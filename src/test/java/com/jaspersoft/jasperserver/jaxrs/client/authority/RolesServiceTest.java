@@ -20,9 +20,10 @@ public class RolesServiceTest extends Assert {
         assertEquals(role.getName(), "ROLE_ADMINISTRATOR");
     }
 
-    @Test(priority = 1, expectedExceptions = NotFoundException.class)
+    @Test(priority = 1)
     public void testGetNonexistentRole(){
-        ClientRole user = Roles.rolename("ROLE_HELLO").get();
+        ClientRole role = Roles.rolename("ROLE_HELLO").get();
+        assertEquals(role, null);
     }
 
     @Test
@@ -42,9 +43,11 @@ public class RolesServiceTest extends Assert {
     @Test(dependsOnMethods = {"testGetRole", "testGetNonexistentRole"})
     public void testAddRole(){
 
-        Response response = Roles.addRole(new ClientRole()
+        ClientRole role = new ClientRole()
                 .setName("ROLE_HELLO")
-                .setExternallyDefined(true));
+                .setExternallyDefined(true);
+
+        Response response = Roles.rolename(role.getName()).put(role);
 
         assertEquals(response.getStatus(), 201);
         assertNotEquals(Roles.rolename("ROLE_HELLO").get(), null);
@@ -53,9 +56,11 @@ public class RolesServiceTest extends Assert {
     @Test(dependsOnMethods = {"testAddRole"}, enabled = false)
     public void testUpdateRole(){
 
-        Response response = Roles.addRole(new ClientRole()
+        ClientRole roleHello = new ClientRole()
                 .setName("ROLE_HELLO")
-                .setExternallyDefined(false));
+                .setExternallyDefined(false);
+
+        Response response = Roles.rolename(roleHello.getName()).put(roleHello);
 
         assertEquals(response.getStatus(), 200);
         ClientRole role = Roles.rolename("ROLE_HELLO").get();
@@ -63,12 +68,13 @@ public class RolesServiceTest extends Assert {
         assertFalse(role.isExternallyDefined());
     }
 
-    @Test(dependsOnMethods = {"testAddRole"}, expectedExceptions = NotFoundException.class)
+    @Test(dependsOnMethods = {"testAddRole"})
     public void testDeleteRole(){
 
         Response response = Roles.rolename("ROLE_HELLO").delete();
         assertEquals(response.getStatus(), 204);
         ClientRole role = Roles.rolename("ROLE_HELLO").get();
+        assertEquals(role, null);
     }
 
 }
