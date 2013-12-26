@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.authority;
+package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
@@ -8,7 +8,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Date;

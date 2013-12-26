@@ -9,5 +9,7 @@ public interface GetDeleteRequest<T> extends Request{
     Response delete();
     GetDeleteRequest<T> addParam(String name, String... values);
     GetDeleteRequest<T> addParams(Map<String, String[]> params);
+    GetDeleteRequest<T> addMatrixParam(String name, String... values);
+    GetDeleteRequest<T> addMatrixParams(Map<String, String[]> params);
 
 }

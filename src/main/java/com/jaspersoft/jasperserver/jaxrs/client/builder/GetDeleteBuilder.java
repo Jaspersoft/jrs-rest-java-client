@@ -47,6 +47,19 @@ public class GetDeleteBuilder<T> implements GetDeleteRequest<T> {
         return this;
     }
 
+    @Override
+    public GetDeleteRequest<T> addMatrixParam(String name, String... values) {
+        concreteTarget = concreteTarget.matrixParam(name, values);
+        return this;
+    }
+
+    @Override
+    public GetDeleteRequest<T> addMatrixParams(Map<String, String[]> params) {
+        for (Map.Entry<String, String[]> entry : params.entrySet()){
+            concreteTarget = concreteTarget.matrixParam(entry.getKey(), entry.getValue());
+        }
+        return this;
+    }
 
     @Override
     public Request setPath(String path) {

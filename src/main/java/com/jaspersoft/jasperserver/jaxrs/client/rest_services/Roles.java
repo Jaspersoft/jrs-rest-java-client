@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.authority;
+package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
 import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;

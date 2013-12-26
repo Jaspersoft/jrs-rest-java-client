@@ -96,6 +96,16 @@ public abstract class RequestBuilder<T> implements CommonRequest<T> {
     }
 
     @Override
+    public GetDeleteRequest<T> addMatrixParam(String name, String... values) {
+        return getDeleteRequest.addMatrixParam(name, values);
+    }
+
+    @Override
+    public GetDeleteRequest<T> addMatrixParams(Map<String, String[]> params) {
+        return getDeleteRequest.addMatrixParams(params);
+    }
+
+    @Override
     public Response put(T entity) {
         return putPostRequest.put(entity);
     }
