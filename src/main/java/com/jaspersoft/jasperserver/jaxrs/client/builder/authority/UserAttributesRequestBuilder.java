@@ -1,47 +1,45 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.authority;
 
 import com.jaspersoft.jasperserver.jaxrs.client.builder.RequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.api.GetDeleteRequest;
 
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
-public class UserAttributesRequestBuilder<T>  {
+public class UserAttributesRequestBuilder<T> extends RequestBuilder<T> {
 
     private static final String URI = "/attributes";
 
-    private UsersRequestBuilder<T> usersRequestBuilder;
 
-    public UserAttributesRequestBuilder(UsersRequestBuilder<T> usersRequestBuilder){
-        this.usersRequestBuilder = usersRequestBuilder;
-        usersRequestBuilder.setPath(URI);
+    public UserAttributesRequestBuilder(WebTarget concreteTarget, Class responseClass){
+        super(responseClass);
+        this.setTarget(concreteTarget);
+        this.setPath(URI);
     }
 
     public T get() {
-        return usersRequestBuilder.get();
+        return getDeleteRequest.get();
     }
 
     public Response delete() {
-        return usersRequestBuilder.delete();
+        return getDeleteRequest.delete();
     }
 
-    public UsersGetDeleteBuilder<T> addParam(String name, String... values) {
-        return usersRequestBuilder.addParam(name, values);
+    public GetDeleteRequest<T> addParam(String name, String... values) {
+        return getDeleteRequest.addParam(name, values);
     }
 
-    public UsersGetDeleteBuilder<T> addParams(Map<String, String[]> params) {
-        return usersRequestBuilder.addParams(params);
+    public GetDeleteRequest<T> addParams(Map<String, String[]> params) {
+        return getDeleteRequest.addParams(params);
     }
 
     public Response put(T entity) {
-        return usersRequestBuilder.put(entity);
+        return putPostRequest.put(entity);
     }
 
     public Response post(T entity) {
-        return usersRequestBuilder.post(entity);
-    }
-
-    public RequestBuilder<T> setPath(String path) {
-        return usersRequestBuilder.setPath(path);
+        return putPostRequest.post(entity);
     }
 
 }

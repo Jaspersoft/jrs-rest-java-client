@@ -6,18 +6,14 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.RolesRequestBu
 
 public class Roles {
 
-    private static final String URI = "/roles";
-
     public static RolesRequestBuilder<ClientRole> rolename(String rolename) {
         RolesRequestBuilder<ClientRole> builder = new RolesRequestBuilder<ClientRole>(ClientRole.class);
-        builder.setPath(URI).setPath(rolename);
+        builder.setPath(rolename);
         return builder;
     }
 
     public static RolesRequestBuilder<RolesListWrapper> allRoles() {
-        RolesRequestBuilder<RolesListWrapper> builder = new RolesRequestBuilder<RolesListWrapper>(RolesListWrapper.class);
-        builder.setPath(URI);
-        return builder;
+        return  new RolesRequestBuilder<RolesListWrapper>(RolesListWrapper.class);
     }
 
 }
