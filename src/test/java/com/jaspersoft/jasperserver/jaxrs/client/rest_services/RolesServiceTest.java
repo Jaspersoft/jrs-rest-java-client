@@ -2,6 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
 import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -11,27 +12,35 @@ public class RolesServiceTest extends Assert {
 
     @Test(priority = 0)
     public void testGetRole(){
-        ClientRole role = Roles.rolename("ROLE_ADMINISTRATOR").get();
+        OperationResult<ClientRole> operationResult =
+                Roles.rolename("ROLE_ADMINISTRATOR").get();
+        ClientRole role = operationResult.getEntity();
         assertNotEquals(role, null);
         assertEquals(role.getName(), "ROLE_ADMINISTRATOR");
     }
 
     @Test(priority = 1)
     public void testGetNonexistentRole(){
-        ClientRole role = Roles.rolename("ROLE_HELLO").get();
+        OperationResult<ClientRole> operationResult =
+                Roles.rolename("ROLE_HELLO").get();
+        ClientRole role = operationResult.getEntity();
         assertEquals(role, null);
     }
 
     @Test
     public void testGetAllRoles(){
-        RolesListWrapper rolesListWrapper = Roles.allRoles().get();
+        OperationResult<RolesListWrapper> operationResult =
+                Roles.allRoles().get();
+        RolesListWrapper rolesListWrapper = operationResult.getEntity();
         assertNotEquals(rolesListWrapper, null);
         assertEquals(rolesListWrapper.getRoleList().size(), 3);
     }
 
     @Test
     public void testGetAllRolesWithQueryParams(){
-        RolesListWrapper rolesListWrapper = Roles.allRoles().addParam("user", "jasperadmin").get();
+        OperationResult<RolesListWrapper> operationResult =
+                Roles.allRoles().addParam("user", "jasperadmin").get();
+        RolesListWrapper rolesListWrapper = operationResult.getEntity();
         assertNotEquals(rolesListWrapper, null);
         assertEquals(rolesListWrapper.getRoleList().size(), 2);
     }
@@ -43,7 +52,9 @@ public class RolesServiceTest extends Assert {
                 .setName("ROLE_HELLO")
                 .setExternallyDefined(true);
 
-        Response response = Roles.rolename(role.getName()).put(role);
+        OperationResult<ClientRole> operationResult =
+                Roles.rolename(role.getName()).put(role);
+        Response response = operationResult.getResponse();
 
         assertEquals(response.getStatus(), 201);
         assertNotEquals(Roles.rolename("ROLE_HELLO").get(), null);
@@ -56,10 +67,15 @@ public class RolesServiceTest extends Assert {
                 .setName("ROLE_HELLO")
                 .setExternallyDefined(false);
 
-        Response response = Roles.rolename(roleHello.getName()).put(roleHello);
+        OperationResult<ClientRole> operationResult =
+                Roles.rolename(roleHello.getName()).put(roleHello);
+        Response response = operationResult.getResponse();
 
         assertEquals(response.getStatus(), 200);
-        ClientRole role = Roles.rolename("ROLE_HELLO").get();
+
+        OperationResult<ClientRole> operationResult1 =
+                Roles.rolename("ROLE_HELLO").get();
+        ClientRole role = operationResult1.getEntity();
         assertNotEquals(role, null);
         assertFalse(role.isExternallyDefined());
     }
@@ -67,9 +83,14 @@ public class RolesServiceTest extends Assert {
     @Test(dependsOnMethods = {"testAddRole"})
     public void testDeleteRole(){
 
-        Response response = Roles.rolename("ROLE_HELLO").delete();
+        OperationResult<ClientRole> operationResult =
+                Roles.rolename("ROLE_HELLO").delete();
+        Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 204);
-        ClientRole role = Roles.rolename("ROLE_HELLO").get();
+
+        OperationResult<ClientRole> operationResult1 =
+                Roles.rolename("ROLE_HELLO").get();
+        ClientRole role = operationResult1.getEntity();
         assertEquals(role, null);
     }
 

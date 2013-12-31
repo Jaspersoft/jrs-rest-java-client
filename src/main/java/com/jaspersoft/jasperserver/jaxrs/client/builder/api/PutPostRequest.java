@@ -1,10 +1,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.api;
 
-import javax.ws.rs.core.Response;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 
-public interface PutPostRequest<T> extends Request{
+public interface PutPostRequest<RequestType, ResponseType> extends Request{
 
-    Response put(T entity);
-    Response post(T entity);
+    OperationResult<ResponseType> put(RequestType entity);
+    OperationResult<ResponseType> post(RequestType entity);
 
 }

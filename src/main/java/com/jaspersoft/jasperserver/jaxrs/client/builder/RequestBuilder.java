@@ -10,13 +10,13 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 
-public abstract class RequestBuilder<T> implements CommonRequest<T> {
+public abstract class RequestBuilder<RequestType, ResponseType>
+        implements CommonRequest<RequestType, ResponseType> {
 
     //static members
     private static final String PROTOCOL = "http://";
@@ -26,8 +26,8 @@ public abstract class RequestBuilder<T> implements CommonRequest<T> {
     private static final WebTarget usersWebTarget;
 
     //instance members
-    protected GetDeleteRequest<T> getDeleteRequest;
-    protected PutPostRequest<T> putPostRequest;
+    protected GetDeleteRequest<ResponseType> getDeleteRequest;
+    protected PutPostRequest<RequestType, ResponseType> putPostRequest;
 
     static  {
         client = ClientBuilder.newClient();
@@ -41,9 +41,9 @@ public abstract class RequestBuilder<T> implements CommonRequest<T> {
         usersWebTarget = client.target(PROTOCOL + host + ":" + port + "/" + context + URI);
     }
 
-    protected RequestBuilder(Class responseClass){
-        getDeleteRequest = new GetDeleteBuilder<T>(usersWebTarget, responseClass);
-        putPostRequest = new PutPostBuilder<T>(usersWebTarget);
+    protected RequestBuilder(Class<ResponseType> responseClass){
+        getDeleteRequest = new GetDeleteBuilder<ResponseType>(usersWebTarget, responseClass);
+        putPostRequest = new PutPostBuilder<RequestType, ResponseType>(usersWebTarget, responseClass);
     }
 
     private static String getUrlProperty(String name){
@@ -57,7 +57,7 @@ public abstract class RequestBuilder<T> implements CommonRequest<T> {
         return properties.getProperty(name);
     }
 
-    public RequestBuilder<T> setPath(String path){
+    public RequestBuilder<RequestType, ResponseType> setPath(String path){
         getDeleteRequest.setPath(path);
         putPostRequest.setPath(path);
         return this;
@@ -76,43 +76,48 @@ public abstract class RequestBuilder<T> implements CommonRequest<T> {
     }
 
     @Override
-    public T get() {
+    public OperationResult<ResponseType> get() {
         return getDeleteRequest.get();
     }
 
     @Override
-    public Response delete() {
+    public OperationResult<ResponseType> delete() {
         return getDeleteRequest.delete();
     }
 
     @Override
-    public GetDeleteRequest<T> addParam(String name, String... values) {
+    public GetDeleteRequest<ResponseType> addParam(String name, String... values) {
         return getDeleteRequest.addParam(name, values);
     }
 
     @Override
-    public GetDeleteRequest<T> addParams(Map<String, String[]> params) {
+    public GetDeleteRequest<ResponseType> addParams(Map<String, String[]> params) {
         return getDeleteRequest.addParams(params);
     }
 
     @Override
-    public GetDeleteRequest<T> addMatrixParam(String name, String... values) {
+    public GetDeleteRequest<ResponseType> addMatrixParam(String name, String... values) {
         return getDeleteRequest.addMatrixParam(name, values);
     }
 
     @Override
-    public GetDeleteRequest<T> addMatrixParams(Map<String, String[]> params) {
+    public GetDeleteRequest<ResponseType> addMatrixParams(Map<String, String[]> params) {
         return getDeleteRequest.addMatrixParams(params);
     }
 
     @Override
-    public Response put(T entity) {
+    public OperationResult<ResponseType> put(RequestType entity) {
         return putPostRequest.put(entity);
     }
 
     @Override
-    public Response post(T entity) {
+    public OperationResult<ResponseType> post(RequestType entity) {
         return putPostRequest.post(entity);
     }
 
+    @Override
+    public void addHeader(String name, String value) {
+        getDeleteRequest.addHeader(name, value);
+        putPostRequest.addHeader(name, value);
+    }
 }

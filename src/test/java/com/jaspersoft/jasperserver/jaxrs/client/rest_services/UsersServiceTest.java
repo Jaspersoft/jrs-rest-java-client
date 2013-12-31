@@ -4,6 +4,7 @@ import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.dto.authority.UserAttributesListWrapper;
 import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -17,33 +18,43 @@ public class UsersServiceTest extends Assert {
 
     @AfterClass
     public void tearDown(){
-        Response response = Users.username("jasperadmin").attributes().delete();
+        OperationResult<UserAttributesListWrapper> operationResult =
+                Users.username("jasperadmin").attributes().delete();
+        Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 204);
     }
 
     @Test(priority = 0)
     public void testGetUser() {
-        ClientUser user = Users.username("jasperadmin").get();
+        OperationResult<ClientUser> operationResult =
+                Users.username("jasperadmin").get();
+        ClientUser user = operationResult.getEntity();
         assertNotEquals(user, null);
         assertEquals(user.getUsername(), "jasperadmin");
     }
 
     @Test(priority = 1)
     public void testGetNonexistentUser() {
-        ClientUser user = Users.username("demo").get();
+        OperationResult<ClientUser> operationResult =
+                Users.username("demo").get();
+        ClientUser user = operationResult.getEntity();
         assertEquals(user, null);
     }
 
     @Test
     public void testGetAllUsers() {
-        UsersListWrapper usersListWrapper = Users.allUsers().get();
+        OperationResult<UsersListWrapper> operationResult =
+                Users.allUsers().get();
+        UsersListWrapper usersListWrapper = operationResult.getEntity();
         assertNotEquals(usersListWrapper, null);
         assertEquals(usersListWrapper.getUserList().size(), 3);
     }
 
     @Test
     public void testGetAllUsersWithQueryParams() {
-        UsersListWrapper usersListWrapper = Users.allUsers().addParam("requiredRole", "ROLE_USER").get();
+        OperationResult<UsersListWrapper> operationResult =
+                Users.allUsers().addParam("requiredRole", "ROLE_USER").get();
+        UsersListWrapper usersListWrapper = operationResult.getEntity();
         assertNotEquals(usersListWrapper, null);
         assertEquals(usersListWrapper.getUserList().size(), 2);
     }
@@ -60,7 +71,9 @@ public class UsersServiceTest extends Assert {
                 .setPreviousPasswordChangeTime(new Date(1348142595199L))
                 .setUsername("demo");
 
-        Response response = Users.username(user.getUsername()).put(user);
+        OperationResult<ClientUser> operationResult =
+                Users.username(user.getUsername()).put(user);
+        Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 201);
         assertNotEquals(Users.username("demo").get(), null);
     }
@@ -77,9 +90,14 @@ public class UsersServiceTest extends Assert {
                 .setPreviousPasswordChangeTime(new Date(1348142595199L))
                 .setUsername("demo");
 
-        Response response = Users.username(user.getUsername()).put(user);
+        OperationResult<ClientUser> operationResult =
+                Users.username(user.getUsername()).put(user);
+        Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 200);
-        ClientUser demo = Users.username("demo").get();
+
+        OperationResult<ClientUser> operationResult1 =
+                Users.username("demo").get();
+        ClientUser demo = operationResult1.getEntity();
         assertNotEquals(demo, null);
         assertEquals(demo.getFullName(), "Hello");
     }
@@ -87,16 +105,22 @@ public class UsersServiceTest extends Assert {
     @Test(dependsOnMethods = {"testUpdateUser"})
     public void testDeleteUser() {
 
-        Response response = Users.username("demo").delete();
+        OperationResult<ClientUser> operationResult =
+                Users.username("demo").delete();
+        Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 204);
-        ClientUser user = Users.username("demo").get();
+
+        OperationResult<ClientUser> operationResult1 =
+                Users.username("demo").get();
+        ClientUser user = operationResult1.getEntity();
         assertEquals(user, null);
     }
 
     @Test
     public void testGetEmptyUserAttributesList() {
-        UserAttributesListWrapper attributesListWrapper =
+        OperationResult<UserAttributesListWrapper> operationResult =
                 Users.username("jasperadmin").attributes().get();
+        UserAttributesListWrapper attributesListWrapper = operationResult.getEntity();
         assertEquals(attributesListWrapper, null);
     }
 
@@ -107,33 +131,42 @@ public class UsersServiceTest extends Assert {
                 .setName("testAttribute")
                 .setValue("hello");
 
-        Response response =
+        OperationResult<ClientUserAttribute> operationResult =
                 Users.username("jasperadmin")
-                        .attribute(clientUserAttribute.getName())
-                        .put(clientUserAttribute);
+                .attribute(clientUserAttribute.getName())
+                .put(clientUserAttribute);
+
+        Response response = operationResult.getResponse();
+
 
         assertEquals(response.getStatus(), 201);
     }
 
     @Test(dependsOnMethods = {"testAddUserAttributeSingle"})
     public void testGetUserAttributesList() {
-        UserAttributesListWrapper attributesListWrapper =
+        OperationResult<UserAttributesListWrapper> operationResult =
                 Users.username("jasperadmin").attributes().get();
+
+        UserAttributesListWrapper attributesListWrapper = operationResult.getEntity();
+
         assertNotEquals(attributesListWrapper, null);
         assertEquals(attributesListWrapper.getProfileAttributes().size(), 1);
     }
 
     @Test(dependsOnMethods = {"testAddUserAttributeSingle"})
     public void testGetUserAttributeSingle() {
-        ClientUserAttribute attribute =
+        OperationResult<ClientUserAttribute> operationResult =
                 Users.username("jasperadmin").attribute("testAttribute").get();
+        ClientUserAttribute attribute = operationResult.getEntity();
         assertNotEquals(attribute, null);
         assertEquals(attribute.getValue(), "hello");
     }
 
     @Test(dependsOnMethods = {"testGetUserAttributesList", "testGetUserAttributeSingle"})
     public void testDeleteUserAttributes() {
-        Response response = Users.username("jasperadmin").attributes().delete();
+        OperationResult<UserAttributesListWrapper> operationResult =
+                Users.username("jasperadmin").attributes().delete();
+        Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 204);
     }
 
@@ -148,14 +181,18 @@ public class UsersServiceTest extends Assert {
                 .setValue("val2"));
 
         UserAttributesListWrapper listWrapper = new UserAttributesListWrapper(userAttributes);
-        Response response = Users.username("jasperadmin").attributes().put(listWrapper);
+        OperationResult<UserAttributesListWrapper> operationResult =
+                Users.username("jasperadmin").attributes().put(listWrapper);
+        Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 200);
     }
 
     @Test(dependsOnMethods = {"testAddAttributeBatch"})
     public void testGetAttributesWithQueryParam() {
-        UserAttributesListWrapper attributesListWrapper =
+        OperationResult<UserAttributesListWrapper> operationResult =
                 Users.username("jasperadmin").attributes().addParam("name", "attr2").addParam("name", "attr1").get();
+        UserAttributesListWrapper attributesListWrapper = operationResult.getEntity();
+
         assertNotEquals(attributesListWrapper, null);
         assertEquals(attributesListWrapper.getProfileAttributes().size(), 2);
     }

@@ -8,4 +8,6 @@ public interface Request {
     WebTarget getPath();
     Request setTarget(WebTarget webTarget);
 
+    void addHeader(String name, String value);
+
 }

@@ -2,8 +2,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionRecipient;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
@@ -12,86 +15,107 @@ import java.util.List;
 
 public class PermissionsServiceTest extends Assert {
 
+    @BeforeClass
+    public void setUp(){
+        Permissions.resource("/themes").
+                permissionRecipient(PermissionRecipient.USER, "joeuser").delete();
+        Permissions.resource("/").
+                permissionRecipient(PermissionRecipient.USER, "joeuser").delete();
+    }
+
+    @AfterClass
+    public void tearDown(){
+        setUp();
+    }
+
     @Test
     public void testGetPermissionForResourceBatch() {
-        RepositoryPermissionListWrapper permissions =
-                Permissions.resource("datasources").get();
-
+        OperationResult<RepositoryPermissionListWrapper> operationResult =
+                Permissions.resource("/datasources").get();
+        RepositoryPermissionListWrapper permissions = operationResult.getEntity();
         assertNotEquals(permissions, null);
     }
 
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testAddPermissionBatch() {
         List<RepositoryPermission> permissionList = new ArrayList<RepositoryPermission>();
-        permissionList.add(new RepositoryPermission("/themes", "role:/ROLE_USER", 30));
-        permissionList.add(new RepositoryPermission("/themes", "role:/ROLE_ADMINISTRATOR", 30));
+        permissionList.add(new RepositoryPermission("/themes", "user:/joeuser", 30));
+        //permissionList.add(new RepositoryPermission("/themes", "role:/ROLE_ADMINISTRATOR", 30));
 
         RepositoryPermissionListWrapper permissionListWrapper = new RepositoryPermissionListWrapper(permissionList);
 
-        Response response = Permissions.createPermissions(permissionListWrapper);
+        OperationResult operationResult = Permissions.createPermissions(permissionListWrapper);
+        Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 201);
     }
 
-    @Test(dependsOnMethods = {"testAddPermissionBatch"}, enabled = false)
+    @Test(dependsOnMethods = {"testAddPermissionBatch"}, enabled = true)
     public void testUpdatePermissionBatch() {
         List<RepositoryPermission> permissionList = new ArrayList<RepositoryPermission>();
-        permissionList.add(new RepositoryPermission("/themes", "role:/ROLE_USER", 1));
-        permissionList.add(new RepositoryPermission("/themes", "role:/ROLE_ADMINISTRATOR", 1));
+        permissionList.add(new RepositoryPermission("/themes", "user:/joeuser", 1));
+        //permissionList.add(new RepositoryPermission("/themes", "role:/ROLE_ADMINISTRATOR", 1));
 
         RepositoryPermissionListWrapper permissionListWrapper = new RepositoryPermissionListWrapper(permissionList);
 
-        Response response =
+        OperationResult<RepositoryPermissionListWrapper> operationResult =
                 Permissions.resource("/themes").put(permissionListWrapper);
+        Response response = operationResult.getResponse();
 
         assertEquals(response.getStatus(), 200);
     }
 
     @Test(dependsOnMethods = "testUpdatePermissionBatch", enabled = false)
     public void testDeletePermissionBatch() {
-        Response response =
+        OperationResult<RepositoryPermissionListWrapper> operationResult =
                 Permissions.resource("/themes").delete();
+        Response response = operationResult.getResponse();
+
         assertEquals(response.getStatus(), 204);
     }
 
     @Test
     public void testGetPermissionForResourceWithPermissionRecipientSingle() {
-        RepositoryPermission permission =
-                Permissions.resource("datasources").permissionRecipient(PermissionRecipient.ROLE, "ROLE_USER").get();
-
+        OperationResult<RepositoryPermission> operationResult =
+                Permissions.resource("/datasources").permissionRecipient(PermissionRecipient.ROLE, "ROLE_USER").get();
+        RepositoryPermission permission = operationResult.getEntity();
         assertNotEquals(permission, null);
     }
 
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testAddPermissionSingle() {
         RepositoryPermission permission = new RepositoryPermission();
         permission
                 .setUri("/")
-                .setRecipient("user:/jasperadmin")
+                .setRecipient("user:/joeuser")
                 .setMask(30);
 
-        Response response = Permissions.createPermissions(permission);
+        OperationResult operationResult = Permissions.createPermissions(permission);
+        Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 201);
     }
 
-    @Test(dependsOnMethods = {"testAddPermission"}, enabled = false)
+    @Test(dependsOnMethods = {"testAddPermissionSingle"}, enabled = true)
     public void testUpdatePermissionSingle() {
         RepositoryPermission permission = new RepositoryPermission();
         permission
                 .setUri("/")
-                .setRecipient("user:/jasperadmin")
+                .setRecipient("user:/joeuser")
                 .setMask(1);
 
-        Response response =
-                Permissions.resource("/").permissionRecipient(PermissionRecipient.USER, "jasperadmin").put(permission);
+        OperationResult<RepositoryPermission> operationResult =
+                Permissions.resource("/").permissionRecipient(PermissionRecipient.USER, "joeuser").put(permission);
+        Response response = operationResult.getResponse();
 
         assertEquals(response.getStatus(), 200);
     }
 
-    @Test(dependsOnMethods = "testUpdatePermission", enabled = false)
+    @Test(dependsOnMethods = "testUpdatePermissionSingle", enabled = false)
     public void testDeletePermissionSingle() {
-        Response response =
+        OperationResult<RepositoryPermission> operationResult =
                 Permissions.resource("/datasources").
-                        permissionRecipient(PermissionRecipient.ROLE, "ROLE_ADMINISTRATOR").delete();
+                permissionRecipient(PermissionRecipient.ROLE, "ROLE_ADMINISTRATOR").delete();
+        Response response = operationResult.getResponse();
+
         assertEquals(response.getStatus(), 204);
     }
 

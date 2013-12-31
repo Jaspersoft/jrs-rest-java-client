@@ -3,34 +3,46 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.GetDeleteRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.Request;
 
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
 public class GetDeleteBuilder<T> implements GetDeleteRequest<T> {
 
     private WebTarget concreteTarget;
-    private Class responseClass;
+    private Class<T> responseClass;
+
+    private MultivaluedMap<String, Object> headers;
 
 
-    public GetDeleteBuilder(WebTarget concreteTarget, Class responseClass){
+    public GetDeleteBuilder(WebTarget concreteTarget, Class<T> responseClass){
         this.concreteTarget = concreteTarget;
         this.responseClass = responseClass;
+        headers = new MultivaluedHashMap<String, Object>();
     }
 
     @Override
-    public T get() {
+    public OperationResult<T> get() {
         try {
-            return (T) concreteTarget.request(MediaType.APPLICATION_JSON).get(responseClass);
+            Invocation.Builder request = concreteTarget.request(MediaType.APPLICATION_JSON);
+            request.headers(headers);
+            Response response = request.get();
+            return new OperationResult<T>(response, responseClass);
         } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public Response delete() {
-        return concreteTarget.request().delete();
+    public OperationResult<T> delete() {
+        Invocation.Builder request = concreteTarget.request();
+        request.headers(headers);
+        Response response = request.delete();
+        return new OperationResult<T>(response, responseClass);
     }
 
     @Override
@@ -76,5 +88,10 @@ public class GetDeleteBuilder<T> implements GetDeleteRequest<T> {
     public Request setTarget(WebTarget webTarget) {
         this.concreteTarget = webTarget;
         return this;
+    }
+
+    @Override
+    public void addHeader(String name, String value) {
+        headers.putSingle(name, value);
     }
 }

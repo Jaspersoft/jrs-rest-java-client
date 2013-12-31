@@ -6,14 +6,19 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.UsersRequestBu
 
 public class Users {
 
-    public static UsersRequestBuilder<ClientUser> username(String username) {
-        UsersRequestBuilder<ClientUser> builder = new UsersRequestBuilder<ClientUser>(ClientUser.class);
+    public static UsersRequestBuilder<ClientUser, ClientUser> username(String username) {
+        UsersRequestBuilder<ClientUser, ClientUser> builder =
+                new UsersRequestBuilder<ClientUser, ClientUser>(ClientUser.class);
         builder.setPath(username);
         return builder;
     }
 
-    public static UsersRequestBuilder<UsersListWrapper> allUsers() {
-        return new UsersRequestBuilder<UsersListWrapper>(UsersListWrapper.class);
+    public static UsersRequestBuilder<UsersListWrapper, UsersListWrapper> allUsers() {
+        return new UsersRequestBuilder<UsersListWrapper, UsersListWrapper>(UsersListWrapper.class);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Users.allUsers().get().getEntity());
     }
 
 }
