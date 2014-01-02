@@ -4,8 +4,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.api.CommonRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.GetDeleteRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.PutPostRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.Request;
+import com.sun.jersey.api.json.JSONConfiguration;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.glassfish.jersey.jackson.JacksonFeature;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -32,7 +32,9 @@ public abstract class RequestBuilder<RequestType, ResponseType>
     static  {
         client = ClientBuilder.newClient();
         client.register(HttpAuthenticationFeature.basic("jasperadmin", "jasperadmin"))
-                .register(JacksonFeature.class);
+                //.property(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE)
+                //.register(JacksonFeature.class)
+        ;
 
         String host = getUrlProperty("host");
         String port = getUrlProperty("port");
@@ -119,5 +121,11 @@ public abstract class RequestBuilder<RequestType, ResponseType>
     public void addHeader(String name, String value) {
         getDeleteRequest.addHeader(name, value);
         putPostRequest.addHeader(name, value);
+    }
+
+    @Override
+    public void setContentType(String mime) {
+        getDeleteRequest.setContentType(mime);
+        putPostRequest.setContentType(mime);
     }
 }

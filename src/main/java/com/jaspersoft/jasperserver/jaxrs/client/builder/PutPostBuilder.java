@@ -17,11 +17,13 @@ public class PutPostBuilder<RequestType, ResponseType> implements PutPostRequest
     private Class<ResponseType> responseClass;
 
     private MultivaluedMap<String, Object> headers;
+    private String mime;
 
 
     public PutPostBuilder(WebTarget concreteTarget, Class<ResponseType> responseClass){
         this.concreteTarget = concreteTarget;
         this.responseClass = responseClass;
+        this.mime = MediaType.APPLICATION_JSON;
         headers = new MultivaluedHashMap<String, Object>();
     }
 
@@ -29,7 +31,7 @@ public class PutPostBuilder<RequestType, ResponseType> implements PutPostRequest
     public OperationResult<ResponseType> put(RequestType entity) {
         Invocation.Builder request = concreteTarget.request();
         request.headers(headers);
-        Response response = request.put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+        Response response = request.put(Entity.entity(entity, mime));
         return new OperationResult<ResponseType>(response, responseClass);
     }
 
@@ -37,7 +39,7 @@ public class PutPostBuilder<RequestType, ResponseType> implements PutPostRequest
     public OperationResult<ResponseType> post(RequestType entity) {
         Invocation.Builder request = concreteTarget.request();
         request.headers(headers);
-        Response response = request.post(Entity.entity(entity, MediaType.APPLICATION_JSON));
+        Response response = request.post(Entity.entity(entity, mime));
         return new OperationResult<ResponseType>(response, responseClass);
     }
 
@@ -61,5 +63,10 @@ public class PutPostBuilder<RequestType, ResponseType> implements PutPostRequest
     @Override
     public void addHeader(String name, String value) {
         headers.putSingle(name, value);
+    }
+
+    @Override
+    public void setContentType(String mime) {
+        this.mime = mime;
     }
 }

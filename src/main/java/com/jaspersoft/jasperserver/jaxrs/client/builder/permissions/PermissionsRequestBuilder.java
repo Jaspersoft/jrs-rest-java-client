@@ -1,6 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.permissions;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
+import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.RequestBuilder;
 
 import javax.ws.rs.client.WebTarget;
@@ -27,4 +29,17 @@ public class PermissionsRequestBuilder<RequestType, ResponseType>
         return new PermissionsRequestBuilder<RequestType, RepositoryPermission>(this.getPath(), RepositoryPermission.class);
     }
 
+    @Override
+    public OperationResult<ResponseType> put(RequestType entity) {
+        if (entity instanceof RepositoryPermissionListWrapper)
+            setContentType("application/collection+json");
+        return super.put(entity);
+    }
+
+    @Override
+    public OperationResult<ResponseType> post(RequestType entity) {
+        if (entity instanceof RepositoryPermissionListWrapper)
+            setContentType("application/collection+json");
+        return super.post(entity);
+    }
 }

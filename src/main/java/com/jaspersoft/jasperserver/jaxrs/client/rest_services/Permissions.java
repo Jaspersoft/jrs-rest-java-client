@@ -28,7 +28,6 @@ public class Permissions {
         PermissionsRequestBuilder<RepositoryPermissionListWrapper, RepositoryPermissionListWrapper> builder =
                 new PermissionsRequestBuilder<RepositoryPermissionListWrapper,
                         RepositoryPermissionListWrapper>(RepositoryPermissionListWrapper.class);
-        builder.addHeader("Content-Type", "application/collection+json");
         return builder.post(permission);
     }
 

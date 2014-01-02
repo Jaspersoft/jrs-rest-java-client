@@ -17,18 +17,20 @@ public class GetDeleteBuilder<T> implements GetDeleteRequest<T> {
     private Class<T> responseClass;
 
     private MultivaluedMap<String, Object> headers;
+    private String mime;
 
 
     public GetDeleteBuilder(WebTarget concreteTarget, Class<T> responseClass){
         this.concreteTarget = concreteTarget;
         this.responseClass = responseClass;
+        this.mime = MediaType.APPLICATION_JSON;
         headers = new MultivaluedHashMap<String, Object>();
     }
 
     @Override
     public OperationResult<T> get() {
         try {
-            Invocation.Builder request = concreteTarget.request(MediaType.APPLICATION_JSON);
+            Invocation.Builder request = concreteTarget.request(mime);
             request.headers(headers);
             Response response = request.get();
             return new OperationResult<T>(response, responseClass);
@@ -94,4 +96,10 @@ public class GetDeleteBuilder<T> implements GetDeleteRequest<T> {
     public void addHeader(String name, String value) {
         headers.putSingle(name, value);
     }
+
+    @Override
+    public void setContentType(String mime) {
+        this.mime = mime;
+    }
+
 }
