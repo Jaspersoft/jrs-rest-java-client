@@ -18,7 +18,8 @@ public class Users {
     }
 
     public static void main(String[] args) {
-        System.out.println(Users.allUsers().get().getEntity());
+        Users.username("demo").delete();
+        Roles.rolename("ROLE_HELLO").delete();
     }
 
 }
