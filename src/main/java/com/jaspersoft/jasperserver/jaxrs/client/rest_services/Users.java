@@ -19,6 +19,7 @@ public class Users {
 
     public static void main(String[] args) {
         Users.username("demo").delete();
+        Users.username("Bobby").delete();
         Roles.rolename("ROLE_HELLO").delete();
     }
 
