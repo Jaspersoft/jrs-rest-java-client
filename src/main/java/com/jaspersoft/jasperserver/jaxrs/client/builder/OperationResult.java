@@ -1,15 +1,20 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder;
 
+import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
+
 import javax.ws.rs.core.Response;
 
 public class OperationResult<T> {
 
     private Response response;
     private Class<T> entityClass;
+    private ErrorDescriptor error;
 
     public OperationResult(Response response, Class<T> entityClass){
         this.response = response;
         this.entityClass = entityClass;
+        if (response.getStatus() == 500)
+            error = response.readEntity(ErrorDescriptor.class);
     }
 
     public T getEntity(){
@@ -23,4 +28,9 @@ public class OperationResult<T> {
     public Response getResponse(){
         return response;
     }
+
+    public ErrorDescriptor getError() {
+        return error;
+    }
+
 }

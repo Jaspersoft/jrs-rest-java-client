@@ -4,7 +4,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.api.CommonRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.GetDeleteRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.PutPostRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.Request;
-import com.sun.jersey.api.json.JSONConfiguration;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 import javax.ws.rs.client.Client;
@@ -15,7 +14,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 
-public abstract class RequestBuilder<RequestType, ResponseType>
+public class RequestBuilder<RequestType, ResponseType>
         implements CommonRequest<RequestType, ResponseType> {
 
     //static members
@@ -43,7 +42,7 @@ public abstract class RequestBuilder<RequestType, ResponseType>
         usersWebTarget = client.target(PROTOCOL + host + ":" + port + "/" + context + URI);
     }
 
-    protected RequestBuilder(Class<ResponseType> responseClass){
+    public RequestBuilder(Class<ResponseType> responseClass){
         getDeleteRequest = new GetDeleteBuilder<ResponseType>(usersWebTarget, responseClass);
         putPostRequest = new PutPostBuilder<RequestType, ResponseType>(usersWebTarget, responseClass);
     }
