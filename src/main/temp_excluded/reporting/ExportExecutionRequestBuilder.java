@@ -1,23 +1,26 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportExecutionStatusEntity;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.AuthenticationCredentials;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.RequestBuilder;
 
 import java.io.File;
 
 public class ExportExecutionRequestBuilder {
 
+    private final AuthenticationCredentials credentials;
     private String requestId;
     private String exportOutput;
 
-    public ExportExecutionRequestBuilder(String requestId, String exportOutput){
+    public ExportExecutionRequestBuilder(AuthenticationCredentials credentials, String requestId, String exportOutput){
         this.requestId = requestId;
         this.exportOutput = exportOutput;
+        this.credentials = credentials;
     }
 
     public OperationResult<File> outputResource(){
-        RequestBuilder<Object, File> builder = new RequestBuilder<Object, File>(File.class);
+        JerseyRequestBuilder<File> builder = new JerseyRequestBuilder<File>(credentials, File.class);
         builder
                 .setPath("reportExecutions")
                 .setPath(requestId)
@@ -28,7 +31,7 @@ public class ExportExecutionRequestBuilder {
     }
 
     public OperationResult<File> attachment(String attachmentId){
-        RequestBuilder<Object, File> builder = new RequestBuilder<Object, File>(File.class);
+        JerseyRequestBuilder<File> builder = new JerseyRequestBuilder<File>(credentials, File.class);
         builder
                 .setPath("reportExecutions")
                 .setPath(requestId)
@@ -40,8 +43,8 @@ public class ExportExecutionRequestBuilder {
     }
 
     public OperationResult<ReportExecutionStatusEntity> status(){
-        RequestBuilder<Object, ReportExecutionStatusEntity> builder =
-                new RequestBuilder<Object, ReportExecutionStatusEntity>(ReportExecutionStatusEntity.class);
+        JerseyRequestBuilder<ReportExecutionStatusEntity> builder =
+                new JerseyRequestBuilder<ReportExecutionStatusEntity>(credentials, ReportExecutionStatusEntity.class);
         builder
                 .setPath("reportExecutions")
                 .setPath(requestId)

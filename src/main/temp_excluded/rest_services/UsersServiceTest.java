@@ -4,10 +4,7 @@ import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.dto.authority.UserAttributesListWrapper;
 import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersAttributesParameter;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersParameter;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -20,15 +17,9 @@ import java.util.List;
 public class UsersServiceTest extends Assert {
 
     @AfterClass
-    public void tearDown() {
+    public void tearDown(){
         OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username("jasperadmin")
-                        .attributes()
-                        .delete();
-
+                Users.username("jasperadmin").attributes().delete();
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 204);
     }
@@ -36,9 +27,7 @@ public class UsersServiceTest extends Assert {
     @Test(priority = 0)
     public void testGetUser() {
         OperationResult<ClientUser> operationResult =
-                JasperserverRestClient.authenticate("jasperadmin", "jasperadmin")
-                        .usersService().username("jasperadmin").get();
-
+                Users.username("jasperadmin").get();
         ClientUser user = operationResult.getEntity();
         assertNotEquals(user, null);
         assertEquals(user.getUsername(), "jasperadmin");
@@ -47,23 +36,15 @@ public class UsersServiceTest extends Assert {
     @Test(priority = 1)
     public void testGetNonexistentUser() {
         OperationResult<ClientUser> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username("demo").get();
-
-        Response response = operationResult.getResponse();
-        assertEquals(response.getStatus(), 404);
+                Users.username("demo").get();
+        ClientUser user = operationResult.getEntity();
+        assertEquals(user, null);
     }
 
     @Test
     public void testGetAllUsers() {
         OperationResult<UsersListWrapper> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .allUsers().get();
-
+                Users.allUsers().get();
         UsersListWrapper usersListWrapper = operationResult.getEntity();
         assertNotEquals(usersListWrapper, null);
         assertEquals(usersListWrapper.getUserList().size(), 3);
@@ -72,13 +53,7 @@ public class UsersServiceTest extends Assert {
     @Test
     public void testGetAllUsersWithQueryParams() {
         OperationResult<UsersListWrapper> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .allUsers()
-                        .param(UsersParameter.REQUIRED_ROLE, "ROLE_USER")
-                        .get();
-
+                Users.allUsers().addParam("requiredRole", "ROLE_USER").get();
         UsersListWrapper usersListWrapper = operationResult.getEntity();
         assertNotEquals(usersListWrapper, null);
         assertEquals(usersListWrapper.getUserList().size(), 2);
@@ -97,14 +72,10 @@ public class UsersServiceTest extends Assert {
                 .setUsername("demo");
 
         OperationResult<ClientUser> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username(user.getUsername())
-                        .addOrUpdate(user);
-
+                Users.username(user.getUsername()).put(user);
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 201);
+        assertNotEquals(Users.username("demo").get(), null);
     }
 
     @Test(dependsOnMethods = {"testAddUser"})
@@ -120,21 +91,12 @@ public class UsersServiceTest extends Assert {
                 .setUsername("demo");
 
         OperationResult<ClientUser> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username(user.getUsername())
-                        .addOrUpdate(user);
+                Users.username(user.getUsername()).put(user);
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 200);
 
         OperationResult<ClientUser> operationResult1 =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username(user.getUsername())
-                        .get();
-
+                Users.username("demo").get();
         ClientUser demo = operationResult1.getEntity();
         assertNotEquals(demo, null);
         assertEquals(demo.getFullName(), "Hello");
@@ -144,26 +106,20 @@ public class UsersServiceTest extends Assert {
     public void testDeleteUser() {
 
         OperationResult<ClientUser> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username("demo")
-                        .delete();
+                Users.username("demo").delete();
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 204);
 
+        OperationResult<ClientUser> operationResult1 =
+                Users.username("demo").get();
+        ClientUser user = operationResult1.getEntity();
+        assertEquals(user, null);
     }
 
     @Test
     public void testGetEmptyUserAttributesList() {
         OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username("jasperadmin")
-                        .attributes()
-                        .get();
-
+                Users.username("jasperadmin").attributes().get();
         UserAttributesListWrapper attributesListWrapper = operationResult.getEntity();
         assertEquals(attributesListWrapper, null);
     }
@@ -176,26 +132,20 @@ public class UsersServiceTest extends Assert {
                 .setValue("hello");
 
         OperationResult<ClientUserAttribute> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username("jasperadmin")
-                        .attribute(clientUserAttribute.getName())
-                        .addOrUpdate(clientUserAttribute);
+                Users.username("jasperadmin")
+                .attribute(clientUserAttribute.getName())
+                .put(clientUserAttribute);
 
         Response response = operationResult.getResponse();
+
+
         assertEquals(response.getStatus(), 201);
     }
 
     @Test(dependsOnMethods = {"testAddUserAttributeSingle"})
     public void testGetUserAttributesList() {
         OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username("jasperadmin")
-                        .attributes()
-                        .get();
+                Users.username("jasperadmin").attributes().get();
 
         UserAttributesListWrapper attributesListWrapper = operationResult.getEntity();
 
@@ -206,13 +156,7 @@ public class UsersServiceTest extends Assert {
     @Test(dependsOnMethods = {"testAddUserAttributeSingle"})
     public void testGetUserAttributeSingle() {
         OperationResult<ClientUserAttribute> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username("jasperadmin")
-                        .attribute("testAttribute")
-                        .get();
-
+                Users.username("jasperadmin").attribute("testAttribute").get();
         ClientUserAttribute attribute = operationResult.getEntity();
         assertNotEquals(attribute, null);
         assertEquals(attribute.getValue(), "hello");
@@ -221,13 +165,7 @@ public class UsersServiceTest extends Assert {
     @Test(dependsOnMethods = {"testGetUserAttributesList", "testGetUserAttributeSingle"})
     public void testDeleteUserAttributes() {
         OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username("jasperadmin")
-                        .attributes()
-                        .delete();
-
+                Users.username("jasperadmin").attributes().delete();
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 204);
     }
@@ -244,13 +182,7 @@ public class UsersServiceTest extends Assert {
 
         UserAttributesListWrapper listWrapper = new UserAttributesListWrapper(userAttributes);
         OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username("jasperadmin")
-                        .attributes()
-                        .addOrUpdate(listWrapper);
-
+                Users.username("jasperadmin").attributes().put(listWrapper);
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 200);
     }
@@ -258,15 +190,7 @@ public class UsersServiceTest extends Assert {
     @Test(dependsOnMethods = {"testAddAttributeBatch"})
     public void testGetAttributesWithQueryParam() {
         OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username("jasperadmin")
-                        .attributes()
-                        .param(UsersAttributesParameter.NAME, "attr2")
-                        .param(UsersAttributesParameter.NAME, "attr1")
-                        .get();
-
+                Users.username("jasperadmin").attributes().addParam("name", "attr2").addParam("name", "attr1").get();
         UserAttributesListWrapper attributesListWrapper = operationResult.getEntity();
 
         assertNotEquals(attributesListWrapper, null);

@@ -1,9 +1,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport;
 
-import com.jaspersoft.jasperserver.jaxrs.client.builder.RequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 
 public class ExportRequestBuilder<RequestType, ResponseType>
-        extends RequestBuilder<RequestType, ResponseType> {
+        extends JerseyRequestBuilder<RequestType, ResponseType> {
 
     private static final String URI = "/export";
 

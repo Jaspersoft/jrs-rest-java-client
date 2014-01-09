@@ -1,11 +1,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.RequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 
 import java.util.zip.GZIPOutputStream;
 
-public class ImportRequestBuilder extends RequestBuilder<GZIPOutputStream, StateDto> {
+public class ImportRequestBuilder extends JerseyRequestBuilder<GZIPOutputStream, StateDto> {
 
     private static final String URI = "/import";
 
