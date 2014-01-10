@@ -1,7 +1,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
+import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._export.ExportParameter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -13,13 +15,16 @@ public class ExportServiceTest extends Assert {
     private StateDto stateDto;
 
     @Test
-    public void testCreateExportTask(){
+    public void testCreateExportTask() {
         OperationResult<StateDto> operationResult =
-                Export.newTask()
+                JasperserverRestClient
+                        .authenticate("jasperadmin", "jasperadmin")
+                        .exportService()
+                        .newTask()
                         .user("jasperadmin")
                         .role("ROLE_USER")
-                        //.parameter(ExportParameter.EVERYTHING)
-                        .post();
+                        .parameter(ExportParameter.EVERYTHING)
+                        .create();
 
         stateDto = operationResult.getEntity();
 
@@ -27,9 +32,14 @@ public class ExportServiceTest extends Assert {
     }
 
     @Test(dependsOnMethods = {"testCreateExportTask"})
-    public void testCreateExportTaskAndGet(){
+    public void testCreateExportTaskAndGet() {
         OperationResult<StateDto> operationResult =
-                Export.task(stateDto.getId()).state().get();
+                JasperserverRestClient
+                        .authenticate("jasperadmin", "jasperadmin")
+                        .exportService()
+                        .task(stateDto.getId())
+                        .state();
+
         StateDto state = operationResult.getEntity();
         assertNotEquals(state, null);
     }
@@ -38,19 +48,28 @@ public class ExportServiceTest extends Assert {
     public void testGetExportInputStream() throws InterruptedException, IOException {
         StateDto state;
 
-        while (true){
+        while (true) {
             OperationResult<StateDto> operationResult =
-                    Export.task(stateDto.getId()).state().get();
+                    JasperserverRestClient
+                            .authenticate("jasperadmin", "jasperadmin")
+                            .exportService()
+                            .task(stateDto.getId())
+                            .state();
+
             state = operationResult.getEntity();
-            if ("finished".equals(state.getPhase())){
+            if ("finished".equals(state.getPhase())) {
                 OperationResult<InputStream> operationResult1 =
-                        Export.task(stateDto.getId()).fetch().get();
+                        JasperserverRestClient
+                                .authenticate("jasperadmin", "jasperadmin")
+                                .exportService()
+                                .task(stateDto.getId())
+                                .fetch();
+
                 InputStream inputStream = operationResult1.getEntity();
                 assertNotEquals(inputStream, null);
                 inputStream.close();
                 break;
-            }
-            else {
+            } else {
                 Thread.sleep(500);
             }
         }

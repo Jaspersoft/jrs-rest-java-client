@@ -1,11 +1,11 @@
-package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport;
+package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._export;
 
 public enum ExportParameter {
 
     /**
-     *  <p>Export everything except audit data: all repository resources,
+     *  <p>ExportService everything except audit data: all repository resources,
      *  permissions, report.</p>
-     *  <p>Export everything except audit data: all repository resources,
+     *  <p>ExportService everything except audit data: all repository resources,
      *  permissions, report jobs, users, and roles.</p>
      *  <p>This option is equivalent to:--uris --repository-permissions
      *  --report-jobs --users --roles</p>

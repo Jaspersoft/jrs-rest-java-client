@@ -1,8 +1,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
+import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.ImportParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._import.ImportService;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._import.ImportParameter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -16,11 +18,14 @@ public class ImportServiceTest extends Assert {
 
     @Test
     public void testCreateImportTask() throws URISyntaxException {
-        URL url = Import.class.getClassLoader().getResource("myzip.zip");
+        URL url = ImportService.class.getClassLoader().getResource("myzip.zip");
         OperationResult<StateDto> operationResult =
-                Import.newTask()
+                JasperserverRestClient
+                        .authenticate("jasperadmin", "jasperadmin")
+                        .importService()
+                        .newTask()
                         .parameter(ImportParameter.INCLUDE_ACCESS_EVENTS, true)
-                        .post(new File(url.toURI()));
+                        .create(new File(url.toURI()));
 
         stateDto = operationResult.getEntity();
         assertNotEquals(stateDto, null);
@@ -29,9 +34,13 @@ public class ImportServiceTest extends Assert {
     @Test(dependsOnMethods = {"testCreateImportTask"})
     public void testGetImportTaskState() {
         OperationResult<StateDto> operationResult =
-                Import.task(stateDto.getId()).state().get();
-        StateDto state = operationResult.getEntity();
+                JasperserverRestClient
+                        .authenticate("jasperadmin", "jasperadmin")
+                        .importService()
+                        .task(stateDto.getId())
+                        .state();
 
+        StateDto state = operationResult.getEntity();
         assertNotEquals(state, null);
     }
 
