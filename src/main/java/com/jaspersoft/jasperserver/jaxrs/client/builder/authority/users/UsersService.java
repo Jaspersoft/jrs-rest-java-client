@@ -1,8 +1,6 @@
-package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
+package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users;
 
 import com.jaspersoft.jasperserver.jaxrs.client.builder.AuthenticationCredentials;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.BatchUsersRequestAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.SingleUserRequestAdapter;
 
 public class UsersService {
 

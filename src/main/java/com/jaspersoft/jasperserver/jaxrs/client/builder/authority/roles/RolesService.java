@@ -1,8 +1,6 @@
-package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
+package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles;
 
 import com.jaspersoft.jasperserver.jaxrs.client.builder.AuthenticationCredentials;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles.BatchRolesRequestAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles.SingleRoleRequestAdapter;
 
 public class RolesService {
 

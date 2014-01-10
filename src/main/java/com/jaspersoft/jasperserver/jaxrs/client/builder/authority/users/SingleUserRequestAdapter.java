@@ -49,29 +49,14 @@ public class SingleUserRequestAdapter {
     }
 
     public OperationResult<ClientUser> get(){
-        JerseyRequestBuilder<ClientUser> builder =
-                new JerseyRequestBuilder<ClientUser>(credentials, ClientUser.class);
-        builder
-                .setPath("/users")
-                .setPath(username);
         return builder.get();
     }
 
-    public OperationResult<ClientUser> addOrUpdate(ClientUser user){
-        JerseyRequestBuilder<ClientUser> builder =
-                new JerseyRequestBuilder<ClientUser>(credentials, ClientUser.class);
-        builder
-                .setPath("/users")
-                .setPath(username);
+    public OperationResult<ClientUser> createOrUpdate(ClientUser user){
         return builder.put(user);
     }
 
     public OperationResult<ClientUser> delete(){
-        JerseyRequestBuilder<ClientUser> builder =
-                new JerseyRequestBuilder<ClientUser>(credentials, ClientUser.class);
-        builder
-                .setPath("/users")
-                .setPath(username);
         return builder.delete();
     }
 
@@ -87,7 +72,7 @@ public class SingleUserRequestAdapter {
             return builder.get();
         }
 
-        public OperationResult<ClientUserAttribute> addOrUpdate(ClientUserAttribute attribute){
+        public OperationResult<ClientUserAttribute> createOrUpdate(ClientUserAttribute attribute){
             return builder.put(attribute);
         }
 
@@ -113,7 +98,7 @@ public class SingleUserRequestAdapter {
             return builder.get();
         }
 
-        public OperationResult<UserAttributesListWrapper> addOrUpdate(UserAttributesListWrapper attributesList){
+        public OperationResult<UserAttributesListWrapper> createOrUpdate(UserAttributesListWrapper attributesList){
 
             return builder.put(attributesList);
         }

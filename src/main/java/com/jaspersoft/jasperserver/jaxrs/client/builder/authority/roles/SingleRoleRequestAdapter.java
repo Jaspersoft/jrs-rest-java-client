@@ -23,29 +23,14 @@ public class SingleRoleRequestAdapter {
     }
 
     public OperationResult<ClientRole> get(){
-        JerseyRequestBuilder<ClientRole> builder =
-                new JerseyRequestBuilder<ClientRole>(credentials, ClientRole.class);
-        builder
-                .setPath("/roles")
-                .setPath(rolename);
         return builder.get();
     }
 
-    public OperationResult<ClientRole> addOrUpdate(ClientRole user){
-        JerseyRequestBuilder<ClientRole> builder =
-                new JerseyRequestBuilder<ClientRole>(credentials, ClientRole.class);
-        builder
-                .setPath("/roles")
-                .setPath(rolename);
+    public OperationResult<ClientRole> createOrUpdate(ClientRole user){
         return builder.put(user);
     }
 
     public OperationResult<ClientRole> delete(){
-        JerseyRequestBuilder<ClientRole> builder =
-                new JerseyRequestBuilder<ClientRole>(credentials, ClientRole.class);
-        builder
-                .setPath("/roles")
-                .setPath(rolename);
         return builder.delete();
     }
 

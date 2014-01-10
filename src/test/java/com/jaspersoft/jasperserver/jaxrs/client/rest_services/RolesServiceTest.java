@@ -80,7 +80,7 @@ public class RolesServiceTest extends Assert {
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()
                         .rolename(role.getName())
-                        .addOrUpdate(role);
+                        .createOrUpdate(role);
 
         Response response = operationResult.getResponse();
 
@@ -99,7 +99,7 @@ public class RolesServiceTest extends Assert {
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()
                         .rolename(roleHello.getName())
-                        .addOrUpdate(roleHello);
+                        .createOrUpdate(roleHello);
 
         Response response = operationResult.getResponse();
 

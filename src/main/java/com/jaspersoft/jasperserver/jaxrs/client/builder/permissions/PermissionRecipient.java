@@ -2,7 +2,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.permissions;
 
 public enum PermissionRecipient {
 
-    USER("user"), ROLE("role");
+    USER("user"),
+    ROLE("role");
 
     private String protocol;
 

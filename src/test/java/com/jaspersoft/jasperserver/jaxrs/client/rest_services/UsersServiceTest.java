@@ -101,7 +101,7 @@ public class UsersServiceTest extends Assert {
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
-                        .addOrUpdate(user);
+                        .createOrUpdate(user);
 
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 201);
@@ -124,7 +124,7 @@ public class UsersServiceTest extends Assert {
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
-                        .addOrUpdate(user);
+                        .createOrUpdate(user);
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 200);
 
@@ -181,7 +181,7 @@ public class UsersServiceTest extends Assert {
                         .usersService()
                         .username("jasperadmin")
                         .attribute(clientUserAttribute.getName())
-                        .addOrUpdate(clientUserAttribute);
+                        .createOrUpdate(clientUserAttribute);
 
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 201);
@@ -249,7 +249,7 @@ public class UsersServiceTest extends Assert {
                         .usersService()
                         .username("jasperadmin")
                         .attributes()
-                        .addOrUpdate(listWrapper);
+                        .createOrUpdate(listWrapper);
 
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 200);

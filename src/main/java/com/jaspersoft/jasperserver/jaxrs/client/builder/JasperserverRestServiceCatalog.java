@@ -1,7 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder;
 
-import com.jaspersoft.jasperserver.jaxrs.client.rest_services.RolesService;
-import com.jaspersoft.jasperserver.jaxrs.client.rest_services.UsersService;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles.RolesService;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersService;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionsService;
 
 public class JasperserverRestServiceCatalog {
 
@@ -19,11 +20,11 @@ public class JasperserverRestServiceCatalog {
         return new RolesService(credentials);
     }
 
-    /*public Permissions permissionsService(){
-        return new Permissions(credentials);
+    public PermissionsService permissionsService(){
+        return new PermissionsService(credentials);
     }
 
-    public Export exportService(){
+    /*public Export exportService(){
         return new Export(credentials);
     }
 
