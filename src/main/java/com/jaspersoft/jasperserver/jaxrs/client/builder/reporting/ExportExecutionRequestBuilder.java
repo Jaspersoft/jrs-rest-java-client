@@ -24,7 +24,7 @@ public class ExportExecutionRequestBuilder {
         builder
                 .setPath("reportExecutions")
                 .setPath(requestId)
-                .setPath("export")
+                .setPath("exports")
                 .setPath(exportOutput)
                 .setPath("outputResource");
         return builder.get();
@@ -35,7 +35,7 @@ public class ExportExecutionRequestBuilder {
         builder
                 .setPath("reportExecutions")
                 .setPath(requestId)
-                .setPath("export")
+                .setPath("exports")
                 .setPath(exportOutput)
                 .setPath("attachments")
                 .setPath(attachmentId);
@@ -48,7 +48,7 @@ public class ExportExecutionRequestBuilder {
         builder
                 .setPath("reportExecutions")
                 .setPath(requestId)
-                .setPath("export")
+                .setPath("exports")
                 .setPath(exportOutput)
                 .setPath("status");
         return builder.get();

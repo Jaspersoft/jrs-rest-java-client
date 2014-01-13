@@ -3,6 +3,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.GetDeleteRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.Request;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.RequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 import javax.ws.rs.client.*;
@@ -40,6 +41,9 @@ public class JerseyRequestBuilder<ResponseType>
         this.contentType = MediaType.APPLICATION_JSON;
 
         usersWebTarget = client.target(PROTOCOL + host + ":" + port + "/" + context + URI);
+
+        if (credentials.getSessionId() != null)
+            usersWebTarget.register(new SessionOutputFilter(credentials.getSessionId()));
 
     }
 

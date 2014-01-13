@@ -3,8 +3,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
 import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._import.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._import.ImportParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._import.ImportService;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

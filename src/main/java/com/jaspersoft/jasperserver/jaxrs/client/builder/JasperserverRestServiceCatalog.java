@@ -5,6 +5,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersSer
 import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._export.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._import.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionsService;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportingService;
 
 public class JasperserverRestServiceCatalog {
 
@@ -34,8 +35,8 @@ public class JasperserverRestServiceCatalog {
         return new ImportService(credentials);
     }
 
-    /*public Reporting reportingService(){
-        return new Reporting(credentials);
-    }*/
+    public ReportingService reportingService(){
+        return new ReportingService(credentials);
+    }
 
 }

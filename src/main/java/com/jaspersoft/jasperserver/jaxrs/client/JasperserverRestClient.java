@@ -9,4 +9,8 @@ public class JasperserverRestClient {
         return new JasperserverRestServiceCatalog(new AuthenticationCredentials(username, password));
     }
 
+    public static JasperserverRestServiceCatalog authenticate(String username, String password, String sessionId){
+        return new JasperserverRestServiceCatalog(new AuthenticationCredentials(username, password, sessionId));
+    }
+
 }

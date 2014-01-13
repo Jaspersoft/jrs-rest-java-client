@@ -5,7 +5,6 @@ import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapp
 import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionRecipient;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionsService;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

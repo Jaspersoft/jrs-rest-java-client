@@ -1,17 +1,16 @@
-package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
+package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportExecutionRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.AuthenticationCredentials;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportExecutionRequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.ReportExecutionDescriptor;
 
-public class Reporting {
+public class ReportingService {
 
     private final AuthenticationCredentials credentials;
 
-    public Reporting(AuthenticationCredentials credentials) {
+    public ReportingService(AuthenticationCredentials credentials) {
         this.credentials = credentials;
     }
 
@@ -35,12 +34,12 @@ public class Reporting {
                 .setOutputFormat("html");
 
         OperationResult<ReportExecutionDescriptor> operationResult =
-                Reporting.newReportRequest(request);
+                ReportingService.newReportRequest(request);
         ReportExecutionDescriptor descriptor = operationResult.getEntity();
 
         System.out.println(descriptor);
 */
-        //Reporting.reportRequest(operationResult.getEntity().getRequestId()).export("text/html").status();
+        //ReportingService.reportRequest(operationResult.getEntity().getRequestId()).export("text/html").status();
     }
 
 }

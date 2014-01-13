@@ -18,6 +18,9 @@ public class OperationResult<T> {
     }
 
     public T getEntity(){
+        if (response.getStatus() == 404)
+            return null;
+
         try {
             return response.readEntity(entityClass);
         } catch (Exception e) {
@@ -31,6 +34,10 @@ public class OperationResult<T> {
 
     public ErrorDescriptor getError() {
         return error;
+    }
+
+    public String getSessionId(){
+        return response.getCookies().get("JSESSIONID").getValue();
     }
 
 }
