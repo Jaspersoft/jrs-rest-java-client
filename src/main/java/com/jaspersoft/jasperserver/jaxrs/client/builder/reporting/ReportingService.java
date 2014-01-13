@@ -8,6 +8,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.ReportExecutionDescriptor;
 
 public class ReportingService {
 
+    private static String sessionId;
+
     private final AuthenticationCredentials credentials;
 
     public ReportingService(AuthenticationCredentials credentials) {
@@ -18,28 +20,14 @@ public class ReportingService {
         JerseyRequestBuilder<ReportExecutionDescriptor> builder =
                 new JerseyRequestBuilder<ReportExecutionDescriptor>(credentials, ReportExecutionDescriptor.class);
         builder.setPath("reportExecutions");
-        return builder.post(request);
+        OperationResult<ReportExecutionDescriptor> descriptor = builder.post(request);
+        sessionId = descriptor.getSessionId();
+        return descriptor;
     }
 
     public ReportExecutionRequestBuilder reportRequest(String requestId) {
+        credentials.setSessionId(sessionId);
         return new ReportExecutionRequestBuilder(credentials, requestId);
-    }
-
-
-    public static void main(String[] args) {
-        /*ReportExecutionRequest request = new ReportExecutionRequest();
-        request.setReportUnitUri("/reports/samples/StandardChartsReport");
-        request
-                .setAsync(true)
-                .setOutputFormat("html");
-
-        OperationResult<ReportExecutionDescriptor> operationResult =
-                ReportingService.newReportRequest(request);
-        ReportExecutionDescriptor descriptor = operationResult.getEntity();
-
-        System.out.println(descriptor);
-*/
-        //ReportingService.reportRequest(operationResult.getEntity().getRequestId()).export("text/html").status();
     }
 
 }

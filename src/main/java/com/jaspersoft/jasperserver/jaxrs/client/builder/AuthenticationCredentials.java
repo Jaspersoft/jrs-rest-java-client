@@ -11,12 +11,6 @@ public class AuthenticationCredentials {
         this.password = password;
     }
 
-    public AuthenticationCredentials(String username, String password, String sessionId) {
-        this.username = username;
-        this.password = password;
-        this.sessionId = sessionId;
-    }
-
     public String getUsername() {
         return username;
     }
