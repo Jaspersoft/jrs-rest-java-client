@@ -53,7 +53,7 @@ public class PermissionsServiceTest extends Assert {
         assertNotEquals(permissions, null);
     }
 
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void testAddPermissionBatch() {
         List<RepositoryPermission> permissionList = new ArrayList<RepositoryPermission>();
         permissionList.add(new RepositoryPermission("/themes", "user:/joeuser", 30));
@@ -71,7 +71,7 @@ public class PermissionsServiceTest extends Assert {
         assertEquals(response.getStatus(), 201);
     }
 
-    @Test(dependsOnMethods = {"testAddPermissionBatch"}, enabled = true)
+    @Test(dependsOnMethods = {"testAddPermissionBatch"}, enabled = false)
     public void testUpdatePermissionBatch() {
         List<RepositoryPermission> permissionList = new ArrayList<RepositoryPermission>();
         permissionList.add(new RepositoryPermission("/themes", "user:/joeuser", 1));
@@ -91,7 +91,7 @@ public class PermissionsServiceTest extends Assert {
         assertEquals(response.getStatus(), 200);
     }
 
-    @Test(dependsOnMethods = "testUpdatePermissionBatch", enabled = true)
+    @Test(dependsOnMethods = "testUpdatePermissionBatch", enabled = false)
     public void testDeletePermissionBatch() {
         OperationResult operationResult =
                 JasperserverRestClient
