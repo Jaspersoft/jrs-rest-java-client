@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class OutputResourceDescriptor {
 
     private String contentType;
+    private String fileName;
 
     public String getContentType() {
         return contentType;
@@ -13,6 +14,14 @@ public class OutputResourceDescriptor {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     @Override

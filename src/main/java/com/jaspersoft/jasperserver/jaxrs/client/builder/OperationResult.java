@@ -1,7 +1,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder;
 
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
+import org.codehaus.jackson.map.exc.UnrecognizedPropertyException;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Response;
 
 public class OperationResult<T> {

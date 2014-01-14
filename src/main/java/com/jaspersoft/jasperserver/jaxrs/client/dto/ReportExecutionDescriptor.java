@@ -1,5 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto;
 
+import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -15,9 +17,19 @@ public class ReportExecutionDescriptor {
     private String requestId;
     private String status;
     private Integer totalPages;
+    private ErrorDescriptor errorDescriptor;
 
     @XmlElement(name = "exports", type = ExportDescriptor.class)
     private List<ExportDescriptor> exports;
+
+
+    public ErrorDescriptor getErrorDescriptor() {
+        return errorDescriptor;
+    }
+
+    public void setErrorDescriptor(ErrorDescriptor errorDescriptor) {
+        this.errorDescriptor = errorDescriptor;
+    }
 
     public Integer getCurrentPage() {
         return currentPage;

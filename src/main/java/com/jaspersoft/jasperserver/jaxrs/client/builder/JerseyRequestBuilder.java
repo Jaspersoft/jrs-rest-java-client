@@ -7,7 +7,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.jackson.JacksonFeature;
-//import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
@@ -37,7 +36,6 @@ public class JerseyRequestBuilder<ResponseType>
         client
                 .property(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE)
                 .register(JacksonFeature.class)
-                //.register(MoxyJsonFeature.class)
                 .register(HttpAuthenticationFeature.basic(credentials.getUsername(), credentials.getPassword()));
 
         String host = getUrlProperty("host");
