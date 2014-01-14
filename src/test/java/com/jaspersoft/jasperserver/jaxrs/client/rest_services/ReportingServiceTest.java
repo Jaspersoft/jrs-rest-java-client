@@ -11,11 +11,11 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.InputStream;
 
 public class ReportingServiceTest extends Assert {
 
     private ReportExecutionDescriptor reportExecutionDescriptor;
-    private String sessionId;
 
     @Test(priority = 0)
     public void testCreateNewReportRequest(){
@@ -32,7 +32,6 @@ public class ReportingServiceTest extends Assert {
                         .newReportRequest(request);
 
         reportExecutionDescriptor = operationResult.getEntity();
-        sessionId = operationResult.getSessionId();
 
         assertNotEquals(reportExecutionDescriptor, null);
     }
@@ -65,7 +64,7 @@ public class ReportingServiceTest extends Assert {
 
     @Test(dependsOnMethods = {"testGetReportExecutionDetails"}, priority = 3)
     public void testGetExportOutputResource(){
-        OperationResult<File> operationResult =
+        OperationResult<InputStream> operationResult =
                 JasperserverRestClient
                         .authenticate("jasperadmin", "jasperadmin")
                         .reportingService()
@@ -73,7 +72,7 @@ public class ReportingServiceTest extends Assert {
                         .export("html")
                         .outputResource();
 
-        File file = operationResult.getEntity();
+        InputStream file = operationResult.getEntity();
         assertNotEquals(file, null);
     }
 
@@ -105,7 +104,7 @@ public class ReportingServiceTest extends Assert {
                 String contentType = attachmentDescriptor.getContentType();
                 String fileName = attachmentDescriptor.getFileName();
 
-                OperationResult<File> operationResult1 =
+                OperationResult<InputStream> operationResult1 =
                         JasperserverRestClient
                                 .authenticate("jasperadmin", "jasperadmin")
                                 .reportingService()
@@ -113,7 +112,7 @@ public class ReportingServiceTest extends Assert {
                                 .export(exportDescriptor.getId())
                                 .attachment(fileName);
 
-                File file = operationResult1.getEntity();
+                InputStream file = operationResult1.getEntity();
                 assertNotEquals(file, null);
                 break;
             }

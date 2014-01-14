@@ -13,7 +13,7 @@ public class OperationResult<T> {
     public OperationResult(Response response, Class<T> entityClass){
         this.response = response;
         this.entityClass = entityClass;
-        if (response.getStatus() == 500)
+        if (response.getStatus() == 500 || response.getStatus() == 400)
             error = response.readEntity(ErrorDescriptor.class);
     }
 

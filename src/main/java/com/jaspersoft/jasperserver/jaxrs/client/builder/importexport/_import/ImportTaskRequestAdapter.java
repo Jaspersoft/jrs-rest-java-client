@@ -10,6 +10,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
+import java.io.InputStream;
 import java.util.concurrent.Future;
 
 public class ImportTaskRequestAdapter {
@@ -27,6 +28,14 @@ public class ImportTaskRequestAdapter {
     }
 
     public OperationResult<StateDto> create(File zipArchive){
+        return createImport(zipArchive);
+    }
+
+    public OperationResult<StateDto> create(InputStream zipArchive){
+        return createImport(zipArchive);
+    }
+
+    private OperationResult<StateDto> createImport(Object zipArchive){
         try {
             AsyncInvoker asyncInvoker = builder.getPath().request(MediaType.APPLICATION_JSON).async();
             Future<Response> responseFuture = asyncInvoker.post(Entity.entity(zipArchive, "application/zip"));

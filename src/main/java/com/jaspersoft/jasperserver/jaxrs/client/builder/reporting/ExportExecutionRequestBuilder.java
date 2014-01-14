@@ -6,6 +6,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 
 import java.io.File;
+import java.io.InputStream;
 
 public class ExportExecutionRequestBuilder {
 
@@ -19,8 +20,9 @@ public class ExportExecutionRequestBuilder {
         this.credentials = credentials;
     }
 
-    public OperationResult<File> outputResource(){
-        JerseyRequestBuilder<File> builder = new JerseyRequestBuilder<File>(credentials, File.class);
+    public OperationResult<InputStream> outputResource(){
+        JerseyRequestBuilder<InputStream> builder =
+                new JerseyRequestBuilder<InputStream>(credentials, InputStream.class);
         builder
                 .setPath("reportExecutions")
                 .setPath(requestId)
@@ -30,8 +32,9 @@ public class ExportExecutionRequestBuilder {
         return builder.get();
     }
 
-    public OperationResult<File> attachment(String attachmentId){
-        JerseyRequestBuilder<File> builder = new JerseyRequestBuilder<File>(credentials, File.class);
+    public OperationResult<InputStream> attachment(String attachmentId){
+        JerseyRequestBuilder<InputStream> builder =
+                new JerseyRequestBuilder<InputStream>(credentials, InputStream.class);
         builder
                 .setPath("reportExecutions")
                 .setPath(requestId)

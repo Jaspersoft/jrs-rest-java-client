@@ -36,8 +36,11 @@ public class UsersServiceTest extends Assert {
     @Test(priority = 0)
     public void testGetUser() {
         OperationResult<ClientUser> operationResult =
-                JasperserverRestClient.authenticate("jasperadmin", "jasperadmin")
-                        .usersService().username("jasperadmin").get();
+                JasperserverRestClient
+                        .authenticate("jasperadmin", "jasperadmin")
+                        .usersService()
+                        .username("jasperadmin")
+                        .get();
 
         ClientUser user = operationResult.getEntity();
         assertNotEquals(user, null);
@@ -62,7 +65,8 @@ public class UsersServiceTest extends Assert {
                 JasperserverRestClient
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
-                        .allUsers().get();
+                        .allUsers()
+                        .get();
 
         UsersListWrapper usersListWrapper = operationResult.getEntity();
         assertNotEquals(usersListWrapper, null);

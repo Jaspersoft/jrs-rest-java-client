@@ -4,7 +4,10 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.api.GetDeleteRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.Request;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.RequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
+import com.sun.jersey.api.json.JSONConfiguration;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.jackson.JacksonFeature;
+//import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
@@ -28,10 +31,14 @@ public class JerseyRequestBuilder<ResponseType>
     private String contentType;
 
 
-    public JerseyRequestBuilder(AuthenticationCredentials credentials, Class<ResponseType> responseClass){
+    public JerseyRequestBuilder(AuthenticationCredentials credentials, Class<ResponseType> responseClass) {
 
         Client client = ClientBuilder.newClient();
-        client.register(HttpAuthenticationFeature.basic(credentials.getUsername(), credentials.getPassword()));
+        client
+                .property(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE)
+                .register(JacksonFeature.class)
+                //.register(MoxyJsonFeature.class)
+                .register(HttpAuthenticationFeature.basic(credentials.getUsername(), credentials.getPassword()));
 
         String host = getUrlProperty("host");
         String port = getUrlProperty("port");
@@ -47,7 +54,7 @@ public class JerseyRequestBuilder<ResponseType>
 
     }
 
-    private static String getUrlProperty(String name){
+    private static String getUrlProperty(String name) {
         InputStream is = JerseyRequestBuilder.class.getClassLoader().getResourceAsStream("url.properties");
         Properties properties = new Properties();
         try {
@@ -58,7 +65,7 @@ public class JerseyRequestBuilder<ResponseType>
         return properties.getProperty(name);
     }
 
-    public JerseyRequestBuilder<ResponseType> setPath(String path){
+    public JerseyRequestBuilder<ResponseType> setPath(String path) {
         usersWebTarget = usersWebTarget.path(path);
         return this;
     }
@@ -100,7 +107,7 @@ public class JerseyRequestBuilder<ResponseType>
 
     @Override
     public GetDeleteRequest<ResponseType> addParams(MultivaluedMap<String, String> params) {
-        for (MultivaluedMap.Entry<String, List<String>> entry : params.entrySet()){
+        for (MultivaluedMap.Entry<String, List<String>> entry : params.entrySet()) {
             usersWebTarget = usersWebTarget.queryParam(entry.getKey(), entry.getValue().toArray());
         }
         return this;
@@ -114,7 +121,7 @@ public class JerseyRequestBuilder<ResponseType>
 
     @Override
     public GetDeleteRequest<ResponseType> addMatrixParams(MultivaluedMap<String, String> params) {
-        for (Map.Entry<String, List<String>> entry : params.entrySet()){
+        for (Map.Entry<String, List<String>> entry : params.entrySet()) {
             usersWebTarget = usersWebTarget.matrixParam(entry.getKey(), entry.getValue().toArray());
         }
         return this;

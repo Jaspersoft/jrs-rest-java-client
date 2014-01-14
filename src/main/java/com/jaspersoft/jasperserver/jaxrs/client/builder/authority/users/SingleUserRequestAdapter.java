@@ -52,11 +52,11 @@ public class SingleUserRequestAdapter {
         return builder.get();
     }
 
-    public OperationResult<ClientUser> createOrUpdate(ClientUser user){
+    public OperationResult createOrUpdate(ClientUser user){
         return builder.put(user);
     }
 
-    public OperationResult<ClientUser> delete(){
+    public OperationResult delete(){
         return builder.delete();
     }
 
@@ -72,7 +72,11 @@ public class SingleUserRequestAdapter {
             return builder.get();
         }
 
-        public OperationResult<ClientUserAttribute> createOrUpdate(ClientUserAttribute attribute){
+        public OperationResult delete(){
+            return builder.delete();
+        }
+
+        public OperationResult createOrUpdate(ClientUserAttribute attribute){
             return builder.put(attribute);
         }
 
