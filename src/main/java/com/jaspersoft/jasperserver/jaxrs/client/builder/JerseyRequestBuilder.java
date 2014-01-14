@@ -6,8 +6,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.api.RequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.glassfish.jersey.jackson.JacksonFeature;
-import org.jboss.resteasy.plugins.providers.jackson.ResteasyJacksonProvider;
+
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;

@@ -1,7 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder;
 
 import org.codehaus.jackson.jaxrs.*;
-import org.jboss.resteasy.annotations.providers.NoJackson;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
