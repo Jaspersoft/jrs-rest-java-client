@@ -1,20 +1,19 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.permissions;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.AuthenticationCredentials;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
 public class SinglePermissionRecipientRequestAdapter {
 
     private final JerseyRequestBuilder<RepositoryPermission> builder;
-    private AuthenticationCredentials credentials;
 
 
-    public SinglePermissionRecipientRequestAdapter(AuthenticationCredentials credentials,
+    public SinglePermissionRecipientRequestAdapter(SessionStorage sessionStorage,
                                                    String resourceUri, String recipient) {
-        this.credentials = credentials;
-        this.builder = new JerseyRequestBuilder<RepositoryPermission>(credentials, RepositoryPermission.class);
+
+        this.builder = new JerseyRequestBuilder<RepositoryPermission>(sessionStorage, RepositoryPermission.class);
         this.builder
                 .setPath("/permissions")
                 .setPath(resourceUri)

@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.rest_services.demo;
+package com.jaspersoft.jasperserver.jaxrs.client.restservices.demo;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
@@ -6,6 +6,7 @@ import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.ResponseStatus;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionMask;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionRecipient;
@@ -18,12 +19,18 @@ import javax.ws.rs.core.Response;
 import java.util.HashSet;
 import java.util.Set;
 
+@Test(dependsOnGroups = "UsersServiceTests")
 public class AuthorityDemoTest extends Assert {
 
+    private static JasperserverRestClient client;
     private static ClientUser user;
+
 
     @BeforeClass
     public static void setUp() {
+        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
+        client = new JasperserverRestClient(configuration);
+
         user = new ClientUser()
                 .setUsername("john.doe")
                 .setPassword("12345678")
@@ -35,7 +42,7 @@ public class AuthorityDemoTest extends Assert {
 
     @AfterClass
     public static void tearDown() {
-        JasperserverRestClient
+        client
                 .authenticate("jasperadmin", "jasperadmin")
                 .usersService()
                 .username(user.getUsername())
@@ -54,7 +61,7 @@ public class AuthorityDemoTest extends Assert {
                 .setFullName("John Doe");
 
         OperationResult result =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
@@ -64,7 +71,7 @@ public class AuthorityDemoTest extends Assert {
         assertEquals(response.getStatus(), ResponseStatus.CREATED);
 
         OperationResult<ClientUser> result1 =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
@@ -75,7 +82,7 @@ public class AuthorityDemoTest extends Assert {
         assertEquals(requestedUser.getUsername(), user.getUsername());
 
         OperationResult result2 =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
@@ -85,7 +92,7 @@ public class AuthorityDemoTest extends Assert {
         assertEquals(result2Response.getStatus(), ResponseStatus.NO_CONTENT);
 
         OperationResult<ClientUser> result3 =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
@@ -98,7 +105,7 @@ public class AuthorityDemoTest extends Assert {
     @Test
     public void testCreateUser() {
         OperationResult result =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
@@ -112,7 +119,7 @@ public class AuthorityDemoTest extends Assert {
     public void testUpdateUserToAdminRole() {
 
         ClientRole role =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()
                         .rolename("ROLE_ADMINISTRATOR")
@@ -126,7 +133,7 @@ public class AuthorityDemoTest extends Assert {
         user.setRoleSet(roles);
 
         OperationResult result =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
@@ -144,7 +151,7 @@ public class AuthorityDemoTest extends Assert {
                 .setValue("hello");
 
         OperationResult result =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
@@ -163,7 +170,7 @@ public class AuthorityDemoTest extends Assert {
                 .setUri("/")
                 .setMask(PermissionMask.READ_ONLY);
 
-        OperationResult result = JasperserverRestClient
+        OperationResult result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .permissionsService()
                 .create(permission);
@@ -176,7 +183,7 @@ public class AuthorityDemoTest extends Assert {
     public void testLoginAsNewUserAndGetPermission() {
 
         OperationResult<RepositoryPermission> result =
-                JasperserverRestClient
+                client
                         .authenticate("john.doe", "12345678")
                         .permissionsService()
                         .resource("/")
@@ -190,7 +197,7 @@ public class AuthorityDemoTest extends Assert {
     @Test(dependsOnMethods = {"testAddUserAttribute"})
     public void testDeleteUserAttribute() {
         OperationResult result =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
@@ -205,7 +212,7 @@ public class AuthorityDemoTest extends Assert {
     @Test(dependsOnMethods = {"testLoginAsNewUserAndGetPermission"})
     public void testDeleteUserPermission() {
         OperationResult result =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .permissionsService()
                         .resource("/")
@@ -221,7 +228,7 @@ public class AuthorityDemoTest extends Assert {
             "testDeleteUserPermission", "testDeleteUserAttribute"})
     public void testDeleteUser() {
         OperationResult result =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())

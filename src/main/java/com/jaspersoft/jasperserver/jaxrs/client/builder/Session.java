@@ -2,41 +2,42 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder;
 
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersService;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._export.ExportService;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._import.ImportService;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice.ExportService;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportingService;
 
-public class JasperserverRestServiceCatalog {
+public class Session {
 
-    private AuthenticationCredentials credentials;
+    private SessionStorage storage;
 
-    public JasperserverRestServiceCatalog(AuthenticationCredentials credentials){
-        this.credentials = credentials;
+    public Session(SessionStorage sessionStorage){
+        this.storage = sessionStorage;
     }
 
     public UsersService usersService(){
-        return new UsersService(credentials);
+
+        return new UsersService(storage);
     }
 
     public RolesService rolesService(){
-        return new RolesService(credentials);
+        return new RolesService(storage);
     }
 
     public PermissionsService permissionsService(){
-        return new PermissionsService(credentials);
+        return new PermissionsService(storage);
     }
 
     public ExportService exportService(){
-        return new ExportService(credentials);
+        return new ExportService(storage);
     }
 
     public ImportService importService(){
-        return new ImportService(credentials);
+        return new ImportService(storage);
     }
 
     public ReportingService reportingService(){
-        return new ReportingService(credentials);
+        return new ReportingService(storage);
     }
 
 }

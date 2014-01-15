@@ -1,28 +1,27 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportExecutionStatusEntity;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.AuthenticationCredentials;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
-import java.io.File;
 import java.io.InputStream;
 
 public class ExportExecutionRequestBuilder {
 
-    private final AuthenticationCredentials credentials;
+    private final SessionStorage sessionStorage;
     private String requestId;
     private String exportOutput;
 
-    public ExportExecutionRequestBuilder(AuthenticationCredentials credentials, String requestId, String exportOutput){
+    public ExportExecutionRequestBuilder(SessionStorage sessionStorage, String requestId, String exportOutput){
         this.requestId = requestId;
         this.exportOutput = exportOutput;
-        this.credentials = credentials;
+        this.sessionStorage = sessionStorage;
     }
 
     public OperationResult<InputStream> outputResource(){
         JerseyRequestBuilder<InputStream> builder =
-                new JerseyRequestBuilder<InputStream>(credentials, InputStream.class);
+                new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
         builder
                 .setPath("reportExecutions")
                 .setPath(requestId)
@@ -34,7 +33,7 @@ public class ExportExecutionRequestBuilder {
 
     public OperationResult<InputStream> attachment(String attachmentId){
         JerseyRequestBuilder<InputStream> builder =
-                new JerseyRequestBuilder<InputStream>(credentials, InputStream.class);
+                new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
         builder
                 .setPath("reportExecutions")
                 .setPath(requestId)
@@ -47,7 +46,7 @@ public class ExportExecutionRequestBuilder {
 
     public OperationResult<ReportExecutionStatusEntity> status(){
         JerseyRequestBuilder<ReportExecutionStatusEntity> builder =
-                new JerseyRequestBuilder<ReportExecutionStatusEntity>(credentials, ReportExecutionStatusEntity.class);
+                new JerseyRequestBuilder<ReportExecutionStatusEntity>(sessionStorage, ReportExecutionStatusEntity.class);
         builder
                 .setPath("reportExecutions")
                 .setPath(requestId)

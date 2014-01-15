@@ -1,9 +1,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles;
 
 import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.AuthenticationCredentials;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -11,14 +11,11 @@ import javax.ws.rs.core.MultivaluedMap;
 public class BatchRolesRequestAdapter {
 
     private final JerseyRequestBuilder<RolesListWrapper> builder;
-    private AuthenticationCredentials credentials;
-
     private MultivaluedMap<String, String> params;
 
 
-    public BatchRolesRequestAdapter(AuthenticationCredentials credentials) {
-        this.credentials = credentials;
-        this.builder = new JerseyRequestBuilder<RolesListWrapper>(credentials, RolesListWrapper.class);
+    public BatchRolesRequestAdapter(SessionStorage sessionStorage) {
+        this.builder = new JerseyRequestBuilder<RolesListWrapper>(sessionStorage, RolesListWrapper.class);
         this.builder.setPath("roles");
         params = new MultivaluedHashMap<String, String>();
     }

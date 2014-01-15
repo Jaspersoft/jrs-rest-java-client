@@ -1,21 +1,21 @@
-package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._export;
+package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice;
 
 import com.jaspersoft.jasperserver.dto.importexport.ExportTaskDto;
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.AuthenticationCredentials;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExportTaskBuilder {
 
-    private final AuthenticationCredentials credentials;
+    private final SessionStorage sessionStorage;
     private final ExportTaskDto exportTaskDto;
 
-    public ExportTaskBuilder(AuthenticationCredentials credentials){
-        this.credentials = credentials;
+    public ExportTaskBuilder(SessionStorage sessionStorage){
+        this.sessionStorage = sessionStorage;
 
         this.exportTaskDto = new ExportTaskDto();
         this.exportTaskDto.setParameters(new ArrayList<String>());
@@ -67,7 +67,7 @@ public class ExportTaskBuilder {
 
     public OperationResult<StateDto> create(){
         JerseyRequestBuilder<StateDto> builder =
-                new JerseyRequestBuilder<StateDto>(credentials, StateDto.class);
+                new JerseyRequestBuilder<StateDto>(sessionStorage, StateDto.class);
         builder.setPath("export");
         return builder.post(exportTaskDto);
     }

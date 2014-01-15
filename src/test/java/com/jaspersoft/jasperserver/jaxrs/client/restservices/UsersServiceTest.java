@@ -1,15 +1,17 @@
-package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
+package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.dto.authority.UserAttributesListWrapper;
 import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersAttributesParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersParameter;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
@@ -17,26 +19,38 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Test(groups = {"UsersServiceTests"})
 public class UsersServiceTest extends Assert {
 
-    @AfterClass
-    public void tearDown() {
-        OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username("jasperadmin")
-                        .attributes()
-                        .delete();
+    private static JasperserverRestClient client;
 
-        Response response = operationResult.getResponse();
-        assertEquals(response.getStatus(), 204);
+    @BeforeClass
+    public static void setUp() {
+        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
+        client = new JasperserverRestClient(configuration);
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .usersService()
+                .username("jasperadmin")
+                .attributes()
+                .delete();
+
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .usersService()
+                .username("demo")
+                .delete();
+
     }
 
     @Test(priority = 0)
     public void testGetUser() {
         OperationResult<ClientUser> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username("jasperadmin")
@@ -50,7 +64,7 @@ public class UsersServiceTest extends Assert {
     @Test(priority = 1)
     public void testGetNonexistentUser() {
         OperationResult<ClientUser> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username("demo").get();
@@ -62,7 +76,7 @@ public class UsersServiceTest extends Assert {
     @Test
     public void testGetAllUsers() {
         OperationResult<UsersListWrapper> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .allUsers()
@@ -76,7 +90,7 @@ public class UsersServiceTest extends Assert {
     @Test
     public void testGetAllUsersWithQueryParams() {
         OperationResult<UsersListWrapper> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .allUsers()
@@ -100,8 +114,8 @@ public class UsersServiceTest extends Assert {
                 .setPreviousPasswordChangeTime(new Date(1348142595199L))
                 .setUsername("demo");
 
-        OperationResult<ClientUser> operationResult =
-                JasperserverRestClient
+        OperationResult operationResult =
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
@@ -123,8 +137,8 @@ public class UsersServiceTest extends Assert {
                 .setPreviousPasswordChangeTime(new Date(1348142595199L))
                 .setUsername("demo");
 
-        OperationResult<ClientUser> operationResult =
-                JasperserverRestClient
+        OperationResult operationResult =
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
@@ -133,7 +147,7 @@ public class UsersServiceTest extends Assert {
         assertEquals(response.getStatus(), 200);
 
         OperationResult<ClientUser> operationResult1 =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username(user.getUsername())
@@ -147,8 +161,8 @@ public class UsersServiceTest extends Assert {
     @Test(dependsOnMethods = {"testUpdateUser"})
     public void testDeleteUser() {
 
-        OperationResult<ClientUser> operationResult =
-                JasperserverRestClient
+        OperationResult operationResult =
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username("demo")
@@ -161,7 +175,7 @@ public class UsersServiceTest extends Assert {
     @Test
     public void testGetEmptyUserAttributesList() {
         OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username("jasperadmin")
@@ -179,8 +193,8 @@ public class UsersServiceTest extends Assert {
                 .setName("testAttribute")
                 .setValue("hello");
 
-        OperationResult<ClientUserAttribute> operationResult =
-                JasperserverRestClient
+        OperationResult operationResult =
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username("jasperadmin")
@@ -194,7 +208,7 @@ public class UsersServiceTest extends Assert {
     @Test(dependsOnMethods = {"testAddUserAttributeSingle"})
     public void testGetUserAttributesList() {
         OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username("jasperadmin")
@@ -210,7 +224,7 @@ public class UsersServiceTest extends Assert {
     @Test(dependsOnMethods = {"testAddUserAttributeSingle"})
     public void testGetUserAttributeSingle() {
         OperationResult<ClientUserAttribute> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username("jasperadmin")
@@ -225,7 +239,7 @@ public class UsersServiceTest extends Assert {
     @Test(dependsOnMethods = {"testGetUserAttributesList", "testGetUserAttributeSingle"})
     public void testDeleteUserAttributes() {
         OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username("jasperadmin")
@@ -248,7 +262,7 @@ public class UsersServiceTest extends Assert {
 
         UserAttributesListWrapper listWrapper = new UserAttributesListWrapper(userAttributes);
         OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username("jasperadmin")
@@ -262,7 +276,7 @@ public class UsersServiceTest extends Assert {
     @Test(dependsOnMethods = {"testAddAttributeBatch"})
     public void testGetAttributesWithQueryParam() {
         OperationResult<UserAttributesListWrapper> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username("jasperadmin")

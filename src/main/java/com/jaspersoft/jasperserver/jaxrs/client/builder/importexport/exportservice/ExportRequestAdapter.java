@@ -1,9 +1,9 @@
-package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._export;
+package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.AuthenticationCredentials;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
 import javax.ws.rs.client.AsyncInvoker;
 import javax.ws.rs.core.Response;
@@ -13,18 +13,18 @@ import java.util.concurrent.Future;
 public class ExportRequestAdapter {
 
     private static final String STATE_URI = "/state";
-    private final AuthenticationCredentials credentials;
+    private final SessionStorage sessionStorage;
 
     private String taskId;
 
-    public ExportRequestAdapter(AuthenticationCredentials credentials, String taskId){
-        this.credentials = credentials;
+    public ExportRequestAdapter(SessionStorage sessionStorage, String taskId){
+        this.sessionStorage = sessionStorage;
         this.taskId = taskId;
     }
 
     public OperationResult<StateDto> state(){
         JerseyRequestBuilder<StateDto> builder =
-                new JerseyRequestBuilder<StateDto>(credentials, StateDto.class);
+                new JerseyRequestBuilder<StateDto>(sessionStorage, StateDto.class);
         builder
                 .setPath("export")
                 .setPath(taskId)
@@ -35,7 +35,7 @@ public class ExportRequestAdapter {
 
     public OperationResult<InputStream> fetch(){
         JerseyRequestBuilder<InputStream> builder =
-                new JerseyRequestBuilder<InputStream>(credentials, InputStream.class);
+                new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
         builder
                 .setPath("export")
                 .setPath(taskId)
@@ -44,7 +44,10 @@ public class ExportRequestAdapter {
         try {
             AsyncInvoker asyncInvoker = builder.getPath().request("application/zip").async();
             Future<Response> responseFuture = asyncInvoker.get();
-            return new OperationResult<InputStream>(responseFuture.get(), InputStream.class);
+            OperationResult<InputStream> result =
+                    new OperationResult<InputStream>(responseFuture.get(), InputStream.class);
+            sessionStorage.setSessionId(result.getSessionId());
+            return result;
         } catch (Exception e) {
             return null;
         }

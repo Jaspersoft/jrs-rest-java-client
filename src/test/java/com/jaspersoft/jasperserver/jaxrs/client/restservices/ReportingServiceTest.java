@@ -1,21 +1,32 @@
-package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
+package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportExecutionRequest;
 import com.jaspersoft.jasperserver.dto.reports.ReportExecutionStatusEntity;
 import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.Session;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.AttachmentDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.ExportDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.ReportExecutionDescriptor;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.InputStream;
 
 public class ReportingServiceTest extends Assert {
 
+    private static Session session;
     private ReportExecutionDescriptor reportExecutionDescriptor;
+
+
+    @BeforeClass
+    public static void setUp() {
+        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
+        JasperserverRestClient client = new JasperserverRestClient(configuration);
+        session = client.authenticate("jasperadmin", "jasperadmin");
+    }
 
     @Test(priority = 0)
     public void testCreateNewReportRequest(){
@@ -26,8 +37,7 @@ public class ReportingServiceTest extends Assert {
                 .setOutputFormat("html");
 
         OperationResult<ReportExecutionDescriptor> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
+                session
                         .reportingService()
                         .newReportRequest(request);
 
@@ -39,8 +49,7 @@ public class ReportingServiceTest extends Assert {
     @Test(dependsOnMethods = {"testCreateNewReportRequest"}, priority = 1)
     public void testGetReportExecutionStatus(){
         OperationResult<ReportExecutionStatusEntity> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
+                session
                         .reportingService()
                         .reportRequest(reportExecutionDescriptor.getRequestId())
                         .status();
@@ -52,8 +61,7 @@ public class ReportingServiceTest extends Assert {
     @Test(dependsOnMethods = {"testGetReportExecutionStatus"}, priority = 2)
     public void testGetReportExecutionDetails(){
         OperationResult<ReportExecutionDescriptor> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
+                session
                         .reportingService()
                         .reportRequest(reportExecutionDescriptor.getRequestId())
                         .executionDetails();
@@ -65,8 +73,7 @@ public class ReportingServiceTest extends Assert {
     @Test(dependsOnMethods = {"testGetReportExecutionDetails"}, priority = 3)
     public void testGetExportOutputResource(){
         OperationResult<InputStream> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
+                session
                         .reportingService()
                         .reportRequest(reportExecutionDescriptor.getRequestId())
                         .export("html")
@@ -79,8 +86,7 @@ public class ReportingServiceTest extends Assert {
     @Test(dependsOnMethods = {"testGetExportOutputResource"}, priority = 4)
     public void testGetExportAttachment() throws InterruptedException {
         OperationResult<ReportExecutionDescriptor> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
+                session
                         .reportingService()
                         .reportRequest(reportExecutionDescriptor.getRequestId())
                         .executionDetails();
@@ -88,8 +94,7 @@ public class ReportingServiceTest extends Assert {
         ReportExecutionDescriptor descriptor = operationResult.getEntity();
 
         OperationResult<ReportExecutionStatusEntity> operationResultStatus =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
+                session
                         .reportingService()
                         .reportRequest(reportExecutionDescriptor.getRequestId())
                         .status();
@@ -105,8 +110,7 @@ public class ReportingServiceTest extends Assert {
                 String fileName = attachmentDescriptor.getFileName();
 
                 OperationResult<InputStream> operationResult1 =
-                        JasperserverRestClient
-                                .authenticate("jasperadmin", "jasperadmin")
+                        session
                                 .reportingService()
                                 .reportRequest(reportExecutionDescriptor.getRequestId())
                                 .export(exportDescriptor.getId())
@@ -126,8 +130,7 @@ public class ReportingServiceTest extends Assert {
     @Test(dependsOnMethods = {"testGetExportAttachment"}, priority = 5)
     public void testGetReportExportStatus(){
         OperationResult<ReportExecutionStatusEntity> operationResult =
-                JasperserverRestClient
-                        .authenticate("jasperadmin", "jasperadmin")
+                session
                         .reportingService()
                         .reportRequest(reportExecutionDescriptor.getRequestId())
                         .export("html")

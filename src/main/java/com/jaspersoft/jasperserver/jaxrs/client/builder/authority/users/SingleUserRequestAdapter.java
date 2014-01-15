@@ -3,9 +3,9 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users;
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.dto.authority.UserAttributesListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.AuthenticationCredentials;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -13,14 +13,14 @@ import javax.ws.rs.core.MultivaluedMap;
 public class SingleUserRequestAdapter {
 
     private final JerseyRequestBuilder<ClientUser> builder;
-    private AuthenticationCredentials credentials;
+    private SessionStorage sessionStorage;
 
     private String username;
 
 
-    public SingleUserRequestAdapter(AuthenticationCredentials credentials, String username) {
-        this.credentials = credentials;
-        this.builder = new JerseyRequestBuilder<ClientUser>(credentials, ClientUser.class);
+    public SingleUserRequestAdapter(SessionStorage sessionStorage, String username) {
+        this.sessionStorage = sessionStorage;
+        this.builder = new JerseyRequestBuilder<ClientUser>(sessionStorage, ClientUser.class);
         this.builder
                 .setPath("/users")
                 .setPath(username);
@@ -29,7 +29,7 @@ public class SingleUserRequestAdapter {
 
     public SingleAttributeInterfaceAdapter attribute(String attributeName){
         JerseyRequestBuilder<ClientUserAttribute> builder =
-                new JerseyRequestBuilder<ClientUserAttribute>(credentials, ClientUserAttribute.class);
+                new JerseyRequestBuilder<ClientUserAttribute>(sessionStorage, ClientUserAttribute.class);
         builder
                 .setPath("/users")
                 .setPath(username)
@@ -40,7 +40,7 @@ public class SingleUserRequestAdapter {
 
     public BatchAttributeInterfaceAdapter attributes(){
         JerseyRequestBuilder<UserAttributesListWrapper> builder =
-                new JerseyRequestBuilder<UserAttributesListWrapper>(credentials, UserAttributesListWrapper.class);
+                new JerseyRequestBuilder<UserAttributesListWrapper>(sessionStorage, UserAttributesListWrapper.class);
         builder
                 .setPath("/users")
                 .setPath(username)

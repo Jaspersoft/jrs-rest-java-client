@@ -1,10 +1,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder;
 
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
-import org.codehaus.jackson.map.exc.UnrecognizedPropertyException;
 
-import javax.ws.rs.ProcessingException;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 public class OperationResult<T> {
 
@@ -12,14 +12,14 @@ public class OperationResult<T> {
     private Class<T> entityClass;
     private ErrorDescriptor error;
 
-    public OperationResult(Response response, Class<T> entityClass){
+    public OperationResult(Response response, Class<T> entityClass) {
         this.response = response;
         this.entityClass = entityClass;
         if (response.getStatus() == 500 || response.getStatus() == 400)
             error = response.readEntity(ErrorDescriptor.class);
     }
 
-    public T getEntity(){
+    public T getEntity() {
         if (response.getStatus() == 404)
             return null;
 
@@ -30,7 +30,7 @@ public class OperationResult<T> {
         }
     }
 
-    public Response getResponse(){
+    public Response getResponse() {
         return response;
     }
 
@@ -38,8 +38,15 @@ public class OperationResult<T> {
         return error;
     }
 
-    public String getSessionId(){
-        return response.getCookies().get("JSESSIONID").getValue();
+    public String getSessionId() {
+        Map<String, NewCookie> cookies = response.getCookies();
+        NewCookie jsessionid;
+
+        if (cookies != null &&
+                (jsessionid = cookies.get("JSESSIONID")) != null)
+            return jsessionid.getValue();
+        else
+            return null;
     }
 
 }

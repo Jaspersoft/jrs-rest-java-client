@@ -1,11 +1,13 @@
-package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
+package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
 import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._import.ImportParameter;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._import.ImportService;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice.ImportParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice.ImportService;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -14,13 +16,20 @@ import java.net.URL;
 
 public class ImportServiceTest extends Assert {
 
+    private static JasperserverRestClient client;
     private StateDto stateDto;
+
+    @BeforeClass
+    public static void setUp() {
+        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
+        client = new JasperserverRestClient(configuration);
+    }
 
     @Test
     public void testCreateImportTask() throws URISyntaxException {
         URL url = ImportService.class.getClassLoader().getResource("myzip.zip");
         OperationResult<StateDto> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .importService()
                         .newTask()
@@ -34,7 +43,7 @@ public class ImportServiceTest extends Assert {
     @Test(dependsOnMethods = {"testCreateImportTask"})
     public void testGetImportTaskState() {
         OperationResult<StateDto> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .importService()
                         .task(stateDto.getId())

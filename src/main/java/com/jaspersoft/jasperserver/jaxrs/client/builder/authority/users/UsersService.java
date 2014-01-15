@@ -1,22 +1,22 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users;
 
-import com.jaspersoft.jasperserver.jaxrs.client.builder.AuthenticationCredentials;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
 public class UsersService {
 
-    private final AuthenticationCredentials credentials;
+    private final SessionStorage sessionStorage;
 
-    public UsersService(AuthenticationCredentials credentials) {
-        this.credentials = credentials;
+    public UsersService(SessionStorage sessionStorage) {
+        this.sessionStorage = sessionStorage;
     }
 
     public SingleUserRequestAdapter username(String username) {
-        return new SingleUserRequestAdapter(credentials, username);
+        return new SingleUserRequestAdapter(sessionStorage, username);
     }
 
 
     public BatchUsersRequestAdapter allUsers(){
-        return new BatchUsersRequestAdapter(credentials);
+        return new BatchUsersRequestAdapter(sessionStorage);
     }
 
 }

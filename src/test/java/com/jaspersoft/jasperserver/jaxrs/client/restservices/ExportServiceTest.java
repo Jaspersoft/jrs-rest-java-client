@@ -1,10 +1,12 @@
-package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
+package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
 import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._export.ExportParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice.ExportParameter;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -12,12 +14,19 @@ import java.io.InputStream;
 
 public class ExportServiceTest extends Assert {
 
+    private static JasperserverRestClient client;
     private StateDto stateDto;
+
+    @BeforeClass
+    public static void setUp() {
+        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
+        client = new JasperserverRestClient(configuration);
+    }
 
     @Test
     public void testCreateExportTask() {
         OperationResult<StateDto> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .exportService()
                         .newTask()
@@ -34,7 +43,7 @@ public class ExportServiceTest extends Assert {
     @Test(dependsOnMethods = {"testCreateExportTask"})
     public void testCreateExportTaskAndGet() {
         OperationResult<StateDto> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .exportService()
                         .task(stateDto.getId())
@@ -50,7 +59,7 @@ public class ExportServiceTest extends Assert {
 
         while (true) {
             OperationResult<StateDto> operationResult =
-                    JasperserverRestClient
+                    client
                             .authenticate("jasperadmin", "jasperadmin")
                             .exportService()
                             .task(stateDto.getId())
@@ -59,7 +68,7 @@ public class ExportServiceTest extends Assert {
             state = operationResult.getEntity();
             if ("finished".equals(state.getPhase())) {
                 OperationResult<InputStream> operationResult1 =
-                        JasperserverRestClient
+                        client
                                 .authenticate("jasperadmin", "jasperadmin")
                                 .exportService()
                                 .task(stateDto.getId())

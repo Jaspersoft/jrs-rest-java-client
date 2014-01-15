@@ -1,12 +1,13 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.GetDeleteRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.Request;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.RequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
-import com.sun.jersey.api.json.JSONConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.providers.CollectionJsonProvider;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-
+import org.glassfish.jersey.jackson.JacksonFeature;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
@@ -18,50 +19,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class JerseyRequestBuilder<ResponseType>
-        implements RequestBuilder<ResponseType> {
+public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<ResponseType> {
 
-    private static final String PROTOCOL = "http://";
-    private static final String URI = "/rest_v2";
-
+    private final SessionStorage sessionStorage;
     private WebTarget usersWebTarget;
-
     private final Class<ResponseType> responseClass;
     private String contentType;
 
 
-    public JerseyRequestBuilder(AuthenticationCredentials credentials, Class<ResponseType> responseClass) {
+    public JerseyRequestBuilder(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
 
+        this.sessionStorage = sessionStorage;
+
+        AuthenticationCredentials credentials = sessionStorage.getCredentials();
         Client client = ClientBuilder.newClient();
         client
-                .property(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE)
-                .register(CustomJsonFeature.class)
-                //.register(JacksonFeature.class)
+                .register(CollectionJsonProvider.class)
+                .register(JacksonFeature.class)
                 .register(HttpAuthenticationFeature.basic(credentials.getUsername(), credentials.getPassword()));
-
-        String host = getUrlProperty("host");
-        String port = getUrlProperty("port");
-        String context = getUrlProperty("context");
 
         this.responseClass = responseClass;
         this.contentType = MediaType.APPLICATION_JSON;
 
-        usersWebTarget = client.target(PROTOCOL + host + ":" + port + "/" + context + URI);
+        String restServerUrl = sessionStorage.getConfiguration().getRestServerUrl();
+        usersWebTarget = client.target(restServerUrl);
 
-        if (credentials.getSessionId() != null)
-            usersWebTarget.register(new SessionOutputFilter(credentials.getSessionId()));
+        if (sessionStorage.getSessionId() != null)
+            usersWebTarget.register(new SessionOutputFilter(sessionStorage.getSessionId()));
 
-    }
-
-    private static String getUrlProperty(String name) {
-        InputStream is = JerseyRequestBuilder.class.getClassLoader().getResourceAsStream("url.properties");
-        Properties properties = new Properties();
-        try {
-            properties.load(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return properties.getProperty(name);
     }
 
     public JerseyRequestBuilder<ResponseType> setPath(String path) {
@@ -85,7 +70,10 @@ public class JerseyRequestBuilder<ResponseType>
         try {
             Invocation.Builder request = usersWebTarget.request(contentType);
             Response response = request.get();
-            return new OperationResult<ResponseType>(response, responseClass);
+            OperationResult<ResponseType> result =
+                    new OperationResult<ResponseType>(response, responseClass);
+            this.sessionStorage.setSessionId(result.getSessionId());
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -95,7 +83,10 @@ public class JerseyRequestBuilder<ResponseType>
     public OperationResult<ResponseType> delete() {
         Invocation.Builder request = usersWebTarget.request();
         Response response = request.delete();
-        return new OperationResult<ResponseType>(response, responseClass);
+        OperationResult<ResponseType> result =
+                new OperationResult<ResponseType>(response, responseClass);
+        this.sessionStorage.setSessionId(result.getSessionId());
+        return result;
     }
 
     @Override
@@ -130,14 +121,20 @@ public class JerseyRequestBuilder<ResponseType>
     public <RequestType> OperationResult<ResponseType> put(RequestType entity) {
         Invocation.Builder request = usersWebTarget.request();
         Response response = request.put(Entity.entity(entity, contentType));
-        return new OperationResult<ResponseType>(response, responseClass);
+        OperationResult<ResponseType> result =
+                new OperationResult<ResponseType>(response, responseClass);
+        this.sessionStorage.setSessionId(result.getSessionId());
+        return result;
     }
 
     @Override
     public <RequestType> OperationResult<ResponseType> post(RequestType entity) {
         Invocation.Builder request = usersWebTarget.request();
         Response response = request.post(Entity.entity(entity, contentType));
-        return new OperationResult<ResponseType>(response, responseClass);
+        OperationResult<ResponseType> result =
+                new OperationResult<ResponseType>(response, responseClass);
+        this.sessionStorage.setSessionId(result.getSessionId());
+        return result;
     }
 
     @Override

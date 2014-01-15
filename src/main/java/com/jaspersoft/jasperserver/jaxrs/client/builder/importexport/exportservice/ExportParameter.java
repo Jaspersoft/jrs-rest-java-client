@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._export;
+package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice;
 
 public enum ExportParameter {
 

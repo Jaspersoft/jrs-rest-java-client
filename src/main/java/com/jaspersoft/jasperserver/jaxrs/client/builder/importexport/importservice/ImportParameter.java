@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport._import;
+package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice;
 
 public enum ImportParameter {
     /**

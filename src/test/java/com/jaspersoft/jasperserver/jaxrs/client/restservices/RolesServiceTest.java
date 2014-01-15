@@ -1,21 +1,31 @@
-package com.jaspersoft.jasperserver.jaxrs.client.rest_services;
+package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
 import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles.RolesParameter;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
 
 public class RolesServiceTest extends Assert {
 
+    private static JasperserverRestClient client;
+
+    @BeforeClass
+    public static void setUp() {
+        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
+        client = new JasperserverRestClient(configuration);
+    }
+
     @Test(priority = 0)
     public void testGetRole() {
         OperationResult<ClientRole> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()
                         .rolename("ROLE_ADMINISTRATOR")
@@ -29,7 +39,7 @@ public class RolesServiceTest extends Assert {
     @Test(priority = 1)
     public void testGetNonexistentRole() {
         OperationResult<ClientRole> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()
                         .rolename("ROLE_HELLO")
@@ -42,7 +52,7 @@ public class RolesServiceTest extends Assert {
     @Test
     public void testGetAllRoles() {
         OperationResult<RolesListWrapper> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()
                         .allRoles()
@@ -56,7 +66,7 @@ public class RolesServiceTest extends Assert {
     @Test
     public void testGetAllRolesWithQueryParams() {
         OperationResult<RolesListWrapper> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()
                         .allRoles()
@@ -76,7 +86,7 @@ public class RolesServiceTest extends Assert {
                 .setExternallyDefined(true);
 
         OperationResult<ClientRole> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()
                         .rolename(role.getName())
@@ -95,7 +105,7 @@ public class RolesServiceTest extends Assert {
                 .setExternallyDefined(false);
 
         OperationResult<ClientRole> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()
                         .rolename(roleHello.getName())
@@ -110,7 +120,7 @@ public class RolesServiceTest extends Assert {
     public void testDeleteRole() {
 
         OperationResult<ClientRole> operationResult =
-                JasperserverRestClient
+                client
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()
                         .rolename("ROLE_HELLO")
