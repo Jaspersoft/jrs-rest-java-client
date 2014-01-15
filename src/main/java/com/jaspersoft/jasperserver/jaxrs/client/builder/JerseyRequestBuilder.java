@@ -1,6 +1,5 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder;
 
-import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.GetDeleteRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.Request;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.RequestBuilder;
@@ -13,11 +12,8 @@ import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<ResponseType> {
 
