@@ -27,7 +27,7 @@ public class ImportServiceTest extends Assert {
 
     @Test
     public void testCreateImportTask() throws URISyntaxException {
-        URL url = ImportService.class.getClassLoader().getResource("myzip.zip");
+        URL url = ImportService.class.getClassLoader().getResource("testExportArchive.zip");
         OperationResult<StateDto> operationResult =
                 client
                         .authenticate("jasperadmin", "jasperadmin")

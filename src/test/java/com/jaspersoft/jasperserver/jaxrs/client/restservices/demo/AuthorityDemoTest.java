@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 import java.util.HashSet;
 import java.util.Set;
 
-@Test(dependsOnGroups = "UsersServiceTests")
+@Test(groups = "AuthorityDemo", dependsOnGroups = "UsersServiceTests")
 public class AuthorityDemoTest extends Assert {
 
     private static JasperserverRestClient client;
@@ -47,59 +47,6 @@ public class AuthorityDemoTest extends Assert {
                 .usersService()
                 .username(user.getUsername())
                 .delete();
-    }
-
-    @Test(enabled = false)
-    public void testSomething() {
-
-        ClientUser user = new ClientUser()
-                .setUsername("john.doe")
-                .setPassword("12345678")
-                .setEmailAddress("john.doe@email.net")
-                .setEnabled(true)
-                .setExternallyDefined(false)
-                .setFullName("John Doe");
-
-        OperationResult result =
-                client
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username(user.getUsername())
-                        .createOrUpdate(user);
-
-        Response response = result.getResponse();
-        assertEquals(response.getStatus(), ResponseStatus.CREATED);
-
-        OperationResult<ClientUser> result1 =
-                client
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username(user.getUsername())
-                        .get();
-
-        ClientUser requestedUser = result1.getEntity();
-        assertNotEquals(requestedUser, null);
-        assertEquals(requestedUser.getUsername(), user.getUsername());
-
-        OperationResult result2 =
-                client
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username(user.getUsername())
-                        .delete();
-
-        Response result2Response = result2.getResponse();
-        assertEquals(result2Response.getStatus(), ResponseStatus.NO_CONTENT);
-
-        OperationResult<ClientUser> result3 =
-                client
-                        .authenticate("jasperadmin", "jasperadmin")
-                        .usersService()
-                        .username(user.getUsername())
-                        .get();
-
-        requestedUser = result3.getEntity();
-        assertEquals(requestedUser, null);
     }
 
     @Test

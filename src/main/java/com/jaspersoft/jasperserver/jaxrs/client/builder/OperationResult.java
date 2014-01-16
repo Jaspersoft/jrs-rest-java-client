@@ -12,6 +12,8 @@ public class OperationResult<T> {
     private Class<T> entityClass;
     private ErrorDescriptor error;
 
+    private T entity;
+
     public OperationResult(Response response, Class<T> entityClass) {
         this.response = response;
         this.entityClass = entityClass;
@@ -24,7 +26,9 @@ public class OperationResult<T> {
             return null;
 
         try {
-            return response.readEntity(entityClass);
+            if (entity == null)
+                entity = response.readEntity(entityClass);
+            return entity;
         } catch (Exception e) {
             return null;
         }
