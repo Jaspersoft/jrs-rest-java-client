@@ -41,7 +41,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                 OperationResult<ReportExecutionDescriptor> operationResult =
                         session
                                 .reportingService()
-                                .newReportRequest(request);
+                                .newReportExecutionRequest(request);
 
                 reportExecutionDescriptor = operationResult.getEntity();
 
@@ -52,7 +52,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                 OperationResult<ReportExecutionStatusEntity> operationResult =
                         session
                                 .reportingService()
-                                .reportRequest(reportExecutionDescriptor.getRequestId())
+                                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
                                 .status();
 
                 ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
@@ -63,7 +63,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                 OperationResult<ReportExecutionDescriptor> operationResult =
                         session
                                 .reportingService()
-                                .reportRequest(reportExecutionDescriptor.getRequestId())
+                                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
                                 .executionDetails();
 
                 ReportExecutionDescriptor descriptor = operationResult.getEntity();
@@ -74,7 +74,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                 OperationResult<InputStream> operationResult =
                         session
                                 .reportingService()
-                                .reportRequest(reportExecutionDescriptor.getRequestId())
+                                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
                                 .export("html")
                                 .outputResource();
 
@@ -86,7 +86,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                 OperationResult<ReportExecutionDescriptor> operationResult =
                         session
                                 .reportingService()
-                                .reportRequest(reportExecutionDescriptor.getRequestId())
+                                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
                                 .executionDetails();
 
                 ReportExecutionDescriptor descriptor = operationResult.getEntity();
@@ -94,7 +94,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                 OperationResult<ReportExecutionStatusEntity> operationResultStatus =
                         session
                                 .reportingService()
-                                .reportRequest(reportExecutionDescriptor.getRequestId())
+                                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
                                 .status();
 
                 ReportExecutionStatusEntity statusEntity = operationResultStatus.getEntity();
@@ -110,7 +110,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                         OperationResult<InputStream> operationResult1 =
                                 session
                                         .reportingService()
-                                        .reportRequest(reportExecutionDescriptor.getRequestId())
+                                        .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
                                         .export(exportDescriptor.getId())
                                         .attachment(fileName);
 
@@ -129,7 +129,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                 OperationResult<ReportExecutionStatusEntity> operationResult =
                         session
                                 .reportingService()
-                                .reportRequest(reportExecutionDescriptor.getRequestId())
+                                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
                                 .export("html")
                                 .status();
 

@@ -14,7 +14,7 @@ public class ReportingService {
         this.sessionStorage = sessionStorage;
     }
 
-    public OperationResult<ReportExecutionDescriptor> newReportRequest(ReportExecutionRequest request) {
+    public OperationResult<ReportExecutionDescriptor> newReportExecutionRequest(ReportExecutionRequest request) {
         JerseyRequestBuilder<ReportExecutionDescriptor> builder =
                 new JerseyRequestBuilder<ReportExecutionDescriptor>(sessionStorage, ReportExecutionDescriptor.class);
         builder.setPath("reportExecutions");
@@ -23,9 +23,12 @@ public class ReportingService {
         return descriptor;
     }
 
-    public ReportExecutionRequestBuilder reportRequest(String requestId) {
-
+    public ReportExecutionRequestBuilder reportExecutionRequest(String requestId) {
         return new ReportExecutionRequestBuilder(sessionStorage, requestId);
+    }
+
+    public ReportsAdapter report(String reportUnitUri){
+        return new ReportsAdapter(sessionStorage, reportUnitUri);
     }
 
 }
