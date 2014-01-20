@@ -3,6 +3,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.inputcontrols.InputControlsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.inputcontrols.InputControlsUtils;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.inputcontrols.ReorderingInputControlsAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,8 +19,8 @@ public class ReportsAdapter {
         this.reportUnitUri = reportUnitUri;
     }
 
-    public InputControlsAdapter inputControls(){
-        return new InputControlsAdapter(sessionStorage, reportUnitUri);
+    public ReorderingInputControlsAdapter inputControls(){
+        return new ReorderingInputControlsAdapter(sessionStorage, reportUnitUri);
     }
 
     public InputControlsAdapter inputControls(String mandatoryId, String... otherIds){

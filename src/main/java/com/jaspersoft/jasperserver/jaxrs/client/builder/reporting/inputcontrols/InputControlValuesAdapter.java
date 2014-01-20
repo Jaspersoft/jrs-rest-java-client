@@ -12,8 +12,8 @@ import javax.ws.rs.core.MultivaluedMap;
 public class InputControlValuesAdapter {
 
     protected final SessionStorage sessionStorage;
-    private final String reportUnitUri;
-    protected MultivaluedMap<String, String> params;
+    protected final String reportUnitUri;
+    protected final MultivaluedMap<String, String> params;
     private String idsPathSegment;
 
     public InputControlValuesAdapter(SessionStorage sessionStorage, String reportUnitUri){
