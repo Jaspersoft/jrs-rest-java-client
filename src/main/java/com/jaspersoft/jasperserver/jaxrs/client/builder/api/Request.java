@@ -9,5 +9,7 @@ public interface Request {
     Request setTarget(WebTarget webTarget);
 
     void setContentType(String mime);
+    void setAccept(String acceptMime);
+    void addHeader(String name, String... values);
 
 }

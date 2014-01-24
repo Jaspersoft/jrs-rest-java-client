@@ -28,7 +28,7 @@ public class InputControlValuesAdapter {
     }
 
     public InputControlValuesAdapter parameter(String name, String value){
-        params.putSingle(name, value);
+        params.add(name, value);
         return this;
     }
 
@@ -60,6 +60,7 @@ public class InputControlValuesAdapter {
         }
         builder.setPath("values");
         builder.setContentType(MediaType.APPLICATION_XML);
+        builder.setAccept(MediaType.APPLICATION_XML);
         return builder.post(InputControlsUtils.toReportParameters(params));
     }
 

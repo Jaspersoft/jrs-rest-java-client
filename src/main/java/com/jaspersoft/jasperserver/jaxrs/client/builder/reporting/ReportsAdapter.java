@@ -1,10 +1,13 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 
+import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.inputcontrols.InputControlsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.inputcontrols.InputControlsUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.inputcontrols.ReorderingInputControlsAdapter;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +30,46 @@ public class ReportsAdapter {
         List<String> ids = new ArrayList<String>(Arrays.asList(otherIds));
         ids.add(0, mandatoryId);
         return new InputControlsAdapter(sessionStorage, reportUnitUri, InputControlsUtils.toPathSegment(ids));
+    }
+
+    public RunReportAdapter prepareForRun(ReportOutputFormat format, Integer... pages){
+        return new RunReportAdapter(sessionStorage, reportUnitUri, format, pages);
+    }
+
+    public class RunReportAdapter{
+
+        private final JerseyRequestBuilder<InputStream> builder;
+
+        public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri,
+                                ReportOutputFormat format, Integer[] pages){
+
+            builder = new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
+            builder
+                    .setPath("reports")
+                    .setPath(reportUnitUri + "." + format.toString().toLowerCase());
+
+            if (pages.length == 1)
+                builder.addParam("page", pages[0].toString());
+            if (pages.length > 1)
+                builder.addParam("pages", toStringArray(pages));
+        }
+
+        public RunReportAdapter parameter(String name, String value){
+            builder.addParam(name, value);
+            return this;
+        }
+
+        public OperationResult<InputStream> run(){
+            return builder.get();
+        }
+
+        private String[] toStringArray(Integer[] ints){
+            String[] strings = new String[ints.length];
+            for (int i = 0; i < ints.length; i++)
+                strings[i] = ints[i].toString();
+            return strings;
+        }
+
     }
 
 }

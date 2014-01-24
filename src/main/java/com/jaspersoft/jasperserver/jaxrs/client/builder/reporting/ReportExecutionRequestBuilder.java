@@ -6,6 +6,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.ReportExecutionDescriptor;
 
+import javax.ws.rs.core.MediaType;
+
 public class ReportExecutionRequestBuilder {
 
     private final SessionStorage sessionStorage;
@@ -27,6 +29,7 @@ public class ReportExecutionRequestBuilder {
         JerseyRequestBuilder<ReportExecutionDescriptor> builder =
                 new JerseyRequestBuilder<ReportExecutionDescriptor>(sessionStorage, ReportExecutionDescriptor.class);
         builder.setPath("reportExecutions").setPath(requestId);
+        builder.setAccept(MediaType.APPLICATION_JSON);
         return builder.get();
     }
 

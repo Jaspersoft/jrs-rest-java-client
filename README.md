@@ -7,7 +7,7 @@ jasperserver-rest-client
         <dependency>
             <groupId>com.jaspersoft</groupId>
             <artifactId>jasperserver-jaxrs-client</artifactId>
-            <version>0.8.3</version>
+            <version>0.9.0</version>
         </dependency>
     </dependencies>
 

@@ -1,0 +1,34 @@
+package com.jaspersoft.jasperserver.jaxrs.client.restservices;
+
+import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportOutputFormat;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.io.*;
+
+public class RunReportServiceTest extends Assert {
+
+    private final JasperserverRestClient client;
+
+    public RunReportServiceTest() {
+        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
+        client = new JasperserverRestClient(configuration);
+    }
+
+    @Test
+    public void testRunReport() throws IOException {
+        OperationResult<InputStream> result = client
+                .authenticate("jasperadmin", "jasperadmin")
+                .reportingService()
+                .report("/reports/samples/Cascading_multi_select_report")
+                .prepareForRun(ReportOutputFormat.HTML, 1)
+                .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
+                .run();
+        InputStream report = result.getEntity();
+        assertNotEquals(report, null);
+    }
+
+}

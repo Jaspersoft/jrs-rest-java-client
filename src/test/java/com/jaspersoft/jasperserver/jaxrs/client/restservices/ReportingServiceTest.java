@@ -106,7 +106,6 @@ public class ReportingServiceTest extends Assert {
             if (statusEntity.getValue().equals("ready")){
                 ExportDescriptor exportDescriptor = descriptor.getExports().get(0);
                 AttachmentDescriptor attachmentDescriptor = exportDescriptor.getAttachments().get(0);
-                String contentType = attachmentDescriptor.getContentType();
                 String fileName = attachmentDescriptor.getFileName();
 
                 OperationResult<InputStream> operationResult1 =

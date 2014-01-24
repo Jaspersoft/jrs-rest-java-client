@@ -53,6 +53,11 @@ public final class ResponseStatus {
     public static final int NOT_ACCEPTABLE = 406;
 
     /**
+     * Resource was updated by another user.
+     */
+    public static final int CONFLICT = 409;
+
+    /**
      * Representation not supported for the resource.
      */
     public static final int UNSUPPORTED_TYPE = 415;

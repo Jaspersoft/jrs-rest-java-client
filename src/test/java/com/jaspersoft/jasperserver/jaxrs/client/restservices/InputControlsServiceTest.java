@@ -1,9 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
-import com.jaspersoft.jasperserver.dto.reports.inputcontrols.InputControlOption;
-import com.jaspersoft.jasperserver.dto.reports.inputcontrols.InputControlState;
-import com.jaspersoft.jasperserver.dto.reports.inputcontrols.InputControlStateListWrapper;
-import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
+import com.jaspersoft.jasperserver.dto.reports.inputcontrols.*;
 import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.sun.deploy.util.ArrayUtil;
@@ -14,11 +11,12 @@ import org.testng.annotations.Test;
 import java.util.Collections;
 import java.util.List;
 
-public class InputControlsTest extends Assert {
+public class InputControlsServiceTest extends Assert {
 
     private JasperserverRestClient client;
+    private List<ReportInputControl> inputControls;
 
-    public InputControlsTest() {
+    public InputControlsServiceTest() {
         RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
         client = new JasperserverRestClient(configuration);
     }
@@ -31,6 +29,25 @@ public class InputControlsTest extends Assert {
                         .report("/reports/samples/Cascading_multi_select_report")
                         .inputControls()
                         .get()
+                        .getEntity();
+        assertNotEquals(inputControls, null);
+        this.inputControls = inputControls.getInputParameters();
+    }
+
+    @Test(dependsOnMethods = "testGetInputControlsStructure")
+    public void testReorderInputControls(){
+        ReportInputControl inputControl0 = inputControls.get(0);
+        inputControls.add(0, inputControls.get(1));
+        inputControls.remove(1);
+        inputControls.add(1, inputControl0);
+        inputControls.remove(2);
+
+        ReportInputControlsListWrapper inputControls =
+                client.authenticate("jasperadmin", "jasperadmin")
+                        .reportingService()
+                        .report("/reports/samples/Cascading_multi_select_report")
+                        .inputControls()
+                        .reorder(new ReportInputControlsListWrapper(this.inputControls))
                         .getEntity();
         assertNotEquals(inputControls, null);
     }
@@ -155,27 +172,6 @@ public class InputControlsTest extends Assert {
                 return control;
         }
         return null;
-    }
-
-    @Test(enabled = false)
-    public void testInputControls() {
-        client.authenticate("jasperadmin", "jasperadmin")
-                .reportingService()
-                .report("/reports/samples/Cascading_multi_select_report_files/Cascading_name_single_select")
-                .inputControls()
-                .parameter("Country_multi_select", "Mexico")
-                .secureGet();
-    }
-
-    @Test(enabled = false)
-    public void testInputControlsValues() {
-        client.authenticate("jasperadmin", "jasperadmin")
-                .reportingService()
-                .report("/reports/samples/Cascading_multi_select_report_files/Cascading_name_single_select")
-                .inputControls()
-                .values()
-                .parameter("Country_multi_select", "Mexico")
-                .update();
     }
 
 }

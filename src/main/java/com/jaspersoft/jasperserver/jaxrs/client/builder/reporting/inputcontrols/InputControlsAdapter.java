@@ -12,7 +12,7 @@ import javax.ws.rs.core.MultivaluedMap;
 public class InputControlsAdapter {
 
     protected final SessionStorage sessionStorage;
-    private final String reportUnitUri;
+    protected final String reportUnitUri;
     protected MultivaluedMap<String, String> params;
     private String idsPathSegment;
 
@@ -28,7 +28,7 @@ public class InputControlsAdapter {
     }
 
     public InputControlsAdapter parameter(String name, String value){
-        params.putSingle(name, value);
+        params.add(name, value);
         return this;
     }
 
@@ -58,6 +58,7 @@ public class InputControlsAdapter {
             builder.setPath(idsPathSegment);
         }
         builder.setContentType(MediaType.APPLICATION_XML);
+        builder.setAccept(MediaType.APPLICATION_XML);
         return builder.post(InputControlsUtils.toReportParameters(params));
     }
 

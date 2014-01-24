@@ -6,6 +6,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservi
 import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportingService;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.resources.ResourcesService;
 
 public class Session {
 
@@ -38,6 +39,10 @@ public class Session {
 
     public ReportingService reportingService(){
         return new ReportingService(storage);
+    }
+
+    public ResourcesService resourcesService(){
+        return new ResourcesService(storage);
     }
 
 }
