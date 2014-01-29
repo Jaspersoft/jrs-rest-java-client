@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.dto;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 

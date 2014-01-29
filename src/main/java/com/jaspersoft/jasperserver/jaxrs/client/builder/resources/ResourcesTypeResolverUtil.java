@@ -7,35 +7,53 @@ import java.util.Map;
 
 public class ResourcesTypeResolverUtil {
 
-    private static final Map<Class<? extends ClientResource>, String> typesMap =
-            new HashMap<Class<? extends ClientResource>, String>(){{
-                put(ClientAdhocDataView.class, "application/repository.adhocDataView+json");
-                put(ClientAwsDataSource.class, "application/repository.awsDataSource+json");
-                put(ClientBeanDataSource.class, "application/repository.beanDataSource+json");
-                put(ClientCustomDataSource.class, "application/repository.customDataSource+json");
-                put(ClientDataType.class, "application/repository.dataType+json");
-                put(ClientFile.class, "application/repository.file+json");
-                put(ClientFolder.class, "application/repository.folder+json");
-                put(ClientInputControl.class, "application/repository.inputControl+json");
-                put(ClientJdbcDataSource.class, "application/repository.jdbcDataSource+json");
-                put(ClientJndiJdbcDataSource.class, "application/repository.jndiJdbcDataSource+json");
-                put(ClientListOfValues.class, "application/repository.listOfValues+json");
-                put(ClientMondrianConnection.class, "application/repository.mondrianConnection+json");
-                put(ClientMondrianXmlaDefinition.class, "application/repository.mondrianXmlaDefinition+json");
-                put(ClientOlapUnit.class, "application/repository.olapUnit+json");
-                put(ClientQuery.class, "application/repository.query+json");
-                put(ClientReportUnit.class, "application/repository.reportUnit+json");
-                put(ClientSecureMondrianConnection.class, "application/repository.secureMondrianConnection+json");
-                put(ClientSemanticLayerDataSource.class, "application/repository.semanticLayerDataSource+json");
-                put(ClientVirtualDataSource.class, "application/repository.virtualDataSource+json");
-                put(ClientXmlaConnection.class, "application/repository.xmlaConnection+json");
-                put(ClientResourceLookup.class, "application/repository.resourceLookup+json");
-            }};
+    private static final Map<Class<? extends ClientResource>, String> classToMimeMap;
 
-    public static String getMimeType(Class<? extends ClientResource> clazz){
-        return typesMap.get(clazz);
+
+    private static final Map<String, Class<? extends ClientResource>> mimeToClassMap;
+
+    static {
+        classToMimeMap = new HashMap<Class<? extends ClientResource>, String>() {{
+            put(ClientAdhocDataView.class, ResourceMediaType.ADHOC_DATA_VIEW_JSON);
+            put(ClientAwsDataSource.class, ResourceMediaType.AWS_DATA_SOURCE_JSON);
+            put(ClientBeanDataSource.class, ResourceMediaType.BEAN_DATA_SOURCE_JSON);
+            put(ClientCustomDataSource.class, ResourceMediaType.CUSTOM_DATA_SOURCE_JSON);
+            put(ClientDataType.class, ResourceMediaType.DATA_TYPE_JSON);
+            put(ClientFile.class, ResourceMediaType.FILE_JSON);
+            put(ClientFolder.class, ResourceMediaType.FOLDER_JSON);
+            put(ClientInputControl.class, ResourceMediaType.INPUT_CONTROL_JSON);
+            put(ClientJdbcDataSource.class, ResourceMediaType.JDBC_DATA_SOURCE_JSON);
+            put(ClientJndiJdbcDataSource.class, ResourceMediaType.JNDI_JDBC_DATA_SOURCE_JSON);
+            put(ClientListOfValues.class, ResourceMediaType.LIST_OF_VALUES_JSON);
+            put(ClientMondrianConnection.class, ResourceMediaType.MONDRIAN_CONNECTION_JSON);
+            put(ClientMondrianXmlaDefinition.class, ResourceMediaType.MONDRIAN_XMLA_DEFINITION_JSON);
+            put(ClientOlapUnit.class, ResourceMediaType.OLAP_UNIT_JSON);
+            put(ClientQuery.class, ResourceMediaType.QUERY_JSON);
+            put(ClientReportUnit.class, ResourceMediaType.REPORT_UNIT_JSON);
+            put(ClientSecureMondrianConnection.class, ResourceMediaType.SECURE_MONDRIAN_CONNECTION_JSON);
+            put(ClientSemanticLayerDataSource.class, ResourceMediaType.SEMANTIC_LAYER_DATA_SOURCE_JSON);
+            put(ClientVirtualDataSource.class, ResourceMediaType.VIRTUAL_DATA_SOURCE_JSON);
+            put(ClientXmlaConnection.class, ResourceMediaType.XMLA_CONNECTION_JSON);
+            put(ClientResourceLookup.class, ResourceMediaType.RESOURCE_LOOKUP_JSON);
+        }};
+
+        mimeToClassMap = new HashMap<String, Class<? extends ClientResource>>();
+        for (Map.Entry<Class<? extends ClientResource>, String> entry : classToMimeMap.entrySet()) {
+            mimeToClassMap.put(entry.getValue(), entry.getKey());
+        }
     }
 
 
+    public static String getMimeType(Class<? extends ClientResource> clazz) {
+        return classToMimeMap.get(clazz);
+    }
+
+    public static Class<? extends ClientResource> getClassForMime(String mime) {
+        return mimeToClassMap.get(mime);
+    }
+
+    public static Class<? extends ClientResource> getResourceType(ClientResource resource) {
+        return resource.getClass();
+    }
 
 }

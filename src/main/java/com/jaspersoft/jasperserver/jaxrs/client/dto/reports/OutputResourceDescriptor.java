@@ -1,9 +1,9 @@
-package com.jaspersoft.jasperserver.jaxrs.client.dto;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "attachment")
-public class AttachmentDescriptor {
+@XmlRootElement(name = "outputResource")
+public class OutputResourceDescriptor {
 
     private String contentType;
     private String fileName;
@@ -29,26 +29,22 @@ public class AttachmentDescriptor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AttachmentDescriptor that = (AttachmentDescriptor) o;
+        OutputResourceDescriptor that = (OutputResourceDescriptor) o;
 
         if (contentType != null ? !contentType.equals(that.contentType) : that.contentType != null) return false;
-        if (fileName != null ? !fileName.equals(that.fileName) : that.fileName != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = contentType != null ? contentType.hashCode() : 0;
-        result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
-        return result;
+        return contentType != null ? contentType.hashCode() : 0;
     }
 
     @Override
     public String toString() {
-        return "AttachmentDescriptor{" +
+        return "OutputResourceDescriptor{" +
                 "contentType='" + contentType + '\'' +
-                ", fileName='" + fileName + '\'' +
                 '}';
     }
 }

@@ -3,14 +3,17 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.resources;
 import com.jaspersoft.jasperserver.dto.common.PatchDescriptor;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
+import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
-import com.sun.jersey.core.util.Base64;
+import com.sun.jersey.multipart.FormDataMultiPart;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
-import java.io.*;
+import java.io.File;
+import java.io.InputStream;
 
 public class SingleResourceAdapter {
 
@@ -30,59 +33,69 @@ public class SingleResourceAdapter {
         return this;
     }
 
-    public <Response extends ClientResource> OperationResult<Response> details(Class<Response> responseClass) {
-        JerseyRequestBuilder<Response> builder =
-                new JerseyRequestBuilder<Response>(sessionStorage, responseClass);
+    public OperationResult<ClientResource> details() {
+        JerseyRequestBuilder<ClientResource> builder =
+                new JerseyRequestBuilder<ClientResource>(sessionStorage, ClientResource.class);
         builder
                 .setPath("resources")
                 .setPath(resourceUri);
         builder.addParams(params);
-        builder.setAccept(ResourcesTypeResolverUtil.getMimeType(responseClass));
+
+        if (isRootFolder(resourceUri))
+            builder.setAccept(ResourceMediaType.FOLDER_JSON);
+        else
+            builder.setAccept(ResourceMediaType.FILE_JSON);
+
         return builder.get();
     }
 
-    public OperationResult<InputStream> downloadBinary(ResourceFilesMimeType mimeType) {
+    private boolean isRootFolder(String resourceUri) {
+        return "/".equals(resourceUri);
+    }
+
+    public OperationResult<InputStream> downloadBinary() {
         JerseyRequestBuilder<InputStream> builder =
                 new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
         builder
                 .setPath("resources")
                 .setPath(resourceUri);
-        builder.setAccept(mimeType.getType());
         return builder.get();
     }
 
-    public <ResourceType extends ClientResource> OperationResult<ResourceType> createOrUpdate(
-            boolean generateId, Class<ResourceType> resourceTypeClass, ResourceType resource) {
+    public OperationResult<ClientResource> createOrUpdate(ClientResource resource) {
+        return getBuilderForCreateOrUpdate(resource).put(resource);
+    }
 
-        JerseyRequestBuilder<ResourceType> builder =
-                new JerseyRequestBuilder<ResourceType>(sessionStorage, resourceTypeClass);
+    public OperationResult<ClientResource> createNew(ClientResource resource) {
+        return getBuilderForCreateOrUpdate(resource).post(resource);
+    }
+
+    private JerseyRequestBuilder<ClientResource> getBuilderForCreateOrUpdate(ClientResource resource) {
+        Class<? extends ClientResource> resourceType = ResourcesTypeResolverUtil.getResourceType(resource);
+
+        JerseyRequestBuilder<ClientResource> builder =
+                new JerseyRequestBuilder<ClientResource>(sessionStorage, resourceType);
         builder
                 .setPath("resources")
                 .setPath(resourceUri);
         builder.addParams(params);
-        builder.setContentType(ResourcesTypeResolverUtil.getMimeType(resourceTypeClass));
+        builder.setContentType(ResourcesTypeResolverUtil.getMimeType(resourceType));
 
-        if (generateId)
-            return builder.post(resource);
-        else
-            return builder.put(resource);
+        return builder;
     }
 
-    public <ResourceType extends ClientResource> OperationResult<ResourceType> copy(
-            Class<ResourceType> resourceTypeClass, String fromUri) {
-        return copyOrMove(false, resourceTypeClass, fromUri);
+    public OperationResult<ClientResource> copyFrom(String fromUri) {
+        return copyOrMove(false, fromUri);
     }
 
-    public <ResourceType extends ClientResource> OperationResult<ResourceType> move(
-            Class<ResourceType> resourceTypeClass, String fromUri) {
-        return copyOrMove(true, resourceTypeClass, fromUri);
+    public OperationResult<ClientResource> moveFrom(String fromUri) {
+        return copyOrMove(true, fromUri);
     }
 
-    private  <ResourceType extends ClientResource> OperationResult<ResourceType> copyOrMove(
-            boolean moving, Class<ResourceType> resourceTypeClass, String fromUri) {
+    private OperationResult<ClientResource> copyOrMove(boolean moving, String fromUri) {
 
-        JerseyRequestBuilder<ResourceType> builder =
-                new JerseyRequestBuilder<ResourceType>(sessionStorage, resourceTypeClass);
+        JerseyRequestBuilder<ClientResource> builder =
+                new JerseyRequestBuilder<ClientResource>(sessionStorage, ClientResource.class);
         builder
                 .setPath("resources")
                 .setPath(resourceUri);
@@ -95,17 +108,17 @@ public class SingleResourceAdapter {
             return builder.post(null);
     }
 
-    public OperationResult<ClientFile> uploadFile(ClientFile file, File fileContent){
+    public OperationResult<ClientFile> uploadFile(File fileContent,
+                                                  ClientFile.FileType fileType,
+                                                  String label,
+                                                  String description) {
 
-        byte[] fileByteArray = null;
-        try {
-            FileInputStream fis = new FileInputStream(fileContent);
-            int available = fis.available();
-            fileByteArray = new byte[available];
-            fis.read(fileByteArray);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FormDataMultiPart form = new FormDataMultiPart();
+        form
+                .field("data", fileContent, MediaType.WILDCARD_TYPE)
+                .field("label", label)
+                .field("description", description)
+                .field("type", fileType.name());
 
         JerseyRequestBuilder<ClientFile> builder =
                 new JerseyRequestBuilder<ClientFile>(sessionStorage, ClientFile.class);
@@ -113,16 +126,12 @@ public class SingleResourceAdapter {
                 .setPath("resources")
                 .setPath(resourceUri);
         builder.addParams(params);
+        builder.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        String mimeType = ResourcesTypeResolverUtil.getMimeType(ClientFile.class);
-        builder.setContentType(mimeType);
-
-        file.setContent(new String(Base64.encode(fileByteArray)));
-
-        return builder.post(file);
+        return builder.post(form);
     }
 
-    public OperationResult delete(){
+    public OperationResult delete() {
         JerseyRequestBuilder builder =
                 new JerseyRequestBuilder(sessionStorage, Object.class);
         builder
@@ -131,8 +140,12 @@ public class SingleResourceAdapter {
         return builder.delete();
     }
 
+    public OperationResult<ClientResource> patchResource(PatchDescriptor descriptor) {
+        throw new UnsupportedOperationException("Server doesn't return proper MIME-type to resolve entity type");
+    }
+
     public <ResourceType extends ClientResource> OperationResult<ResourceType> patchResource(
-            Class<ResourceType> resourceTypeClass, PatchDescriptor descriptor){
+            Class<ResourceType> resourceTypeClass, PatchDescriptor descriptor) {
 
         JerseyRequestBuilder<ResourceType> builder =
                 new JerseyRequestBuilder<ResourceType>(sessionStorage, resourceTypeClass);

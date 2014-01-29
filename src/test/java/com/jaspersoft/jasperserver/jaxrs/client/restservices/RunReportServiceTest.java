@@ -7,7 +7,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportOutputFo
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class RunReportServiceTest extends Assert {
 

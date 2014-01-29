@@ -39,6 +39,12 @@ public class PermissionsServiceTest extends Assert {
                 .permissionRecipient(PermissionRecipient.USER, "joeuser")
                 .delete();
 
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .permissionsService()
+                .resource("/themes")
+                .delete();
+
     }
 
     @AfterClass

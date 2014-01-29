@@ -1,6 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder;
 
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
+import com.jaspersoft.jasperserver.dto.resources.ClientResource;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.resources.ResourcesTypeResolverUtil;
 
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
@@ -9,13 +11,17 @@ import java.util.Map;
 public class OperationResult<T> {
 
     private Response response;
-    private Class<T> entityClass;
+    private Class<? extends T> entityClass;
     private ErrorDescriptor error;
 
     private T entity;
 
-    public OperationResult(Response response, Class<T> entityClass) {
+    public OperationResult(Response response, Class<? extends T> entityClass) {
         this.response = response;
+        if (entityClass.isAssignableFrom(ClientResource.class)){
+            entityClass =
+                   (Class<? extends T>) ResourcesTypeResolverUtil.getClassForMime(response.getHeaderString("Content-Type"));
+        }
         this.entityClass = entityClass;
         if (response.getStatus() == 500 || response.getStatus() == 400)
             error = response.readEntity(ErrorDescriptor.class);
@@ -52,5 +58,7 @@ public class OperationResult<T> {
         else
             return null;
     }
+
+
 
 }

@@ -6,15 +6,14 @@ import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice.ImportService;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.resources.ResourceFilesMimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.resources.ResourceSearchParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.resources.ResourceServiceParameter;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -54,26 +53,51 @@ public class ResourcesServiceTest extends Assert {
 
     @Test
     public void testGetResourceDetails() {
-        OperationResult<ClientListOfValues> result = client
+        OperationResult<ClientResource> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .resourcesService()
                 .resource("/properties/GlobalPropertiesList")
-                .details(ClientListOfValues.class);
+                .details();
 
-        ClientListOfValues listOfValues = result.getEntity();
+        ClientListOfValues listOfValues = (ClientListOfValues) result.getEntity();
         assertNotNull(listOfValues);
     }
 
     @Test
+    public void testGetRootFolderDetails(){
+        OperationResult<ClientResource> result = client
+                .authenticate("jasperadmin", "jasperadmin")
+                .resourcesService()
+                .resource("/")
+                .details();
+
+        assertTrue(result.getEntity() instanceof ClientFolder);
+        ClientFolder rootFolder = (ClientFolder) result.getEntity();
+        assertNotNull(rootFolder);
+    }
+
+    @Test
+    public void testGetFileDetails() {
+        OperationResult<ClientResource> result = client
+                .authenticate("jasperadmin", "jasperadmin")
+                .resourcesService()
+                .resource("/images/JRLogo")
+                .details();
+
+        ClientFile jrLogo = (ClientFile) result.getEntity();
+        assertNotNull(jrLogo);
+    }
+
+    @Test
     public void testGetResourceDetailsExpanded() {
-        OperationResult<ClientReportUnit> result = client
+        OperationResult<ClientResource> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .resourcesService()
                 .resource("/reports/interactive/CustomersReport")
                 .parameter(ResourceServiceParameter.EXPANDED, "true")
-                .details(ClientReportUnit.class);
+                .details();
 
-        ClientReportUnit reportUnit = result.getEntity();
+        ClientReportUnit reportUnit = (ClientReportUnit) result.getEntity();
         assertNotNull(reportUnit);
         assertTrue(reportUnit.getJrxml() instanceof ClientFile);
     }
@@ -84,7 +108,7 @@ public class ResourcesServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .resourcesService()
                 .resource("/themes/default/buttons.css")
-                .downloadBinary(ResourceFilesMimeType.CSS);
+                .downloadBinary();
 
         InputStream inputStream = result.getEntity();
         assertNotNull(inputStream);
@@ -103,14 +127,14 @@ public class ResourcesServiceTest extends Assert {
                 .setUpdateDate("2014-01-24 16:27:47")
                 .setVersion(0);
 
-        OperationResult<ClientFolder> result = client
+        OperationResult<ClientResource> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .resourcesService()
                 .resource(folder.getUri())
-                .createOrUpdate(false, ClientFolder.class, folder);
+                .createOrUpdate(folder);
 
         assertEquals(result.getResponse().getStatus(), 200);
-        ClientFolder resultFolder = result.getEntity();
+        ClientFolder resultFolder = (ClientFolder) result.getEntity();
         assertNotNull(resultFolder);
     }
 
@@ -127,19 +151,19 @@ public class ResourcesServiceTest extends Assert {
                 .setUpdateDate("2014-01-24 16:27:47")
                 .setVersion(0);
 
-        OperationResult<ClientFolder> result = client
+        OperationResult<ClientResource> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .resourcesService()
                 .resource(folder.getUri())
-                .createOrUpdate(true, ClientFolder.class, folder);
+                .createNew(folder);
 
         assertEquals(result.getResponse().getStatus(), 201);
-        ClientFolder resultFolder = result.getEntity();
+        ClientFolder resultFolder = (ClientFolder) result.getEntity();
         assertNotNull(resultFolder);
     }
 
     @Test(dependsOnMethods = "testCreateResourceWithExplicitId")
-    public void testPatchResource() {
+    public void testPatchResourceWithSpecifiedType() {
 
         PatchDescriptor patchDescriptor = new PatchDescriptor();
         patchDescriptor.setVersion(0);
@@ -157,17 +181,31 @@ public class ResourcesServiceTest extends Assert {
         assertEquals(resultFolder.getLabel(), "Patch Label");
     }
 
-    @Test(dependsOnMethods = "testPatchResource")
+    @Test(dependsOnMethods = "testPatchResourceWithSpecifiedType", expectedExceptions = UnsupportedOperationException.class)
+    public void testPatchResourceWithoutSpecifiedType() {
+
+        PatchDescriptor patchDescriptor = new PatchDescriptor();
+        patchDescriptor.setVersion(0);
+        patchDescriptor.field("label", "Patch Label");
+
+        OperationResult<ClientResource> result = client
+                .authenticate("jasperadmin", "jasperadmin")
+                .resourcesService()
+                .resource("/reports/testFolder")
+                .patchResource(patchDescriptor);
+    }
+
+    @Test(dependsOnMethods = "testPatchResourceWithoutSpecifiedType")
     public void testMoveResource() {
 
-        OperationResult<ClientFolder> result = client
+        OperationResult<ClientResource> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .resourcesService()
                 .resource("/datasources")
-                .move(ClientFolder.class, "/reports/testFolder");
+                .moveFrom("/reports/testFolder");
 
         assertEquals(result.getResponse().getStatus(), 200);
-        ClientFolder resultFolder = result.getEntity();
+        ClientFolder resultFolder = (ClientFolder) result.getEntity();
         assertNotNull(resultFolder);
         assertEquals(resultFolder.getLabel(), "Patch Label");
         assertEquals(resultFolder.getUri(), "/datasources/testFolder");
@@ -176,14 +214,14 @@ public class ResourcesServiceTest extends Assert {
     @Test(dependsOnMethods = "testMoveResource")
     public void testCopyResource() {
 
-        OperationResult<ClientFolder> result = client
+        OperationResult<ClientResource> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .resourcesService()
                 .resource("/reports")
-                .copy(ClientFolder.class, "/datasources/testFolder");
+                .copyFrom("/datasources/testFolder");
 
         assertEquals(result.getResponse().getStatus(), 200);
-        ClientFolder resultFolder = result.getEntity();
+        ClientFolder resultFolder = (ClientFolder) result.getEntity();
         assertNotNull(resultFolder);
         assertEquals(resultFolder.getLabel(), "Patch Label");
         assertEquals(resultFolder.getUri(), "/reports/testFolder");
@@ -191,25 +229,13 @@ public class ResourcesServiceTest extends Assert {
 
     @Test(dependsOnMethods = "testCopyResource")
     public void testUploadFile() throws URISyntaxException {
-
-        ClientFile file = new ClientFile();
-        file
-                .setUri("/reports/testFolder")
-                .setLabel("Test Upload Image")
-                .setDescription("Test image description")
-                .setPermissionMask(0)
-                .setCreationDate("2014-01-24 16:27:47")
-                .setUpdateDate("2014-01-24 16:27:47")
-                .setVersion(0)
-                .setType(ClientFile.FileType.img);
         URL url = ResourcesServiceTest.class.getClassLoader().getResource("stateChart.png");
-
 
         OperationResult<ClientFile> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .resourcesService()
                 .resource("/reports/testFolder")
-                .uploadFile(file, new File(url.toURI()));
+                .uploadFile(new File(url.toURI()), ClientFile.FileType.img, "testFile", "testFileDesc");
 
         assertEquals(result.getResponse().getStatus(), ResponseStatus.CREATED);
         ClientFile clientFile = result.getEntity();

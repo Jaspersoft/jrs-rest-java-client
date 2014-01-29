@@ -4,7 +4,7 @@ import com.jaspersoft.jasperserver.dto.reports.ReportExecutionStatusEntity;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.ReportExecutionDescriptor;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
 
 import javax.ws.rs.core.MediaType;
 

@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.inputcontrols;
+package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters;
 
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.InputControlStateListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
@@ -9,25 +9,25 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
-public class InputControlValuesAdapter {
+public class ReportParametersValuesAdapter {
 
     protected final SessionStorage sessionStorage;
     protected final String reportUnitUri;
     protected final MultivaluedMap<String, String> params;
     private String idsPathSegment;
 
-    public InputControlValuesAdapter(SessionStorage sessionStorage, String reportUnitUri){
+    public ReportParametersValuesAdapter(SessionStorage sessionStorage, String reportUnitUri){
         params = new MultivaluedHashMap<String, String>();
         this.sessionStorage = sessionStorage;
         this.reportUnitUri = reportUnitUri;
     }
 
-    public InputControlValuesAdapter(SessionStorage sessionStorage, String reportUnitUri, String idsPathSegment) {
+    public ReportParametersValuesAdapter(SessionStorage sessionStorage, String reportUnitUri, String idsPathSegment) {
         this(sessionStorage, reportUnitUri);
         this.idsPathSegment = idsPathSegment;
     }
 
-    public InputControlValuesAdapter parameter(String name, String value){
+    public ReportParametersValuesAdapter parameter(String name, String value){
         params.add(name, value);
         return this;
     }
@@ -61,7 +61,7 @@ public class InputControlValuesAdapter {
         builder.setPath("values");
         builder.setContentType(MediaType.APPLICATION_XML);
         builder.setAccept(MediaType.APPLICATION_XML);
-        return builder.post(InputControlsUtils.toReportParameters(params));
+        return builder.post(ReportParametersUtils.toReportParameters(params));
     }
 
 

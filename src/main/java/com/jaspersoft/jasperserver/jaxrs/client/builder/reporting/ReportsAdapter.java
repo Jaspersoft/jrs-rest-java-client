@@ -3,9 +3,9 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.inputcontrols.InputControlsAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.inputcontrols.InputControlsUtils;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.inputcontrols.ReorderingInputControlsAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters.ReorderingReportParametersAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters.ReportParametersAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters.ReportParametersUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -22,14 +22,14 @@ public class ReportsAdapter {
         this.reportUnitUri = reportUnitUri;
     }
 
-    public ReorderingInputControlsAdapter inputControls(){
-        return new ReorderingInputControlsAdapter(sessionStorage, reportUnitUri);
+    public ReorderingReportParametersAdapter reportParameters(){
+        return new ReorderingReportParametersAdapter(sessionStorage, reportUnitUri);
     }
 
-    public InputControlsAdapter inputControls(String mandatoryId, String... otherIds){
+    public ReportParametersAdapter reportParameters(String mandatoryId, String... otherIds){
         List<String> ids = new ArrayList<String>(Arrays.asList(otherIds));
         ids.add(0, mandatoryId);
-        return new InputControlsAdapter(sessionStorage, reportUnitUri, InputControlsUtils.toPathSegment(ids));
+        return new ReportParametersAdapter(sessionStorage, reportUnitUri, ReportParametersUtils.toPathSegment(ids));
     }
 
     public RunReportAdapter prepareForRun(ReportOutputFormat format, Integer... pages){

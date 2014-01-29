@@ -5,6 +5,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.api.Request;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.api.RequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
+import com.sun.jersey.multipart.impl.MultiPartWriter;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
@@ -18,23 +19,27 @@ import java.util.Map;
 
 public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<ResponseType> {
 
+    protected String operationResultType;
+
     private final SessionStorage sessionStorage;
-    private final Class<ResponseType> responseClass;
+    private final Class<? extends ResponseType> responseClass;
     private final MultivaluedMap<String, String> headers;
     private WebTarget usersWebTarget;
     private String contentType;
     private String acceptType;
 
 
-    public JerseyRequestBuilder(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
+    public JerseyRequestBuilder(SessionStorage sessionStorage, Class<? extends ResponseType> responseClass) {
 
         this.sessionStorage = sessionStorage;
+        this.operationResultType = OperationResult.class.getName();
 
         AuthenticationCredentials credentials = sessionStorage.getCredentials();
         Client client = ClientBuilder.newClient();
         client
                 .register(CustomRepresentationTypeProvider.class)
                 .register(JacksonFeature.class)
+                .register(MultiPartWriter.class)
                 .register(HttpAuthenticationFeature.basic(credentials.getUsername(), credentials.getPassword()));
 
         this.responseClass = responseClass;
@@ -66,19 +71,35 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         return this;
     }
 
+    private OperationResult<ResponseType> constructOperationResult(Response response,
+                                                                   Class<? extends ResponseType> responseClass,
+                                                                   String operationResultType){
+        try {
+            return (OperationResult<ResponseType>) Class.forName(operationResultType)
+                    .getConstructor(Response.class, Class.class)
+                    .newInstance(response, responseClass);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Exception while instantiating " + operationResultType + " class");
+        }
+    }
+
     @Override
     public OperationResult<ResponseType> get() {
         try {
             Invocation.Builder request =
                     usersWebTarget
-                            .request()
-                            .accept(acceptType);
+                            .request();
+            if (acceptType != null){
+                request = request.accept(acceptType);
+            }
             addHeaders(request);
 
             Response response = request.get();
             OperationResult<ResponseType> result =
-                    new OperationResult<ResponseType>(response, responseClass);
+                    constructOperationResult(response, responseClass, operationResultType);
             this.sessionStorage.setSessionId(result.getSessionId());
+
             return result;
         } catch (Exception e) {
             return null;
@@ -89,14 +110,17 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     public OperationResult<ResponseType> delete() {
         Invocation.Builder request =
                 usersWebTarget
-                        .request()
-                        .accept(acceptType);
+                        .request();
+        if (acceptType != null){
+            request = request.accept(acceptType);
+        }
         addHeaders(request);
 
         Response response = request.delete();
         OperationResult<ResponseType> result =
-                new OperationResult<ResponseType>(response, responseClass);
+                constructOperationResult(response, responseClass, operationResultType);
         this.sessionStorage.setSessionId(result.getSessionId());
+
         return result;
     }
 
@@ -140,14 +164,17 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     public <RequestType> OperationResult<ResponseType> put(RequestType entity) {
         Invocation.Builder request =
                 usersWebTarget
-                        .request()
-                        .accept(acceptType);
+                        .request();
+        if (acceptType != null){
+            request = request.accept(acceptType);
+        }
         addHeaders(request);
 
         Response response = request.put(Entity.entity(entity, contentType));
         OperationResult<ResponseType> result =
-                new OperationResult<ResponseType>(response, responseClass);
+                constructOperationResult(response, responseClass, operationResultType);
         this.sessionStorage.setSessionId(result.getSessionId());
+
         return result;
     }
 
@@ -155,14 +182,17 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     public <RequestType> OperationResult<ResponseType> post(RequestType entity) {
         Invocation.Builder request =
                 usersWebTarget
-                        .request()
-                        .accept(acceptType);
+                        .request();
+        if (acceptType != null){
+            request = request.accept(acceptType);
+        }
         addHeaders(request);
 
         Response response = request.post(Entity.entity(entity, contentType));
         OperationResult<ResponseType> result =
-                new OperationResult<ResponseType>(response, responseClass);
+                constructOperationResult(response, responseClass, operationResultType);
         this.sessionStorage.setSessionId(result.getSessionId());
+
         return result;
     }
 

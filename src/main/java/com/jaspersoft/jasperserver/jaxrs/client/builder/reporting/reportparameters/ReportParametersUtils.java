@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.inputcontrols;
+package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportParameter;
 import com.jaspersoft.jasperserver.dto.reports.ReportParameters;
@@ -7,7 +7,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InputControlsUtils {
+public class ReportParametersUtils {
 
     public static ReportParameters toReportParameters(MultivaluedMap<String, String> params){
 
