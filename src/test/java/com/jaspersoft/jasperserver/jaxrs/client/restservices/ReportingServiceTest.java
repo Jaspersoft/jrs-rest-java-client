@@ -6,9 +6,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.Session;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.AttachmentDescriptor;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportDescriptor;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportAndJobSearchParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.*;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -29,7 +28,7 @@ public class ReportingServiceTest extends Assert {
     }
 
     @Test(priority = 0)
-    public void testCreateNewReportRequest(){
+    public void testCreateNewReportRequest() {
         ReportExecutionRequest request = new ReportExecutionRequest();
         request.setReportUnitUri("/reports/samples/StandardChartsReport");
         request
@@ -47,7 +46,7 @@ public class ReportingServiceTest extends Assert {
     }
 
     @Test(dependsOnMethods = {"testCreateNewReportRequest"}, priority = 1)
-    public void testGetReportExecutionStatus(){
+    public void testGetReportExecutionStatus() {
         OperationResult<ReportExecutionStatusEntity> operationResult =
                 session
                         .reportingService()
@@ -59,7 +58,7 @@ public class ReportingServiceTest extends Assert {
     }
 
     @Test(dependsOnMethods = {"testGetReportExecutionStatus"}, priority = 2)
-    public void testGetReportExecutionDetails(){
+    public void testGetReportExecutionDetails() {
         OperationResult<ReportExecutionDescriptor> operationResult =
                 session
                         .reportingService()
@@ -71,7 +70,7 @@ public class ReportingServiceTest extends Assert {
     }
 
     @Test(dependsOnMethods = {"testGetReportExecutionDetails"}, priority = 3)
-    public void testGetExportOutputResource(){
+    public void testGetExportOutputResource() {
         OperationResult<InputStream> operationResult =
                 session
                         .reportingService()
@@ -93,41 +92,38 @@ public class ReportingServiceTest extends Assert {
 
         ReportExecutionDescriptor descriptor = operationResult.getEntity();
 
-        OperationResult<ReportExecutionStatusEntity> operationResultStatus =
+        ExportDescriptor exportDescriptor = descriptor.getExports().get(0);
+        String fileName = exportDescriptor.getAttachments().get(0).getFileName();
+
+        OperationResult<InputStream> operationResult1 =
                 session
                         .reportingService()
                         .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                        .status();
+                        .export(exportDescriptor.getId())
+                        .attachment(fileName);
 
-        ReportExecutionStatusEntity statusEntity = operationResultStatus.getEntity();
-
-        while (true){
-
-            if (statusEntity.getValue().equals("ready")){
-                ExportDescriptor exportDescriptor = descriptor.getExports().get(0);
-                AttachmentDescriptor attachmentDescriptor = exportDescriptor.getAttachments().get(0);
-                String fileName = attachmentDescriptor.getFileName();
-
-                OperationResult<InputStream> operationResult1 =
-                        session
-                                .reportingService()
-                                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                                .export(exportDescriptor.getId())
-                                .attachment(fileName);
-
-                InputStream file = operationResult1.getEntity();
-                assertNotEquals(file, null);
-                break;
-            }
-            else {
-                Thread.sleep(500);
-            }
-        }
-
+        InputStream file = operationResult1.getEntity();
+        assertNotEquals(file, null);
     }
 
     @Test(dependsOnMethods = {"testGetExportAttachment"}, priority = 5)
-    public void testGetReportExportStatus(){
+    public void testRunNewExport() {
+        ExportExecutionOptions exportExecutionOptions = new ExportExecutionOptions()
+                .setOutputFormat("pdf")
+                .setPages("3");
+
+        OperationResult<ExportExecutionDescriptor> operationResult =
+                session
+                        .reportingService()
+                        .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
+                        .runExport(exportExecutionOptions);
+
+        ExportExecutionDescriptor statusEntity = operationResult.getEntity();
+        assertNotEquals(statusEntity, null);
+    }
+
+    @Test(dependsOnMethods = {"testGetExportAttachment"})
+    public void testGetReportExportStatus() {
         OperationResult<ReportExecutionStatusEntity> operationResult =
                 session
                         .reportingService()
@@ -138,5 +134,62 @@ public class ReportingServiceTest extends Assert {
         ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
         assertNotEquals(statusEntity, null);
     }
+
+    @Test(dependsOnMethods = {"testGetExportAttachment"})
+    public void testCancelRequestExecution() {
+
+        ReportExecutionRequest request = new ReportExecutionRequest();
+        request.setReportUnitUri("/reports/samples/StandardChartsReport");
+        request
+                .setAsync(true)
+                .setOutputFormat("html");
+
+        OperationResult<ReportExecutionDescriptor> operationResult =
+                session
+                        .reportingService()
+                        .newReportExecutionRequest(request);
+
+        ReportExecutionDescriptor executionDescriptor = operationResult.getEntity();
+
+        OperationResult<ReportExecutionStatusEntity> operationResult1 =
+                session
+                        .reportingService()
+                        .reportExecutionRequest(executionDescriptor.getRequestId())
+                        .cancelExecution();
+
+        ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
+        assertNotEquals(statusEntity, null);
+        assertEquals(statusEntity.getValue(), "cancelled");
+    }
+
+    /**
+     * Very unstable test. Its correctness depends on server's speed.
+     */
+    /*@Test(dependsOnMethods = {"testCancelRequestExecution"})
+    public void testFindRunningReportsAndJobs() {
+
+        ReportExecutionRequest request = new ReportExecutionRequest();
+        request.setReportUnitUri("/reports/samples/AllAccounts");
+        request
+                .setAsync(true)
+                .setOutputFormat("html");
+
+        OperationResult<ReportExecutionDescriptor> operationResult =
+                session
+                        .reportingService()
+                        .newReportExecutionRequest(request);
+
+        OperationResult<ReportExecutionListWrapper> operationResult1 =
+                session
+                        .reportingService()
+                        .runningReportsAndJobs()
+                        .parameter(ReportAndJobSearchParameter.REPORT_URI, "/reports/samples/AllAccounts")
+                        .find();
+
+        ReportExecutionListWrapper entity = operationResult1.getEntity();
+        assertNotEquals(entity, null);
+        assertEquals(entity.getReportExecutions().size(), 1);
+    }*/
+
 
 }

@@ -91,37 +91,18 @@ public class MultipleSimultaneousSessionsTest extends Assert {
 
                 ReportExecutionDescriptor descriptor = operationResult.getEntity();
 
-                OperationResult<ReportExecutionStatusEntity> operationResultStatus =
+                ExportDescriptor exportDescriptor = descriptor.getExports().get(0);
+                String fileName = exportDescriptor.getAttachments().get(0).getFileName();
+
+                OperationResult<InputStream> operationResult1 =
                         session
                                 .reportingService()
                                 .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                                .status();
+                                .export(exportDescriptor.getId())
+                                .attachment(fileName);
 
-                ReportExecutionStatusEntity statusEntity = operationResultStatus.getEntity();
-
-                while (true){
-
-                    if (statusEntity.getValue().equals("ready")){
-                        ExportDescriptor exportDescriptor = descriptor.getExports().get(0);
-                        AttachmentDescriptor attachmentDescriptor = exportDescriptor.getAttachments().get(0);
-                        String contentType = attachmentDescriptor.getContentType();
-                        String fileName = attachmentDescriptor.getFileName();
-
-                        OperationResult<InputStream> operationResult1 =
-                                session
-                                        .reportingService()
-                                        .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                                        .export(exportDescriptor.getId())
-                                        .attachment(fileName);
-
-                        InputStream file = operationResult1.getEntity();
-                        assertNotEquals(file, null);
-                        break;
-                    }
-                    else {
-                        Thread.sleep(500);
-                    }
-                }
+                InputStream file = operationResult1.getEntity();
+                assertNotEquals(file, null);
 
             }
 

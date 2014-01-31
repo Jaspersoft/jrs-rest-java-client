@@ -1,3 +1,24 @@
+/*
+* Copyright (C) 2005 - 2014 Jaspersoft Corporation. All rights  reserved.
+* http://www.jaspersoft.com.
+*
+* Unless you have purchased  a commercial license agreement from Jaspersoft,
+* the following license terms  apply:
+*
+* This program is free software: you can redistribute it and/or  modify
+* it under the terms of the GNU Affero General Public License  as
+* published by the Free Software Foundation, either version 3 of  the
+* License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU Affero  General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public  License
+* along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
@@ -5,10 +26,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
-import javax.ws.rs.client.AsyncInvoker;
-import javax.ws.rs.core.Response;
 import java.io.InputStream;
-import java.util.concurrent.Future;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
 
 public class ExportRequestAdapter {
 
@@ -17,40 +37,31 @@ public class ExportRequestAdapter {
 
     private String taskId;
 
-    public ExportRequestAdapter(SessionStorage sessionStorage, String taskId){
+    public ExportRequestAdapter(SessionStorage sessionStorage, String taskId) {
         this.sessionStorage = sessionStorage;
         this.taskId = taskId;
     }
 
-    public OperationResult<StateDto> state(){
-        JerseyRequestBuilder<StateDto> builder =
-                new JerseyRequestBuilder<StateDto>(sessionStorage, StateDto.class);
-        builder
-                .setPath("export")
-                .setPath(taskId)
-                .setPath(STATE_URI);
-
-        return builder.get();
+    public OperationResult<StateDto> state() {
+        return buildRequest(sessionStorage, StateDto.class, new String[]{"/export", taskId, STATE_URI}).get();
     }
 
-    public OperationResult<InputStream> fetch(){
-        JerseyRequestBuilder<InputStream> builder =
-                new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
-        builder
-                .setPath("export")
-                .setPath(taskId)
-                .setPath("mockFilename");
+    public OperationResult<InputStream> fetch() {
 
-        try {
-            AsyncInvoker asyncInvoker = builder.getPath().request("application/zip").async();
-            Future<Response> responseFuture = asyncInvoker.get();
-            OperationResult<InputStream> result =
-                    new OperationResult<InputStream>(responseFuture.get(), InputStream.class);
-            sessionStorage.setSessionId(result.getSessionId());
-            return result;
-        } catch (Exception e) {
-            return null;
+        while (!"finished".equals(state().getEntity().getPhase())) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ignored) {}
         }
+
+        JerseyRequestBuilder<InputStream> builder =
+                buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/mockFilename"});
+        builder.setAccept("application/zip");
+
+        OperationResult<InputStream> result = builder.get();
+        sessionStorage.setSessionId(result.getSessionId());
+
+        return result;
     }
 
 }

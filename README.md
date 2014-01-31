@@ -11,25 +11,25 @@ https://github.com/boryskolesnykov/jasperserver-rest-client/blob/master/mvn-repo
 Configuration
 -------------
 To start working with the library you should firstly configure one ore more instances of `JasperserverRestClient`.
-To do this you shold create instance of `RestClientConfiguration`. It can be done in two ways:  
+To do this you should create instance of `RestClientConfiguration`. It can be done in two ways:
 ####Loading configuration from file: 
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
 ```
 File should contain only URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}/rest_v2`.
-####Сreation of manual configuration
+####Creation of manual configuration
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver/rest_v2");
 ```
 ####Client instantiation:
-Here everthing is easy, you need just to pass `configuration` to `JasperserverRestClient` constructor.
+Here everything is easy, you need just to pass `configuration` to `JasperserverRestClient` constructor.
 ```java
 JasperserverRestClient client = new JasperserverRestClient(configuration);
 ```
 
 Reporting services
 ------------------
-After you've configured the client you can easily use any of available sevices. For reporting service there is one feature that should be noted - when you are running a report all subsequent operations must be executed in the same session. Here's the code:
+After you've configured the client you can easily use any of available services. For reporting service there is one feature that should be noted - when you are running a report all subsequent operations must be executed in the same session. Here's the code:
 ```java
 Session session = client.authenticate("jasperadmin", "jasperadmin");
 ```
@@ -107,7 +107,20 @@ for(AttachmentDescriptor attDescriptor : htmlExportDescriptor.getAttachments()){
 }
 ```
 ####Exporting a Report Asynchronously
-//TODO:
+After running a report and downloading its content in a given format, you can request the same report in other formats. As with exporting report formats through the user interface, the report does not run again because the export process is independent of the report.
+```java
+ExportExecutionOptions exportExecutionOptions = new ExportExecutionOptions()
+        .setOutputFormat("pdf")
+        .setPages("3");
+
+OperationResult<ExportExecutionDescriptor> operationResult =
+        session
+                .reportingService()
+                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
+                .runExport(exportExecutionOptions);
+
+ExportExecutionDescriptor statusEntity = operationResult.getEntity();
+```
 ####Polling Export Execution
 As with the execution of the main report, you can also poll the execution of the export process.
 For example, to get the status of the HTML export in the previous example, use the following code:
@@ -120,6 +133,19 @@ OperationResult<ReportExecutionStatusEntity> operationResult =
                 .status();
 
 ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
+```
+####Finding Running Reports and Jobs
+//TODO: impl
+####Stopping Running Reports and Jobs
+To stop a report that is running and cancel its output, use the code below:
+```java
+OperationResult<ReportExecutionStatusEntity> operationResult1 =
+        session
+                .reportingService()
+                .reportExecutionRequest(executionDescriptor.getRequestId())
+                .cancelExecution();
+
+ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
 ```
 
 Administration services:

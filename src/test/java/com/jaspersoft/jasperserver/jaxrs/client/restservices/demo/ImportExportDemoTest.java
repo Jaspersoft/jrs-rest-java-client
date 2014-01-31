@@ -60,21 +60,12 @@ public class ImportExportDemoTest extends Assert {
                 .create()
                 .getEntity();
 
-        while (true) {
-            StateDto state = client.authenticate("jasperadmin", "jasperadmin")
-                    .exportService()
-                    .task(exportState.getId())
-                    .state()
-                    .getEntity();
-            if ("finished".equals(state.getPhase())) {
-                export = client.authenticate("jasperadmin", "jasperadmin")
-                        .exportService()
-                        .task(exportState.getId())
-                        .fetch()
-                        .getEntity();
-                break;
-            }
-        }
+        export = client.authenticate("jasperadmin", "jasperadmin")
+                .exportService()
+                .task(exportState.getId())
+                .fetch()
+                .getEntity();
+
     }
 
     @Test(dependsOnMethods = "testExport")

@@ -1,3 +1,24 @@
+/*
+* Copyright (C) 2005 - 2014 Jaspersoft Corporation. All rights  reserved.
+* http://www.jaspersoft.com.
+*
+* Unless you have purchased  a commercial license agreement from Jaspersoft,
+* the following license terms  apply:
+*
+* This program is free software: you can redistribute it and/or  modify
+* it under the terms of the GNU Affero General Public License  as
+* published by the Free Software Foundation, either version 3 of  the
+* License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU Affero  General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public  License
+* along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
@@ -15,11 +36,9 @@ import java.util.concurrent.Future;
 
 public class ImportTaskRequestAdapter {
 
-    private final SessionStorage sessionStorage;
     private JerseyRequestBuilder<StateDto> builder;
 
     public ImportTaskRequestAdapter(SessionStorage sessionStorage){
-        this.sessionStorage = sessionStorage;
         this.builder = new JerseyRequestBuilder<StateDto>(sessionStorage, StateDto.class);
         builder.setPath("import");
     }
@@ -38,15 +57,8 @@ public class ImportTaskRequestAdapter {
     }
 
     private OperationResult<StateDto> createImport(Object zipArchive){
-        try {
-            AsyncInvoker asyncInvoker = builder.getPath().request(MediaType.APPLICATION_JSON).async();
-            Future<Response> responseFuture = asyncInvoker.post(Entity.entity(zipArchive, "application/zip"));
-            OperationResult<StateDto> result =
-                    new OperationResult<StateDto>(responseFuture.get(), StateDto.class);
-            sessionStorage.setSessionId(result.getSessionId());
-            return result;
-        } catch (Exception e) {
-            return null;
-        }
+        builder.setAccept(MediaType.APPLICATION_JSON);
+        builder.setContentType("application/zip");
+        return builder.post(zipArchive);
     }
 }

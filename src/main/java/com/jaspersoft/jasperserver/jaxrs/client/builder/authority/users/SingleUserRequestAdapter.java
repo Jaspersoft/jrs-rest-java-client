@@ -1,3 +1,24 @@
+/*
+* Copyright (C) 2005 - 2014 Jaspersoft Corporation. All rights  reserved.
+* http://www.jaspersoft.com.
+*
+* Unless you have purchased  a commercial license agreement from Jaspersoft,
+* the following license terms  apply:
+*
+* This program is free software: you can redistribute it and/or  modify
+* it under the terms of the GNU Affero General Public License  as
+* published by the Free Software Foundation, either version 3 of  the
+* License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU Affero  General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public  License
+* along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
@@ -10,73 +31,68 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+
 public class SingleUserRequestAdapter {
 
-    private final JerseyRequestBuilder<ClientUser> builder;
     private SessionStorage sessionStorage;
-
     private String username;
 
 
     public SingleUserRequestAdapter(SessionStorage sessionStorage, String username) {
         this.sessionStorage = sessionStorage;
-        this.builder = new JerseyRequestBuilder<ClientUser>(sessionStorage, ClientUser.class);
-        this.builder
-                .setPath("/users")
-                .setPath(username);
         this.username = username;
     }
 
     public SingleAttributeInterfaceAdapter attribute(String attributeName){
-        JerseyRequestBuilder<ClientUserAttribute> builder =
-                new JerseyRequestBuilder<ClientUserAttribute>(sessionStorage, ClientUserAttribute.class);
-        builder
-                .setPath("/users")
-                .setPath(username)
-                .setPath("/attributes")
-                .setPath(attributeName);
-        return new SingleAttributeInterfaceAdapter(builder);
+        return new SingleAttributeInterfaceAdapter(attributeName);
     }
 
     public BatchAttributeInterfaceAdapter attributes(){
-        JerseyRequestBuilder<UserAttributesListWrapper> builder =
-                new JerseyRequestBuilder<UserAttributesListWrapper>(sessionStorage, UserAttributesListWrapper.class);
-        builder
-                .setPath("/users")
-                .setPath(username)
-                .setPath("/attributes");
-        return new BatchAttributeInterfaceAdapter(builder);
+        return new BatchAttributeInterfaceAdapter();
     }
 
     public OperationResult<ClientUser> get(){
+        JerseyRequestBuilder<ClientUser> builder =
+                buildRequest(sessionStorage, ClientUser.class, new String[]{"/users", username});
         return builder.get();
     }
 
     public OperationResult createOrUpdate(ClientUser user){
+        JerseyRequestBuilder<Object> builder =
+                buildRequest(sessionStorage, Object.class, new String[]{"/users", username});
         return builder.put(user);
     }
 
     public OperationResult delete(){
+        JerseyRequestBuilder<Object> builder =
+                buildRequest(sessionStorage, Object.class, new String[]{"/users", username});
         return builder.delete();
     }
 
     public class SingleAttributeInterfaceAdapter {
 
-        private JerseyRequestBuilder<ClientUserAttribute> builder;
+        private final String attributeName;
 
-        public SingleAttributeInterfaceAdapter(JerseyRequestBuilder<ClientUserAttribute> builder){
-            this.builder = builder;
+        public SingleAttributeInterfaceAdapter(String attributeName) {
+            this.attributeName = attributeName;
         }
 
         public OperationResult<ClientUserAttribute> get(){
+            JerseyRequestBuilder<ClientUserAttribute> builder =
+                    buildRequest(sessionStorage, ClientUserAttribute.class, new String[]{"/users", username, "/attributes", attributeName});
             return builder.get();
         }
 
         public OperationResult delete(){
+            JerseyRequestBuilder<Object> builder =
+                    buildRequest(sessionStorage, Object.class, new String[]{"/users", username, "/attributes", attributeName});
             return builder.delete();
         }
 
         public OperationResult createOrUpdate(ClientUserAttribute attribute){
+            JerseyRequestBuilder<Object> builder =
+                    buildRequest(sessionStorage, Object.class, new String[]{"/users", username, "/attributes", attributeName});
             return builder.put(attribute);
         }
 
@@ -84,11 +100,9 @@ public class SingleUserRequestAdapter {
 
     public class BatchAttributeInterfaceAdapter {
 
-        private JerseyRequestBuilder<UserAttributesListWrapper> builder;
         private MultivaluedMap<String, String> params;
 
-        public BatchAttributeInterfaceAdapter(JerseyRequestBuilder<UserAttributesListWrapper> builder){
-            this.builder = builder;
+        public BatchAttributeInterfaceAdapter(){
             params = new MultivaluedHashMap<String, String>();
         }
 
@@ -98,16 +112,21 @@ public class SingleUserRequestAdapter {
         }
 
         public OperationResult<UserAttributesListWrapper> get(){
+            JerseyRequestBuilder<UserAttributesListWrapper> builder =
+                    buildRequest(sessionStorage, UserAttributesListWrapper.class, new String[]{"/users", username, "/attributes"});
             builder.addParams(params);
             return builder.get();
         }
 
         public OperationResult<UserAttributesListWrapper> createOrUpdate(UserAttributesListWrapper attributesList){
-
+            JerseyRequestBuilder<UserAttributesListWrapper> builder =
+                    buildRequest(sessionStorage, UserAttributesListWrapper.class, new String[]{"/users", username, "/attributes"});
             return builder.put(attributesList);
         }
 
         public OperationResult<UserAttributesListWrapper> delete(){
+            JerseyRequestBuilder<UserAttributesListWrapper> builder =
+                    buildRequest(sessionStorage, UserAttributesListWrapper.class, new String[]{"/users", username, "/attributes"});
             builder.addParams(params);
             return builder.delete();
         }

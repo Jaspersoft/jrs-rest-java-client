@@ -55,34 +55,16 @@ public class ExportServiceTest extends Assert {
 
     @Test(dependsOnMethods = {"testCreateExportTask", "testCreateExportTaskAndGet"})
     public void testGetExportInputStream() throws InterruptedException, IOException {
-        StateDto state;
+        OperationResult<InputStream> operationResult1 =
+                client
+                        .authenticate("jasperadmin", "jasperadmin")
+                        .exportService()
+                        .task(stateDto.getId())
+                        .fetch();
 
-        while (true) {
-            OperationResult<StateDto> operationResult =
-                    client
-                            .authenticate("jasperadmin", "jasperadmin")
-                            .exportService()
-                            .task(stateDto.getId())
-                            .state();
-
-            state = operationResult.getEntity();
-            if ("finished".equals(state.getPhase())) {
-                OperationResult<InputStream> operationResult1 =
-                        client
-                                .authenticate("jasperadmin", "jasperadmin")
-                                .exportService()
-                                .task(stateDto.getId())
-                                .fetch();
-
-                InputStream inputStream = operationResult1.getEntity();
-                assertNotEquals(inputStream, null);
-                inputStream.close();
-                break;
-            } else {
-                Thread.sleep(500);
-            }
-        }
-
+        InputStream inputStream = operationResult1.getEntity();
+        assertNotEquals(inputStream, null);
+        inputStream.close();
     }
 
 }
