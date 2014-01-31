@@ -135,7 +135,19 @@ OperationResult<ReportExecutionStatusEntity> operationResult =
 ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
 ```
 ####Finding Running Reports and Jobs
-//TODO: impl
+You can search for reports that are running on the server, including
+report jobs triggered by the scheduler.
+To search for running reports, use the search arguments from `ReportAndJobSearchParameter` enumeration.
+```java
+OperationResult<ReportExecutionListWrapper> operationResult =
+        session
+                .reportingService()
+                .runningReportsAndJobs()
+                .parameter(ReportAndJobSearchParameter.REPORT_URI, "/reports/samples/AllAccounts")
+                .find();
+
+ReportExecutionListWrapper entity = operationResult1.getEntity();
+```
 ####Stopping Running Reports and Jobs
 To stop a report that is running and cancel its output, use the code below:
 ```java
