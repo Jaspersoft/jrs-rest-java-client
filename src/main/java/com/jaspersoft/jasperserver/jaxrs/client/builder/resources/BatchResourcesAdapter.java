@@ -26,26 +26,38 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+
 public class BatchResourcesAdapter {
 
-    private final JerseyRequestBuilder<ClientResourceListWrapper> builder;
+    private final SessionStorage sessionStorage;
+    private MultivaluedMap<String, String> params;
 
     public BatchResourcesAdapter(SessionStorage sessionStorage) {
-        builder = new JerseyRequestBuilder<ClientResourceListWrapper>(sessionStorage, ClientResourceListWrapper.class);
-        builder.setPath("resources");
+        this.sessionStorage = sessionStorage;
+        this.params = new MultivaluedHashMap<String, String>();
     }
 
     public BatchResourcesAdapter parameter(ResourceSearchParameter param, String value){
-        builder.addParam(param.getName(), value);
+        params.add(param.getName(), value);
         return this;
     }
 
     public OperationResult<ClientResourceListWrapper> search(){
-        return builder.get();
+        return getBuilder(ClientResourceListWrapper.class).get();
     }
 
     public OperationResult delete(){
-        return builder.delete();
+        return getBuilder(Object.class).delete();
+    }
+
+    private <T> JerseyRequestBuilder<T> getBuilder(Class<T> responseClass) {
+        JerseyRequestBuilder<T> builder = buildRequest(sessionStorage, responseClass, new String[]{"/resources"});
+        builder.addParams(params);
+        return builder;
     }
 
 }

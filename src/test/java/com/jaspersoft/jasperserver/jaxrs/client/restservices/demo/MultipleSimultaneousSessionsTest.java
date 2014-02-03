@@ -6,7 +6,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.Session;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.AttachmentDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
 import org.testng.Assert;

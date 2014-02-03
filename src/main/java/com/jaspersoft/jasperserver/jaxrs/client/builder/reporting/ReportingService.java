@@ -22,10 +22,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportExecutionRequest;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
 
 public class ReportingService {
 
@@ -36,10 +37,9 @@ public class ReportingService {
     }
 
     public OperationResult<ReportExecutionDescriptor> newReportExecutionRequest(ReportExecutionRequest request) {
-        JerseyRequestBuilder<ReportExecutionDescriptor> builder =
-                new JerseyRequestBuilder<ReportExecutionDescriptor>(sessionStorage, ReportExecutionDescriptor.class);
-        builder.setPath("reportExecutions");
-        OperationResult<ReportExecutionDescriptor> descriptor = builder.post(request);
+        OperationResult<ReportExecutionDescriptor> descriptor =
+                buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions"})
+                        .post(request);
         sessionStorage.setSessionId(descriptor.getSessionId());
         return descriptor;
     }
@@ -48,11 +48,11 @@ public class ReportingService {
         return new ReportExecutionRequestBuilder(sessionStorage, requestId);
     }
 
-    public ReportsAndJobsSearchAdapter runningReportsAndJobs(){
+    public ReportsAndJobsSearchAdapter runningReportsAndJobs() {
         return new ReportsAndJobsSearchAdapter(sessionStorage);
     }
 
-    public ReportsAdapter report(String reportUnitUri){
+    public ReportsAdapter report(String reportUnitUri) {
         return new ReportsAdapter(sessionStorage, reportUnitUri);
     }
 

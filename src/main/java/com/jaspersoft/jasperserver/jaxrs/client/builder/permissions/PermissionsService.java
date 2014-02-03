@@ -27,6 +27,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+
 public class PermissionsService {
 
     private final SessionStorage sessionStorage;
@@ -40,14 +42,12 @@ public class PermissionsService {
     }
 
     public OperationResult create(RepositoryPermission permission){
-        JerseyRequestBuilder builder = new JerseyRequestBuilder(sessionStorage, Object.class);
-        builder.setPath("permissions");
-        return builder.post(permission);
+        return buildRequest(sessionStorage, Object.class, new String[]{"/permissions"})
+                .post(permission);
     }
 
     public OperationResult create(RepositoryPermissionListWrapper permissions) {
-        JerseyRequestBuilder builder = new JerseyRequestBuilder(sessionStorage, Object.class);
-        builder.setPath("permissions");
+        JerseyRequestBuilder builder = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
         builder.setContentType("application/collection+json");
         return builder.post(permissions);
     }

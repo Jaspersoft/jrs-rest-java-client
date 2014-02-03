@@ -3,11 +3,12 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.resources.ResourceServiceParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionListWrapper;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
 
 
 public class ReportsAndJobsSearchAdapter {
@@ -27,10 +28,8 @@ public class ReportsAndJobsSearchAdapter {
 
     public OperationResult<ReportExecutionListWrapper> find(){
         JerseyRequestBuilder<ReportExecutionListWrapper> builder =
-                new JerseyRequestBuilder<ReportExecutionListWrapper>(sessionStorage, ReportExecutionListWrapper.class);
-        builder.setPath("reportExecutions");
+                buildRequest(sessionStorage, ReportExecutionListWrapper.class, new String[]{"/reportExecutions"});
         builder.addParams(params);
-
         return builder.get();
     }
 

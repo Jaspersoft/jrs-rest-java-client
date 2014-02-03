@@ -26,31 +26,40 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+
 public class SinglePermissionRecipientRequestAdapter {
 
-    private final JerseyRequestBuilder<RepositoryPermission> builder;
+    private final SessionStorage sessionStorage;
+    private final String resourceUri;
+    private final String recipient;
 
 
     public SinglePermissionRecipientRequestAdapter(SessionStorage sessionStorage,
                                                    String resourceUri, String recipient) {
 
-        this.builder = new JerseyRequestBuilder<RepositoryPermission>(sessionStorage, RepositoryPermission.class);
-        this.builder
-                .setPath("/permissions")
-                .setPath(resourceUri)
-                .addMatrixParam("recipient", recipient);
+        this.sessionStorage = sessionStorage;
+        this.resourceUri = resourceUri;
+        this.recipient = recipient;
     }
 
     public OperationResult<RepositoryPermission> get(){
-        return builder.get();
+        return getBuilder(RepositoryPermission.class).get();
     }
 
     public OperationResult<RepositoryPermission> createOrUpdate(RepositoryPermission permission){
-        return builder.put(permission);
+        return getBuilder(RepositoryPermission.class).put(permission);
     }
 
-    public OperationResult<RepositoryPermission> delete(){
-        return builder.delete();
+    public OperationResult delete(){
+        return getBuilder(Object.class).delete();
+    }
+
+    private <T> JerseyRequestBuilder<T> getBuilder(Class<T> responseClass){
+        JerseyRequestBuilder<T> builder =
+                buildRequest(sessionStorage, responseClass, new String[]{"/permissions", resourceUri});
+        builder.addMatrixParam("recipient", recipient);
+        return builder;
     }
 
 }

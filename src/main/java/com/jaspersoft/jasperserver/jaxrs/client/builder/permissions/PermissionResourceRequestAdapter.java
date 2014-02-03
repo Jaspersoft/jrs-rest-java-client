@@ -26,27 +26,23 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+
 public class PermissionResourceRequestAdapter {
 
-    private SessionStorage sessionStorage;
-    private String resourceUri;
-    private MultivaluedMap<String, String> params;
-    private final JerseyRequestBuilder<RepositoryPermissionListWrapper> builder;
+    private final SessionStorage sessionStorage;
+    private final String resourceUri;
+    private final MultivaluedMap<String, String> params;
 
 
     public PermissionResourceRequestAdapter(SessionStorage sessionStorage, String resourceUri) {
         this.sessionStorage = sessionStorage;
         this.resourceUri = resourceUri;
         params = new MultivaluedHashMap<String, String>();
-
-        builder = new JerseyRequestBuilder<RepositoryPermissionListWrapper>(
-                sessionStorage, RepositoryPermissionListWrapper.class);
-        builder
-                .setPath("/permissions")
-                .setPath(resourceUri);
     }
 
     public SinglePermissionRecipientRequestAdapter permissionRecipient(PermissionRecipient recipient, String name) {
@@ -56,8 +52,9 @@ public class PermissionResourceRequestAdapter {
     }
 
     public OperationResult createOrUpdate(RepositoryPermissionListWrapper permissions) {
-        builder.setContentType("application/collection+json");
-        return builder.put(permissions);
+        return buildRequest(sessionStorage, Object.class, new String[]{"/permissions", resourceUri},
+                "application/collection+json", MediaType.APPLICATION_JSON, null, null)
+                .put(permissions);
     }
 
     public PermissionResourceRequestAdapter param(PermissionResourceParameter resourceParam, String value) {
@@ -66,12 +63,15 @@ public class PermissionResourceRequestAdapter {
     }
 
     public OperationResult<RepositoryPermissionListWrapper> get(){
+        JerseyRequestBuilder<RepositoryPermissionListWrapper> builder =
+                buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
         builder.addParams(params);
         return builder.get();
     }
 
     public OperationResult delete(){
-        return builder.delete();
+        return buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri})
+                .delete();
     }
 
 }

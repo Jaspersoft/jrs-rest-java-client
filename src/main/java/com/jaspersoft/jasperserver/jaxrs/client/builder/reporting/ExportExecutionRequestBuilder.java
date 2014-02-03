@@ -22,11 +22,12 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportExecutionStatusEntity;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
 import java.io.InputStream;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
 
 public class ExportExecutionRequestBuilder {
 
@@ -41,15 +42,9 @@ public class ExportExecutionRequestBuilder {
     }
 
     public OperationResult<InputStream> outputResource(){
-        JerseyRequestBuilder<InputStream> builder =
-                new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
-        builder
-                .setPath("reportExecutions")
-                .setPath(requestId)
-                .setPath("exports")
-                .setPath(exportOutput)
-                .setPath("outputResource");
-        return builder.get();
+        return buildRequest(sessionStorage, InputStream.class,
+                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/outputResource"})
+                .get();
     }
 
     public OperationResult<InputStream> attachment(String attachmentId){
@@ -60,27 +55,14 @@ public class ExportExecutionRequestBuilder {
             } catch (InterruptedException ignored) {}
         }
 
-        JerseyRequestBuilder<InputStream> builder =
-                new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
-        builder
-                .setPath("reportExecutions")
-                .setPath(requestId)
-                .setPath("exports")
-                .setPath(exportOutput)
-                .setPath("attachments")
-                .setPath(attachmentId);
-        return builder.get();
+        return buildRequest(sessionStorage, InputStream.class,
+                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/attachments", attachmentId})
+                .get();
     }
 
     public OperationResult<ReportExecutionStatusEntity> status(){
-        JerseyRequestBuilder<ReportExecutionStatusEntity> builder =
-                new JerseyRequestBuilder<ReportExecutionStatusEntity>(sessionStorage, ReportExecutionStatusEntity.class);
-        builder
-                .setPath("reportExecutions")
-                .setPath(requestId)
-                .setPath("exports")
-                .setPath(exportOutput)
-                .setPath("status");
-        return builder.get();
+        return buildRequest(sessionStorage, ReportExecutionStatusEntity.class,
+                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/status"})
+                .get();
     }
 }

@@ -36,6 +36,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.InputStream;
 
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+
 public class SingleResourceAdapter {
 
 
@@ -56,10 +58,7 @@ public class SingleResourceAdapter {
 
     public OperationResult<ClientResource> details() {
         JerseyRequestBuilder<ClientResource> builder =
-                new JerseyRequestBuilder<ClientResource>(sessionStorage, ClientResource.class);
-        builder
-                .setPath("resources")
-                .setPath(resourceUri);
+                buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri});
         builder.addParams(params);
 
         if (isRootFolder(resourceUri))
@@ -71,16 +70,12 @@ public class SingleResourceAdapter {
     }
 
     private boolean isRootFolder(String resourceUri) {
-        return "/".equals(resourceUri);
+        return "/".equals(resourceUri) || "".equals(resourceUri);
     }
 
     public OperationResult<InputStream> downloadBinary() {
-        JerseyRequestBuilder<InputStream> builder =
-                new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
-        builder
-                .setPath("resources")
-                .setPath(resourceUri);
-        return builder.get();
+        return buildRequest(sessionStorage, InputStream.class, new String[]{"/resources", resourceUri})
+                .get();
     }
 
     public OperationResult<ClientResource> createOrUpdate(ClientResource resource) {
@@ -93,16 +88,9 @@ public class SingleResourceAdapter {
 
     private JerseyRequestBuilder<ClientResource> getBuilderForCreateOrUpdate(ClientResource resource) {
         Class<? extends ClientResource> resourceType = ResourcesTypeResolverUtil.getResourceType(resource);
-
-        JerseyRequestBuilder<ClientResource> builder =
-                new JerseyRequestBuilder<ClientResource>(sessionStorage, resourceType);
-        builder
-                .setPath("resources")
-                .setPath(resourceUri);
-        builder.addParams(params);
-        builder.setContentType(ResourcesTypeResolverUtil.getMimeType(resourceType));
-
-        return builder;
+        return (JerseyRequestBuilder<ClientResource>) buildRequest(sessionStorage, resourceType,
+                new String[]{"/resources", resourceUri},
+                ResourcesTypeResolverUtil.getMimeType(resourceType), null, params, null);
     }
 
     public OperationResult<ClientResource> copyFrom(String fromUri) {
@@ -116,10 +104,7 @@ public class SingleResourceAdapter {
     private OperationResult<ClientResource> copyOrMove(boolean moving, String fromUri) {
 
         JerseyRequestBuilder<ClientResource> builder =
-                new JerseyRequestBuilder<ClientResource>(sessionStorage, ClientResource.class);
-        builder
-                .setPath("resources")
-                .setPath(resourceUri);
+                buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri});
         builder.addParams(params);
         builder.addHeader("Content-Location", fromUri);
 
@@ -142,10 +127,7 @@ public class SingleResourceAdapter {
                 .field("type", fileType.name());
 
         JerseyRequestBuilder<ClientFile> builder =
-                new JerseyRequestBuilder<ClientFile>(sessionStorage, ClientFile.class);
-        builder
-                .setPath("resources")
-                .setPath(resourceUri);
+                buildRequest(sessionStorage, ClientFile.class, new String[]{"/resources", resourceUri});
         builder.addParams(params);
         builder.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -154,10 +136,7 @@ public class SingleResourceAdapter {
 
     public OperationResult delete() {
         JerseyRequestBuilder builder =
-                new JerseyRequestBuilder(sessionStorage, Object.class);
-        builder
-                .setPath("resources")
-                .setPath(resourceUri);
+                buildRequest(sessionStorage, Object.class, new String[]{"/resources", resourceUri});
         return builder.delete();
     }
 
@@ -169,10 +148,7 @@ public class SingleResourceAdapter {
             Class<ResourceType> resourceTypeClass, PatchDescriptor descriptor) {
 
         JerseyRequestBuilder<ResourceType> builder =
-                new JerseyRequestBuilder<ResourceType>(sessionStorage, resourceTypeClass);
-        builder
-                .setPath("resources")
-                .setPath(resourceUri);
+                buildRequest(sessionStorage, resourceTypeClass, new String[]{"/resources", resourceUri});
         builder.setAccept(ResourcesTypeResolverUtil.getMimeType(resourceTypeClass));
         builder.addHeader("X-HTTP-Method-Override", "PATCH");
 

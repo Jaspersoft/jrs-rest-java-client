@@ -22,15 +22,13 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportExecutionStatusEntity;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportExecutionDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportExecutionOptions;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
 
-import javax.ws.rs.core.MediaType;
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
 
 public class ReportExecutionRequestBuilder {
 
@@ -43,27 +41,20 @@ public class ReportExecutionRequestBuilder {
     }
 
     public OperationResult<ReportExecutionStatusEntity> status() {
-        JerseyRequestBuilder<ReportExecutionStatusEntity> builder =
-                new JerseyRequestBuilder<ReportExecutionStatusEntity>(sessionStorage, ReportExecutionStatusEntity.class);
-        builder.setPath("reportExecutions").setPath(requestId).setPath("status");
-        return builder.get();
+        return buildRequest(sessionStorage, ReportExecutionStatusEntity.class,
+                new String[]{"/reportExecutions", requestId, "/status"}).get();
     }
 
     public OperationResult<ReportExecutionDescriptor> executionDetails() {
-        JerseyRequestBuilder<ReportExecutionDescriptor> builder =
-                new JerseyRequestBuilder<ReportExecutionDescriptor>(sessionStorage, ReportExecutionDescriptor.class);
-        builder.setPath("reportExecutions").setPath(requestId);
-        builder.setAccept(MediaType.APPLICATION_JSON);
-        return builder.get();
+        return buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId})
+                .get();
     }
 
     public OperationResult<ReportExecutionStatusEntity> cancelExecution() {
-        JerseyRequestBuilder<ReportExecutionStatusEntity> builder =
-                new JerseyRequestBuilder<ReportExecutionStatusEntity>(sessionStorage, ReportExecutionStatusEntity.class);
-        builder.setPath("reportExecutions").setPath(requestId).setPath("status");
         ReportExecutionStatusEntity statusEntity = new ReportExecutionStatusEntity();
         statusEntity.setValue("cancelled");
-        return builder.put(statusEntity);
+        return buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{"/reportExecutions", requestId, "/status"})
+                .put(statusEntity);
     }
 
     public ExportExecutionRequestBuilder export(String exportOutput) {
@@ -71,15 +62,8 @@ public class ReportExecutionRequestBuilder {
     }
 
     public OperationResult<ExportExecutionDescriptor> runExport(ExportExecutionOptions exportExecutionOptions) {
-        JerseyRequestBuilder<ExportExecutionDescriptor> builder =
-                new JerseyRequestBuilder<ExportExecutionDescriptor>(sessionStorage, ExportExecutionDescriptor.class);
-
-        builder
-                .setPath("reportExecutions")
-                .setPath(requestId)
-                .setPath("exports");
-
-        return builder.post(exportExecutionOptions);
+        return buildRequest(sessionStorage, ExportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId, "/exports"})
+                .post(exportExecutionOptions);
     }
 
 }

@@ -22,9 +22,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters;
 
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
 
 public class ReorderingReportParametersAdapter extends ReportParametersAdapter {
 
@@ -33,13 +34,8 @@ public class ReorderingReportParametersAdapter extends ReportParametersAdapter {
     }
 
     public OperationResult<ReportInputControlsListWrapper> reorder(ReportInputControlsListWrapper inputControls){
-        JerseyRequestBuilder<ReportInputControlsListWrapper> builder =
-                new JerseyRequestBuilder<ReportInputControlsListWrapper>(sessionStorage, ReportInputControlsListWrapper.class);
-        builder
-                .setPath("reports")
-                .setPath(reportUnitUri)
-                .setPath("inputControls");
-        return builder.put(inputControls);
+        return buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"})
+                .put(inputControls);
     }
 
 }

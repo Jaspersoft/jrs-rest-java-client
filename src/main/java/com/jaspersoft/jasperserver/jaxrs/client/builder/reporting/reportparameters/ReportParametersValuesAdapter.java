@@ -30,6 +30,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+
 public class ReportParametersValuesAdapter {
 
     protected final SessionStorage sessionStorage;
@@ -37,8 +39,8 @@ public class ReportParametersValuesAdapter {
     protected final MultivaluedMap<String, String> params;
     private String idsPathSegment;
 
-    public ReportParametersValuesAdapter(SessionStorage sessionStorage, String reportUnitUri){
-        params = new MultivaluedHashMap<String, String>();
+    public ReportParametersValuesAdapter(SessionStorage sessionStorage, String reportUnitUri) {
+        this.params = new MultivaluedHashMap<String, String>();
         this.sessionStorage = sessionStorage;
         this.reportUnitUri = reportUnitUri;
     }
@@ -48,40 +50,31 @@ public class ReportParametersValuesAdapter {
         this.idsPathSegment = idsPathSegment;
     }
 
-    public ReportParametersValuesAdapter parameter(String name, String value){
+    public ReportParametersValuesAdapter parameter(String name, String value) {
         params.add(name, value);
         return this;
     }
 
-    public OperationResult<InputControlStateListWrapper> get(){
+    public OperationResult<InputControlStateListWrapper> get() {
         JerseyRequestBuilder<InputControlStateListWrapper> builder =
-                new JerseyRequestBuilder<InputControlStateListWrapper>(
-                        sessionStorage, InputControlStateListWrapper.class);
-        builder
-                .setPath("reports")
-                .setPath(reportUnitUri)
-                .setPath("inputControls");
-        if (idsPathSegment != null){
+                buildRequest(sessionStorage, InputControlStateListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"});
+        if (idsPathSegment != null) {
             builder.setPath(idsPathSegment);
         }
         builder.setPath("values");
         builder.addParams(params);
         return builder.get();
     }
-    public OperationResult<InputControlStateListWrapper> update(){
+
+    public OperationResult<InputControlStateListWrapper> update() {
         JerseyRequestBuilder<InputControlStateListWrapper> builder =
-                new JerseyRequestBuilder<InputControlStateListWrapper>(
-                        sessionStorage, InputControlStateListWrapper.class);
-        builder
-                .setPath("reports")
-                .setPath(reportUnitUri)
-                .setPath("inputControls");
-        if (idsPathSegment != null){
+                buildRequest(sessionStorage, InputControlStateListWrapper.class,
+                        new String[]{"/reports", reportUnitUri, "/inputControls"},
+                        MediaType.APPLICATION_XML, MediaType.APPLICATION_XML, null, null);
+        if (idsPathSegment != null) {
             builder.setPath(idsPathSegment);
         }
         builder.setPath("values");
-        builder.setContentType(MediaType.APPLICATION_XML);
-        builder.setAccept(MediaType.APPLICATION_XML);
         return builder.post(ReportParametersUtils.toReportParameters(params));
     }
 

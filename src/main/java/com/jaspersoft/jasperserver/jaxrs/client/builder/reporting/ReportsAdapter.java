@@ -28,6 +28,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparamete
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters.ReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters.ReportParametersUtils;
 
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,28 +61,39 @@ public class ReportsAdapter {
 
     public class RunReportAdapter{
 
-        private final JerseyRequestBuilder<InputStream> builder;
+        private final MultivaluedMap<String, String> params;
+        private final SessionStorage sessionStorage;
+        private final String reportUnitUri;
+        private final ReportOutputFormat format;
+        private final Integer[] pages;
 
         public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri,
                                 ReportOutputFormat format, Integer[] pages){
 
-            builder = new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
+            this.params = new MultivaluedHashMap<String, String>();
+            this.sessionStorage = sessionStorage;
+            this.reportUnitUri = reportUnitUri;
+            this.format = format;
+            this.pages = pages;
+        }
+
+        public RunReportAdapter parameter(String name, String value){
+            params.add(name, value);
+            return this;
+        }
+
+        public OperationResult<InputStream> run(){
+            JerseyRequestBuilder<InputStream> builder =
+                    new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
             builder
                     .setPath("reports")
                     .setPath(reportUnitUri + "." + format.toString().toLowerCase());
+            builder.addParams(params);
 
             if (pages.length == 1)
                 builder.addParam("page", pages[0].toString());
             if (pages.length > 1)
                 builder.addParam("pages", toStringArray(pages));
-        }
-
-        public RunReportAdapter parameter(String name, String value){
-            builder.addParam(name, value);
-            return this;
-        }
-
-        public OperationResult<InputStream> run(){
             return builder.get();
         }
 

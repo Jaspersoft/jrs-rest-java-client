@@ -22,7 +22,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
-import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;

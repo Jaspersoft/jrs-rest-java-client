@@ -50,18 +50,6 @@ public class ReportParametersServiceTest extends Assert {
     }
 
     @Test
-    public void testGetReportInputParametersViaPost(){
-        ReportInputControlsListWrapper inputControls =
-                client.authenticate("jasperadmin", "jasperadmin")
-                        .reportingService()
-                        .report("/reports/samples/Cascading_multi_select_report")
-                        .reportParameters()
-                        .secureGet()
-                        .getEntity();
-        assertNotEquals(inputControls, null);
-    }
-
-    @Test
     public void testGetInputControlsStructureForSpecifiedInputControls() {
         ReportInputControlsListWrapper inputControls =
                 client.authenticate("jasperadmin", "jasperadmin")
@@ -69,19 +57,6 @@ public class ReportParametersServiceTest extends Assert {
                         .report("/reports/samples/Cascading_multi_select_report")
                         .reportParameters("Cascading_name_single_select")
                         .get()
-                        .getEntity();
-        assertNotEquals(inputControls, null);
-        assertEquals(inputControls.getInputParameters().size(), 1);
-    }
-
-    @Test
-    public void testGetInputControlsStructureForSpecifiedInputControlsViaPost() {
-        ReportInputControlsListWrapper inputControls =
-                client.authenticate("jasperadmin", "jasperadmin")
-                        .reportingService()
-                        .report("/reports/samples/Cascading_multi_select_report")
-                        .reportParameters("Cascading_name_single_select")
-                        .secureGet()
                         .getEntity();
         assertNotEquals(inputControls, null);
         assertEquals(inputControls.getInputParameters().size(), 1);

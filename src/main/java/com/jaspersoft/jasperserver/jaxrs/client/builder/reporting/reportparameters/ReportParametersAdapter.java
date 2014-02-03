@@ -30,15 +30,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+
 public class ReportParametersAdapter {
 
     protected final SessionStorage sessionStorage;
     protected final String reportUnitUri;
-    protected MultivaluedMap<String, String> params;
+    protected final MultivaluedMap<String, String> params;
     private String idsPathSegment;
 
     public ReportParametersAdapter(SessionStorage sessionStorage, String reportUnitUri){
-        params = new MultivaluedHashMap<String, String>();
+        this.params = new MultivaluedHashMap<String, String>();
         this.sessionStorage = sessionStorage;
         this.reportUnitUri = reportUnitUri;
     }
@@ -55,31 +57,12 @@ public class ReportParametersAdapter {
 
     public OperationResult<ReportInputControlsListWrapper> get(){
         JerseyRequestBuilder<ReportInputControlsListWrapper> builder =
-                new JerseyRequestBuilder<ReportInputControlsListWrapper>(
-                        sessionStorage, ReportInputControlsListWrapper.class);
-        builder
-                .setPath("reports")
-                .setPath(reportUnitUri)
-                .setPath("inputControls");
+                buildRequest(sessionStorage, ReportInputControlsListWrapper.class,
+                        new String[]{"/reports", reportUnitUri, "/inputControls"},
+                        MediaType.APPLICATION_XML, MediaType.APPLICATION_XML, null, null);
         if (idsPathSegment != null){
             builder.setPath(idsPathSegment);
         }
-        builder.addParams(params);
-        return builder.get();
-    }
-    public OperationResult<ReportInputControlsListWrapper> secureGet(){
-        JerseyRequestBuilder<ReportInputControlsListWrapper> builder =
-                new JerseyRequestBuilder<ReportInputControlsListWrapper>(
-                        sessionStorage, ReportInputControlsListWrapper.class);
-        builder
-                .setPath("reports")
-                .setPath(reportUnitUri)
-                .setPath("inputControls");
-        if (idsPathSegment != null){
-            builder.setPath(idsPathSegment);
-        }
-        builder.setContentType(MediaType.APPLICATION_XML);
-        builder.setAccept(MediaType.APPLICATION_XML);
         return builder.post(ReportParametersUtils.toReportParameters(params));
     }
 

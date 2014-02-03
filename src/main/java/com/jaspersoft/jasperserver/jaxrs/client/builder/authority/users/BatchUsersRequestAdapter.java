@@ -22,7 +22,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users;
 
 import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 

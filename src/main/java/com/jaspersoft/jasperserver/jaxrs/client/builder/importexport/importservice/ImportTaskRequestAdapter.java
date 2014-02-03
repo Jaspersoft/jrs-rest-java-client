@@ -22,43 +22,43 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 
-import javax.ws.rs.client.AsyncInvoker;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.InputStream;
-import java.util.concurrent.Future;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
 
 public class ImportTaskRequestAdapter {
 
-    private JerseyRequestBuilder<StateDto> builder;
+    private final SessionStorage sessionStorage;
+    private final MultivaluedMap<String, String> params;
 
-    public ImportTaskRequestAdapter(SessionStorage sessionStorage){
-        this.builder = new JerseyRequestBuilder<StateDto>(sessionStorage, StateDto.class);
-        builder.setPath("import");
+    public ImportTaskRequestAdapter(SessionStorage sessionStorage) {
+        this.sessionStorage = sessionStorage;
+        this.params = new MultivaluedHashMap<String, String>();
     }
 
-    public ImportTaskRequestAdapter parameter(ImportParameter parameter, boolean value){
-        builder.addParam(parameter.getParamName(), Boolean.toString(value));
+    public ImportTaskRequestAdapter parameter(ImportParameter parameter, boolean value) {
+        params.add(parameter.getParamName(), Boolean.toString(value));
         return this;
     }
 
-    public OperationResult<StateDto> create(File zipArchive){
+    public OperationResult<StateDto> create(File zipArchive) {
         return createImport(zipArchive);
     }
 
-    public OperationResult<StateDto> create(InputStream zipArchive){
+    public OperationResult<StateDto> create(InputStream zipArchive) {
         return createImport(zipArchive);
     }
 
-    private OperationResult<StateDto> createImport(Object zipArchive){
-        builder.setAccept(MediaType.APPLICATION_JSON);
-        builder.setContentType("application/zip");
-        return builder.post(zipArchive);
+    private OperationResult<StateDto> createImport(Object zipArchive) {
+        return buildRequest(sessionStorage, StateDto.class, new String[]{"/import"},
+                "application/zip", MediaType.APPLICATION_JSON, params, null)
+                .post(zipArchive);
     }
 }
