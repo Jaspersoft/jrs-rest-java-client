@@ -35,7 +35,21 @@ Session session = client.authenticate("jasperadmin", "jasperadmin");
 ```
 We've authenticated as `jasperadmin` user an got a session for this user, all subsequent operations must be done through this session instance.
 ####Running a report:
-In order to run a report, you need firstly build `ReportExecutionRequest` instance and specify all the parameters needed to launch a report. The response from the server is the `ReportExecutionDescriptor` instance which contains the request ID needed to track the execution until completion and others report parameters. Here's the code to run a report:
+There are two approaches to run a report - in synchronous and asynchronous modes.
+To run report in synchronous mode you can use the code below:
+```java
+OperationResult<InputStream> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .reportingService()
+        .report("/reports/samples/Cascading_multi_select_report")
+        .prepareForRun(ReportOutputFormat.HTML, 1)
+        .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
+        .run();
+InputStream report = result.getEntity();
+```
+In this mode you don't need to work in one session. In the above code we specified report URI, format in which we want to get a report and some report parameters. As we a result we got `InputStream` instance. In synchronous mode as a response you get a report itself while in asynchronous you get just a descriptor with report ID which you can use to download report afer it will be ready.
+
+In order to run a report in asynchronous mode, you need firstly build `ReportExecutionRequest` instance and specify all the parameters needed to launch a report. The response from the server is the `ReportExecutionDescriptor` instance which contains the request ID needed to track the execution until completion and others report parameters. Here's the code to run a report:
 ```java
 //instantiating request and specifying report parameters
 ReportExecutionRequest request = new ReportExecutionRequest();
@@ -162,44 +176,157 @@ ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
 
 Administration services:
 ------------------------
-####New user creation:
-```java
-        ClientUser user = new ClientUser()
-                .setUsername("john.doe")
-                .setPassword("12345678")
-                .setEmailAddress("john.doe@email.net")
-                .setEnabled(true)
-                .setExternallyDefined(false)
-                .setFullName("John Doe");
+Only administrative users may access the REST services for administration.
 
-        client
-            .authenticate("jasperadmin", "jasperadmin")
-            .usersService()
-            .username(user.getUsername())
-            .createOrUpdate(user);
-```
-####Granting new user with admin role:
+###Users service
+It provides methods that allow you to list, view, create, modify, and delete user accounts, including setting role membership.
+Because the user ID is used in the URL, this service can operate only on users whose ID is less than 100 characters long and does not contain spaces or special symbols. As with resource IDs, the user ID is permanent and cannot be modified for the life of the user account.
+####Searching for Users
+You can search for users by name or by role. If no search is specified, service returns all users.
 ```java
-        ClientRole role = client
+OperationResult<UsersListWrapper> operationResult =
+        client
                 .authenticate("jasperadmin", "jasperadmin")
-                .rolesService()
-                .rolename("ROLE_ADMINISTRATOR")
-                .get()
-                .getEntity();
+                .usersService()
+                .allUsers()
+                .param(UsersParameter.REQUIRED_ROLE, "ROLE_USER")
+                .get();
 
-        Set<ClientRole> roles = new HashSet<ClientRole>();
-        roles.add(role);
-        user.setRoleSet(roles);
-
-        client
-            .authenticate("jasperadmin", "jasperadmin")
-            .usersService()
-            .username(user.getUsername())
-            .createOrUpdate(user);
+UsersListWrapper usersListWrapper = operationResult.getEntity();
 ```
-Firstly we requested an admin role entity and then updated existing user with a new role.
+####Viewing a User
+Method `username()` with a user ID (username) retrieves a single descriptor containing the full list of user properties and roles.
+```java
+OperationResult<ClientUser> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .usersService()
+                .username("jasperadmin")
+                .get();
 
-####Addition of some user' attributes:
+ClientUser user = operationResult.getEntity();
+```
+The full user descriptor includes detailed information about the user account, including any roles.
+####Creating a User
+To create a user account, put all required information in a user descriptor `ClientUser`, and include it in a request to the users service (`createOrUpdate()` method), with the intended user ID (username) specified in the `username()` method. To create a user, the user ID in the `username()` method must be unique on the server. If the user ID already exists, that user account will be modified. The descriptor sent in the request should contain all the properties you want to set on the new user, except for the username that is specified in the `username()` method. To set roles on the user, specify them as a list of roles.
+```java
+//Creating a user
+ClientUser user = new ClientUser()
+        .setUsername("john.doe")
+        .setPassword("12345678")
+        .setEmailAddress("john.doe@email.net")
+        .setEnabled(true)
+        .setExternallyDefined(false)
+        .setFullName("John Doe");
+
+client
+    .authenticate("jasperadmin", "jasperadmin")
+    .usersService()
+    .username(user.getUsername())
+    .createOrUpdate(user);
+    
+//Granting new user with admin role    
+ClientRole role = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .rolesService()
+        .rolename("ROLE_ADMINISTRATOR")
+        .get()
+        .getEntity();
+
+Set<ClientRole> roles = new HashSet<ClientRole>();
+roles.add(role);
+user.setRoleSet(roles);
+
+client
+    .authenticate("jasperadmin", "jasperadmin")
+    .usersService()
+    .username(user.getUsername())
+    .createOrUpdate(user);
+```
+####Modifying User Properties
+To modify the properties of a user account, put all desired information in a user descriptor (`ClientUser`), and include it in a request to the users service (`createOrUpdate()` method), with the existing user ID (username) specified in the `username()` method. To modify a user, the user ID must already exist on the server. If the user ID doesn’t exist, a user account will be created. To add a role to the user, specify the entire list of roles with the desired role added. To remove a role from a user, specify the entire list of roles without the desired role removed.
+```java
+ClientUser user = new ClientUser()
+        .setUsername("john.doe")
+        .setPassword("12345678")
+        .setEmailAddress("john.doe@email.net")
+        .setEnabled(true)
+        .setExternallyDefined(false)
+        .setFullName("Bob");                    //field to be updated
+
+client
+    .authenticate("jasperadmin", "jasperadmin")
+    .usersService()
+    .username(user.getUsername())
+    .createOrUpdate(user);
+```
+####Deleting a User
+To delete a user, call the `delete()` method and specify the user ID in the `username()` method.
+```java
+client
+    .authenticate("jasperadmin", "jasperadmin")
+    .usersService()
+    .username(user.getUsername())
+    .delete();
+```
+
+Attributes service
+--------------------
+Attributes, also called profile attributes, are name-value pairs associated with a user. Certain advanced features such as Domain security and OLAP access grants use profile attributes in addition to roles to grant certain permissions. Unlike roles, attributes are not pre-defined, and thus any attribute name can be assigned any value at any time.
+Attributes service provides methods for reading, writing, and deleting attributes on any given user account. All attribute operations apply to a single specific user; there are no operations for reading or searching attributes from multiple users.
+Because the user ID is used in the URL, this service can operate only on users whose ID is less than 100 characters long and does not contain spaces or special symbols. In addition, both attribute names and attribute values being written with this service are limited to 255 characters and may not be empty (null) or contain only whitespace characters.
+####Viewing User Attributes
+The code below retrieves the list of attributes, if any, defined for the user.
+```java
+OperationResult<UserAttributesListWrapper> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .usersService()
+                .username("jasperadmin")
+                .attributes()
+                .get();
+
+UserAttributesListWrapper attributesListWrapper = operationResult.getEntity();
+```
+The list of attributes includes the name and value of each attribute. Each attribute may only have one value, however that value may contain a comma-separated list that is interpreted by the server as being multi-valued.
+
+An alternative syntax exists to read a single attribute by specifying its name in the `attribute()` method:
+```java
+OperationResult<ClientUserAttribute> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .usersService()
+                .username("jasperadmin")
+                .attribute("testAttribute")
+                .get();
+
+ClientUserAttribute attribute = operationResult.getEntity();
+```
+The response is a single attribute name-value pair.
+####Setting User Attributes
+The `createOrUpdate()` method of the attributes service adds or replaces attributes on the specified user. The list of attributes defines the name and value of each attribute. Each attribute may only have one value, however, that value may contain a comma separated list that is interpreted by the server as being multi-valued.
+There are two syntaxes, the following one is for adding or replacing all attributes
+```java
+List<ClientUserAttribute> userAttributes = new ArrayList<ClientUserAttribute>();
+userAttributes.add(new ClientUserAttribute()
+        .setName("attr1")
+        .setValue("val1"));
+userAttributes.add(new ClientUserAttribute()
+        .setName("attr2")
+        .setValue("val2"));
+
+UserAttributesListWrapper listWrapper = new UserAttributesListWrapper(userAttributes);
+OperationResult<UserAttributesListWrapper> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .usersService()
+                .username("jasperadmin")
+                .attributes()
+                .createOrUpdate(listWrapper);
+
+Response response = operationResult.getResponse();
+```
+The second syntax of the attributes service is for adding or replacing individual attributes.
 ```java
         ClientUserAttribute attribute = new ClientUserAttribute()
                         .setName("someAttribute")
@@ -212,44 +339,34 @@ Firstly we requested an admin role entity and then updated existing user with a 
             .attribute(attribute.getName())
             .createOrUpdate(attribute);
 ```
-####Creating permission for user to do something with some resource:
+####Deleting User Attributes
+The `delete()` method of the attributes service removes attributes from the specified user. When attributes are
+removed, both the name and the value of the attribute are removed, not only the value.
+There are two syntaxes, the following one is for deleting multiple attributes or all attributes at once.
 ```java
-        RepositoryPermission permission = new RepositoryPermission()
-            .setRecipient("user:/john.doe")
-            .setUri("/")
-            .setMask(PermissionMask.READ_ONLY);
+OperationResult<UserAttributesListWrapper> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .usersService()
+                .username("jasperadmin")
+                .attributes()
+                .delete();
 
-        client
-            .authenticate("jasperadmin", "jasperadmin")
-            .permissionsService()
-            .create(permission);
+Response response = operationResult.getResponse();
 ```
-####Deleting of user' attributes:
+The second syntax deletes a single attribute named in the `username()` from the specified user.
 ```java
+OperationResult operationResult =
         client
-            .authenticate("jasperadmin", "jasperadmin")
-            .usersService()
-            .username(user.getUsername())
-            .attribute("someAttribute")
-            .delete();
+                .authenticate("jasperadmin", "jasperadmin")
+                .usersService()
+                .username("jasperadmin")
+                .attribute(clientUserAttribute.getName())
+                .createOrUpdate(clientUserAttribute);
+
+Response response = operationResult.getResponse();
 ```
-####Deleting of permissions:
-```java
-        client
-            .authenticate("jasperadmin", "jasperadmin")
-            .permissionsService()
-            .resource("/")
-            .permissionRecipient(PermissionRecipient.USER, "john.doe")
-            .delete();
-```
-####Deleting of users:
-```java
-        client
-            .authenticate("jasperadmin", "jasperadmin")
-            .usersService()
-            .username(user.getUsername())
-            .delete();
-```
+
 
 ###Maven dependency to add jasperserver-rest-client to your app:
 ```xml
