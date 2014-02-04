@@ -1,6 +1,3 @@
-jrs-rest-client-java
-========================
-
 Introduction
 -------------
 With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests. To use library in your maven-based application you need just to specify dependency and repository which are given below or download jar file manually from 
@@ -27,8 +24,8 @@ Here everything is easy, you need just to pass `configuration` to `JasperserverR
 JasperserverRestClient client = new JasperserverRestClient(configuration);
 ```
 
-Reporting services
-------------------
+Report services
+===============
 After you've configured the client you can easily use any of available services. For reporting service there is one feature that should be noted - when you are running a report all subsequent operations must be executed in the same session. Here's the code:
 ```java
 Session session = client.authenticate("jasperadmin", "jasperadmin");
@@ -173,9 +170,54 @@ OperationResult<ReportExecutionStatusEntity> operationResult1 =
 
 ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
 ```
+###Report Parameters services:
+The reports service includes methods for reading and setting report parameters. 
+####Listing Report Parameters Structure
+The following code returns a description of the structure of the report parameters for a given report.
+```java
+ReportInputControlsListWrapper inputControls =
+        client.authenticate("jasperadmin", "jasperadmin")
+                .reportingService()
+                .report("/reports/samples/Cascading_multi_select_report")
+                .reportParameters()
+                .get()
+                .getEntity();
+```
+The response contains the structure of the report parameters for the report. It contains the information needed by your application to display the report parameters to your users and allow them to make a selection. In particular, this includes any cascading structure as a set of dependencies between report parameters. Each report parameter also has a type that indicates how the user should be allowed to make a choice: bool, singleSelect, singleSelectRadio, multiSelectCheckbox, multiSelect, singleValue, singleValueText, singleValueNumber, singleValueDate, singleValueDatetime, singleValueTime.  
+The structure includes a set of validation rules for each report parameter. These rules indicate what type of validation your client should perform on report parameter values it receives from your users, and if the validation fails, the message to display. Depending on the type of the report parameter, the following validations are possible:
+* mandatoryValidationRule – This input is required and your client should ensure the user enters a value.
+* dateTimeFormatValidation – This input must have a data time format and your client should ensure the user enters a valid date and time.
+
+####Listing Report Parameter Values
+The following code returns a description of the possible values of all report parameters for the report. Among these choices, it shows which ones are selected.
+```java
+InputControlStateListWrapper inputControlsValues =
+        client.authenticate("jasperadmin", "jasperadmin")
+                .reportingService()
+                .report("/reports/samples/Cascading_multi_select_report")
+                .reportParameters()
+                .values()
+                .get()
+                .getEntity();
+```
+The response contains the structure of the report parameters for the report.   
+If a selection-type report parameter has a null value, it is given as `~NULL~`. If no selection is made, its value is given as `~NOTHING~`.
+####Setting Report Parameter Values
+The following code updates the state of current report parameter values, so they are set for the next run of the report.
+```java
+InputControlStateListWrapper inputControlsValues =
+        client.authenticate("jasperadmin", "jasperadmin")
+                .reportingService()
+                .report("/reports/samples/Cascading_multi_select_report")
+                .reportParameters()
+                .values()
+                .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
+                .update()
+                .getEntity();
+```
 
 Administration services:
-------------------------
+========================
 Only administrative users may access the REST services for administration.
 
 ###Users service
@@ -270,8 +312,7 @@ client
     .delete();
 ```
 
-Attributes service
---------------------
+###Attributes service
 Attributes, also called profile attributes, are name-value pairs associated with a user. Certain advanced features such as Domain security and OLAP access grants use profile attributes in addition to roles to grant certain permissions. Unlike roles, attributes are not pre-defined, and thus any attribute name can be assigned any value at any time.
 Attributes service provides methods for reading, writing, and deleting attributes on any given user account. All attribute operations apply to a single specific user; there are no operations for reading or searching attributes from multiple users.
 Because the user ID is used in the URL, this service can operate only on users whose ID is less than 100 characters long and does not contain spaces or special symbols. In addition, both attribute names and attribute values being written with this service are limited to 255 characters and may not be empty (null) or contain only whitespace characters.
@@ -366,6 +407,130 @@ OperationResult operationResult =
 
 Response response = operationResult.getResponse();
 ```
+###The Roles Service
+It provides similar methods that allow you to list, view, create, modify, and delete roles. The new service provides improved search functionality, including user-based role searches. Because the role ID is used in the URL, this service can operate only on roles whose ID is less than 100 characters long and does not contain spaces or special symbols. Unlike resource IDs, the role ID is the role name and can be modified.
+####Searching for Roles
+The `allRoles()` method searches for and lists role definitions. It has options to search for roles by
+name or by user (`param()` method) that belong to the role. If no search is specified, it returns all roles.
+```java
+OperationResult<RolesListWrapper> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .rolesService()
+                .allRoles()
+                .param(RolesParameter.USER, "jasperadmin")
+                .get();
+
+RolesListWrapper rolesListWrapper = operationResult.getEntity();
+```
+####Viewing a Role
+The `rolename()` method with a role ID retrieves a single role descriptor containing the role properties.
+```java
+OperationResult<ClientRole> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .rolesService()
+                .rolename("ROLE_ADMINISTRATOR")
+                .get();
+
+ClientRole role = operationResult.getEntity();
+```
+####Creating a Role
+To create a role, send the request via `createOrUpdate()` method to the roles service with the intended role ID (name) specified in the URL. Roles do not have any properties to specify other than the role ID, but the request must include a descriptor that
+can be empty.
+```java
+ClientRole role = new ClientRole()
+        .setName("ROLE_HELLO");
+
+OperationResult<ClientRole> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .rolesService()
+                .rolename(role.getName())
+                .createOrUpdate(role);
+
+Response response = operationResult.getResponse();
+```
+####Modifying a Role
+To change the name of a role, send a request via `createOrUpdate()` to the roles service and specify the new name in the role descriptor. The only property of a role that you can modify is the role’s name. After the update, all members of the role are members of the new role name, and all permissions associated with the old role name are updated to the new role name.
+```java
+ClientRole roleHello = new ClientRole()
+        .setName("ROLE_HELLO_HELLO");
+
+OperationResult<ClientRole> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .rolesService()
+                .rolename("ROLE_HELLO")
+                .createOrUpdate(roleHello);
+
+Response response = operationResult.getResponse();
+```
+####Setting Role Membership
+To assign role membership to a user, set the roles property on the user account with the PUT method of the rest_
+v2/users service. For details, see section [creating a user](https://github.com/boryskolesnykov/jasperserver-rest-client/edit/master/README.md#creating-a-user).
+####Deleting a Role
+To delete a role, send the DELETE method and specify the role ID (name) in the URL.
+When this method is successful, the role is permanently deleted.
+```java
+OperationResult operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .rolesService()
+                .rolename("ROLE_HELLO")
+                .delete();
+Response response = operationResult.getResponse();
+```
+Repository Services
+=====================
+###Resources Service
+This new service provides greater performance and more consistent handling of resource descriptors for all repository resource types. The service has two formats, one takes search parameters to find resources, the other takes a repository URI to access resource descriptors and file contents.
+####Searching the Repository
+The resources service, when `resources()` method used without specifying any repository URI, is used to search the repository. The various parameters let you refine the search and specify how you receive search results.
+```java
+OperationResult<ClientResourceListWrapper> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resources()
+        .search();
+ClientResourceListWrapper resourceListWrapper = result.getEntity();
+//OR
+OperationResult<ClientResourceListWrapper> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resources()
+        .parameter(ResourceSearchParameter.FOLDER_URI, "/reports/samples")
+        .parameter(ResourceSearchParameter.LIMIT, "5")
+        .search();
+ClientResourceListWrapper resourceListWrapper = result.getEntity();
+```
+The response of a search is a set of shortened descriptors showing only the common attributes of each resource. One additional attribute specifies the type of the resource. This allows you to quickly receive a list of resources for display or further processing.
+####Viewing Resource Details
+Use the `resource()` method and a resource URI with `details()` method to request the resource's complete descriptor.
+```java
+OperationResult<ClientResource> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource("/properties/GlobalPropertiesList")
+        .details();
+```
+###Downloading File Resources
+There are two operations on file resources:
+* Viewing the file resource details to determine the file format
+* Downloading the binary file contents
+
+To view the file resource details, specify the URL of the file in `resource()` method and use the code form [Viewing Resource Details](https://github.com/boryskolesnykov/jasperserver-rest-client/edit/master/README.md#viewing-resource-details) section.  
+To download file binary content, specify the URL of the file in `resource()` method and use the code below
+```java
+OperationResult<InputStream> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource("/themes/default/buttons.css")
+        .downloadBinary();
+
+InputStream inputStream = result.getEntity();
+```
+To get file MIME type yo can get `Content-Type` header from the `Response` instance.
 
 
 ###Maven dependency to add jasperserver-rest-client to your app:
