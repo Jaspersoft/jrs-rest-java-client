@@ -41,12 +41,12 @@ public class PermissionsService {
         return new PermissionResourceRequestAdapter(sessionStorage, name);
     }
 
-    public OperationResult create(RepositoryPermission permission){
+    public OperationResult createNew(RepositoryPermission permission){
         return buildRequest(sessionStorage, Object.class, new String[]{"/permissions"})
                 .post(permission);
     }
 
-    public OperationResult create(RepositoryPermissionListWrapper permissions) {
+    public OperationResult createNew(RepositoryPermissionListWrapper permissions) {
         JerseyRequestBuilder builder = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
         builder.setContentType("application/collection+json");
         return builder.post(permissions);

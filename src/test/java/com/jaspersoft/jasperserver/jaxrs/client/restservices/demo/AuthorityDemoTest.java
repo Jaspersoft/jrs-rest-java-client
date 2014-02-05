@@ -120,7 +120,7 @@ public class AuthorityDemoTest extends Assert {
         OperationResult result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .permissionsService()
-                .create(permission);
+                .createNew(permission);
 
         Response response = result.getResponse();
         assertEquals(response.getStatus(), ResponseStatus.CREATED);

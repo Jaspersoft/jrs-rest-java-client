@@ -45,7 +45,7 @@ public class SingleRoleRequestAdapter {
         return builder.put(user);
     }
 
-    public OperationResult<ClientRole> delete(){
+    public OperationResult delete(){
         return builder.delete();
     }
 

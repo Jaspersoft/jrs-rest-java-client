@@ -5,6 +5,7 @@ import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapp
 import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionMask;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionRecipient;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -77,7 +78,7 @@ public class PermissionsServiceTest extends Assert {
                 client
                         .authenticate("jasperadmin", "jasperadmin")
                         .permissionsService()
-                        .create(permissionListWrapper);
+                        .createNew(permissionListWrapper);
 
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 201);
@@ -137,13 +138,13 @@ public class PermissionsServiceTest extends Assert {
         permission
                 .setUri("/")
                 .setRecipient("user:/joeuser")
-                .setMask(30);
+                .setMask(PermissionMask.READ_WRITE_DELETE);
 
         OperationResult operationResult =
                 client
                         .authenticate("jasperadmin", "jasperadmin")
                         .permissionsService()
-                        .create(permission);
+                        .createNew(permission);
 
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 201);
@@ -172,7 +173,7 @@ public class PermissionsServiceTest extends Assert {
 
     @Test(dependsOnMethods = "testUpdatePermissionSingle")
     public void testDeletePermissionSingle() {
-        OperationResult<RepositoryPermission> operationResult =
+        OperationResult operationResult =
                 client
                         .authenticate("jasperadmin", "jasperadmin")
                         .permissionsService()
