@@ -514,7 +514,7 @@ OperationResult<ClientResource> result = client
         .resource("/properties/GlobalPropertiesList")
         .details();
 ```
-###Downloading File Resources
+####Downloading File Resources
 There are two operations on file resources:
 * Viewing the file resource details to determine the file format
 * Downloading the binary file contents
@@ -531,6 +531,138 @@ OperationResult<InputStream> result = client
 InputStream inputStream = result.getEntity();
 ```
 To get file MIME type yo can get `Content-Type` header from the `Response` instance.
+####Creating a Resource
+The `createNew()` and `createOrUpdate()` methods offer alternative ways to create resources. Both take a resource descriptor but each handles the URL differently. With the `createNew()` method, specify a folder in the URL, and the new resource ID is created automatically from the label attribute in its descriptor. With the `createOrUpdate()` method, specify a unique new resource ID as part of the URL in `resource()` method.
+```java
+ClientFolder folder = new ClientFolder();
+folder
+        .setUri("/reports/testFolder")
+        .setLabel("Test Folder")
+        .setDescription("Test folder description")
+        .setPermissionMask(0)
+        .setCreationDate("2014-01-24 16:27:47")
+        .setUpdateDate("2014-01-24 16:27:47")
+        .setVersion(0);
+
+OperationResult<ClientResource> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource(folder.getUri())
+        .createOrUpdate(folder);
+//OR
+OperationResult<ClientResource> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource(folder.getUri())
+        .createNew(folder);
+```
+####Modifying a Resource
+Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual fields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.  
+The `patchResource()` method updates individual descriptor fields on the target resource. It also accept expressions that modify the descriptor in the Spring Expression Language. This expression language lets you easily modify the structure and values of descriptors.
+```java
+PatchDescriptor patchDescriptor = new PatchDescriptor();
+patchDescriptor.setVersion(0);
+patchDescriptor.field("label", "Patch Label");
+
+OperationResult<ClientFolder> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource("/reports/testFolder")
+        .patchResource(ClientFolder.class, patchDescriptor);
+```
+Note that you must explicitly set the type of resource to update because of server issue.
+####Copying a Resource
+To copy a resource, specify in `copyFrom()` method its URI and in `resource()` method URI of destination location.
+```java
+OperationResult<ClientResource> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource("/reports")
+        .copyFrom("/datasources/testFolder");
+```
+####Moving a Resource
+To move a resource, specify in `moveFrom()` method its URI and in `resource()` method URI of destination location.
+```java
+OperationResult<ClientResource> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource("/datasources")
+        .moveFrom("/reports/testFolder");
+```
+####Uploading File Resources
+To upload file you must specify the MIME type that corresponds with the desired file type, you can take it from `ClientFile.FileType` enumeration.
+```java
+OperationResult<ClientFile> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource("/reports/testFolder")
+        .uploadFile(imageFile, ClientFile.FileType.img, "fileName", "fileDescription");
+```
+####Deleting Resources
+You can delete resources in two ways, one for single resources and one for multiple resources. To delete multiple resources at once, specify multiple URIs with the `ResourceSearchParameter.RESOURCE_URI` parameter.
+```java
+//multiple
+OperationResult result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resources()
+        .parameter(ResourceSearchParameter.RESOURCE_URI, "/some/resource/uri/1")
+        .parameter(ResourceSearchParameter.RESOURCE_URI, "/some/resource/uri/2")
+        .delete();
+//OR
+//single
+OperationResult result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource("/reports/testFolder")
+        .delete();
+```
+###The Permissions Service
+In the permissions service, the syntax is expanded so that you can specify the resource, the recipient (user name or role name) and the permission value within the URL. This makes it simpler to set permissions because you don’t need to send a resource descriptor to describe the permissions. In order to set, modify, or delete permissions, you must use credentials or login with a user that has “administer” permissions on the target resource.  
+Because a permission can apply to either a user or a role, the permissions service uses the concept of a “recipient”. A recipient specifies whether the permission applies to a user or a role, and gives the ID of the user or role.  
+There are two qualities of a permission:
+* The assigned permission is one that is set explicitly for a given resource and a given user or role. Not all permissions are assigned, in which case the permission is inherited from the parent folder.
+* The effective permission is the permission that is being enforced, whether it is assigned or inherited.
+ 
+####Viewing Multiple Permissions
+
+```java
+OperationResult<RepositoryPermissionListWrapper> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .permissionsService()
+                .resource("/datasources")
+                .get();
+```
+####Viewing a Single Permission
+Specify the recipient in the URL to see a specific assigned permission.
+```java
+OperationResult<RepositoryPermission> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .permissionsService()
+                .resource("/datasources")
+                .permissionRecipient(PermissionRecipient.ROLE, "ROLE_USER")
+                .get();
+
+RepositoryPermission permission = operationResult.getEntity();
+```
+####Setting Multiple Permissions
+The `createNew()` method assigns any number of permissions to any number of resources specified in the body of the request. All permissions must be newly assigned, and the request will fail if a recipient already has an assigned (not inherited) permission. Use the `createOrUpdate()` method to update assigned permissions. The `createOrUpdate()` method modifies exiting permissions (already assigned).
+```java
+List<RepositoryPermission> permissionList = new ArrayList<RepositoryPermission>();
+permissionList.add(new RepositoryPermission("/themes", "user:/joeuser", 30));
+
+RepositoryPermissionListWrapper permissionListWrapper = new RepositoryPermissionListWrapper(permissionList);
+
+OperationResult operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .permissionsService()
+                .createNew(permissionListWrapper);
+
+Response response = operationResult.getResponse();
+```
 
 
 ###Maven dependency to add jasperserver-rest-client to your app:
