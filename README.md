@@ -663,6 +663,48 @@ OperationResult operationResult =
 
 Response response = operationResult.getResponse();
 ```
+####Setting a Single Permission
+The `createNew()` method accepts a single permission descriptor.
+```java
+RepositoryPermission permission = new RepositoryPermission();
+permission
+        .setUri("/")
+        .setRecipient("user:/joeuser")
+        .setMask(PermissionMask.READ_WRITE_DELETE);
+
+OperationResult operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .permissionsService()
+                .createNew(permission);
+
+Response response = operationResult.getResponse();
+```
+####Deleting Permissions in Bulk
+The `delete()` method removes all assigned permissions from the designated resource. After returning successfully, all effective permissions for the resource are inherited.
+```java
+OperationResult operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .permissionsService()
+                .resource("/themes")
+                .delete();
+
+Response response = operationResult.getResponse();
+```
+####Deleting a Single Permission
+Specify a recipient in the `permissionRecipient()` method and call the `delete()` method to remove only that permission.
+```java
+OperationResult operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .permissionsService()
+                .resource("/")
+                .permissionRecipient(PermissionRecipient.USER, "joeuser")
+                .delete();
+
+Response response = operationResult.getResponse();
+```
 
 
 ###Maven dependency to add jasperserver-rest-client to your app:
@@ -687,4 +729,25 @@ Response response = operationResult.getResponse();
         </repository>
     </repositories>
 ```
+
+License
+--------
+Copyright &copy; 2005 - 2014 Jaspersoft Corporation. All rights reserved.
+http://www.jaspersoft.com.
+
+Unless you have purchased a commercial license agreement from Jaspersoft,
+the following license terms apply:
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero  General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public  License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
 
