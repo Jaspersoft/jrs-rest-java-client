@@ -25,6 +25,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles.RolesSer
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice.ImportService;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.JobsService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportingService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.resources.ResourcesService;
@@ -64,6 +65,10 @@ public class Session {
 
     public ResourcesService resourcesService(){
         return new ResourcesService(storage);
+    }
+
+    public JobsService jobsService(){
+        return new JobsService(storage);
     }
 
 }

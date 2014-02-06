@@ -1,40 +1,36 @@
-/*
-* Copyright (C) 2005 - 2014 Jaspersoft Corporation. All rights  reserved.
-* http://www.jaspersoft.com.
-*
-* Unless you have purchased  a commercial license agreement from Jaspersoft,
-* the following license terms  apply:
-*
-* This program is free software: you can redistribute it and/or  modify
-* it under the terms of the GNU Affero General Public License  as
-* published by the Free Software Foundation, either version 3 of  the
-* License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero  General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public  License
-* along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
-*/
-
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
+@XmlRootElement(name = "mailNotification")
 public class MailNotification {
 
+    private static final int VERSION_NEW = -1;
+
+    @XmlElementWrapper(name = "bccAddresses")
+    @XmlElement(name = "address")
     private List<String> bccAddresses;
+
+    @XmlElementWrapper(name = "ccAddresses")
+    @XmlElement(name = "address")
     private List<String> ccAddresses;
+
+    @XmlElementWrapper(name = "toAddresses")
+    @XmlElement(name = "address")
+    private List<String> toAddresses;
+
+    private int version = VERSION_NEW;
     private long id;
     private boolean includingStackTraceWhenJobFails;
     private String messageText;
-    private String resultSendType;
+    private Byte resultSendType;
     private boolean skipEmptyReports;
     private boolean skipNotificationWhenJobFails;
     private String subject;
-    private List<String> toAddresses;
-    private long version;
+
+
 
 }

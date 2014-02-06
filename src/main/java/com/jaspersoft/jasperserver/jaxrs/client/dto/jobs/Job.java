@@ -21,6 +21,11 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
+import java.util.List;
+
 public class Job {
 
     private String baseOutputFilename;
@@ -28,5 +33,18 @@ public class Job {
     private String description;
     private long id;
     private String label;
+    private MailNotification mailNotification;
+
+    @XmlElementWrapper(name = "outputFormats")
+    @XmlElement(name = "outputFormat")
+    private List<String> outputFormats;
+
+    private String outputLocale;
+    private String reportUnitURI;
+
+    @XmlElements({
+            @XmlElement(name = "simpleTrigger", type = SimpleTrigger.class),
+            @XmlElement(name = "calendarTrigger", type = CalendarTrigger.class)})
+    private JobTrigger jobTrigger;
 
 }
