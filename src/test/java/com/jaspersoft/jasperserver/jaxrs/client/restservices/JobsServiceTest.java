@@ -10,6 +10,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSummaryListWrapper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Test
 public class JobsServiceTest extends Assert {
 
     private JasperserverRestClient client;

@@ -11,7 +11,7 @@
 
     <properties>
         <!--maven variable which points to your local repository -->
-        <internal.repo.path>file:///d:/idea-workspace/jasperserver-jaxrs-client/mvn-repo/</internal.repo.path>
+        <internal.repo.path>file:///d:/idea-workspace/jasperserver-rest-client/mvn-repo/</internal.repo.path>
     </properties>
 
     <distributionManagement>
@@ -24,8 +24,13 @@
 
     <repositories>
         <repository>
-            <id>my-local-repo</id>
-            <url>${internal.repo.path}</url>
+            <id>my.mvn.repo</id>
+            <url>https://github.com/boryskolesnykov/jasperserver-rest-client/tree/master/mvn-repo</url>
+            <!-- use snapshot version -->
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
     </repositories>
 

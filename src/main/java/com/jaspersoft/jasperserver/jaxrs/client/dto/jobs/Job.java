@@ -34,17 +34,17 @@ public class Job {
     private long id;
     private String label;
     private MailNotification mailNotification;
+    private String outputLocale;
+    private String reportUnitURI;
 
     @XmlElementWrapper(name = "outputFormats")
     @XmlElement(name = "outputFormat")
     private List<String> outputFormats;
 
-    private String outputLocale;
-    private String reportUnitURI;
-
     @XmlElements({
             @XmlElement(name = "simpleTrigger", type = SimpleTrigger.class),
             @XmlElement(name = "calendarTrigger", type = CalendarTrigger.class)})
     private JobTrigger jobTrigger;
+
 
 }
