@@ -6,7 +6,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.JobsParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarType;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSummaryListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.JobSummaryListWrapper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -21,14 +22,6 @@ public class JobsServiceTest extends Assert {
     }
 
     @Test
-    public void testSchedulingReport(){
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .jobsService()
-                .scheduleReport(new Object());
-    }
-
-    @Test
     public void testGetAllJobs(){
         OperationResult<JobSummaryListWrapper> result = client
                 .authenticate("jasperadmin", "jasperadmin")
@@ -38,25 +31,47 @@ public class JobsServiceTest extends Assert {
 
         int status = result.getResponse().getStatus();
         assertTrue(status == 200 || status == 204);
+        JobSummaryListWrapper jobSummaryListWrapper = result.getEntity();
+        assertTrue(jobSummaryListWrapper.getJobsummary().size() == 1);
 
     }
 
     @Test
     public void testViewJobDefinition(){
-        client
+        OperationResult<Job> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .job("")
+                .job("8600")
                 .get();
+
+        Job job = result.getEntity();
+        assertNotNull(job);
     }
 
     @Test
     public void testExtendedJobSearch(){
-        client
+
+        Job criteria = new Job();
+        criteria.setLabel("LongTermJobForTests");
+
+        OperationResult<JobSummaryListWrapper> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .search(new Object());
+                .search(criteria);
+
+        JobSummaryListWrapper jobSummaryListWrapper = result.getEntity();
+        assertNotNull(jobSummaryListWrapper);
+
+
+    }
+
+    @Test
+    public void testSchedulingReport(){
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .jobsService()
+                .scheduleReport(new Object());
     }
 
     @Test

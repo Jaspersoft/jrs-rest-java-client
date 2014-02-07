@@ -31,7 +31,8 @@ public class JobSummary {
 
     private long id;
     private String label;
-    private String reportUnitUri;
+    private String reportUnitURI;
+    private String owner;
     private JobState state;
     private long version;
 
@@ -51,12 +52,20 @@ public class JobSummary {
         this.label = label;
     }
 
-    public String getReportUnitUri() {
-        return reportUnitUri;
+    public String getReportUnitURI() {
+        return reportUnitURI;
     }
 
-    public void setReportUnitUri(String reportUnitUri) {
-        this.reportUnitUri = reportUnitUri;
+    public void setReportUnitURI(String reportUnitURI) {
+        this.reportUnitURI = reportUnitURI;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public JobState getState() {
@@ -75,30 +84,5 @@ public class JobSummary {
         this.version = version;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        JobSummary that = (JobSummary) o;
-
-        if (id != that.id) return false;
-        if (version != that.version) return false;
-        if (label != null ? !label.equals(that.label) : that.label != null) return false;
-        if (reportUnitUri != null ? !reportUnitUri.equals(that.reportUnitUri) : that.reportUnitUri != null)
-            return false;
-        if (state != null ? !state.equals(that.state) : that.state != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (label != null ? label.hashCode() : 0);
-        result = 31 * result + (reportUnitUri != null ? reportUnitUri.hashCode() : 0);
-        result = 31 * result + (state != null ? state.hashCode() : 0);
-        result = 31 * result + (int) (version ^ (version >>> 32));
-        return result;
-    }
 }

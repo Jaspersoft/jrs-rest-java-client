@@ -10,6 +10,13 @@ public class FtpInfo {
     private String password;
     private String folderPath;
     private String serverName;
+    private String type;
+    private String protocol;
+    private int port;
+    private boolean implicit;
+    private long pbsz;
+    private String prot;
+
 
     public String getUserName() {
         return userName;
@@ -43,37 +50,51 @@ public class FtpInfo {
         this.serverName = serverName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FtpInfo ftpInfo = (FtpInfo) o;
-
-        if (folderPath != null ? !folderPath.equals(ftpInfo.folderPath) : ftpInfo.folderPath != null) return false;
-        if (password != null ? !password.equals(ftpInfo.password) : ftpInfo.password != null) return false;
-        if (serverName != null ? !serverName.equals(ftpInfo.serverName) : ftpInfo.serverName != null) return false;
-        if (userName != null ? !userName.equals(ftpInfo.userName) : ftpInfo.userName != null) return false;
-
-        return true;
+    public String getType() {
+        return type;
     }
 
-    @Override
-    public int hashCode() {
-        int result = userName != null ? userName.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (folderPath != null ? folderPath.hashCode() : 0);
-        result = 31 * result + (serverName != null ? serverName.hashCode() : 0);
-        return result;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return "FtpInfo{" +
-                "userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", folderPath='" + folderPath + '\'' +
-                ", serverName='" + serverName + '\'' +
-                '}';
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public boolean isImplicit() {
+        return implicit;
+    }
+
+    public void setImplicit(boolean implicit) {
+        this.implicit = implicit;
+    }
+
+    public long getPbsz() {
+        return pbsz;
+    }
+
+    public void setPbsz(long pbsz) {
+        this.pbsz = pbsz;
+    }
+
+    public String getProt() {
+        return prot;
+    }
+
+    public void setProt(String prot) {
+        this.prot = prot;
     }
 }

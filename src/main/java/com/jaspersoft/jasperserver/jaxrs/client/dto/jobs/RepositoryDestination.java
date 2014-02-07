@@ -21,15 +21,12 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
 
 @XmlRootElement(name = "repositoryDestination")
 public class RepositoryDestination {
 
-    private String folderUri;
+    private String folderURI;
     private long id;
     private String outputDescription;
     private boolean overwriteFiles;
@@ -42,12 +39,12 @@ public class RepositoryDestination {
     private String outputLocalFolder;
     private FtpInfo outputFTPInfo;
 
-    public String getFolderUri() {
-        return folderUri;
+    public String getFolderURI() {
+        return folderURI;
     }
 
-    public void setFolderUri(String folderUri) {
-        this.folderUri = folderUri;
+    public void setFolderURI(String folderURI) {
+        this.folderURI = folderURI;
     }
 
     public long getId() {
@@ -153,7 +150,7 @@ public class RepositoryDestination {
         if (version != that.version) return false;
         if (defaultReportOutputFolderURI != null ? !defaultReportOutputFolderURI.equals(that.defaultReportOutputFolderURI) : that.defaultReportOutputFolderURI != null)
             return false;
-        if (folderUri != null ? !folderUri.equals(that.folderUri) : that.folderUri != null) return false;
+        if (folderURI != null ? !folderURI.equals(that.folderURI) : that.folderURI != null) return false;
         if (outputDescription != null ? !outputDescription.equals(that.outputDescription) : that.outputDescription != null)
             return false;
         if (outputFTPInfo != null ? !outputFTPInfo.equals(that.outputFTPInfo) : that.outputFTPInfo != null)
@@ -168,7 +165,7 @@ public class RepositoryDestination {
 
     @Override
     public int hashCode() {
-        int result = folderUri != null ? folderUri.hashCode() : 0;
+        int result = folderURI != null ? folderURI.hashCode() : 0;
         result = 31 * result + (int) (id ^ (id >>> 32));
         result = 31 * result + (outputDescription != null ? outputDescription.hashCode() : 0);
         result = 31 * result + (overwriteFiles ? 1 : 0);
@@ -186,7 +183,7 @@ public class RepositoryDestination {
     @Override
     public String toString() {
         return "RepositoryDestination{" +
-                "folderUri='" + folderUri + '\'' +
+                "folderUri='" + folderURI + '\'' +
                 ", id=" + id +
                 ", outputDescription='" + outputDescription + '\'' +
                 ", overwriteFiles=" + overwriteFiles +

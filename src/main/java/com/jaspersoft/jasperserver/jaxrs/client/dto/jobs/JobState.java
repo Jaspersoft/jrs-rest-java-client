@@ -29,8 +29,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "state")
 public class JobState {
 
+    private String previousFireTime;
     private String nextFireTime;
     private String value;
+
+    public String getPreviousFireTime() {
+        return previousFireTime;
+    }
+
+    public void setPreviousFireTime(String previousFireTime) {
+        this.previousFireTime = previousFireTime;
+    }
 
     public String getNextFireTime() {
         return nextFireTime;

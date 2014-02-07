@@ -21,30 +21,165 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.OutputFormatsListWrapper;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.Timestamp;
 import java.util.List;
 
+@XmlRootElement(name = "job")
 public class Job {
 
-    private String baseOutputFilename;
-    private RepositoryDestination repositoryDestination;
-    private String description;
     private long id;
+    private long version;
+    private String username;
     private String label;
-    private MailNotification mailNotification;
+    private String description;
+    private String creationDate;
+    private String baseOutputFilename;
     private String outputLocale;
-    private String reportUnitURI;
+    private String outputTimeZone;
 
-    @XmlElementWrapper(name = "outputFormats")
-    @XmlElement(name = "outputFormat")
-    private List<String> outputFormats;
+    @XmlElement(name = "repositoryDestination")
+    private RepositoryDestination repositoryDestination;
+
+    @XmlElement(name = "mailNotification")
+    private MailNotification mailNotification;
+
+    @XmlElement(name = "source")
+    private JobSource source;
+
+    @XmlElement(name = "alert")
+    private JobAlert alert;
+
+    @XmlElement(name = "outputFormats")
+    private OutputFormatsListWrapper outputFormats;
 
     @XmlElements({
             @XmlElement(name = "simpleTrigger", type = SimpleTrigger.class),
             @XmlElement(name = "calendarTrigger", type = CalendarTrigger.class)})
-    private JobTrigger jobTrigger;
+    private JobTrigger trigger;
 
+    public long getId() {
+        return id;
+    }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getBaseOutputFilename() {
+        return baseOutputFilename;
+    }
+
+    public void setBaseOutputFilename(String baseOutputFilename) {
+        this.baseOutputFilename = baseOutputFilename;
+    }
+
+    public String getOutputLocale() {
+        return outputLocale;
+    }
+
+    public void setOutputLocale(String outputLocale) {
+        this.outputLocale = outputLocale;
+    }
+
+    public String getOutputTimeZone() {
+        return outputTimeZone;
+    }
+
+    public void setOutputTimeZone(String outputTimeZone) {
+        this.outputTimeZone = outputTimeZone;
+    }
+
+    public RepositoryDestination getRepositoryDestination() {
+        return repositoryDestination;
+    }
+
+    public void setRepositoryDestination(RepositoryDestination repositoryDestination) {
+        this.repositoryDestination = repositoryDestination;
+    }
+
+    public MailNotification getMailNotification() {
+        return mailNotification;
+    }
+
+    public void setMailNotification(MailNotification mailNotification) {
+        this.mailNotification = mailNotification;
+    }
+
+    public JobSource getSource() {
+        return source;
+    }
+
+    public void setSource(JobSource source) {
+        this.source = source;
+    }
+
+    public JobAlert getAlert() {
+        return alert;
+    }
+
+    public void setAlert(JobAlert alert) {
+        this.alert = alert;
+    }
+
+    public JobTrigger getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(JobTrigger trigger) {
+        this.trigger = trigger;
+    }
+
+    public OutputFormatsListWrapper getOutputFormats() {
+        return outputFormats;
+    }
+
+    public void setOutputFormats(OutputFormatsListWrapper outputFormats) {
+        this.outputFormats = outputFormats;
+    }
 }

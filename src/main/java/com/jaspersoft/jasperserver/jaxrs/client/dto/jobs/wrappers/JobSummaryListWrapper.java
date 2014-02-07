@@ -1,6 +1,6 @@
-package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers;
 
-import com.jaspersoft.jasperserver.dto.authority.ClientUser;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSummary;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

@@ -36,6 +36,7 @@ import java.lang.reflect.Type;
 @Provider
 @Consumes({
         "application/collection+json",
+        "application/job+json",
         ResourceMediaType.LIST_OF_VALUES_JSON,
         ResourceMediaType.ADHOC_DATA_VIEW_JSON,
         ResourceMediaType.AWS_DATA_SOURCE_JSON,
@@ -60,6 +61,7 @@ import java.lang.reflect.Type;
         "text/json"})
 @Produces({
         "application/collection+json",
+        "application/job+json",
         ResourceMediaType.LIST_OF_VALUES_JSON,
         ResourceMediaType.ADHOC_DATA_VIEW_JSON,
         ResourceMediaType.AWS_DATA_SOURCE_JSON,
