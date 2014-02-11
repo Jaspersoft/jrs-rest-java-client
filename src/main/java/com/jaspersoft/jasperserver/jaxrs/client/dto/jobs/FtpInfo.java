@@ -2,6 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Map;
 
 @XmlRootElement(name = "outputFTPInfo")
 public class FtpInfo {
@@ -12,10 +13,11 @@ public class FtpInfo {
     private String serverName;
     private String type;
     private String protocol;
-    private int port;
-    private boolean implicit;
-    private long pbsz;
+    private Integer port;
+    private Boolean implicit;
+    private Long pbsz;
     private String prot;
+    private volatile Map<String, String> propertiesMap;
 
 
     public String getUserName() {
@@ -66,27 +68,27 @@ public class FtpInfo {
         this.protocol = protocol;
     }
 
-    public int getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 
-    public boolean isImplicit() {
+    public Boolean isImplicit() {
         return implicit;
     }
 
-    public void setImplicit(boolean implicit) {
+    public void setImplicit(Boolean implicit) {
         this.implicit = implicit;
     }
 
-    public long getPbsz() {
+    public Long getPbsz() {
         return pbsz;
     }
 
-    public void setPbsz(long pbsz) {
+    public void setPbsz(Long pbsz) {
         this.pbsz = pbsz;
     }
 
@@ -96,5 +98,13 @@ public class FtpInfo {
 
     public void setProt(String prot) {
         this.prot = prot;
+    }
+
+    public Map<String, String> getPropertiesMap() {
+        return propertiesMap;
+    }
+
+    public void setPropertiesMap(Map<String, String> propertiesMap) {
+        this.propertiesMap = propertiesMap;
     }
 }

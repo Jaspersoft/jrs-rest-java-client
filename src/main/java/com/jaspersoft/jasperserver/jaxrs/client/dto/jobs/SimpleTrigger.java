@@ -5,15 +5,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "simpleTrigger")
 public class SimpleTrigger extends JobTrigger {
 
-    private int occurrenceCount;
+    private Integer occurrenceCount;
     private Integer recurrenceInterval;
     private String recurrenceIntervalUnit;
 
-    public int getOccurrenceCount() {
+    public Integer getOccurrenceCount() {
         return occurrenceCount;
     }
 
-    public void setOccurrenceCount(int occurrenceCount) {
+    public void setOccurrenceCount(Integer occurrenceCount) {
         this.occurrenceCount = occurrenceCount;
     }
 

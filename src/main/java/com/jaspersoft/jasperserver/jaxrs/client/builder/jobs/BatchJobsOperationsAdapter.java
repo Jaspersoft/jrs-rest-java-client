@@ -6,6 +6,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.JobSummaryListWrapper;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.util.JSONPObject;
 
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -46,18 +48,25 @@ public class BatchJobsOperationsAdapter {
         builder.addParams(params);
         if (searchCriteria != null){
             ObjectMapper mapper = new ObjectMapper();
-            /*try {
+            SerializationConfig serializationConfig =
+                    mapper.getSerializationConfig().withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+            mapper.setSerializationConfig(serializationConfig);
+            try {
                 builder.addParam("example", URLEncoder.encode(mapper.writeValueAsString(searchCriteria), "UTF-8"));
             } catch (IOException e) {
                 e.printStackTrace();
-            }*/
-            builder.addParam("example", "%7b%22outputFormat%22%3a%22PDF%22%2C%22label%22%3A%22LongTermJobForTests%22%%2C%22trigger%22%3Anull7d");
+            }
         }
         return builder.get();
     }
 
-    public OperationResult update(Object param){
-        throw new UnsupportedOperationException();
+    public OperationResult update(Job job){
+        ObjectMapper mapper = new ObjectMapper();
+        SerializationConfig serializationConfig =
+                mapper.getSerializationConfig().withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+        mapper.setSerializationConfig(serializationConfig);
+
+        buildRequest(sessionStorage, Object.class, new String[]{"/jobs"});
     }
 
     public OperationResult pause(){

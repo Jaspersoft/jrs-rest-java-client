@@ -1,6 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 public class OutputFormatsListWrapper extends StringListWrapper {
@@ -24,10 +25,12 @@ public class OutputFormatsListWrapper extends StringListWrapper {
         super.setStrings(strings);
     }
 
-    public List<String> getOutputFormat() {
+    @XmlTransient
+    public List<String> getOutputFormats() {
         return this.getStrings();
     }
 
+    @XmlTransient
     public void setOutputFormats(List<String> outputFormats) {
         this.setStrings(strings);
     }

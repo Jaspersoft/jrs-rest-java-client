@@ -33,8 +33,8 @@ import java.util.List;
 @XmlRootElement(name = "job")
 public class Job {
 
-    private long id;
-    private long version;
+    private Long id;
+    private Long version;
     private String username;
     private String label;
     private String description;
@@ -63,19 +63,19 @@ public class Job {
             @XmlElement(name = "calendarTrigger", type = CalendarTrigger.class)})
     private JobTrigger trigger;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public void setVersion(long version) {
+    public void setVersion(Long version) {
         this.version = version;
     }
 

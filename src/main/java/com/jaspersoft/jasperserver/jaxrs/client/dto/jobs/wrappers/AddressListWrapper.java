@@ -2,6 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 @XmlRootElement
@@ -26,11 +27,13 @@ public class AddressListWrapper extends StringListWrapper {
         super.setStrings(strings);
     }
 
-    public List<String> getAdresses() {
+    @XmlTransient
+    public List<String> getAddress() {
         return this.getStrings();
     }
 
-    public void setAdresses(List<String> adresses) {
+    @XmlTransient
+    public void setAddress(List<String> adresses) {
         this.setStrings(strings);
     }
 

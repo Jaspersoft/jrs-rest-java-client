@@ -29,18 +29,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "jobsummary")
 public class JobSummary {
 
-    private long id;
+    private Long id;
     private String label;
     private String reportUnitURI;
     private String owner;
     private JobState state;
-    private long version;
+    private Long version;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -76,11 +76,11 @@ public class JobSummary {
         this.state = state;
     }
 
-    public long getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public void setVersion(long version) {
+    public void setVersion(Long version) {
         this.version = version;
     }
 

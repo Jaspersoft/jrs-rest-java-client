@@ -8,8 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "mailNotification")
 public class MailNotification {
 
-    private static final int VERSION_NEW = -1;
-
     @XmlElement(name = "bccAddresses")
     private AddressListWrapper bccAddresses;
 
@@ -19,13 +17,13 @@ public class MailNotification {
     @XmlElement(name = "toAddresses")
     private AddressListWrapper toAddresses;
 
-    private int version = VERSION_NEW;
-    private long id;
-    private boolean includingStackTraceWhenJobFails;
+    private Integer version;
+    private Long id;
+    private Boolean includingStackTraceWhenJobFails;
     private String messageText;
     private String resultSendType;
-    private boolean skipEmptyReports;
-    private boolean skipNotificationWhenJobFails;
+    private Boolean skipEmptyReports;
+    private Boolean skipNotificationWhenJobFails;
     private String subject;
     private String messageTextWhenJobFails;
 
@@ -53,27 +51,27 @@ public class MailNotification {
         this.bccAddresses = bccAddresses;
     }
 
-    public int getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public boolean isIncludingStackTraceWhenJobFails() {
+    public Boolean isIncludingStackTraceWhenJobFails() {
         return includingStackTraceWhenJobFails;
     }
 
-    public void setIncludingStackTraceWhenJobFails(boolean includingStackTraceWhenJobFails) {
+    public void setIncludingStackTraceWhenJobFails(Boolean includingStackTraceWhenJobFails) {
         this.includingStackTraceWhenJobFails = includingStackTraceWhenJobFails;
     }
 
@@ -85,19 +83,19 @@ public class MailNotification {
         this.messageText = messageText;
     }
 
-    public boolean isSkipEmptyReports() {
+    public Boolean isSkipEmptyReports() {
         return skipEmptyReports;
     }
 
-    public void setSkipEmptyReports(boolean skipEmptyReports) {
+    public void setSkipEmptyReports(Boolean skipEmptyReports) {
         this.skipEmptyReports = skipEmptyReports;
     }
 
-    public boolean isSkipNotificationWhenJobFails() {
+    public Boolean isSkipNotificationWhenJobFails() {
         return skipNotificationWhenJobFails;
     }
 
-    public void setSkipNotificationWhenJobFails(boolean skipNotificationWhenJobFails) {
+    public void setSkipNotificationWhenJobFails(Boolean skipNotificationWhenJobFails) {
         this.skipNotificationWhenJobFails = skipNotificationWhenJobFails;
     }
 

@@ -8,15 +8,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "reportJobAlert")
 public class JobAlert {
 
-    private long id;
-    private int version;
+    private Long id;
+    private Integer version;
     private String recipient;
     private String jobState;
     private String messageText;
     private String messageTextWhenJobFails;
     private String subject;
-    private boolean includingStackTrace;
-    private boolean includingReportJobInfo;
+    private Boolean includingStackTrace;
+    private Boolean includingReportJobInfo;
 
     @XmlElement(name = "toAddresses")
     private AddressListWrapper toAddresses;
@@ -30,19 +30,19 @@ public class JobAlert {
         this.toAddresses = toAddresses;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 
@@ -86,19 +86,19 @@ public class JobAlert {
         this.subject = subject;
     }
 
-    public boolean isIncludingStackTrace() {
+    public Boolean isIncludingStackTrace() {
         return includingStackTrace;
     }
 
-    public void setIncludingStackTrace(boolean includingStackTrace) {
+    public void setIncludingStackTrace(Boolean includingStackTrace) {
         this.includingStackTrace = includingStackTrace;
     }
 
-    public boolean isIncludingReportJobInfo() {
+    public Boolean isIncludingReportJobInfo() {
         return includingReportJobInfo;
     }
 
-    public void setIncludingReportJobInfo(boolean includingReportJobInfo) {
+    public void setIncludingReportJobInfo(Boolean includingReportJobInfo) {
         this.includingReportJobInfo = includingReportJobInfo;
     }
 

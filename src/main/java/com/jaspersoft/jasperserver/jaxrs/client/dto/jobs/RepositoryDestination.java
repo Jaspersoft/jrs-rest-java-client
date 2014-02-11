@@ -27,15 +27,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class RepositoryDestination {
 
     private String folderURI;
-    private long id;
+    private Long id;
     private String outputDescription;
-    private boolean overwriteFiles;
-    private boolean sequentialFilenames;
-    private long version;
+    private Boolean overwriteFiles;
+    private Boolean sequentialFilenames;
+    private Long version;
     private String timestampPattern;
-    private boolean saveToRepository;
+    private Boolean saveToRepository;
     private String defaultReportOutputFolderURI;
-    private boolean usingDefaultReportOutputFolderURI;
+    private Boolean usingDefaultReportOutputFolderURI;
     private String outputLocalFolder;
     private FtpInfo outputFTPInfo;
 
@@ -47,11 +47,11 @@ public class RepositoryDestination {
         this.folderURI = folderURI;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,27 +63,27 @@ public class RepositoryDestination {
         this.outputDescription = outputDescription;
     }
 
-    public boolean isOverwriteFiles() {
+    public Boolean isOverwriteFiles() {
         return overwriteFiles;
     }
 
-    public void setOverwriteFiles(boolean overwriteFiles) {
+    public void setOverwriteFiles(Boolean overwriteFiles) {
         this.overwriteFiles = overwriteFiles;
     }
 
-    public boolean isSequentialFilenames() {
+    public Boolean isSequentialFilenames() {
         return sequentialFilenames;
     }
 
-    public void setSequentialFilenames(boolean sequentialFilenames) {
+    public void setSequentialFilenames(Boolean sequentialFilenames) {
         this.sequentialFilenames = sequentialFilenames;
     }
 
-    public long getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public void setVersion(long version) {
+    public void setVersion(Long version) {
         this.version = version;
     }
 
@@ -95,11 +95,11 @@ public class RepositoryDestination {
         this.timestampPattern = timestampPattern;
     }
 
-    public boolean isSaveToRepository() {
+    public Boolean isSaveToRepository() {
         return saveToRepository;
     }
 
-    public void setSaveToRepository(boolean saveToRepository) {
+    public void setSaveToRepository(Boolean saveToRepository) {
         this.saveToRepository = saveToRepository;
     }
 
@@ -111,11 +111,11 @@ public class RepositoryDestination {
         this.defaultReportOutputFolderURI = defaultReportOutputFolderURI;
     }
 
-    public boolean isUsingDefaultReportOutputFolderURI() {
+    public Boolean isUsingDefaultReportOutputFolderURI() {
         return usingDefaultReportOutputFolderURI;
     }
 
-    public void setUsingDefaultReportOutputFolderURI(boolean usingDefaultReportOutputFolderURI) {
+    public void setUsingDefaultReportOutputFolderURI(Boolean usingDefaultReportOutputFolderURI) {
         this.usingDefaultReportOutputFolderURI = usingDefaultReportOutputFolderURI;
     }
 
