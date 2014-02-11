@@ -20,8 +20,7 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
-import com.jaspersoft.jasperserver.api.JasperServerAPI;
-import com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobRuntimeInformation;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobState;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
@@ -30,13 +29,11 @@ import java.util.Date;
  * Searching report jobs by runtime information
  * 
  * @author Ivan Chan (ichan@jaspersoft.com)
- * @version $Id: ReportJobRuntimeInformationModel.java 25420 2012-10-20 16:36:09Z sergey.prilukin $
+ * @version $Id: ReportJobStateModel.java 25420 2012-10-20 16:36:09Z sergey.prilukin $
  * @since 1.0
- * @see com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobSummary#getRuntimeInformation()
  */
-@JasperServerAPI
 @XmlRootElement(name = "stateModel")
-public class ReportJobRuntimeInformationModel extends ReportJobRuntimeInformation {
+public class ReportJobStateModel extends JobState {
 
     private boolean isNextFireTimeModified = false;
     private boolean isPreviousFireTimeModified = false;
@@ -45,7 +42,7 @@ public class ReportJobRuntimeInformationModel extends ReportJobRuntimeInformatio
 	/**
 	 * Creates an empty object.
 	 */
-	public ReportJobRuntimeInformationModel() {
+	public ReportJobStateModel() {
 	}
 
 
@@ -54,7 +51,7 @@ public class ReportJobRuntimeInformationModel extends ReportJobRuntimeInformatio
 	 * 
 	 * @param nextFireTime the next fire time for the job
 	 */
-	public void setNextFireTime(Date nextFireTime) {
+	public void setNextFireTime(String nextFireTime) {
         isNextFireTimeModified = true;
 		super.setNextFireTime(nextFireTime);
 	}
@@ -64,7 +61,7 @@ public class ReportJobRuntimeInformationModel extends ReportJobRuntimeInformatio
 	 * 
 	 * @param previousFireTime the previous fire time of the job
 	 */
-	public void setPreviousFireTime(Date previousFireTime) {
+	public void setPreviousFireTime(String previousFireTime) {
         isPreviousFireTimeModified = true;
 		super.setPreviousFireTime(previousFireTime);
 	}
@@ -75,9 +72,9 @@ public class ReportJobRuntimeInformationModel extends ReportJobRuntimeInformatio
 	 *
 	 * @param state one of the <code>STATE_*</code> constants
 	 */
-	public void setStateCode(Byte state) {
+	public void setValue(String state) {
         isStateModified = true;
-		super.setStateCode(state);
+		super.setValue(state);
 	}
 
     /**

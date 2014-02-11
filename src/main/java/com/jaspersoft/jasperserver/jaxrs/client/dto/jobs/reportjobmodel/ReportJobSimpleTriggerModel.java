@@ -20,8 +20,7 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
-import com.jaspersoft.jasperserver.api.JasperServerAPI;
-import com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobSimpleTrigger;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.SimpleTrigger;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.Date;
@@ -41,8 +40,7 @@ import java.util.Date;
  * @version $Id: ReportJobSimpleTriggerModel.java 25010 2012-09-26 16:56:35Z sergey.prilukin $
  * @since 4.7
  */
-@JasperServerAPI
-public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
+public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 
     private boolean isOccurrenceCountModified = false;
     private boolean isRecurrenceIntervalUnitModified = false;
@@ -65,7 +63,6 @@ public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
 	 *
 	 * <p>
 	 * If the job should be executed once, <code>1</code> should be used.
-	 * If the job should recur indefinitely, {@link #RECUR_INDEFINITELY} should
 	 * be used.
 	 * </p>
 	 *
@@ -76,7 +73,6 @@ public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
 	 * </p>
 	 *
 	 * @param recurrenceCount how many times the job should occur
-	 * @see com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobTrigger#getEndDate()
 	 */
 	public void setOccurrenceCount(Integer recurrenceCount) {
         isOccurrenceCountModified = true;
@@ -88,9 +84,8 @@ public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
 	 *
 	 * @param recurrenceInterval the unit in which the recurrence interval is
 	 * defined, as one of the <code>INTERVAL_*</code> constants
-	 * @see #setRecurrenceIntervalUnit(byte)
 	 */
-	public void setRecurrenceIntervalUnit(Byte recurrenceInterval) {
+	public void setRecurrenceIntervalUnit(String recurrenceInterval) {
         isRecurrenceIntervalUnitModified = true;
 		super.setRecurrenceIntervalUnit(recurrenceInterval);
 	}
@@ -101,7 +96,6 @@ public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
 	 * <code>setRecurrenceIntervalUnit(byte)</code>.
 	 *
 	 * @param recurrenceInterval the job recurrence time interval
-	 * @see #setRecurrenceIntervalUnit(byte)
 	 */
 	public void setRecurrenceInterval(Integer recurrenceInterval) {
         isRecurrenceIntervalModified = true;
@@ -114,7 +108,7 @@ public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
      * @deprecated ID is not supported in ReportJobModel
      */
     @Override
-	public long getId() {
+	public Long getId() {
         return super.getId();
 	}
 
@@ -123,7 +117,7 @@ public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
      */
     @Override
     @XmlTransient
-	public void setId(long id) {
+	public void setId(Long id) {
         super.setId(id);
 	}
 
@@ -132,7 +126,7 @@ public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
      */
     @Override
     @XmlTransient
-	public int getVersion() {
+	public Integer getVersion() {
         return super.getVersion();
 	}
 
@@ -140,7 +134,7 @@ public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
      * @deprecated ID is not supported in ReportJobModel
      */
     @Override
-	public void setVersion(int version) {
+	public void setVersion(Integer version) {
         super.setVersion(version);
 	}
 
@@ -154,9 +148,8 @@ public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
 	 *
 	 * @param startDate the date at which the report job should start.
 	 * @see #getStartDate()
-	 * @see #START_TYPE_SCHEDULE
 	 */
-	public void setStartDate(Date startDate) {
+	public void setStartDate(String startDate) {
         isStartDateModified = true;
 		super.setStartDate(startDate);
 	}
@@ -171,10 +164,8 @@ public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
 	 * effective and starts firing at the specified calendar moments.
 	 * </p>
 	 *
-	 * @param startType one of {@link #START_TYPE_NOW} and
-	 * {@value #START_TYPE_SCHEDULE}
 	 */
-	public void setStartType(byte startType) {
+	public void setStartType(int startType) {
         isStartTypeModified = true;
 		super.setStartType(startType);
 	}
@@ -189,7 +180,7 @@ public class ReportJobSimpleTriggerModel extends ReportJobSimpleTrigger {
 	 *
 	 * @param endDate an end date for the job
 	 */
-	public void setEndDate(Date endDate) {
+	public void setEndDate(String endDate) {
         isEndDateModified = true;
 		super.setEndDate(endDate);
 	}

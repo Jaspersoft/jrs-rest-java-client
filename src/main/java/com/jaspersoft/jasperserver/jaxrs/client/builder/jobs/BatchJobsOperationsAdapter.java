@@ -1,9 +1,12 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.jobs;
 
+import com.jaspersoft.jasperserver.dto.job.JobIdListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.JobSummaryListWrapper;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -42,7 +45,7 @@ public class BatchJobsOperationsAdapter {
         return search(null);
     }
 
-    public OperationResult<JobSummaryListWrapper> search(Job searchCriteria){
+    public OperationResult<JobSummaryListWrapper> search(JobExtension searchCriteria){
         JerseyRequestBuilder<JobSummaryListWrapper> builder =
                 buildRequest(sessionStorage, JobSummaryListWrapper.class, new String[]{"/jobs"});
         builder.addParams(params);
@@ -60,13 +63,14 @@ public class BatchJobsOperationsAdapter {
         return builder.get();
     }
 
-    public OperationResult update(Job job){
-        ObjectMapper mapper = new ObjectMapper();
-        SerializationConfig serializationConfig =
-                mapper.getSerializationConfig().withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-        mapper.setSerializationConfig(serializationConfig);
+    public OperationResult<JobIdListWrapper> update(ReportJobModel jobModel){
+        JerseyRequestBuilder<JobIdListWrapper> builder =
+                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
+        builder.setContentType("application/job+json");
+        builder.setAccept("application/job+json");
+        builder.addParams(params);
 
-        buildRequest(sessionStorage, Object.class, new String[]{"/jobs"});
+        return builder.post(jobModel);
     }
 
     public OperationResult pause(){

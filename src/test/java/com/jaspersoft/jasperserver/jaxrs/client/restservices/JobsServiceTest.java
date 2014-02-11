@@ -1,12 +1,15 @@
 package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
+import com.jaspersoft.jasperserver.dto.job.JobIdListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.JobsParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.JobSummaryListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.OutputFormatsListWrapper;
 import org.testng.Assert;
@@ -19,7 +22,7 @@ import java.util.List;
 public class JobsServiceTest extends Assert {
 
     private JasperserverRestClient client;
-    private Job job;
+    private JobExtension job;
 
     public JobsServiceTest() {
         RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
@@ -43,10 +46,10 @@ public class JobsServiceTest extends Assert {
 
     @Test
     public void testViewJobDefinition(){
-        OperationResult<Job> result = client
+        OperationResult<JobExtension> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .job(8600)
+                .job(489)
                 .get();
 
         job = result.getEntity();
@@ -59,13 +62,13 @@ public class JobsServiceTest extends Assert {
         Long jobId = job.getId();
         job.setLabel(label);
 
-        OperationResult<Job> result = client
+        OperationResult<JobExtension> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .job(jobId)
                 .update(job);
         assertNotNull(result);
-        Job job = result.getEntity();
+        JobExtension job = result.getEntity();
         assertNotNull(job);
         this.job = job;
         assertEquals(job.getLabel(), label);
@@ -74,7 +77,7 @@ public class JobsServiceTest extends Assert {
     @Test(dependsOnMethods = "testEditJobDefinition")
     public void testExtendedJobSearch(){
 
-        Job criteria = new Job();
+        JobExtension criteria = new JobExtension();
         criteria.setLabel("updatedLabel");
         criteria.setAlert(new JobAlert());        //tests nested objects
 
@@ -96,7 +99,7 @@ public class JobsServiceTest extends Assert {
         JobSource source = job.getSource();
         source.setReportUnitURI("/reports/samples/Employees");
 
-        OperationResult<Job> result = client
+        OperationResult<JobExtension> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .scheduleReport(job);
@@ -122,7 +125,7 @@ public class JobsServiceTest extends Assert {
         OperationResult<JobState> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .job(8600)
+                .job(489)
                 .state();
         assertNotNull(result);
         JobState jobState = result.getEntity();
@@ -131,12 +134,18 @@ public class JobsServiceTest extends Assert {
 
     @Test(dependsOnMethods = "testScheduleJob")
     public void testUpdateJobsInBulk(){
-        client
+        ReportJobModel jobModel = new ReportJobModel();
+        jobModel.setDescription("Bulk update description");
+
+        OperationResult<JobIdListWrapper> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.UPDATE_JOB_ID, "8600")
-                .update(new Object());
+                .parameter(JobsParameter.UPDATE_JOB_ID, "489")
+                .update(jobModel);
+
+        assertNotNull(result);
+        assertEquals(result.getResponse().getStatus(), ResponseStatus.OK);
     }
 
     @Test

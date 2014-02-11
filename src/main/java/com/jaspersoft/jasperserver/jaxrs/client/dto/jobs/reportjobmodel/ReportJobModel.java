@@ -37,13 +37,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.OutputFormatsListWrapper;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import java.sql.Timestamp;
-import java.util.Set;
+import javax.xml.bind.annotation.*;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "jobModel")
 public class ReportJobModel extends Job {
 
@@ -74,7 +70,7 @@ public class ReportJobModel extends Job {
     private boolean isOutputLocaleModified = false;
     private boolean isRuntimeInformationModified = false;
 
-    private ReportJobRuntimeInformationModel runtimeInformation = null;
+    private ReportJobStateModel runtimeInformation = null;
 
 
     /**
@@ -203,7 +199,7 @@ public class ReportJobModel extends Job {
 		else if ((trigger instanceof ReportJobSimpleTriggerModel) || (trigger instanceof ReportJobCalendarTriggerModel))
             super.setTrigger(trigger);
         else {
-            if ((trigger instanceof ReportJobSimpleTrigger))
+            if ((trigger instanceof SimpleTrigger))
                 throw new JSClientException("Please use ReportJobSimpleTriggerModel or  instead of ReportJobSimpleTrigger in ReportJobModel class.");
             else
                 throw new JSClientException("Please use ReportJobCalendarTriggerModel or  instead of ReportJobCalendarTrigger in ReportJobModel class.");
@@ -268,6 +264,7 @@ public class ReportJobModel extends Job {
 		super.setAlert(alert);
         isAlertModified = true;
 	}
+
 
 
 	/**
@@ -410,7 +407,7 @@ public class ReportJobModel extends Job {
 	 *
 	 * @return runtime Information Model for searhing
 	 */
-	public ReportJobRuntimeInformationModel getRuntimeInformationModel() {
+	public ReportJobStateModel getRuntimeInformationModel() {
 		return runtimeInformation;
 	}
 
@@ -419,7 +416,7 @@ public class ReportJobModel extends Job {
 	 *
 	 * @param runtimeInformationModel search by runtime information
 	 */
-	public void setRuntimeInformationModel(ReportJobRuntimeInformationModel runtimeInformationModel) {
+	public void setRuntimeInformationModel(ReportJobStateModel runtimeInformationModel) {
         isRuntimeInformationModified = true;
 		this.runtimeInformation = runtimeInformationModel;
 	}

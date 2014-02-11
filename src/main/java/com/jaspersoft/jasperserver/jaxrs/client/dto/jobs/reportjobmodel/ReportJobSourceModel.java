@@ -20,8 +20,7 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
-import com.jaspersoft.jasperserver.api.JasperServerAPI;
-import com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobSource;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSource;
 
 import java.util.Map;
 
@@ -38,8 +37,7 @@ import java.util.Map;
  * @version $Id: ReportJobSourceModel.java 25010 2012-09-26 16:56:35Z sergey.prilukin $
  * @since 4.7
  */
-@JasperServerAPI
-public class ReportJobSourceModel extends ReportJobSource {
+public class ReportJobSourceModel extends JobSource {
 
     private boolean isReportUnitURIModified = false;
     private boolean isParametersMapModified = false;
@@ -71,9 +69,9 @@ public class ReportJobSourceModel extends ReportJobSource {
 	 *
 	 * @param parameters the report input values
 	 */
-	public void setParametersMap(Map parameters) {
+	public void setParameters(Map<String, Object> parameters) {
 		isParametersMapModified = true;
-        super.setParametersMap(parameters);
+        super.setParameters(parameters);
 	}
 
     /**

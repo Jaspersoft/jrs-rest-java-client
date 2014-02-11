@@ -4,6 +4,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobState;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
@@ -18,8 +19,9 @@ public class SingleJobOperationsAdapter {
         this.jobId = jobId;
     }
 
-    public OperationResult<Job> get(){
-        JerseyRequestBuilder<Job> builder = buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId});
+    public OperationResult<JobExtension> get(){
+        JerseyRequestBuilder<JobExtension> builder =
+                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs", jobId});
         builder.setAccept("application/job+json");
         return builder.get();
     }
@@ -29,9 +31,9 @@ public class SingleJobOperationsAdapter {
                 .get();
     }
 
-    public OperationResult<Job> update(Job job){
-        JerseyRequestBuilder<Job> builder =
-                buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId});
+    public OperationResult<JobExtension> update(JobExtension job){
+        JerseyRequestBuilder<JobExtension> builder =
+                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs", jobId});
         builder.setContentType("application/job+json");
         builder.setAccept("application/job+json");
 

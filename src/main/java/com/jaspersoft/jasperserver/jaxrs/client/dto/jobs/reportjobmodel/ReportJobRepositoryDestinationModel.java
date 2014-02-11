@@ -20,10 +20,9 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
-import com.jaspersoft.jasperserver.api.JSException;
-import com.jaspersoft.jasperserver.api.JasperServerAPI;
-import com.jaspersoft.jasperserver.api.engine.scheduling.domain.FTPInfo;
-import com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobRepositoryDestination;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.JSClientException;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.FtpInfo;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.RepositoryDestination;
 
 /**
  * Contains attributes related to the generation of repository resources
@@ -34,8 +33,7 @@ import com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobReposit
  * @version $Id: ReportJobRepositoryDestinationModel.java 25010 2012-09-26 16:56:35Z sergey.prilukin $
  * @since 4.7
  */
-@JasperServerAPI
-public class ReportJobRepositoryDestinationModel extends ReportJobRepositoryDestination {
+public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 
     private boolean isFolderURIModified = false;
     private boolean isSequentialFilenamesModified = false;
@@ -184,7 +182,7 @@ public class ReportJobRepositoryDestinationModel extends ReportJobRepositoryDest
 	 * @see #setOutputFTPInfoModel(FTPInfoModel)
      * @deprecated use #getOutputFTPInfoModel() instead
 	 */
-	public FTPInfo getOutputFTPInfo() {
+	public FtpInfo getOutputFTPInfo() {
         return getOutputFTPInfoModel();
 	}
 
@@ -196,10 +194,10 @@ public class ReportJobRepositoryDestinationModel extends ReportJobRepositoryDest
 	 * @see #setOutputFTPInfoModel(FTPInfoModel)
 	 */
 	public FTPInfoModel getOutputFTPInfoModel() {
-        FTPInfo model = super.getOutputFTPInfo();
+        FtpInfo model = super.getOutputFTPInfo();
         if (model == null) return null;
         if (model instanceof FTPInfoModel) return (FTPInfoModel) model;
-        throw new JSException("Please use FTPInfoModel instead of FTPInfo in ReportJobRepositoryDestinationModel class.");
+        throw new JSClientException("Please use FTPInfoModel instead of FTPInfo in ReportJobRepositoryDestinationModel class.");
 	}
 
 	/**
@@ -209,10 +207,10 @@ public class ReportJobRepositoryDestinationModel extends ReportJobRepositoryDest
 	 * @param ftpInfo FTP information of the output folder
      * @deprecated use #setOutputFTPInfo(FTPInfoModel) instead
 	 */
-	public void setOutputFTPInfo(FTPInfo ftpInfo) {
+	public void setOutputFTPInfo(FtpInfo ftpInfo) {
         if (ftpInfo == null) setOutputFTPInfoModel(null);
 		else if (ftpInfo instanceof FTPInfoModel) setOutputFTPInfoModel((FTPInfoModel)ftpInfo);
-        else throw new JSException("Please use FTPInfoModel instead of FTPInfo in ReportJobRepositoryDestinationModel class.");
+        else throw new JSClientException("Please use FTPInfoModel instead of FTPInfo in ReportJobRepositoryDestinationModel class.");
 	}
 
     /**

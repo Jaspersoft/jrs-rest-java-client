@@ -6,6 +6,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.SingleCalendarOperationsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
 
@@ -26,9 +27,9 @@ public class JobsService {
         return new SingleJobOperationsAdapter(sessionStorage, String.valueOf(jobId));
     }
 
-    public OperationResult<Job> scheduleReport(Job report){
-        JerseyRequestBuilder<Job> builder =
-                buildRequest(sessionStorage, Job.class, new String[]{"/jobs"});
+    public OperationResult<JobExtension> scheduleReport(JobExtension report){
+        JerseyRequestBuilder<JobExtension> builder =
+                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs"});
         builder.setContentType("application/job+json");
         builder.setAccept("application/job+json");
 

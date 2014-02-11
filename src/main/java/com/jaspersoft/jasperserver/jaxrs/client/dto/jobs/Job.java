@@ -41,7 +41,7 @@ public class Job {
     private String creationDate;
     private String baseOutputFilename;
     private String outputLocale;
-    private String outputTimeZone;
+
 
     @XmlElement(name = "repositoryDestination")
     private RepositoryDestination repositoryDestination;
@@ -125,14 +125,6 @@ public class Job {
 
     public void setOutputLocale(String outputLocale) {
         this.outputLocale = outputLocale;
-    }
-
-    public String getOutputTimeZone() {
-        return outputTimeZone;
-    }
-
-    public void setOutputTimeZone(String outputTimeZone) {
-        this.outputTimeZone = outputTimeZone;
     }
 
     public RepositoryDestination getRepositoryDestination() {
