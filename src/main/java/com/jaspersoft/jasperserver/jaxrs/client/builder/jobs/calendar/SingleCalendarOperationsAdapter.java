@@ -1,10 +1,15 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar;
 
+import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.ReportJobCalendar;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
 
 public class SingleCalendarOperationsAdapter {
 
@@ -23,16 +28,22 @@ public class SingleCalendarOperationsAdapter {
         return this;
     }
 
-    public OperationResult get(){
-        throw new UnsupportedOperationException();
+    public OperationResult<ReportJobCalendar> get(){
+        return buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName})
+                .get();
     }
 
     public OperationResult delete(){
-        throw new UnsupportedOperationException();
+        return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName})
+                .delete();
     }
 
-    public OperationResult createOrUpdate(Object calendarDescriptor){
-        throw new UnsupportedOperationException();
+    public OperationResult createOrUpdate(Calendar calendarDescriptor){
+        JerseyRequestBuilder<Object> builder =
+                buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName});
+        builder.addParams(params);
+
+        return builder.put(calendarDescriptor);
     }
 
 }

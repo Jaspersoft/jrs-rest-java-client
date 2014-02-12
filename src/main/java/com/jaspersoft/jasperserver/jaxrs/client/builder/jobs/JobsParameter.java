@@ -72,7 +72,7 @@ public enum JobsParameter {
     /**
      * Can be used multiple times to create a list of jobIDs to update
      */
-    UPDATE_JOB_ID("id"),
+    JOB_ID("id"),
 
     /**
      * When true, the trigger is replaced from the content being sent and the trigger

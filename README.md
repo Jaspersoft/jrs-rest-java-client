@@ -713,7 +713,7 @@ Response response = operationResult.getResponse();
         <dependency>
             <groupId>com.jaspersoft</groupId>
             <artifactId>jasperserver-jaxrs-client</artifactId>
-            <version>0.9.1</version>
+            <version>0.9.2</version>
         </dependency>
     </dependencies>
 

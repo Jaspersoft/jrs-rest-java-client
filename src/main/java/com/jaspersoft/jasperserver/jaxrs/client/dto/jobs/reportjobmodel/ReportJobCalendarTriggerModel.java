@@ -21,6 +21,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.CalendarTrigger;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.MonthsSortedSetWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.WeekDaysSortedSetWrapper;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.SortedSet;
@@ -120,7 +122,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	/**
 	 * Sets the type of days on which the trigger should fire.
 	 */
-	public void setDaysType(Byte daysType) {
+	public void setDaysType(String daysType) {
         isDaysTypeModified = true;
 		super.setDaysType(daysType);
 	}
@@ -167,7 +169,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 *
 	 * @param months the months as <code>java.lang.Byte</code> values
 	 */
-    public void setMonths(SortedSet<String> months) {
+    public void setMonths(MonthsSortedSetWrapper months) {
         isMonthsModified = true;
         super.setMonths(months);
 	}
@@ -182,7 +184,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 *
 	 * @param weekDays the week days as <code>java.lang.Byte</code> values
 	 */
-	public void setWeekDays(SortedSet weekDays) {
+	public void setWeekDays(WeekDaysSortedSetWrapper weekDays) {
         isWeekDaysModified = true;
 		super.setWeekDays(weekDays);
 	}

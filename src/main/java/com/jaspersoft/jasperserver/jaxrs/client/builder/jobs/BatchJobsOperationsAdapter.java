@@ -18,6 +18,8 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
 
@@ -31,25 +33,25 @@ public class BatchJobsOperationsAdapter {
         params = new MultivaluedHashMap<String, String>();
     }
 
-    public BatchJobsOperationsAdapter parameter(JobsParameter parameter, String value){
+    public BatchJobsOperationsAdapter parameter(JobsParameter parameter, String value) {
         params.add(parameter.getName(), value);
         return this;
     }
 
-    public OperationResult<JobSummaryListWrapper> get(){
+    public OperationResult<JobSummaryListWrapper> get() {
         return buildRequest(sessionStorage, JobSummaryListWrapper.class, new String[]{"/jobs"})
                 .get();
     }
 
-    public OperationResult<JobSummaryListWrapper> search(){
+    public OperationResult<JobSummaryListWrapper> search() {
         return search(null);
     }
 
-    public OperationResult<JobSummaryListWrapper> search(JobExtension searchCriteria){
+    public OperationResult<JobSummaryListWrapper> search(JobExtension searchCriteria) {
         JerseyRequestBuilder<JobSummaryListWrapper> builder =
                 buildRequest(sessionStorage, JobSummaryListWrapper.class, new String[]{"/jobs"});
         builder.addParams(params);
-        if (searchCriteria != null){
+        if (searchCriteria != null) {
             ObjectMapper mapper = new ObjectMapper();
             SerializationConfig serializationConfig =
                     mapper.getSerializationConfig().withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
@@ -63,7 +65,7 @@ public class BatchJobsOperationsAdapter {
         return builder.get();
     }
 
-    public OperationResult<JobIdListWrapper> update(ReportJobModel jobModel){
+    public OperationResult<JobIdListWrapper> update(ReportJobModel jobModel) {
         JerseyRequestBuilder<JobIdListWrapper> builder =
                 buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
         builder.setContentType("application/job+json");
@@ -73,16 +75,50 @@ public class BatchJobsOperationsAdapter {
         return builder.post(jobModel);
     }
 
-    public OperationResult pause(){
-        throw new UnsupportedOperationException();
+    public OperationResult<JobIdListWrapper> update(Job jobDescriptor) {
+        ObjectMapper mapper = new ObjectMapper();
+        SerializationConfig serializationConfig =
+                mapper.getSerializationConfig().withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+        mapper.setSerializationConfig(serializationConfig);
+
+        JerseyRequestBuilder<JobIdListWrapper> builder =
+                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
+        builder.addParams(params);
+
+        String jobJson = null;
+        try {
+            jobJson = mapper.writeValueAsString(jobDescriptor);
+        } catch (IOException ignored) {
+        }
+
+        return builder.post(jobJson);
     }
 
-    public OperationResult resume(){
-        throw new UnsupportedOperationException();
+
+    private List<Long> getIds() {
+        List<Long> ids = new ArrayList<Long>();
+        for (String id : params.get(JobsParameter.JOB_ID.getName())) {
+            ids.add(Long.parseLong(id));
+        }
+        return ids;
     }
 
-    public OperationResult restart(){
-        throw new UnsupportedOperationException();
+    public OperationResult<JobIdListWrapper> pause() {
+        JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"})
+                .post(jobIdListWrapper);
+    }
+
+    public OperationResult<JobIdListWrapper> resume() {
+        JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"})
+                .post(jobIdListWrapper);
+}
+
+    public OperationResult<JobIdListWrapper> restart() {
+        JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"})
+                .post(jobIdListWrapper);
     }
 
 }

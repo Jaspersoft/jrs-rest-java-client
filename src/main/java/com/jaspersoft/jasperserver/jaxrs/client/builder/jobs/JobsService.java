@@ -7,6 +7,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarTy
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.SingleCalendarOperationsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.CalendarNameListWrapper;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
 
@@ -36,12 +37,17 @@ public class JobsService {
         return builder.put(report);
     }
 
-    public OperationResult calendars(){
+    public OperationResult<CalendarNameListWrapper> calendars(){
         return calendars(null);
     }
 
-    public OperationResult calendars(CalendarType type){
-        throw new UnsupportedOperationException();
+    public OperationResult<CalendarNameListWrapper> calendars(CalendarType type){
+        JerseyRequestBuilder<CalendarNameListWrapper> builder =
+                buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
+        if (type != null)
+            builder.addParam("calendarType", type.name().toLowerCase());
+
+        return builder.get();
     }
 
     public SingleCalendarOperationsAdapter calendar(String name){

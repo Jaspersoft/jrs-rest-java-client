@@ -9,14 +9,13 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.JobsParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.BaseCalendar;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.WeeklyCalendar;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.CalendarNameListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.JobSummaryListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.OutputFormatsListWrapper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Test
 public class JobsServiceTest extends Assert {
@@ -49,7 +48,7 @@ public class JobsServiceTest extends Assert {
         OperationResult<JobExtension> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .job(489)
+                .job(8600)
                 .get();
 
         job = result.getEntity();
@@ -125,15 +124,15 @@ public class JobsServiceTest extends Assert {
         OperationResult<JobState> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .job(489)
+                .job(8600)
                 .state();
         assertNotNull(result);
         JobState jobState = result.getEntity();
         assertNotNull(jobState);
     }
 
-    @Test(dependsOnMethods = "testScheduleJob")
-    public void testUpdateJobsInBulk(){
+    @Test(dependsOnMethods = "testScheduleJob", enabled = false)
+    public void testUpdateJobsInBulkWithJobModel(){
         ReportJobModel jobModel = new ReportJobModel();
         jobModel.setDescription("Bulk update description");
 
@@ -141,41 +140,63 @@ public class JobsServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.UPDATE_JOB_ID, "489")
+                .parameter(JobsParameter.JOB_ID, "8600")
                 .update(jobModel);
 
         assertNotNull(result);
         assertEquals(result.getResponse().getStatus(), ResponseStatus.OK);
     }
 
-    @Test
-    public void testPauseJobs(){
-        client
+    @Test(dependsOnMethods = "testScheduleJob")
+    public void testUpdateJobsInBulkWithJobDescriptor(){
+        Job jobDescriptor = new Job();
+        jobDescriptor.setDescription("Bulk update description");
+
+        OperationResult<JobIdListWrapper> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.valueOf("jobId"), "jobId")
-                .pause();
+                .parameter(JobsParameter.JOB_ID, "8600")
+                .update(jobDescriptor);
+
+        assertNotNull(result);
+        assertEquals(result.getResponse().getStatus(), ResponseStatus.OK);
     }
 
-    @Test
+    @Test(dependsOnMethods = "testUpdateJobsInBulkWithJobDescriptor")
     public void testResumeJobs(){
-        client
+        OperationResult<JobIdListWrapper> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.valueOf("jobId"), "jobId")
+                .parameter(JobsParameter.JOB_ID, "8600")
                 .resume();
+        assertNotNull(result);
+        assertNotNull(result.getEntity());
     }
 
-    @Test
-    public void testRestartJobs(){
-        client
+    @Test(dependsOnMethods = "testResumeJobs")
+    public void testPauseJobs(){
+        OperationResult<JobIdListWrapper> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.valueOf("jobId"), "jobId")
+                .parameter(JobsParameter.JOB_ID, "8600")
+                .pause();
+        assertNotNull(result);
+        assertNotNull(result.getEntity());
+    }
+
+    @Test(dependsOnMethods = "testPauseJobs")
+    public void testRestartJobs(){
+        OperationResult<JobIdListWrapper> result = client
+                .authenticate("jasperadmin", "jasperadmin")
+                .jobsService()
+                .jobs()
+                .parameter(JobsParameter.JOB_ID, "8600")
                 .restart();
+        assertNotNull(result);
+        assertNotNull(result.getEntity());
     }
 
     /*@Test
@@ -187,39 +208,65 @@ public class JobsServiceTest extends Assert {
     }*/
 
     @Test
-    public void testListAllRegisteredCalendarNames(){
-        client
+    public void testListAllRegisteredCalendars(){
+        OperationResult<CalendarNameListWrapper> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .calendars(CalendarType.valueOf("someType"));
+                .calendars();
+        assertNotNull(result);
+        CalendarNameListWrapper calendarNameListWrapper = result.getEntity();
+        assertNotNull(calendarNameListWrapper);
     }
 
     @Test
-    public void testViewExclusionCalendar(){
-        client
+    public void testListAllRegisteredCalendarNamesWithType(){
+        OperationResult<CalendarNameListWrapper> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .calendar("")
+                .calendars(CalendarType.HOLIDAY);
+        assertNotNull(result);
+        CalendarNameListWrapper calendarNameListWrapper = result.getEntity();
+        assertNotNull(calendarNameListWrapper);
+    }
+
+    @Test
+    public void testAddOrUpdateCalendar(){
+
+        WeeklyCalendar calendar = new WeeklyCalendar();
+        calendar.setDescription("lalala");
+        calendar.setTimeZone("GMT+03:00");
+        calendar.setExcludeDaysFlags(new boolean[]{true, false, false, false, false, true, true});
+
+        OperationResult result = client
+                .authenticate("jasperadmin", "jasperadmin")
+                .jobsService()
+                .calendar("testCalendar")
+                .createOrUpdate(calendar);
+        assertNotNull(result);
+        assertEquals(result.getResponse().getStatus(), ResponseStatus.UPDATED);
+    }
+
+    @Test(dependsOnMethods = "testAddOrUpdateCalendar")
+    public void testViewCalendar(){
+        OperationResult<ReportJobCalendar> result = client
+                .authenticate("jasperadmin", "jasperadmin")
+                .jobsService()
+                .calendar("testCalendar")
                 .get();
+        assertNotNull(result);
+        ReportJobCalendar jobCalendar = result.getEntity();
+        assertNotNull(jobCalendar);
     }
 
-    @Test
-    public void testDeleteExclusionCalendar(){
-        client
+    @Test(dependsOnMethods = "testViewCalendar")
+    public void testDeleteCalendar(){
+        OperationResult result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .calendar("")
+                .calendar("testCalendar")
                 .delete();
-    }
-
-    @Test
-    public void testAddOrUpdateExclusionCalendar(){
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .jobsService()
-                .calendar("")
-                .parameter(CalendarParameter.valueOf("someParam"), "")
-                .createOrUpdate(new Object());
+        assertNotNull(result);
+        assertEquals(result.getResponse().getStatus(), ResponseStatus.OK);
     }
 
 }
