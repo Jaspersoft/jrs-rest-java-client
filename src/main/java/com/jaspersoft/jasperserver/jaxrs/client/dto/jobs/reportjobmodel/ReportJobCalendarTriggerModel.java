@@ -25,7 +25,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.MonthsSortedSe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.WeekDaysSortedSetWrapper;
 
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.SortedSet;
 
 
 /**

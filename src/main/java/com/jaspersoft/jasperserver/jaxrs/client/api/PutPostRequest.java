@@ -21,7 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.api;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 public interface PutPostRequest<ResponseType> extends Request{
 

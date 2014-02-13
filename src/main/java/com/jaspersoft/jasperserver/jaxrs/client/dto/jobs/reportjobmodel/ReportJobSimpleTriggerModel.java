@@ -23,7 +23,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.SimpleTrigger;
 
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.Date;
 
 /**
  * Job trigger model which fires at fixed time intervals.

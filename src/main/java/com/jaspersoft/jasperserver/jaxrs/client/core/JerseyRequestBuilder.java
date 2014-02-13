@@ -24,6 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 import com.jaspersoft.jasperserver.jaxrs.client.api.GetDeleteRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.api.Request;
 import com.jaspersoft.jasperserver.jaxrs.client.api.RequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
 import com.sun.jersey.multipart.impl.MultiPartWriter;
