@@ -705,6 +705,195 @@ OperationResult operationResult =
 
 Response response = operationResult.getResponse();
 ```
+Jobs service
+==================
+The jobs service provides the interface to schedule reports and manage scheduled reports (also called jobs). In addition, this service provides an API to scheduler features that were introduced in JasperReports Server 4.7, such as bulk updates, pausing jobs, FTP output and exclusion calendars.
+####Listing Report Jobs
+Use the following method to list all jobs managed by the scheduler.
+```java
+OperationResult<JobSummaryListWrapper> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .jobs()
+        .get();
+
+JobSummaryListWrapper jobSummaryListWrapper = result.getEntity();
+```
+The jobs are described in the `JobSummary` element.
+####Viewing a Job Definition
+The following piece of code with a specific job ID specified in `job()` method retrieves the detailed information about that scheduled job.
+```java
+OperationResult<JobExtension> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .job(8600)
+        .get();
+
+JobExtension job = result.getEntity();
+```
+This code returns a job element that gives the output, scheduling, and parameter details, if any, for the job.
+####Extended Job Search
+The `search()` method is used for more advanced job searches. Some field of the jobsummary descriptor can be used directly as parameters, and fields of the job descriptor can also be used as search criteria. You can also control the pagination and sorting order of the reply.
+```java
+JobExtension criteria = new JobExtension();
+criteria.setLabel("updatedLabel");
+criteria.setAlert(new JobAlert());        
+
+OperationResult<JobSummaryListWrapper> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .jobs()
+        .parameter(JobsParameter.SEARCH_LABEL, "hello")
+        .search(criteria);
+
+JobSummaryListWrapper jobSummaryListWrapper = result.getEntity();
+```
+The `criteria` parameter lets you specify a search on fields in the job descriptor, such as output formats. Some fields may be specified in both the search parameter and in a dedicated parameter, for example label. In that case, the search specified in the parameter takes precedence.   For example, you can search for all jobs that specify output format of PDF. The criteria to specify this
+field is:
+```java
+List<String> outputFormats = new ArrayList<String>();
+outputFormats.add("PDF");
+OutputFormatsListWrapper wrapper = new OutputFormatsListWrapper(outputFormats);
+JobExtension criteria = new JobExtension();
+criteria.setOutputFormats(wrapper);
+```
+Currently the code is a little bit littered, in futere versions it will be eliminated.
+####Scheduling a Report
+To schedule a report, create its job descriptor similar to the one returned by the `job(id).get();` method, and use the `scheduleReport()` method of the jobs service. Specify the report being scheduled inside the job descriptor. You do not need to specify any job IDs in the descriptor, because the server will assign them.
+```java
+job.setLabel("NewScheduledReport");
+job.setDescription("blablabla");
+JobSource source = job.getSource();
+source.setReportUnitURI("/reports/samples/Employees");
+
+OperationResult<JobExtension> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .scheduleReport(job);
+
+job = result.getEntity();
+```
+The body contains the job descriptor of the newly created job. It is similar to the one that was sent but now contains the jobID for the new job.
+####Viewing Job Status
+The following method returns the current runtime state of a job:
+```java
+OperationResult<JobState> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .job(8600)
+        .state();
+
+JobState jobState = result.getEntity();
+```
+Response contains the `JobState` status descriptor.
+####Editing a Job Definition
+To modify an existing job definition, use the `job(id).get()` method to read its job descriptor, modify the descriptor as required, and use the `update()` method of the jobs service. The `update()` method replaces the definition of the job with the given job ID.
+```java
+String label = "updatedLabel";
+Long jobId = job.getId();
+job.setLabel(label);
+
+OperationResult<JobExtension> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .job(jobId)
+        .update(job);
+
+JobExtension job = result.getEntity();
+```
+####Updating Jobs in Bulk
+To update several jobs at once you should specify jobs IDs as parameters, and send a descriptor with filled fields to update.
+```java
+Job jobDescriptor = new Job();
+jobDescriptor.setDescription("Bulk update description");
+
+OperationResult<JobIdListWrapper> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .jobs()
+        .parameter(JobsParameter.JOB_ID, "8600")
+        .parameter(JobsParameter.JOB_ID, "8601")
+        .update(jobDescriptor);
+```
+The code above will update the `description` field of jobs with IDs `8600` and `8601`.
+####Pausing Jobs
+The following method pauses currently scheduled job execution. Pausing keeps the job schedule and all other details but prevents the job from running. It does not delete the job.
+```java
+OperationResult<JobIdListWrapper> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .jobs()
+        .parameter(JobsParameter.JOB_ID, "8600")
+        .pause();
+```
+####Resuming Jobs
+Use the following method to resume any or all paused jobs in the scheduler. Resuming a job means that any defined trigger in the schedule that occurs after the time it is resumed will cause the report to run again. Missed schedule triggers that occur before the job is resumed are never run.
+```java
+OperationResult<JobIdListWrapper> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .jobs()
+        .parameter(JobsParameter.JOB_ID, "8600")
+        .resume();
+```
+####Restarting Failed Jobs
+Use the following method to rerun failed jobs in the scheduler. For each job to be restarted, the scheduler creates an immediate single-run copy of job, to replace the one that failed. Therefore, all jobs listed in the request body will run once immediately after issuing this command. The single-run copies have a misfire policy set so that they do not trigger any further failures (`MISFIRE_ INSTRUCTION_IGNORE_MISFIRE_POLICY`). If the single-run copies fail themselves, no further attempts are made automatically.
+```java
+OperationResult<JobIdListWrapper> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .jobs()
+        .parameter(JobsParameter.JOB_ID, "8600")
+        .restart();
+```
+###Calendars service
+The scheduler allows a job to be defined with a list of excluded days or times when you do not want the job to run. For example, if you have a report scheduled to run every business day, you want to exclude holidays that change every year. The list for excluded days and times is defined as a calendar, and there are various ways to define the calendar.  The scheduler stores any number of exclusion calendars that you can reference by name. When scheduling a report, reference the name of the calendar to exclude, and the scheduler automatically calculates the correct days to trigger the report. The scheduler also allows you to update an exclusion calendar and update all of the report jobs that used it. Therefore, you can update the calendar of excluded holidays every year and not need to modify any report jobs.
+####Listing All Registered Calendar Names
+The following method returns the list of all calendar names that were added to the scheduler.
+```java
+OperationResult<CalendarNameListWrapper> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .calendars();  //OR .calendars(CalendarType.HOLIDAY); //to specify the desired calendar type
+
+CalendarNameListWrapper calendarNameListWrapper = result.getEntity();
+```
+####Viewing an Exclusion Calendar
+The following method takes the name of an exclusion calendar and returns the definition of the calendar:
+```java
+OperationResult<ReportJobCalendar> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .calendar("testCalendar")
+        .get();
+
+ReportJobCalendar jobCalendar = result.getEntity();
+```
+As a result we have common caledar descriptor `ReportJobCalendar`.
+####Adding or Updating an Exclusion Calendar
+This method creates a named exclusion calendar that you can use when scheduling reports. If the calendar already exists, you have the option of replacing it and updating all the jobs that used it.
+```java
+WeeklyCalendar calendar = new WeeklyCalendar();
+calendar.setDescription("lalala");
+calendar.setTimeZone("GMT+03:00");
+calendar.setExcludeDaysFlags(new boolean[]{true, false, false, false, false, true, true});
+
+OperationResult result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .calendar("testCalendar")
+        .createOrUpdate(calendar);
+```
+Unlike common `ReportJobCalendar` which we receive as result of GET operation here we need create the calendar instance of desired type and path it to the `createOrUpdate()` method.
+####Deleting an Exclusion Calendar
+Use the following method to delete a calendar by name.
+```java
+OperationResult result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .jobsService()
+        .calendar("testCalendar")
+        .delete();
+```
 
 
 ###Maven dependency to add jasperserver-rest-client to your app:
