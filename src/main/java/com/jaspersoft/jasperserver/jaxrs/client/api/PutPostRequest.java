@@ -19,9 +19,13 @@
 * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.jaspersoft.jasperserver.jaxrs.client.builder.api;
+package com.jaspersoft.jasperserver.jaxrs.client.api;
 
-public interface RequestBuilder<ResponseType>
-        extends Request, GetDeleteRequest<ResponseType>, PutPostRequest<ResponseType>{
+import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+
+public interface PutPostRequest<ResponseType> extends Request{
+
+    <RequestType> OperationResult<ResponseType> put(RequestType entity);
+    <RequestType> OperationResult<ResponseType> post(RequestType entity);
 
 }

@@ -19,13 +19,19 @@
 * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.jaspersoft.jasperserver.jaxrs.client.builder.api;
+package com.jaspersoft.jasperserver.jaxrs.client.api;
 
-import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
 
-public interface PutPostRequest<ResponseType> extends Request{
+import javax.ws.rs.core.MultivaluedMap;
 
-    <RequestType> OperationResult<ResponseType> put(RequestType entity);
-    <RequestType> OperationResult<ResponseType> post(RequestType entity);
+public interface GetDeleteRequest<ResponseType> extends Request{
+
+    OperationResult<ResponseType> get();
+    OperationResult<ResponseType> delete();
+    GetDeleteRequest<ResponseType> addParam(String name, String... values);
+    GetDeleteRequest<ResponseType> addParams(MultivaluedMap<String, String> params);
+    GetDeleteRequest<ResponseType> addMatrixParam(String name, String... values);
+    GetDeleteRequest<ResponseType> addMatrixParams(MultivaluedMap<String, String> params);
 
 }

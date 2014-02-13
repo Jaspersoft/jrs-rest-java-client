@@ -19,7 +19,7 @@
 * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.jaspersoft.jasperserver.jaxrs.client.builder;
+package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersService;

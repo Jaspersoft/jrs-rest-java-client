@@ -19,11 +19,11 @@
 * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.jaspersoft.jasperserver.jaxrs.client.builder;
+package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.builder.api.GetDeleteRequest;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.api.Request;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.api.RequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.api.GetDeleteRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.api.Request;
+import com.jaspersoft.jasperserver.jaxrs.client.api.RequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
 import com.sun.jersey.multipart.impl.MultiPartWriter;

@@ -19,33 +19,30 @@
 * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.jaspersoft.jasperserver.jaxrs.client.builder;
+package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-public class AuthenticationCredentials {
+import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 
-    private String username;
-    private String password;
+public class SessionStorage {
+
+    private RestClientConfiguration configuration;
+    private AuthenticationCredentials credentials;
     private String sessionId;
 
-    public AuthenticationCredentials(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public RestClientConfiguration getConfiguration() {
+        return configuration;
     }
 
-    public String getUsername() {
-        return username;
+    public void setConfiguration(RestClientConfiguration configuration) {
+        this.configuration = configuration;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public AuthenticationCredentials getCredentials() {
+        return credentials;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setCredentials(AuthenticationCredentials credentials) {
+        this.credentials = credentials;
     }
 
     public String getSessionId() {
@@ -53,6 +50,7 @@ public class AuthenticationCredentials {
     }
 
     public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+        if (sessionId != null)
+            this.sessionId = sessionId;
     }
 }

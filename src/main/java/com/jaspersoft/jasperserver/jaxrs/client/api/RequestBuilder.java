@@ -19,18 +19,9 @@
 * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.jaspersoft.jasperserver.jaxrs.client.builder.api;
+package com.jaspersoft.jasperserver.jaxrs.client.api;
 
-import javax.ws.rs.client.WebTarget;
-
-public interface Request {
-
-    Request setPath(String path);
-    WebTarget getPath();
-    Request setTarget(WebTarget webTarget);
-
-    void setContentType(String mime);
-    void setAccept(String acceptMime);
-    void addHeader(String name, String... values);
+public interface RequestBuilder<ResponseType>
+        extends Request, GetDeleteRequest<ResponseType>, PutPostRequest<ResponseType>{
 
 }
