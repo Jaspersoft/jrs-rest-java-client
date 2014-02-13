@@ -22,7 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users;
 
 import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 import javax.ws.rs.core.MultivaluedHashMap;

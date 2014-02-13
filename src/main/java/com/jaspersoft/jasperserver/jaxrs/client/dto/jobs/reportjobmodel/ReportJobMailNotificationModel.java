@@ -24,7 +24,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.MailNotification;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.AddressListWrapper;
 
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.List;
 
 /**
  * Email notification model that can be defined for a report job.  Model is used in search/ update only.

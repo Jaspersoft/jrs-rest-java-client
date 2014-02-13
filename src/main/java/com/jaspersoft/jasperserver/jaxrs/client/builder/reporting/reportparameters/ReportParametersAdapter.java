@@ -23,7 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparamet
 
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 import javax.ws.rs.core.MediaType;

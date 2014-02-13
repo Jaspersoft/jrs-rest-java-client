@@ -6,7 +6,7 @@ import com.jaspersoft.jasperserver.dto.authority.UserAttributesListWrapper;
 import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersAttributesParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersParameter;
 import org.testng.Assert;

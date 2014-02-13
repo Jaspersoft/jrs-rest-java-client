@@ -24,11 +24,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.OutputFormatsListWrapper;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.sql.Timestamp;
-import java.util.List;
 
 @XmlRootElement(name = "job")
 public class Job {

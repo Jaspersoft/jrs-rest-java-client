@@ -22,7 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;

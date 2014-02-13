@@ -23,7 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;

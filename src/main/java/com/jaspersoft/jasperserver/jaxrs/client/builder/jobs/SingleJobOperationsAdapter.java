@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobState;

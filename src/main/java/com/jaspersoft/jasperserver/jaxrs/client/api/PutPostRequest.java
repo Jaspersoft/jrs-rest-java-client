@@ -21,11 +21,11 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.api;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 public interface PutPostRequest<ResponseType> extends Request{
 
-    <RequestType> OperationResult<ResponseType> put(RequestType entity);
-    <RequestType> OperationResult<ResponseType> post(RequestType entity);
+    OperationResult<? extends ResponseType> put(Object entity);
+    OperationResult<? extends ResponseType> post(Object entity);
 
 }

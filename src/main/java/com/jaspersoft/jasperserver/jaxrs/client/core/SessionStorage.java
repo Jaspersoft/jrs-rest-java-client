@@ -21,8 +21,6 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-
 public class SessionStorage {
 
     private RestClientConfiguration configuration;

@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.core;
+package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
 public class JSClientException extends RuntimeException {
 

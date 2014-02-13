@@ -23,7 +23,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobState;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Date;
 
 /**
  * Searching report jobs by runtime information

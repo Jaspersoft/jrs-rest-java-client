@@ -2,7 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.jobs;
 
 import com.jaspersoft.jasperserver.dto.job.JobIdListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
@@ -14,7 +14,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
-
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;

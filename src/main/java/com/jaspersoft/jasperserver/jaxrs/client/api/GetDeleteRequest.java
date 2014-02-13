@@ -21,14 +21,14 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.api;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedMap;
 
 public interface GetDeleteRequest<ResponseType> extends Request{
 
-    OperationResult<ResponseType> get();
-    OperationResult<ResponseType> delete();
+    OperationResult<? extends ResponseType> get();
+    OperationResult<? extends ResponseType> delete();
     GetDeleteRequest<ResponseType> addParam(String name, String... values);
     GetDeleteRequest<ResponseType> addParams(MultivaluedMap<String, String> params);
     GetDeleteRequest<ResponseType> addMatrixParam(String name, String... values);

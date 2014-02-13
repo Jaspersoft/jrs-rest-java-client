@@ -4,7 +4,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.MonthsSortedSe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.WeekDaysSortedSetWrapper;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.SortedSet;
 
 @XmlRootElement(name = "calendarTrigger")
 public class CalendarTrigger extends JobTrigger {

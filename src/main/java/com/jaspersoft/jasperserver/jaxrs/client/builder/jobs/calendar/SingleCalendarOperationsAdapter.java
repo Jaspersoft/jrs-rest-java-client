@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.ReportJobCalendar;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar;

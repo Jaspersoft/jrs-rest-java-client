@@ -5,7 +5,7 @@ import com.jaspersoft.jasperserver.dto.importexport.StateDto;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice.ExportParameter;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;

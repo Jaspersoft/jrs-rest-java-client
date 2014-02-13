@@ -19,7 +19,7 @@
 * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.jaspersoft.jasperserver.jaxrs.client.core;
+package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
@@ -33,25 +33,15 @@ public class OperationResult<T> {
 
     private Response response;
     private Class<? extends T> entityClass;
-    private ErrorDescriptor error;
 
     private T entity;
 
     public OperationResult(Response response, Class<? extends T> entityClass) {
         this.response = response;
-        if (entityClass.isAssignableFrom(ClientResource.class)){
-            entityClass =
-                   (Class<? extends T>) ResourcesTypeResolverUtil.getClassForMime(response.getHeaderString("Content-Type"));
-        }
         this.entityClass = entityClass;
-        if (response.getStatus() == 500 || response.getStatus() == 400)
-            error = response.readEntity(ErrorDescriptor.class);
     }
 
     public T getEntity() {
-        if (response.getStatus() == 404)
-            return null;
-
         try {
             if (entity == null)
                 entity = response.readEntity(entityClass);
@@ -63,10 +53,6 @@ public class OperationResult<T> {
 
     public Response getResponse() {
         return response;
-    }
-
-    public ErrorDescriptor getError() {
-        return error;
     }
 
     public String getSessionId() {

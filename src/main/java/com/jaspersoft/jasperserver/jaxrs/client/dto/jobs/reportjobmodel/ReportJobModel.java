@@ -33,7 +33,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
  * @since 4.7
  */
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.JSClientException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.OutputFormatsListWrapper;
 

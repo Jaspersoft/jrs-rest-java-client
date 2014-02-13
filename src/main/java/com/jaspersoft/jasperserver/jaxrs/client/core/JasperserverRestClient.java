@@ -21,10 +21,6 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.AuthenticationCredentials;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-
 public class JasperserverRestClient {
 
     private Session session;
