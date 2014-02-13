@@ -21,7 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles;
 
-import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 public class RolesService {
 

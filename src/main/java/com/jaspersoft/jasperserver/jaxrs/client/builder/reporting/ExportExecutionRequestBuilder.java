@@ -22,12 +22,12 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportExecutionStatusEntity;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 import java.io.InputStream;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
 
 public class ExportExecutionRequestBuilder {
 

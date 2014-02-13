@@ -21,7 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice;
 
-import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 public class ExportService {
 

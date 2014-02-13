@@ -22,10 +22,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
 
 public class ImportRequestAdapter {
 

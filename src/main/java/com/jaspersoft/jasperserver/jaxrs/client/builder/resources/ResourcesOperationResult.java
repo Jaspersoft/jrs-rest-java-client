@@ -22,7 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.resources;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
 
 import javax.ws.rs.core.Response;
 

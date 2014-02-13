@@ -24,14 +24,14 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users;
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.dto.authority.UserAttributesListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
 
 public class SingleUserRequestAdapter {
 

@@ -20,11 +20,9 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JSClientException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobAlert;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.AddressListWrapper;
-
-import java.util.List;
 
 /**
  * job execution alert model that can be defined for a report job.

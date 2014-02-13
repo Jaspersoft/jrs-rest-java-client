@@ -1,15 +1,13 @@
 package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.job.JobIdListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.ResponseStatus;
-import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.JobsParameter;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.BaseCalendar;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.WeeklyCalendar;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.CalendarNameListWrapper;

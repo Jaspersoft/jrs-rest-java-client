@@ -23,11 +23,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.permissions;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
 
 public class PermissionsService {
 

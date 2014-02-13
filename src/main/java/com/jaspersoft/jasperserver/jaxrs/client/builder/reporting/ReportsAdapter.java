@@ -21,9 +21,9 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting;
 
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters.ReorderingReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters.ReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters.ReportParametersUtils;

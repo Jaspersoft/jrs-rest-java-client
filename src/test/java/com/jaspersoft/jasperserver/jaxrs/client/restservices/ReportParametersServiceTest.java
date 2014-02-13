@@ -1,8 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.*;
-import com.jaspersoft.jasperserver.jaxrs.client.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

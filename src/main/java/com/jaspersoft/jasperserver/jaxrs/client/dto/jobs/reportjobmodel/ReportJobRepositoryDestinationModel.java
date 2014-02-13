@@ -20,7 +20,7 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JSClientException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.FtpInfo;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.RepositoryDestination;
 

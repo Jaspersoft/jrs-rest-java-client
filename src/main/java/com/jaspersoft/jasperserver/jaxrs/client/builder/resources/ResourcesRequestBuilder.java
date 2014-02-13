@@ -22,8 +22,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.resources;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 public class ResourcesRequestBuilder extends JerseyRequestBuilder<ClientResource> {
 
