@@ -25,7 +25,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 
 public interface PutPostRequest<ResponseType> extends Request{
 
-    OperationResult<? extends ResponseType> put(Object entity);
-    OperationResult<? extends ResponseType> post(Object entity);
+    OperationResult<ResponseType> put(Object entity);
+    OperationResult<ResponseType> post(Object entity);
 
 }

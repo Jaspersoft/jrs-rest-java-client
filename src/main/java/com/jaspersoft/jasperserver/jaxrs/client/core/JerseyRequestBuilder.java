@@ -24,6 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 import com.jaspersoft.jasperserver.jaxrs.client.api.GetDeleteRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.api.Request;
 import com.jaspersoft.jasperserver.jaxrs.client.api.RequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
@@ -77,14 +78,14 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
 
     private final OperationResultFactory operationResultFactory;
     private final SessionStorage sessionStorage;
-    private final Class<? extends ResponseType> responseClass;
+    private final Class<ResponseType> responseClass;
     private MultivaluedMap<String, String> headers;
     private WebTarget usersWebTarget;
     private String contentType;
     private String acceptType;
 
 
-    protected JerseyRequestBuilder(SessionStorage sessionStorage, Class<? extends ResponseType> responseClass) {
+    protected JerseyRequestBuilder(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
 
         this.operationResultFactory = new OperationResultFactoryImpl();
         this.sessionStorage = sessionStorage;
@@ -128,7 +129,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     }
 
     @Override
-    public OperationResult<? extends ResponseType> get() {
+    public OperationResult<ResponseType> get() throws JSClientWebException {
         try {
             Invocation.Builder request =
                     usersWebTarget
@@ -139,18 +140,20 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
             addHeaders(request);
 
             Response response = request.get();
-            OperationResult<? extends ResponseType> result =
+            OperationResult<ResponseType> result =
                     operationResultFactory.getOperationResult(response, responseClass);
             this.sessionStorage.setSessionId(result.getSessionId());
 
             return result;
+        } catch (JSClientWebException e) {
+            throw e;
         } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public OperationResult<? extends ResponseType> delete() {
+    public OperationResult<ResponseType> delete() throws JSClientWebException {
         Invocation.Builder request =
                 usersWebTarget
                         .request();
@@ -160,7 +163,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         addHeaders(request);
 
         Response response = request.delete();
-        OperationResult<? extends ResponseType> result =
+        OperationResult<ResponseType> result =
                 operationResultFactory.getOperationResult(response, responseClass);
         this.sessionStorage.setSessionId(result.getSessionId());
 
@@ -204,7 +207,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     }
 
     @Override
-    public OperationResult<? extends ResponseType> put(Object entity) {
+    public OperationResult<ResponseType> put(Object entity) throws JSClientWebException {
         Invocation.Builder request =
                 usersWebTarget
                         .request();
@@ -214,7 +217,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         addHeaders(request);
 
         Response response = request.put(Entity.entity(entity, contentType));
-        OperationResult<? extends ResponseType> result =
+        OperationResult<ResponseType> result =
                 operationResultFactory.getOperationResult(response, responseClass);
         this.sessionStorage.setSessionId(result.getSessionId());
 
@@ -222,7 +225,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     }
 
     @Override
-    public OperationResult<? extends ResponseType> post(Object entity) {
+    public OperationResult<ResponseType> post(Object entity) throws JSClientWebException {
         Invocation.Builder request =
                 usersWebTarget
                         .request();
@@ -232,7 +235,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         addHeaders(request);
 
         Response response = request.post(Entity.entity(entity, contentType));
-        OperationResult<? extends ResponseType> result =
+        OperationResult<ResponseType> result =
                 operationResultFactory.getOperationResult(response, responseClass);
         this.sessionStorage.setSessionId(result.getSessionId());
 

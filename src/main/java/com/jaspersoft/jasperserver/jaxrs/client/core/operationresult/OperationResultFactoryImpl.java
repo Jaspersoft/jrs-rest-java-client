@@ -18,18 +18,18 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
     }
 
     @Override
-    public <T> OperationResult<? extends T> getOperationResult(Response response, Class<? extends T> responseClass)
+    public <T> OperationResult<T> getOperationResult(Response response, Class<T> responseClass)
             throws JSClientWebException {
         checkForError(response);
         if (isClientResource(responseClass))
-            responseClass = (Class<? extends T>) getSpecificResourceType(response);
+            responseClass = (Class<T>) getSpecificResourceType(response);
 
         return getAppropriateOperationResultInstance(response, responseClass);
     }
 
-    private <T> OperationResult<? extends T> getAppropriateOperationResultInstance(Response response,
-                                                                                   Class<? extends T> responseClass){
-        OperationResult<? extends T> result;
+    private <T> OperationResult<T> getAppropriateOperationResultInstance(Response response,
+                                                                                   Class<T> responseClass){
+        OperationResult<T> result;
         if (response.hasEntity())
             result = new WithEntityOperationResult(response, responseClass);
         else
@@ -40,7 +40,7 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
     private void checkForError(Response response) throws JSClientWebException {
         int statusCode = response.getStatus();
         if (isError(statusCode))
-            throw exceptionsFactory.getException(statusCode);
+            throw exceptionsFactory.getException(response);
     }
 
     private boolean isError(int responseCode){

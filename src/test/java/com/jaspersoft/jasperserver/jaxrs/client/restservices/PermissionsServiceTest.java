@@ -26,25 +26,29 @@ public class PermissionsServiceTest extends Assert {
         RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
         client = new JasperserverRestClient(configuration);
 
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .permissionsService()
-                .resource("/datasources")
-                .permissionRecipient(PermissionRecipient.USER, "joeuser")
-                .delete();
+        try {
+            client
+                    .authenticate("jasperadmin", "jasperadmin")
+                    .permissionsService()
+                    .resource("/datasources")
+                    .permissionRecipient(PermissionRecipient.USER, "joeuser")
+                    .delete();
 
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .permissionsService()
-                .resource("/")
-                .permissionRecipient(PermissionRecipient.USER, "joeuser")
-                .delete();
+            client
+                    .authenticate("jasperadmin", "jasperadmin")
+                    .permissionsService()
+                    .resource("/")
+                    .permissionRecipient(PermissionRecipient.USER, "joeuser")
+                    .delete();
 
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .permissionsService()
-                .resource("/themes")
-                .delete();
+            client
+                    .authenticate("jasperadmin", "jasperadmin")
+                    .permissionsService()
+                    .resource("/themes")
+                    .delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

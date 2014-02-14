@@ -6,6 +6,8 @@ import com.jaspersoft.jasperserver.dto.authority.UserAttributesListWrapper;
 import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersAttributesParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersParameter;
@@ -32,18 +34,20 @@ public class UsersServiceTest extends Assert {
 
     @AfterClass
     public static void tearDown() {
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .usersService()
-                .username("jasperadmin")
-                .attributes()
-                .delete();
+        try {
+            client
+                    .authenticate("jasperadmin", "jasperadmin")
+                    .usersService()
+                    .username("jasperadmin")
+                    .attributes()
+                    .delete();
 
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .usersService()
-                .username("demo")
-                .delete();
+            client
+                    .authenticate("jasperadmin", "jasperadmin")
+                    .usersService()
+                    .username("demo")
+                    .delete();
+        } catch (Exception e) {}
 
     }
 
@@ -61,16 +65,13 @@ public class UsersServiceTest extends Assert {
         assertEquals(user.getUsername(), "jasperadmin");
     }
 
-    @Test(priority = 1)
+    @Test(priority = 1, expectedExceptions = {JSClientWebException.class, ResourceNotFoundException.class})
     public void testGetNonexistentUser() {
         OperationResult<ClientUser> operationResult =
                 client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
                         .username("demo").get();
-
-        Response response = operationResult.getResponse();
-        assertEquals(response.getStatus(), 404);
     }
 
     @Test

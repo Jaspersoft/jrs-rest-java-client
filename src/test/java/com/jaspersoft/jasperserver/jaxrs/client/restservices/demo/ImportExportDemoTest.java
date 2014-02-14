@@ -5,6 +5,7 @@ import com.jaspersoft.jasperserver.dto.importexport.StateDto;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice.ExportParameter;
 import org.testng.Assert;
@@ -33,18 +34,22 @@ public class ImportExportDemoTest extends Assert {
                 .setExternallyDefined(false)
                 .setFullName("John Doe");
 
-        client.authenticate("jasperadmin", "jasperadmin")
-                .usersService()
-                .username(user.getUsername())
-                .createOrUpdate(user);
+        try {
+            client.authenticate("jasperadmin", "jasperadmin")
+                    .usersService()
+                    .username(user.getUsername())
+                    .createOrUpdate(user);
+        } catch (Exception e) {}
     }
 
     @AfterClass
     public static void tearDown(){
-        client.authenticate("jasperadmin", "jasperadmin")
-                .usersService()
-                .username("john.doe")
-                .delete();
+        try {
+            client.authenticate("jasperadmin", "jasperadmin")
+                    .usersService()
+                    .username("john.doe")
+                    .delete();
+        } catch (Exception e) {}
     }
 
     @Test
@@ -68,7 +73,7 @@ public class ImportExportDemoTest extends Assert {
 
     }
 
-    @Test(dependsOnMethods = "testExport")
+    @Test(dependsOnMethods = "testExport", expectedExceptions = JSClientWebException.class)
     public void testDeleteJohnDoeUserAndCheckAbsence() {
         OperationResult result =
                 client.authenticate("jasperadmin", "jasperadmin")
@@ -82,6 +87,7 @@ public class ImportExportDemoTest extends Assert {
                         .usersService()
                         .username("john.doe")
                         .get();
+
         assertEquals(result1.getResponse().getStatus(), ResponseStatus.NOT_FOUND);
         assertEquals(result1.getEntity(), null);
     }

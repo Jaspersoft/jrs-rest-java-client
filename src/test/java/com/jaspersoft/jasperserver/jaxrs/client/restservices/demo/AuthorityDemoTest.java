@@ -42,11 +42,15 @@ public class AuthorityDemoTest extends Assert {
 
     @AfterClass
     public static void tearDown() {
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .usersService()
-                .username(user.getUsername())
-                .delete();
+        try {
+            client
+                    .authenticate("jasperadmin", "jasperadmin")
+                    .usersService()
+                    .username(user.getUsername())
+                    .delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

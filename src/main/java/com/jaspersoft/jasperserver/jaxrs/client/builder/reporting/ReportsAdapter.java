@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+
 public class ReportsAdapter {
 
     private final SessionStorage sessionStorage;
@@ -84,10 +86,8 @@ public class ReportsAdapter {
 
         public OperationResult<InputStream> run(){
             JerseyRequestBuilder<InputStream> builder =
-                    new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
-            builder
-                    .setPath("reports")
-                    .setPath(reportUnitUri + "." + format.toString().toLowerCase());
+                    buildRequest(sessionStorage, InputStream.class,
+                            new String[]{"/reports", reportUnitUri + "." + format.toString().toLowerCase()});
             builder.addParams(params);
 
             if (pages.length == 1)

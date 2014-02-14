@@ -1,7 +1,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
+import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
 
+import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,11 +21,19 @@ public class WebExceptionsFactoryImpl implements WebExceptionsFactory {
             }};
 
     @Override
-    public JSClientWebException getException(int errorCode) {
-        Class<? extends JSClientWebException> exceptionClass = errorCodeToTypeMap.get(errorCode);
+    public JSClientWebException getException(Response response) {
+        Class<? extends JSClientWebException> exceptionClass = errorCodeToTypeMap.get(response.getStatus());
         JSClientWebException exception = null;
         try {
-            exception = exceptionClass.newInstance();
+            ErrorDescriptor errorDescriptor = null;
+
+            try {
+                errorDescriptor = response.readEntity(ErrorDescriptor.class);
+            } catch (Exception ignored) {}
+
+            exception = exceptionClass.getConstructor(String.class)
+                    .newInstance(errorDescriptor != null ? errorDescriptor.getMessage()
+                            : "Exception happened while requesting " + response.getLocation());
         } catch (Exception ignored) {}
 
         return exception;
