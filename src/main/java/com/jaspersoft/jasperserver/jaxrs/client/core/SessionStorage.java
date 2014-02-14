@@ -21,6 +21,9 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionMask;
+
 public class SessionStorage {
 
     private RestClientConfiguration configuration;
@@ -50,5 +53,19 @@ public class SessionStorage {
     public void setSessionId(String sessionId) {
         if (sessionId != null)
             this.sessionId = sessionId;
+    }
+
+    public static void main(String[] args) {
+        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
+        JasperserverRestClient client = new JasperserverRestClient(configuration);
+        RepositoryPermission permission = new RepositoryPermission()
+                .setRecipient("user:/jasperadmin")
+                .setUri("/themes")
+                .setMask(PermissionMask.READ_WRITE_DELETE);
+
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .permissionsService()
+                .createNew(permission);
     }
 }

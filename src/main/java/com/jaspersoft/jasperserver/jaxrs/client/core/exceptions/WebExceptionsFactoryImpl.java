@@ -12,12 +12,12 @@ public class WebExceptionsFactoryImpl implements WebExceptionsFactory {
     private static final Map<Integer, Class<? extends JSClientWebException>> errorCodeToTypeMap =
             new HashMap<Integer, Class<? extends JSClientWebException>>(){{
                 put(ResponseStatus.BAD_REQUEST, BadRequestException.class);
-                put(ResponseStatus.FORBIDDEN, AuthenticationFailureException.class);
+                put(ResponseStatus.FORBIDDEN, AccessForbiddenException.class);
                 put(ResponseStatus.NOT_ALLOWED, HttpMethodNotAllowedException.class);
                 put(ResponseStatus.SERVER_ERROR, InternalServerErrorException.class);
                 put(ResponseStatus.NOT_ACCEPTABLE, RepresentationNotAvailableForResourceException.class);
                 put(ResponseStatus.NOT_FOUND, ResourceNotFoundException.class);
-                put(ResponseStatus.UNAUTHORIZED, UnauthorizedActionException.class);
+                put(ResponseStatus.UNAUTHORIZED, AuthenticationFailureException.class);
             }};
 
     @Override
@@ -33,7 +33,7 @@ public class WebExceptionsFactoryImpl implements WebExceptionsFactory {
 
             exception = exceptionClass.getConstructor(String.class)
                     .newInstance(errorDescriptor != null ? errorDescriptor.getMessage()
-                            : "Exception happened while requesting " + response.getLocation());
+                            : "Exception happened with response: " + response);
         } catch (Exception ignored) {}
 
         return exception;

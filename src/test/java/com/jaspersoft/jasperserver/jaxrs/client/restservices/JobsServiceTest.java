@@ -4,7 +4,7 @@ import com.jaspersoft.jasperserver.dto.job.JobIdListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.JobsParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
@@ -46,7 +46,7 @@ public class JobsServiceTest extends Assert {
         OperationResult<JobExtension> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .job(8600)
+                .job(489)
                 .get();
 
         job = result.getEntity();
@@ -122,7 +122,7 @@ public class JobsServiceTest extends Assert {
         OperationResult<JobState> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .job(8600)
+                .job(489)
                 .state();
         assertNotNull(result);
         JobState jobState = result.getEntity();
@@ -138,7 +138,7 @@ public class JobsServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "8600")
+                .parameter(JobsParameter.JOB_ID, "489")
                 .update(jobModel);
 
         assertNotNull(result);
@@ -154,7 +154,7 @@ public class JobsServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "8600")
+                .parameter(JobsParameter.JOB_ID, "489")
                 .update(jobDescriptor);
 
         assertNotNull(result);
@@ -167,7 +167,7 @@ public class JobsServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "8600")
+                .parameter(JobsParameter.JOB_ID, "489")
                 .resume();
         assertNotNull(result);
         assertNotNull(result.getEntity());
@@ -179,7 +179,7 @@ public class JobsServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "8600")
+                .parameter(JobsParameter.JOB_ID, "489")
                 .pause();
         assertNotNull(result);
         assertNotNull(result.getEntity());
@@ -191,7 +191,7 @@ public class JobsServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "8600")
+                .parameter(JobsParameter.JOB_ID, "489")
                 .restart();
         assertNotNull(result);
         assertNotNull(result.getEntity());
