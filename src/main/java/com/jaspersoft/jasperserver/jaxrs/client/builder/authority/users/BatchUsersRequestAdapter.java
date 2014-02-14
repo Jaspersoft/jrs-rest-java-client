@@ -22,8 +22,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users;
 
 import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -47,7 +48,10 @@ public class BatchUsersRequestAdapter {
     }
 
     public OperationResult<UsersListWrapper> get(){
-        return buildRequest(sessionStorage, UsersListWrapper.class, new String[]{"users"}, null, null, params, null).get();
+        JerseyRequestBuilder<UsersListWrapper> builder =
+                buildRequest(sessionStorage, UsersListWrapper.class, new String[]{"users"});
+        builder.addParams(params);
+        return builder.get();
     }
 
 }

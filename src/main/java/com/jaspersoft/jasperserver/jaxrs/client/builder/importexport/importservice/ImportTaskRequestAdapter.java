@@ -22,8 +22,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice;
 
 import com.jaspersoft.jasperserver.dto.importexport.StateDto;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -57,8 +58,12 @@ public class ImportTaskRequestAdapter {
     }
 
     private OperationResult<StateDto> createImport(Object zipArchive) {
-        return buildRequest(sessionStorage, StateDto.class, new String[]{"/import"},
-                "application/zip", MediaType.APPLICATION_JSON, params, null)
-                .post(zipArchive);
+        JerseyRequestBuilder<StateDto> builder = buildRequest(sessionStorage, StateDto.class, new String[]{"/import"});
+        builder
+                .setContentType("application/zip")
+                .setAccept(MediaType.APPLICATION_JSON)
+                .addParams(params);
+
+        return builder.post(zipArchive);
     }
 }

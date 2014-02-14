@@ -23,8 +23,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparamet
 
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -58,8 +58,9 @@ public class ReportParametersAdapter {
     public OperationResult<ReportInputControlsListWrapper> get(){
         JerseyRequestBuilder<ReportInputControlsListWrapper> builder =
                 buildRequest(sessionStorage, ReportInputControlsListWrapper.class,
-                        new String[]{"/reports", reportUnitUri, "/inputControls"},
-                        MediaType.APPLICATION_XML, MediaType.APPLICATION_XML, null, null);
+                        new String[]{"/reports", reportUnitUri, "/inputControls"});
+        builder.setContentType(MediaType.APPLICATION_XML);
+        builder.setAccept(MediaType.APPLICATION_XML);
         if (idsPathSegment != null){
             builder.setPath(idsPathSegment);
         }

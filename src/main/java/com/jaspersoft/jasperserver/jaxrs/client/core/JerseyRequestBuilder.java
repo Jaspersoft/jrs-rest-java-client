@@ -21,9 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.api.GetDeleteRequest;
-import com.jaspersoft.jasperserver.jaxrs.client.api.Request;
-import com.jaspersoft.jasperserver.jaxrs.client.api.RequestBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
@@ -43,48 +41,25 @@ import java.util.Map;
 
 public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<ResponseType> {
 
-    public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage,
-                                                           Class<T> responseClass,
-                                                           String[] path,
-                                                           String contentType,
-                                                           String acceptType,
-                                                           MultivaluedMap<String, String> params,
-                                                           MultivaluedMap<String, String> headers){
-        JerseyRequestBuilder<T> builder =
-                new JerseyRequestBuilder<T>(sessionStorage, responseClass);
-        for (String pathElem : path){
+    public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path){
+        JerseyRequestBuilder<T> builder = new JerseyRequestBuilder<T>(sessionStorage, responseClass);
+        for (String pathElem : path)
             builder.setPath(pathElem);
-        }
-        if (contentType != null)
-            builder.setContentType(contentType);
-        if (acceptType != null)
-            builder.setAccept(acceptType);
-        if (params != null)
-            builder.addParams(params);
-        if (headers != null) {
-            builder.setHeaders(headers);
-        }
 
         return builder;
-    }
-
-    public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage,
-                                                           Class<T> responseClass,
-                                                           String[] path){
-        return buildRequest(sessionStorage, responseClass, path, null, null, null, null);
     }
 
 
     private final OperationResultFactory operationResultFactory;
     private final SessionStorage sessionStorage;
-    private final Class<? extends ResponseType> responseClass;
+    private final Class<ResponseType> responseClass;
     private MultivaluedMap<String, String> headers;
     private WebTarget usersWebTarget;
     private String contentType;
     private String acceptType;
 
 
-    protected JerseyRequestBuilder(SessionStorage sessionStorage, Class<? extends ResponseType> responseClass) {
+    protected JerseyRequestBuilder(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
 
         this.operationResultFactory = new OperationResultFactoryImpl();
         this.sessionStorage = sessionStorage;
@@ -122,13 +97,13 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     }
 
     @Override
-    public Request setTarget(WebTarget webTarget) {
+    public RequestBuilder<ResponseType> setTarget(WebTarget webTarget) {
         this.usersWebTarget = webTarget;
         return this;
     }
 
     @Override
-    public OperationResult<? extends ResponseType> get() {
+    public OperationResult<ResponseType> get() throws JSClientWebException {
         try {
             Invocation.Builder request =
                     usersWebTarget
@@ -139,18 +114,20 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
             addHeaders(request);
 
             Response response = request.get();
-            OperationResult<? extends ResponseType> result =
+            OperationResult<ResponseType> result =
                     operationResultFactory.getOperationResult(response, responseClass);
             this.sessionStorage.setSessionId(result.getSessionId());
 
             return result;
+        } catch (JSClientWebException e) {
+            throw e;
         } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public OperationResult<? extends ResponseType> delete() {
+    public OperationResult<ResponseType> delete() throws JSClientWebException {
         Invocation.Builder request =
                 usersWebTarget
                         .request();
@@ -160,7 +137,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         addHeaders(request);
 
         Response response = request.delete();
-        OperationResult<? extends ResponseType> result =
+        OperationResult<ResponseType> result =
                 operationResultFactory.getOperationResult(response, responseClass);
         this.sessionStorage.setSessionId(result.getSessionId());
 
@@ -176,13 +153,13 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     }
 
     @Override
-    public GetDeleteRequest<ResponseType> addParam(String name, String... values) {
+    public RequestBuilder<ResponseType> addParam(String name, String... values) {
         usersWebTarget = usersWebTarget.queryParam(name, values);
         return this;
     }
 
     @Override
-    public GetDeleteRequest<ResponseType> addParams(MultivaluedMap<String, String> params) {
+    public RequestBuilder<ResponseType> addParams(MultivaluedMap<String, String> params) {
         for (MultivaluedMap.Entry<String, List<String>> entry : params.entrySet()) {
             usersWebTarget = usersWebTarget.queryParam(entry.getKey(), entry.getValue().toArray());
         }
@@ -190,13 +167,13 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     }
 
     @Override
-    public GetDeleteRequest<ResponseType> addMatrixParam(String name, String... values) {
+    public RequestBuilder<ResponseType> addMatrixParam(String name, String... values) {
         usersWebTarget = usersWebTarget.matrixParam(name, values);
         return this;
     }
 
     @Override
-    public GetDeleteRequest<ResponseType> addMatrixParams(MultivaluedMap<String, String> params) {
+    public RequestBuilder<ResponseType> addMatrixParams(MultivaluedMap<String, String> params) {
         for (Map.Entry<String, List<String>> entry : params.entrySet()) {
             usersWebTarget = usersWebTarget.matrixParam(entry.getKey(), entry.getValue().toArray());
         }
@@ -204,7 +181,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     }
 
     @Override
-    public OperationResult<? extends ResponseType> put(Object entity) {
+    public OperationResult<ResponseType> put(Object entity) throws JSClientWebException {
         Invocation.Builder request =
                 usersWebTarget
                         .request();
@@ -214,7 +191,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         addHeaders(request);
 
         Response response = request.put(Entity.entity(entity, contentType));
-        OperationResult<? extends ResponseType> result =
+        OperationResult<ResponseType> result =
                 operationResultFactory.getOperationResult(response, responseClass);
         this.sessionStorage.setSessionId(result.getSessionId());
 
@@ -222,7 +199,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     }
 
     @Override
-    public OperationResult<? extends ResponseType> post(Object entity) {
+    public OperationResult<ResponseType> post(Object entity) throws JSClientWebException {
         Invocation.Builder request =
                 usersWebTarget
                         .request();
@@ -232,7 +209,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         addHeaders(request);
 
         Response response = request.post(Entity.entity(entity, contentType));
-        OperationResult<? extends ResponseType> result =
+        OperationResult<ResponseType> result =
                 operationResultFactory.getOperationResult(response, responseClass);
         this.sessionStorage.setSessionId(result.getSessionId());
 
@@ -240,22 +217,26 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     }
 
     @Override
-    public void setContentType(String contentType) {
+    public RequestBuilder<ResponseType> setContentType(String contentType) {
         this.contentType = contentType;
+        return this;
     }
 
     @Override
-    public void setAccept(String acceptMime) {
+    public RequestBuilder<ResponseType> setAccept(String acceptMime) {
         this.acceptType = acceptMime;
+        return this;
     }
 
     @Override
-    public void addHeader(String name, String... values) {
+    public RequestBuilder<ResponseType> addHeader(String name, String... values) {
         headers.addAll(name, values);
+        return null;
     }
 
-    public void setHeaders(MultivaluedMap<String, String> headers){
+    public RequestBuilder<ResponseType> setHeaders(MultivaluedMap<String, String> headers){
         this.headers = headers;
+        return null;
     }
 
 }

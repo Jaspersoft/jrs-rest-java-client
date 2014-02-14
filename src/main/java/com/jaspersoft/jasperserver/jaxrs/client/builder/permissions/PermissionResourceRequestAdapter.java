@@ -23,8 +23,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.builder.permissions;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -52,9 +52,10 @@ public class PermissionResourceRequestAdapter {
     }
 
     public OperationResult createOrUpdate(RepositoryPermissionListWrapper permissions) {
-        return buildRequest(sessionStorage, Object.class, new String[]{"/permissions", resourceUri},
-                "application/collection+json", MediaType.APPLICATION_JSON, null, null)
-                .put(permissions);
+        JerseyRequestBuilder<Object> builder =
+                buildRequest(sessionStorage, Object.class, new String[]{"/permissions", resourceUri});
+        builder.setContentType("application/collection+json");
+        return builder.put(permissions);
     }
 
     public PermissionResourceRequestAdapter param(PermissionResourceParameter resourceParam, String value) {

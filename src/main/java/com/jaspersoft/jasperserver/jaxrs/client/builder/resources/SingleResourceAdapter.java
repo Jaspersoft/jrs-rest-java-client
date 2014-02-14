@@ -26,8 +26,8 @@ import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.sun.jersey.multipart.FormDataMultiPart;
 
 import javax.ws.rs.core.MediaType;
@@ -88,9 +88,11 @@ public class SingleResourceAdapter {
 
     private JerseyRequestBuilder<ClientResource> getBuilderForCreateOrUpdate(ClientResource resource) {
         Class<? extends ClientResource> resourceType = ResourcesTypeResolverUtil.getResourceType(resource);
-        return (JerseyRequestBuilder<ClientResource>) buildRequest(sessionStorage, resourceType,
-                new String[]{"/resources", resourceUri},
-                ResourcesTypeResolverUtil.getMimeType(resourceType), null, params, null);
+        JerseyRequestBuilder<? extends ClientResource> builder =
+                buildRequest(sessionStorage, resourceType, new String[]{"/resources", resourceUri});
+        builder.setContentType(ResourcesTypeResolverUtil.getMimeType(resourceType));
+        builder.addParams(params);
+        return (JerseyRequestBuilder<ClientResource>) builder;
     }
 
     public OperationResult<ClientResource> copyFrom(String fromUri) {

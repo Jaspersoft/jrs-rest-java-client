@@ -25,8 +25,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparamete
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters.ReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters.ReportParametersUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -34,6 +34,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
 
 public class ReportsAdapter {
 
@@ -84,10 +86,8 @@ public class ReportsAdapter {
 
         public OperationResult<InputStream> run(){
             JerseyRequestBuilder<InputStream> builder =
-                    new JerseyRequestBuilder<InputStream>(sessionStorage, InputStream.class);
-            builder
-                    .setPath("reports")
-                    .setPath(reportUnitUri + "." + format.toString().toLowerCase());
+                    buildRequest(sessionStorage, InputStream.class,
+                            new String[]{"/reports", reportUnitUri + "." + format.toString().toLowerCase()});
             builder.addParams(params);
 
             if (pages.length == 1)

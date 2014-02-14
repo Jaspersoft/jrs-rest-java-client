@@ -21,6 +21,21 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
+import com.jaspersoft.jasperserver.dto.reports.ReportExecutionRequest;
+import com.jaspersoft.jasperserver.dto.reports.ReportParameters;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.JobsParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionMask;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportOutputFormat;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.WeeklyCalendar;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.JobSummaryListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 public class SessionStorage {
 
     private RestClientConfiguration configuration;
@@ -50,5 +65,18 @@ public class SessionStorage {
     public void setSessionId(String sessionId) {
         if (sessionId != null)
             this.sessionId = sessionId;
+    }
+
+    public static void main(String[] args) {
+        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
+        JasperserverRestClient client = new JasperserverRestClient(configuration);
+        Session session = client.authenticate("jasperadmin", "jasperadmin");
+
+        OperationResult result = client
+                .authenticate("jasperadmin", "jasperadmin")
+                .jobsService()
+                .calendar("testCalendar")
+                .delete();
+
     }
 }

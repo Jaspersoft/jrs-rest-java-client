@@ -1,9 +1,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
+import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportOutputFormat;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportOutputFormat;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

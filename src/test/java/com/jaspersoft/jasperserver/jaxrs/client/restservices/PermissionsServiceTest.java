@@ -2,11 +2,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionMask;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionRecipient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionMask;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionRecipient;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -26,25 +26,29 @@ public class PermissionsServiceTest extends Assert {
         RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
         client = new JasperserverRestClient(configuration);
 
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .permissionsService()
-                .resource("/datasources")
-                .permissionRecipient(PermissionRecipient.USER, "joeuser")
-                .delete();
+        try {
+            client
+                    .authenticate("jasperadmin", "jasperadmin")
+                    .permissionsService()
+                    .resource("/datasources")
+                    .permissionRecipient(PermissionRecipient.USER, "joeuser")
+                    .delete();
 
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .permissionsService()
-                .resource("/")
-                .permissionRecipient(PermissionRecipient.USER, "joeuser")
-                .delete();
+            client
+                    .authenticate("jasperadmin", "jasperadmin")
+                    .permissionsService()
+                    .resource("/")
+                    .permissionRecipient(PermissionRecipient.USER, "joeuser")
+                    .delete();
 
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .permissionsService()
-                .resource("/themes")
-                .delete();
+            client
+                    .authenticate("jasperadmin", "jasperadmin")
+                    .permissionsService()
+                    .resource("/themes")
+                    .delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

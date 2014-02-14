@@ -2,10 +2,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
 import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles.RolesParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles.RolesParameter;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -36,7 +37,7 @@ public class RolesServiceTest extends Assert {
         assertEquals(role.getName(), "ROLE_ADMINISTRATOR");
     }
 
-    @Test(priority = 1)
+    @Test(priority = 1, expectedExceptions = {JSClientWebException.class})
     public void testGetNonexistentRole() {
         OperationResult<ClientRole> operationResult =
                 client

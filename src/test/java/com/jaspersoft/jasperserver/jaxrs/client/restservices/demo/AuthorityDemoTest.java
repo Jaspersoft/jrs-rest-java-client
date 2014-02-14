@@ -4,12 +4,12 @@ import com.jaspersoft.jasperserver.dto.authority.ClientRole;
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionMask;
+import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionRecipient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionMask;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionRecipient;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -42,11 +42,15 @@ public class AuthorityDemoTest extends Assert {
 
     @AfterClass
     public static void tearDown() {
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .usersService()
-                .username(user.getUsername())
-                .delete();
+        try {
+            client
+                    .authenticate("jasperadmin", "jasperadmin")
+                    .usersService()
+                    .username(user.getUsername())
+                    .delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

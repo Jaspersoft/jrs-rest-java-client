@@ -21,10 +21,6 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
-import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
-import com.jaspersoft.jasperserver.dto.resources.ClientResource;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.resources.ResourcesTypeResolverUtil;
-
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.util.Map;
