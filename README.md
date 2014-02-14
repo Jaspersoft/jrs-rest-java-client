@@ -902,7 +902,7 @@ OperationResult result = client
         <dependency>
             <groupId>com.jaspersoft</groupId>
             <artifactId>jasperserver-jaxrs-client</artifactId>
-            <version>0.9.3</version>
+            <version>0.9.4</version>
         </dependency>
     </dependencies>
 
