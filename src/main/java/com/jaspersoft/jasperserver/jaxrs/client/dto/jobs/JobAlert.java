@@ -102,6 +102,48 @@ public class JobAlert {
         this.includingReportJobInfo = includingReportJobInfo;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        JobAlert jobAlert = (JobAlert) o;
+
+        if (id != null ? !id.equals(jobAlert.id) : jobAlert.id != null) return false;
+        if (includingReportJobInfo != null ? !includingReportJobInfo.equals(jobAlert.includingReportJobInfo) : jobAlert.includingReportJobInfo != null)
+            return false;
+        if (includingStackTrace != null ? !includingStackTrace.equals(jobAlert.includingStackTrace) : jobAlert.includingStackTrace != null)
+            return false;
+        if (jobState != null ? !jobState.equals(jobAlert.jobState) : jobAlert.jobState != null) return false;
+        if (messageText != null ? !messageText.equals(jobAlert.messageText) : jobAlert.messageText != null)
+            return false;
+        if (messageTextWhenJobFails != null ? !messageTextWhenJobFails.equals(jobAlert.messageTextWhenJobFails) : jobAlert.messageTextWhenJobFails != null)
+            return false;
+        if (recipient != null ? !recipient.equals(jobAlert.recipient) : jobAlert.recipient != null) return false;
+        if (subject != null ? !subject.equals(jobAlert.subject) : jobAlert.subject != null) return false;
+        if (toAddresses != null ? !toAddresses.equals(jobAlert.toAddresses) : jobAlert.toAddresses != null)
+            return false;
+        if (version != null ? !version.equals(jobAlert.version) : jobAlert.version != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + (recipient != null ? recipient.hashCode() : 0);
+        result = 31 * result + (jobState != null ? jobState.hashCode() : 0);
+        result = 31 * result + (messageText != null ? messageText.hashCode() : 0);
+        result = 31 * result + (messageTextWhenJobFails != null ? messageTextWhenJobFails.hashCode() : 0);
+        result = 31 * result + (subject != null ? subject.hashCode() : 0);
+        result = 31 * result + (includingStackTrace != null ? includingStackTrace.hashCode() : 0);
+        result = 31 * result + (includingReportJobInfo != null ? includingReportJobInfo.hashCode() : 0);
+        result = 31 * result + (toAddresses != null ? toAddresses.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "JobAlert{" +
                 "id=" + id +

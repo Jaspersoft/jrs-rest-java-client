@@ -60,11 +60,13 @@ public class JobState {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof JobState)) return false;
 
         JobState jobState = (JobState) o;
 
         if (nextFireTime != null ? !nextFireTime.equals(jobState.nextFireTime) : jobState.nextFireTime != null)
+            return false;
+        if (previousFireTime != null ? !previousFireTime.equals(jobState.previousFireTime) : jobState.previousFireTime != null)
             return false;
         if (value != null ? !value.equals(jobState.value) : jobState.value != null) return false;
 
@@ -73,8 +75,18 @@ public class JobState {
 
     @Override
     public int hashCode() {
-        int result = nextFireTime != null ? nextFireTime.hashCode() : 0;
+        int result = previousFireTime != null ? previousFireTime.hashCode() : 0;
+        result = 31 * result + (nextFireTime != null ? nextFireTime.hashCode() : 0);
         result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "JobState{" +
+                "previousFireTime='" + previousFireTime + '\'' +
+                ", nextFireTime='" + nextFireTime + '\'' +
+                ", value='" + value + '\'' +
+                '}';
     }
 }

@@ -35,12 +35,12 @@ public class JobSource {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof JobSource)) return false;
 
-        JobSource jobSource = (JobSource) o;
+        JobSource source = (JobSource) o;
 
-        if (parameters != null ? !parameters.equals(jobSource.parameters) : jobSource.parameters != null) return false;
-        if (reportUnitURI != null ? !reportUnitURI.equals(jobSource.reportUnitURI) : jobSource.reportUnitURI != null)
+        if (parameters != null ? !parameters.equals(source.parameters) : source.parameters != null) return false;
+        if (reportUnitURI != null ? !reportUnitURI.equals(source.reportUnitURI) : source.reportUnitURI != null)
             return false;
 
         return true;

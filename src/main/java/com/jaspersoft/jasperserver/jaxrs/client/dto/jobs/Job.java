@@ -171,4 +171,71 @@ public class Job {
     public void setOutputFormats(OutputFormatsListWrapper outputFormats) {
         this.outputFormats = outputFormats;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Job job = (Job) o;
+
+        if (alert != null ? !alert.equals(job.alert) : job.alert != null) return false;
+        if (baseOutputFilename != null ? !baseOutputFilename.equals(job.baseOutputFilename) : job.baseOutputFilename != null)
+            return false;
+        if (creationDate != null ? !creationDate.equals(job.creationDate) : job.creationDate != null) return false;
+        if (description != null ? !description.equals(job.description) : job.description != null) return false;
+        if (id != null ? !id.equals(job.id) : job.id != null) return false;
+        if (label != null ? !label.equals(job.label) : job.label != null) return false;
+        if (mailNotification != null ? !mailNotification.equals(job.mailNotification) : job.mailNotification != null)
+            return false;
+        if (outputFormats != null ? !outputFormats.equals(job.outputFormats) : job.outputFormats != null) return false;
+        if (outputLocale != null ? !outputLocale.equals(job.outputLocale) : job.outputLocale != null) return false;
+        if (repositoryDestination != null ? !repositoryDestination.equals(job.repositoryDestination) : job.repositoryDestination != null)
+            return false;
+        if (source != null ? !source.equals(job.source) : job.source != null) return false;
+        if (trigger != null ? !trigger.equals(job.trigger) : job.trigger != null) return false;
+        if (username != null ? !username.equals(job.username) : job.username != null) return false;
+        if (version != null ? !version.equals(job.version) : job.version != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (label != null ? label.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+        result = 31 * result + (baseOutputFilename != null ? baseOutputFilename.hashCode() : 0);
+        result = 31 * result + (outputLocale != null ? outputLocale.hashCode() : 0);
+        result = 31 * result + (repositoryDestination != null ? repositoryDestination.hashCode() : 0);
+        result = 31 * result + (mailNotification != null ? mailNotification.hashCode() : 0);
+        result = 31 * result + (source != null ? source.hashCode() : 0);
+        result = 31 * result + (alert != null ? alert.hashCode() : 0);
+        result = 31 * result + (outputFormats != null ? outputFormats.hashCode() : 0);
+        result = 31 * result + (trigger != null ? trigger.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Job{" +
+                "id=" + id +
+                ", version=" + version +
+                ", username='" + username + '\'' +
+                ", label='" + label + '\'' +
+                ", description='" + description + '\'' +
+                ", creationDate='" + creationDate + '\'' +
+                ", baseOutputFilename='" + baseOutputFilename + '\'' +
+                ", outputLocale='" + outputLocale + '\'' +
+                ", repositoryDestination=" + repositoryDestination +
+                ", mailNotification=" + mailNotification +
+                ", source=" + source +
+                ", alert=" + alert +
+                ", outputFormats=" + outputFormats +
+                ", trigger=" + trigger +
+                '}';
+    }
 }

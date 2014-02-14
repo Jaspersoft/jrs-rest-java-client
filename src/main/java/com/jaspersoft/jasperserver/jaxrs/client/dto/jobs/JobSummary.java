@@ -84,5 +84,44 @@ public class JobSummary {
         this.version = version;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof JobSummary)) return false;
 
+        JobSummary that = (JobSummary) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (label != null ? !label.equals(that.label) : that.label != null) return false;
+        if (owner != null ? !owner.equals(that.owner) : that.owner != null) return false;
+        if (reportUnitURI != null ? !reportUnitURI.equals(that.reportUnitURI) : that.reportUnitURI != null)
+            return false;
+        if (state != null ? !state.equals(that.state) : that.state != null) return false;
+        if (version != null ? !version.equals(that.version) : that.version != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (label != null ? label.hashCode() : 0);
+        result = 31 * result + (reportUnitURI != null ? reportUnitURI.hashCode() : 0);
+        result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "JobSummary{" +
+                "id=" + id +
+                ", label='" + label + '\'' +
+                ", reportUnitURI='" + reportUnitURI + '\'' +
+                ", owner='" + owner + '\'' +
+                ", state=" + state +
+                ", version=" + version +
+                '}';
+    }
 }

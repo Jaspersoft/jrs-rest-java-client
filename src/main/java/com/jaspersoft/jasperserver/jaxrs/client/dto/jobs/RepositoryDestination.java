@@ -138,27 +138,31 @@ public class RepositoryDestination {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof RepositoryDestination)) return false;
 
         RepositoryDestination that = (RepositoryDestination) o;
 
-        if (id != that.id) return false;
-        if (overwriteFiles != that.overwriteFiles) return false;
-        if (saveToRepository != that.saveToRepository) return false;
-        if (sequentialFilenames != that.sequentialFilenames) return false;
-        if (usingDefaultReportOutputFolderURI != that.usingDefaultReportOutputFolderURI) return false;
-        if (version != that.version) return false;
         if (defaultReportOutputFolderURI != null ? !defaultReportOutputFolderURI.equals(that.defaultReportOutputFolderURI) : that.defaultReportOutputFolderURI != null)
             return false;
         if (folderURI != null ? !folderURI.equals(that.folderURI) : that.folderURI != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (outputDescription != null ? !outputDescription.equals(that.outputDescription) : that.outputDescription != null)
             return false;
         if (outputFTPInfo != null ? !outputFTPInfo.equals(that.outputFTPInfo) : that.outputFTPInfo != null)
             return false;
         if (outputLocalFolder != null ? !outputLocalFolder.equals(that.outputLocalFolder) : that.outputLocalFolder != null)
             return false;
+        if (overwriteFiles != null ? !overwriteFiles.equals(that.overwriteFiles) : that.overwriteFiles != null)
+            return false;
+        if (saveToRepository != null ? !saveToRepository.equals(that.saveToRepository) : that.saveToRepository != null)
+            return false;
+        if (sequentialFilenames != null ? !sequentialFilenames.equals(that.sequentialFilenames) : that.sequentialFilenames != null)
+            return false;
         if (timestampPattern != null ? !timestampPattern.equals(that.timestampPattern) : that.timestampPattern != null)
             return false;
+        if (usingDefaultReportOutputFolderURI != null ? !usingDefaultReportOutputFolderURI.equals(that.usingDefaultReportOutputFolderURI) : that.usingDefaultReportOutputFolderURI != null)
+            return false;
+        if (version != null ? !version.equals(that.version) : that.version != null) return false;
 
         return true;
     }
@@ -166,15 +170,15 @@ public class RepositoryDestination {
     @Override
     public int hashCode() {
         int result = folderURI != null ? folderURI.hashCode() : 0;
-        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (outputDescription != null ? outputDescription.hashCode() : 0);
-        result = 31 * result + (overwriteFiles ? 1 : 0);
-        result = 31 * result + (sequentialFilenames ? 1 : 0);
-        result = 31 * result + (int) (version ^ (version >>> 32));
+        result = 31 * result + (overwriteFiles != null ? overwriteFiles.hashCode() : 0);
+        result = 31 * result + (sequentialFilenames != null ? sequentialFilenames.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + (timestampPattern != null ? timestampPattern.hashCode() : 0);
-        result = 31 * result + (saveToRepository ? 1 : 0);
+        result = 31 * result + (saveToRepository != null ? saveToRepository.hashCode() : 0);
         result = 31 * result + (defaultReportOutputFolderURI != null ? defaultReportOutputFolderURI.hashCode() : 0);
-        result = 31 * result + (usingDefaultReportOutputFolderURI ? 1 : 0);
+        result = 31 * result + (usingDefaultReportOutputFolderURI != null ? usingDefaultReportOutputFolderURI.hashCode() : 0);
         result = 31 * result + (outputLocalFolder != null ? outputLocalFolder.hashCode() : 0);
         result = 31 * result + (outputFTPInfo != null ? outputFTPInfo.hashCode() : 0);
         return result;
@@ -183,7 +187,7 @@ public class RepositoryDestination {
     @Override
     public String toString() {
         return "RepositoryDestination{" +
-                "folderUri='" + folderURI + '\'' +
+                "folderURI='" + folderURI + '\'' +
                 ", id=" + id +
                 ", outputDescription='" + outputDescription + '\'' +
                 ", overwriteFiles=" + overwriteFiles +

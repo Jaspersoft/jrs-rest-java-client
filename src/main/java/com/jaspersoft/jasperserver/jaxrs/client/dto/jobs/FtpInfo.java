@@ -107,4 +107,60 @@ public class FtpInfo {
     public void setPropertiesMap(Map<String, String> propertiesMap) {
         this.propertiesMap = propertiesMap;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FtpInfo ftpInfo = (FtpInfo) o;
+
+        if (folderPath != null ? !folderPath.equals(ftpInfo.folderPath) : ftpInfo.folderPath != null) return false;
+        if (implicit != null ? !implicit.equals(ftpInfo.implicit) : ftpInfo.implicit != null) return false;
+        if (password != null ? !password.equals(ftpInfo.password) : ftpInfo.password != null) return false;
+        if (pbsz != null ? !pbsz.equals(ftpInfo.pbsz) : ftpInfo.pbsz != null) return false;
+        if (port != null ? !port.equals(ftpInfo.port) : ftpInfo.port != null) return false;
+        if (propertiesMap != null ? !propertiesMap.equals(ftpInfo.propertiesMap) : ftpInfo.propertiesMap != null)
+            return false;
+        if (prot != null ? !prot.equals(ftpInfo.prot) : ftpInfo.prot != null) return false;
+        if (protocol != null ? !protocol.equals(ftpInfo.protocol) : ftpInfo.protocol != null) return false;
+        if (serverName != null ? !serverName.equals(ftpInfo.serverName) : ftpInfo.serverName != null) return false;
+        if (type != null ? !type.equals(ftpInfo.type) : ftpInfo.type != null) return false;
+        if (userName != null ? !userName.equals(ftpInfo.userName) : ftpInfo.userName != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userName != null ? userName.hashCode() : 0;
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (folderPath != null ? folderPath.hashCode() : 0);
+        result = 31 * result + (serverName != null ? serverName.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (protocol != null ? protocol.hashCode() : 0);
+        result = 31 * result + (port != null ? port.hashCode() : 0);
+        result = 31 * result + (implicit != null ? implicit.hashCode() : 0);
+        result = 31 * result + (pbsz != null ? pbsz.hashCode() : 0);
+        result = 31 * result + (prot != null ? prot.hashCode() : 0);
+        result = 31 * result + (propertiesMap != null ? propertiesMap.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "FtpInfo{" +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", folderPath='" + folderPath + '\'' +
+                ", serverName='" + serverName + '\'' +
+                ", type='" + type + '\'' +
+                ", protocol='" + protocol + '\'' +
+                ", port=" + port +
+                ", implicit=" + implicit +
+                ", pbsz=" + pbsz +
+                ", prot='" + prot + '\'' +
+                ", propertiesMap=" + propertiesMap +
+                '}';
+    }
 }

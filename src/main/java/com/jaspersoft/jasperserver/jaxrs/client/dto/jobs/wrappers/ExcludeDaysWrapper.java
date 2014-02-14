@@ -49,4 +49,28 @@ public class ExcludeDaysWrapper {
     public void setExcludeDays(List<String> excludeDays) {
         this.excludeDays = excludeDays;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ExcludeDaysWrapper that = (ExcludeDaysWrapper) o;
+
+        if (excludeDays != null ? !excludeDays.equals(that.excludeDays) : that.excludeDays != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return excludeDays != null ? excludeDays.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "ExcludeDaysWrapper{" +
+                "excludeDays=" + excludeDays +
+                '}';
+    }
 }

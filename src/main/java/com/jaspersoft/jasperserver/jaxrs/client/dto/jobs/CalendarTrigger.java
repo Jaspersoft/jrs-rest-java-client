@@ -64,14 +64,42 @@ public class CalendarTrigger extends JobTrigger {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CalendarTrigger that = (CalendarTrigger) o;
+
+        if (daysType != null ? !daysType.equals(that.daysType) : that.daysType != null) return false;
+        if (hours != null ? !hours.equals(that.hours) : that.hours != null) return false;
+        if (minutes != null ? !minutes.equals(that.minutes) : that.minutes != null) return false;
+        if (monthDays != null ? !monthDays.equals(that.monthDays) : that.monthDays != null) return false;
+        if (months != null ? !months.equals(that.months) : that.months != null) return false;
+        if (weekDays != null ? !weekDays.equals(that.weekDays) : that.weekDays != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = minutes != null ? minutes.hashCode() : 0;
+        result = 31 * result + (hours != null ? hours.hashCode() : 0);
+        result = 31 * result + (daysType != null ? daysType.hashCode() : 0);
+        result = 31 * result + (weekDays != null ? weekDays.hashCode() : 0);
+        result = 31 * result + (monthDays != null ? monthDays.hashCode() : 0);
+        result = 31 * result + (months != null ? months.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "CalendarTrigger{" +
                 "minutes='" + minutes + '\'' +
                 ", hours='" + hours + '\'' +
-                ", daysType=" + daysType +
+                ", daysType='" + daysType + '\'' +
                 ", weekDays=" + weekDays +
                 ", monthDays='" + monthDays + '\'' +
                 ", months=" + months +
-                '}';
+                "} " + super.toString();
     }
 }

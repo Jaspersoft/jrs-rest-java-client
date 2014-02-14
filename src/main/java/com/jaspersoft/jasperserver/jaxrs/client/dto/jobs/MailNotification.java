@@ -122,4 +122,67 @@ public class MailNotification {
     public void setResultSendType(String resultSendType) {
         this.resultSendType = resultSendType;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MailNotification)) return false;
+
+        MailNotification that = (MailNotification) o;
+
+        if (bccAddresses != null ? !bccAddresses.equals(that.bccAddresses) : that.bccAddresses != null) return false;
+        if (ccAddresses != null ? !ccAddresses.equals(that.ccAddresses) : that.ccAddresses != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (includingStackTraceWhenJobFails != null ? !includingStackTraceWhenJobFails.equals(that.includingStackTraceWhenJobFails) : that.includingStackTraceWhenJobFails != null)
+            return false;
+        if (messageText != null ? !messageText.equals(that.messageText) : that.messageText != null) return false;
+        if (messageTextWhenJobFails != null ? !messageTextWhenJobFails.equals(that.messageTextWhenJobFails) : that.messageTextWhenJobFails != null)
+            return false;
+        if (resultSendType != null ? !resultSendType.equals(that.resultSendType) : that.resultSendType != null)
+            return false;
+        if (skipEmptyReports != null ? !skipEmptyReports.equals(that.skipEmptyReports) : that.skipEmptyReports != null)
+            return false;
+        if (skipNotificationWhenJobFails != null ? !skipNotificationWhenJobFails.equals(that.skipNotificationWhenJobFails) : that.skipNotificationWhenJobFails != null)
+            return false;
+        if (subject != null ? !subject.equals(that.subject) : that.subject != null) return false;
+        if (toAddresses != null ? !toAddresses.equals(that.toAddresses) : that.toAddresses != null) return false;
+        if (version != null ? !version.equals(that.version) : that.version != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = bccAddresses != null ? bccAddresses.hashCode() : 0;
+        result = 31 * result + (ccAddresses != null ? ccAddresses.hashCode() : 0);
+        result = 31 * result + (toAddresses != null ? toAddresses.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (includingStackTraceWhenJobFails != null ? includingStackTraceWhenJobFails.hashCode() : 0);
+        result = 31 * result + (messageText != null ? messageText.hashCode() : 0);
+        result = 31 * result + (resultSendType != null ? resultSendType.hashCode() : 0);
+        result = 31 * result + (skipEmptyReports != null ? skipEmptyReports.hashCode() : 0);
+        result = 31 * result + (skipNotificationWhenJobFails != null ? skipNotificationWhenJobFails.hashCode() : 0);
+        result = 31 * result + (subject != null ? subject.hashCode() : 0);
+        result = 31 * result + (messageTextWhenJobFails != null ? messageTextWhenJobFails.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "MailNotification{" +
+                "bccAddresses=" + bccAddresses +
+                ", ccAddresses=" + ccAddresses +
+                ", toAddresses=" + toAddresses +
+                ", version=" + version +
+                ", id=" + id +
+                ", includingStackTraceWhenJobFails=" + includingStackTraceWhenJobFails +
+                ", messageText='" + messageText + '\'' +
+                ", resultSendType='" + resultSendType + '\'' +
+                ", skipEmptyReports=" + skipEmptyReports +
+                ", skipNotificationWhenJobFails=" + skipNotificationWhenJobFails +
+                ", subject='" + subject + '\'' +
+                ", messageTextWhenJobFails='" + messageTextWhenJobFails + '\'' +
+                '}';
+    }
 }

@@ -36,12 +36,13 @@ public class SimpleTrigger extends JobTrigger {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof SimpleTrigger)) return false;
         if (!super.equals(o)) return false;
 
         SimpleTrigger that = (SimpleTrigger) o;
 
-        if (occurrenceCount != that.occurrenceCount) return false;
+        if (occurrenceCount != null ? !occurrenceCount.equals(that.occurrenceCount) : that.occurrenceCount != null)
+            return false;
         if (recurrenceInterval != null ? !recurrenceInterval.equals(that.recurrenceInterval) : that.recurrenceInterval != null)
             return false;
         if (recurrenceIntervalUnit != null ? !recurrenceIntervalUnit.equals(that.recurrenceIntervalUnit) : that.recurrenceIntervalUnit != null)
@@ -53,7 +54,7 @@ public class SimpleTrigger extends JobTrigger {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + occurrenceCount;
+        result = 31 * result + (occurrenceCount != null ? occurrenceCount.hashCode() : 0);
         result = 31 * result + (recurrenceInterval != null ? recurrenceInterval.hashCode() : 0);
         result = 31 * result + (recurrenceIntervalUnit != null ? recurrenceIntervalUnit.hashCode() : 0);
         return result;
@@ -65,6 +66,6 @@ public class SimpleTrigger extends JobTrigger {
                 "occurrenceCount=" + occurrenceCount +
                 ", recurrenceInterval=" + recurrenceInterval +
                 ", recurrenceIntervalUnit='" + recurrenceIntervalUnit + '\'' +
-                '}';
+                "} " + super.toString();
     }
 }

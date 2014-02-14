@@ -43,4 +43,29 @@ public class ReportParametersMapWrapper {
     public void setParameterValues(HashMap<String, Object> parameterValues) {
         this.parameterValues = parameterValues;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ReportParametersMapWrapper that = (ReportParametersMapWrapper) o;
+
+        if (parameterValues != null ? !parameterValues.equals(that.parameterValues) : that.parameterValues != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return parameterValues != null ? parameterValues.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "ReportParametersMapWrapper{" +
+                "parameterValues=" + parameterValues +
+                '}';
+    }
 }

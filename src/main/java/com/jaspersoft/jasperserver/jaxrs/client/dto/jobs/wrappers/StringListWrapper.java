@@ -24,4 +24,27 @@ public class StringListWrapper {
         this.strings = strings;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StringListWrapper that = (StringListWrapper) o;
+
+        if (strings != null ? !strings.equals(that.strings) : that.strings != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return strings != null ? strings.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "StringListWrapper{" +
+                "strings=" + strings +
+                '}';
+    }
 }

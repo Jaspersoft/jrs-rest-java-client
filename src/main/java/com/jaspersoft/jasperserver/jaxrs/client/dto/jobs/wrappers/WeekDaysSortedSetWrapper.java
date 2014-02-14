@@ -50,5 +50,28 @@ public class WeekDaysSortedSetWrapper {
         this.days = days;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WeekDaysSortedSetWrapper that = (WeekDaysSortedSetWrapper) o;
+
+        if (days != null ? !days.equals(that.days) : that.days != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return days != null ? days.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "WeekDaysSortedSetWrapper{" +
+                "days=" + days +
+                '}';
+    }
 }
 

@@ -51,5 +51,28 @@ public class MonthsSortedSetWrapper {
         this.months = months;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MonthsSortedSetWrapper that = (MonthsSortedSetWrapper) o;
+
+        if (months != null ? !months.equals(that.months) : that.months != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return months != null ? months.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "MonthsSortedSetWrapper{" +
+                "months=" + months +
+                '}';
+    }
 }
 

@@ -43,4 +43,29 @@ public class CalendarNameListWrapper {
     public void setCalendarNames(List<String> calendarNames) {
         this.calendarNames = calendarNames;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CalendarNameListWrapper that = (CalendarNameListWrapper) o;
+
+        if (calendarNames != null ? !calendarNames.equals(that.calendarNames) : that.calendarNames != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return calendarNames != null ? calendarNames.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "CalendarNameListWrapper{" +
+                "calendarNames=" + calendarNames +
+                '}';
+    }
 }
