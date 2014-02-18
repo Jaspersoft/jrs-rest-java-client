@@ -909,7 +909,7 @@ OperationResult result = client
     <repositories>
         <repository>
             <id>my.mvn.repo</id>
-            <url>https://github.com/boryskolesnykov/jasperserver-rest-client/tree/master/mvn-repo</url>
+            <url>https://github.com/Jaspersoft/jrs-rest-java-client/tree/master/mvn-repo</url>
             <!-- use snapshot version -->
             <snapshots>
                 <enabled>true</enabled>
