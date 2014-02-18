@@ -21,10 +21,10 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.reportparameters;
 
-import com.jaspersoft.jasperserver.dto.reports.inputcontrols.InputControlStateListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;

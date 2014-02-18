@@ -1,13 +1,13 @@
 package com.jaspersoft.jasperserver.jaxrs.client.restservices.demo;
 
-import com.jaspersoft.jasperserver.dto.reports.ReportExecutionRequest;
-import com.jaspersoft.jasperserver.dto.reports.ReportExecutionStatusEntity;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionStatusEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -3,6 +3,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
