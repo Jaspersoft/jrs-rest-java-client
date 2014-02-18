@@ -2,7 +2,7 @@ Introduction
 -------------
 With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests. To use library in your maven-based application you need just to specify dependency and repository which are given below or download jar file manually from 
 ```
-https://github.com/boryskolesnykov/jasperserver-rest-client/blob/master/mvn-repo/com/jaspersoft/jasperserver-jaxrs-client/{version}/jasperserver-jaxrs-client-{version}.jar
+https://github.com/Jaspersoft/jrs-rest-java-client/tree/master/mvn-repo/com/jaspersoft/jasperserver-jaxrs-client/{version}/jasperserver-jaxrs-client-{version}.jar
 ```
 
 Configuration
