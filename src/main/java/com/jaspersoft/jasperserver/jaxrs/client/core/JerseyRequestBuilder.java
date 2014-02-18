@@ -41,6 +41,12 @@ import java.util.Map;
 
 public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<ResponseType> {
 
+    private static final int GET = 0;
+    private static final int DELETE = 1;
+    private static final int POST = 2;
+    private static final int PUT = 3;
+
+
     public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path){
         JerseyRequestBuilder<T> builder = new JerseyRequestBuilder<T>(sessionStorage, responseClass);
         for (String pathElem : path)
@@ -92,42 +98,30 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     }
 
     @Override
-    public WebTarget getPath() {
-        return usersWebTarget;
-    }
-
-    @Override
-    public RequestBuilder<ResponseType> setTarget(WebTarget webTarget) {
-        this.usersWebTarget = webTarget;
-        return this;
-    }
-
-    @Override
     public OperationResult<ResponseType> get() throws JSClientWebException {
-        try {
-            Invocation.Builder request =
-                    usersWebTarget
-                            .request();
-            if (acceptType != null){
-                request = request.accept(acceptType);
-            }
-            addHeaders(request);
-
-            Response response = request.get();
-            OperationResult<ResponseType> result =
-                    operationResultFactory.getOperationResult(response, responseClass);
-            this.sessionStorage.setSessionId(result.getSessionId());
-
-            return result;
-        } catch (JSClientWebException e) {
-            throw e;
-        } catch (Exception e) {
-            return null;
-        }
+        Invocation.Builder request = buildRequest();
+        return executeRequest(GET, request);
     }
 
     @Override
     public OperationResult<ResponseType> delete() throws JSClientWebException {
+        Invocation.Builder request = buildRequest();
+        return executeRequest(DELETE, request);
+    }
+
+    @Override
+    public OperationResult<ResponseType> put(Object entity) throws JSClientWebException {
+        Invocation.Builder request = buildRequest();
+        return executeRequest(PUT, request, entity);
+    }
+
+    @Override
+    public OperationResult<ResponseType> post(Object entity) throws JSClientWebException {
+        Invocation.Builder request = buildRequest();
+        return executeRequest(POST, request, entity);
+    }
+
+    private Invocation.Builder buildRequest(){
         Invocation.Builder request =
                 usersWebTarget
                         .request();
@@ -136,11 +130,36 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         }
         addHeaders(request);
 
-        Response response = request.delete();
+        return request;
+    }
+
+    private OperationResult<ResponseType> executeRequest(int httpMethod, Invocation.Builder request){
+        return executeRequest(httpMethod, request, null);
+    }
+
+    private OperationResult<ResponseType> executeRequest(int httpMethod, Invocation.Builder request, Object entity){
+        Response response = null;
+        switch (httpMethod){
+            case GET:{
+                response = request.get();
+                break;
+            }
+            case DELETE:{
+                response = request.delete();
+                break;
+            }
+            case POST:{
+                response = request.post(Entity.entity(entity, contentType));
+                break;
+            }
+            case PUT:{
+                response = request.put(Entity.entity(entity, contentType));
+                break;
+            }
+        }
         OperationResult<ResponseType> result =
                 operationResultFactory.getOperationResult(response, responseClass);
         this.sessionStorage.setSessionId(result.getSessionId());
-
         return result;
     }
 
@@ -178,42 +197,6 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
             usersWebTarget = usersWebTarget.matrixParam(entry.getKey(), entry.getValue().toArray());
         }
         return this;
-    }
-
-    @Override
-    public OperationResult<ResponseType> put(Object entity) throws JSClientWebException {
-        Invocation.Builder request =
-                usersWebTarget
-                        .request();
-        if (acceptType != null){
-            request = request.accept(acceptType);
-        }
-        addHeaders(request);
-
-        Response response = request.put(Entity.entity(entity, contentType));
-        OperationResult<ResponseType> result =
-                operationResultFactory.getOperationResult(response, responseClass);
-        this.sessionStorage.setSessionId(result.getSessionId());
-
-        return result;
-    }
-
-    @Override
-    public OperationResult<ResponseType> post(Object entity) throws JSClientWebException {
-        Invocation.Builder request =
-                usersWebTarget
-                        .request();
-        if (acceptType != null){
-            request = request.accept(acceptType);
-        }
-        addHeaders(request);
-
-        Response response = request.post(Entity.entity(entity, contentType));
-        OperationResult<ResponseType> result =
-                operationResultFactory.getOperationResult(response, responseClass);
-        this.sessionStorage.setSessionId(result.getSessionId());
-
-        return result;
     }
 
     @Override

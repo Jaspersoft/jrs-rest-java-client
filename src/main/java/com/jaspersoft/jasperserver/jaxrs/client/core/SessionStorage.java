@@ -69,14 +69,7 @@ public class SessionStorage {
 
     public static void main(String[] args) {
         RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
-        JasperserverRestClient client = new JasperserverRestClient(configuration);
-        Session session = client.authenticate("jasperadmin", "jasperadmin");
 
-        OperationResult result = client
-                .authenticate("jasperadmin", "jasperadmin")
-                .jobsService()
-                .calendar("testCalendar")
-                .delete();
 
     }
 }

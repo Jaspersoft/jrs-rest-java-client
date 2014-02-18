@@ -44,9 +44,6 @@ public interface RequestBuilder<ResponseType> {
 
     //util
     RequestBuilder<ResponseType> setPath(String path);
-    WebTarget getPath();
-    RequestBuilder<ResponseType> setTarget(WebTarget webTarget);
-
     RequestBuilder<ResponseType> setContentType(String mime);
     RequestBuilder<ResponseType> setAccept(String acceptMime);
     RequestBuilder<ResponseType> addHeader(String name, String... values);

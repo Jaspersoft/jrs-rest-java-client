@@ -22,15 +22,6 @@
         </repository>
     </distributionManagement>
 
-    <repositories>
-
-        <repository>
-            <id>jaspersoft-repo</id>
-            <url>http://mvnrepo.jaspersoft.com:8081/artifactory/repo</url>
-        </repository>
-
-    </repositories>
-
     <dependencies>
 
         <dependency>
