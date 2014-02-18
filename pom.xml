@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.jaspersoft</groupId>
-    <artifactId>jasperserver-jaxrs-client</artifactId>
-    <version>0.9.4</version>
+    <artifactId>jrs-rest-java-client</artifactId>
+    <version>0.9.5</version>
 
 
     <properties>
@@ -25,7 +25,7 @@
     <repositories>
         <repository>
             <id>my.mvn.repo</id>
-            <url>https://github.com/boryskolesnykov/jasperserver-rest-client/tree/master/mvn-repo</url>
+            <url>https://github.com/boryskolesnykov/jrs-rest-java-client/tree/master/mvn-repo</url>
             <!-- use snapshot version -->
             <snapshots>
                 <enabled>true</enabled>
