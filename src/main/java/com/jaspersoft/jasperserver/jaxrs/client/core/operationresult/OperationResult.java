@@ -25,7 +25,7 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
-public class OperationResult<T> {
+public abstract class OperationResult<T> {
 
     private Response response;
     private Class<? extends T> entityClass;
