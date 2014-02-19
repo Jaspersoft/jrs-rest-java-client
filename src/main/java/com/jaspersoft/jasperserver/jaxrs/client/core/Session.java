@@ -21,14 +21,14 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles.RolesService;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.users.UsersService;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice.ExportService;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.importservice.ImportService;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.JobsService;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionsService;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportingService;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.resources.ResourcesService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionsService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
 
 public class Session {
 

@@ -2,8 +2,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionMask;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionRecipient;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionMask;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionRecipient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;

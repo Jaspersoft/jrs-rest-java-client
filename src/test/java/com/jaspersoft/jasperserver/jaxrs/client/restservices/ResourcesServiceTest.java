@@ -23,8 +23,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.common.PatchDescriptor;
 import com.jaspersoft.jasperserver.dto.resources.*;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.resources.ResourceSearchParameter;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.resources.ResourceServiceParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourceSearchParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourceServiceParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;

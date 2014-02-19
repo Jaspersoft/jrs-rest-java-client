@@ -2,7 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
 import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.authority.roles.RolesParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;

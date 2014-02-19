@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.restservices.demo;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.importexport.exportservice.ExportParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;

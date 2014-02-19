@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
-import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.JobsParameter;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.calendar.CalendarType;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;

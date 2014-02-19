@@ -1,8 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.restservices.exceptions;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionMask;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportOutputFormat;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionMask;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.*;
