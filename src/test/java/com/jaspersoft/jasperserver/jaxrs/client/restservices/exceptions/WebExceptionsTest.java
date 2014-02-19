@@ -1,19 +1,14 @@
 package com.jaspersoft.jasperserver.jaxrs.client.restservices.exceptions;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
-import com.jaspersoft.jasperserver.jaxrs.client.builder.jobs.JobsParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.permissions.PermissionMask;
 import com.jaspersoft.jasperserver.jaxrs.client.builder.reporting.ReportOutputFormat;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.*;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.io.InputStream;
 
 public class WebExceptionsTest extends Assert {
 

@@ -2,7 +2,7 @@ Introduction
 -------------
 With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests. To use library in your maven-based application you need just to specify dependency and repository which are given below or download jar file manually from 
 ```
-https://github.com/Jaspersoft/jrs-rest-java-client/tree/master/mvn-repo/com/jaspersoft/jasperserver-jaxrs-client/{version}/jasperserver-jaxrs-client-{version}.jar
+http://jaspersoft.artifactoryonline.com/jaspersoft/repo/com/jaspersoft/jrs-rest-java-client/{version}/jrs-rest-java-client-{version}.jar
 ```
 
 Configuration
@@ -901,21 +901,25 @@ OperationResult result = client
     <dependencies>
         <dependency>
             <groupId>com.jaspersoft</groupId>
-            <artifactId>jasperserver-jaxrs-client</artifactId>
-            <version>0.9.4</version>
+            <artifactId>jrs-rest-java-client</artifactId>
+            <version>0.9.5</version>
         </dependency>
     </dependencies>
 
     <repositories>
+
         <repository>
-            <id>my.mvn.repo</id>
-            <url>https://github.com/Jaspersoft/jrs-rest-java-client/tree/master/mvn-repo</url>
-            <!-- use snapshot version -->
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
+            <id>jaspersoft-clients-releases</id>
+            <name>Jaspersoft clients releases</name>
+            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jaspersoft-clients-releases</url>
         </repository>
+
+        <repository>
+            <id>jaspersoft-clients-snapshots</id>
+            <name>Jaspersoft clients snapshots</name>
+            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jaspersoft-clients-snapshots</url>
+        </repository>
+
     </repositories>
 ```
 

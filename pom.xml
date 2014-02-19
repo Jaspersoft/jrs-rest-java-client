@@ -6,21 +6,13 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>0.9.5</version>
-
+    <version>5.5.0-SNAPSHOT</version>
+    <name>REST client for JasperReports server</name>
+    <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
     <properties>
-        <!--maven variable which points to your local repository -->
-        <internal.repo.path>file:///d:/idea-workspace/jasperserver-jaxrs-client/mvn-repo/</internal.repo.path>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>internal.repo</id>
-            <name>Internal Repository</name>
-            <url>${internal.repo.path}</url>
-        </repository>
-    </distributionManagement>
 
     <dependencies>
 
@@ -56,9 +48,32 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.8.7</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
+
+    <repositories>
+
+        <repository>
+            <id>jrs-ce-releases</id>
+            <name>JasperReports Server CE releases repository</name>
+            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-releases/</url>
+        </repository>
+
+        <repository>
+            <id>jrs-ce-snapshots</id>
+            <name>JasperReports Server CE snapshots repository</name>
+            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-snapshots/</url>
+        </repository>
+
+    </repositories>
+
+    <scm>
+        <connection>scm:git:http://github.com/Jaspersoft/jrs-rest-java-client</connection>
+        <developerConnection>scm:git:https://github.com/Jaspersoft/jrs-rest-java-client</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
         <plugins>
@@ -72,5 +87,18 @@
             </plugin>
         </plugins>
     </build>
+
+    <developers>
+        <developer>
+            <id>borys.kolesnykov</id>
+            <name>Borys Kolesnykov</name>
+            <email>borys.kolesnikov@gmail.com</email>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+3</timezone>
+        </developer>
+    </developers>
 
 </project>
