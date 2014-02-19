@@ -5,7 +5,10 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.Permissi
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AccessForbiddenException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailureException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.BadRequestException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

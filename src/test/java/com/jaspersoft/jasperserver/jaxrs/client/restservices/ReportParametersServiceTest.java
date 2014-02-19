@@ -1,6 +1,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
-import com.jaspersoft.jasperserver.dto.reports.inputcontrols.*;
+import com.jaspersoft.jasperserver.dto.reports.inputcontrols.InputControlOption;
+import com.jaspersoft.jasperserver.dto.reports.inputcontrols.InputControlState;
+import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControl;
+import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;

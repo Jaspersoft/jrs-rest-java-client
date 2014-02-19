@@ -36,9 +36,7 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder
 
 public class SingleUserRequestAdapter extends AbstractAdapter {
 
-    private SessionStorage sessionStorage;
     private String username;
-
 
     public SingleUserRequestAdapter(SessionStorage sessionStorage, String username) {
         super(sessionStorage);

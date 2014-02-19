@@ -23,7 +23,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MultivaluedMap;
 
 public interface RequestBuilder<ResponseType> {

@@ -18,6 +18,7 @@ public class WebExceptionsFactoryImpl implements WebExceptionsFactory {
                 put(ResponseStatus.NOT_ACCEPTABLE, RepresentationNotAvailableForResourceException.class);
                 put(ResponseStatus.NOT_FOUND, ResourceNotFoundException.class);
                 put(ResponseStatus.UNAUTHORIZED, AuthenticationFailureException.class);
+                put(ResponseStatus.CONFLICT, ConflictException.class);
             }};
 
     @Override
