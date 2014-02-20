@@ -29,6 +29,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo.ServerInfoService;
 
 public class Session {
 
@@ -38,8 +39,15 @@ public class Session {
         this.storage = sessionStorage;
     }
 
-    public UsersService usersService(){
+    public SessionStorage getStorage() {
+        return storage;
+    }
 
+    public ServerInfoService serverInfoService(){
+        return new ServerInfoService(storage);
+    }
+
+    public UsersService usersService(){
         return new UsersService(storage);
     }
 

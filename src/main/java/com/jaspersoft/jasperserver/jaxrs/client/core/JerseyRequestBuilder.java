@@ -82,14 +82,15 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         client
                 .register(CustomRepresentationTypeProvider.class)
                 .register(JacksonFeature.class)
-                .register(MultiPartWriter.class)
-                .register(HttpAuthenticationFeature.basic(credentials.getUsername(), credentials.getPassword()));
+                .register(MultiPartWriter.class);
 
         String restServerUrl = sessionStorage.getConfiguration().getRestServerUrl();
         usersWebTarget = client.target(restServerUrl);
 
         if (sessionStorage.getSessionId() != null)
             usersWebTarget.register(new SessionOutputFilter(sessionStorage.getSessionId()));
+        else
+            usersWebTarget.register(HttpAuthenticationFeature.basic(credentials.getUsername(), credentials.getPassword()));
     }
 
     public JerseyRequestBuilder<ResponseType> setPath(String path) {
