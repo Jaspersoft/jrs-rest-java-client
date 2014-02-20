@@ -23,6 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.bundles.BundlesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsService;
@@ -41,6 +42,10 @@ public class Session {
 
     public SessionStorage getStorage() {
         return storage;
+    }
+
+    public BundlesService bundlesService(){
+        return new BundlesService(storage);
     }
 
     public ServerInfoService serverInfoService(){
