@@ -21,10 +21,9 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.bundles.BundlesService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connection.ConnectionService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsService;
@@ -32,6 +31,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.Permissi
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo.ServerInfoService;
+
 
 public class Session {
 
@@ -45,48 +45,48 @@ public class Session {
         return storage;
     }
 
-    public ConnectionService connectionService(){
-        return new ConnectionService(storage);
-    }
-
-    public BundlesService bundlesService(){
-        return new BundlesService(storage);
+    public <ServiceType extends AbstractAdapter> ServiceType getService(Class<ServiceType> serviceClass){
+        try {
+            return serviceClass.getConstructor(SessionStorage.class).newInstance(storage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public ServerInfoService serverInfoService(){
-        return new ServerInfoService(storage);
+        return getService(ServerInfoService.class);
     }
 
     public UsersService usersService(){
-        return new UsersService(storage);
+        return getService(UsersService.class);
     }
 
     public RolesService rolesService(){
-        return new RolesService(storage);
+        return getService(RolesService.class);
     }
 
     public PermissionsService permissionsService(){
-        return new PermissionsService(storage);
+        return getService(PermissionsService.class);
     }
 
     public ExportService exportService(){
-        return new ExportService(storage);
+        return getService(ExportService.class);
     }
 
     public ImportService importService(){
-        return new ImportService(storage);
+        return getService(ImportService.class);
     }
 
     public ReportingService reportingService(){
-        return new ReportingService(storage);
+        return getService(ReportingService.class);
     }
 
     public ResourcesService resourcesService(){
-        return new ResourcesService(storage);
+        return getService(ResourcesService.class);
     }
 
     public JobsService jobsService(){
-        return new JobsService(storage);
+        return getService(JobsService.class);
     }
 
 }
