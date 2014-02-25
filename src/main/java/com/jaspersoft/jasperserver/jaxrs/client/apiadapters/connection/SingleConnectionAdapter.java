@@ -19,31 +19,38 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.bundles;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connection;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
-import java.util.List;
-import java.util.Map;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
 
-public class BundlesService extends AbstractAdapter {
+public class SingleConnectionAdapter extends AbstractAdapter {
 
-    public BundlesService(SessionStorage sessionStorage) {
+    private final String uuid;
+
+    public SingleConnectionAdapter(SessionStorage sessionStorage, String uuid) {
         super(sessionStorage);
+        this.uuid = uuid;
     }
 
-    public OperationResult<List<String>> bundles(){
-        Class clazz = List.class;
-        Class<List<String>> clazz_t = clazz;
-        return JerseyRequestBuilder.buildRequest(sessionStorage, clazz_t, new String[]{"/bundles"}).get();
+    public <ConnectionType> OperationResult<ConnectionType> get(Class<ConnectionType> connectionClass){
+        return buildRequest(sessionStorage, connectionClass, new String[]{"/connections", uuid}).get();
     }
 
-    public OperationResult<Map<String, String>> bundle(String name){
-        Class clazz = Map.class;
-        Class<Map<String, String>> clazz_t = clazz;
-        return JerseyRequestBuilder.buildRequest(sessionStorage, clazz_t, new String[]{"/bundles", name}).get();
+    public <ConnectionType> OperationResult<ConnectionType> update(Class<ConnectionType> connectionClass,
+                                                                   ConnectionType connection){
+        JerseyRequestBuilder<ConnectionType> builder =
+                buildRequest(sessionStorage, connectionClass, new String[]{"/connections", uuid});
+        builder.setContentType(ConnectionTypeResolverUtil.getMimeType(connectionClass));
+
+        return builder.put(connection);
+    }
+
+    public OperationResult delete(){
+        return buildRequest(sessionStorage, Object.class, new String[]{"/connections", uuid}).delete();
     }
 }

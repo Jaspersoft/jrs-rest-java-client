@@ -22,6 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.providers;
 
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connection.ConnectionMediaType;
 import org.codehaus.jackson.jaxrs.Annotations;
 import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
 
@@ -37,6 +38,8 @@ import java.lang.reflect.Type;
 @Consumes({
         "application/collection+json",
         "application/job+json",
+        ConnectionMediaType.FTP,
+        ConnectionMediaType.LOCAL_FILE_SYSTEM,
         ResourceMediaType.LIST_OF_VALUES_JSON,
         ResourceMediaType.ADHOC_DATA_VIEW_JSON,
         ResourceMediaType.AWS_DATA_SOURCE_JSON,
@@ -62,6 +65,8 @@ import java.lang.reflect.Type;
 @Produces({
         "application/collection+json",
         "application/job+json",
+        ConnectionMediaType.FTP,
+        ConnectionMediaType.LOCAL_FILE_SYSTEM,
         ResourceMediaType.LIST_OF_VALUES_JSON,
         ResourceMediaType.ADHOC_DATA_VIEW_JSON,
         ResourceMediaType.AWS_DATA_SOURCE_JSON,

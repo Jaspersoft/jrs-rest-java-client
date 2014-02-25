@@ -19,31 +19,31 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.bundles;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connection;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
-import java.util.List;
-import java.util.Map;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
 
-public class BundlesService extends AbstractAdapter {
+public class ConnectionService extends AbstractAdapter {
 
-    public BundlesService(SessionStorage sessionStorage) {
+    public ConnectionService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
-    public OperationResult<List<String>> bundles(){
-        Class clazz = List.class;
-        Class<List<String>> clazz_t = clazz;
-        return JerseyRequestBuilder.buildRequest(sessionStorage, clazz_t, new String[]{"/bundles"}).get();
+    public <ConnectionType> OperationResult<ConnectionType> newConnection(Class<ConnectionType> connectionClass,
+                                                                          ConnectionType connection){
+        JerseyRequestBuilder<ConnectionType> builder =
+                buildRequest(sessionStorage, connectionClass, new String[]{"/connections"});
+        builder.setContentType(ConnectionTypeResolverUtil.getMimeType(connectionClass));
+
+        return builder.post(connection);
     }
 
-    public OperationResult<Map<String, String>> bundle(String name){
-        Class clazz = Map.class;
-        Class<Map<String, String>> clazz_t = clazz;
-        return JerseyRequestBuilder.buildRequest(sessionStorage, clazz_t, new String[]{"/bundles", name}).get();
+    public SingleConnectionAdapter connection(String uuid){
+        return new SingleConnectionAdapter(sessionStorage, uuid);
     }
 }
