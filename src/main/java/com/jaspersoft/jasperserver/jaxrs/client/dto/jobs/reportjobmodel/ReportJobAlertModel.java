@@ -23,7 +23,10 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobAlert;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.AddressListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobAlertJobState;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobAlertRecipient;
+
+import java.util.List;
 
 /**
  * job execution alert model that can be defined for a report job.
@@ -87,7 +90,7 @@ public class ReportJobAlertModel extends JobAlert {
 	 * Specifies whether the alert would send it to owner, admin, none
      * or both (admin and owner)
 	 */
-    public void setRecipient(String recipient) {
+    public void setRecipient(JobAlertRecipient recipient) {
         super.setRecipient(recipient);
         isRecipientModified = true;
     }
@@ -99,7 +102,7 @@ public class ReportJobAlertModel extends JobAlert {
 	 * @param toAddresses the list of recipients as
 	 * <code>java.lang.String</code> email addresses
 	 */
-    public void setToAddresses(AddressListWrapper toAddresses) {
+    public void setToAddresses(List<String> toAddresses) {
         super.setToAddresses(toAddresses);
         isToAddressesModified = true;
     }
@@ -108,7 +111,7 @@ public class ReportJobAlertModel extends JobAlert {
 	 * Specifies whether the alert would send it when job fails, succeeds, none,
      * or both (fail and success)
 	 */
-    public void setJobState(String jobState) {
+    public void setJobState(JobAlertJobState jobState) {
         super.setJobState(jobState);
         isJobStateModified = true;
     }

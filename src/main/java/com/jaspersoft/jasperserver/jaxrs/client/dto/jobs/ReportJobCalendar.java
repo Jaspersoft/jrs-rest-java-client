@@ -21,8 +21,8 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.adapters.ExcludeDaysXmlAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.adapters.TimeZoneXmlAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.ExcludeDaysXmlAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.TimeZoneXmlAdapter;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;

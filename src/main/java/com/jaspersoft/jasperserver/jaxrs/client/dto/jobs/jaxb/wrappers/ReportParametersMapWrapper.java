@@ -19,36 +19,30 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.SortedSet;
+import java.util.HashMap;
 
 /**
- * This class is needed because of bug in JAXB.
- * @XmlElementWrapper doesn't support @XmlJavaTypeAdapter
- *
  * @author Yaroslav.Kovalchyk
- * @version $Id: MonthsSortedSetWrapper.java 22756 2012-03-23 10:39:15Z sergey.prilukin $
+ * @version $Id$
  */
-@XmlRootElement(name = "months")
-public class MonthsSortedSetWrapper {
+@XmlRootElement(name = "parameters")
+public class ReportParametersMapWrapper {
+    private HashMap<String, Object> parameterValues;
 
-    private SortedSet<String> months;
-
-    public MonthsSortedSetWrapper(){}
-
-    public MonthsSortedSetWrapper(SortedSet<String> months){
-        this.months = months;
-    }
-    @XmlElement(name = "month")
-    public SortedSet<String> getMonths() {
-        return months;
+    public ReportParametersMapWrapper(){}
+    public ReportParametersMapWrapper(HashMap<String, Object> parameterValues){
+        this.parameterValues = parameterValues;
     }
 
-    public void setMonths(SortedSet<String> months) {
-        this.months = months;
+    public HashMap<String, Object> getParameterValues() {
+        return parameterValues;
+    }
+
+    public void setParameterValues(HashMap<String, Object> parameterValues) {
+        this.parameterValues = parameterValues;
     }
 
     @Override
@@ -56,23 +50,23 @@ public class MonthsSortedSetWrapper {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MonthsSortedSetWrapper that = (MonthsSortedSetWrapper) o;
+        ReportParametersMapWrapper that = (ReportParametersMapWrapper) o;
 
-        if (months != null ? !months.equals(that.months) : that.months != null) return false;
+        if (parameterValues != null ? !parameterValues.equals(that.parameterValues) : that.parameterValues != null)
+            return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return months != null ? months.hashCode() : 0;
+        return parameterValues != null ? parameterValues.hashCode() : 0;
     }
 
     @Override
     public String toString() {
-        return "MonthsSortedSetWrapper{" +
-                "months=" + months +
+        return "ReportParametersMapWrapper{" +
+                "parameterValues=" + parameterValues +
                 '}';
     }
 }
-

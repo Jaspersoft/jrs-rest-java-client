@@ -19,9 +19,10 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.adapters;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.ReportParametersMapWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.ValuesCollection;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.ReportParametersMapWrapper;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.datatype.XMLGregorianCalendar;

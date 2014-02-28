@@ -23,8 +23,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars;
 
 public class DailyCalendar extends Calendar {
 
-    private java.util.Calendar rangeStartingCalendar;
-    private java.util.Calendar rangeEndingCalendar;
+    private Calendar rangeStartingCalendar;
+    private Calendar rangeEndingCalendar;
     private Boolean invertTimeRange;
 
     public DailyCalendar() {
@@ -32,19 +32,19 @@ public class DailyCalendar extends Calendar {
         this.calendarType = TYPE_DAILY;
     }
 
-    public java.util.Calendar getRangeStartingCalendar() {
+    public Calendar getRangeStartingCalendar() {
         return rangeStartingCalendar;
     }
 
-    public void setRangeStartingCalendar(java.util.Calendar rangeStartingCalendar) {
+    public void setRangeStartingCalendar(Calendar rangeStartingCalendar) {
         this.rangeStartingCalendar = rangeStartingCalendar;
     }
 
-    public java.util.Calendar getRangeEndingCalendar() {
+    public Calendar getRangeEndingCalendar() {
         return rangeEndingCalendar;
     }
 
-    public void setRangeEndingCalendar(java.util.Calendar rangeEndingCalendar) {
+    public void setRangeEndingCalendar(Calendar rangeEndingCalendar) {
         this.rangeEndingCalendar = rangeEndingCalendar;
     }
 

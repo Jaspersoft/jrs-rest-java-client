@@ -22,6 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.FtpInfo;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.FtpType;
 
 import java.util.Map;
 
@@ -92,7 +93,7 @@ public class FTPInfoModel extends FtpInfo {
      *
      * @param type the ftp type
      */
-    public void setType(String type) {
+    public void setType(FtpType type) {
         isPropertiesMapModified = true;
         super.setType(type);
     }

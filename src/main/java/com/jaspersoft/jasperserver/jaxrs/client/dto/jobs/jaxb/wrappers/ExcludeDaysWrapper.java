@@ -19,35 +19,36 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers;
-
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSummary;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement(name = "jobs")
-public class JobSummaryListWrapper {
-    private List<JobSummary> jobsummary;
+/**
+ * This class is needed because of bug in JAXB.
+ * XmlElementWrapper annotation doesn't support @XmlJavaTypeAdapter
+ *
+ * @author Yaroslav.Kovalchyk
+ * @version $Id: ExcludeDaysWrapper.java 23844 2012-05-22 06:23:41Z ykovalchyk $
+ */
+@XmlRootElement(name = "excludeDays")
+public class ExcludeDaysWrapper {
 
-    public JobSummaryListWrapper(){}
+    private List<String> excludeDays;
 
-    public JobSummaryListWrapper(List<JobSummary> jobSummaries){
-        jobsummary = new ArrayList<JobSummary>(jobSummaries.size());
-        for (JobSummary r : jobSummaries){
-            jobsummary.add(r);
-        }
+    public ExcludeDaysWrapper(){}
+
+    public ExcludeDaysWrapper(List<String> excludeDays){
+        this.excludeDays = excludeDays;
+    }
+    @XmlElement(name = "excludeDay")
+    public List<String> getExcludeDays() {
+        return excludeDays;
     }
 
-    @XmlElement(name = "jobsummary")
-    public List<JobSummary> getJobsummary() {
-        return jobsummary;
-    }
-
-    public void setJobsummary(List<JobSummary> jobSummaries) {
-        this.jobsummary = jobSummaries;
+    public void setExcludeDays(List<String> excludeDays) {
+        this.excludeDays = excludeDays;
     }
 
     @Override
@@ -55,22 +56,22 @@ public class JobSummaryListWrapper {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        JobSummaryListWrapper that = (JobSummaryListWrapper) o;
+        ExcludeDaysWrapper that = (ExcludeDaysWrapper) o;
 
-        if (jobsummary != null ? !jobsummary.equals(that.jobsummary) : that.jobsummary != null) return false;
+        if (excludeDays != null ? !excludeDays.equals(that.excludeDays) : that.excludeDays != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return jobsummary != null ? jobsummary.hashCode() : 0;
+        return excludeDays != null ? excludeDays.hashCode() : 0;
     }
 
     @Override
     public String toString() {
-        return "JobSummaryListWrapper{" +
-                "jobsummary=" + jobsummary +
+        return "ExcludeDaysWrapper{" +
+                "excludeDays=" + excludeDays +
                 '}';
     }
 }

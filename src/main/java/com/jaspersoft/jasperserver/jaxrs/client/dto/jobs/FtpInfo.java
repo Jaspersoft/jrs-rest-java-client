@@ -32,13 +32,13 @@ public class FtpInfo {
     private String password;
     private String folderPath;
     private String serverName;
-    private String type;
+    private FtpType type;
     private String protocol;
     private Integer port;
     private Boolean implicit;
     private Long pbsz;
     private String prot;
-    private volatile Map<String, String> propertiesMap;
+    private Map<String, String> propertiesMap;
 
 
     public String getUserName() {
@@ -73,11 +73,11 @@ public class FtpInfo {
         this.serverName = serverName;
     }
 
-    public String getType() {
+    public FtpType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(FtpType type) {
         this.type = type;
     }
 

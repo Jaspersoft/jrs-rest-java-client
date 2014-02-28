@@ -21,7 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.ExcludeDaysWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.ExcludeDaysWrapper;
 
 
 public class HolidayCalendar extends Calendar {

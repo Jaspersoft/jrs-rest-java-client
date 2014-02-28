@@ -19,30 +19,35 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSummary;
+
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * @author Yaroslav.Kovalchyk
- * @version $Id$
- */
-@XmlRootElement(name = "parameters")
-public class ReportParametersMapWrapper {
-    private HashMap<String, Object> parameterValues;
+@XmlRootElement(name = "jobs")
+public class JobSummaryListWrapper {
+    private List<JobSummary> jobsummary;
 
-    public ReportParametersMapWrapper(){}
-    public ReportParametersMapWrapper(HashMap<String, Object> parameterValues){
-        this.parameterValues = parameterValues;
+    public JobSummaryListWrapper(){}
+
+    public JobSummaryListWrapper(List<JobSummary> jobSummaries){
+        jobsummary = new ArrayList<JobSummary>(jobSummaries.size());
+        for (JobSummary r : jobSummaries){
+            jobsummary.add(r);
+        }
     }
 
-    public HashMap<String, Object> getParameterValues() {
-        return parameterValues;
+    @XmlElement(name = "jobsummary")
+    public List<JobSummary> getJobsummary() {
+        return jobsummary;
     }
 
-    public void setParameterValues(HashMap<String, Object> parameterValues) {
-        this.parameterValues = parameterValues;
+    public void setJobsummary(List<JobSummary> jobSummaries) {
+        this.jobsummary = jobSummaries;
     }
 
     @Override
@@ -50,23 +55,22 @@ public class ReportParametersMapWrapper {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ReportParametersMapWrapper that = (ReportParametersMapWrapper) o;
+        JobSummaryListWrapper that = (JobSummaryListWrapper) o;
 
-        if (parameterValues != null ? !parameterValues.equals(that.parameterValues) : that.parameterValues != null)
-            return false;
+        if (jobsummary != null ? !jobsummary.equals(that.jobsummary) : that.jobsummary != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return parameterValues != null ? parameterValues.hashCode() : 0;
+        return jobsummary != null ? jobsummary.hashCode() : 0;
     }
 
     @Override
     public String toString() {
-        return "ReportParametersMapWrapper{" +
-                "parameterValues=" + parameterValues +
+        return "JobSummaryListWrapper{" +
+                "jobsummary=" + jobsummary +
                 '}';
     }
 }

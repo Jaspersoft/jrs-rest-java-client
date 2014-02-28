@@ -19,9 +19,9 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.adapters;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.ExcludeDaysWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.ExcludeDaysWrapper;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.text.DateFormat;

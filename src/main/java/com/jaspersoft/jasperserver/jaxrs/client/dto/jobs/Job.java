@@ -21,11 +21,15 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.OutputFormatsListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.OutputFormatXmlAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.TimestampToStringXmlAdapter;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.sql.Timestamp;
+import java.util.Set;
 
 @XmlRootElement(name = "job")
 public class Job {
@@ -35,7 +39,7 @@ public class Job {
     private String username;
     private String label;
     private String description;
-    private String creationDate;
+    private Timestamp creationDate;
     private String baseOutputFilename;
     private String outputLocale;
 
@@ -53,7 +57,7 @@ public class Job {
     private JobAlert alert;
 
     @XmlElement(name = "outputFormats")
-    private OutputFormatsListWrapper outputFormats;
+    private Set<OutputFormat> outputFormats;
 
     @XmlElements({
             @XmlElement(name = "simpleTrigger", type = SimpleTrigger.class),
@@ -100,11 +104,12 @@ public class Job {
         this.description = description;
     }
 
-    public String getCreationDate() {
+    @XmlJavaTypeAdapter(TimestampToStringXmlAdapter.class)
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -164,11 +169,12 @@ public class Job {
         this.trigger = trigger;
     }
 
-    public OutputFormatsListWrapper getOutputFormats() {
+    @XmlJavaTypeAdapter(OutputFormatXmlAdapter.class)
+    public Set<OutputFormat> getOutputFormats() {
         return outputFormats;
     }
 
-    public void setOutputFormats(OutputFormatsListWrapper outputFormats) {
+    public void setOutputFormats(Set<OutputFormat> outputFormats) {
         this.outputFormats = outputFormats;
     }
 

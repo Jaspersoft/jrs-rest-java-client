@@ -21,11 +21,12 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.CalendarDaysType;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.CalendarTrigger;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.MonthsSortedSetWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.WeekDaysSortedSetWrapper;
 
 import javax.xml.bind.annotation.XmlTransient;
+import java.util.Date;
+import java.util.SortedSet;
 
 
 /**
@@ -122,7 +123,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	/**
 	 * Sets the type of days on which the trigger should fire.
 	 */
-	public void setDaysType(String daysType) {
+	public void setDaysType(CalendarDaysType daysType) {
         isDaysTypeModified = true;
 		super.setDaysType(daysType);
 	}
@@ -169,7 +170,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 *
 	 * @param months the months as <code>java.lang.Byte</code> values
 	 */
-    public void setMonths(MonthsSortedSetWrapper months) {
+    public void setMonths(SortedSet<Byte> months) {
         isMonthsModified = true;
         super.setMonths(months);
 	}
@@ -184,7 +185,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 *
 	 * @param weekDays the week days as <code>java.lang.Byte</code> values
 	 */
-	public void setWeekDays(WeekDaysSortedSetWrapper weekDays) {
+	public void setWeekDays(SortedSet<Byte> weekDays) {
         isWeekDaysModified = true;
 		super.setWeekDays(weekDays);
 	}
@@ -235,7 +236,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * @param startDate the date at which the report job should start.
 	 * @see #getStartDate()
 	 */
-	public void setStartDate(String startDate) {
+	public void setStartDate(Date startDate) {
         isStartDateModified = true;
 		super.setStartDate(startDate);
 	}
@@ -266,7 +267,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 *
 	 * @param endDate an end date for the job
 	 */
-	public void setEndDate(String endDate) {
+	public void setEndDate(Date endDate) {
         isEndDateModified = true;
 		super.setEndDate(endDate);
 	}

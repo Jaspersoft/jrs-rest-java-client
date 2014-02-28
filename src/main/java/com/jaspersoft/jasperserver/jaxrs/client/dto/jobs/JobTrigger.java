@@ -21,6 +21,11 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.NoTimezoneDateToStringXmlAdapter;
+
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Date;
+
 public class JobTrigger {
 
     private Long id;
@@ -28,8 +33,8 @@ public class JobTrigger {
     private String timezone;
     private String calendarName;
     private int startType;
-    private String startDate;
-    private String endDate;
+    private Date startDate;
+    private Date endDate;
     private Integer misfireInstruction;
 
     public Long getId() {
@@ -72,19 +77,21 @@ public class JobTrigger {
         this.startType = startType;
     }
 
-    public String getStartDate() {
+    @XmlJavaTypeAdapter(NoTimezoneDateToStringXmlAdapter.class)
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    @XmlJavaTypeAdapter(NoTimezoneDateToStringXmlAdapter.class)
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 

@@ -22,8 +22,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobState;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobStateType;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
 
 /**
  * Searching report jobs by runtime information
@@ -51,7 +53,7 @@ public class ReportJobStateModel extends JobState {
 	 * 
 	 * @param nextFireTime the next fire time for the job
 	 */
-	public void setNextFireTime(String nextFireTime) {
+	public void setNextFireTime(Date nextFireTime) {
         isNextFireTimeModified = true;
 		super.setNextFireTime(nextFireTime);
 	}
@@ -61,7 +63,7 @@ public class ReportJobStateModel extends JobState {
 	 * 
 	 * @param previousFireTime the previous fire time of the job
 	 */
-	public void setPreviousFireTime(String previousFireTime) {
+	public void setPreviousFireTime(Date previousFireTime) {
         isPreviousFireTimeModified = true;
 		super.setPreviousFireTime(previousFireTime);
 	}
@@ -72,7 +74,7 @@ public class ReportJobStateModel extends JobState {
 	 *
 	 * @param state one of the <code>STATE_*</code> constants
 	 */
-	public void setValue(String state) {
+	public void setValue(JobStateType state) {
         isStateModified = true;
 		super.setValue(state);
 	}

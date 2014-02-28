@@ -21,18 +21,20 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.AddressListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.AddressesXmlAdapter;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.List;
 
 @XmlRootElement(name = "reportJobAlert")
 public class JobAlert {
 
     private Long id;
     private Integer version;
-    private String recipient;
-    private String jobState;
+    private JobAlertRecipient recipient;
+    private JobAlertJobState jobState;
     private String messageText;
     private String messageTextWhenJobFails;
     private String subject;
@@ -40,14 +42,15 @@ public class JobAlert {
     private Boolean includingReportJobInfo;
 
     @XmlElement(name = "toAddresses")
-    private AddressListWrapper toAddresses;
+    private List<String> toAddresses;
 
 
-    public AddressListWrapper getToAddresses() {
+    public List<String> getToAddresses() {
         return toAddresses;
     }
 
-    public void setToAddresses(AddressListWrapper toAddresses) {
+    @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
+    public void setToAddresses(List<String> toAddresses) {
         this.toAddresses = toAddresses;
     }
 
@@ -67,19 +70,19 @@ public class JobAlert {
         this.version = version;
     }
 
-    public String getRecipient() {
+    public JobAlertRecipient getRecipient() {
         return recipient;
     }
 
-    public void setRecipient(String recipient) {
+    public void setRecipient(JobAlertRecipient recipient) {
         this.recipient = recipient;
     }
 
-    public String getJobState() {
+    public JobAlertJobState getJobState() {
         return jobState;
     }
 
-    public void setJobState(String jobState) {
+    public void setJobState(JobAlertJobState jobState) {
         this.jobState = jobState;
     }
 

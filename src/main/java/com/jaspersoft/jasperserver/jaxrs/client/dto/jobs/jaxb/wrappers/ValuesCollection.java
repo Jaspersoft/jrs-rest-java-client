@@ -19,23 +19,28 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.adapters;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.util.TimeZone;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import java.util.Collection;
 
 /**
+ * <p></p>
+ *
  * @author Yaroslav.Kovalchyk
  * @version $Id$
  */
-public class TimeZoneXmlAdapter extends XmlAdapter<String, TimeZone>{
-    @Override
-    public TimeZone unmarshal(String v) throws Exception {
-        return TimeZone.getTimeZone(v);
+@XmlType(name = "collection")
+public class ValuesCollection {
+    private Collection<Object> collection;
+
+    @XmlElement(name = "item")
+    public Collection<Object> getCollection() {
+        return collection;
     }
 
-    @Override
-    public String marshal(TimeZone v) throws Exception {
-        return v.getID();
+    public void setCollection(Collection<Object> collection) {
+        this.collection = collection;
     }
 }

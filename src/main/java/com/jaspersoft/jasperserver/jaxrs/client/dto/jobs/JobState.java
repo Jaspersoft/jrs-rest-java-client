@@ -21,39 +21,45 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.DateToStringXmlAdapter;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Date;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "state")
 public class JobState {
 
-    private String previousFireTime;
-    private String nextFireTime;
-    private String value;
+    private Date previousFireTime;
+    private Date nextFireTime;
+    private JobStateType value;
 
-    public String getPreviousFireTime() {
+    @XmlJavaTypeAdapter(DateToStringXmlAdapter.class)
+    public Date getPreviousFireTime() {
         return previousFireTime;
     }
 
-    public void setPreviousFireTime(String previousFireTime) {
+    public void setPreviousFireTime(Date previousFireTime) {
         this.previousFireTime = previousFireTime;
     }
 
-    public String getNextFireTime() {
+    @XmlJavaTypeAdapter(DateToStringXmlAdapter.class)
+    public Date getNextFireTime() {
         return nextFireTime;
     }
 
-    public void setNextFireTime(String nextFireTime) {
+    public void setNextFireTime(Date nextFireTime) {
         this.nextFireTime = nextFireTime;
     }
 
-    public String getValue() {
+    public JobStateType getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(JobStateType value) {
         this.value = value;
     }
 

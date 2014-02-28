@@ -21,8 +21,8 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.adapters.ReportJobSourceParametersXmlAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.adapters.ValuesCollection;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.ReportJobSourceParametersXmlAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.ValuesCollection;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;

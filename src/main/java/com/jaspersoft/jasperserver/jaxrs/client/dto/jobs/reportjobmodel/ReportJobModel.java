@@ -36,9 +36,10 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.OutputFormatsListWrapper;
 
 import javax.xml.bind.annotation.*;
+import java.sql.Timestamp;
+import java.util.Set;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "jobModel")
@@ -468,7 +469,7 @@ public class ReportJobModel extends Job {
      * @param creationDate the job creation date
      * @since 4.7
      */
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         isCreationDateModified = true;
         super.setCreationDate(creationDate);
     }
@@ -500,7 +501,7 @@ public class ReportJobModel extends Job {
      * @param outputFormats the set of output formats as
      * <code>java.lang.Byte</code> keys
      */
-    public void setOutputFormatsSet(OutputFormatsListWrapper outputFormats) {
+    public void setOutputFormatsSet(Set<OutputFormat> outputFormats) {
         isOutputFormatsModified = true;
         super.setOutputFormats(outputFormats);
     }

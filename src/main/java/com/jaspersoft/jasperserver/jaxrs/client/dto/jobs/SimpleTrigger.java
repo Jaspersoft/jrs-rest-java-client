@@ -28,7 +28,7 @@ public class SimpleTrigger extends JobTrigger {
 
     private Integer occurrenceCount;
     private Integer recurrenceInterval;
-    private String recurrenceIntervalUnit;
+    private IntervalUnitType recurrenceIntervalUnit;
 
     public Integer getOccurrenceCount() {
         return occurrenceCount;
@@ -46,11 +46,11 @@ public class SimpleTrigger extends JobTrigger {
         this.recurrenceInterval = recurrenceInterval;
     }
 
-    public String getRecurrenceIntervalUnit() {
+    public IntervalUnitType getRecurrenceIntervalUnit() {
         return recurrenceIntervalUnit;
     }
 
-    public void setRecurrenceIntervalUnit(String recurrenceIntervalUnit) {
+    public void setRecurrenceIntervalUnit(IntervalUnitType recurrenceIntervalUnit) {
         this.recurrenceIntervalUnit = recurrenceIntervalUnit;
     }
 

@@ -22,9 +22,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.MailNotification;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.AddressListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.MailNotificationSendType;
 
 import javax.xml.bind.annotation.XmlTransient;
+import java.util.List;
 
 /**
  * Email notification model that can be defined for a report job.  Model is used in search/ update only.
@@ -105,7 +106,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 * attachments, or include links to the output in the repository.
 	 *
 	 */
-	public void setResultSendType(String resultSendType) {
+	public void setResultSendType(MailNotificationSendType resultSendType) {
         isResultSendTypeModified = true;
 		super.setResultSendType(resultSendType);
 	}
@@ -127,7 +128,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 * @param bccAddresses the list of Bcc recipients as
 	 * <code>java.lang.String</code> email addresses
 	 */
-	public void setBccAddresses(AddressListWrapper bccAddresses) {
+	public void setBccAddresses(List<String> bccAddresses) {
         isBccAddressesModified = true;
         super.setBccAddresses(bccAddresses);
 	}
@@ -139,7 +140,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 * @param ccAddresses the list of CC recipients as
 	 * <code>java.lang.String</code> email addresses
 	 */
-	public void setCcAddresses(AddressListWrapper ccAddresses) {
+	public void setCcAddresses(List<String> ccAddresses) {
         isCcAddressesModified = true;
 		super.setCcAddresses(ccAddresses);
 	}
@@ -151,7 +152,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 * @param toAddresses the list of CC recipients as
 	 * <code>java.lang.String</code> email addresses
 	 */
-	public void setToAddresses(AddressListWrapper toAddresses) {
+	public void setToAddresses(List<String> toAddresses) {
         isToAddressesModified = true;
 		super.setToAddresses(toAddresses);
 	}

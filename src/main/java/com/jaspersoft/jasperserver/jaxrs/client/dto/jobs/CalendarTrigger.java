@@ -21,20 +21,22 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.MonthsSortedSetWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.WeekDaysSortedSetWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.DaysByteXmlAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.MonthsByteXmlAdapter;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.SortedSet;
 
 @XmlRootElement(name = "calendarTrigger")
 public class CalendarTrigger extends JobTrigger {
 
     private String minutes;
     private String hours;
-    private String daysType;
-    private WeekDaysSortedSetWrapper weekDays;
+    private CalendarDaysType daysType;
+    private SortedSet<Byte> weekDays;
     private String monthDays;
-    private MonthsSortedSetWrapper months;
+    private SortedSet<Byte> months;
 
     public String getMinutes() {
         return minutes;
@@ -60,27 +62,29 @@ public class CalendarTrigger extends JobTrigger {
         this.monthDays = monthDays;
     }
 
-    public String getDaysType() {
+    public CalendarDaysType getDaysType() {
         return daysType;
     }
 
-    public void setDaysType(String daysType) {
+    public void setDaysType(CalendarDaysType daysType) {
         this.daysType = daysType;
     }
 
-    public WeekDaysSortedSetWrapper getWeekDays() {
+    @XmlJavaTypeAdapter(DaysByteXmlAdapter.class)
+    public SortedSet<Byte> getWeekDays() {
         return weekDays;
     }
 
-    public void setWeekDays(WeekDaysSortedSetWrapper weekDays) {
+    public void setWeekDays(SortedSet<Byte> weekDays) {
         this.weekDays = weekDays;
     }
 
-    public MonthsSortedSetWrapper getMonths() {
+    @XmlJavaTypeAdapter(MonthsByteXmlAdapter.class)
+    public SortedSet<Byte> getMonths() {
         return months;
     }
 
-    public void setMonths(MonthsSortedSetWrapper months) {
+    public void setMonths(SortedSet<Byte> months) {
         this.months = months;
     }
 

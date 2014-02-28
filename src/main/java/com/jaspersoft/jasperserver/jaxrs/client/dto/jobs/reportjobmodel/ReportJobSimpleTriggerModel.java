@@ -21,9 +21,11 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.IntervalUnitType;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.SimpleTrigger;
 
 import javax.xml.bind.annotation.XmlTransient;
+import java.util.Date;
 
 /**
  * Job trigger model which fires at fixed time intervals.
@@ -85,7 +87,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 * @param recurrenceInterval the unit in which the recurrence interval is
 	 * defined, as one of the <code>INTERVAL_*</code> constants
 	 */
-	public void setRecurrenceIntervalUnit(String recurrenceInterval) {
+	public void setRecurrenceIntervalUnit(IntervalUnitType recurrenceInterval) {
         isRecurrenceIntervalUnitModified = true;
 		super.setRecurrenceIntervalUnit(recurrenceInterval);
 	}
@@ -149,7 +151,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 * @param startDate the date at which the report job should start.
 	 * @see #getStartDate()
 	 */
-	public void setStartDate(String startDate) {
+	public void setStartDate(Date startDate) {
         isStartDateModified = true;
 		super.setStartDate(startDate);
 	}
@@ -180,7 +182,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 *
 	 * @param endDate an end date for the job
 	 */
-	public void setEndDate(String endDate) {
+	public void setEndDate(Date endDate) {
         isEndDateModified = true;
 		super.setEndDate(endDate);
 	}

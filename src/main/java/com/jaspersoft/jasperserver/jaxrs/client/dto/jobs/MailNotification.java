@@ -21,54 +21,55 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.wrappers.AddressListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.AddressesXmlAdapter;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.List;
 
 @XmlRootElement(name = "mailNotification")
 public class MailNotification {
 
-    @XmlElement(name = "bccAddresses")
-    private AddressListWrapper bccAddresses;
+    @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
+    private List<String> bccAddresses;
 
-    @XmlElement(name = "ccAddresses")
-    private AddressListWrapper ccAddresses;
+    @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
+    private List<String> ccAddresses;
 
-    @XmlElement(name = "toAddresses")
-    private AddressListWrapper toAddresses;
+    @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
+    private List<String> toAddresses;
 
     private Integer version;
     private Long id;
     private Boolean includingStackTraceWhenJobFails;
     private String messageText;
-    private String resultSendType;
+    private MailNotificationSendType resultSendType;
     private Boolean skipEmptyReports;
     private Boolean skipNotificationWhenJobFails;
     private String subject;
     private String messageTextWhenJobFails;
 
-    public AddressListWrapper getCcAddresses() {
+    public List<String> getCcAddresses() {
         return ccAddresses;
     }
 
-    public void setCcAddresses(AddressListWrapper ccAddresses) {
+    public void setCcAddresses(List<String> ccAddresses) {
         this.ccAddresses = ccAddresses;
     }
 
-    public AddressListWrapper getToAddresses() {
+    public List<String> getToAddresses() {
         return toAddresses;
     }
 
-    public void setToAddresses(AddressListWrapper toAddresses) {
+    public void setToAddresses(List<String> toAddresses) {
         this.toAddresses = toAddresses;
     }
 
-    public AddressListWrapper getBccAddresses() {
+    public List<String> getBccAddresses() {
         return bccAddresses;
     }
 
-    public void setBccAddresses(AddressListWrapper bccAddresses) {
+    public void setBccAddresses(List<String> bccAddresses) {
         this.bccAddresses = bccAddresses;
     }
 
@@ -136,11 +137,11 @@ public class MailNotification {
         this.messageTextWhenJobFails = messageTextWhenJobFails;
     }
 
-    public String getResultSendType() {
+    public MailNotificationSendType getResultSendType() {
         return resultSendType;
     }
 
-    public void setResultSendType(String resultSendType) {
+    public void setResultSendType(MailNotificationSendType resultSendType) {
         this.resultSendType = resultSendType;
     }
 
