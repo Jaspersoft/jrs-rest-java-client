@@ -29,6 +29,10 @@ public class RestClientConfiguration {
 
     private String restServerUrl;
 
+    public RestClientConfiguration(String restServerUrl){
+        setRestServerUrl(restServerUrl);
+    }
+
     public String getRestServerUrl() {
         return restServerUrl;
     }
@@ -39,9 +43,7 @@ public class RestClientConfiguration {
 
     public static RestClientConfiguration loadConfiguration(String path){
         InputStream is = RestClientConfiguration.class.getClassLoader().getResourceAsStream(path);
-        RestClientConfiguration configuration = new RestClientConfiguration();
-        configuration.setRestServerUrl(getProperty(is, "url"));
-        return configuration;
+        return new RestClientConfiguration(getProperty(is, "url"));
     }
 
     private static String getProperty(InputStream is, String name) {

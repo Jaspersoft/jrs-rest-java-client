@@ -21,7 +21,12 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class JasperserverRestClient {
+
+    private static final Pattern ENCRYPTED_PASSWORD_PATTERN = Pattern.compile("[a-fA-F0-9]{256}");
 
     private final RestClientConfiguration configuration;
 
@@ -32,11 +37,23 @@ public class JasperserverRestClient {
     }
 
     public Session authenticate(String username, String password){
-        AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
+
+        AuthenticationCredentials credentials;
+        if (isPasswordEncrypted(password))
+            credentials = new AuthenticationCredentials(username, password, true);
+        else
+            credentials = new AuthenticationCredentials(username, password);
+
         SessionStorage sessionStorage = new SessionStorage();
         sessionStorage.setConfiguration(configuration);
         sessionStorage.setCredentials(credentials);
         return new Session(sessionStorage);
+    }
+
+
+    private boolean isPasswordEncrypted(String password){
+        Matcher matcher = ENCRYPTED_PASSWORD_PATTERN.matcher(password);
+        return matcher.matches();
     }
 
 }

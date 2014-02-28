@@ -27,7 +27,7 @@ public abstract class AbstractAdapter {
 
     protected final SessionStorage sessionStorage;
 
-    public AbstractAdapter(SessionStorage sessionStorage){
+    public AbstractAdapter(SessionStorage sessionStorage) {
         this.sessionStorage = sessionStorage;
     }
 

@@ -25,7 +25,6 @@ public class SessionStorage {
 
     private RestClientConfiguration configuration;
     private AuthenticationCredentials credentials;
-    private String sessionId;
 
     public RestClientConfiguration getConfiguration() {
         return configuration;
@@ -44,12 +43,12 @@ public class SessionStorage {
     }
 
     public String getSessionId() {
-        return sessionId;
+        return credentials.getSessionId();
     }
 
     public void setSessionId(String sessionId) {
         if (sessionId != null)
-            this.sessionId = sessionId;
+            credentials.setSessionId(sessionId);
     }
 
 }

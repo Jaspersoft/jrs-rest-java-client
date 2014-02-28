@@ -22,6 +22,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.WebExceptionsFactory;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.WebExceptionsFactoryImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
@@ -32,12 +34,10 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
 import javax.ws.rs.client.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<ResponseType> {
 
@@ -47,7 +47,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     private static final int PUT = 3;
 
 
-    public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path){
+    public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path) {
         JerseyRequestBuilder<T> builder = new JerseyRequestBuilder<T>(sessionStorage, responseClass);
         for (String pathElem : path)
             builder.setPath(pathElem);
@@ -76,8 +76,11 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         init();
     }
 
-    private void init(){
+    private void init() {
         AuthenticationCredentials credentials = sessionStorage.getCredentials();
+        if (credentials.isPasswordEncrypted())
+            loginWithEncryptedPassword(credentials, sessionStorage.getConfiguration().getRestServerUrl());
+
         Client client = ClientBuilder.newClient();
         client
                 .register(CustomRepresentationTypeProvider.class)
@@ -85,12 +88,31 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
                 .register(MultiPartWriter.class);
 
         String restServerUrl = sessionStorage.getConfiguration().getRestServerUrl();
-        usersWebTarget = client.target(restServerUrl);
+        usersWebTarget = client.target(restServerUrl + (restServerUrl.endsWith("/") ? "rest_v2" : "/rest_v2"));
 
         if (sessionStorage.getSessionId() != null)
             usersWebTarget.register(new SessionOutputFilter(sessionStorage.getSessionId()));
         else
             usersWebTarget.register(HttpAuthenticationFeature.basic(credentials.getUsername(), credentials.getPassword()));
+    }
+
+    private void loginWithEncryptedPassword(AuthenticationCredentials credentials, String serverUrl) {
+        Client client = ClientBuilder.newClient();
+        Form form = new Form();
+        form
+                .param("j_username", credentials.getUsername())
+                .param("j_password", credentials.getPassword());
+
+        WebTarget target = client.target(serverUrl + (serverUrl.endsWith("/") ? "rest/login" : "/rest/login"));
+        Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+        if (response.getStatus() == ResponseStatus.OK){
+            String jsessionid = response.getCookies().get("JSESSIONID").getValue();
+            credentials.setSessionId(jsessionid);
+        } else {
+            WebExceptionsFactory exceptionsFactory = new WebExceptionsFactoryImpl();
+            throw exceptionsFactory.getException(response);
+        }
+
     }
 
     public JerseyRequestBuilder<ResponseType> setPath(String path) {
@@ -122,11 +144,11 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         return executeRequest(POST, request, entity);
     }
 
-    private Invocation.Builder buildRequest(){
+    private Invocation.Builder buildRequest() {
         Invocation.Builder request =
                 usersWebTarget
                         .request();
-        if (acceptType != null){
+        if (acceptType != null) {
             request = request.accept(acceptType);
         }
         addHeaders(request);
@@ -134,26 +156,26 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         return request;
     }
 
-    private OperationResult<ResponseType> executeRequest(int httpMethod, Invocation.Builder request){
+    private OperationResult<ResponseType> executeRequest(int httpMethod, Invocation.Builder request) {
         return executeRequest(httpMethod, request, null);
     }
 
-    private OperationResult<ResponseType> executeRequest(int httpMethod, Invocation.Builder request, Object entity){
+    private OperationResult<ResponseType> executeRequest(int httpMethod, Invocation.Builder request, Object entity) {
         Response response = null;
-        switch (httpMethod){
-            case GET:{
+        switch (httpMethod) {
+            case GET: {
                 response = request.get();
                 break;
             }
-            case DELETE:{
+            case DELETE: {
                 response = request.delete();
                 break;
             }
-            case POST:{
+            case POST: {
                 response = request.post(Entity.entity(entity, contentType));
                 break;
             }
-            case PUT:{
+            case PUT: {
                 response = request.put(Entity.entity(entity, contentType));
                 break;
             }
@@ -164,9 +186,9 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         return result;
     }
 
-    private void addHeaders(Invocation.Builder request){
-        for (Map.Entry<String, List<String>> header : headers.entrySet()){
-            for (String value : header.getValue()){
+    private void addHeaders(Invocation.Builder request) {
+        for (Map.Entry<String, List<String>> header : headers.entrySet()) {
+            for (String value : header.getValue()) {
                 request = request.header(header.getKey(), value);
             }
         }
@@ -218,7 +240,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         return null;
     }
 
-    public RequestBuilder<ResponseType> setHeaders(MultivaluedMap<String, String> headers){
+    public RequestBuilder<ResponseType> setHeaders(MultivaluedMap<String, String> headers) {
         this.headers = headers;
         return null;
     }
