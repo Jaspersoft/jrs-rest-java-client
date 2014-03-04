@@ -16,7 +16,7 @@ RestClientConfiguration configuration = RestClientConfiguration.loadConfiguratio
 File should contain only URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}/rest_v2`.
 ####Creation of manual configuration
 ```java
-RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver/rest_v2");
+RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
 ```
 ####Client instantiation:
 Here everything is easy, you need just to pass `configuration` to `JasperserverRestClient` constructor.
@@ -29,6 +29,8 @@ Report services
 After you've configured the client you can easily use any of available services. For reporting service there is one feature that should be noted - when you are running a report all subsequent operations must be executed in the same session. Here's the code:
 ```java
 Session session = client.authenticate("jasperadmin", "jasperadmin");
+//or authentication with encrypted password
+//Session session = client.authenticate("jasperadmin", "8deb4666e0811b048d400522b2c7d5847119f91fa5ba055ecc193034d84aa1f25d20b5203399591849bb6f04b498b9e21df9ee6d6ca2c1c8b35d591831703b54a358d5d7b8d5155f923f358e6dc449a31d687400d9865b2e971ce333245ef10bed01868e4deef3f88168634225bf8809bb1e89cd2dbc5e9f10728d010b9f799a");
 ```
 We've authenticated as `jasperadmin` user an got a session for this user, all subsequent operations must be done through this session instance.
 ####Running a report:
@@ -894,7 +896,103 @@ OperationResult result = client
         .calendar("testCalendar")
         .delete();
 ```
+Import/Export
+=============
+###Export service
+The export service works asynchronously: first you request the export with the desired options, then you monitor the state of the export, and finally you request the output file. You must be authenticated as the system admin (superuser) for the export services.
+```java
+OperationResult<StateDto> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .exportService()
+                .newTask()
+                .user("jasperadmin")
+                .role("ROLE_USER")
+                .parameter(ExportParameter.EVERYTHING)
+                .create();
 
+StateDto stateDto = operationResult.getEntity();
+```
+####Checking the Export State
+After receiving the export ID, you can check the state of the export operation.
+```java
+OperationResult<StateDto> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .exportService()
+                .task(stateDto.getId())
+                .state();
+
+StateDto state = operationResult.getEntity();
+```
+The body of the response contains the current state of the export operation.
+####Fetching the Export Output
+When the export state is ready, you can download the zip file containing the export catalog.
+```java
+OperationResult<InputStream> operationResult1 =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .exportService()
+                .task(stateDto.getId())
+                .fetch();
+
+InputStream inputStream = operationResult1.getEntity();
+```
+###Import service
+Use the following service to upload a catalog as a zip file and import it with the given options. Specify options as arguments from `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportParameter`. Arguments that are omitted are assumed to be false. You must be authenticated as the system admin (superuser) for the import service. Jaspersoft does not recommend uploading files greater than 2 gigabytes.
+```java
+URL url = ImportService.class.getClassLoader().getResource("testExportArchive.zip");
+OperationResult<StateDto> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .importService()
+                .newTask()
+                .parameter(ImportParameter.INCLUDE_ACCESS_EVENTS, true)
+                .create(new File(url.toURI()));
+
+StateDto stateDto = operationResult.getEntity();
+```
+####Checking the Import State
+After receiving the import ID, you can check the state of the import operation.
+```java
+OperationResult<StateDto> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .importService()
+                .task(stateDto.getId())
+                .state();
+
+StateDto state = operationResult.getEntity();
+```
+REST Server Information
+========================
+Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
+```java
+OperationResult<ServerInfo> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .serverInfoService()
+        .details();
+
+ServerInfo serverInfo = result.getEntity();
+```
+The server returns a `ServerInfo` instance containing the requested information.
+You can access each value separately with the following code:
+```java
+OperationResult<String> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .serverInfoService() 
+        .edition();
+        //.version();
+        //.licenseType();
+        //.features();
+        //.expiration();
+        //.editionName();
+        //.dateTimeFormatPattern();
+        //.dateFormatPattern();
+        //.build();
+
+String edition = result.getEntity();
+```
 
 ###Maven dependency to add jasperserver-rest-client to your app:
 ```xml
@@ -902,7 +1000,7 @@ OperationResult result = client
         <dependency>
             <groupId>com.jaspersoft</groupId>
             <artifactId>jrs-rest-java-client</artifactId>
-            <version>0.9.5</version>
+            <version>5.5.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
