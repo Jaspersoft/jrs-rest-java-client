@@ -13,7 +13,7 @@ To do this you should create instance of `RestClientConfiguration`. It can be do
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
 ```
-File should contain only URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}/rest_v2`.
+File should contain only URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}`.
 ####Creation of manual configuration
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
