@@ -21,10 +21,14 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
-public class AuthenticationFailureException extends JSClientWebException {
+import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 
-    public AuthenticationFailureException(String message) {
-        super(message);
+import java.util.List;
+
+public class AuthenticationFailedException extends JSClientWebException {
+
+    public AuthenticationFailedException(String message, List<ErrorDescriptor> errorDescriptorList) {
+        super(message, errorDescriptorList);
     }
 
 }

@@ -57,9 +57,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return builder.get();
     }
 
-    public OperationResult createOrUpdate(ClientUser user){
-        JerseyRequestBuilder<Object> builder =
-                buildRequest(sessionStorage, Object.class, new String[]{"/users", username});
+    public OperationResult<ClientUser> createOrUpdate(ClientUser user){
+        JerseyRequestBuilder<ClientUser> builder =
+                buildRequest(sessionStorage, ClientUser.class, new String[]{"/users", username});
         return builder.put(user);
     }
 

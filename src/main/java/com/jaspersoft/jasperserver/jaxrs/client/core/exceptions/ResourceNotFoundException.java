@@ -21,9 +21,13 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+
+import java.util.List;
+
 public class ResourceNotFoundException extends JSClientWebException {
 
-    public ResourceNotFoundException(String message) {
-        super(message);
+    public ResourceNotFoundException(String message, List<ErrorDescriptor> errorDescriptorList) {
+        super(message, errorDescriptorList);
     }
 }

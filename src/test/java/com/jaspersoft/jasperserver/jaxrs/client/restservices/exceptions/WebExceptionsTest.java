@@ -27,7 +27,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutp
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AccessForbiddenException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailureException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.BadRequestException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
 import org.testng.Assert;
@@ -53,7 +53,7 @@ public class WebExceptionsTest extends Assert {
                 .get();
     }
 
-    @Test(expectedExceptions = AuthenticationFailureException.class)
+    @Test(expectedExceptions = AuthenticationFailedException.class)
     public void testGetResourceByNotAuthorizedUser() {
         client
                 .authenticate("jasperadmin", "")

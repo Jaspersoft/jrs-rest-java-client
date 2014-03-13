@@ -21,10 +21,14 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+
+import java.util.List;
+
 public class BadRequestException extends JSClientWebException {
 
-    public BadRequestException(String message) {
-        super(message);
+    public BadRequestException(String message, List<ErrorDescriptor> errorDescriptorList) {
+        super(message, errorDescriptorList);
     }
 
 }

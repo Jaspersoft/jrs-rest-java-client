@@ -21,8 +21,12 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+
+import java.util.List;
+
 public class InternalServerErrorException extends JSClientWebException {
-    public InternalServerErrorException(String message) {
-        super(message);
+    public InternalServerErrorException(String message, List<ErrorDescriptor> errorDescriptorList) {
+        super(message, errorDescriptorList);
     }
 }

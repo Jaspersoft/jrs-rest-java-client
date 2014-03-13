@@ -136,7 +136,7 @@ public class UsersServiceTest extends Assert {
                 .setPreviousPasswordChangeTime(new Date(1348142595199L))
                 .setUsername("demo");
 
-        OperationResult operationResult =
+        OperationResult<ClientUser> operationResult =
                 client
                         .authenticate("jasperadmin", "jasperadmin")
                         .usersService()
@@ -145,6 +145,8 @@ public class UsersServiceTest extends Assert {
 
         Response response = operationResult.getResponse();
         assertEquals(response.getStatus(), 201);
+        ClientUser clientUser = operationResult.getEntity();
+        assertNotNull(clientUser);
     }
 
     @Test(dependsOnMethods = {"testAddUser"})

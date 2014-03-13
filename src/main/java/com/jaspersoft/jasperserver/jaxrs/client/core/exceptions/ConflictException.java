@@ -21,8 +21,12 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+
+import java.util.List;
+
 public class ConflictException extends JSClientWebException {
-    public ConflictException(String message) {
-        super(message);
+    public ConflictException(String message, List<ErrorDescriptor> errorDescriptorList) {
+        super(message, errorDescriptorList);
     }
 }

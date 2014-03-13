@@ -22,10 +22,21 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+
+import java.util.List;
+
 public class JSClientWebException extends JSClientException {
 
-    public JSClientWebException(String message) {
+    protected List<ErrorDescriptor> errorDescriptorList;
+
+    public JSClientWebException(String message, List<ErrorDescriptor> errorDescriptorList) {
         super(message);
+        this.errorDescriptorList = errorDescriptorList;
+    }
+
+    public List<ErrorDescriptor> getErrorDescriptorList(){
+        return errorDescriptorList;
     }
 
 }

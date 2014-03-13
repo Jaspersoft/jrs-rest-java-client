@@ -21,8 +21,12 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+
+import java.util.List;
+
 public class RepresentationNotAvailableForResourceException extends JSClientWebException {
-    public RepresentationNotAvailableForResourceException(String message) {
-        super(message);
+    public RepresentationNotAvailableForResourceException(String message, List<ErrorDescriptor> errorDescriptorList) {
+        super(message, errorDescriptorList);
     }
 }
