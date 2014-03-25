@@ -23,6 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -50,9 +51,9 @@ public class PermissionResourceRequestAdapter extends AbstractAdapter {
         return new SinglePermissionRecipientRequestAdapter(sessionStorage, resourceUri, uri);
     }
 
-    public OperationResult createOrUpdate(RepositoryPermissionListWrapper permissions) {
-        JerseyRequestBuilder<Object> builder =
-                buildRequest(sessionStorage, Object.class, new String[]{"/permissions", resourceUri});
+    public OperationResult<RepositoryPermissionListWrapper> createOrUpdate(RepositoryPermissionListWrapper permissions) {
+        JerseyRequestBuilder<RepositoryPermissionListWrapper> builder =
+                buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri}, new CommonExceptionHandler());
         builder.setContentType("application/collection+json");
         return builder.put(permissions);
     }
@@ -64,13 +65,13 @@ public class PermissionResourceRequestAdapter extends AbstractAdapter {
 
     public OperationResult<RepositoryPermissionListWrapper> get(){
         JerseyRequestBuilder<RepositoryPermissionListWrapper> builder =
-                buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
+                buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri}, new CommonExceptionHandler());
         builder.addParams(params);
         return builder.get();
     }
 
     public OperationResult delete(){
-        return buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri})
+        return buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri}, new CommonExceptionHandler())
                 .delete();
     }
 

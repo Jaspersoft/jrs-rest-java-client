@@ -27,24 +27,41 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.job.JobIdListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.WeeklyCalendar;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.JobSummaryListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 @Test
 public class JobsServiceTest extends Assert {
 
-    private JasperserverRestClient client;
+    private static JasperserverRestClient client;
     private JobExtension job;
 
     public JobsServiceTest() {
         RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
         client = new JasperserverRestClient(configuration);
+    }
+
+    @AfterClass
+    public static void tearDown(){
+        OperationResult<JobSummaryListWrapper> allJobs = client
+                .authenticate("jasperadmin", "jasperadmin")
+                .jobsService().jobs().search();
+        for (JobSummary job : allJobs.getEntity().getJobsummary()){
+            if (job.getId() != 21281)
+                client
+                        .authenticate("jasperadmin", "jasperadmin")
+                        .jobsService()
+                        .job(job.getId())
+                        .delete();
+        }
     }
 
     @Test
@@ -53,7 +70,7 @@ public class JobsServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .get();
+                .search();
 
         int status = result.getResponse().getStatus();
         assertTrue(status == 200 || status == 204);
@@ -67,7 +84,7 @@ public class JobsServiceTest extends Assert {
         OperationResult<JobExtension> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .job(8600)
+                .job(21281)
                 .get();
 
         job = result.getEntity();
@@ -143,7 +160,7 @@ public class JobsServiceTest extends Assert {
         OperationResult<JobState> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .job(8600)
+                .job(21281)
                 .state();
         assertNotNull(result);
         JobState jobState = result.getEntity();
@@ -159,8 +176,8 @@ public class JobsServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "8600")
-                .update(jobModel);
+                .parameter(JobsParameter.JOB_ID, "21281")
+                .updateWithProcessedParameters(jobModel);
 
         assertNotNull(result);
         assertEquals(result.getResponse().getStatus(), ResponseStatus.OK);
@@ -168,14 +185,14 @@ public class JobsServiceTest extends Assert {
 
     @Test(dependsOnMethods = "testScheduleJob")
     public void testUpdateJobsInBulkWithJobDescriptor(){
-        Job jobDescriptor = new Job();
+        ReportJobModel jobDescriptor = new ReportJobModel();
         jobDescriptor.setDescription("Bulk update description");
 
         OperationResult<JobIdListWrapper> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "8600")
+                .parameter(JobsParameter.JOB_ID, "21281")
                 .update(jobDescriptor);
 
         assertNotNull(result);
@@ -188,7 +205,7 @@ public class JobsServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "8600")
+                .parameter(JobsParameter.JOB_ID, "21281")
                 .resume();
         assertNotNull(result);
         assertNotNull(result.getEntity());
@@ -200,22 +217,27 @@ public class JobsServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "8600")
+                .parameter(JobsParameter.JOB_ID, "21281")
                 .pause();
         assertNotNull(result);
         assertNotNull(result.getEntity());
     }
 
-    @Test(dependsOnMethods = "testPauseJobs")
+    private static List<Long> restartedJobId;
+
+    @Test(dependsOnMethods = {"testPauseJobs", "testGetAllJobs"})
     public void testRestartJobs(){
         OperationResult<JobIdListWrapper> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "8600")
+                .parameter(JobsParameter.JOB_ID, "21281")
                 .restart();
         assertNotNull(result);
-        assertNotNull(result.getEntity());
+        JobIdListWrapper entity = result.getEntity();
+        assertNotNull(entity);
+
+        restartedJobId = entity.getIds();
     }
 
     /*@Test
@@ -260,7 +282,7 @@ public class JobsServiceTest extends Assert {
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .calendar("testCalendar")
-                .createOrUpdate(calendar);
+                .createNew(calendar);
         assertNotNull(result);
         assertEquals(result.getResponse().getStatus(), ResponseStatus.UPDATED);
     }

@@ -40,8 +40,8 @@ import java.util.Map;
  */
 public class ReportJobSourceModel extends JobSource {
 
-    private boolean isReportUnitURIModified = false;
-    private boolean isParametersMapModified = false;
+    /*private boolean isReportUnitURIModified = false;
+    private boolean isParametersMapModified = false;*/
 
 	/**
 	 * Creates an empty job source.
@@ -56,7 +56,7 @@ public class ReportJobSourceModel extends JobSource {
 	 * should execute
 	 */
 	public void setReportUnitURI(String reportUnitURI) {
-        isReportUnitURIModified = true;
+//        isReportUnitURIModified = true;
 		super.setReportUnitURI(reportUnitURI);
 	}
 
@@ -71,21 +71,21 @@ public class ReportJobSourceModel extends JobSource {
 	 * @param parameters the report input values
 	 */
 	public void setParameters(Map<String, Object> parameters) {
-		isParametersMapModified = true;
+//		isParametersMapModified = true;
         super.setParameters(parameters);
 	}
 
-    /**
-     * returns whether report unit uri has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isReportUnitURIModified() { return isReportUnitURIModified; }
-
-    /**
-     * returns whether parameters map has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isParametersMapModified() { return isParametersMapModified; }
+//    /**
+//     * returns whether report unit uri has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isReportUnitURIModified() { return isReportUnitURIModified; }
+//
+//    /**
+//     * returns whether parameters map has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isParametersMapModified() { return isParametersMapModified; }
 }

@@ -36,7 +36,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.RepositoryDestination;
  */
 public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 
-    private boolean isFolderURIModified = false;
+    /*private boolean isFolderURIModified = false;
     private boolean isSequentialFilenamesModified = false;
     private boolean isOverwriteFilesModified = false;
     private boolean isOutputDescriptionModified = false;
@@ -45,7 +45,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
     private boolean isDefaultReportOutputFolderURIModified = false;
     private boolean isUsingDefaultReportOutputFolderURIModified = false;
     private boolean isOutputFTPInfoModified = false;
-    private boolean isOutputLocalFolderModified = false;
+    private boolean isOutputLocalFolderModified = false;*/
 
 
     /**
@@ -66,7 +66,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * @see ReportJobModel#setBaseOutputFilename(String)
 	 */
 	public void setFolderURI(String folder) {
-        isFolderURIModified = true;
+//        isFolderURIModified = true;
 		super.setFolderURI(folder);
 	}
 
@@ -83,7 +83,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * names should include a timestamp
 	 */
 	public void setSequentialFilenames(boolean sequentialFilenames) {
-		isSequentialFilenamesModified = true;
+//		isSequentialFilenamesModified = true;
         super.setSequentialFilenames(sequentialFilenames);
 	}
 
@@ -95,7 +95,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * @see #isOverwriteFiles()
 	 */
 	public void setOverwriteFiles(boolean overwriteFiles) {
-		isOverwriteFilesModified = true;
+//		isOverwriteFilesModified = true;
         super.setOverwriteFiles(overwriteFiles);
 	}
 
@@ -106,7 +106,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * @since 3.0
 	 */
 	public void setOutputDescription(String outputDescription) {
-		isOutputDescriptionModified = true;
+//		isOutputDescriptionModified = true;
         super.setOutputDescription(outputDescription);
 	}
 
@@ -125,7 +125,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * @see #setSequentialFilenames(boolean)
 	 */
 	public void setTimestampPattern(String timestampPattern) {
-		isTimestampPatternModified = true;
+//		isTimestampPatternModified = true;
         super.setTimestampPattern(timestampPattern);
 	}
 
@@ -136,7 +136,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * @see #isSaveToRepository()
 	 */
 	public void setSaveToRepository(boolean saveToRepository) {
-        isSaveToRepositoryModified = true;
+//        isSaveToRepositoryModified = true;
 		super.setSaveToRepository(saveToRepository);
 	}
 
@@ -148,7 +148,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
      * @since 4.7
      */
 	public void setDefaultReportOutputFolderURI(String defaultReportOutputFolderURI) {
-        isDefaultReportOutputFolderURIModified = true;
+//        isDefaultReportOutputFolderURIModified = true;
         super.setDefaultReportOutputFolderURI(defaultReportOutputFolderURI);
     }
 
@@ -160,7 +160,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
      * @since 4.7
 	 */
 	public void setUsingDefaultReportOutputFolderURI(boolean usingDefaultReportOutputFolderURI) {
-        isUsingDefaultReportOutputFolderURIModified = true;
+//        isUsingDefaultReportOutputFolderURIModified = true;
 		super.setUsingDefaultReportOutputFolderURI(usingDefaultReportOutputFolderURI);
 	}
 
@@ -171,7 +171,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * @param outputLocalFolder the path of the local output folder
 	 */
     public void setOutputLocalFolder(String outputLocalFolder) {
-        isOutputLocalFolderModified = true;
+//        isOutputLocalFolderModified = true;
         super.setOutputLocalFolder(outputLocalFolder);
     }
 
@@ -221,77 +221,77 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * @param outputFTPInfo FTP information of the output folder
 	 */
     public void setOutputFTPInfoModel(FTPInfoModel outputFTPInfo) {
-        isOutputFTPInfoModified = true;
+//        isOutputFTPInfoModified = true;
         super.setOutputFTPInfo(outputFTPInfo);
     }
 
-    /**
-     * returns whether FolderURI has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isFolderURIModified() { return isFolderURIModified; }
-
-    /**
-     * returns whether SequentialFilenames has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isSequentialFilenamesModified() { return isSequentialFilenamesModified; }
-
-    /**
-     * returns whether OutputDescription has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isOutputDescriptionsModified() { return isOutputDescriptionModified; }
-
-    /**
-     * returns whether TimestampPattern has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isTimestampPatternModified() { return isTimestampPatternModified; }
-
-    /**
-     * returns whether OverwriteFiles has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isOverwriteFilesModified() { return isOverwriteFilesModified; }
-
-    /**
-     * returns whether SaveToRepository has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isSaveToRepositoryModified() { return isSaveToRepositoryModified; }
-
-    /**
-     * returns whether DefaultReportOutputFolderURI has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isDefaultReportOutputFolderURIModified() { return isDefaultReportOutputFolderURIModified; }
-
-    /**
-     * returns whether UsingDefaultReportOutputFolderURI has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isUsingDefaultReportOutputFolderURIModified() { return isUsingDefaultReportOutputFolderURIModified; }
-
-    /**
-     * returns whether OutputLocalFolder has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isOutputLocalFolderModified() { return isOutputLocalFolderModified; }
-
-    /**
-     * returns whether OutputFTPInfo has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isOutputFTPInfoModified() { return isOutputFTPInfoModified; }
+//    /**
+//     * returns whether FolderURI has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isFolderURIModified() { return isFolderURIModified; }
+//
+//    /**
+//     * returns whether SequentialFilenames has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isSequentialFilenamesModified() { return isSequentialFilenamesModified; }
+//
+//    /**
+//     * returns whether OutputDescription has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isOutputDescriptionsModified() { return isOutputDescriptionModified; }
+//
+//    /**
+//     * returns whether TimestampPattern has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isTimestampPatternModified() { return isTimestampPatternModified; }
+//
+//    /**
+//     * returns whether OverwriteFiles has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isOverwriteFilesModified() { return isOverwriteFilesModified; }
+//
+//    /**
+//     * returns whether SaveToRepository has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isSaveToRepositoryModified() { return isSaveToRepositoryModified; }
+//
+//    /**
+//     * returns whether DefaultReportOutputFolderURI has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isDefaultReportOutputFolderURIModified() { return isDefaultReportOutputFolderURIModified; }
+//
+//    /**
+//     * returns whether UsingDefaultReportOutputFolderURI has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isUsingDefaultReportOutputFolderURIModified() { return isUsingDefaultReportOutputFolderURIModified; }
+//
+//    /**
+//     * returns whether OutputLocalFolder has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isOutputLocalFolderModified() { return isOutputLocalFolderModified; }
+//
+//    /**
+//     * returns whether OutputFTPInfo has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isOutputFTPInfoModified() { return isOutputFTPInfoModified; }
 }

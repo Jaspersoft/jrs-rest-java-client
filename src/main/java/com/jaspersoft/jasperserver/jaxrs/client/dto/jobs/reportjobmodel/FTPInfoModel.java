@@ -35,11 +35,11 @@ import java.util.Map;
  */
 public class FTPInfoModel extends FtpInfo {
 
-    private boolean isUserNameModified = false;
-    private boolean isPasswordModified = false;
-    private boolean isFolderPathModified = false;
-    private boolean isServerNameModified = false;
-    private boolean isPropertiesMapModified = false;
+//    private boolean isUserNameModified = false;
+//    private boolean isPasswordModified = false;
+//    private boolean isFolderPathModified = false;
+//    private boolean isServerNameModified = false;
+//    private boolean isPropertiesMapModified = false;
 
 	/**
 	 * Creates an empty job source.
@@ -53,7 +53,7 @@ public class FTPInfoModel extends FtpInfo {
 	 * @param  userName the login user name
 	 */
     public void setUserName(String userName) {
-        isUserNameModified = true;
+//        isUserNameModified = true;
         super.setUserName(userName);
     }
 
@@ -63,7 +63,7 @@ public class FTPInfoModel extends FtpInfo {
 	 * @param password the login password
 	 */
     public void setPassword(String password) {
-        isPasswordModified = true;
+//        isPasswordModified = true;
         super.setPassword(password);
     }
 
@@ -74,7 +74,7 @@ public class FTPInfoModel extends FtpInfo {
 	 * @param folderPath the folder path
 	 */
     public void setFolderPath(String folderPath) {
-        isFolderPathModified = true;
+//        isFolderPathModified = true;
         super.setFolderPath(folderPath);
     }
 
@@ -84,7 +84,7 @@ public class FTPInfoModel extends FtpInfo {
 	 * @return the server name
 	 */
     public void setServerName(String serverName) {
-        isServerNameModified = true;
+//        isServerNameModified = true;
         super.setServerName(serverName);
     }
 
@@ -94,7 +94,7 @@ public class FTPInfoModel extends FtpInfo {
      * @param type the ftp type
      */
     public void setType(FtpType type) {
-        isPropertiesMapModified = true;
+//        isPropertiesMapModified = true;
         super.setType(type);
     }
 
@@ -104,7 +104,7 @@ public class FTPInfoModel extends FtpInfo {
      * @param port the port number
      */
     public void setPort(int port) {
-        isPropertiesMapModified = true;
+//        isPropertiesMapModified = true;
         super.setPort(port);
     }
 
@@ -114,7 +114,7 @@ public class FTPInfoModel extends FtpInfo {
      * @param protocol the protocol
      */
     public void setProtocol(String protocol) {
-        isPropertiesMapModified = true;
+//        isPropertiesMapModified = true;
         super.setProtocol(protocol);
     }
 
@@ -125,7 +125,7 @@ public class FTPInfoModel extends FtpInfo {
      * @param implicit
      */
     public void setImplicit(boolean implicit) {
-        isPropertiesMapModified = true;
+//        isPropertiesMapModified = true;
         super.setImplicit(implicit);
     }
 
@@ -134,7 +134,7 @@ public class FTPInfoModel extends FtpInfo {
      * @param pbsz Protection Buffer Size.
      */
     public void setPbsz(long pbsz) {
-        isPropertiesMapModified = true;
+//        isPropertiesMapModified = true;
         super.setPbsz(pbsz);
     }
 
@@ -149,7 +149,7 @@ public class FTPInfoModel extends FtpInfo {
      * @param prot Data Channel Protection Level
      */
     public void setProt(String prot) {
-        isPropertiesMapModified = true;
+//        isPropertiesMapModified = true;
         super.setProt(prot);
     }
 
@@ -159,42 +159,42 @@ public class FTPInfoModel extends FtpInfo {
      * @param propertiesMap extra properties for FTP info
      */
     public void setPropertiesMap(Map<String, String>  propertiesMap) {
-        isPropertiesMapModified = true;
+//        isPropertiesMapModified = true;
         super.setPropertiesMap(propertiesMap);
     }
 
-    /**
-     * returns whether UserName has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isUserNameModified() { return isUserNameModified; }
-
-    /**
-     * returns whether Password has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isPasswordModified() { return isPasswordModified; }
-
-    /**
-     * returns whether folder path has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isFolderPathModified() { return isFolderPathModified; }
-
-    /**
-     * returns whether server name has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isServerNameModified() { return isServerNameModified; }
-
-    /**
-     * returns whether Properties Map has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isPropertiesMapModified() { return isPropertiesMapModified; }
+//    /**
+//     * returns whether UserName has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isUserNameModified() { return isUserNameModified; }
+//
+//    /**
+//     * returns whether Password has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isPasswordModified() { return isPasswordModified; }
+//
+//    /**
+//     * returns whether folder path has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isFolderPathModified() { return isFolderPathModified; }
+//
+//    /**
+//     * returns whether server name has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isServerNameModified() { return isServerNameModified; }
+//
+//    /**
+//     * returns whether Properties Map has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isPropertiesMapModified() { return isPropertiesMapModified; }
 }

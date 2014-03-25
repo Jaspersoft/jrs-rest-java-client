@@ -23,6 +23,22 @@ package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
 public class JSClientException extends RuntimeException {
 
+    public JSClientException() {
+        super();
+    }
+
+    public JSClientException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public JSClientException(Throwable cause) {
+        super(cause);
+    }
+
+    protected JSClientException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+
     public JSClientException(String message) {
         super(message);
     }

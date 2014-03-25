@@ -24,6 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -36,17 +37,19 @@ public class PermissionsService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    public PermissionResourceRequestAdapter resource(String name) {
-        return new PermissionResourceRequestAdapter(sessionStorage, name);
+    public PermissionResourceRequestAdapter resource(String resourceUri) {
+        if ("".equals(resourceUri))
+            throw new  IllegalArgumentException("'resourceUri' mustn't be an empty string");
+        return new PermissionResourceRequestAdapter(sessionStorage, resourceUri);
     }
 
     public OperationResult createNew(RepositoryPermission permission){
-        return buildRequest(sessionStorage, Object.class, new String[]{"/permissions"})
+        return buildRequest(sessionStorage, Object.class, new String[]{"/permissions"}, new CommonExceptionHandler())
                 .post(permission);
     }
 
     public OperationResult createNew(RepositoryPermissionListWrapper permissions) {
-        JerseyRequestBuilder builder = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
+        JerseyRequestBuilder builder = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"}, new CommonExceptionHandler());
         builder.setContentType("application/collection+json");
         return builder.post(permissions);
     }

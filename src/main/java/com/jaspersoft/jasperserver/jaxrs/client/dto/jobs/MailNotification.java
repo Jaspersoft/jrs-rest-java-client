@@ -30,13 +30,9 @@ import java.util.List;
 @XmlRootElement(name = "mailNotification")
 public class MailNotification {
 
-    @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
+
     private List<String> bccAddresses;
-
-    @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
     private List<String> ccAddresses;
-
-    @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
     private List<String> toAddresses;
 
     private Integer version;
@@ -49,6 +45,7 @@ public class MailNotification {
     private String subject;
     private String messageTextWhenJobFails;
 
+    @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
     public List<String> getCcAddresses() {
         return ccAddresses;
     }
@@ -57,6 +54,7 @@ public class MailNotification {
         this.ccAddresses = ccAddresses;
     }
 
+    @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
     public List<String> getToAddresses() {
         return toAddresses;
     }
@@ -65,6 +63,7 @@ public class MailNotification {
         this.toAddresses = toAddresses;
     }
 
+    @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
     public List<String> getBccAddresses() {
         return bccAddresses;
     }

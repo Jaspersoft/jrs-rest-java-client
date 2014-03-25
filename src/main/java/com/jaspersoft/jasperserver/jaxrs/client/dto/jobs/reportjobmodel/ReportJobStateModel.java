@@ -37,9 +37,9 @@ import java.util.Date;
 @XmlRootElement(name = "stateModel")
 public class ReportJobStateModel extends JobState {
 
-    private boolean isNextFireTimeModified = false;
-    private boolean isPreviousFireTimeModified = false;
-    private boolean isStateModified = false;
+//    private boolean isNextFireTimeModified = false;
+//    private boolean isPreviousFireTimeModified = false;
+//    private boolean isStateModified = false;
 
 	/**
 	 * Creates an empty object.
@@ -54,7 +54,7 @@ public class ReportJobStateModel extends JobState {
 	 * @param nextFireTime the next fire time for the job
 	 */
 	public void setNextFireTime(Date nextFireTime) {
-        isNextFireTimeModified = true;
+//        isNextFireTimeModified = true;
 		super.setNextFireTime(nextFireTime);
 	}
 
@@ -64,7 +64,7 @@ public class ReportJobStateModel extends JobState {
 	 * @param previousFireTime the previous fire time of the job
 	 */
 	public void setPreviousFireTime(Date previousFireTime) {
-        isPreviousFireTimeModified = true;
+//        isPreviousFireTimeModified = true;
 		super.setPreviousFireTime(previousFireTime);
 	}
 
@@ -75,28 +75,28 @@ public class ReportJobStateModel extends JobState {
 	 * @param state one of the <code>STATE_*</code> constants
 	 */
 	public void setValue(JobStateType state) {
-        isStateModified = true;
+//        isStateModified = true;
 		super.setValue(state);
 	}
 
-    /**
-     * returns whether NextFireTime has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isNextFireTimeModified() { return isNextFireTimeModified; }
-
-    /**
-     * returns whether PreviousFireTime has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isPreviousFireTimeModified() { return isPreviousFireTimeModified; }
-
-    /**
-     * returns whether State has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isStateModified() { return isStateModified; }
+//    /**
+//     * returns whether NextFireTime has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isNextFireTimeModified() { return isNextFireTimeModified; }
+//
+//    /**
+//     * returns whether PreviousFireTime has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isPreviousFireTimeModified() { return isPreviousFireTimeModified; }
+//
+//    /**
+//     * returns whether State has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isStateModified() { return isStateModified; }
 }

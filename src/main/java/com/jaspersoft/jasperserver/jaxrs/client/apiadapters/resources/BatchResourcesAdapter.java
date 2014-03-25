@@ -23,6 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientResourceListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -55,7 +56,7 @@ public class BatchResourcesAdapter extends AbstractAdapter {
     }
 
     private <T> JerseyRequestBuilder<T> getBuilder(Class<T> responseClass) {
-        JerseyRequestBuilder<T> builder = buildRequest(sessionStorage, responseClass, new String[]{"/resources"});
+        JerseyRequestBuilder<T> builder = buildRequest(sessionStorage, responseClass, new String[]{"/resources"}, new CommonExceptionHandler());
         builder.addParams(params);
         return builder;
     }

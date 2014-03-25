@@ -18,17 +18,29 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 
 import java.util.List;
 
-public class AccessForbiddenException extends JSClientWebException {
+/**
+ * @author Yaroslav.Kovalchyk
+ * @version $Id: IllegalParameterValueException.java 30161 2013-03-22 19:20:15Z inesterenko $
+ */
+public class IllegalParameterValueException extends JSClientWebException {
 
-    public AccessForbiddenException(String message, List<ErrorDescriptor> errorDescriptorList) {
-        super(message, errorDescriptorList);
+    public static final String ERROR_CODE  = "illegal.parameter.value.error";
+
+    public IllegalParameterValueException() {
+        super();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
+    public IllegalParameterValueException(String message) {
+        super(message);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public IllegalParameterValueException(String message, List<ErrorDescriptor> errorDescriptors) {
+        super(message, errorDescriptors);    //To change body of overridden methods use File | Settings | File Templates.
+    }
 }

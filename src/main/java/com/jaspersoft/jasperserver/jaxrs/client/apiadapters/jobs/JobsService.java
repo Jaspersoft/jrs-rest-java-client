@@ -22,10 +22,12 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
@@ -34,8 +36,11 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder
 
 public class JobsService extends AbstractAdapter {
 
+    private ExceptionHandler exceptionHandler;
+
     public JobsService(SessionStorage sessionStorage) {
         super(sessionStorage);
+        exceptionHandler = new CommonExceptionHandler();
     }
 
     public BatchJobsOperationsAdapter jobs(){
@@ -48,7 +53,7 @@ public class JobsService extends AbstractAdapter {
 
     public OperationResult<JobExtension> scheduleReport(JobExtension report){
         JerseyRequestBuilder<JobExtension> builder =
-                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs"});
+                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs"}, new JobValidationExceptionHandler());
         builder.setContentType("application/job+json");
         builder.setAccept("application/job+json");
 
@@ -61,15 +66,17 @@ public class JobsService extends AbstractAdapter {
 
     public OperationResult<CalendarNameListWrapper> calendars(CalendarType type){
         JerseyRequestBuilder<CalendarNameListWrapper> builder =
-                buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
+                buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"}, exceptionHandler);
         if (type != null)
             builder.addParam("calendarType", type.name().toLowerCase());
 
         return builder.get();
     }
 
-    public SingleCalendarOperationsAdapter calendar(String name){
-        return new SingleCalendarOperationsAdapter(sessionStorage, name);
+    public SingleCalendarOperationsAdapter calendar(String calendarName){
+        if ("".equals(calendarName) || "/".equals(calendarName))
+            throw new  IllegalArgumentException("'calendarName' mustn't be an empty string");
+        return new SingleCalendarOperationsAdapter(sessionStorage, calendarName);
     }
 
 }

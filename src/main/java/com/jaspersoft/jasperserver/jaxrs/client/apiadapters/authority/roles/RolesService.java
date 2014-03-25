@@ -31,6 +31,8 @@ public class RolesService extends AbstractAdapter {
     }
 
     public SingleRoleRequestAdapter rolename(String rolename) {
+        if ("".equals(rolename) || "/".equals(rolename))
+            throw new  IllegalArgumentException("'rolename' mustn't be an empty string");
         return new SingleRoleRequestAdapter(sessionStorage, rolename);
     }
 

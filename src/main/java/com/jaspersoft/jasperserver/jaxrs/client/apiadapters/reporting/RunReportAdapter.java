@@ -29,6 +29,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
 
@@ -37,37 +39,55 @@ public class RunReportAdapter extends AbstractAdapter {
     private final MultivaluedMap<String, String> params;
     private final String reportUnitUri;
     private final ReportOutputFormat format;
-    private final Integer[] pages;
+    private String[] pages;
 
-    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri,
-                            ReportOutputFormat format, Integer[] pages){
-
+    private RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, ReportOutputFormat format) {
         super(sessionStorage);
         this.params = new MultivaluedHashMap<String, String>();
         this.reportUnitUri = reportUnitUri;
         this.format = format;
-        this.pages = pages;
     }
 
-    public RunReportAdapter parameter(String name, String value){
+    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri,
+                            ReportOutputFormat format, Integer[] pages) {
+        this(sessionStorage, reportUnitUri, format);
+        this.pages = toStringArray(pages);
+    }
+
+    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri,
+                            ReportOutputFormat format, PageRange range) {
+        this(sessionStorage, reportUnitUri, format);
+        this.pages = new String[]{range.getRange()};
+    }
+
+    public RunReportAdapter parameter(String name, String value) {
         params.add(name, value);
         return this;
     }
 
-    public OperationResult<InputStream> run(){
+    public OperationResult<InputStream> run() {
         JerseyRequestBuilder<InputStream> builder =
                 buildRequest(sessionStorage, InputStream.class,
-                        new String[]{"/reports", reportUnitUri + "." + format.toString().toLowerCase()});
+                        new String[]{"/reports", reportUnitUri + "." + format.toString().toLowerCase()}, new RunReportExceptionHandler());
         builder.addParams(params);
 
-        if (pages.length == 1)
-            builder.addParam("page", pages[0].toString());
-        if (pages.length > 1)
-            builder.addParam("pages", toStringArray(pages));
+        if (pages != null && pages.length > 0) {
+            if (pages.length == 1) {
+                final Pattern pattern = Pattern.compile("^(\\d+)-(\\d+)$");
+                final Matcher matcher = pattern.matcher(pages[0]);
+                if (matcher.matches()) {
+                    builder.addParam("pages", pages[0]);
+                } else {
+                    builder.addParam("page", pages[0]);
+                }
+            }
+            if (pages.length > 1)
+                builder.addParam("pages", pages);
+        }
         return builder.get();
     }
 
-    private String[] toStringArray(Integer[] ints){
+    private String[] toStringArray(Integer[] ints) {
         String[] strings = new String[ints.length];
         for (int i = 0; i < ints.length; i++)
             strings[i] = ints[i].toString();

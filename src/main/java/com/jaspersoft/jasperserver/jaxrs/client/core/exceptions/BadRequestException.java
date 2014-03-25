@@ -27,8 +27,15 @@ import java.util.List;
 
 public class BadRequestException extends JSClientWebException {
 
-    public BadRequestException(String message, List<ErrorDescriptor> errorDescriptorList) {
-        super(message, errorDescriptorList);
+    public BadRequestException() {
+        super();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
+    public BadRequestException(String message) {
+        super(message);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public BadRequestException(String message, List<ErrorDescriptor> errorDescriptors) {
+        super(message, errorDescriptors);    //To change body of overridden methods use File | Settings | File Templates.
+    }
 }

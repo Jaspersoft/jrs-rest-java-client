@@ -35,6 +35,8 @@ public class ExportService extends AbstractAdapter {
     }
 
     public ExportRequestAdapter task(String taskId){
+        if ("".equals(taskId) || "/".equals(taskId))
+            throw new  IllegalArgumentException("'taskId' mustn't be an empty string");
         return new ExportRequestAdapter(sessionStorage, taskId);
     }
 

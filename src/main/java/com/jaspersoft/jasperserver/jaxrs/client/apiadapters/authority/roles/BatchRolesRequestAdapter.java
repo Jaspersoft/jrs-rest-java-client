@@ -23,8 +23,10 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles;
 
 import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -35,10 +37,12 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder
 public class BatchRolesRequestAdapter extends AbstractAdapter{
 
     private final MultivaluedMap<String, String> params;
+    private ExceptionHandler exceptionHandler;
 
     public BatchRolesRequestAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
         params = new MultivaluedHashMap<String, String>();
+        this.exceptionHandler = new CommonExceptionHandler();
     }
 
     public BatchRolesRequestAdapter param(RolesParameter rolesParam, String value){
@@ -48,7 +52,7 @@ public class BatchRolesRequestAdapter extends AbstractAdapter{
 
     public OperationResult<RolesListWrapper> get(){
         JerseyRequestBuilder<RolesListWrapper> builder =
-                buildRequest(sessionStorage, RolesListWrapper.class, new String[]{"/roles"});
+                buildRequest(sessionStorage, RolesListWrapper.class, new String[]{"/roles"}, exceptionHandler);
         builder.addParams(params);
         return builder.get();
     }

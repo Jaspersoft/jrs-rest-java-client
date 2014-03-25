@@ -25,8 +25,17 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 
 import java.util.List;
 
-public class RepresentationNotAvailableForResourceException extends JSClientWebException {
-    public RepresentationNotAvailableForResourceException(String message, List<ErrorDescriptor> errorDescriptorList) {
-        super(message, errorDescriptorList);
+public class RequestedRepresentationNotAvailableForResourceException extends JSClientWebException {
+
+    public RequestedRepresentationNotAvailableForResourceException() {
+        super();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public RequestedRepresentationNotAvailableForResourceException(String message) {
+        super(message);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public RequestedRepresentationNotAvailableForResourceException(String message, List<ErrorDescriptor> errorDescriptors) {
+        super(message, errorDescriptors);    //To change body of overridden methods use File | Settings | File Templates.
     }
 }

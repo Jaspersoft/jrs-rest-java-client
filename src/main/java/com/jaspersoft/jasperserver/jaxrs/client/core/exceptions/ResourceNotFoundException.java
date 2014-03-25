@@ -18,16 +18,29 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 
 import java.util.List;
 
+/**
+ * @author Yaroslav.Kovalchyk
+ * @version $Id: ResourceNotFoundException.java 30161 2013-03-22 19:20:15Z inesterenko $
+ */
 public class ResourceNotFoundException extends JSClientWebException {
 
-    public ResourceNotFoundException(String message, List<ErrorDescriptor> errorDescriptorList) {
-        super(message, errorDescriptorList);
+    public static final String ERROR_CODE_RESOURCE_NOT_FOUND = "resource.not.found";
+
+    public ResourceNotFoundException() {
+        super();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public ResourceNotFoundException(String message) {
+        super(message);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public ResourceNotFoundException(String message, List<ErrorDescriptor> errorDescriptors) {
+        super(message, errorDescriptors);    //To change body of overridden methods use File | Settings | File Templates.
     }
 }

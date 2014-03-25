@@ -43,18 +43,18 @@ import java.util.SortedSet;
  */
 public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 
-    private boolean isMinutesModified = false;
-    private boolean isHoursModified = false;
-    private boolean isDaysTypeModified = false;
-    private boolean isMonthDaysModified = false;
-    private boolean isMonthsModified = false;
-    private boolean isWeekDaysModified = false;
-    private boolean isStartDateModified = false;
-    private boolean isStartTypeModified = false;
-    private boolean isEndDateModified = false;
-    private boolean isTimezoneModified = false;
-    private boolean isCalendarNameModified = false;
-    private boolean isMisfireInstructionModified = false;
+//    private boolean isMinutesModified = false;
+//    private boolean isHoursModified = false;
+//    private boolean isDaysTypeModified = false;
+//    private boolean isMonthDaysModified = false;
+//    private boolean isMonthsModified = false;
+//    private boolean isWeekDaysModified = false;
+//    private boolean isStartDateModified = false;
+//    private boolean isStartTypeModified = false;
+//    private boolean isEndDateModified = false;
+//    private boolean isTimezoneModified = false;
+//    private boolean isCalendarNameModified = false;
+//    private boolean isMisfireInstructionModified = false;
 
 	/**
 	 * Specifies the pattern that determines the minutes part of the trigger
@@ -84,7 +84,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * @param minutes the minutes pattern to be used for the trigger
 	 */
 	public void setMinutes(String minutes) {
-        isMinutesModified = true;
+//        isMinutesModified = true;
 		super.setMinutes(minutes);
 	}
 
@@ -116,7 +116,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * @param hours the hours pattern to be used for the trigger
 	 */
 	public void setHours(String hours) {
-        isHoursModified = true;
+//        isHoursModified = true;
 		super.setHours(hours);
 	}
 
@@ -124,7 +124,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * Sets the type of days on which the trigger should fire.
 	 */
 	public void setDaysType(CalendarDaysType daysType) {
-        isDaysTypeModified = true;
+//        isDaysTypeModified = true;
 		super.setDaysType(daysType);
 	}
 
@@ -156,7 +156,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * @param monthDays the month days pattern to be used for the trigger
 	 */
 	public void setMonthDays(String monthDays) {
-        isMonthDaysModified = true;
+//        isMonthDaysModified = true;
 		super.setMonthDays(monthDays);
 	}
 
@@ -171,7 +171,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * @param months the months as <code>java.lang.Byte</code> values
 	 */
     public void setMonths(SortedSet<Byte> months) {
-        isMonthsModified = true;
+//        isMonthsModified = true;
         super.setMonths(months);
 	}
 
@@ -186,7 +186,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * @param weekDays the week days as <code>java.lang.Byte</code> values
 	 */
 	public void setWeekDays(SortedSet<Byte> weekDays) {
-        isWeekDaysModified = true;
+//        isWeekDaysModified = true;
 		super.setWeekDays(weekDays);
 	}
 
@@ -237,7 +237,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * @see #getStartDate()
 	 */
 	public void setStartDate(Date startDate) {
-        isStartDateModified = true;
+//        isStartDateModified = true;
 		super.setStartDate(startDate);
 	}
 
@@ -253,7 +253,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 *
 	 */
 	public void setStartType(byte startType) {
-        isStartTypeModified = true;
+//        isStartTypeModified = true;
 		super.setStartType(startType);
 	}
 
@@ -268,7 +268,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * @param endDate an end date for the job
 	 */
 	public void setEndDate(Date endDate) {
-        isEndDateModified = true;
+//        isEndDateModified = true;
 		super.setEndDate(endDate);
 	}
 
@@ -279,7 +279,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * @param timezone the trigger timezone
 	 */
 	public void setTimezone(String timezone) {
-        isTimezoneModified = true;
+//        isTimezoneModified = true;
 		super.setTimezone(timezone);
 	}
 
@@ -292,105 +292,105 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
      * @param calendarName - use null to dis-associate a Calendar.
 	 */
     public void setCalendarName(String calendarName) {
-        isCalendarNameModified = true;
+//        isCalendarNameModified = true;
         super.setCalendarName(calendarName);
     }
 
 
     public void setMisfireInstruction(Integer misfireInstruction) {
-      isMisfireInstructionModified = true;
+//      isMisfireInstructionModified = true;
       super.setMisfireInstruction(misfireInstruction);
     }
 
-    /**
-     * returns whether Minutes has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isMinutesModified() { return isMinutesModified; }
-
-    /**
-     * returns whether Hours has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isHoursModified() { return isHoursModified; }
-
-    /**
-     * returns whether DaysType has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isDaysTypeModified() { return isDaysTypeModified; }
-
-    /**
-     * returns whether MonthDays has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isMonthDaysModified() { return isMonthDaysModified; }
-
-    /**
-     * returns whether Months has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isMonthsModified() { return isMonthsModified; }
-
-    /**
-     * returns whether WeekDays has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isWeekDaysModified() { return isWeekDaysModified; }
-
-    /**
-     * returns whether StartDate has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isStartDateModified() { return isStartDateModified; }
-
-    /**
-     * returns whether StartType has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isStartTypeModified() { return isStartTypeModified; }
-
-    /**
-     * returns whether EndDate has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isEndDateModified() { return isEndDateModified; }
-
-    /**
-     * returns whether Timezone has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isTimezoneModified() { return isTimezoneModified; }
-
-    /**
-     * returns whether CalendarName has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isCalendarNameModified() { return isCalendarNameModified; }
-
-    public boolean isMisfireInstructionModified() { return isMisfireInstructionModified; }
-
-     /**
-     * returns whether ReportJobCalendarTriggerModel has been modified
-     *
-     * @return true if the object has been modified
-     */
-    public boolean isModified() {
-        return (isDaysTypeModified || isEndDateModified || isHoursModified || isMinutesModified || isMonthDaysModified ||
-                isMonthsModified || isStartDateModified || isStartTypeModified || isTimezoneModified ||
-                isWeekDaysModified  || isCalendarNameModified || isMisfireInstructionModified );
-    }
+//    /**
+//     * returns whether Minutes has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isMinutesModified() { return isMinutesModified; }
+//
+//    /**
+//     * returns whether Hours has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isHoursModified() { return isHoursModified; }
+//
+//    /**
+//     * returns whether DaysType has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isDaysTypeModified() { return isDaysTypeModified; }
+//
+//    /**
+//     * returns whether MonthDays has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isMonthDaysModified() { return isMonthDaysModified; }
+//
+//    /**
+//     * returns whether Months has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isMonthsModified() { return isMonthsModified; }
+//
+//    /**
+//     * returns whether WeekDays has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isWeekDaysModified() { return isWeekDaysModified; }
+//
+//    /**
+//     * returns whether StartDate has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isStartDateModified() { return isStartDateModified; }
+//
+//    /**
+//     * returns whether StartType has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isStartTypeModified() { return isStartTypeModified; }
+//
+//    /**
+//     * returns whether EndDate has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isEndDateModified() { return isEndDateModified; }
+//
+//    /**
+//     * returns whether Timezone has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isTimezoneModified() { return isTimezoneModified; }
+//
+//    /**
+//     * returns whether CalendarName has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isCalendarNameModified() { return isCalendarNameModified; }
+//
+//    public boolean isMisfireInstructionModified() { return isMisfireInstructionModified; }
+//
+//     /**
+//     * returns whether ReportJobCalendarTriggerModel has been modified
+//     *
+//     * @return true if the object has been modified
+//     */
+//    public boolean isModified() {
+//        return (isDaysTypeModified || isEndDateModified || isHoursModified || isMinutesModified || isMonthDaysModified ||
+//                isMonthsModified || isStartDateModified || isStartTypeModified || isTimezoneModified ||
+//                isWeekDaysModified  || isCalendarNameModified || isMisfireInstructionModified );
+//    }
 
 
 }

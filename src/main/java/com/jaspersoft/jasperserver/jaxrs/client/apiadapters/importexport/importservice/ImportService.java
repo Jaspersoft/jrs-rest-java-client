@@ -35,6 +35,8 @@ public class ImportService extends AbstractAdapter {
     }
 
     public ImportRequestAdapter task(String taskId){
+        if ("".equals(taskId) || "/".equals(taskId))
+            throw new  IllegalArgumentException("'taskId' mustn't be an empty string");
         return new ImportRequestAdapter(sessionStorage, taskId);
     }
 

@@ -26,7 +26,16 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 import java.util.List;
 
 public class ConflictException extends JSClientWebException {
-    public ConflictException(String message, List<ErrorDescriptor> errorDescriptorList) {
-        super(message, errorDescriptorList);
+
+    public ConflictException() {
+        super();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public ConflictException(String message) {
+        super(message);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public ConflictException(String message, List<ErrorDescriptor> errorDescriptors) {
+        super(message, errorDescriptors);    //To change body of overridden methods use File | Settings | File Templates.
     }
 }

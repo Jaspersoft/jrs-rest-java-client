@@ -107,7 +107,7 @@ public class RolesServiceTest extends Assert {
                 .setName("ROLE_HELLO")
                 .setExternallyDefined(true);
 
-        OperationResult<ClientRole> operationResult =
+        OperationResult<RolesListWrapper> operationResult =
                 client
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()
@@ -126,7 +126,7 @@ public class RolesServiceTest extends Assert {
                 .setName("ROLE_HELLO")
                 .setExternallyDefined(false);
 
-        OperationResult<ClientRole> operationResult =
+        OperationResult<RolesListWrapper> operationResult =
                 client
                         .authenticate("jasperadmin", "jasperadmin")
                         .rolesService()

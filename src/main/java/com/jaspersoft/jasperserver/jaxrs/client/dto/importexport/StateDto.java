@@ -21,6 +21,8 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.importexport;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -29,8 +31,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "state")
 public class StateDto {
-    String id;
-    String message, phase;
+
+    private String id;
+    private String message;
+    private String phase;
+    private ErrorDescriptor errorDescriptor;
+
 
     public StateDto() {
         super();
@@ -64,13 +70,23 @@ public class StateDto {
         this.message = message;
     }
 
+    public ErrorDescriptor getErrorDescriptor() {
+        return errorDescriptor;
+    }
+
+    public void setErrorDescriptor(ErrorDescriptor errorDescriptor) {
+        this.errorDescriptor = errorDescriptor;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof StateDto)) return false;
 
         StateDto stateDto = (StateDto) o;
 
+        if (errorDescriptor != null ? !errorDescriptor.equals(stateDto.errorDescriptor) : stateDto.errorDescriptor != null)
+            return false;
         if (id != null ? !id.equals(stateDto.id) : stateDto.id != null) return false;
         if (message != null ? !message.equals(stateDto.message) : stateDto.message != null) return false;
         if (phase != null ? !phase.equals(stateDto.phase) : stateDto.phase != null) return false;
@@ -83,6 +99,7 @@ public class StateDto {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (message != null ? message.hashCode() : 0);
         result = 31 * result + (phase != null ? phase.hashCode() : 0);
+        result = 31 * result + (errorDescriptor != null ? errorDescriptor.hashCode() : 0);
         return result;
     }
 
@@ -92,6 +109,7 @@ public class StateDto {
                 "id='" + id + '\'' +
                 ", message='" + message + '\'' +
                 ", phase='" + phase + '\'' +
+                ", errorDescriptor=" + errorDescriptor +
                 '}';
     }
 }

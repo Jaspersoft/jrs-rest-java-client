@@ -21,9 +21,13 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters;
 
+import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControl;
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+
+import java.util.List;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
 
@@ -33,9 +37,10 @@ public class ReorderingReportParametersAdapter extends ReportParametersAdapter {
         super(sessionStorage, reportUnitUri);
     }
 
-    public OperationResult<ReportInputControlsListWrapper> reorder(ReportInputControlsListWrapper inputControls){
-        return buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"})
-                .put(inputControls);
+    public OperationResult<ReportInputControlsListWrapper> reorder(List<ReportInputControl> inputControls){
+        ReportInputControlsListWrapper wrapper = new ReportInputControlsListWrapper(inputControls);
+        return buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"}, new CommonExceptionHandler())
+                .put(wrapper);
     }
 
 }

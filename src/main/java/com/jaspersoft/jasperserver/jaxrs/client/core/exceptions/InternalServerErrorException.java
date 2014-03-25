@@ -26,7 +26,16 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 import java.util.List;
 
 public class InternalServerErrorException extends JSClientWebException {
-    public InternalServerErrorException(String message, List<ErrorDescriptor> errorDescriptorList) {
-        super(message, errorDescriptorList);
+
+    public InternalServerErrorException() {
+        super();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public InternalServerErrorException(String message) {
+        super(message);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public InternalServerErrorException(String message, List<ErrorDescriptor> errorDescriptors) {
+        super(message, errorDescriptors);    //To change body of overridden methods use File | Settings | File Templates.
     }
 }

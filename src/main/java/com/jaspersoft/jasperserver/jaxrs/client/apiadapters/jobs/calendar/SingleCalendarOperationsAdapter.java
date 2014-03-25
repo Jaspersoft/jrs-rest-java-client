@@ -22,8 +22,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.ReportJobCalendar;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar;
@@ -37,11 +39,13 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
 
     private final String calendarName;
     private final MultivaluedMap<String, String> params;
+    private ExceptionHandler exceptionHandler;
 
     public SingleCalendarOperationsAdapter(SessionStorage sessionStorage, String calendarName) {
         super(sessionStorage);
         this.calendarName = calendarName;
         params = new MultivaluedHashMap<String, String>();
+        exceptionHandler = new CommonExceptionHandler();
     }
 
     public SingleCalendarOperationsAdapter parameter(CalendarParameter parameter, String value){
@@ -50,18 +54,18 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<ReportJobCalendar> get(){
-        return buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName})
+        return buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName}, exceptionHandler)
                 .get();
     }
 
     public OperationResult delete(){
-        return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName})
+        return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName}, exceptionHandler)
                 .delete();
     }
 
-    public OperationResult createOrUpdate(Calendar calendarDescriptor){
-        JerseyRequestBuilder<Object> builder =
-                buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName});
+    public OperationResult<ReportJobCalendar> createNew(Calendar calendarDescriptor){
+        JerseyRequestBuilder<ReportJobCalendar> builder =
+                buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName}, exceptionHandler);
         builder.addParams(params);
 
         return builder.put(calendarDescriptor);

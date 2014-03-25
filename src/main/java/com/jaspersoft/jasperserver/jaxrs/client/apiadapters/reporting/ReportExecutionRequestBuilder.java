@@ -22,6 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportExecutionDescriptor;
@@ -42,18 +43,18 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
 
     public OperationResult<ReportExecutionStatusEntity> status() {
         return buildRequest(sessionStorage, ReportExecutionStatusEntity.class,
-                new String[]{"/reportExecutions", requestId, "/status"}).get();
+                new String[]{"/reportExecutions", requestId, "/status"}, new CommonExceptionHandler()).get();
     }
 
     public OperationResult<ReportExecutionDescriptor> executionDetails() {
-        return buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId})
+        return buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId}, new CommonExceptionHandler())
                 .get();
     }
 
     public OperationResult<ReportExecutionStatusEntity> cancelExecution() {
         ReportExecutionStatusEntity statusEntity = new ReportExecutionStatusEntity();
         statusEntity.setValue("cancelled");
-        return buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{"/reportExecutions", requestId, "/status"})
+        return buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{"/reportExecutions", requestId, "/status"}, new CommonExceptionHandler())
                 .put(statusEntity);
     }
 
@@ -62,7 +63,7 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
     }
 
     public OperationResult<ExportExecutionDescriptor> runExport(ExportExecutionOptions exportExecutionOptions) {
-        return buildRequest(sessionStorage, ExportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId, "/exports"})
+        return buildRequest(sessionStorage, ExportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId, "/exports"}, new CommonExceptionHandler())
                 .post(exportExecutionOptions);
     }
 

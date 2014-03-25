@@ -22,6 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionStatusEntity;
@@ -43,11 +44,14 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
 
     public OperationResult<InputStream> outputResource(){
         return buildRequest(sessionStorage, InputStream.class,
-                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/outputResource"})
+                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/outputResource"}, new CommonExceptionHandler())
                 .get();
     }
 
     public OperationResult<InputStream> attachment(String attachmentId){
+
+        if ("".equals(attachmentId) || "/".equals(attachmentId))
+            throw new  IllegalArgumentException("'attachmentId' mustn't be an empty string");
 
         while (!"ready".equals(status().getEntity().getValue())){
             try {
@@ -56,13 +60,13 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
         }
 
         return buildRequest(sessionStorage, InputStream.class,
-                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/attachments", attachmentId})
+                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/attachments", attachmentId}, new CommonExceptionHandler())
                 .get();
     }
 
     public OperationResult<ReportExecutionStatusEntity> status(){
         return buildRequest(sessionStorage, ReportExecutionStatusEntity.class,
-                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/status"})
+                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/status"}, new CommonExceptionHandler())
                 .get();
     }
 }

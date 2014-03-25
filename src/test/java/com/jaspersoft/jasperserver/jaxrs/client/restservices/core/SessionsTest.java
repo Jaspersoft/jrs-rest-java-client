@@ -24,11 +24,15 @@ package com.jaspersoft.jasperserver.jaxrs.client.restservices.core;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class SessionsTest extends Assert {
+
+    private static Log log = LogFactory.getLog(SessionsTest.class);
 
     private static JasperserverRestClient client;
 
@@ -72,8 +76,10 @@ public class SessionsTest extends Assert {
 
         jasperadminSession.resourcesService().resource("/reports/samples/StandardChartsEyeCandyReport").details();
         String sessionId1 = jasperadminSession.getStorage().getSessionId();
+        log.info("Session1: id = " + sessionId1);
         jasperadminSession.resourcesService().resource("/reports/samples/StandardChartsAegeanReport").details();
         String sessionId2 = jasperadminSession.getStorage().getSessionId();
+        log.info("Session2: id = " + sessionId2);
 
         assertEquals(sessionId1, sessionId2);
     }

@@ -69,7 +69,7 @@ public class ReportParametersServiceTest extends Assert {
                         .reportingService()
                         .report("/reports/samples/Cascading_multi_select_report")
                         .reportParameters()
-                        .reorder(new ReportInputControlsListWrapper(this.inputControls))
+                        .reorder(this.inputControls)
                         .getEntity();
         assertNotEquals(inputControls, null);
     }
@@ -115,16 +115,16 @@ public class ReportParametersServiceTest extends Assert {
     }
 
     @Test
-    public void testUpdateInputControlsValues() {
+    public void testUpdatedInputControlsValues() {
 
         InputControlStateListWrapper inputControlsValues =
                 client.authenticate("jasperadmin", "jasperadmin")
                         .reportingService()
                         .report("/reports/samples/Cascading_multi_select_report")
                         .reportParameters()
-                        .values()
                         .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
-                        .update()
+                        .values()
+                        .get()
                         .getEntity();
         assertNotEquals(inputControlsValues, null);
         InputControlState inputControlState =
@@ -133,16 +133,16 @@ public class ReportParametersServiceTest extends Assert {
     }
 
     @Test
-    public void testUpdateInputControlsValuesForSpecifiedInputControls() {
+    public void testUpdatedInputControlsValuesForSpecifiedInputControls() {
 
         InputControlStateListWrapper inputControlsValues =
                 client.authenticate("jasperadmin", "jasperadmin")
                         .reportingService()
                         .report("/reports/samples/Cascading_multi_select_report")
                         .reportParameters("Cascading_name_single_select")
-                        .values()
                         .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
-                        .update()
+                        .values()
+                        .get()
                         .getEntity();
         assertNotEquals(inputControlsValues, null);
         List<InputControlState> inputControlStateList = inputControlsValues.getInputControlStateList();

@@ -26,9 +26,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.Permissi
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AccessForbiddenException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AccessDeniedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.BadRequestException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ReportExportException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -62,7 +62,7 @@ public class WebExceptionsTest extends Assert {
                 .get();
     }
 
-    @Test(expectedExceptions = AccessForbiddenException.class)
+    @Test(expectedExceptions = AccessDeniedException.class)
     public void testPerformForbiddenAction() {
         /*
         * setting own permissions is forbidden for user
@@ -78,7 +78,7 @@ public class WebExceptionsTest extends Assert {
                 .createNew(permission);
     }
 
-    @Test(expectedExceptions = BadRequestException.class)
+    @Test(expectedExceptions = ReportExportException.class)
     public void testSendIncorrectRequest() {
         client
                 .authenticate("jasperadmin", "jasperadmin")

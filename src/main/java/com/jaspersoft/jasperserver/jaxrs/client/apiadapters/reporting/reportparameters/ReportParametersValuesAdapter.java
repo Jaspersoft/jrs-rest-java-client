@@ -22,13 +22,13 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
@@ -36,49 +36,30 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder
 public class ReportParametersValuesAdapter extends AbstractAdapter {
 
     protected final String reportUnitUri;
-    protected final MultivaluedMap<String, String> params;
+    protected MultivaluedMap<String, String> params;
     private String idsPathSegment;
 
     public ReportParametersValuesAdapter(SessionStorage sessionStorage, String reportUnitUri) {
         super(sessionStorage);
-        this.params = new MultivaluedHashMap<String, String>();
         this.reportUnitUri = reportUnitUri;
     }
 
-    public ReportParametersValuesAdapter(SessionStorage sessionStorage, String reportUnitUri, String idsPathSegment) {
+    public ReportParametersValuesAdapter(SessionStorage sessionStorage, String reportUnitUri, String idsPathSegment, MultivaluedMap<String, String> params) {
         this(sessionStorage, reportUnitUri);
         this.idsPathSegment = idsPathSegment;
-    }
-
-    public ReportParametersValuesAdapter parameter(String name, String value) {
-        params.add(name, value);
-        return this;
+        this.params = params;
     }
 
     public OperationResult<InputControlStateListWrapper> get() {
         JerseyRequestBuilder<InputControlStateListWrapper> builder =
-                buildRequest(sessionStorage, InputControlStateListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"});
+                buildRequest(sessionStorage, InputControlStateListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"}, new CommonExceptionHandler());
         if (idsPathSegment != null) {
             builder.setPath(idsPathSegment);
         }
         builder.setPath("values");
-        builder.addParams(params);
-        return builder.get();
-    }
-
-    public OperationResult<InputControlStateListWrapper> update() {
-        JerseyRequestBuilder<InputControlStateListWrapper> builder =
-                buildRequest(sessionStorage, InputControlStateListWrapper.class,
-                        new String[]{"/reports", reportUnitUri, "/inputControls"});
-
         builder.setContentType(MediaType.APPLICATION_XML);
         builder.setAccept(MediaType.APPLICATION_XML);
-        if (idsPathSegment != null) {
-            builder.setPath(idsPathSegment);
-        }
-        builder.setPath("values");
         return builder.post(ReportParametersUtils.toReportParameters(params));
     }
-
 
 }

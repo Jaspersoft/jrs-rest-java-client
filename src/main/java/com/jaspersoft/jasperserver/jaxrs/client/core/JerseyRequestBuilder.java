@@ -22,8 +22,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.WebExceptionsFactory;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.WebExceptionsFactoryImpl;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
@@ -37,7 +37,6 @@ import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 
 public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<ResponseType> {
 
@@ -47,8 +46,23 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     private static final int PUT = 3;
 
 
-    public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path) {
+    public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage,
+                                                           Class<T> responseClass,
+                                                           String[] path){
+        return buildRequest(sessionStorage, responseClass, path, null);
+    }
+
+    public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage,
+                                                           Class<T> responseClass,
+                                                           String[] path,
+                                                           ExceptionHandler exceptionHandler) {
         JerseyRequestBuilder<T> builder = new JerseyRequestBuilder<T>(sessionStorage, responseClass);
+
+        if (exceptionHandler != null)
+            builder.exceptionHandler = exceptionHandler;
+        else
+            builder.exceptionHandler = new DefaultExceptionHandler();
+
         for (String pathElem : path)
             builder.setPath(pathElem);
 
@@ -59,6 +73,8 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     private final OperationResultFactory operationResultFactory;
     private final SessionStorage sessionStorage;
     private final Class<ResponseType> responseClass;
+
+    private ExceptionHandler exceptionHandler;
     private MultivaluedMap<String, String> headers;
     private WebTarget usersWebTarget;
     private String contentType;
@@ -109,8 +125,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
             String jsessionid = response.getCookies().get("JSESSIONID").getValue();
             credentials.setSessionId(jsessionid);
         } else {
-            WebExceptionsFactory exceptionsFactory = new WebExceptionsFactoryImpl();
-            throw exceptionsFactory.getException(response);
+            exceptionHandler.handleException(response);
         }
 
     }
@@ -180,6 +195,10 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
                 break;
             }
         }
+
+        if (response.getStatus() >= 400)
+            exceptionHandler.handleException(response);
+
         OperationResult<ResponseType> result =
                 operationResultFactory.getOperationResult(response, responseClass);
         this.sessionStorage.setSessionId(result.getSessionId());

@@ -42,14 +42,14 @@ import java.util.List;
  */
 public class ReportJobAlertModel extends JobAlert {
 
-    private boolean isRecipientModified = false;
-    private boolean isToAddressesModified = false;
-    private boolean isJobStateModified = false;
-    private boolean isMessageTextModified = false;
-    private boolean isMessageTextWhenJobFailsModified = false;
-    private boolean isSubjectModified = false;
-    private boolean isIncludingStackTraceModified = false;
-    private boolean isIncludingReportJobInfoModified = false;
+//    private boolean isRecipientModified = false;
+//    private boolean isToAddressesModified = false;
+//    private boolean isJobStateModified = false;
+//    private boolean isMessageTextModified = false;
+//    private boolean isMessageTextWhenJobFailsModified = false;
+//    private boolean isSubjectModified = false;
+//    private boolean isIncludingStackTraceModified = false;
+//    private boolean isIncludingReportJobInfoModified = false;
 
     /**
 	 * Creates an empty job alert
@@ -92,7 +92,7 @@ public class ReportJobAlertModel extends JobAlert {
 	 */
     public void setRecipient(JobAlertRecipient recipient) {
         super.setRecipient(recipient);
-        isRecipientModified = true;
+//        isRecipientModified = true;
     }
 
     /**
@@ -104,7 +104,7 @@ public class ReportJobAlertModel extends JobAlert {
 	 */
     public void setToAddresses(List<String> toAddresses) {
         super.setToAddresses(toAddresses);
-        isToAddressesModified = true;
+//        isToAddressesModified = true;
     }
 
 	/**
@@ -113,7 +113,7 @@ public class ReportJobAlertModel extends JobAlert {
 	 */
     public void setJobState(JobAlertJobState jobState) {
         super.setJobState(jobState);
-        isJobStateModified = true;
+//        isJobStateModified = true;
     }
 
 	/**
@@ -123,7 +123,7 @@ public class ReportJobAlertModel extends JobAlert {
 	 */
     public void setMessageText(String customizeMessage) {
         super.setMessageText(customizeMessage);
-        isMessageTextModified = true;
+//        isMessageTextModified = true;
     }
 
     /*
@@ -133,7 +133,7 @@ public class ReportJobAlertModel extends JobAlert {
 	 */
     public void setMessageTextWhenJobFails(String customizeMessage) {
         super.setMessageTextWhenJobFails(customizeMessage);
-        isMessageTextModified = true;
+//        isMessageTextModified = true;
     }
 
     /**
@@ -143,7 +143,7 @@ public class ReportJobAlertModel extends JobAlert {
 	 */
     public void setSubject(String subject) {
         super.setSubject(subject);
-        isSubjectModified = true;
+//        isSubjectModified = true;
     }
 
     /**
@@ -153,7 +153,7 @@ public class ReportJobAlertModel extends JobAlert {
 	 */
     public void setIncludingReportJobInfo(boolean includingReportJobInfo) {
         super.setIncludingReportJobInfo(includingReportJobInfo);
-        isIncludingReportJobInfoModified = true;
+//        isIncludingReportJobInfoModified = true;
     }
 
     /**
@@ -163,63 +163,63 @@ public class ReportJobAlertModel extends JobAlert {
 	 */
     public void setIncludingStackTrace(boolean includeStackTrace) {
         super.setIncludingStackTrace(includeStackTrace);
-        isIncludingStackTraceModified = true;
+//        isIncludingStackTraceModified = true;
     }
 
-    /**
-     * returns whether Recipient has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isRecipientModified() { return isRecipientModified; }
-
-    /**
-     * returns whether ToAddresses has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isToAddressesModified() { return isToAddressesModified; }
-
-    /**
-     * returns whether JobState has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isJobStateModified() { return isJobStateModified; }
-
-    /**
-     * returns whether textMessage has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isMessageTextModified() { return isMessageTextModified; }
-
-    /**
-     * returns whether TextMessageWhenJobFails has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isMessageTextWhenJobFailsModified() { return isMessageTextWhenJobFailsModified; }
-
-    /**
-     * returns whether subject has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isSubjectModified() { return isSubjectModified; }
-
-    /**
-     * returns whether IncludeStackTrace has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isIncludingStackTraceModified() { return isIncludingStackTraceModified; }
-
-    /**
-     * returns whether IncludingReportJobInfo has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isIncludingReportJobInfoModified() { return isIncludingReportJobInfoModified; }
+//    /**
+//     * returns whether Recipient has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isRecipientModified() { return isRecipientModified; }
+//
+//    /**
+//     * returns whether ToAddresses has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isToAddressesModified() { return isToAddressesModified; }
+//
+//    /**
+//     * returns whether JobState has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isJobStateModified() { return isJobStateModified; }
+//
+//    /**
+//     * returns whether textMessage has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isMessageTextModified() { return isMessageTextModified; }
+//
+//    /**
+//     * returns whether TextMessageWhenJobFails has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isMessageTextWhenJobFailsModified() { return isMessageTextWhenJobFailsModified; }
+//
+//    /**
+//     * returns whether subject has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isSubjectModified() { return isSubjectModified; }
+//
+//    /**
+//     * returns whether IncludeStackTrace has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isIncludingStackTraceModified() { return isIncludingStackTraceModified; }
+//
+//    /**
+//     * returns whether IncludingReportJobInfo has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isIncludingReportJobInfoModified() { return isIncludingReportJobInfoModified; }
 
 }

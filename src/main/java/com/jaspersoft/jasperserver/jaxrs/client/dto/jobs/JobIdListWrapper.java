@@ -19,7 +19,7 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.job;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

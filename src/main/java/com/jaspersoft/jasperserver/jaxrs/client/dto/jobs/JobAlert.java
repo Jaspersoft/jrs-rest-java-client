@@ -41,10 +41,10 @@ public class JobAlert {
     private Boolean includingStackTrace;
     private Boolean includingReportJobInfo;
 
-    @XmlElement(name = "toAddresses")
     private List<String> toAddresses;
 
 
+    @XmlElement(name = "toAddresses")
     public List<String> getToAddresses() {
         return toAddresses;
     }

@@ -26,6 +26,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -57,7 +58,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
 
     public OperationResult<ClientResource> details() {
         JerseyRequestBuilder<ClientResource> builder =
-                buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri});
+                buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri}, new CommonExceptionHandler());
         builder.addParams(params);
 
         if (isRootFolder(resourceUri))
@@ -73,7 +74,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     public OperationResult<InputStream> downloadBinary() {
-        return buildRequest(sessionStorage, InputStream.class, new String[]{"/resources", resourceUri})
+        return buildRequest(sessionStorage, InputStream.class, new String[]{"/resources", resourceUri}, new CommonExceptionHandler())
                 .get();
     }
 
@@ -88,7 +89,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
     private JerseyRequestBuilder<ClientResource> getBuilderForCreateOrUpdate(ClientResource resource) {
         Class<? extends ClientResource> resourceType = ResourcesTypeResolverUtil.getResourceType(resource);
         JerseyRequestBuilder<? extends ClientResource> builder =
-                buildRequest(sessionStorage, resourceType, new String[]{"/resources", resourceUri});
+                buildRequest(sessionStorage, resourceType, new String[]{"/resources", resourceUri}, new CommonExceptionHandler());
         builder.setContentType(ResourcesTypeResolverUtil.getMimeType(resourceType));
         builder.addParams(params);
         return (JerseyRequestBuilder<ClientResource>) builder;
@@ -105,7 +106,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
     private OperationResult<ClientResource> copyOrMove(boolean moving, String fromUri) {
 
         JerseyRequestBuilder<ClientResource> builder =
-                buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri});
+                buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri}, new CommonExceptionHandler());
         builder.addParams(params);
         builder.addHeader("Content-Location", fromUri);
 
@@ -128,7 +129,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
                 .field("type", fileType.name());
 
         JerseyRequestBuilder<ClientFile> builder =
-                buildRequest(sessionStorage, ClientFile.class, new String[]{"/resources", resourceUri});
+                buildRequest(sessionStorage, ClientFile.class, new String[]{"/resources", resourceUri}, new CommonExceptionHandler());
         builder.addParams(params);
         builder.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -137,7 +138,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
 
     public OperationResult delete() {
         JerseyRequestBuilder builder =
-                buildRequest(sessionStorage, Object.class, new String[]{"/resources", resourceUri});
+                buildRequest(sessionStorage, Object.class, new String[]{"/resources", resourceUri}, new CommonExceptionHandler());
         return builder.delete();
     }
 
@@ -149,7 +150,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
             Class<ResourceType> resourceTypeClass, PatchDescriptor descriptor) {
 
         JerseyRequestBuilder<ResourceType> builder =
-                buildRequest(sessionStorage, resourceTypeClass, new String[]{"/resources", resourceUri});
+                buildRequest(sessionStorage, resourceTypeClass, new String[]{"/resources", resourceUri}, new CommonExceptionHandler());
         builder.setAccept(ResourcesTypeResolverUtil.getMimeType(resourceTypeClass));
         builder.addHeader("X-HTTP-Method-Override", "PATCH");
 

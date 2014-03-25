@@ -27,8 +27,15 @@ import java.util.List;
 
 public class AuthenticationFailedException extends JSClientWebException {
 
-    public AuthenticationFailedException(String message, List<ErrorDescriptor> errorDescriptorList) {
-        super(message, errorDescriptorList);
+    public AuthenticationFailedException() {
+        super();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
+    public AuthenticationFailedException(String message) {
+        super(message);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public AuthenticationFailedException(String message, List<ErrorDescriptor> errorDescriptors) {
+        super(message, errorDescriptors);    //To change body of overridden methods use File | Settings | File Templates.
+    }
 }

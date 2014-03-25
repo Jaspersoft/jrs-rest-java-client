@@ -22,6 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -49,7 +50,7 @@ public class ReportsAndJobsSearchAdapter extends AbstractAdapter {
 
     public OperationResult<ReportExecutionListWrapper> find(){
         JerseyRequestBuilder<ReportExecutionListWrapper> builder =
-                buildRequest(sessionStorage, ReportExecutionListWrapper.class, new String[]{"/reportExecutions"});
+                buildRequest(sessionStorage, ReportExecutionListWrapper.class, new String[]{"/reportExecutions"}, new CommonExceptionHandler());
         builder.addParams(params);
         return builder.get();
     }

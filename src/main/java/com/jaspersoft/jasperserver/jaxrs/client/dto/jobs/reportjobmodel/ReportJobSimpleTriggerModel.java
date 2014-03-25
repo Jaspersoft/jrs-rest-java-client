@@ -44,7 +44,7 @@ import java.util.Date;
  */
 public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 
-    private boolean isOccurrenceCountModified = false;
+   /* private boolean isOccurrenceCountModified = false;
     private boolean isRecurrenceIntervalUnitModified = false;
     private boolean isRecurrenceIntervalModified = false;
     private boolean isStartDateModified = false;
@@ -52,7 +52,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
     private boolean isEndDateModified = false;
     private boolean isTimezoneModified = false;
     private boolean isCalendarNameModified = false;
-    private boolean isMisfireInstructionModified = false;
+    private boolean isMisfireInstructionModified = false;*/
 
 	/**
 	 * Create an empty simple job trigger;
@@ -77,7 +77,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 * @param recurrenceCount how many times the job should occur
 	 */
 	public void setOccurrenceCount(Integer recurrenceCount) {
-        isOccurrenceCountModified = true;
+//        isOccurrenceCountModified = true;
 		super.setOccurrenceCount(recurrenceCount);
 	}
 
@@ -88,7 +88,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 * defined, as one of the <code>INTERVAL_*</code> constants
 	 */
 	public void setRecurrenceIntervalUnit(IntervalUnitType recurrenceInterval) {
-        isRecurrenceIntervalUnitModified = true;
+//        isRecurrenceIntervalUnitModified = true;
 		super.setRecurrenceIntervalUnit(recurrenceInterval);
 	}
 
@@ -100,7 +100,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 * @param recurrenceInterval the job recurrence time interval
 	 */
 	public void setRecurrenceInterval(Integer recurrenceInterval) {
-        isRecurrenceIntervalModified = true;
+//        isRecurrenceIntervalModified = true;
 		super.setRecurrenceInterval(recurrenceInterval);
 	}
 
@@ -152,7 +152,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 * @see #getStartDate()
 	 */
 	public void setStartDate(Date startDate) {
-        isStartDateModified = true;
+//        isStartDateModified = true;
 		super.setStartDate(startDate);
 	}
 
@@ -168,7 +168,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 *
 	 */
 	public void setStartType(int startType) {
-        isStartTypeModified = true;
+//        isStartTypeModified = true;
 		super.setStartType(startType);
 	}
 
@@ -183,7 +183,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 * @param endDate an end date for the job
 	 */
 	public void setEndDate(Date endDate) {
-        isEndDateModified = true;
+//        isEndDateModified = true;
 		super.setEndDate(endDate);
 	}
 
@@ -194,7 +194,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 * @param timezone the trigger timezone
 	 */
 	public void setTimezone(String timezone) {
-        isTimezoneModified = true;
+//        isTimezoneModified = true;
 		super.setTimezone(timezone);
 	}
 
@@ -207,82 +207,82 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
      * @param calendarName - use null to dis-associate a Calendar.
 	 */
     public void setCalendarName(String calendarName) {
-        isCalendarNameModified = true;
+//        isCalendarNameModified = true;
         super.setCalendarName(calendarName);
     }
 
     public void setMisfireInstruction(Integer misfireInstruction) {
-      isMisfireInstructionModified = true;
+//     isMisfireInstructionModified = true;
       super.setMisfireInstruction(misfireInstruction);
     }
 
-    /**
-     * returns whether OccurrenceCount has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isOccurrenceCountModified() { return isOccurrenceCountModified; }
-
-    /**
-     * returns whether RecurrenceIntervalUnit has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isRecurrenceIntervalUnitModified() { return isRecurrenceIntervalUnitModified; }
-
-    /**
-     * returns whether RecurrenceInterval has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isRecurrenceIntervalModified() { return isRecurrenceIntervalModified; }
-
-    /**
-     * returns whether StartDate has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isStartDateModified() { return isStartDateModified; }
-
-    /**
-     * returns whether StartType has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isStartTypeModified() { return isStartTypeModified; }
-
-    /**
-     * returns whether EndDate has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isEndDateModified() { return isEndDateModified; }
-
-    /**
-     * returns whether Timezone has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isTimezoneModified() { return isTimezoneModified; }
-
-    /**
-     * returns whether CalendarName has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isCalendarNameModified() { return isCalendarNameModified; }
-
-
-    public boolean isMisfireInstructionModified() { return isMisfireInstructionModified; }
-
-    /**
-     * returns whether ReportJobCalendarTriggerModel has been modified
-     *
-     * @return true if the object has been modified
-     */
-    public boolean isModified() {
-        return (isEndDateModified || isStartDateModified || isStartTypeModified || isTimezoneModified || isOccurrenceCountModified ||
-            isRecurrenceIntervalModified || isRecurrenceIntervalUnitModified || isCalendarNameModified ||
-            isMisfireInstructionModified);
-    }
+//    /**
+//     * returns whether OccurrenceCount has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isOccurrenceCountModified() { return isOccurrenceCountModified; }
+//
+//    /**
+//     * returns whether RecurrenceIntervalUnit has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isRecurrenceIntervalUnitModified() { return isRecurrenceIntervalUnitModified; }
+//
+//    /**
+//     * returns whether RecurrenceInterval has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isRecurrenceIntervalModified() { return isRecurrenceIntervalModified; }
+//
+//    /**
+//     * returns whether StartDate has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isStartDateModified() { return isStartDateModified; }
+//
+//    /**
+//     * returns whether StartType has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isStartTypeModified() { return isStartTypeModified; }
+//
+//    /**
+//     * returns whether EndDate has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isEndDateModified() { return isEndDateModified; }
+//
+//    /**
+//     * returns whether Timezone has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isTimezoneModified() { return isTimezoneModified; }
+//
+//    /**
+//     * returns whether CalendarName has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isCalendarNameModified() { return isCalendarNameModified; }
+//
+//
+//    public boolean isMisfireInstructionModified() { return isMisfireInstructionModified; }
+//
+//    /**
+//     * returns whether ReportJobCalendarTriggerModel has been modified
+//     *
+//     * @return true if the object has been modified
+//     */
+//    public boolean isModified() {
+//        return (isEndDateModified || isStartDateModified || isStartTypeModified || isTimezoneModified || isOccurrenceCountModified ||
+//            isRecurrenceIntervalModified || isRecurrenceIntervalUnitModified || isCalendarNameModified ||
+//            isMisfireInstructionModified);
+//    }
 }

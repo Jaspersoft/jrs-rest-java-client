@@ -41,16 +41,16 @@ import java.util.List;
  */
 public class ReportJobMailNotificationModel extends MailNotification {
 
-    private boolean isMessageTextModified = false;
-    private boolean isResultSendTypeModified = false;
-    private boolean isSubjectModified = false;
-    private boolean isBccAddressesModified = false;
-    private boolean isCcAddressesModified = false;
-    private boolean isToAddressesModified = false;
-    private boolean isSkipEmptyReportsModified = false;
-    private boolean isMessageTextWhenJobFailsModified = false;
-    private boolean isIncludingStackTraceWhenJobFailsModified = false;
-    private boolean isSkipNotificationWhenJobFailsModified = false;
+//    private boolean isMessageTextModified = false;
+//    private boolean isResultSendTypeModified = false;
+//    private boolean isSubjectModified = false;
+//    private boolean isBccAddressesModified = false;
+//    private boolean isCcAddressesModified = false;
+//    private boolean isToAddressesModified = false;
+//    private boolean isSkipEmptyReportsModified = false;
+//    private boolean isMessageTextWhenJobFailsModified = false;
+//    private boolean isIncludingStackTraceWhenJobFailsModified = false;
+//    private boolean isSkipNotificationWhenJobFailsModified = false;
 
     /**
 	 * Creates an empty job email notification.
@@ -97,7 +97,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 * @param messageText the notification message text
 	 */
 	public void setMessageText(String messageText) {
-        isMessageTextModified = true;
+//        isMessageTextModified = true;
 		super.setMessageText(messageText);
 	}
 
@@ -107,7 +107,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 *
 	 */
 	public void setResultSendType(MailNotificationSendType resultSendType) {
-        isResultSendTypeModified = true;
+//        isResultSendTypeModified = true;
 		super.setResultSendType(resultSendType);
 	}
 
@@ -117,7 +117,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 * @param subject the email notification subject
 	 */
 	public void setSubject(String subject) {
-		isSubjectModified = true;
+//		isSubjectModified = true;
         super.setSubject(subject);
 	}
 
@@ -129,7 +129,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 * <code>java.lang.String</code> email addresses
 	 */
 	public void setBccAddresses(List<String> bccAddresses) {
-        isBccAddressesModified = true;
+//        isBccAddressesModified = true;
         super.setBccAddresses(bccAddresses);
 	}
 
@@ -141,7 +141,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 * <code>java.lang.String</code> email addresses
 	 */
 	public void setCcAddresses(List<String> ccAddresses) {
-        isCcAddressesModified = true;
+//        isCcAddressesModified = true;
 		super.setCcAddresses(ccAddresses);
 	}
 
@@ -153,7 +153,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 * <code>java.lang.String</code> email addresses
 	 */
 	public void setToAddresses(List<String> toAddresses) {
-        isToAddressesModified = true;
+//        isToAddressesModified = true;
 		super.setToAddresses(toAddresses);
 	}
 
@@ -166,7 +166,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 * @since 2.0
 	 */
 	public void setSkipEmptyReports(boolean skipEmptyReports) {
-        isSkipEmptyReportsModified = true;
+//        isSkipEmptyReportsModified = true;
         super.setSkipEmptyReports(skipEmptyReports);
 	}
 
@@ -177,7 +177,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 */
     public void setMessageTextWhenJobFails(String messageTextWhenErrorOccurs) {
         super.setMessageTextWhenJobFails(messageTextWhenErrorOccurs);
-        isMessageTextWhenJobFailsModified = true;
+//        isMessageTextWhenJobFailsModified = true;
     }
 
     /**
@@ -187,7 +187,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 */
     public void setIncludingStackTraceWhenJobFails(boolean includeStackTraceWhenErrorOccurs) {
         super.setIncludingStackTraceWhenJobFails(includeStackTraceWhenErrorOccurs);
-        isIncludingStackTraceWhenJobFailsModified = true;
+//        isIncludingStackTraceWhenJobFailsModified = true;
     }
 
     /**
@@ -196,77 +196,77 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	 * @param skipNotificationWhenJobFails skip mail notification when job fails
 	 */
     public void setSkipNotificationWhenJobFails(boolean skipNotificationWhenJobFails) {
-        isSkipNotificationWhenJobFailsModified = true;
+//        isSkipNotificationWhenJobFailsModified = true;
         super.setSkipNotificationWhenJobFails(skipNotificationWhenJobFails);
     }
 
-    /**
-     * returns whether MessageText has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isMessageTextModified() { return isMessageTextModified; }
-
-    /**
-     * returns whether ResultSendType has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isResultSendTypeModified() { return isResultSendTypeModified; }
-
-    /**
-     * returns whether Subject has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isSubjectModified() { return isSubjectModified; }
-
-    /**
-     * returns whether SkipEmptyReports has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isSkipEmptyReportsModified() { return isSkipEmptyReportsModified; }
-
-    /**
-     * returns whether BccAddresses has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isBccAddressesModified() { return isBccAddressesModified; }
-
-    /**
-     * returns whether CcAddresses has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isCcAddressesModified() { return isCcAddressesModified; }
-
-    /**
-     * returns whether ToAddresses has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isToAddressesModified() { return isToAddressesModified; }
-
-    /**
-     * returns whether CustomizeMessageToUserWhenErrorOccurs has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isMessageTextWhenJobFailsModified() { return isMessageTextWhenJobFailsModified; }
-
-    /**
-     * returns whether IncludeStackTraceInMailWhenErrorOccurs has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isIncludingStackTraceWhenJobFailsModified() { return isIncludingStackTraceWhenJobFailsModified; }
-
-    /**
-     * returns whether SkipNotificationWhenJobFails has been modified
-     *
-     * @return true if the attribute has been modified
-     */
-    public boolean isSkipNotificationWhenJobFailsModified() { return isSkipNotificationWhenJobFailsModified; }
+//    /**
+//     * returns whether MessageText has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isMessageTextModified() { return isMessageTextModified; }
+//
+//    /**
+//     * returns whether ResultSendType has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isResultSendTypeModified() { return isResultSendTypeModified; }
+//
+//    /**
+//     * returns whether Subject has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isSubjectModified() { return isSubjectModified; }
+//
+//    /**
+//     * returns whether SkipEmptyReports has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isSkipEmptyReportsModified() { return isSkipEmptyReportsModified; }
+//
+//    /**
+//     * returns whether BccAddresses has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isBccAddressesModified() { return isBccAddressesModified; }
+//
+//    /**
+//     * returns whether CcAddresses has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isCcAddressesModified() { return isCcAddressesModified; }
+//
+//    /**
+//     * returns whether ToAddresses has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isToAddressesModified() { return isToAddressesModified; }
+//
+//    /**
+//     * returns whether CustomizeMessageToUserWhenErrorOccurs has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isMessageTextWhenJobFailsModified() { return isMessageTextWhenJobFailsModified; }
+//
+//    /**
+//     * returns whether IncludeStackTraceInMailWhenErrorOccurs has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isIncludingStackTraceWhenJobFailsModified() { return isIncludingStackTraceWhenJobFailsModified; }
+//
+//    /**
+//     * returns whether SkipNotificationWhenJobFails has been modified
+//     *
+//     * @return true if the attribute has been modified
+//     */
+//    public boolean isSkipNotificationWhenJobFailsModified() { return isSkipNotificationWhenJobFailsModified; }
 }

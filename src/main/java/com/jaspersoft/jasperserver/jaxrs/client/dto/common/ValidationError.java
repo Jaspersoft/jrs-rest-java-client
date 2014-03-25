@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 - 2011 Jaspersoft Corporation. All rights reserved.
+ * Copyright (C) 2005 - 2014 Jaspersoft Corporation. All rights  reserved.
  * http://www.jaspersoft.com.
  *
  * Unless you have purchased  a commercial license agreement from Jaspersoft,
@@ -16,7 +16,7 @@
  * GNU Affero  General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public  License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 package com.jaspersoft.jasperserver.jaxrs.client.dto.common;
 

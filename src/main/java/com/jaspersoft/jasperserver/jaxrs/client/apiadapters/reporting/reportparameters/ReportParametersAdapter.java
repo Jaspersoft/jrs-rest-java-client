@@ -23,6 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportpar
 
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -58,7 +59,7 @@ public class ReportParametersAdapter extends AbstractAdapter {
     public OperationResult<ReportInputControlsListWrapper> get(){
         JerseyRequestBuilder<ReportInputControlsListWrapper> builder =
                 buildRequest(sessionStorage, ReportInputControlsListWrapper.class,
-                        new String[]{"/reports", reportUnitUri, "/inputControls"});
+                        new String[]{"/reports", reportUnitUri, "/inputControls"}, new CommonExceptionHandler());
         builder.setContentType(MediaType.APPLICATION_XML);
         builder.setAccept(MediaType.APPLICATION_XML);
         if (idsPathSegment != null){
@@ -68,7 +69,7 @@ public class ReportParametersAdapter extends AbstractAdapter {
     }
 
     public ReportParametersValuesAdapter values(){
-        return new ReportParametersValuesAdapter(sessionStorage, reportUnitUri, idsPathSegment);
+        return new ReportParametersValuesAdapter(sessionStorage, reportUnitUri, idsPathSegment, params);
     }
 
 }

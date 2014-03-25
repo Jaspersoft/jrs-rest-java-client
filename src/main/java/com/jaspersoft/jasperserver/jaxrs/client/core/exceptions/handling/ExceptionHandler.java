@@ -19,12 +19,12 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
+package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling;
 
 import javax.ws.rs.core.Response;
 
-public interface WebExceptionsFactory {
+public interface ExceptionHandler {
 
-    public JSClientWebException getException(Response errorCode);
+    void handleException(Response response);
 
 }

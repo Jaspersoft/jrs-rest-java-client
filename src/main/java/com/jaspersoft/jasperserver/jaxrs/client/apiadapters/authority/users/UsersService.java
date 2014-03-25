@@ -31,6 +31,8 @@ public class UsersService extends AbstractAdapter {
     }
 
     public SingleUserRequestAdapter username(String username) {
+        if ("".equals(username) || "/".equals(username))
+            throw new  IllegalArgumentException("'username' mustn't be an empty string");
         return new SingleUserRequestAdapter(sessionStorage, username);
     }
 

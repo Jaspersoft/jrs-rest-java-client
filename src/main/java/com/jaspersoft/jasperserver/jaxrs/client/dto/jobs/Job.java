@@ -43,25 +43,11 @@ public class Job {
     private String baseOutputFilename;
     private String outputLocale;
 
-
-    @XmlElement(name = "repositoryDestination")
     private RepositoryDestination repositoryDestination;
-
-    @XmlElement(name = "mailNotification")
     private MailNotification mailNotification;
-
-    @XmlElement(name = "source")
     private JobSource source;
-
-    @XmlElement(name = "alert")
     private JobAlert alert;
-
-    @XmlElement(name = "outputFormats")
     private Set<OutputFormat> outputFormats;
-
-    @XmlElements({
-            @XmlElement(name = "simpleTrigger", type = SimpleTrigger.class),
-            @XmlElement(name = "calendarTrigger", type = CalendarTrigger.class)})
     private JobTrigger trigger;
 
     public Long getId() {
@@ -129,6 +115,7 @@ public class Job {
         this.outputLocale = outputLocale;
     }
 
+    @XmlElement(name = "repositoryDestination")
     public RepositoryDestination getRepositoryDestination() {
         return repositoryDestination;
     }
@@ -137,6 +124,7 @@ public class Job {
         this.repositoryDestination = repositoryDestination;
     }
 
+    @XmlElement(name = "mailNotification")
     public MailNotification getMailNotification() {
         return mailNotification;
     }
@@ -145,6 +133,7 @@ public class Job {
         this.mailNotification = mailNotification;
     }
 
+    @XmlElement(name = "source")
     public JobSource getSource() {
         return source;
     }
@@ -153,6 +142,7 @@ public class Job {
         this.source = source;
     }
 
+    @XmlElement(name = "alert")
     public JobAlert getAlert() {
         return alert;
     }
@@ -161,6 +151,9 @@ public class Job {
         this.alert = alert;
     }
 
+    @XmlElements({
+            @XmlElement(name = "simpleTrigger", type = SimpleTrigger.class),
+            @XmlElement(name = "calendarTrigger", type = CalendarTrigger.class)})
     public JobTrigger getTrigger() {
         return trigger;
     }
@@ -169,6 +162,7 @@ public class Job {
         this.trigger = trigger;
     }
 
+    @XmlElement(name = "outputFormats")
     @XmlJavaTypeAdapter(OutputFormatXmlAdapter.class)
     public Set<OutputFormat> getOutputFormats() {
         return outputFormats;

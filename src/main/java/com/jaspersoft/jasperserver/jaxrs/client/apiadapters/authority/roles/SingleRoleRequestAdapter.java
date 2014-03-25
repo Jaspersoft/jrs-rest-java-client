@@ -22,34 +22,39 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
+import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 public class SingleRoleRequestAdapter extends AbstractAdapter {
 
     private final String rolename;
+    private ExceptionHandler exceptionHandler;
 
     public SingleRoleRequestAdapter(SessionStorage sessionStorage, String rolename) {
         super(sessionStorage);
         this.rolename = rolename;
+        this.exceptionHandler = new CommonExceptionHandler();
     }
 
     public OperationResult<ClientRole> get(){
-        return buildRequest().get();
+        return buildRequest(ClientRole.class).get();
     }
 
-    public OperationResult<ClientRole> createOrUpdate(ClientRole user){
-        return buildRequest().put(user);
+    public OperationResult<RolesListWrapper> createOrUpdate(ClientRole user){
+        return buildRequest(RolesListWrapper.class).put(user);
     }
 
     public OperationResult delete(){
-        return buildRequest().delete();
+        return buildRequest(ClientRole.class).delete();
     }
 
-    private JerseyRequestBuilder<ClientRole> buildRequest(){
-        return JerseyRequestBuilder.buildRequest(sessionStorage, ClientRole.class, new String[]{"/roles", rolename});
+    private <T> JerseyRequestBuilder<T> buildRequest(Class<T> returnType){
+        return JerseyRequestBuilder.buildRequest(sessionStorage, returnType, new String[]{"/roles", rolename}, exceptionHandler);
     }
 
 }

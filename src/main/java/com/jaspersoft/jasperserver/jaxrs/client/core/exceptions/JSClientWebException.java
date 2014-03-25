@@ -18,25 +18,50 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
-
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Yaroslav.Kovalchyk
+ * @version $Id: JSClientWebException.java 30161 2013-03-22 19:20:15Z inesterenko $
+ */
 public class JSClientWebException extends JSClientException {
 
-    protected List<ErrorDescriptor> errorDescriptorList;
+    private List<ErrorDescriptor> errorDescriptors;
 
-    public JSClientWebException(String message, List<ErrorDescriptor> errorDescriptorList) {
-        super(message);
-        this.errorDescriptorList = errorDescriptorList;
+    private void init(){
+        errorDescriptors = new ArrayList<ErrorDescriptor>();
     }
 
-    public List<ErrorDescriptor> getErrorDescriptorList(){
-        return errorDescriptorList;
+    public JSClientWebException() {
+        super();
+        init();
+    }
+
+    public JSClientWebException(String message) {
+        super(message);
+        init();
+    }
+
+    public JSClientWebException(String message, List<ErrorDescriptor> errorDescriptors) {
+        super(message);
+        this.errorDescriptors = errorDescriptors;
+    }
+
+    public List<ErrorDescriptor> getErrorDescriptors() {
+        return errorDescriptors;
+    }
+
+    public void setErrorDescriptors(List<ErrorDescriptor> errorDescriptors) {
+        this.errorDescriptors = errorDescriptors;
+    }
+
+    public void addErrorDescriptor(ErrorDescriptor errorDescriptor){
+        errorDescriptors.add(errorDescriptor);
     }
 
 }

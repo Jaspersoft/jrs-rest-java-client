@@ -22,8 +22,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobState;
@@ -33,27 +35,29 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder
 public class SingleJobOperationsAdapter extends AbstractAdapter {
 
     private final String jobId;
+    private ExceptionHandler exceptionHandler;
 
     public SingleJobOperationsAdapter(SessionStorage sessionStorage, String jobId) {
         super(sessionStorage);
         this.jobId = jobId;
+        this.exceptionHandler = new CommonExceptionHandler();
     }
 
     public OperationResult<JobExtension> get(){
         JerseyRequestBuilder<JobExtension> builder =
-                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs", jobId});
+                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs", jobId}, exceptionHandler);
         builder.setAccept("application/job+json");
         return builder.get();
     }
 
     public OperationResult<JobState> state(){
-        return buildRequest(sessionStorage, JobState.class, new String[]{"/jobs", jobId, "/state"})
+        return buildRequest(sessionStorage, JobState.class, new String[]{"/jobs", jobId, "/state"}, exceptionHandler)
                 .get();
     }
 
     public OperationResult<JobExtension> update(JobExtension job){
         JerseyRequestBuilder<JobExtension> builder =
-                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs", jobId});
+                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs", jobId}, new JobValidationExceptionHandler());
         builder.setContentType("application/job+json");
         builder.setAccept("application/job+json");
 
@@ -61,7 +65,7 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult delete() {
-        return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", jobId})
+        return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", jobId}, exceptionHandler)
                 .delete();
     }
 }
