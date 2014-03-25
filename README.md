@@ -1021,6 +1021,19 @@ String edition = result.getEntity();
     </repositories>
 ```
 
+Exception handling
+=====================
+You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method. 
+
+JRS REST client exception handling system is based on `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler` interface. Its `void handleException(Response response)` method is responsible for all error handling logic. You can use existed handlers, define your own handlers or extend existed handlers.
+
+1. Existed handlers:
+  * `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` - primitive handler, its logic is based only on response status, so it won't give any details of error.
+  * `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler` - this implementation is suitable for most of the JRS errors, but sometimes you can meet some not standart errors and here such implementations as `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobValidationExceptionHandler`, `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.RunReportExceptionHandler`, etc. take responsibility.
+2. You can create your own handler by implementing `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler`.
+3. You can extend `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` or any other handler and override its methods `handleBadRequestError(Response response)` and/or `handleOtherErrors(Response response)`.
+
+
 License
 --------
 Copyright &copy; 2005 - 2014 Jaspersoft Corporation. All rights reserved.
