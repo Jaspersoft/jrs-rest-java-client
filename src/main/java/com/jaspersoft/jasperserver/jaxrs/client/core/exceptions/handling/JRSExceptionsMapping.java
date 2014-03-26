@@ -51,6 +51,7 @@ public final class JRSExceptionsMapping {
                 put(ReportStartPageGreaterThenEndPageException.REPORT_START_PAGE_GREATER_THEN_END_PAGE, ReportStartPageGreaterThenEndPageException.class);
                 put(ReportExportException.ERROR_EXPORTING_REPORT_UNIT, ReportExportException.class);
                 put(ReportExportException.ERROR_EXPORT_PARAMETERS_MISSED, ReportExportException.class);
+                put(ResourceNotFoundException.ERROR_CODE_RESOURCE_NOT_FOUND, ResourceNotFoundException.class);
             }};
 
     private JRSExceptionsMapping(){}

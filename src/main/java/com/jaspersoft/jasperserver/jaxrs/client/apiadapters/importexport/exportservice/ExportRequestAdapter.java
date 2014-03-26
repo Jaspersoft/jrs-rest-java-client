@@ -22,11 +22,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ExportFailedException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
 
@@ -39,16 +39,16 @@ public class ExportRequestAdapter extends AbstractAdapter {
 
     private static final String STATE_URI = "/state";
     private String taskId;
-    private ExceptionHandler exceptionHandler;
+    private ErrorHandler errorHandler;
 
     public ExportRequestAdapter(SessionStorage sessionStorage, String taskId) {
         super(sessionStorage);
         this.taskId = taskId;
-        this.exceptionHandler = new CommonExceptionHandler();
+        this.errorHandler = new DefaultErrorHandler();
     }
 
     public OperationResult<StateDto> state() {
-        return buildRequest(sessionStorage, StateDto.class, new String[]{"/export", taskId, STATE_URI}, exceptionHandler)
+        return buildRequest(sessionStorage, StateDto.class, new String[]{"/export", taskId, STATE_URI}, errorHandler)
                 .get();
     }
 
@@ -70,7 +70,7 @@ public class ExportRequestAdapter extends AbstractAdapter {
         }
 
         JerseyRequestBuilder<InputStream> builder =
-                buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/mockFilename"}, exceptionHandler);
+                buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/mockFilename"}, errorHandler);
         builder.setAccept("application/zip");
 
         OperationResult<InputStream> result = builder.get();

@@ -22,8 +22,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionStatusEntity;
 
@@ -44,7 +44,7 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
 
     public OperationResult<InputStream> outputResource(){
         return buildRequest(sessionStorage, InputStream.class,
-                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/outputResource"}, new CommonExceptionHandler())
+                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/outputResource"}, new DefaultErrorHandler())
                 .get();
     }
 
@@ -60,13 +60,13 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
         }
 
         return buildRequest(sessionStorage, InputStream.class,
-                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/attachments", attachmentId}, new CommonExceptionHandler())
+                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/attachments", attachmentId}, new DefaultErrorHandler())
                 .get();
     }
 
     public OperationResult<ReportExecutionStatusEntity> status(){
         return buildRequest(sessionStorage, ReportExecutionStatusEntity.class,
-                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/status"}, new CommonExceptionHandler())
+                new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/status"}, new DefaultErrorHandler())
                 .get();
     }
 }

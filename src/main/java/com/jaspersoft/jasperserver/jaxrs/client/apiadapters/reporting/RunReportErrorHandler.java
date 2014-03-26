@@ -21,35 +21,22 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Response;
 
-public class RunReportExceptionHandler extends CommonExceptionHandler {
-
-    private static final Log log = LogFactory.getLog(RunReportExceptionHandler.class);
+public class RunReportErrorHandler extends DefaultErrorHandler {
 
     @Override
-    protected void handleOtherErrors(Response response) {
+    protected JSClientWebException buildJRSSpecificException(Response response) {
         String jasperServerError = response.getHeaderString("JasperServerError");
+        JSClientWebException exception = null;
         if (jasperServerError != null && jasperServerError.equals("true")){
-            JSClientWebException exception = null;
-            try {
-                String message = response.readEntity(String.class);
-                Class<? extends JSClientWebException> exceptionType = getExceptionType(null, response.getStatus());
-                exception = exceptionType.getConstructor(String.class).newInstance(message);
-            } catch (ProcessingException e) {
-                log.warn("Cannot read entity from response body", e);
-            } catch (Exception e) {
-                log.warn("Cannot instantiate exception", e);
-            }
-            if (exception != null)
-                throw exception;
+            String errorMessage = readBody(response, String.class);
+            exception = buildResponseStatusAwareException(response, errorMessage);
         }
-        super.handleOtherErrors(response);
+
+        return exception != null ? exception : super.buildJRSSpecificException(response);
     }
 }

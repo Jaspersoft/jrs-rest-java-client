@@ -21,52 +21,31 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ValidationException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ValidationError;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ValidationErrorsListWrapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobValidationExceptionHandler extends CommonExceptionHandler {
-
-    private static final Log log = LogFactory.getLog(JobValidationExceptionHandler.class);
+public class JobValidationErrorHandler extends DefaultErrorHandler {
 
     @Override
-    protected void handleOtherErrors(Response response) {
+    protected JSClientWebException buildJRSSpecificException(Response response) {
+        List<ErrorDescriptor> errorDescriptors = null;
         if (response.getHeaderString("Content-Type").contains("xml") ||
-                response.getHeaderString("Content-Type").contains("json")){
-
-            JSClientWebException exception = null;
-            try {
-
-                ValidationErrorsListWrapper validationErrors = response.readEntity(ValidationErrorsListWrapper.class);
-                List<ErrorDescriptor> errorDescriptors = toErrorDescriptor(validationErrors);
-
-                Class<? extends JSClientWebException> exceptionType =
-                        getExceptionType(errorDescriptors.get(0).getErrorCode(), response.getStatus());
-
-                exception = exceptionType.getConstructor(String.class, List.class)
-                        .newInstance(generateErrorMessage(errorDescriptors), errorDescriptors);
-            } catch (ProcessingException e) {
-                log.warn("Cannot read entity from response body", e);
-            } catch (Exception e) {
-                log.warn("Cannot instantiate exception", e);
-            }
-
-            if (exception != null)
-                throw exception;
+                response.getHeaderString("Content-Type").contains("json")) {
+            ValidationErrorsListWrapper validationErrors = readBody(response, ValidationErrorsListWrapper.class);
+            errorDescriptors = toErrorDescriptorList(validationErrors);
         }
-        super.handleOtherErrors(response);
+        return new ValidationException(generateErrorMessage(errorDescriptors), errorDescriptors);
     }
 
-    protected List<ErrorDescriptor> toErrorDescriptor(ValidationErrorsListWrapper validationErrors) {
+    protected List<ErrorDescriptor> toErrorDescriptorList(ValidationErrorsListWrapper validationErrors) {
         List<ErrorDescriptor> errorDescriptors = new ArrayList<ErrorDescriptor>();
         List<ValidationError> errors = validationErrors.getErrors();
         for (ValidationError error : errors) {
@@ -80,11 +59,15 @@ public class JobValidationExceptionHandler extends CommonExceptionHandler {
         return errorDescriptors;
     }
 
-    protected String generateErrorMessage(List<ErrorDescriptor> errorDescriptors) {
+    private String generateErrorMessage(List<ErrorDescriptor> errorDescriptors) {
         StringBuilder sb = new StringBuilder();
-        for (ErrorDescriptor errorDescriptor : errorDescriptors) {
-            sb.append("\n\t\t").append(errorDescriptor.getMessage());
+        if (errorDescriptors != null) {
+            for (ErrorDescriptor errorDescriptor : errorDescriptors) {
+                String message = errorDescriptor.getMessage();
+                sb.append("\n\t\t").append(message != null ? message : errorDescriptor.getErrorCode());
+            }
         }
         return sb.toString();
     }
+
 }

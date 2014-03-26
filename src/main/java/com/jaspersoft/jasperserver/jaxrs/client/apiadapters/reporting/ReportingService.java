@@ -22,8 +22,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
@@ -38,7 +38,7 @@ public class ReportingService extends AbstractAdapter {
 
     public OperationResult<ReportExecutionDescriptor> newReportExecutionRequest(ReportExecutionRequest request) {
         OperationResult<ReportExecutionDescriptor> descriptor =
-                buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions"}, new CommonExceptionHandler())
+                buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions"}, new DefaultErrorHandler())
                         .post(request);
         sessionStorage.setSessionId(descriptor.getSessionId());
         return descriptor;

@@ -22,12 +22,12 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
@@ -36,11 +36,11 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder
 
 public class JobsService extends AbstractAdapter {
 
-    private ExceptionHandler exceptionHandler;
+    private ErrorHandler errorHandler;
 
     public JobsService(SessionStorage sessionStorage) {
         super(sessionStorage);
-        exceptionHandler = new CommonExceptionHandler();
+        errorHandler = new DefaultErrorHandler();
     }
 
     public BatchJobsOperationsAdapter jobs(){
@@ -53,7 +53,7 @@ public class JobsService extends AbstractAdapter {
 
     public OperationResult<JobExtension> scheduleReport(JobExtension report){
         JerseyRequestBuilder<JobExtension> builder =
-                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs"}, new JobValidationExceptionHandler());
+                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
         builder.setContentType("application/job+json");
         builder.setAccept("application/job+json");
 
@@ -66,7 +66,7 @@ public class JobsService extends AbstractAdapter {
 
     public OperationResult<CalendarNameListWrapper> calendars(CalendarType type){
         JerseyRequestBuilder<CalendarNameListWrapper> builder =
-                buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"}, exceptionHandler);
+                buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"}, errorHandler);
         if (type != null)
             builder.addParam("calendarType", type.name().toLowerCase());
 

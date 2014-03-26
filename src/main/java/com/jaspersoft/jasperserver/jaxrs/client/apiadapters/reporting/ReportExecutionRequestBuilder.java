@@ -22,8 +22,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportExecutionDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportExecutionOptions;
@@ -43,18 +43,18 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
 
     public OperationResult<ReportExecutionStatusEntity> status() {
         return buildRequest(sessionStorage, ReportExecutionStatusEntity.class,
-                new String[]{"/reportExecutions", requestId, "/status"}, new CommonExceptionHandler()).get();
+                new String[]{"/reportExecutions", requestId, "/status"}, new DefaultErrorHandler()).get();
     }
 
     public OperationResult<ReportExecutionDescriptor> executionDetails() {
-        return buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId}, new CommonExceptionHandler())
+        return buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId}, new DefaultErrorHandler())
                 .get();
     }
 
     public OperationResult<ReportExecutionStatusEntity> cancelExecution() {
         ReportExecutionStatusEntity statusEntity = new ReportExecutionStatusEntity();
         statusEntity.setValue("cancelled");
-        return buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{"/reportExecutions", requestId, "/status"}, new CommonExceptionHandler())
+        return buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{"/reportExecutions", requestId, "/status"}, new DefaultErrorHandler())
                 .put(statusEntity);
     }
 
@@ -63,7 +63,7 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
     }
 
     public OperationResult<ExportExecutionDescriptor> runExport(ExportExecutionOptions exportExecutionOptions) {
-        return buildRequest(sessionStorage, ExportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId, "/exports"}, new CommonExceptionHandler())
+        return buildRequest(sessionStorage, ExportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId, "/exports"}, new DefaultErrorHandler())
                 .post(exportExecutionOptions);
     }
 

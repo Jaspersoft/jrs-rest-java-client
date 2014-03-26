@@ -25,23 +25,17 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 
 import java.util.List;
 
-/**
- * @author Yaroslav.Kovalchyk
- * @version $Id: IllegalParameterValueException.java 30161 2013-03-22 19:20:15Z inesterenko $
- */
-public class IllegalParameterValueException extends JSClientWebException {
+public class ValidationException extends JSClientWebException {
 
-    public static final String ERROR_CODE  = "illegal.parameter.value.error";
-
-    public IllegalParameterValueException() {
-        super();    //To change body of overridden methods use File | Settings | File Templates.
+    public ValidationException() {
+        super();
     }
 
-    public IllegalParameterValueException(String message) {
-        super(message);    //To change body of overridden methods use File | Settings | File Templates.
+    public ValidationException(String message) {
+        super(message);
     }
 
-    public IllegalParameterValueException(String message, List<ErrorDescriptor> errorDescriptors) {
-        super(message, errorDescriptors);    //To change body of overridden methods use File | Settings | File Templates.
+    public ValidationException(String message, List<ErrorDescriptor> errorDescriptors) {
+        super(message, errorDescriptors);
     }
 }

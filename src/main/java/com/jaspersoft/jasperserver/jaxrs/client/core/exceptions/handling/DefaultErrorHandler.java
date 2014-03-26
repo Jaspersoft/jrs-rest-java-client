@@ -23,16 +23,20 @@ package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.*;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class DefaultExceptionHandler implements ExceptionHandler {
+public class DefaultErrorHandler implements ErrorHandler {
 
-    private static final Log log = LogFactory.getLog(DefaultExceptionHandler.class);
+    private static final Log log = LogFactory.getLog(DefaultErrorHandler.class);
 
     protected static final Map<Integer, Class<? extends JSClientWebException>> httpErrorCodeToTypeMap =
             new HashMap<Integer, Class<? extends JSClientWebException>>() {{
@@ -47,8 +51,9 @@ public class DefaultExceptionHandler implements ExceptionHandler {
             }};
 
     @Override
-    public void handleException(Response response) {
-        switch (response.getStatus()){
+    public void handleError(Response response) {
+        response.bufferEntity();
+        switch (response.getStatus()) {
             case ResponseStatus.UNAUTHORIZED:
                 throw new AuthenticationFailedException(response.getStatusInfo().getReasonPhrase());
             case ResponseStatus.NOT_ALLOWED:
@@ -57,30 +62,60 @@ public class DefaultExceptionHandler implements ExceptionHandler {
                 throw new RequestedRepresentationNotAvailableForResourceException(response.getStatusInfo().getReasonPhrase());
             case ResponseStatus.UNSUPPORTED_TYPE:
                 throw new RepresentationalTypeNotSupportedForResourceException(response.getStatusInfo().getReasonPhrase());
-            case ResponseStatus.FORBIDDEN:
-            case ResponseStatus.NOT_FOUND:
-            case ResponseStatus.CONFLICT:
-            case ResponseStatus.SERVER_ERROR: {
-                handleOtherErrors(response);
-            }
-            case ResponseStatus.BAD_REQUEST: {
-                handleBadRequestError(response);
-            }
             default:
-                throw new JSClientWebException(response.getStatusInfo().getReasonPhrase());
+                handleOtherErrors(response);
         }
     }
 
-    protected void handleBadRequestError(Response response){
-        throw new BadRequestException(response.getStatusInfo().getReasonPhrase());
+    protected void handleOtherErrors(Response response) {
+        buildAndThrowException(response);
     }
 
-    protected void handleOtherErrors(Response response){
+    protected <T> T readBody(Response response, Class<T> expectedType) {
+        T entity = null;
+        try {
+            if (response.hasEntity()) {
+                entity = response.readEntity(expectedType);
+            }
+        } catch (ProcessingException e) {
+            log.warn("Cannot read entity from response body", e);
+        }
+        return entity;
+    }
+
+    protected void buildAndThrowException(Response response) {
+        JSClientWebException exception = buildJRSSpecificException(response);
+        if (exception == null) exception = buildResponseStatusAwareException(response, null);
+        throw exception;
+    }
+
+    protected JSClientWebException buildJRSSpecificException(Response response) {
+        ErrorDescriptor errorDescriptor = readBody(response, ErrorDescriptor.class);
+        return buildErrorCodeAwareException(errorDescriptor);
+    }
+
+    protected final JSClientWebException buildErrorCodeAwareException(ErrorDescriptor errorDescriptor) {
+        JSClientWebException exception = null;
+        try {
+            Class<? extends JSClientWebException> exceptionType =
+                    JRSExceptionsMapping.ERROR_CODE_TO_TYPE_MAP.get(errorDescriptor.getErrorCode());
+
+            String message = errorDescriptor.getMessage();
+            exception = exceptionType.getConstructor(String.class, List.class)
+                    .newInstance(message != null ? message : errorDescriptor.getErrorCode(), Arrays.asList(errorDescriptor));
+        } catch (Exception e) {
+            log.warn("Cannot instantiate exception.", e);
+        }
+        return exception;
+    }
+
+    protected JSClientWebException buildResponseStatusAwareException(Response response, String overridingMessage) {
         Class<? extends JSClientWebException> exceptionType = httpErrorCodeToTypeMap.get(response.getStatus());
-        JSClientWebException exception = new JSClientWebException("Unexpected error");
+        String reasonPhrase = response.getStatusInfo().getReasonPhrase();
+        JSClientWebException exception = new JSClientWebException(overridingMessage != null ? overridingMessage : reasonPhrase);
         try {
             exception = exceptionType.getConstructor(String.class)
-                    .newInstance(response.getStatusInfo().getReasonPhrase());
+                    .newInstance(overridingMessage != null ? overridingMessage : reasonPhrase);
         } catch (Exception e) {
             log.error("Cannot instantiate exception", e);
         }

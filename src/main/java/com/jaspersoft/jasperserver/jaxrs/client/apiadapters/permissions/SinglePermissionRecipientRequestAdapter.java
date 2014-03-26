@@ -23,9 +23,9 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
@@ -55,7 +55,7 @@ public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
 
     private <T> JerseyRequestBuilder<T> getBuilder(Class<T> responseClass){
         JerseyRequestBuilder<T> builder =
-                buildRequest(sessionStorage, responseClass, new String[]{"/permissions", resourceUri}, new CommonExceptionHandler());
+                buildRequest(sessionStorage, responseClass, new String[]{"/permissions", resourceUri}, new DefaultErrorHandler());
         builder.addMatrixParam("recipient", recipient);
         return builder;
     }

@@ -24,21 +24,21 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles;
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
 import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 public class SingleRoleRequestAdapter extends AbstractAdapter {
 
     private final String rolename;
-    private ExceptionHandler exceptionHandler;
+    private ErrorHandler errorHandler;
 
     public SingleRoleRequestAdapter(SessionStorage sessionStorage, String rolename) {
         super(sessionStorage);
         this.rolename = rolename;
-        this.exceptionHandler = new CommonExceptionHandler();
+        this.errorHandler = new DefaultErrorHandler();
     }
 
     public OperationResult<ClientRole> get(){
@@ -54,7 +54,7 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
     }
 
     private <T> JerseyRequestBuilder<T> buildRequest(Class<T> returnType){
-        return JerseyRequestBuilder.buildRequest(sessionStorage, returnType, new String[]{"/roles", rolename}, exceptionHandler);
+        return JerseyRequestBuilder.buildRequest(sessionStorage, returnType, new String[]{"/roles", rolename}, errorHandler);
     }
 
 }

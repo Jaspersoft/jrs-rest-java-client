@@ -22,9 +22,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ServerInfo;
 
@@ -38,12 +38,12 @@ public class ServerInfoService extends AbstractAdapter {
     }
 
     public OperationResult<ServerInfo> details(){
-        return JerseyRequestBuilder.buildRequest(sessionStorage, ServerInfo.class, new String[]{"/serverInfo"}, new CommonExceptionHandler()).get();
+        return JerseyRequestBuilder.buildRequest(sessionStorage, ServerInfo.class, new String[]{"/serverInfo"}, new DefaultErrorHandler()).get();
     }
 
     private JerseyRequestBuilder<String> buildServerInfoRequest(String path){
         JerseyRequestBuilder<String> builder =
-                JerseyRequestBuilder.buildRequest(sessionStorage, String.class, new String[]{"/serverInfo", path}, new CommonExceptionHandler());
+                JerseyRequestBuilder.buildRequest(sessionStorage, String.class, new String[]{"/serverInfo", path}, new DefaultErrorHandler());
         builder.setAccept(MediaType.TEXT_PLAIN);
         return builder;
     }

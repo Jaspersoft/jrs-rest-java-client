@@ -22,8 +22,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
@@ -55,13 +55,13 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage,
                                                            Class<T> responseClass,
                                                            String[] path,
-                                                           ExceptionHandler exceptionHandler) {
+                                                           ErrorHandler errorHandler) {
         JerseyRequestBuilder<T> builder = new JerseyRequestBuilder<T>(sessionStorage, responseClass);
 
-        if (exceptionHandler != null)
-            builder.exceptionHandler = exceptionHandler;
+        if (errorHandler != null)
+            builder.errorHandler = errorHandler;
         else
-            builder.exceptionHandler = new DefaultExceptionHandler();
+            builder.errorHandler = new DefaultErrorHandler();
 
         for (String pathElem : path)
             builder.setPath(pathElem);
@@ -74,7 +74,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     private final SessionStorage sessionStorage;
     private final Class<ResponseType> responseClass;
 
-    private ExceptionHandler exceptionHandler;
+    private ErrorHandler errorHandler;
     private MultivaluedMap<String, String> headers;
     private WebTarget usersWebTarget;
     private String contentType;
@@ -125,7 +125,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
             String jsessionid = response.getCookies().get("JSESSIONID").getValue();
             credentials.setSessionId(jsessionid);
         } else {
-            exceptionHandler.handleException(response);
+            errorHandler.handleError(response);
         }
 
     }
@@ -197,7 +197,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         }
 
         if (response.getStatus() >= 400)
-            exceptionHandler.handleException(response);
+            errorHandler.handleError(response);
 
         OperationResult<ResponseType> result =
                 operationResultFactory.getOperationResult(response, responseClass);

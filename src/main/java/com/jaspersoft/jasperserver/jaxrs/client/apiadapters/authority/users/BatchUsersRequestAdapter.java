@@ -23,10 +23,10 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users;
 
 import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -37,12 +37,12 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder
 public class BatchUsersRequestAdapter extends AbstractAdapter {
 
     private MultivaluedMap<String, String> params;
-    private ExceptionHandler exceptionHandler;
+    private ErrorHandler errorHandler;
 
     public BatchUsersRequestAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
         params = new MultivaluedHashMap<String, String>();
-        this.exceptionHandler = new CommonExceptionHandler();
+        this.errorHandler = new DefaultErrorHandler();
     }
 
     public BatchUsersRequestAdapter param(UsersParameter userParam, String value){
@@ -52,7 +52,7 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
 
     public OperationResult<UsersListWrapper> get(){
         JerseyRequestBuilder<UsersListWrapper> builder =
-                buildRequest(sessionStorage, UsersListWrapper.class, new String[]{"users"}, exceptionHandler);
+                buildRequest(sessionStorage, UsersListWrapper.class, new String[]{"users"}, errorHandler);
         builder.addParams(params);
         return builder.get();
     }

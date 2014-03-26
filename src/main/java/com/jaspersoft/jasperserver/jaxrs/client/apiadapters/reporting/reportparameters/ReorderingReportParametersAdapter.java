@@ -23,8 +23,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportpar
 
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControl;
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class ReorderingReportParametersAdapter extends ReportParametersAdapter {
 
     public OperationResult<ReportInputControlsListWrapper> reorder(List<ReportInputControl> inputControls){
         ReportInputControlsListWrapper wrapper = new ReportInputControlsListWrapper(inputControls);
-        return buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"}, new CommonExceptionHandler())
+        return buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"}, new DefaultErrorHandler())
                 .put(wrapper);
     }
 

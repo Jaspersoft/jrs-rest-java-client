@@ -22,9 +22,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
 
@@ -59,7 +59,7 @@ public class ImportTaskRequestAdapter extends AbstractAdapter {
     }
 
     private OperationResult<StateDto> createImport(Object zipArchive) {
-        JerseyRequestBuilder<StateDto> builder = buildRequest(sessionStorage, StateDto.class, new String[]{"/import"}, new CommonExceptionHandler());
+        JerseyRequestBuilder<StateDto> builder = buildRequest(sessionStorage, StateDto.class, new String[]{"/import"}, new DefaultErrorHandler());
         builder
                 .setContentType("application/zip")
                 .setAccept(MediaType.APPLICATION_JSON)

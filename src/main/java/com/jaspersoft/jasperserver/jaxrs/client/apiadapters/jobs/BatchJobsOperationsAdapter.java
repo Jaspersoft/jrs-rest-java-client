@@ -22,11 +22,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobIdListWrapper;
@@ -54,12 +54,12 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     private static final Log log = LogFactory.getLog(BatchJobsOperationsAdapter.class);
 
     private final MultivaluedMap<String, String> params;
-    private ExceptionHandler exceptionHandler;
+    private ErrorHandler errorHandler;
 
     public BatchJobsOperationsAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
         params = new MultivaluedHashMap<String, String>();
-        exceptionHandler = new CommonExceptionHandler();
+        errorHandler = new DefaultErrorHandler();
     }
 
     public BatchJobsOperationsAdapter parameter(JobsParameter parameter, String value) {
@@ -73,7 +73,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     public OperationResult<JobSummaryListWrapper> search(Job searchCriteria) {
         JerseyRequestBuilder<JobSummaryListWrapper> builder =
-                buildRequest(sessionStorage, JobSummaryListWrapper.class, new String[]{"/jobs"}, exceptionHandler);
+                buildRequest(sessionStorage, JobSummaryListWrapper.class, new String[]{"/jobs"}, errorHandler);
         builder.addParams(params);
         if (searchCriteria != null) {
             ObjectMapper mapper = new ObjectMapper();
@@ -97,7 +97,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     public OperationResult<JobIdListWrapper> updateWithProcessedParameters(ReportJobModel jobModel) {
         throw new UnsupportedOperationException("Operation is not supported yet");
         /*JerseyRequestBuilder<JobIdListWrapper> builder =
-                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"}, exceptionHandler);
+                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"}, errorHandler);
         builder.setContentType("application/job+json");
         builder.setAccept("application/job+json");
         builder.addParams(params);
@@ -120,7 +120,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
         mapper.setAnnotationIntrospector(introspector);
 
         JerseyRequestBuilder<JobIdListWrapper> builder =
-                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"}, exceptionHandler);
+                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"}, errorHandler);
         builder.addParams(params);
 
         String jobJson = null;
@@ -148,19 +148,19 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     public OperationResult<JobIdListWrapper> pause() {
         JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"}, exceptionHandler)
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"}, errorHandler)
                 .post(jobIdListWrapper);
     }
 
     public OperationResult<JobIdListWrapper> resume() {
         JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/resume"}, exceptionHandler)
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/resume"}, errorHandler)
                 .post(jobIdListWrapper);
     }
 
     public OperationResult<JobIdListWrapper> restart() {
         JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/restart"}, exceptionHandler)
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/restart"}, errorHandler)
                 .post(jobIdListWrapper);
     }
 

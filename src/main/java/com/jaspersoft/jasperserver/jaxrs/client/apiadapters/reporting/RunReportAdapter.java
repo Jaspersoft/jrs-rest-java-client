@@ -68,7 +68,7 @@ public class RunReportAdapter extends AbstractAdapter {
     public OperationResult<InputStream> run() {
         JerseyRequestBuilder<InputStream> builder =
                 buildRequest(sessionStorage, InputStream.class,
-                        new String[]{"/reports", reportUnitUri + "." + format.toString().toLowerCase()}, new RunReportExceptionHandler());
+                        new String[]{"/reports", reportUnitUri + "." + format.toString().toLowerCase()}, new RunReportErrorHandler());
         builder.addParams(params);
 
         if (pages != null && pages.length > 0) {
