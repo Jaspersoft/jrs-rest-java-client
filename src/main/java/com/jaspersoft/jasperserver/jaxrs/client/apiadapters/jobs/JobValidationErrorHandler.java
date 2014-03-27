@@ -21,7 +21,6 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ValidationException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
@@ -35,14 +34,14 @@ import java.util.List;
 public class JobValidationErrorHandler extends DefaultErrorHandler {
 
     @Override
-    protected JSClientWebException buildJRSSpecificException(Response response) {
+    protected void handleBodyError(Response response) {
         List<ErrorDescriptor> errorDescriptors = null;
         if (response.getHeaderString("Content-Type").contains("xml") ||
                 response.getHeaderString("Content-Type").contains("json")) {
             ValidationErrorsListWrapper validationErrors = readBody(response, ValidationErrorsListWrapper.class);
             errorDescriptors = toErrorDescriptorList(validationErrors);
         }
-        return new ValidationException(generateErrorMessage(errorDescriptors), errorDescriptors);
+        throw  new ValidationException(generateErrorMessage(errorDescriptors), errorDescriptors);
     }
 
     protected List<ErrorDescriptor> toErrorDescriptorList(ValidationErrorsListWrapper validationErrors) {

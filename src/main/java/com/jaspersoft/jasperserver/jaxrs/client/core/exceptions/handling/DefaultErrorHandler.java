@@ -48,27 +48,16 @@ public class DefaultErrorHandler implements ErrorHandler {
                 put(ResponseStatus.NOT_FOUND, ResourceNotFoundException.class);
                 put(ResponseStatus.UNAUTHORIZED, AuthenticationFailedException.class);
                 put(ResponseStatus.CONFLICT, ConflictException.class);
+                put(ResponseStatus.UNSUPPORTED_TYPE, RepresentationalTypeNotSupportedForResourceException.class);
             }};
 
     @Override
     public void handleError(Response response) {
-        response.bufferEntity();
-        switch (response.getStatus()) {
-            case ResponseStatus.UNAUTHORIZED:
-                throw new AuthenticationFailedException(response.getStatusInfo().getReasonPhrase());
-            case ResponseStatus.NOT_ALLOWED:
-                throw new HttpMethodNotAllowedException(response.getStatusInfo().getReasonPhrase());
-            case ResponseStatus.NOT_ACCEPTABLE:
-                throw new RequestedRepresentationNotAvailableForResourceException(response.getStatusInfo().getReasonPhrase());
-            case ResponseStatus.UNSUPPORTED_TYPE:
-                throw new RepresentationalTypeNotSupportedForResourceException(response.getStatusInfo().getReasonPhrase());
-            default:
-                handleOtherErrors(response);
+        if (response.hasEntity()) {
+            response.bufferEntity();
+            handleBodyError(response);
         }
-    }
-
-    protected void handleOtherErrors(Response response) {
-        buildAndThrowException(response);
+        handleStatusCodeError(response, null);
     }
 
     protected <T> T readBody(Response response, Class<T> expectedType) {
@@ -83,18 +72,8 @@ public class DefaultErrorHandler implements ErrorHandler {
         return entity;
     }
 
-    protected void buildAndThrowException(Response response) {
-        JSClientWebException exception = buildJRSSpecificException(response);
-        if (exception == null) exception = buildResponseStatusAwareException(response, null);
-        throw exception;
-    }
-
-    protected JSClientWebException buildJRSSpecificException(Response response) {
+    protected void handleBodyError(Response response) {
         ErrorDescriptor errorDescriptor = readBody(response, ErrorDescriptor.class);
-        return buildErrorCodeAwareException(errorDescriptor);
-    }
-
-    protected final JSClientWebException buildErrorCodeAwareException(ErrorDescriptor errorDescriptor) {
         JSClientWebException exception = null;
         try {
             Class<? extends JSClientWebException> exceptionType =
@@ -106,10 +85,10 @@ public class DefaultErrorHandler implements ErrorHandler {
         } catch (Exception e) {
             log.warn("Cannot instantiate exception.", e);
         }
-        return exception;
+        if (exception != null) throw exception;
     }
 
-    protected JSClientWebException buildResponseStatusAwareException(Response response, String overridingMessage) {
+    protected void handleStatusCodeError(Response response, String overridingMessage) {
         Class<? extends JSClientWebException> exceptionType = httpErrorCodeToTypeMap.get(response.getStatus());
         String reasonPhrase = response.getStatusInfo().getReasonPhrase();
         JSClientWebException exception = new JSClientWebException(overridingMessage != null ? overridingMessage : reasonPhrase);
@@ -119,7 +98,7 @@ public class DefaultErrorHandler implements ErrorHandler {
         } catch (Exception e) {
             log.error("Cannot instantiate exception", e);
         }
-        throw exception;
+        if (exception != null) throw exception;
     }
 
 }

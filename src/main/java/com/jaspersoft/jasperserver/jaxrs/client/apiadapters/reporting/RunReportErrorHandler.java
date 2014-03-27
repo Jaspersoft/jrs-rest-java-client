@@ -21,7 +21,6 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 
 import javax.ws.rs.core.Response;
@@ -29,14 +28,13 @@ import javax.ws.rs.core.Response;
 public class RunReportErrorHandler extends DefaultErrorHandler {
 
     @Override
-    protected JSClientWebException buildJRSSpecificException(Response response) {
+    protected void handleBodyError(Response response) {
         String jasperServerError = response.getHeaderString("JasperServerError");
-        JSClientWebException exception = null;
         if (jasperServerError != null && jasperServerError.equals("true")){
             String errorMessage = readBody(response, String.class);
-            exception = buildResponseStatusAwareException(response, errorMessage);
+            handleStatusCodeError(response, errorMessage);
         }
 
-        return exception != null ? exception : super.buildJRSSpecificException(response);
+        super.handleBodyError(response);
     }
 }
