@@ -1,0 +1,147 @@
+package com.jaspersoft.jasperserver.jaxrs.client.dto.authority;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "organization")
+public class ClientTenant {
+
+    private String id = null;
+    private String alias = null;
+    private String parentId = null;
+    private String tenantName = null;
+    private String tenantDesc = null;
+    private String tenantNote = null;
+    private String tenantUri = null;
+    private String tenantFolderUri = null;
+    private String theme = null;
+
+
+    public String getTenantDesc() {
+        return tenantDesc;
+    }
+
+    public ClientTenant setTenantDesc(String tenantDesc) {
+        this.tenantDesc = tenantDesc;
+        return this;
+    }
+
+    public String getTenantNote() {
+        return tenantNote;
+    }
+
+    public ClientTenant setTenantNote(String tenantNote) {
+        this.tenantNote = tenantNote;
+        return this;
+    }
+
+    public String getId() {
+        return id;
+    }
+    public ClientTenant setId(String pid) {
+        id = pid;
+        return this;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public ClientTenant setAlias(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public ClientTenant setParentId(String parentId) {
+        this.parentId = parentId;
+        return this;
+    }
+
+    public String getTenantName() {
+        return tenantName;
+    }
+
+    public ClientTenant setTenantName(String tenantName) {
+        this.tenantName = tenantName;
+        return this;
+    }
+
+    public String getTenantUri() {
+        return tenantUri;
+    }
+
+    public ClientTenant setTenantUri(String tenantUri) {
+        this.tenantUri = tenantUri;
+        return this;
+    }
+
+    public String getTenantFolderUri() {
+        return tenantFolderUri;
+    }
+    public ClientTenant setTenantFolderUri(String tenantFolderUri) {
+        this.tenantFolderUri = tenantFolderUri;
+        return this;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public ClientTenant setTheme(String theme) {
+        this.theme = theme;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ClientTenant that = (ClientTenant) o;
+
+        if (alias != null ? !alias.equals(that.alias) : that.alias != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (parentId != null ? !parentId.equals(that.parentId) : that.parentId != null) return false;
+        if (tenantDesc != null ? !tenantDesc.equals(that.tenantDesc) : that.tenantDesc != null) return false;
+        if (tenantFolderUri != null ? !tenantFolderUri.equals(that.tenantFolderUri) : that.tenantFolderUri != null)
+            return false;
+        if (tenantName != null ? !tenantName.equals(that.tenantName) : that.tenantName != null) return false;
+        if (tenantNote != null ? !tenantNote.equals(that.tenantNote) : that.tenantNote != null) return false;
+        if (tenantUri != null ? !tenantUri.equals(that.tenantUri) : that.tenantUri != null) return false;
+        if (theme != null ? !theme.equals(that.theme) : that.theme != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (alias != null ? alias.hashCode() : 0);
+        result = 31 * result + (parentId != null ? parentId.hashCode() : 0);
+        result = 31 * result + (tenantName != null ? tenantName.hashCode() : 0);
+        result = 31 * result + (tenantDesc != null ? tenantDesc.hashCode() : 0);
+        result = 31 * result + (tenantNote != null ? tenantNote.hashCode() : 0);
+        result = 31 * result + (tenantUri != null ? tenantUri.hashCode() : 0);
+        result = 31 * result + (tenantFolderUri != null ? tenantFolderUri.hashCode() : 0);
+        result = 31 * result + (theme != null ? theme.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientTenant{" +
+                "id='" + id + '\'' +
+                ", alias='" + alias + '\'' +
+                ", parentId='" + parentId + '\'' +
+                ", tenantName='" + tenantName + '\'' +
+                ", tenantDesc='" + tenantDesc + '\'' +
+                ", tenantNote='" + tenantNote + '\'' +
+                ", tenantUri='" + tenantUri + '\'' +
+                ", tenantFolderUri='" + tenantFolderUri + '\'' +
+                ", theme='" + theme + '\'' +
+                '}';
+    }
+}

@@ -22,6 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
@@ -51,6 +52,10 @@ public class Session {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public OrganizationsService organizationsService(){
+        return getService(OrganizationsService.class);
     }
 
     public ServerInfoService serverInfoService(){

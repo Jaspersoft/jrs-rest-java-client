@@ -21,6 +21,15 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientUser;
+import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.ClientTenant;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.OrganizationsListWrapper;
+
+import java.util.List;
+
 public class SessionStorage {
 
     private RestClientConfiguration configuration;
@@ -49,6 +58,35 @@ public class SessionStorage {
     public void setSessionId(String sessionId) {
         if (sessionId != null)
             credentials.setSessionId(sessionId);
+    }
+
+
+    public static void main(String[] args) {
+        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:4444/jasperserver-pro/");
+        JasperserverRestClient client = new JasperserverRestClient(configuration1);
+
+        Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
+
+        /*ClientTenant organization = new ClientTenant();
+        organization.setAlias("fromRestOrg1");
+
+        OperationResult<ClientTenant> result = session
+                .organizationsService()
+                .organizations()
+                .parameter(OrganizationParameter.CREATE_DEFAULT_USERS, "false")
+                .create(organization);
+
+        System.out.println(result.getEntity());*/
+
+        ClientTenant organization = new ClientTenant();
+        organization.setTheme("pods_summer");
+
+        OperationResult result = session
+                .organizationsService()
+                .organization("fromRestOrg1")
+                .delete();
+
+        System.out.println(result.getEntity());
     }
 
 }
