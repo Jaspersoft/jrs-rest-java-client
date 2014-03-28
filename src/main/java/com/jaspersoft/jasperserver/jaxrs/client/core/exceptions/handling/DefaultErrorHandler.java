@@ -26,6 +26,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.*;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Response;
@@ -66,6 +67,8 @@ public class DefaultErrorHandler implements ErrorHandler {
             if (response.hasEntity()) {
                 entity = response.readEntity(expectedType);
             }
+        } catch (MessageBodyProviderNotFoundException e){
+            log.warn("Cannot read entity from response body: unexpected body content");
         } catch (ProcessingException e) {
             log.warn("Cannot read entity from response body", e);
         }
@@ -74,18 +77,20 @@ public class DefaultErrorHandler implements ErrorHandler {
 
     protected void handleBodyError(Response response) {
         ErrorDescriptor errorDescriptor = readBody(response, ErrorDescriptor.class);
-        JSClientWebException exception = null;
-        try {
-            Class<? extends JSClientWebException> exceptionType =
-                    JRSExceptionsMapping.ERROR_CODE_TO_TYPE_MAP.get(errorDescriptor.getErrorCode());
+        if (errorDescriptor != null) {
+            JSClientWebException exception = null;
+            try {
+                Class<? extends JSClientWebException> exceptionType =
+                        JRSExceptionsMapping.ERROR_CODE_TO_TYPE_MAP.get(errorDescriptor.getErrorCode());
 
-            String message = errorDescriptor.getMessage();
-            exception = exceptionType.getConstructor(String.class, List.class)
-                    .newInstance(message != null ? message : errorDescriptor.getErrorCode(), Arrays.asList(errorDescriptor));
-        } catch (Exception e) {
-            log.warn("Cannot instantiate exception.", e);
+                String message = errorDescriptor.getMessage();
+                exception = exceptionType.getConstructor(String.class, List.class)
+                        .newInstance(message != null ? message : errorDescriptor.getErrorCode(), Arrays.asList(errorDescriptor));
+            } catch (Exception e) {
+                log.warn("Cannot instantiate exception.", e);
+            }
+            if (exception != null) throw exception;
         }
-        if (exception != null) throw exception;
     }
 
     protected void handleStatusCodeError(Response response, String overridingMessage) {

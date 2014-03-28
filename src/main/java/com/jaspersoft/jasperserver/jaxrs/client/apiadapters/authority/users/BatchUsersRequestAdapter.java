@@ -26,7 +26,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -37,12 +36,15 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder
 public class BatchUsersRequestAdapter extends AbstractAdapter {
 
     private MultivaluedMap<String, String> params;
-    private ErrorHandler errorHandler;
+    private final String uri;
 
-    public BatchUsersRequestAdapter(SessionStorage sessionStorage) {
+    public BatchUsersRequestAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
         params = new MultivaluedHashMap<String, String>();
-        this.errorHandler = new DefaultErrorHandler();
+        if (organizationId != null)
+            uri = "/organizations/" + organizationId + "/users";
+        else
+            uri = "/users";
     }
 
     public BatchUsersRequestAdapter param(UsersParameter userParam, String value){
@@ -52,7 +54,11 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
 
     public OperationResult<UsersListWrapper> get(){
         JerseyRequestBuilder<UsersListWrapper> builder =
-                buildRequest(sessionStorage, UsersListWrapper.class, new String[]{"users"}, errorHandler);
+                buildRequest(
+                        sessionStorage,
+                        UsersListWrapper.class,
+                        new String[]{uri},
+                        new DefaultErrorHandler());
         builder.addParams(params);
         return builder.get();
     }

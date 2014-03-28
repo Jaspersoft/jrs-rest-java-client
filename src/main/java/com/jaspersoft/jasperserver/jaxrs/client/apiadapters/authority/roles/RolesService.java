@@ -26,6 +26,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 public class RolesService extends AbstractAdapter {
 
+    private String organizationId;
+
     public RolesService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
@@ -33,11 +35,18 @@ public class RolesService extends AbstractAdapter {
     public SingleRoleRequestAdapter rolename(String rolename) {
         if ("".equals(rolename) || "/".equals(rolename))
             throw new  IllegalArgumentException("'rolename' mustn't be an empty string");
-        return new SingleRoleRequestAdapter(sessionStorage, rolename);
+        return new SingleRoleRequestAdapter(sessionStorage, organizationId, rolename);
     }
 
     public BatchRolesRequestAdapter allRoles() {
-        return new BatchRolesRequestAdapter(sessionStorage);
+        return new BatchRolesRequestAdapter(sessionStorage, organizationId);
+    }
+
+    public RolesService organization(String organizationId){
+        if ("".equals(organizationId) || "/".equals(organizationId))
+            throw new  IllegalArgumentException("'organizationId' mustn't be an empty string");
+        this.organizationId = organizationId;
+        return this;
     }
 
 }

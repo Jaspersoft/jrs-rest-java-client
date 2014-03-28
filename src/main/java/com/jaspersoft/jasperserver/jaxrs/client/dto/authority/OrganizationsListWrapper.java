@@ -7,20 +7,20 @@ import java.util.List;
 @XmlRootElement(name = "organizations")
 public class OrganizationsListWrapper {
 
-    private List<ClientTenant> list;
+    private List<Organization> list;
 
     public OrganizationsListWrapper(){}
 
-    public OrganizationsListWrapper(List<ClientTenant> roles){
+    public OrganizationsListWrapper(List<Organization> roles){
        list = roles;
     }
 
     @XmlElement(name = "organization")
-    public List<ClientTenant> getList() {
+    public List<Organization> getList() {
         return list;
     }
 
-    public void setList(List<ClientTenant> list) {
+    public void setList(List<Organization> list) {
         this.list = list;
     }
 

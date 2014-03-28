@@ -28,24 +28,21 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
-
 public class SingleUserRequestAdapter extends AbstractAdapter {
 
-    private String username;
-    private ErrorHandler errorHandler;
+    private final String userUriPrefix;
 
-    public SingleUserRequestAdapter(SessionStorage sessionStorage, String username) {
+    public SingleUserRequestAdapter(SessionStorage sessionStorage, String organizationId,  String username) {
         super(sessionStorage);
-        this.username = username;
-        this.errorHandler = new DefaultErrorHandler();
-
+        if (organizationId != null)
+            userUriPrefix = "/organizations/" + organizationId + "/users/" + username;
+        else
+            userUriPrefix = "/users/" + username;
     }
 
     public SingleAttributeInterfaceAdapter attribute(String attributeName){
@@ -59,21 +56,23 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<ClientUser> get(){
-        JerseyRequestBuilder<ClientUser> builder =
-                buildRequest(sessionStorage, ClientUser.class, new String[]{"/users", username}, errorHandler);
-        return builder.get();
+        return buildRequest().get();
     }
 
     public OperationResult<ClientUser> createOrUpdate(ClientUser user){
-        JerseyRequestBuilder<ClientUser> builder =
-                buildRequest(sessionStorage, ClientUser.class, new String[]{"/users", username}, errorHandler);
-        return builder.put(user);
+        return buildRequest().put(user);
     }
 
     public OperationResult delete(){
-        JerseyRequestBuilder<Object> builder =
-                buildRequest(sessionStorage, Object.class, new String[]{"/users", username}, errorHandler);
-        return builder.delete();
+        return buildRequest().delete();
+    }
+
+    private JerseyRequestBuilder<ClientUser> buildRequest(){
+        return JerseyRequestBuilder.buildRequest(
+                sessionStorage,
+                ClientUser.class,
+                new String[]{userUriPrefix},
+                new DefaultErrorHandler());
     }
 
     public class SingleAttributeInterfaceAdapter {
@@ -85,21 +84,23 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         }
 
         public OperationResult<ClientUserAttribute> get(){
-            JerseyRequestBuilder<ClientUserAttribute> builder =
-                    buildRequest(sessionStorage, ClientUserAttribute.class, new String[]{"/users", username, "/attributes", attributeName}, errorHandler);
-            return builder.get();
+            return buildRequest().get();
         }
 
         public OperationResult delete(){
-            JerseyRequestBuilder<Object> builder =
-                    buildRequest(sessionStorage, Object.class, new String[]{"/users", username, "/attributes", attributeName}, errorHandler);
-            return builder.delete();
+            return buildRequest().delete();
         }
 
         public OperationResult createOrUpdate(ClientUserAttribute attribute){
-            JerseyRequestBuilder<Object> builder =
-                    buildRequest(sessionStorage, Object.class, new String[]{"/users", username, "/attributes", attributeName}, errorHandler);
-            return builder.put(attribute);
+            return buildRequest().put(attribute);
+        }
+
+        private JerseyRequestBuilder<ClientUserAttribute> buildRequest(){
+            return JerseyRequestBuilder.buildRequest(
+                    sessionStorage,
+                    ClientUserAttribute.class,
+                    new String[]{userUriPrefix, "/attributes", attributeName},
+                    new DefaultErrorHandler());
         }
 
     }
@@ -118,23 +119,27 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         }
 
         public OperationResult<UserAttributesListWrapper> get(){
-            JerseyRequestBuilder<UserAttributesListWrapper> builder =
-                    buildRequest(sessionStorage, UserAttributesListWrapper.class, new String[]{"/users", username, "/attributes"}, errorHandler);
+            JerseyRequestBuilder<UserAttributesListWrapper> builder = buildRequest();
             builder.addParams(params);
             return builder.get();
         }
 
         public OperationResult createOrUpdate(UserAttributesListWrapper attributesList){
-            JerseyRequestBuilder<UserAttributesListWrapper> builder =
-                    buildRequest(sessionStorage, UserAttributesListWrapper.class, new String[]{"/users", username, "/attributes"}, errorHandler);
-            return builder.put(attributesList);
+            return buildRequest().put(attributesList);
         }
 
         public OperationResult delete(){
-            JerseyRequestBuilder<UserAttributesListWrapper> builder =
-                    buildRequest(sessionStorage, UserAttributesListWrapper.class, new String[]{"/users", username, "/attributes"}, errorHandler);
+            JerseyRequestBuilder<UserAttributesListWrapper> builder = buildRequest();
             builder.addParams(params);
             return builder.delete();
+        }
+
+        private JerseyRequestBuilder<UserAttributesListWrapper> buildRequest(){
+            return JerseyRequestBuilder.buildRequest(
+                    sessionStorage,
+                    UserAttributesListWrapper.class,
+                    new String[]{userUriPrefix, "/attributes"},
+                    new DefaultErrorHandler());
         }
 
     }

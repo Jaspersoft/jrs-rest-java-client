@@ -27,7 +27,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.ClientTenant;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.Organization;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.AnnotationIntrospector;
@@ -37,7 +37,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 
 
 public class SingleOrganizationAdapter extends AbstractAdapter {
@@ -51,11 +50,11 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         this.organizationId = organizationId;
     }
 
-    public OperationResult<ClientTenant> get() {
+    public OperationResult<Organization> get() {
         return buildRequest().get();
     }
 
-    public OperationResult<ClientTenant> update(ClientTenant organization) {
+    public OperationResult<Organization> update(Organization organization) {
         ObjectMapper mapper = new ObjectMapper();
 
         SerializationConfig serializationConfig = mapper.getSerializationConfig();
@@ -80,10 +79,10 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return buildRequest().delete();
     }
 
-    private JerseyRequestBuilder<ClientTenant> buildRequest() {
+    private JerseyRequestBuilder<Organization> buildRequest() {
         return JerseyRequestBuilder.buildRequest(
                 sessionStorage,
-                ClientTenant.class,
+                Organization.class,
                 new String[]{"/organizations", organizationId},
                 new DefaultErrorHandler());
     }

@@ -27,18 +27,19 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 public class SingleRoleRequestAdapter extends AbstractAdapter {
 
-    private final String rolename;
-    private ErrorHandler errorHandler;
 
-    public SingleRoleRequestAdapter(SessionStorage sessionStorage, String rolename) {
+    private final String roleUriPrefix;
+
+    public SingleRoleRequestAdapter(SessionStorage sessionStorage, String organizationId, String rolename) {
         super(sessionStorage);
-        this.rolename = rolename;
-        this.errorHandler = new DefaultErrorHandler();
+        if (organizationId != null)
+            roleUriPrefix = "/organizations/" + organizationId + "/roles/" + rolename;
+        else
+            roleUriPrefix = "/roles/" + rolename;
     }
 
     public OperationResult<ClientRole> get(){
@@ -54,7 +55,11 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
     }
 
     private <T> JerseyRequestBuilder<T> buildRequest(Class<T> returnType){
-        return JerseyRequestBuilder.buildRequest(sessionStorage, returnType, new String[]{"/roles", rolename}, errorHandler);
+        return JerseyRequestBuilder.buildRequest(
+                sessionStorage,
+                returnType,
+                new String[]{roleUriPrefix},
+                new DefaultErrorHandler());
     }
 
 }

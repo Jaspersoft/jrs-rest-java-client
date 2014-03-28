@@ -26,7 +26,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.ClientTenant;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.Organization;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.OrganizationsListWrapper;
 
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -52,8 +52,8 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
         return builder.get();
     }
 
-    public OperationResult<ClientTenant> create(ClientTenant organization){
-        JerseyRequestBuilder<ClientTenant> builder = buildRequest(ClientTenant.class);
+    public OperationResult<Organization> create(Organization organization){
+        JerseyRequestBuilder<Organization> builder = buildRequest(Organization.class);
         builder.addParams(params);
         return builder.post(organization);
     }

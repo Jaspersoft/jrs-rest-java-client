@@ -3,7 +3,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.authority;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "organization")
-public class ClientTenant {
+public class Organization {
 
     private String id = null;
     private String alias = null;
@@ -20,7 +20,7 @@ public class ClientTenant {
         return tenantDesc;
     }
 
-    public ClientTenant setTenantDesc(String tenantDesc) {
+    public Organization setTenantDesc(String tenantDesc) {
         this.tenantDesc = tenantDesc;
         return this;
     }
@@ -29,7 +29,7 @@ public class ClientTenant {
         return tenantNote;
     }
 
-    public ClientTenant setTenantNote(String tenantNote) {
+    public Organization setTenantNote(String tenantNote) {
         this.tenantNote = tenantNote;
         return this;
     }
@@ -37,7 +37,7 @@ public class ClientTenant {
     public String getId() {
         return id;
     }
-    public ClientTenant setId(String pid) {
+    public Organization setId(String pid) {
         id = pid;
         return this;
     }
@@ -46,7 +46,7 @@ public class ClientTenant {
         return alias;
     }
 
-    public ClientTenant setAlias(String alias) {
+    public Organization setAlias(String alias) {
         this.alias = alias;
         return this;
     }
@@ -55,7 +55,7 @@ public class ClientTenant {
         return parentId;
     }
 
-    public ClientTenant setParentId(String parentId) {
+    public Organization setParentId(String parentId) {
         this.parentId = parentId;
         return this;
     }
@@ -64,7 +64,7 @@ public class ClientTenant {
         return tenantName;
     }
 
-    public ClientTenant setTenantName(String tenantName) {
+    public Organization setTenantName(String tenantName) {
         this.tenantName = tenantName;
         return this;
     }
@@ -73,7 +73,7 @@ public class ClientTenant {
         return tenantUri;
     }
 
-    public ClientTenant setTenantUri(String tenantUri) {
+    public Organization setTenantUri(String tenantUri) {
         this.tenantUri = tenantUri;
         return this;
     }
@@ -81,7 +81,7 @@ public class ClientTenant {
     public String getTenantFolderUri() {
         return tenantFolderUri;
     }
-    public ClientTenant setTenantFolderUri(String tenantFolderUri) {
+    public Organization setTenantFolderUri(String tenantFolderUri) {
         this.tenantFolderUri = tenantFolderUri;
         return this;
     }
@@ -90,7 +90,7 @@ public class ClientTenant {
         return theme;
     }
 
-    public ClientTenant setTheme(String theme) {
+    public Organization setTheme(String theme) {
         this.theme = theme;
         return this;
     }
@@ -100,7 +100,7 @@ public class ClientTenant {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ClientTenant that = (ClientTenant) o;
+        Organization that = (Organization) o;
 
         if (alias != null ? !alias.equals(that.alias) : that.alias != null) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
@@ -132,7 +132,7 @@ public class ClientTenant {
 
     @Override
     public String toString() {
-        return "ClientTenant{" +
+        return "Organization{" +
                 "id='" + id + '\'' +
                 ", alias='" + alias + '\'' +
                 ", parentId='" + parentId + '\'' +
