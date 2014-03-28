@@ -29,8 +29,10 @@ Report services
 After you've configured the client you can easily use any of available services. For reporting service there is one feature that should be noted - when you are running a report all subsequent operations must be executed in the same session. Here's the code:
 ```java
 Session session = client.authenticate("jasperadmin", "jasperadmin");
+//authentication with multitenancy enabled
+Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
 //or authentication with encrypted password
-//Session session = client.authenticate("jasperadmin", "8deb4666e0811b048d400522b2c7d5847119f91fa5ba055ecc193034d84aa1f25d20b5203399591849bb6f04b498b9e21df9ee6d6ca2c1c8b35d591831703b54a358d5d7b8d5155f923f358e6dc449a31d687400d9865b2e971ce333245ef10bed01868e4deef3f88168634225bf8809bb1e89cd2dbc5e9f10728d010b9f799a");
+Session session = client.authenticate("jasperadmin", "8deb4666e0811b048d400522b2c7d5847119f91fa5ba055ecc193034d84aa1f25d20b5203399591849bb6f04b498b9e21df9ee6d6ca2c1c8b35d591831703b54a358d5d7b8d5155f923f358e6dc449a31d687400d9865b2e971ce333245ef10bed01868e4deef3f88168634225bf8809bb1e89cd2dbc5e9f10728d010b9f799a");
 ```
 We've authenticated as `jasperadmin` user an got a session for this user, all subsequent operations must be done through this session instance.
 ####Running a report:
@@ -221,6 +223,75 @@ InputControlStateListWrapper inputControlsValues =
 Administration services:
 ========================
 Only administrative users may access the REST services for administration.
+
+###Organizations service
+It provides methods that allow you to list, view, create, modify, and delete organizations (also known as tenants). Because the organization ID is used in the URL, this service can operate only on organizations whose ID is less than 100 characters long and does not contain spaces or special symbols. As with resource IDs, the organization ID is permanent and cannot be modified for the life of the organization.
+####Searching for Organizations
+The service searches for organizations by ID, alias, or display name. If no search is specified, it returns a list of all organizations. Searches and listings start from but do not include the
+logged-in user’s organization or the specified base.
+```java
+OperationResult<OrganizationsListWrapper> result = session
+        .organizationsService()
+        .organizations()
+        .parameter(OrganizationParameter.INCLUDE_PARENTS, "true")
+        .get();
+```
+####Viewing an Organization
+The `organization()` method with an organization ID retrieves a single descriptor containing the list of properties for the organization. When you specify an organization, use its unique ID, not its path.
+```java
+OperationResult<Organization> result = session
+        .organizationsService()
+        .organization("myOrg1")
+        .get();
+```
+####Creating an Organization
+To create an organization, put all information in an organization descriptor, and include it in a request to the `rest_v2/organizations` service, with no ID specified. The organization is created in the organization specified by the `parentId` value of the descriptor.
+```java
+Organization organization = new Organization();
+organization.setAlias("myOrg1");
+
+OperationResult<Organization> result = session
+        .organizationsService()
+        .organizations()
+        .create(organization);
+```
+The descriptor sent in the request should contain all the properties you want to set on the new organization. Specify the `parentId` value to set the parent of the organization, not the `tenantUri` or `tenantFolderUri` properties.  
+However, all properties have defaults or can be determined based on the alias value. The minimal descriptor necessary to create an organization is simply the alias property. In this case, the organization is created as child of the logged-in user’s home organization.
+####Modifying Organization Properties
+To modify the properties of an organization, use the `update` method and specify the organization ID in the URL. The request must include an organization descriptor with the values you want to change. You cannot change the ID of an organization, only its name (used for display) and its alias (used for logging in).
+```java
+Organization organization = new Organization();
+organization.setAlias("lalalaOrg");
+
+OperationResult<Organization> result = session
+        .organizationsService()
+        .organization("myOrg1")
+        .update(organization);
+```
+####Deleting an Organization
+To delete an organization, use the `delete()` method and specify the organization ID in the `organization()` method. When deleting an organization, all of its resources in the repository, all of its sub-organizations, all of its users, and all of its roles are permanently deleted.
+```java
+OperationResult result = session
+        .organizationsService()
+        .organization("myOrg1")
+        .delete();
+```
+  
+  
+######Each of administration services can work both with enabled and disabled multitenancy mode.
+```java
+//with multitenancy
+client
+        .authenticate("jasperadmin|organization_1", "jasperadmin")
+        .usersService()
+        .organization("myOrg1")
+        ....
+//without multitenancy        
+client
+        .authenticate("jasperadmin", "jasperadmin")
+        .usersService()
+        ...
+```
 
 ###Users service
 It provides methods that allow you to list, view, create, modify, and delete user accounts, including setting role membership.
