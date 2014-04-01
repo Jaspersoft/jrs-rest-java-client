@@ -24,15 +24,28 @@ Here everything is easy, you need just to pass `configuration` to `JasperserverR
 JasperserverRestClient client = new JasperserverRestClient(configuration);
 ```
 
-Report services
-===============
-After you've configured the client you can easily use any of available services. For reporting service there is one feature that should be noted - when you are running a report all subsequent operations must be executed in the same session. Here's the code:
+Authentication
+---------------
+There are two types of authentication: with encription on and off.
+####Basic authentication (encryption off)
+Specify login and password (not encrypted) in `authenticate()` method.
 ```java
 Session session = client.authenticate("jasperadmin", "jasperadmin");
 //authentication with multitenancy enabled
 Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
-//or authentication with encrypted password
+```
+####Authentication with encrypted password
+All exactly the same, but you need to pass encrypted password.
+```java
 Session session = client.authenticate("jasperadmin", "8deb4666e0811b048d400522b2c7d5847119f91fa5ba055ecc193034d84aa1f25d20b5203399591849bb6f04b498b9e21df9ee6d6ca2c1c8b35d591831703b54a358d5d7b8d5155f923f358e6dc449a31d687400d9865b2e971ce333245ef10bed01868e4deef3f88168634225bf8809bb1e89cd2dbc5e9f10728d010b9f799a");
+```
+
+
+Report services
+===============
+After you've configured the client you can easily use any of available services. For reporting service there is one feature that should be noted - when you are running a report all subsequent operations must be executed in the same session. Here's the code:
+```java
+Session session = client.authenticate("login", "password");
 ```
 We've authenticated as `jasperadmin` user an got a session for this user, all subsequent operations must be done through this session instance.
 ####Running a report:
@@ -1094,15 +1107,14 @@ String edition = result.getEntity();
 
 Exception handling
 =====================
-You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method. 
+You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method. 
 
-JRS REST client exception handling system is based on `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler` interface. Its `void handleException(Response response)` method is responsible for all error handling logic. You can use existed handlers, define your own handlers or extend existed handlers.
+JRS REST client exception handling system is based on `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` interface. Its `void handleError(Response response)` method is responsible for all error handling logic. You can use existed handlers, define your own handlers or extend existed handlers.
 
 1. Existed handlers:
-  * `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` - primitive handler, its logic is based only on response status, so it won't give any details of error.
-  * `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.CommonExceptionHandler` - this implementation is suitable for most of the JRS errors, but sometimes you can meet some not standart errors and here such implementations as `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobValidationExceptionHandler`, `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.RunReportExceptionHandler`, etc. take responsibility.
-2. You can create your own handler by implementing `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ExceptionHandler`.
-3. You can extend `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` or any other handler and override its methods `handleBadRequestError(Response response)` and/or `handleOtherErrors(Response response)`.
+  * `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` - this implementation is suitable for most of the JRS errors, but sometimes you can meet some not standart errors and here such implementations as `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobValidationErrorHandler`, `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.RunReportErrorHandler`, etc. take responsibility.
+2. You can create your own handler by implementing `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler`.
+3. You can extend `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` or any other handler and override its methods `void handleBodyError(Response response)` and/or `void handleStatusCodeError(Response response, String overridingMessage)`.
 
 
 License
