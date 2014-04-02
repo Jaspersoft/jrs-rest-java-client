@@ -39,6 +39,11 @@ All exactly the same, but you need to pass encrypted password.
 ```java
 Session session = client.authenticate("jasperadmin", "8deb4666e0811b048d400522b2c7d5847119f91fa5ba055ecc193034d84aa1f25d20b5203399591849bb6f04b498b9e21df9ee6d6ca2c1c8b35d591831703b54a358d5d7b8d5155f923f358e6dc449a31d687400d9865b2e971ce333245ef10bed01868e4deef3f88168634225bf8809bb1e89cd2dbc5e9f10728d010b9f799a");
 ```
+####Logout
+Not to store session on server you can invalidate it with `logout()` method.
+```java
+session.logout();
+```
 
 
 Report services
