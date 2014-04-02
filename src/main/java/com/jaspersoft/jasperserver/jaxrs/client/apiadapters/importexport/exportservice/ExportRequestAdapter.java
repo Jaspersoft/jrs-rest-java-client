@@ -74,7 +74,7 @@ public class ExportRequestAdapter extends AbstractAdapter {
         builder.setAccept("application/zip");
 
         OperationResult<InputStream> result = builder.get();
-        sessionStorage.setSessionId(result.getSessionId());
+        //sessionStorage.setSessionId(result.getSessionId());
 
         return result;
     }

@@ -76,6 +76,8 @@ public class DefaultErrorHandler implements ErrorHandler {
     }
 
     protected void handleBodyError(Response response) {
+        if (response.getHeaderString("Content-Type").contains("text/html")) return;
+
         ErrorDescriptor errorDescriptor = readBody(response, ErrorDescriptor.class);
         if (errorDescriptor != null) {
             JSClientWebException exception = null;

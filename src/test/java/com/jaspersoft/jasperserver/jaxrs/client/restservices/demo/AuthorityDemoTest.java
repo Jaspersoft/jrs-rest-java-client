@@ -54,7 +54,7 @@ public class AuthorityDemoTest extends Assert {
 
         user = new ClientUser()
                 .setUsername("john.doe")
-                .setPassword("12345678")
+                .setPassword("12345678q")
                 .setEmailAddress("john.doe@email.net")
                 .setEnabled(true)
                 .setExternallyDefined(false)
@@ -156,7 +156,7 @@ public class AuthorityDemoTest extends Assert {
 
         OperationResult<RepositoryPermission> result =
                 client
-                        .authenticate("john.doe", "12345678")
+                        .authenticate("john.doe", "12345678q")
                         .permissionsService()
                         .resource("/")
                         .permissionRecipient(PermissionRecipient.USER, "john.doe")

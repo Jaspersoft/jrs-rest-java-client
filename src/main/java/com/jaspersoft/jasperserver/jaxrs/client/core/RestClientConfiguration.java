@@ -24,21 +24,28 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RestClientConfiguration {
 
-    private String restServerUrl;
+    private static final Pattern URL_PATTERN = Pattern.compile("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
 
-    public RestClientConfiguration(String restServerUrl){
-        setRestServerUrl(restServerUrl);
+    private String jasperReportsServerUrl;
+
+    public RestClientConfiguration(String jasperReportsServerUrl){
+        Matcher matcher = URL_PATTERN.matcher(jasperReportsServerUrl);
+        if (!matcher.matches())
+            throw new IllegalArgumentException("Given parameter is not a URL");
+        setJasperReportsServerUrl(jasperReportsServerUrl);
     }
 
-    public String getRestServerUrl() {
-        return restServerUrl;
+    public String getJasperReportsServerUrl() {
+        return jasperReportsServerUrl;
     }
 
-    public void setRestServerUrl(String restServerUrl) {
-        this.restServerUrl = restServerUrl;
+    public void setJasperReportsServerUrl(String jasperReportsServerUrl) {
+        this.jasperReportsServerUrl = jasperReportsServerUrl;
     }
 
     public static RestClientConfiguration loadConfiguration(String path){

@@ -32,6 +32,10 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.Permissi
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo.ServerInfoService;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 
 
 public class Session {
@@ -44,6 +48,12 @@ public class Session {
 
     public SessionStorage getStorage() {
         return storage;
+    }
+
+    public void logout(){
+        WebTarget target = storage.getRootTarget().path("/exituser.html");
+        Response response = target.request().get();
+        if (response.getStatus() >= 400) new DefaultErrorHandler().handleError(response);
     }
 
     public <ServiceType extends AbstractAdapter> ServiceType getService(Class<ServiceType> serviceClass){

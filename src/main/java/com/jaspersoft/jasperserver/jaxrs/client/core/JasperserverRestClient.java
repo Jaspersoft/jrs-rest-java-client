@@ -44,9 +44,7 @@ public class JasperserverRestClient {
         else
             credentials = new AuthenticationCredentials(username, password);
 
-        SessionStorage sessionStorage = new SessionStorage();
-        sessionStorage.setConfiguration(configuration);
-        sessionStorage.setCredentials(credentials);
+        SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
         return new Session(sessionStorage);
     }
 

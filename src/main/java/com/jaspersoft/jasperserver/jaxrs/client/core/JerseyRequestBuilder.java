@@ -27,14 +27,17 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHa
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
-import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
 import com.sun.jersey.multipart.impl.MultiPartWriter;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
-import javax.ws.rs.client.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
@@ -89,45 +92,10 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
         this.contentType = MediaType.APPLICATION_JSON;
         this.acceptType = MediaType.APPLICATION_JSON;
         this.headers = new MultivaluedHashMap<String, String>();
-        init();
-    }
-
-    private void init() {
-        AuthenticationCredentials credentials = sessionStorage.getCredentials();
-        if (credentials.isPasswordEncrypted())
-            loginWithEncryptedPassword(credentials, sessionStorage.getConfiguration().getRestServerUrl());
-
-        Client client = ClientBuilder.newClient();
-        client
+        this.usersWebTarget = sessionStorage.getRootTarget().path("/rest_v2")
                 .register(CustomRepresentationTypeProvider.class)
                 .register(JacksonFeature.class)
                 .register(MultiPartWriter.class);
-
-        String restServerUrl = sessionStorage.getConfiguration().getRestServerUrl();
-        usersWebTarget = client.target(restServerUrl + (restServerUrl.endsWith("/") ? "rest_v2" : "/rest_v2"));
-
-        if (sessionStorage.getSessionId() != null)
-            usersWebTarget.register(new SessionOutputFilter(sessionStorage.getSessionId()));
-        else
-            usersWebTarget.register(HttpAuthenticationFeature.basic(credentials.getUsername(), credentials.getPassword()));
-    }
-
-    private void loginWithEncryptedPassword(AuthenticationCredentials credentials, String serverUrl) {
-        Client client = ClientBuilder.newClient();
-        Form form = new Form();
-        form
-                .param("j_username", credentials.getUsername())
-                .param("j_password", credentials.getPassword());
-
-        WebTarget target = client.target(serverUrl + (serverUrl.endsWith("/") ? "rest/login" : "/rest/login"));
-        Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
-        if (response.getStatus() == ResponseStatus.OK){
-            String jsessionid = response.getCookies().get("JSESSIONID").getValue();
-            credentials.setSessionId(jsessionid);
-        } else {
-            errorHandler.handleError(response);
-        }
-
     }
 
     public JerseyRequestBuilder<ResponseType> setPath(String path) {
@@ -201,7 +169,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
 
         OperationResult<ResponseType> result =
                 operationResultFactory.getOperationResult(response, responseClass);
-        this.sessionStorage.setSessionId(result.getSessionId());
+        //this.sessionStorage.setSessionId(result.getSessionId());
         return result;
     }
 

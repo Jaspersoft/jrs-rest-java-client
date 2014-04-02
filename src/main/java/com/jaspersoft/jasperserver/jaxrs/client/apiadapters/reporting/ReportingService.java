@@ -40,7 +40,7 @@ public class ReportingService extends AbstractAdapter {
         OperationResult<ReportExecutionDescriptor> descriptor =
                 buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions"}, new DefaultErrorHandler())
                         .post(request);
-        sessionStorage.setSessionId(descriptor.getSessionId());
+        //sessionStorage.setSessionId(descriptor.getSessionId());
         return descriptor;
     }
 

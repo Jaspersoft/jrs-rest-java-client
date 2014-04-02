@@ -26,7 +26,6 @@ public class AuthenticationCredentials {
     private String username;
     private String password;
     private boolean isPasswordEncrypted;
-    private String sessionId;
 
     public AuthenticationCredentials(String username, String password) {
         this.username = username;
@@ -62,11 +61,4 @@ public class AuthenticationCredentials {
         isPasswordEncrypted = passwordEncrypted;
     }
 
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
 }

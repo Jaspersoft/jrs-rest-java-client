@@ -21,10 +21,51 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 public class SessionStorage {
 
     private RestClientConfiguration configuration;
     private AuthenticationCredentials credentials;
+    private WebTarget rootTarget;
+    private String sessionId;
+
+    public SessionStorage(RestClientConfiguration configuration, AuthenticationCredentials credentials) {
+        this.configuration = configuration;
+        this.credentials = credentials;
+        init();
+    }
+
+    private void init(){
+        Client client = ClientBuilder.newClient();
+        rootTarget = client.target(configuration.getJasperReportsServerUrl());
+        login();
+        rootTarget.register(new SessionOutputFilter(sessionId));
+    }
+
+    private void login() {
+        Form form = new Form();
+        form
+                .param("j_username", credentials.getUsername())
+                .param("j_password", credentials.getPassword());
+
+        WebTarget target = rootTarget.path("/rest/login");
+        Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+
+        if (response.getStatus() == ResponseStatus.OK)
+            this.sessionId = response.getCookies().get("JSESSIONID").getValue();
+        else
+            new DefaultErrorHandler().handleError(response);
+    }
 
     public RestClientConfiguration getConfiguration() {
         return configuration;
@@ -43,12 +84,38 @@ public class SessionStorage {
     }
 
     public String getSessionId() {
-        return credentials.getSessionId();
+        return sessionId;
     }
 
     public void setSessionId(String sessionId) {
-        if (sessionId != null)
-            credentials.setSessionId(sessionId);
+        this.sessionId = sessionId;
     }
 
+    public WebTarget getRootTarget() {
+        return rootTarget;
+    }
+
+    /*public static void main(String[] args) {
+        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:4444/jasperserver");
+        JasperserverRestClient client = new JasperserverRestClient(configuration1);
+
+        Session session = client.authenticate("jasperadmin", "jasperadmin");
+
+        OperationResult<RolesListWrapper> result = session
+                .rolesService()
+                .allRoles()
+                .get();
+
+        System.out.println(result.getEntity());
+
+        session.logout();
+
+        OperationResult<RolesListWrapper> result1 = session
+                .rolesService()
+                .allRoles()
+                .get();
+
+        System.out.println(result1.getEntity());
+
+    }*/
 }
