@@ -21,6 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -88,47 +89,18 @@ public class SessionStorage {
         return rootTarget;
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
+    /*public static void main(String[] args) throws InterruptedException {
+        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:4444/jasperserver");
         JasperserverRestClient client = new JasperserverRestClient(configuration1);
 
-        Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
+        Session session = client.authenticate("jasperadmin", "jasperadmin");
 
-        RequestExecution requestExecution = session
-                .organizationsService()
-                .organizations()
-                .parameter(OrganizationParameter.CREATE_DEFAULT_USERS, "false")
-                .asyncCreate(new Organization().setAlias("asyncTestOrg"), new Callback<OperationResult<Organization>, Void>() {
-                    @Override
-                    public Void execute(OperationResult<Organization> data) {
-                        System.out.println(data.getEntity());
-                        while (alwaysTrue()){}
-                        return null;
-                    }
+        OperationResult<UsersListWrapper> result = session
+                .usersService()
+                .allUsers()
+                .get();
 
-                    private boolean alwaysTrue(){return true;}
-                });
+        System.out.println(result.getSerializedContent());
 
-        requestExecution.cancel();
-
-        session
-                .organizationsService()
-                .organizations()
-                .parameter(OrganizationParameter.INCLUDE_PARENTS, "false")
-                .asyncGet(new Callback<OperationResult<OrganizationsListWrapper>, Void>() {
-                    @Override
-                    public Void execute(OperationResult<OrganizationsListWrapper> data) {
-                        OrganizationsListWrapper organizationsListWrapper = data.getEntity();
-                        List<Organization> list = organizationsListWrapper.getList();
-                        for (Organization organization : list) {
-                            System.out.println(organization);
-                        }
-                        return null;
-                    }
-                });
-
-        System.out.println("hello");
-
-
-    }
+    }*/
 }

@@ -31,6 +31,7 @@ public abstract class OperationResult<T> {
     private Class<? extends T> entityClass;
 
     private T entity;
+    private String serializedContent;
 
     public OperationResult(Response response, Class<? extends T> entityClass) {
         this.response = response;
@@ -42,6 +43,16 @@ public abstract class OperationResult<T> {
             if (entity == null)
                 entity = response.readEntity(entityClass);
             return entity;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getSerializedContent() {
+        try {
+            if (serializedContent == null)
+                serializedContent = response.readEntity(String.class);
+            return serializedContent;
         } catch (Exception e) {
             return null;
         }
