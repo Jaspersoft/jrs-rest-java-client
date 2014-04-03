@@ -1114,8 +1114,7 @@ RequestExecution requestExecution = session
         requestExecution.cancel();
 ```
 
-Getting serialized content from response
-========================================
+###Getting serialized content from response
 If you need to get a plain response body, either JSON, XML, HTML or plain text, you gen get it it with code below:
 ```java
 OperationResult<UsersListWrapper> result = ...
