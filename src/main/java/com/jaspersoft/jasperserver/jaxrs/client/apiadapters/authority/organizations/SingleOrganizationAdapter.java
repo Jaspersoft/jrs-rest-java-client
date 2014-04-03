@@ -22,8 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -54,7 +53,21 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return buildRequest().get();
     }
 
-    public OperationResult<Organization> update(Organization organization) {
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<Organization>, R> callback){
+        final JerseyRequest<Organization> builder = buildRequest();
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.get());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
+    private String prepareJsonForUpdate(Organization organization){
         ObjectMapper mapper = new ObjectMapper();
 
         SerializationConfig serializationConfig = mapper.getSerializationConfig();
@@ -64,7 +77,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         mapper.setSerializationConfig(serializationConfig);
         mapper.setAnnotationIntrospector(introspector);
 
-        String json = null;
+        String json;
         try {
             json = mapper.writeValueAsString(organization);
         } catch (IOException e) {
@@ -72,15 +85,49 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
             throw new JSClientException("Cannot marshal organization object.");
         }
 
+        return json;
+    }
+
+    public OperationResult<Organization> update(Organization organization) {
+        String json = prepareJsonForUpdate(organization);
         return buildRequest().put(json);
+    }
+
+    public <R> RequestExecution asyncUpdate(Organization organization, final Callback<OperationResult<Organization>, R> callback){
+        final JerseyRequest<Organization> builder = buildRequest();
+        final String json = prepareJsonForUpdate(organization);
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.put(json));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     public OperationResult delete(){
         return buildRequest().delete();
     }
 
-    private JerseyRequestBuilder<Organization> buildRequest() {
-        return JerseyRequestBuilder.buildRequest(
+    public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback){
+        final JerseyRequest builder = buildRequest();
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.delete());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
+    private JerseyRequest<Organization> buildRequest() {
+        return JerseyRequest.buildRequest(
                 sessionStorage,
                 Organization.class,
                 new String[]{"/organizations", organizationId},

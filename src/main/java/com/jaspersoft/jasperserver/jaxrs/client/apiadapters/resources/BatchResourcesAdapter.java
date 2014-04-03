@@ -23,15 +23,14 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientResourceListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class BatchResourcesAdapter extends AbstractAdapter {
 
@@ -51,12 +50,40 @@ public class BatchResourcesAdapter extends AbstractAdapter {
         return getBuilder(ClientResourceListWrapper.class).get();
     }
 
+    public <R> RequestExecution asyncSearch(final Callback<OperationResult<ClientResourceListWrapper>, R> callback) {
+        final JerseyRequest<ClientResourceListWrapper> builder = getBuilder(ClientResourceListWrapper.class);
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.get());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
     public OperationResult delete(){
         return getBuilder(Object.class).delete();
     }
 
-    private <T> JerseyRequestBuilder<T> getBuilder(Class<T> responseClass) {
-        JerseyRequestBuilder<T> builder = buildRequest(sessionStorage, responseClass, new String[]{"/resources"}, new DefaultErrorHandler());
+    public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
+        final JerseyRequest builder = getBuilder(Object.class);
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.delete());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
+    private <T> JerseyRequest<T> getBuilder(Class<T> responseClass) {
+        JerseyRequest<T> builder = buildRequest(sessionStorage, responseClass, new String[]{"/resources"}, new DefaultErrorHandler());
         builder.addParams(params);
         return builder;
     }

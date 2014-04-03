@@ -22,12 +22,12 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class ImportRequestAdapter extends AbstractAdapter {
 
@@ -42,6 +42,21 @@ public class ImportRequestAdapter extends AbstractAdapter {
     public OperationResult<StateDto> state(){
         return buildRequest(sessionStorage, StateDto.class, new String[]{"/import", taskId, STATE_URI}, new DefaultErrorHandler())
                 .get();
+    }
+
+    public <R> RequestExecution asyncState(final Callback<OperationResult<StateDto>, R> callback){
+        final JerseyRequest<StateDto> builder =
+                buildRequest(sessionStorage, StateDto.class, new String[]{"/import", taskId, STATE_URI});
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.get());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
 }

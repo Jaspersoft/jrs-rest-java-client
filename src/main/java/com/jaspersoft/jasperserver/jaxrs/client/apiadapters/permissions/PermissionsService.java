@@ -24,12 +24,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class PermissionsService extends AbstractAdapter {
 
@@ -48,10 +47,41 @@ public class PermissionsService extends AbstractAdapter {
                 .post(permission);
     }
 
+    public <R> RequestExecution asyncCreateNew(final RepositoryPermission permission, final Callback<OperationResult, R> callback) {
+        final JerseyRequest builder =
+                buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.post(permission));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
     public OperationResult createNew(RepositoryPermissionListWrapper permissions) {
-        JerseyRequestBuilder builder = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"}, new DefaultErrorHandler());
+        JerseyRequest builder = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
         builder.setContentType("application/collection+json");
         return builder.post(permissions);
+    }
+
+    public <R> RequestExecution asyncCreateNew(final RepositoryPermissionListWrapper permissions, final Callback<OperationResult, R> callback) {
+        final JerseyRequest builder =
+                buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
+        builder.setContentType("application/collection+json");
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.post(permissions));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
 }

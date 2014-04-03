@@ -21,9 +21,9 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters;
 
+import com.jaspersoft.jasperserver.dto.reports.ReportParameters;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
@@ -31,7 +31,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputC
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class ReportParametersValuesAdapter extends AbstractAdapter {
 
@@ -51,7 +51,27 @@ public class ReportParametersValuesAdapter extends AbstractAdapter {
     }
 
     public OperationResult<InputControlStateListWrapper> get() {
-        JerseyRequestBuilder<InputControlStateListWrapper> builder =
+        JerseyRequest<InputControlStateListWrapper> builder = prepareRequest();
+        return builder.post(ReportParametersUtils.toReportParameters(params));
+    }
+
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<InputControlStateListWrapper>, R> callback) {
+        final JerseyRequest<InputControlStateListWrapper> builder = prepareRequest();
+        final ReportParameters reportParameters = ReportParametersUtils.toReportParameters(params);
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.post(reportParameters));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
+    private JerseyRequest<InputControlStateListWrapper> prepareRequest(){
+        JerseyRequest<InputControlStateListWrapper> builder =
                 buildRequest(sessionStorage, InputControlStateListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"}, new DefaultErrorHandler());
         if (idsPathSegment != null) {
             builder.setPath(idsPathSegment);
@@ -59,7 +79,8 @@ public class ReportParametersValuesAdapter extends AbstractAdapter {
         builder.setPath("values");
         builder.setContentType(MediaType.APPLICATION_XML);
         builder.setAccept(MediaType.APPLICATION_XML);
-        return builder.post(ReportParametersUtils.toReportParameters(params));
+
+        return builder;
     }
 
 }

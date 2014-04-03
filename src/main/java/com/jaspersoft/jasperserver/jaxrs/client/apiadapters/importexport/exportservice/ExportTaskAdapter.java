@@ -22,7 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.ExportTaskDto;
@@ -31,7 +31,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class ExportTaskAdapter extends AbstractAdapter {
 
@@ -90,6 +90,25 @@ public class ExportTaskAdapter extends AbstractAdapter {
     public OperationResult<StateDto> create(){
         return buildRequest(sessionStorage, StateDto.class, new String[]{"/export"}, new DefaultErrorHandler())
                 .post(exportTaskDto);
+    }
+
+    public <R> RequestExecution asyncCreate(final Callback<OperationResult<StateDto>, R> callback){
+        final JerseyRequest<StateDto> builder =
+                buildRequest(sessionStorage, StateDto.class, new String[]{"/export"});
+        builder.setAccept("application/zip");
+
+        //guarantee that exportTaskDto won't be modified from another thread
+        final ExportTaskDto localCopy = new ExportTaskDto(exportTaskDto);
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.post(localCopy));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
 }

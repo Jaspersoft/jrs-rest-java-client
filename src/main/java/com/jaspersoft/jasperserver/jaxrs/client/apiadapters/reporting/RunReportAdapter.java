@@ -22,8 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -32,7 +31,7 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class RunReportAdapter extends AbstractAdapter {
 
@@ -66,7 +65,26 @@ public class RunReportAdapter extends AbstractAdapter {
     }
 
     public OperationResult<InputStream> run() {
-        JerseyRequestBuilder<InputStream> builder =
+        JerseyRequest<InputStream> builder = prepareRunRequest();
+        return builder.get();
+    }
+
+    public <R> RequestExecution asyncRun(final Callback<OperationResult<InputStream>, R> callback) {
+        final JerseyRequest<InputStream> builder = prepareRunRequest();
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.get());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
+    private JerseyRequest<InputStream> prepareRunRequest(){
+        JerseyRequest<InputStream> builder =
                 buildRequest(sessionStorage, InputStream.class,
                         new String[]{"/reports", reportUnitUri + "." + format.toString().toLowerCase()}, new RunReportErrorHandler());
         builder.addParams(params);
@@ -84,7 +102,7 @@ public class RunReportAdapter extends AbstractAdapter {
             if (pages.length > 1)
                 builder.addParam("pages", pages);
         }
-        return builder.get();
+        return builder;
     }
 
     private String[] toStringArray(Integer[] ints) {

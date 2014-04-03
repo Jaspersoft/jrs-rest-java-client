@@ -23,13 +23,12 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportpar
 
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControl;
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import java.util.List;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class ReorderingReportParametersAdapter extends ReportParametersAdapter {
 
@@ -39,8 +38,24 @@ public class ReorderingReportParametersAdapter extends ReportParametersAdapter {
 
     public OperationResult<ReportInputControlsListWrapper> reorder(List<ReportInputControl> inputControls){
         ReportInputControlsListWrapper wrapper = new ReportInputControlsListWrapper(inputControls);
-        return buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"}, new DefaultErrorHandler())
+        return buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"})
                 .put(wrapper);
     }
 
+    public <R> RequestExecution asyncReorder(final List<ReportInputControl> inputControls,
+                                             final Callback<OperationResult<ReportInputControlsListWrapper>, R> callback) {
+        final ReportInputControlsListWrapper wrapper = new ReportInputControlsListWrapper(inputControls);
+        final JerseyRequest<ReportInputControlsListWrapper> builder =
+                buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"});
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.put(wrapper));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
 }

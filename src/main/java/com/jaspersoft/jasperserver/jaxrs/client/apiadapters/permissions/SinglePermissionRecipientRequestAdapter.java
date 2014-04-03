@@ -23,12 +23,10 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
 
@@ -45,17 +43,59 @@ public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
         return getBuilder(RepositoryPermission.class).get();
     }
 
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<RepositoryPermission>, R> callback) {
+        final JerseyRequest<RepositoryPermission> builder = getBuilder(RepositoryPermission.class);
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.get());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
     public OperationResult<RepositoryPermission> createOrUpdate(RepositoryPermission permission){
         return getBuilder(RepositoryPermission.class).put(permission);
+    }
+
+    public <R> RequestExecution asyncCreateOrUpdate(final RepositoryPermission permission, final Callback<OperationResult<RepositoryPermission>, R> callback) {
+        final JerseyRequest<RepositoryPermission> builder = getBuilder(RepositoryPermission.class);
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.put(permission));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     public OperationResult delete(){
         return getBuilder(Object.class).delete();
     }
 
-    private <T> JerseyRequestBuilder<T> getBuilder(Class<T> responseClass){
-        JerseyRequestBuilder<T> builder =
-                buildRequest(sessionStorage, responseClass, new String[]{"/permissions", resourceUri}, new DefaultErrorHandler());
+    public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
+        final JerseyRequest builder = getBuilder(Object.class);
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.delete());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
+    private <T> JerseyRequest<T> getBuilder(Class<T> responseClass){
+        JerseyRequest<T> builder =
+                buildRequest(sessionStorage, responseClass, new String[]{"/permissions", resourceUri});
         builder.addMatrixParam("recipient", recipient);
         return builder;
     }

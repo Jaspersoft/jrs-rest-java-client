@@ -25,8 +25,7 @@ import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.dto.authority.UserAttributesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
@@ -59,16 +58,58 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return buildRequest().get();
     }
 
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientUser>, R> callback){
+        final JerseyRequest<ClientUser> builder = buildRequest();
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.get());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
     public OperationResult<ClientUser> createOrUpdate(ClientUser user){
         return buildRequest().put(user);
+    }
+
+    public <R> RequestExecution asyncCreateOrUpdate(final ClientUser user, final Callback<OperationResult<ClientUser>, R> callback){
+        final JerseyRequest<ClientUser> builder = buildRequest();
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.put(user));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     public OperationResult delete(){
         return buildRequest().delete();
     }
 
-    private JerseyRequestBuilder<ClientUser> buildRequest(){
-        return JerseyRequestBuilder.buildRequest(
+    public <R> RequestExecution asyncDelete(final Callback<OperationResult<ClientUser>, R> callback){
+        final JerseyRequest<ClientUser> builder = buildRequest();
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.delete());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
+    private JerseyRequest<ClientUser> buildRequest(){
+        return JerseyRequest.buildRequest(
                 sessionStorage,
                 ClientUser.class,
                 new String[]{userUriPrefix},
@@ -87,16 +128,59 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
             return buildRequest().get();
         }
 
+        public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientUserAttribute>, R> callback){
+            final JerseyRequest<ClientUserAttribute> builder = buildRequest();
+
+            RequestExecution task = new RequestExecution(new Runnable() {
+                @Override
+                public void run() {
+                    callback.execute(builder.get());
+                }
+            });
+
+            ThreadPoolUtil.runAsynchronously(task);
+            return task;
+        }
+
         public OperationResult delete(){
             return buildRequest().delete();
+        }
+
+        public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback){
+            final JerseyRequest builder = buildRequest();
+
+            RequestExecution task = new RequestExecution(new Runnable() {
+                @Override
+                public void run() {
+                    callback.execute(builder.delete());
+                }
+            });
+
+            ThreadPoolUtil.runAsynchronously(task);
+            return task;
         }
 
         public OperationResult createOrUpdate(ClientUserAttribute attribute){
             return buildRequest().put(attribute);
         }
 
-        private JerseyRequestBuilder<ClientUserAttribute> buildRequest(){
-            return JerseyRequestBuilder.buildRequest(
+        public <R> RequestExecution asyncCreateOrUpdate(final ClientUserAttribute userAttribute,
+                                                        final Callback<OperationResult<ClientUserAttribute>, R> callback){
+            final JerseyRequest<ClientUserAttribute> builder = buildRequest();
+
+            RequestExecution task = new RequestExecution(new Runnable() {
+                @Override
+                public void run() {
+                    callback.execute(builder.put(userAttribute));
+                }
+            });
+
+            ThreadPoolUtil.runAsynchronously(task);
+            return task;
+        }
+
+        private JerseyRequest<ClientUserAttribute> buildRequest(){
+            return JerseyRequest.buildRequest(
                     sessionStorage,
                     ClientUserAttribute.class,
                     new String[]{userUriPrefix, "/attributes", attributeName},
@@ -119,23 +203,68 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         }
 
         public OperationResult<UserAttributesListWrapper> get(){
-            JerseyRequestBuilder<UserAttributesListWrapper> builder = buildRequest();
+            JerseyRequest<UserAttributesListWrapper> builder = buildRequest();
             builder.addParams(params);
             return builder.get();
+        }
+
+        public <R> RequestExecution asyncGet(final Callback<OperationResult<UserAttributesListWrapper>, R> callback){
+            final JerseyRequest<UserAttributesListWrapper> builder = buildRequest();
+            builder.addParams(params);
+
+            RequestExecution task = new RequestExecution(new Runnable() {
+                @Override
+                public void run() {
+                    callback.execute(builder.get());
+                }
+            });
+
+            ThreadPoolUtil.runAsynchronously(task);
+            return task;
         }
 
         public OperationResult createOrUpdate(UserAttributesListWrapper attributesList){
             return buildRequest().put(attributesList);
         }
 
+        public <R> RequestExecution asyncCreateOrUpdate(final UserAttributesListWrapper attributesList,
+                                                        final Callback<OperationResult<UserAttributesListWrapper>, R> callback){
+            final JerseyRequest<UserAttributesListWrapper> builder = buildRequest();
+
+            RequestExecution task = new RequestExecution(new Runnable() {
+                @Override
+                public void run() {
+                    callback.execute(builder.put(attributesList));
+                }
+            });
+
+            ThreadPoolUtil.runAsynchronously(task);
+            return task;
+        }
+
         public OperationResult delete(){
-            JerseyRequestBuilder<UserAttributesListWrapper> builder = buildRequest();
+            JerseyRequest<UserAttributesListWrapper> builder = buildRequest();
             builder.addParams(params);
             return builder.delete();
         }
 
-        private JerseyRequestBuilder<UserAttributesListWrapper> buildRequest(){
-            return JerseyRequestBuilder.buildRequest(
+        public <R> RequestExecution asyncDelete(final Callback<OperationResult<UserAttributesListWrapper>, R> callback){
+            final JerseyRequest<UserAttributesListWrapper> builder = buildRequest();
+            builder.addParams(params);
+
+            RequestExecution task = new RequestExecution(new Runnable() {
+                @Override
+                public void run() {
+                    callback.execute(builder.delete());
+                }
+            });
+
+            ThreadPoolUtil.runAsynchronously(task);
+            return task;
+        }
+
+        private JerseyRequest<UserAttributesListWrapper> buildRequest(){
+            return JerseyRequest.buildRequest(
                     sessionStorage,
                     UserAttributesListWrapper.class,
                     new String[]{userUriPrefix, "/attributes"},

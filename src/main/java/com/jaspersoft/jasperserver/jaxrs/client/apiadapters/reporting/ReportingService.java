@@ -22,13 +22,12 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class ReportingService extends AbstractAdapter {
 
@@ -37,11 +36,24 @@ public class ReportingService extends AbstractAdapter {
     }
 
     public OperationResult<ReportExecutionDescriptor> newReportExecutionRequest(ReportExecutionRequest request) {
-        OperationResult<ReportExecutionDescriptor> descriptor =
-                buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions"}, new DefaultErrorHandler())
-                        .post(request);
-        //sessionStorage.setSessionId(descriptor.getSessionId());
-        return descriptor;
+        return buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions"})
+                .post(request);
+    }
+
+    public <R> RequestExecution asyncNewReportExecutionRequest(final ReportExecutionRequest request,
+                                               final Callback<OperationResult<ReportExecutionDescriptor>, R> callback) {
+        final JerseyRequest<ReportExecutionDescriptor> builder =
+                buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions"});
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.post(request));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     public ReportExecutionRequestBuilder reportExecutionRequest(String requestId) {

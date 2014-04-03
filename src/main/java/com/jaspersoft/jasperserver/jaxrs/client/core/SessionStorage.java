@@ -21,7 +21,11 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.Organization;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.OrganizationsListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 
 import javax.ws.rs.client.Client;
@@ -31,6 +35,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 public class SessionStorage {
 
@@ -45,7 +50,7 @@ public class SessionStorage {
         init();
     }
 
-    private void init(){
+    private void init() {
         Client client = ClientBuilder.newClient();
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         login();
@@ -71,51 +76,59 @@ public class SessionStorage {
         return configuration;
     }
 
-    public void setConfiguration(RestClientConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
     public AuthenticationCredentials getCredentials() {
         return credentials;
-    }
-
-    public void setCredentials(AuthenticationCredentials credentials) {
-        this.credentials = credentials;
     }
 
     public String getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
     public WebTarget getRootTarget() {
         return rootTarget;
     }
 
-    /*public static void main(String[] args) {
-        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:4444/jasperserver");
+    public static void main(String[] args) throws InterruptedException {
+        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
         JasperserverRestClient client = new JasperserverRestClient(configuration1);
 
-        Session session = client.authenticate("jasperadmin", "jasperadmin");
+        Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
 
-        OperationResult<RolesListWrapper> result = session
-                .rolesService()
-                .allRoles()
-                .get();
+        RequestExecution requestExecution = session
+                .organizationsService()
+                .organizations()
+                .parameter(OrganizationParameter.CREATE_DEFAULT_USERS, "false")
+                .asyncCreate(new Organization().setAlias("asyncTestOrg"), new Callback<OperationResult<Organization>, Void>() {
+                    @Override
+                    public Void execute(OperationResult<Organization> data) {
+                        System.out.println(data.getEntity());
+                        while (alwaysTrue()){}
+                        return null;
+                    }
 
-        System.out.println(result.getEntity());
+                    private boolean alwaysTrue(){return true;}
+                });
 
-        session.logout();
+        requestExecution.cancel();
 
-        OperationResult<RolesListWrapper> result1 = session
-                .rolesService()
-                .allRoles()
-                .get();
+        session
+                .organizationsService()
+                .organizations()
+                .parameter(OrganizationParameter.INCLUDE_PARENTS, "false")
+                .asyncGet(new Callback<OperationResult<OrganizationsListWrapper>, Void>() {
+                    @Override
+                    public Void execute(OperationResult<OrganizationsListWrapper> data) {
+                        OrganizationsListWrapper organizationsListWrapper = data.getEntity();
+                        List<Organization> list = organizationsListWrapper.getList();
+                        for (Organization organization : list) {
+                            System.out.println(organization);
+                        }
+                        return null;
+                    }
+                });
 
-        System.out.println(result1.getEntity());
+        System.out.println("hello");
 
-    }*/
+
+    }
 }

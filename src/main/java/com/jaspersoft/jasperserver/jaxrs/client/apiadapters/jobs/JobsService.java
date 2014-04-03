@@ -24,23 +24,17 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class JobsService extends AbstractAdapter {
 
-    private ErrorHandler errorHandler;
-
     public JobsService(SessionStorage sessionStorage) {
         super(sessionStorage);
-        errorHandler = new DefaultErrorHandler();
     }
 
     public BatchJobsOperationsAdapter jobs(){
@@ -52,7 +46,7 @@ public class JobsService extends AbstractAdapter {
     }
 
     public OperationResult<JobExtension> scheduleReport(JobExtension report){
-        JerseyRequestBuilder<JobExtension> builder =
+        JerseyRequest<JobExtension> builder =
                 buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
         builder.setContentType("application/job+json");
         builder.setAccept("application/job+json");
@@ -60,17 +54,55 @@ public class JobsService extends AbstractAdapter {
         return builder.put(report);
     }
 
+    public <R> RequestExecution asyncScheduleReport(final JobExtension report, final Callback<OperationResult<JobExtension>, R> callback) {
+        final JerseyRequest<JobExtension> builder =
+                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
+        builder.setContentType("application/job+json");
+        builder.setAccept("application/job+json");
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.put(report));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
     public OperationResult<CalendarNameListWrapper> calendars(){
         return calendars(null);
     }
 
+    public <R> RequestExecution asyncCalendars(final Callback<OperationResult<CalendarNameListWrapper>, R> callback) {
+        return asyncCalendars(null, callback);
+    }
+
     public OperationResult<CalendarNameListWrapper> calendars(CalendarType type){
-        JerseyRequestBuilder<CalendarNameListWrapper> builder =
-                buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"}, errorHandler);
+        JerseyRequest<CalendarNameListWrapper> builder =
+                buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
         if (type != null)
             builder.addParam("calendarType", type.name().toLowerCase());
 
         return builder.get();
+    }
+
+    public <R> RequestExecution asyncCalendars(final CalendarType type, final Callback<OperationResult<CalendarNameListWrapper>, R> callback) {
+        final JerseyRequest<CalendarNameListWrapper> builder =
+                buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
+        if (type != null)
+            builder.addParam("calendarType", type.name().toLowerCase());
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.get());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     public SingleCalendarOperationsAdapter calendar(String calendarName){

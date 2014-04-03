@@ -22,8 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
@@ -34,7 +33,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.InputStream;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class ImportTaskRequestAdapter extends AbstractAdapter {
 
@@ -54,17 +53,45 @@ public class ImportTaskRequestAdapter extends AbstractAdapter {
         return createImport(zipArchive);
     }
 
+    public <R> RequestExecution asyncCreate(final File zipArchive, final Callback<OperationResult<StateDto>, R> callback){
+        return asyncCreateImport(zipArchive, callback);
+    }
+
     public OperationResult<StateDto> create(InputStream zipArchive) {
         return createImport(zipArchive);
     }
 
+    public <R> RequestExecution asyncCreate(final InputStream zipArchive, final Callback<OperationResult<StateDto>, R> callback){
+        return asyncCreateImport(zipArchive, callback);
+    }
+
     private OperationResult<StateDto> createImport(Object zipArchive) {
-        JerseyRequestBuilder<StateDto> builder = buildRequest(sessionStorage, StateDto.class, new String[]{"/import"}, new DefaultErrorHandler());
+        JerseyRequest<StateDto> builder =
+                buildRequest(sessionStorage, StateDto.class, new String[]{"/import"}, new DefaultErrorHandler());
         builder
                 .setContentType("application/zip")
                 .setAccept(MediaType.APPLICATION_JSON)
                 .addParams(params);
 
         return builder.post(zipArchive);
+    }
+
+    private  <R> RequestExecution asyncCreateImport(final Object zipArchive, final Callback<OperationResult<StateDto>, R> callback){
+        final JerseyRequest<StateDto> builder =
+                buildRequest(sessionStorage, StateDto.class, new String[]{"/import"});
+        builder
+                .setContentType("application/zip")
+                .setAccept(MediaType.APPLICATION_JSON)
+                .addParams(params);
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.post(zipArchive));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 }

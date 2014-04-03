@@ -41,7 +41,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
-public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<ResponseType> {
+public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType> {
 
     private static final int GET = 0;
     private static final int DELETE = 1;
@@ -49,17 +49,17 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     private static final int PUT = 3;
 
 
-    public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage,
+    public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage,
                                                            Class<T> responseClass,
                                                            String[] path){
         return buildRequest(sessionStorage, responseClass, path, null);
     }
 
-    public static <T> JerseyRequestBuilder<T> buildRequest(SessionStorage sessionStorage,
+    public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage,
                                                            Class<T> responseClass,
                                                            String[] path,
                                                            ErrorHandler errorHandler) {
-        JerseyRequestBuilder<T> builder = new JerseyRequestBuilder<T>(sessionStorage, responseClass);
+        JerseyRequest<T> builder = new JerseyRequest<T>(sessionStorage, responseClass);
 
         if (errorHandler != null)
             builder.errorHandler = errorHandler;
@@ -84,7 +84,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
     private String acceptType;
 
 
-    protected JerseyRequestBuilder(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
+    protected JerseyRequest(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
 
         this.operationResultFactory = new OperationResultFactoryImpl();
         this.sessionStorage = sessionStorage;
@@ -98,7 +98,7 @@ public class JerseyRequestBuilder<ResponseType> implements RequestBuilder<Respon
                 .register(MultiPartWriter.class);
     }
 
-    public JerseyRequestBuilder<ResponseType> setPath(String path) {
+    public JerseyRequest<ResponseType> setPath(String path) {
         usersWebTarget = usersWebTarget.path(path);
         return this;
     }

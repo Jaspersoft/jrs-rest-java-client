@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +51,18 @@ public class ExportTaskDto {
     @XmlElementWrapper(name = "users")
     @XmlElement(name = "user")
     private List<String> usersToExport;
+
+    public ExportTaskDto() {
+    }
+
+    public ExportTaskDto(ExportTaskDto other) {
+        this.exportParams = new ArrayList<String>(other.exportParams);
+        this.urisOfResources = new ArrayList<String>(other.urisOfResources);
+        this.urisOfScheduledJobs = new ArrayList<String>(other.urisOfScheduledJobs);
+        this.rolesToExport = new ArrayList<String>(other.rolesToExport);
+        this.usersToExport = new ArrayList<String>(other.usersToExport);
+    }
+
 
     public List<String> getParameters() {
         return exportParams;

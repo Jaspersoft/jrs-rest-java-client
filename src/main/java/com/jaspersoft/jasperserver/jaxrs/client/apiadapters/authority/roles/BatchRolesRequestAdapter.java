@@ -23,15 +23,14 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles;
 
 import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class BatchRolesRequestAdapter extends AbstractAdapter{
 
@@ -53,10 +52,26 @@ public class BatchRolesRequestAdapter extends AbstractAdapter{
     }
 
     public OperationResult<RolesListWrapper> get(){
-        JerseyRequestBuilder<RolesListWrapper> builder =
+        JerseyRequest<RolesListWrapper> builder =
                 buildRequest(sessionStorage, RolesListWrapper.class, new String[]{uri}, new DefaultErrorHandler());
         builder.addParams(params);
         return builder.get();
+    }
+
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<RolesListWrapper>, R> callback){
+        final JerseyRequest<RolesListWrapper> builder =
+                buildRequest(sessionStorage, RolesListWrapper.class, new String[]{uri}, new DefaultErrorHandler());
+        builder.addParams(params);
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.get());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
 }

@@ -22,16 +22,14 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionListWrapper;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequestBuilder.buildRequest;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 
 public class ReportsAndJobsSearchAdapter extends AbstractAdapter {
@@ -49,10 +47,26 @@ public class ReportsAndJobsSearchAdapter extends AbstractAdapter {
     }
 
     public OperationResult<ReportExecutionListWrapper> find(){
-        JerseyRequestBuilder<ReportExecutionListWrapper> builder =
-                buildRequest(sessionStorage, ReportExecutionListWrapper.class, new String[]{"/reportExecutions"}, new DefaultErrorHandler());
+        JerseyRequest<ReportExecutionListWrapper> builder =
+                buildRequest(sessionStorage, ReportExecutionListWrapper.class, new String[]{"/reportExecutions"});
         builder.addParams(params);
         return builder.get();
+    }
+
+    public <R> RequestExecution asyncFind(final Callback<OperationResult<ReportExecutionListWrapper>, R> callback) {
+        final JerseyRequest<ReportExecutionListWrapper> builder =
+                buildRequest(sessionStorage, ReportExecutionListWrapper.class, new String[]{"/reportExecutions"});
+        builder.addParams(params);
+
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(builder.get());
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
 }
