@@ -38,7 +38,11 @@ import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,17 +70,17 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<JobSummaryListWrapper> search(Job searchCriteria) {
-        JerseyRequest<JobSummaryListWrapper> builder = prepareSearchRequest(searchCriteria);
-        return builder.get();
+        JerseyRequest<JobSummaryListWrapper> request = prepareSearchRequest(searchCriteria);
+        return request.get();
     }
 
     public <R> RequestExecution asyncSearch(final Job searchCriteria, final Callback<OperationResult<JobSummaryListWrapper>, R> callback) {
-        final JerseyRequest<JobSummaryListWrapper> builder = prepareSearchRequest(searchCriteria);
+        final JerseyRequest<JobSummaryListWrapper> request = prepareSearchRequest(searchCriteria);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -85,14 +89,14 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<JobSummaryListWrapper> prepareSearchRequest(Job searchCriteria){
-        JerseyRequest<JobSummaryListWrapper> builder =
+        JerseyRequest<JobSummaryListWrapper> request =
                 buildRequest(sessionStorage, JobSummaryListWrapper.class, new String[]{"/jobs"});
-        builder.addParams(params);
+        request.addParams(params);
         if (searchCriteria != null) {
             String criteriaJson = buildJson(searchCriteria);
-            builder.addParam("example", URLEncoder.encode(criteriaJson), "UTF-8");
+            request.addParam("example", URLEncoder.encode(criteriaJson), "UTF-8");
         }
-        return builder;
+        return request;
     }
 
     private String buildJson(Object object){
@@ -113,15 +117,30 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
         }
     }
 
+    private String buildXml(ReportJobModel reportJobModel){
+        try {
+            StringWriter writer = new StringWriter();
+            JAXBContext jaxbContext = JAXBContext.newInstance(ReportJobModel.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            jaxbMarshaller.marshal(reportJobModel, writer);
+            return writer.toString();
+        } catch (JAXBException e) {
+            log.warn("Can't marshal report job model.");
+            throw new RuntimeException("Failed to build report job model xml.", e);
+        }
+    }
+
     public OperationResult<JobIdListWrapper> updateWithProcessedParameters(ReportJobModel jobModel) {
         throw new UnsupportedOperationException("Operation is not supported yet");
-        /*JerseyRequest<JobIdListWrapper> builder =
+        /*JerseyRequest<JobIdListWrapper> request =
                 buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"}, errorHandler);
-        builder.setContentType("application/job+json");
-        builder.setAccept("application/job+json");
-        builder.addParams(params);
+        request.setContentType("application/job+json");
+        request.setAccept("application/job+json");
+        request.addParams(params);
 
-        return builder.post(jobModel);*/
+        return request.post(jobModel);*/
     }
 
 
@@ -130,25 +149,30 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
      */
     public OperationResult<JobIdListWrapper> update(ReportJobModel jobModel) {
 
-        JerseyRequest<JobIdListWrapper> builder =
+        JerseyRequest<JobIdListWrapper> request =
                 buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
-        builder.addParams(params);
+        request.addParams(params);
 
-        String jobJson = buildJson(jobModel);
-        return builder.post(jobJson);
+        String content = null;
+        if (sessionStorage.getConfiguration().getContentMimeType() == MimeType.JSON)
+            content = buildJson(jobModel);
+        else
+            content = buildXml(jobModel);
+
+        return request.post(content);
     }
 
     public <R> RequestExecution asyncUpdate(final ReportJobModel jobModel, final Callback<OperationResult<JobIdListWrapper>, R> callback) {
-        final JerseyRequest<JobIdListWrapper> builder =
+        final JerseyRequest<JobIdListWrapper> request =
                 buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
-        builder.addParams(params);
+        request.addParams(params);
 
         final String jobJson = buildJson(jobModel);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(jobJson));
+                callback.execute(request.post(jobJson));
             }
         });
 
@@ -175,13 +199,13 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncPause(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
         final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> builder =
+        final JerseyRequest<JobIdListWrapper> request =
                 buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(jobIdListWrapper));
+                callback.execute(request.post(jobIdListWrapper));
             }
         });
 
@@ -197,13 +221,13 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncResume(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
         final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> builder =
+        final JerseyRequest<JobIdListWrapper> request =
                 buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/resume"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(jobIdListWrapper));
+                callback.execute(request.post(jobIdListWrapper));
             }
         });
 
@@ -219,13 +243,13 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncRestart(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
         final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> builder =
+        final JerseyRequest<JobIdListWrapper> request =
                 buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/restart"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(jobIdListWrapper));
+                callback.execute(request.post(jobIdListWrapper));
             }
         });
 

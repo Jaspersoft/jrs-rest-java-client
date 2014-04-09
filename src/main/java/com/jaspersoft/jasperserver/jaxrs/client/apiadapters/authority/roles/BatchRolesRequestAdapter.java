@@ -52,21 +52,21 @@ public class BatchRolesRequestAdapter extends AbstractAdapter{
     }
 
     public OperationResult<RolesListWrapper> get(){
-        JerseyRequest<RolesListWrapper> builder =
+        JerseyRequest<RolesListWrapper> request =
                 buildRequest(sessionStorage, RolesListWrapper.class, new String[]{uri}, new DefaultErrorHandler());
-        builder.addParams(params);
-        return builder.get();
+        request.addParams(params);
+        return request.get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<RolesListWrapper>, R> callback){
-        final JerseyRequest<RolesListWrapper> builder =
+        final JerseyRequest<RolesListWrapper> request =
                 buildRequest(sessionStorage, RolesListWrapper.class, new String[]{uri}, new DefaultErrorHandler());
-        builder.addParams(params);
+        request.addParams(params);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 

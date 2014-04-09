@@ -54,12 +54,12 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<Organization>, R> callback){
-        final JerseyRequest<Organization> builder = buildRequest();
+        final JerseyRequest<Organization> request = buildRequest();
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -94,13 +94,13 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncUpdate(Organization organization, final Callback<OperationResult<Organization>, R> callback){
-        final JerseyRequest<Organization> builder = buildRequest();
+        final JerseyRequest<Organization> request = buildRequest();
         final String json = prepareJsonForUpdate(organization);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.put(json));
+                callback.execute(request.put(json));
             }
         });
 
@@ -113,12 +113,12 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback){
-        final JerseyRequest builder = buildRequest();
+        final JerseyRequest request = buildRequest();
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.delete());
+                callback.execute(request.delete());
             }
         });
 

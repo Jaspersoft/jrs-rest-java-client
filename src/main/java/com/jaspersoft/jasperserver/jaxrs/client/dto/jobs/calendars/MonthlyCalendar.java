@@ -21,21 +21,25 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars;
 
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Arrays;
 
+@XmlRootElement(name = "reportJobCalendar")
 public class MonthlyCalendar extends Calendar {
 
-    @XmlElementWrapper(name = "excludeDaysFlags")
-    @XmlElement(name = "excludeDayFlag")
     private boolean[] excludeDaysFlags;
 
     public MonthlyCalendar() {
         super();
-        this.calendarType = TYPE_MONTHLY;
+        this.calendarType = CalendarType.monthly;
     }
 
+    @XmlElementWrapper(name = "excludeDaysFlags")
+    @XmlElement(name = "excludeDayFlag")
     public boolean[] getExcludeDaysFlags() {
         return excludeDaysFlags;
     }

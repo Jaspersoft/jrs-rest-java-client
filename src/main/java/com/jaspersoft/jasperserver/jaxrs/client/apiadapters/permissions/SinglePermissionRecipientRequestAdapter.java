@@ -44,12 +44,12 @@ public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<RepositoryPermission>, R> callback) {
-        final JerseyRequest<RepositoryPermission> builder = getBuilder(RepositoryPermission.class);
+        final JerseyRequest<RepositoryPermission> request = getBuilder(RepositoryPermission.class);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -62,12 +62,12 @@ public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncCreateOrUpdate(final RepositoryPermission permission, final Callback<OperationResult<RepositoryPermission>, R> callback) {
-        final JerseyRequest<RepositoryPermission> builder = getBuilder(RepositoryPermission.class);
+        final JerseyRequest<RepositoryPermission> request = getBuilder(RepositoryPermission.class);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.put(permission));
+                callback.execute(request.put(permission));
             }
         });
 
@@ -80,12 +80,12 @@ public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
-        final JerseyRequest builder = getBuilder(Object.class);
+        final JerseyRequest request = getBuilder(Object.class);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.delete());
+                callback.execute(request.delete());
             }
         });
 
@@ -94,10 +94,10 @@ public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
     }
 
     private <T> JerseyRequest<T> getBuilder(Class<T> responseClass){
-        JerseyRequest<T> builder =
+        JerseyRequest<T> request =
                 buildRequest(sessionStorage, responseClass, new String[]{"/permissions", resourceUri});
-        builder.addMatrixParam("recipient", recipient);
-        return builder;
+        request.addMatrixParam("recipient", recipient);
+        return request;
     }
 
 }

@@ -48,14 +48,14 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncOutputResource(final Callback<OperationResult<InputStream>, R> callback) {
-        final JerseyRequest<InputStream> builder =
+        final JerseyRequest<InputStream> request =
                 buildRequest(sessionStorage, InputStream.class,
                         new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/outputResource"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -84,7 +84,7 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
         if ("".equals(attachmentId) || "/".equals(attachmentId))
             throw new  IllegalArgumentException("'attachmentId' mustn't be an empty string");
 
-        final JerseyRequest<InputStream> builder =
+        final JerseyRequest<InputStream> request =
                 buildRequest(sessionStorage, InputStream.class,
                         new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/attachments", attachmentId});
 
@@ -96,7 +96,7 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
                         Thread.sleep(500);
                     } catch (InterruptedException ignored) {}
                 }
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -111,14 +111,14 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncStatus(final Callback<OperationResult<ReportExecutionStatusEntity>, R> callback) {
-        final JerseyRequest<ReportExecutionStatusEntity> builder =
+        final JerseyRequest<ReportExecutionStatusEntity> request =
                 buildRequest(sessionStorage, ReportExecutionStatusEntity.class,
                         new String[]{"/reportExecutions", requestId, "/exports", exportOutput, "/status"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 

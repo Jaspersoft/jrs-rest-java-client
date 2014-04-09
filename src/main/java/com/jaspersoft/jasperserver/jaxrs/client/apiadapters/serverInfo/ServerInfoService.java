@@ -41,10 +41,10 @@ public class ServerInfoService extends AbstractAdapter {
     }
 
     private JerseyRequest<String> buildServerInfoRequest(String path){
-        JerseyRequest<String> builder =
+        JerseyRequest<String> request =
                 JerseyRequest.buildRequest(sessionStorage, String.class, new String[]{"/serverInfo", path});
-        builder.setAccept(MediaType.TEXT_PLAIN);
-        return builder;
+        request.setAccept(MediaType.TEXT_PLAIN);
+        return request;
     }
 
     public OperationResult<String> edition(){

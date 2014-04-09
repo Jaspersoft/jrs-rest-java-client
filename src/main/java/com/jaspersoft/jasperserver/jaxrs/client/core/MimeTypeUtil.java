@@ -19,17 +19,22 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars;
+package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
+public class MimeTypeUtil {
 
-import javax.xml.bind.annotation.XmlRootElement;
+    private static final String JSON_SUFFIX = "json";
+    private static final String XML_SUFFIX = "xml";
 
-@XmlRootElement(name = "reportJobCalendar")
-public class BaseCalendar extends Calendar {
-
-    public BaseCalendar(){
-        this.calendarType = CalendarType.base;
+    public static String toCorrectContentMime(RestClientConfiguration configuration, String srcMime){
+        if (srcMime.endsWith("+{mime}"))
+            return srcMime.replace("{mime}", configuration.getContentMimeType() == MimeType.JSON ? "json" : "xml");
+        return srcMime;
     }
 
+    public static String toCorrectAcceptMime(RestClientConfiguration configuration, String srcMime){
+        if (srcMime.endsWith("+{mime}"))
+            return srcMime.replace("{mime}", configuration.getAcceptMimeType() == MimeType.JSON ? "json" : "xml");
+        return srcMime;
+    }
 }

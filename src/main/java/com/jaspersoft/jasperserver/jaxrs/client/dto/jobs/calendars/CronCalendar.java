@@ -21,13 +21,18 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars;
 
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "reportJobCalendar")
 public class CronCalendar extends Calendar {
 
     private String cronExpression;
 
     public CronCalendar() {
         super();
-        this.calendarType = TYPE_CRON;
+        this.calendarType = CalendarType.cron;
     }
 
     public String getCronExpression() {

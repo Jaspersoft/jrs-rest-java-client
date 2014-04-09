@@ -47,7 +47,7 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
     }
 
     private boolean isClientResource(Class<?> clazz){
-        return clazz.isAssignableFrom(ClientResource.class);
+        return clazz != Object.class && clazz.isAssignableFrom(ClientResource.class);
     }
 
     private Class<? extends ClientResource> getSpecificResourceType(Response response){

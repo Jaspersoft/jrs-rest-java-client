@@ -46,13 +46,13 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncStatus(final Callback<OperationResult<ReportExecutionStatusEntity>, R> callback) {
-        final JerseyRequest<ReportExecutionStatusEntity> builder =
+        final JerseyRequest<ReportExecutionStatusEntity> request =
                 buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{"/reportExecutions", requestId, "/status"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -66,13 +66,13 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncExecutionDetails(final Callback<OperationResult<ReportExecutionDescriptor>, R> callback) {
-        final JerseyRequest<ReportExecutionDescriptor> builder =
+        final JerseyRequest<ReportExecutionDescriptor> request =
                 buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -90,13 +90,13 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
     public <R> RequestExecution asyncCancelExecution(final Callback<OperationResult<ReportExecutionStatusEntity>, R> callback) {
         final ReportExecutionStatusEntity statusEntity = new ReportExecutionStatusEntity();
         statusEntity.setValue("cancelled");
-        final JerseyRequest<ReportExecutionStatusEntity> builder =
+        final JerseyRequest<ReportExecutionStatusEntity> request =
                 buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{"/reportExecutions", requestId, "/status"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.put(statusEntity));
+                callback.execute(request.put(statusEntity));
             }
         });
 
@@ -115,13 +115,13 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
 
     public <R> RequestExecution asyncRunExport(final ExportExecutionOptions exportExecutionOptions,
                                                final Callback<OperationResult<ExportExecutionDescriptor>, R> callback) {
-        final JerseyRequest<ExportExecutionDescriptor> builder =
+        final JerseyRequest<ExportExecutionDescriptor> request =
                 buildRequest(sessionStorage, ExportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId, "/exports"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(exportExecutionOptions));
+                callback.execute(request.post(exportExecutionOptions));
             }
         });
 

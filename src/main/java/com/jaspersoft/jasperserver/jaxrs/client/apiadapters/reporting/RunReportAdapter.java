@@ -65,17 +65,17 @@ public class RunReportAdapter extends AbstractAdapter {
     }
 
     public OperationResult<InputStream> run() {
-        JerseyRequest<InputStream> builder = prepareRunRequest();
-        return builder.get();
+        JerseyRequest<InputStream> request = prepareRunRequest();
+        return request.get();
     }
 
     public <R> RequestExecution asyncRun(final Callback<OperationResult<InputStream>, R> callback) {
-        final JerseyRequest<InputStream> builder = prepareRunRequest();
+        final JerseyRequest<InputStream> request = prepareRunRequest();
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -84,25 +84,25 @@ public class RunReportAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<InputStream> prepareRunRequest(){
-        JerseyRequest<InputStream> builder =
+        JerseyRequest<InputStream> request =
                 buildRequest(sessionStorage, InputStream.class,
                         new String[]{"/reports", reportUnitUri + "." + format.toString().toLowerCase()}, new RunReportErrorHandler());
-        builder.addParams(params);
+        request.addParams(params);
 
         if (pages != null && pages.length > 0) {
             if (pages.length == 1) {
                 final Pattern pattern = Pattern.compile("^(\\d+)-(\\d+)$");
                 final Matcher matcher = pattern.matcher(pages[0]);
                 if (matcher.matches()) {
-                    builder.addParam("pages", pages[0]);
+                    request.addParam("pages", pages[0]);
                 } else {
-                    builder.addParam("page", pages[0]);
+                    request.addParam("page", pages[0]);
                 }
             }
             if (pages.length > 1)
-                builder.addParam("pages", pages);
+                request.addParam("pages", pages);
         }
-        return builder;
+        return request;
     }
 
     private String[] toStringArray(Integer[] ints) {

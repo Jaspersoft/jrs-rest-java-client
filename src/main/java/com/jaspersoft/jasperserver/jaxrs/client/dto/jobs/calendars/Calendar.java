@@ -21,27 +21,24 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
 
-@XmlRootElement(name = "reportJobCalendar")
+import java.util.TimeZone;
+
 public abstract class Calendar {
 
-    protected static final String TYPE_ANNUAL = "annual";
-    protected static final String TYPE_BASE = "base";
-    protected static final String TYPE_CRON = "cron";
-    protected static final String TYPE_DAILY = "daily";
-    protected static final String TYPE_HOLIDAY = "holiday";
-    protected static final String TYPE_MONTHLY = "monthly";
-    protected static final String TYPE_WEEKLY = "weekly";
-
-    protected String calendarType;
+    protected CalendarType calendarType;
     protected String description;
-    protected String timeZone;
+    protected TimeZone timeZone;
 
     protected Calendar(){}
 
-    public String getCalendarType() {
+    public CalendarType getCalendarType() {
         return calendarType;
+    }
+
+    public void setCalendarType(CalendarType calendarType) {
+        this.calendarType = calendarType;
     }
 
     public String getDescription() {
@@ -52,11 +49,11 @@ public abstract class Calendar {
         this.description = description;
     }
 
-    public String getTimeZone() {
+    public TimeZone getTimeZone() {
         return timeZone;
     }
 
-    public void setTimeZone(String timeZone) {
+    public void setTimeZone(TimeZone timeZone) {
         this.timeZone = timeZone;
     }
 

@@ -27,6 +27,7 @@
             <artifactId>jersey-client</artifactId>
             <version>2.5</version>
         </dependency>
+
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-json</artifactId>
@@ -35,7 +36,7 @@
         <dependency>
             <groupId>com.sun.jersey.contribs</groupId>
             <artifactId>jersey-multipart</artifactId>
-            <version>1.13-b01</version>
+            <version>1.17</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>

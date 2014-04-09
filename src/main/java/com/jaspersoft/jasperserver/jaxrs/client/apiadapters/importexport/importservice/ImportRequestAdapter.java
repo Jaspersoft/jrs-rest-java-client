@@ -45,13 +45,13 @@ public class ImportRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncState(final Callback<OperationResult<StateDto>, R> callback){
-        final JerseyRequest<StateDto> builder =
+        final JerseyRequest<StateDto> request =
                 buildRequest(sessionStorage, StateDto.class, new String[]{"/import", taskId, STATE_URI});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 

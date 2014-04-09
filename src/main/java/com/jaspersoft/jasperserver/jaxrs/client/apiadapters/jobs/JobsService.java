@@ -37,33 +37,45 @@ public class JobsService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    public BatchJobsOperationsAdapter jobs(){
+    public BatchJobsOperationsAdapter jobs() {
         return new BatchJobsOperationsAdapter(sessionStorage);
     }
 
-    public SingleJobOperationsAdapter job(long jobId){
+    public SingleJobOperationsAdapter job(long jobId) {
         return new SingleJobOperationsAdapter(sessionStorage, String.valueOf(jobId));
     }
 
-    public OperationResult<JobExtension> scheduleReport(JobExtension report){
-        JerseyRequest<JobExtension> builder =
+    public OperationResult<JobExtension> scheduleReport(JobExtension report) {
+        JerseyRequest<JobExtension> request =
                 buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
-        builder.setContentType("application/job+json");
-        builder.setAccept("application/job+json");
 
-        return builder.put(report);
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
+            request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+        } else {
+            request.setContentType("application/job+json");
+            request.setAccept("application/job+json");
+        }
+
+        return request.put(report);
     }
 
     public <R> RequestExecution asyncScheduleReport(final JobExtension report, final Callback<OperationResult<JobExtension>, R> callback) {
-        final JerseyRequest<JobExtension> builder =
+        final JerseyRequest<JobExtension> request =
                 buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
-        builder.setContentType("application/job+json");
-        builder.setAccept("application/job+json");
+
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
+            request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+        } else {
+            request.setContentType("application/job+json");
+            request.setAccept("application/job+json");
+        }
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.put(report));
+                callback.execute(request.put(report));
             }
         });
 
@@ -71,7 +83,7 @@ public class JobsService extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult<CalendarNameListWrapper> calendars(){
+    public OperationResult<CalendarNameListWrapper> calendars() {
         return calendars(null);
     }
 
@@ -79,25 +91,25 @@ public class JobsService extends AbstractAdapter {
         return asyncCalendars(null, callback);
     }
 
-    public OperationResult<CalendarNameListWrapper> calendars(CalendarType type){
-        JerseyRequest<CalendarNameListWrapper> builder =
+    public OperationResult<CalendarNameListWrapper> calendars(CalendarType type) {
+        JerseyRequest<CalendarNameListWrapper> request =
                 buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
         if (type != null)
-            builder.addParam("calendarType", type.name().toLowerCase());
+            request.addParam("calendarType", type.name().toLowerCase());
 
-        return builder.get();
+        return request.get();
     }
 
     public <R> RequestExecution asyncCalendars(final CalendarType type, final Callback<OperationResult<CalendarNameListWrapper>, R> callback) {
-        final JerseyRequest<CalendarNameListWrapper> builder =
+        final JerseyRequest<CalendarNameListWrapper> request =
                 buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
         if (type != null)
-            builder.addParam("calendarType", type.name().toLowerCase());
+            request.addParam("calendarType", type.name().toLowerCase());
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -105,9 +117,9 @@ public class JobsService extends AbstractAdapter {
         return task;
     }
 
-    public SingleCalendarOperationsAdapter calendar(String calendarName){
+    public SingleCalendarOperationsAdapter calendar(String calendarName) {
         if ("".equals(calendarName) || "/".equals(calendarName))
-            throw new  IllegalArgumentException("'calendarName' mustn't be an empty string");
+            throw new IllegalArgumentException("'calendarName' mustn't be an empty string");
         return new SingleCalendarOperationsAdapter(sessionStorage, calendarName);
     }
 

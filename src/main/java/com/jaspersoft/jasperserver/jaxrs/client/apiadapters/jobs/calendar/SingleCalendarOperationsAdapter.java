@@ -24,8 +24,9 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.WithEntityOperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.ReportJobCalendar;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.*;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -43,24 +44,99 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
         params = new MultivaluedHashMap<String, String>();
     }
 
-    public SingleCalendarOperationsAdapter parameter(CalendarParameter parameter, String value){
+    public SingleCalendarOperationsAdapter parameter(CalendarParameter parameter, String value) {
         params.add(parameter.getName(), value);
         return this;
     }
 
-    public OperationResult<ReportJobCalendar> get(){
-        return buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName})
-                .get();
+    public OperationResult<Calendar> get() {
+        OperationResult<ReportJobCalendar> result =
+                buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName})
+                        .get();
+        return convertToLocalCalendarType(result);
     }
 
-    public <R> RequestExecution asyncGet(final Callback<OperationResult<ReportJobCalendar>, R> callback) {
-        final JerseyRequest<ReportJobCalendar> builder =
+    private OperationResult<Calendar> convertToLocalCalendarType(OperationResult<ReportJobCalendar> source) {
+        ReportJobCalendar reportJobCalendar = source.getEntity();
+        CalendarType calendarType = CalendarType.valueOf(reportJobCalendar.getCalendarType());
+
+        Calendar localCalendar = null;
+
+        switch (calendarType) {
+            case annual: {
+                AnnualCalendar annualCalendar = new AnnualCalendar();
+                setCommonCalendarFields(annualCalendar, reportJobCalendar);
+                annualCalendar.setDataSorted(reportJobCalendar.isDataSorted());
+                annualCalendar.setExcludeDays(reportJobCalendar.getExcludeDays());
+                localCalendar = annualCalendar;
+                break;
+            }
+            case base: {
+                BaseCalendar baseCalendar = new BaseCalendar();
+                setCommonCalendarFields(baseCalendar, reportJobCalendar);
+                localCalendar = baseCalendar;
+                break;
+            }
+            case cron: {
+                CronCalendar cronCalendar = new CronCalendar();
+                setCommonCalendarFields(cronCalendar, reportJobCalendar);
+                cronCalendar.setCronExpression(reportJobCalendar.getCronExpression());
+                localCalendar = cronCalendar;
+                break;
+            }
+            case daily: {
+                DailyCalendar dailyCalendar = new DailyCalendar();
+                setCommonCalendarFields(dailyCalendar, reportJobCalendar);
+                dailyCalendar.setInvertTimeRange(reportJobCalendar.isInvertTimeRange());
+                dailyCalendar.setRangeEndingCalendar(reportJobCalendar.getRangeEndingCalendar());
+                dailyCalendar.setRangeStartingCalendar(reportJobCalendar.getRangeStartingCalendar());
+                localCalendar = dailyCalendar;
+                break;
+            }
+            case holiday: {
+                HolidayCalendar holidayCalendar = new HolidayCalendar();
+                setCommonCalendarFields(holidayCalendar, reportJobCalendar);
+                holidayCalendar.setDataSorted(reportJobCalendar.isDataSorted());
+                holidayCalendar.setExcludeDays(reportJobCalendar.getExcludeDays());
+                localCalendar = holidayCalendar;
+                break;
+            }
+            case monthly: {
+                MonthlyCalendar monthlyCalendar = new MonthlyCalendar();
+                setCommonCalendarFields(monthlyCalendar, reportJobCalendar);
+                monthlyCalendar.setExcludeDaysFlags(reportJobCalendar.getExcludeDaysFlags());
+                localCalendar = monthlyCalendar;
+                break;
+            }
+            case weekly: {
+                WeeklyCalendar weeklyCalendar = new WeeklyCalendar();
+                setCommonCalendarFields(weeklyCalendar, reportJobCalendar);
+                weeklyCalendar.setExcludeDaysFlags(reportJobCalendar.getExcludeDaysFlags());
+                localCalendar = weeklyCalendar;
+                break;
+            }
+        }
+
+        final Calendar finalLocalCalendar = localCalendar;
+        return new WithEntityOperationResult<Calendar>(source.getResponse(), Calendar.class) {{
+                    this.entity = finalLocalCalendar;
+                }};
+    }
+
+    private void setCommonCalendarFields(Calendar target, ReportJobCalendar src) {
+        target.setCalendarType(CalendarType.valueOf(src.getCalendarType()));
+        target.setDescription(src.getDescription());
+        target.setTimeZone(src.getTimeZone());
+    }
+
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<Calendar>, R> callback) {
+        final JerseyRequest<ReportJobCalendar> request =
                 buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(convertToLocalCalendarType(request.get()));
             }
         });
 
@@ -68,19 +144,19 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult delete(){
+    public OperationResult delete() {
         return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName})
                 .delete();
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
-        final JerseyRequest builder =
+        final JerseyRequest request =
                 buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.delete());
+                callback.execute(request.delete());
             }
         });
 
@@ -88,23 +164,23 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult<ReportJobCalendar> createNew(Calendar calendarDescriptor){
-        JerseyRequest<ReportJobCalendar> builder =
+    public OperationResult<ReportJobCalendar> createNew(Calendar calendarDescriptor) {
+        JerseyRequest<ReportJobCalendar> request =
                 buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
-        builder.addParams(params);
+        request.addParams(params);
 
-        return builder.put(calendarDescriptor);
+        return request.put(calendarDescriptor);
     }
 
     public <R> RequestExecution asyncCreateNew(final Calendar calendarDescriptor, final Callback<OperationResult<ReportJobCalendar>, R> callback) {
-        final JerseyRequest<ReportJobCalendar> builder =
+        final JerseyRequest<ReportJobCalendar> request =
                 buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
-        builder.addParams(params);
+        request.addParams(params);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.put(calendarDescriptor));
+                callback.execute(request.put(calendarDescriptor));
             }
         });
 

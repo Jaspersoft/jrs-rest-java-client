@@ -48,13 +48,13 @@ public class ExportRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncState(final Callback<OperationResult<StateDto>, R> callback){
-        final JerseyRequest<StateDto> builder =
+        final JerseyRequest<StateDto> request =
                 buildRequest(sessionStorage, StateDto.class, new String[]{"/export", taskId, STATE_URI});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -79,17 +79,17 @@ public class ExportRequestAdapter extends AbstractAdapter {
             } catch (InterruptedException ignored) {}
         }
 
-        JerseyRequest<InputStream> builder =
+        JerseyRequest<InputStream> request =
                 buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/mockFilename"});
-        builder.setAccept("application/zip");
+        request.setAccept("application/zip");
 
-        return builder.get();
+        return request.get();
     }
 
     public <R> RequestExecution asyncFetch(final Callback<OperationResult<InputStream>, R> callback){
-        final JerseyRequest<InputStream> builder =
+        final JerseyRequest<InputStream> request =
                 buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/mockFilename"});
-        builder.setAccept("application/zip");
+        request.setAccept("application/zip");
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -108,7 +108,7 @@ public class ExportRequestAdapter extends AbstractAdapter {
                         Thread.sleep(500);
                     } catch (InterruptedException ignored) {}
                 }
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 

@@ -52,29 +52,29 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<UsersListWrapper> get(){
-        JerseyRequest<UsersListWrapper> builder =
+        JerseyRequest<UsersListWrapper> request =
                 buildRequest(
                         sessionStorage,
                         UsersListWrapper.class,
                         new String[]{uri},
                         new DefaultErrorHandler());
-        builder.addParams(params);
-        return builder.get();
+        request.addParams(params);
+        return request.get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<UsersListWrapper>, R> callback){
-        final JerseyRequest<UsersListWrapper> builder =
+        final JerseyRequest<UsersListWrapper> request =
                 buildRequest(
                         sessionStorage,
                         UsersListWrapper.class,
                         new String[]{uri},
                         new DefaultErrorHandler());
-        builder.addParams(params);
+        request.addParams(params);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.delete());
+                callback.execute(request.delete());
             }
         });
 

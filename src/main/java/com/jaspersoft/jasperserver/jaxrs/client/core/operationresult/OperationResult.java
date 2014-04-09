@@ -21,17 +21,15 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
-import java.util.Map;
 
 public abstract class OperationResult<T> {
 
-    private Response response;
-    private Class<? extends T> entityClass;
+    protected Response response;
+    protected Class<? extends T> entityClass;
 
-    private T entity;
-    private String serializedContent;
+    protected T entity;
+    protected String serializedContent;
 
     public OperationResult(Response response, Class<? extends T> entityClass) {
         this.response = response;
@@ -61,18 +59,5 @@ public abstract class OperationResult<T> {
     public Response getResponse() {
         return response;
     }
-
-    public String getSessionId() {
-        Map<String, NewCookie> cookies = response.getCookies();
-        NewCookie jsessionid;
-
-        if (cookies != null &&
-                (jsessionid = cookies.get("JSESSIONID")) != null)
-            return jsessionid.getValue();
-        else
-            return null;
-    }
-
-
 
 }

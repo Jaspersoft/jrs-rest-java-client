@@ -39,9 +39,16 @@ public class JobValidationErrorHandler extends DefaultErrorHandler {
         if (response.getHeaderString("Content-Type").contains("xml") ||
                 response.getHeaderString("Content-Type").contains("json")) {
             ValidationErrorsListWrapper validationErrors = readBody(response, ValidationErrorsListWrapper.class);
+
+            if (validationErrors == null){
+                super.handleBodyError(response);
+                return;
+            }
+
             errorDescriptors = toErrorDescriptorList(validationErrors);
+            throw new ValidationException(generateErrorMessage(errorDescriptors), errorDescriptors);
         }
-        throw  new ValidationException(generateErrorMessage(errorDescriptors), errorDescriptors);
+        super.handleBodyError(response);
     }
 
     protected List<ErrorDescriptor> toErrorDescriptorList(ValidationErrorsListWrapper validationErrors) {

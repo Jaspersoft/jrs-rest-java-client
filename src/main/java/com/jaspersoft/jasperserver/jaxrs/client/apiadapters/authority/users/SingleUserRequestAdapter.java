@@ -59,12 +59,12 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientUser>, R> callback){
-        final JerseyRequest<ClientUser> builder = buildRequest();
+        final JerseyRequest<ClientUser> request = buildRequest();
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -77,12 +77,12 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncCreateOrUpdate(final ClientUser user, final Callback<OperationResult<ClientUser>, R> callback){
-        final JerseyRequest<ClientUser> builder = buildRequest();
+        final JerseyRequest<ClientUser> request = buildRequest();
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.put(user));
+                callback.execute(request.put(user));
             }
         });
 
@@ -95,12 +95,12 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult<ClientUser>, R> callback){
-        final JerseyRequest<ClientUser> builder = buildRequest();
+        final JerseyRequest<ClientUser> request = buildRequest();
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.delete());
+                callback.execute(request.delete());
             }
         });
 
@@ -129,12 +129,12 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         }
 
         public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientUserAttribute>, R> callback){
-            final JerseyRequest<ClientUserAttribute> builder = buildRequest();
+            final JerseyRequest<ClientUserAttribute> request = buildRequest();
 
             RequestExecution task = new RequestExecution(new Runnable() {
                 @Override
                 public void run() {
-                    callback.execute(builder.get());
+                    callback.execute(request.get());
                 }
             });
 
@@ -147,12 +147,12 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         }
 
         public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback){
-            final JerseyRequest builder = buildRequest();
+            final JerseyRequest request = buildRequest();
 
             RequestExecution task = new RequestExecution(new Runnable() {
                 @Override
                 public void run() {
-                    callback.execute(builder.delete());
+                    callback.execute(request.delete());
                 }
             });
 
@@ -166,12 +166,12 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
 
         public <R> RequestExecution asyncCreateOrUpdate(final ClientUserAttribute userAttribute,
                                                         final Callback<OperationResult<ClientUserAttribute>, R> callback){
-            final JerseyRequest<ClientUserAttribute> builder = buildRequest();
+            final JerseyRequest<ClientUserAttribute> request = buildRequest();
 
             RequestExecution task = new RequestExecution(new Runnable() {
                 @Override
                 public void run() {
-                    callback.execute(builder.put(userAttribute));
+                    callback.execute(request.put(userAttribute));
                 }
             });
 
@@ -203,19 +203,19 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         }
 
         public OperationResult<UserAttributesListWrapper> get(){
-            JerseyRequest<UserAttributesListWrapper> builder = buildRequest();
-            builder.addParams(params);
-            return builder.get();
+            JerseyRequest<UserAttributesListWrapper> request = buildRequest();
+            request.addParams(params);
+            return request.get();
         }
 
         public <R> RequestExecution asyncGet(final Callback<OperationResult<UserAttributesListWrapper>, R> callback){
-            final JerseyRequest<UserAttributesListWrapper> builder = buildRequest();
-            builder.addParams(params);
+            final JerseyRequest<UserAttributesListWrapper> request = buildRequest();
+            request.addParams(params);
 
             RequestExecution task = new RequestExecution(new Runnable() {
                 @Override
                 public void run() {
-                    callback.execute(builder.get());
+                    callback.execute(request.get());
                 }
             });
 
@@ -229,12 +229,12 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
 
         public <R> RequestExecution asyncCreateOrUpdate(final UserAttributesListWrapper attributesList,
                                                         final Callback<OperationResult<UserAttributesListWrapper>, R> callback){
-            final JerseyRequest<UserAttributesListWrapper> builder = buildRequest();
+            final JerseyRequest<UserAttributesListWrapper> request = buildRequest();
 
             RequestExecution task = new RequestExecution(new Runnable() {
                 @Override
                 public void run() {
-                    callback.execute(builder.put(attributesList));
+                    callback.execute(request.put(attributesList));
                 }
             });
 
@@ -243,19 +243,19 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         }
 
         public OperationResult delete(){
-            JerseyRequest<UserAttributesListWrapper> builder = buildRequest();
-            builder.addParams(params);
-            return builder.delete();
+            JerseyRequest<UserAttributesListWrapper> request = buildRequest();
+            request.addParams(params);
+            return request.delete();
         }
 
         public <R> RequestExecution asyncDelete(final Callback<OperationResult<UserAttributesListWrapper>, R> callback){
-            final JerseyRequest<UserAttributesListWrapper> builder = buildRequest();
-            builder.addParams(params);
+            final JerseyRequest<UserAttributesListWrapper> request = buildRequest();
+            request.addParams(params);
 
             RequestExecution task = new RequestExecution(new Runnable() {
                 @Override
                 public void run() {
-                    callback.execute(builder.delete());
+                    callback.execute(request.delete());
                 }
             });
 

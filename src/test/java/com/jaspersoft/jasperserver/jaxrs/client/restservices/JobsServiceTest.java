@@ -28,6 +28,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.WeeklyCalendar;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.JobSummaryListWrapper;
@@ -37,6 +38,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.TimeZone;
 
 @Test
 public class JobsServiceTest extends Assert {
@@ -183,7 +185,7 @@ public class JobsServiceTest extends Assert {
         assertEquals(result.getResponse().getStatus(), ResponseStatus.OK);
     }
 
-    @Test(dependsOnMethods = "testScheduleJob")
+    @Test//(dependsOnMethods = "testScheduleJob")
     public void testUpdateJobsInBulkWithJobDescriptor(){
         ReportJobModel jobDescriptor = new ReportJobModel();
         jobDescriptor.setDescription("Bulk update description");
@@ -264,7 +266,7 @@ public class JobsServiceTest extends Assert {
         OperationResult<CalendarNameListWrapper> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
-                .calendars(CalendarType.HOLIDAY);
+                .calendars(CalendarType.holiday);
         assertNotNull(result);
         CalendarNameListWrapper calendarNameListWrapper = result.getEntity();
         assertNotNull(calendarNameListWrapper);
@@ -275,7 +277,7 @@ public class JobsServiceTest extends Assert {
 
         WeeklyCalendar calendar = new WeeklyCalendar();
         calendar.setDescription("lalala");
-        calendar.setTimeZone("GMT+03:00");
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+03:00"));
         calendar.setExcludeDaysFlags(new boolean[]{true, false, false, false, false, true, true});
 
         OperationResult result = client
@@ -289,14 +291,15 @@ public class JobsServiceTest extends Assert {
 
     @Test(dependsOnMethods = "testAddOrUpdateCalendar")
     public void testViewCalendar(){
-        OperationResult<ReportJobCalendar> result = client
+        OperationResult<Calendar> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .calendar("testCalendar")
                 .get();
         assertNotNull(result);
-        ReportJobCalendar jobCalendar = result.getEntity();
+        Calendar jobCalendar = result.getEntity();
         assertNotNull(jobCalendar);
+        assertTrue(jobCalendar instanceof WeeklyCalendar);
     }
 
     @Test(dependsOnMethods = "testViewCalendar")

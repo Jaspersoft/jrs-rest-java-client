@@ -21,30 +21,35 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars;
 
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "reportJobCalendar")
 public class DailyCalendar extends Calendar {
 
-    private Calendar rangeStartingCalendar;
-    private Calendar rangeEndingCalendar;
+    private java.util.Calendar rangeStartingCalendar;
+    private java.util.Calendar rangeEndingCalendar;
     private Boolean invertTimeRange;
 
     public DailyCalendar() {
         super();
-        this.calendarType = TYPE_DAILY;
+        this.calendarType = CalendarType.daily;
     }
 
-    public Calendar getRangeStartingCalendar() {
+    public java.util.Calendar getRangeStartingCalendar() {
         return rangeStartingCalendar;
     }
 
-    public void setRangeStartingCalendar(Calendar rangeStartingCalendar) {
+    public void setRangeStartingCalendar(java.util.Calendar rangeStartingCalendar) {
         this.rangeStartingCalendar = rangeStartingCalendar;
     }
 
-    public Calendar getRangeEndingCalendar() {
+    public java.util.Calendar getRangeEndingCalendar() {
         return rangeEndingCalendar;
     }
 
-    public void setRangeEndingCalendar(Calendar rangeEndingCalendar) {
+    public void setRangeEndingCalendar(java.util.Calendar rangeEndingCalendar) {
         this.rangeEndingCalendar = rangeEndingCalendar;
     }
 

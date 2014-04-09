@@ -46,12 +46,12 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientRole>, R> callback){
-        final JerseyRequest<ClientRole> builder = buildRequest(ClientRole.class);
+        final JerseyRequest<ClientRole> request = buildRequest(ClientRole.class);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -64,12 +64,12 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncCreateOrUpdate(final ClientRole user, final Callback<OperationResult<RolesListWrapper>, R> callback){
-        final JerseyRequest<RolesListWrapper> builder = buildRequest(RolesListWrapper.class);
+        final JerseyRequest<RolesListWrapper> request = buildRequest(RolesListWrapper.class);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.put(user));
+                callback.execute(request.put(user));
             }
         });
 
@@ -82,12 +82,12 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult<ClientRole>, R> callback){
-        final JerseyRequest<ClientRole> builder = buildRequest(ClientRole.class);
+        final JerseyRequest<ClientRole> request = buildRequest(ClientRole.class);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.delete());
+                callback.execute(request.delete());
             }
         });
 

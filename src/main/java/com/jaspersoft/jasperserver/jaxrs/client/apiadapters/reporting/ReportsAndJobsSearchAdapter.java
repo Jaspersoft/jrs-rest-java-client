@@ -47,21 +47,21 @@ public class ReportsAndJobsSearchAdapter extends AbstractAdapter {
     }
 
     public OperationResult<ReportExecutionListWrapper> find(){
-        JerseyRequest<ReportExecutionListWrapper> builder =
+        JerseyRequest<ReportExecutionListWrapper> request =
                 buildRequest(sessionStorage, ReportExecutionListWrapper.class, new String[]{"/reportExecutions"});
-        builder.addParams(params);
-        return builder.get();
+        request.addParams(params);
+        return request.get();
     }
 
     public <R> RequestExecution asyncFind(final Callback<OperationResult<ReportExecutionListWrapper>, R> callback) {
-        final JerseyRequest<ReportExecutionListWrapper> builder =
+        final JerseyRequest<ReportExecutionListWrapper> request =
                 buildRequest(sessionStorage, ReportExecutionListWrapper.class, new String[]{"/reportExecutions"});
-        builder.addParams(params);
+        request.addParams(params);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 

@@ -45,13 +45,13 @@ public class ReorderingReportParametersAdapter extends ReportParametersAdapter {
     public <R> RequestExecution asyncReorder(final List<ReportInputControl> inputControls,
                                              final Callback<OperationResult<ReportInputControlsListWrapper>, R> callback) {
         final ReportInputControlsListWrapper wrapper = new ReportInputControlsListWrapper(inputControls);
-        final JerseyRequest<ReportInputControlsListWrapper> builder =
+        final JerseyRequest<ReportInputControlsListWrapper> request =
                 buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.put(wrapper));
+                callback.execute(request.put(wrapper));
             }
         });
 

@@ -51,12 +51,12 @@ public class BatchResourcesAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncSearch(final Callback<OperationResult<ClientResourceListWrapper>, R> callback) {
-        final JerseyRequest<ClientResourceListWrapper> builder = getBuilder(ClientResourceListWrapper.class);
+        final JerseyRequest<ClientResourceListWrapper> request = getBuilder(ClientResourceListWrapper.class);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -69,12 +69,12 @@ public class BatchResourcesAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
-        final JerseyRequest builder = getBuilder(Object.class);
+        final JerseyRequest request = getBuilder(Object.class);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.delete());
+                callback.execute(request.delete());
             }
         });
 
@@ -83,9 +83,9 @@ public class BatchResourcesAdapter extends AbstractAdapter {
     }
 
     private <T> JerseyRequest<T> getBuilder(Class<T> responseClass) {
-        JerseyRequest<T> builder = buildRequest(sessionStorage, responseClass, new String[]{"/resources"}, new DefaultErrorHandler());
-        builder.addParams(params);
-        return builder;
+        JerseyRequest<T> request = buildRequest(sessionStorage, responseClass, new String[]{"/resources"}, new DefaultErrorHandler());
+        request.addParams(params);
+        return request;
     }
 
 }

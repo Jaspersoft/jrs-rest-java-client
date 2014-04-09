@@ -59,22 +59,21 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
                                                            Class<T> responseClass,
                                                            String[] path,
                                                            ErrorHandler errorHandler) {
-        JerseyRequest<T> builder = new JerseyRequest<T>(sessionStorage, responseClass);
+        JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, responseClass);
 
         if (errorHandler != null)
-            builder.errorHandler = errorHandler;
+            request.errorHandler = errorHandler;
         else
-            builder.errorHandler = new DefaultErrorHandler();
+            request.errorHandler = new DefaultErrorHandler();
 
         for (String pathElem : path)
-            builder.setPath(pathElem);
+            request.setPath(pathElem);
 
-        return builder;
+        return request;
     }
 
 
     private final OperationResultFactory operationResultFactory;
-    private final SessionStorage sessionStorage;
     private final Class<ResponseType> responseClass;
 
     private ErrorHandler errorHandler;
@@ -87,10 +86,21 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     protected JerseyRequest(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
 
         this.operationResultFactory = new OperationResultFactoryImpl();
-        this.sessionStorage = sessionStorage;
         this.responseClass = responseClass;
-        this.contentType = MediaType.APPLICATION_JSON;
-        this.acceptType = MediaType.APPLICATION_JSON;
+
+        RestClientConfiguration configuration = sessionStorage.getConfiguration();
+
+        if (configuration.getContentMimeType() == MimeType.JSON)
+            this.contentType = MediaType.APPLICATION_JSON;
+        else
+            this.contentType = MediaType.APPLICATION_XML;
+
+        if (configuration.getAcceptMimeType() == MimeType.JSON)
+            this.acceptType = MediaType.APPLICATION_JSON;
+        else
+            this.acceptType = MediaType.APPLICATION_XML;
+
+
         this.headers = new MultivaluedHashMap<String, String>();
         this.usersWebTarget = sessionStorage.getRootTarget().path("/rest_v2")
                 .register(CustomRepresentationTypeProvider.class)

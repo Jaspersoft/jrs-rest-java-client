@@ -19,17 +19,8 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars;
+package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
-
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name = "reportJobCalendar")
-public class BaseCalendar extends Calendar {
-
-    public BaseCalendar(){
-        this.calendarType = CalendarType.base;
-    }
-
+public enum MimeType {
+    XML, JSON
 }

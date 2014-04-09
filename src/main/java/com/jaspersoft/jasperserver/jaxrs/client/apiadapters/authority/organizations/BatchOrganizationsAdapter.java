@@ -46,19 +46,19 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<OrganizationsListWrapper> get() {
-        JerseyRequest<OrganizationsListWrapper> builder = buildRequest(OrganizationsListWrapper.class);
-        builder.addParams(params);
-        return builder.get();
+        JerseyRequest<OrganizationsListWrapper> request = buildRequest(OrganizationsListWrapper.class);
+        request.addParams(params);
+        return request.get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<OrganizationsListWrapper>, R> callback) {
-        final JerseyRequest<OrganizationsListWrapper> builder = buildRequest(OrganizationsListWrapper.class);
-        builder.addParams(params);
+        final JerseyRequest<OrganizationsListWrapper> request = buildRequest(OrganizationsListWrapper.class);
+        request.addParams(params);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -67,19 +67,19 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<Organization> create(Organization organization) {
-        JerseyRequest<Organization> builder = buildRequest(Organization.class);
-        builder.addParams(params);
-        return builder.post(organization);
+        JerseyRequest<Organization> request = buildRequest(Organization.class);
+        request.addParams(params);
+        return request.post(organization);
     }
 
     public <R> RequestExecution asyncCreate(final Organization organization, final Callback<OperationResult<Organization>, R> callback){
-        final JerseyRequest<Organization> builder = buildRequest(Organization.class);
-        builder.addParams(params);
+        final JerseyRequest<Organization> request = buildRequest(Organization.class);
+        request.addParams(params);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(organization));
+                callback.execute(request.post(organization));
             }
         });
 

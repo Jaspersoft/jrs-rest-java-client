@@ -45,12 +45,12 @@ public class ReportParametersUtils {
     }
 
     public static String toPathSegment(List<String> inputControlsIds){
-        StringBuilder builder = new StringBuilder();
+        StringBuilder request = new StringBuilder();
         for (String id : inputControlsIds)
-            builder.append(id)
+            request.append(id)
                     .append(";");
 
-        return builder.toString();
+        return request.toString();
     }
 
 }

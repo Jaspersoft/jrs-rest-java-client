@@ -23,13 +23,12 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "reportExecution")
 public class ReportExecutionDescriptor {
 
@@ -39,8 +38,6 @@ public class ReportExecutionDescriptor {
     private String status;
     private Integer totalPages;
     private ErrorDescriptor errorDescriptor;
-
-    @XmlElement(name = "exports", type = ExportDescriptor.class)
     private List<ExportDescriptor> exports;
 
 
@@ -92,6 +89,9 @@ public class ReportExecutionDescriptor {
         this.totalPages = totalPages;
     }
 
+    @XmlElementWrapper(name = "exports")
+    @XmlElement(name = "export", type = ExportDescriptor.class)
+    //@XmlJavaTypeAdapter(ExportDescriptorsAdapter.class)
     public List<ExportDescriptor> getExports() {
         return exports;
     }

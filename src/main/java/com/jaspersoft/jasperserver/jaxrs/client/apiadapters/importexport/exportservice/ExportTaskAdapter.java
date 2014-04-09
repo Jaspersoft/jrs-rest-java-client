@@ -93,9 +93,9 @@ public class ExportTaskAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncCreate(final Callback<OperationResult<StateDto>, R> callback){
-        final JerseyRequest<StateDto> builder =
+        final JerseyRequest<StateDto> request =
                 buildRequest(sessionStorage, StateDto.class, new String[]{"/export"});
-        builder.setAccept("application/zip");
+        request.setAccept("application/zip");
 
         //guarantee that exportTaskDto won't be modified from another thread
         final ExportTaskDto localCopy = new ExportTaskDto(exportTaskDto);
@@ -103,7 +103,7 @@ public class ExportTaskAdapter extends AbstractAdapter {
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(localCopy));
+                callback.execute(request.post(localCopy));
             }
         });
 

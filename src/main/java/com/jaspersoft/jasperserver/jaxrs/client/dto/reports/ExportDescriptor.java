@@ -23,13 +23,12 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "export")
 public class ExportDescriptor {
 
@@ -39,8 +38,6 @@ public class ExportDescriptor {
     private String attachmentsPrefix;
     private OutputResourceDescriptor outputResource;
     private ErrorDescriptor errorDescriptor;
-
-    @XmlElement(name = "attachments", type = AttachmentDescriptor.class)
     private List<AttachmentDescriptor> attachments;
 
     public ErrorDescriptor getErrorDescriptor() {
@@ -91,6 +88,8 @@ public class ExportDescriptor {
         this.outputResource = outputResource;
     }
 
+    @XmlElementWrapper(name = "attachments")
+    @XmlElement(name = "attachment", type = AttachmentDescriptor.class)
     public List<AttachmentDescriptor> getAttachments() {
         return attachments;
     }

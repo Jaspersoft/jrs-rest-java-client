@@ -23,10 +23,17 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connection;
 
 public final class ConnectionMediaType {
 
-    public static final String FTP = "application/connections.ftp+json";
-    public static final String LOCAL_FILE_SYSTEM = "application/connections.lfs+json";
-    public static final String TXT_FILE = "application/connections.txtFile+json";
-    public static final String XLS_FILE = "application/connections.xlsFile+json";
+    public static final String FTP_JSON = "application/connections.ftp+json";
+    public static final String FTP_XML = "application/connections.ftp+xml";
+
+    public static final String LOCAL_FILE_SYSTEM_JSON = "application/connections.lfs+json";
+    public static final String LOCAL_FILE_SYSTEM_XML = "application/connections.lfs+xml";
+
+    public static final String TXT_FILE_JSON = "application/connections.txtFile+json";
+    public static final String TXT_FILE_XML = "application/connections.txtFile+xml";
+
+    public static final String XLS_FILE_JSON = "application/connections.xlsFile+json";
+    public static final String XLS_FILE_XML = "application/connections.xlsFile+xml";
 
     private ConnectionMediaType(){}
 }

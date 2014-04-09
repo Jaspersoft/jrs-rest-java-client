@@ -38,22 +38,29 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
         this.jobId = jobId;
     }
 
-    public OperationResult<JobExtension> get(){
-        JerseyRequest<JobExtension> builder =
+    public OperationResult<JobExtension> get() {
+        JerseyRequest<JobExtension> request =
                 buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs", jobId});
-        builder.setAccept("application/job+json");
-        return builder.get();
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0)
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+        else
+            request.setAccept("application/job+json");
+        return request.get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<JobExtension>, R> callback) {
-        final JerseyRequest<JobExtension> builder =
+        final JerseyRequest<JobExtension> request =
                 buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs", jobId});
-        builder.setAccept("application/job+json");
+
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0)
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+        else
+            request.setAccept("application/job+json");
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -61,19 +68,19 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult<JobState> state(){
+    public OperationResult<JobState> state() {
         return buildRequest(sessionStorage, JobState.class, new String[]{"/jobs", jobId, "/state"})
                 .get();
     }
 
     public <R> RequestExecution asyncState(final Callback<OperationResult<JobState>, R> callback) {
-        final JerseyRequest<JobState> builder =
+        final JerseyRequest<JobState> request =
                 buildRequest(sessionStorage, JobState.class, new String[]{"/jobs", jobId, "/state"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.get());
+                callback.execute(request.get());
             }
         });
 
@@ -81,25 +88,39 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult<JobExtension> update(JobExtension job){
-        JerseyRequest<JobExtension> builder =
+    public OperationResult<JobExtension> update(JobExtension job) {
+        JerseyRequest<JobExtension> request =
                 buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs", jobId}, new JobValidationErrorHandler());
-        builder.setContentType("application/job+json");
-        builder.setAccept("application/job+json");
 
-        return builder.post(job);
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0){
+            request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+        }
+        else{
+            request.setContentType("application/job+json");
+            request.setAccept("application/job+json");
+        }
+
+        return request.post(job);
     }
 
     public <R> RequestExecution asyncUpdate(final JobExtension job, final Callback<OperationResult<JobExtension>, R> callback) {
-        final JerseyRequest<JobExtension> builder =
+        final JerseyRequest<JobExtension> request =
                 buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs", jobId}, new JobValidationErrorHandler());
-        builder.setContentType("application/job+json");
-        builder.setAccept("application/job+json");
+
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0){
+            request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+        }
+        else{
+            request.setContentType("application/job+json");
+            request.setAccept("application/job+json");
+        }
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(job));
+                callback.execute(request.post(job));
             }
         });
 
@@ -113,13 +134,13 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
-        final JerseyRequest builder =
+        final JerseyRequest request =
                 buildRequest(sessionStorage, Object.class, new String[]{"/jobs", jobId});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.delete());
+                callback.execute(request.delete());
             }
         });
 

@@ -57,18 +57,18 @@ public class ReportParametersAdapter extends AbstractAdapter {
     }
 
     public OperationResult<ReportInputControlsListWrapper> get(){
-        JerseyRequest<ReportInputControlsListWrapper> builder = prepareRequest();
-        return builder.post(ReportParametersUtils.toReportParameters(params));
+        JerseyRequest<ReportInputControlsListWrapper> request = prepareRequest();
+        return request.post(ReportParametersUtils.toReportParameters(params));
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<ReportInputControlsListWrapper>, R> callback) {
-        final JerseyRequest<ReportInputControlsListWrapper> builder = prepareRequest();
+        final JerseyRequest<ReportInputControlsListWrapper> request = prepareRequest();
         final ReportParameters reportParameters = ReportParametersUtils.toReportParameters(params);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(reportParameters));
+                callback.execute(request.post(reportParameters));
             }
         });
 
@@ -77,15 +77,15 @@ public class ReportParametersAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<ReportInputControlsListWrapper> prepareRequest(){
-        JerseyRequest<ReportInputControlsListWrapper> builder =
+        JerseyRequest<ReportInputControlsListWrapper> request =
                 buildRequest(sessionStorage, ReportInputControlsListWrapper.class,
                         new String[]{"/reports", reportUnitUri, "/inputControls"}, new DefaultErrorHandler());
-        builder.setContentType(MediaType.APPLICATION_XML);
-        builder.setAccept(MediaType.APPLICATION_XML);
+        request.setContentType(MediaType.APPLICATION_XML);
+        request.setAccept(MediaType.APPLICATION_XML);
         if (idsPathSegment != null){
-            builder.setPath(idsPathSegment);
+            request.setPath(idsPathSegment);
         }
-        return builder;
+        return request;
     }
 
     public ReportParametersValuesAdapter values(){

@@ -21,25 +21,31 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.ExcludeDaysWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.ExcludeDaysXmlAdapter;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
 
+@XmlRootElement(name = "reportJobCalendar")
 public class AnnualCalendar extends Calendar {
 
     public AnnualCalendar() {
         super();
-        this.calendarType = TYPE_ANNUAL;
+        this.calendarType = CalendarType.annual;
     }
 
-    private ExcludeDaysWrapper excludeDays = new ExcludeDaysWrapper();
+    private ArrayList<java.util.Calendar> excludeDays = new ArrayList<java.util.Calendar>();
     // true, if excludeDays is sorted
     private Boolean dataSorted;
 
-    public ExcludeDaysWrapper getExcludeDays() {
+    @XmlJavaTypeAdapter(ExcludeDaysXmlAdapter.class)
+    public ArrayList<java.util.Calendar> getExcludeDays() {
         return excludeDays;
     }
 
-    public void setExcludeDays(ExcludeDaysWrapper excludeDays) {
+    public void setExcludeDays(ArrayList<java.util.Calendar> excludeDays) {
         this.excludeDays = excludeDays;
     }
 

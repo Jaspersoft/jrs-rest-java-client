@@ -51,18 +51,18 @@ public class ReportParametersValuesAdapter extends AbstractAdapter {
     }
 
     public OperationResult<InputControlStateListWrapper> get() {
-        JerseyRequest<InputControlStateListWrapper> builder = prepareRequest();
-        return builder.post(ReportParametersUtils.toReportParameters(params));
+        JerseyRequest<InputControlStateListWrapper> request = prepareRequest();
+        return request.post(ReportParametersUtils.toReportParameters(params));
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<InputControlStateListWrapper>, R> callback) {
-        final JerseyRequest<InputControlStateListWrapper> builder = prepareRequest();
+        final JerseyRequest<InputControlStateListWrapper> request = prepareRequest();
         final ReportParameters reportParameters = ReportParametersUtils.toReportParameters(params);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(reportParameters));
+                callback.execute(request.post(reportParameters));
             }
         });
 
@@ -71,16 +71,16 @@ public class ReportParametersValuesAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<InputControlStateListWrapper> prepareRequest(){
-        JerseyRequest<InputControlStateListWrapper> builder =
+        JerseyRequest<InputControlStateListWrapper> request =
                 buildRequest(sessionStorage, InputControlStateListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"}, new DefaultErrorHandler());
         if (idsPathSegment != null) {
-            builder.setPath(idsPathSegment);
+            request.setPath(idsPathSegment);
         }
-        builder.setPath("values");
-        builder.setContentType(MediaType.APPLICATION_XML);
-        builder.setAccept(MediaType.APPLICATION_XML);
+        request.setPath("values");
+        request.setContentType(MediaType.APPLICATION_XML);
+        request.setAccept(MediaType.APPLICATION_XML);
 
-        return builder;
+        return request;
     }
 
 }

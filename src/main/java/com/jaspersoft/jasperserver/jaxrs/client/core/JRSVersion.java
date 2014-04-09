@@ -19,17 +19,15 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars;
+package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
+public enum JRSVersion implements Comparable<JRSVersion> {
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name = "reportJobCalendar")
-public class BaseCalendar extends Calendar {
-
-    public BaseCalendar(){
-        this.calendarType = CalendarType.base;
-    }
+    //!!!order is important!!! the latest version must be in the end
+    v4_7_0,
+    v5_0_0,
+    v5_1_0,
+    v5_2_0,
+    v5_5_0
 
 }

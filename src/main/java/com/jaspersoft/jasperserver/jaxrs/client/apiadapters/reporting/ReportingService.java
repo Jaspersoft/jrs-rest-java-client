@@ -40,15 +40,15 @@ public class ReportingService extends AbstractAdapter {
                 .post(request);
     }
 
-    public <R> RequestExecution asyncNewReportExecutionRequest(final ReportExecutionRequest request,
+    public <R> RequestExecution asyncNewReportExecutionRequest(final ReportExecutionRequest reportExecutionRequest,
                                                final Callback<OperationResult<ReportExecutionDescriptor>, R> callback) {
-        final JerseyRequest<ReportExecutionDescriptor> builder =
+        final JerseyRequest<ReportExecutionDescriptor> request =
                 buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(request));
+                callback.execute(request.post(request));
             }
         });
 

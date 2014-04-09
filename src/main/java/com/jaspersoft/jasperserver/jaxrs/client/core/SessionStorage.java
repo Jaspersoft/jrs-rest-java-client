@@ -21,12 +21,10 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.Organization;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.OrganizationsListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSource;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 
 import javax.ws.rs.client.Client;
@@ -36,7 +34,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 public class SessionStorage {
 
@@ -91,16 +88,31 @@ public class SessionStorage {
 
     /*public static void main(String[] args) throws InterruptedException {
         RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:4444/jasperserver");
+        configuration1.setContentMimeType(MimeType.XML);
+        configuration1.setAcceptMimeType(MimeType.XML);
         JasperserverRestClient client = new JasperserverRestClient(configuration1);
 
         Session session = client.authenticate("jasperadmin", "jasperadmin");
 
-        OperationResult<UsersListWrapper> result = session
-                .usersService()
-                .allUsers()
+        OperationResult<JobExtension> result = session
+                .jobsService()
+                .job(21281)
                 .get();
 
-        System.out.println(result.getSerializedContent());
+        JobExtension job = result.getEntity();
+
+        job.setLabel("NewScheduledReport");
+        job.setDescription("blablabla");
+        JobSource source = job.getSource();
+        source.setReportUnitURI("/reports/samples/Employees");
+
+        OperationResult<JobExtension> result1 = session
+                .jobsService()
+                .scheduleReport(job);
+
+        job = result.getEntity();
+
+        System.out.println(job);
 
     }*/
 }

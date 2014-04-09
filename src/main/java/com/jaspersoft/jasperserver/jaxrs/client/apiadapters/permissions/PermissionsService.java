@@ -48,13 +48,13 @@ public class PermissionsService extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncCreateNew(final RepositoryPermission permission, final Callback<OperationResult, R> callback) {
-        final JerseyRequest builder =
+        final JerseyRequest request =
                 buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(permission));
+                callback.execute(request.post(permission));
             }
         });
 
@@ -63,20 +63,20 @@ public class PermissionsService extends AbstractAdapter {
     }
 
     public OperationResult createNew(RepositoryPermissionListWrapper permissions) {
-        JerseyRequest builder = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
-        builder.setContentType("application/collection+json");
-        return builder.post(permissions);
+        JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
+        request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
+        return request.post(permissions);
     }
 
     public <R> RequestExecution asyncCreateNew(final RepositoryPermissionListWrapper permissions, final Callback<OperationResult, R> callback) {
-        final JerseyRequest builder =
+        final JerseyRequest request =
                 buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
-        builder.setContentType("application/collection+json");
+        request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(builder.post(permissions));
+                callback.execute(request.post(permissions));
             }
         });
 
