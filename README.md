@@ -1121,6 +1121,56 @@ OperationResult<UsersListWrapper> result = ...
 result.getSerializedContent();
 ```
 
+###Switching between JSON and XML
+You can configure a client to make request either with JSON or XML content.
+```java
+RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver");
+configuration.setContentMimeType(MimeType.XML);
+configuration.setAcceptMimeType(MimeType.XML);
+```
+or you can externilize configuration
+```
+url=http://localhost:4444/jasperserver/
+contentMimeType=JSON
+acceptMimeType=JSON
+#contentMimeType=XML
+#acceptMimeType=XML
+```
+```java
+RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("jrs-client-config.properties");
+```
+
+###Possible issues
+1. <strong>Deploying jrs-rest-client within web app to any Appplication Server, e.g. JBoss, Glassfish, WebSphere etc.</strong>  
+jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your application server does not support this version you will get an error. To solve this problem you need to add to your application a deployment configuration specific for your AS where you need to exclude modules with old JAX-RS API version. Example of such descriptor for JBoss AS you can find below:
+
+```xml
+<jboss-deployment-structure>
+    <deployment>
+        <exclusions>
+
+            <!-- Exclude JAVA EE of JBOSS (javax.ws..) => Add dependency javax.annotation -->
+            <module name="javaee.api" />
+            <!-- Exclude RestEasy conflict (javax.ws.rs.ext.RunDelegate) -->
+            <module name="javax.ws.rs.api"/>
+            <module name="org.codehaus.jackson.jackson-core-asl" />
+            <module name="org.jboss.resteasy.resteasy-atom-provider" />
+            <module name="org.jboss.resteasy.resteasy-cdi" />
+            <module name="org.jboss.resteasy.resteasy-crypto" />
+            <module name="org.jboss.resteasy.resteasy-jackson-provider" />
+            <module name="org.jboss.resteasy.resteasy-jaxb-provider" />
+            <module name="org.jboss.resteasy.resteasy-jaxrs" />
+            <module name="org.jboss.resteasy.resteasy-jettison-provider" />
+            <module name="org.jboss.resteasy.resteasy-jsapi" />
+            <module name="org.jboss.resteasy.resteasy-json-p-provider" />
+            <module name="org.jboss.resteasy.resteasy-multipart-provider" />
+            <module name="org.jboss.resteasy.resteasy-validator-provider-11" />
+            <module name="org.jboss.resteasy.resteasy-yaml-provider" />
+        </exclusions>
+    </deployment>
+</jboss-deployment-structure>
+```
+
 ###Maven dependency to add jasperserver-rest-client to your app:
 ```xml
     <dependencies>
