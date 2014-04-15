@@ -43,6 +43,8 @@ public class RestClientConfiguration {
     private MimeType acceptMimeType = MimeType.JSON;
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
     private TrustManager[] trustManagers;
+    private Long connectionTimeout;
+    private Long readTimeout;
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
@@ -110,11 +112,35 @@ public class RestClientConfiguration {
         this.trustManagers = trustManagers;
     }
 
+    public Long getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    public void setConnectionTimeout(Long connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public Long getReadTimeout() {
+        return readTimeout;
+    }
+
+    public void setReadTimeout(Long readTimeout) {
+        this.readTimeout = readTimeout;
+    }
+
     public static RestClientConfiguration loadConfiguration(String path) {
         Properties properties = loadProperties(path);
 
         RestClientConfiguration configuration = new RestClientConfiguration();
         configuration.setJasperReportsServerUrl(properties.getProperty("url"));
+
+        String connectionTimeout = properties.getProperty("connectionTimeout");
+        if (connectionTimeout != null)
+            configuration.setConnectionTimeout(Long.valueOf(connectionTimeout));
+
+        String readTimeout = properties.getProperty("readTimeout");
+        if (readTimeout != null)
+            configuration.setConnectionTimeout(Long.valueOf(readTimeout));
 
         try {
             configuration.setContentMimeType(MimeType.valueOf(properties.getProperty("contentMimeType")));

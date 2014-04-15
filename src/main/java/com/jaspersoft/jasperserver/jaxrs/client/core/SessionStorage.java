@@ -22,13 +22,14 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.glassfish.jersey.client.ClientProperties;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
+import javax.net.ssl.*;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -81,6 +82,15 @@ public class SessionStorage {
         }
 
         Client client = clientBuilder.build();
+
+        Long connectionTimeout = configuration.getConnectionTimeout();
+        if (connectionTimeout != null)
+            client.property(ClientProperties.CONNECT_TIMEOUT, connectionTimeout);
+
+        Long readTimeout = configuration.getReadTimeout();
+        if (readTimeout != null)
+            client.property(ClientProperties.READ_TIMEOUT, readTimeout);
+
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         login();
         rootTarget.register(new SessionOutputFilter(sessionId));
@@ -119,35 +129,14 @@ public class SessionStorage {
 
     /*public static void main(String[] args) throws InterruptedException {
 //        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:8081/jasperserver-pro");
-        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:4444/jasperserver");
+        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:8080/jasperserver");
 //        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:8080/jasperserver");
         JasperserverRestClient client = new JasperserverRestClient(configuration1);
 
         //Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
         Session session = client.authenticate("jasperadmin", "jasperadmin");
 
-        OperationResult<Job> result1 = session
-                .jobsService()
-                .job(21281)
-                .get();
 
-        Job jobExtension = result1.getEntity();
-
-        Job job = new Job();
-        job.setAlert(jobExtension.getAlert());
-        job.setBaseOutputFilename(jobExtension.getBaseOutputFilename() + "2");
-        job.setDescription(jobExtension.getDescription());
-        job.setLabel(jobExtension.getLabel());
-        job.setOutputFormats(jobExtension.getOutputFormats());
-        job.setTrigger(jobExtension.getTrigger());
-        job.setSource(jobExtension.getSource());
-        job.setRepositoryDestination(jobExtension.getRepositoryDestination());
-
-        OperationResult<? extends Job> result = session
-                .jobsService()
-                .scheduleReport(job);
-
-        System.out.println(result.getEntity());
 
     }*/
 }
