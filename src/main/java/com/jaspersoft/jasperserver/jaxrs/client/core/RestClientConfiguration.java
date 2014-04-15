@@ -135,11 +135,11 @@ public class RestClientConfiguration {
         configuration.setJasperReportsServerUrl(properties.getProperty("url"));
 
         String connectionTimeout = properties.getProperty("connectionTimeout");
-        if (connectionTimeout != null)
+        if (connectionTimeout != null && !connectionTimeout.equals(""))
             configuration.setConnectionTimeout(Long.valueOf(connectionTimeout));
 
         String readTimeout = properties.getProperty("readTimeout");
-        if (readTimeout != null)
+        if (readTimeout != null && !readTimeout.equals(""))
             configuration.setConnectionTimeout(Long.valueOf(readTimeout));
 
         try {
