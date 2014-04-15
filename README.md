@@ -18,6 +18,20 @@ File should contain only URL which is entry point to your server's REST services
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
 ```
+####HTTPS configuration
+<strong>To use HTTPS you need:</strong>  
+1. Configure your server to support HTTPS  
+2. Download [InstallCert](http://miteff.com/files/InstallCert-bin.zip) util and follow  [InstallCert-Guide](http://www.mkyong.com/webservices/jax-ws/suncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target/) instructions.  
+3. Set HTTPS as your protocol in server URL, e.g. `https://localhost:8443/jasperserver`  
+4. Configure trusted certificates if needed  
+
+```java
+RestClientConfiguration configuration = new RestClientConfiguration("https://localhost:8443/jasperserver");
+X509TrustManager x509TrustManager = ...
+TrustManager[] trustManagers = new TrustManager[1];
+trustManagers[0] = x509TrustManager;
+configuration.setTrustManagers(trustManagers);
+```
 ####Client instantiation:
 Here everything is easy, you need just to pass `configuration` to `JasperserverRestClient` constructor.
 ```java
@@ -814,19 +828,19 @@ The jobs are described in the `JobSummary` element.
 ####Viewing a Job Definition
 The following piece of code with a specific job ID specified in `job()` method retrieves the detailed information about that scheduled job.
 ```java
-OperationResult<JobExtension> result = client
+OperationResult<Job> result = client
         .authenticate("jasperadmin", "jasperadmin")
         .jobsService()
         .job(8600)
         .get();
 
-JobExtension job = result.getEntity();
+Job job = result.getEntity();
 ```
 This code returns a job element that gives the output, scheduling, and parameter details, if any, for the job.
 ####Extended Job Search
 The `search()` method is used for more advanced job searches. Some field of the jobsummary descriptor can be used directly as parameters, and fields of the job descriptor can also be used as search criteria. You can also control the pagination and sorting order of the reply.
 ```java
-JobExtension criteria = new JobExtension();
+Job criteria = new Job);
 criteria.setLabel("updatedLabel");
 criteria.setAlert(new JobAlert());        
 
@@ -857,7 +871,7 @@ job.setDescription("blablabla");
 JobSource source = job.getSource();
 source.setReportUnitURI("/reports/samples/Employees");
 
-OperationResult<JobExtension> result = client
+OperationResult<Job> result = client
         .authenticate("jasperadmin", "jasperadmin")
         .jobsService()
         .scheduleReport(job);
@@ -884,13 +898,13 @@ String label = "updatedLabel";
 Long jobId = job.getId();
 job.setLabel(label);
 
-OperationResult<JobExtension> result = client
+OperationResult<Job> result = client
         .authenticate("jasperadmin", "jasperadmin")
         .jobsService()
         .job(jobId)
         .update(job);
 
-JobExtension job = result.getEntity();
+Job job = result.getEntity();
 ```
 ####Updating Jobs in Bulk
 To update several jobs at once you should specify jobs IDs as parameters, and send a descriptor with filled fields to update.
@@ -952,13 +966,13 @@ CalendarNameListWrapper calendarNameListWrapper = result.getEntity();
 ####Viewing an Exclusion Calendar
 The following method takes the name of an exclusion calendar and returns the definition of the calendar:
 ```java
-OperationResult<ReportJobCalendar> result = client
+OperationResult<Calendar> result = client
         .authenticate("jasperadmin", "jasperadmin")
         .jobsService()
         .calendar("testCalendar")
         .get();
 
-ReportJobCalendar jobCalendar = result.getEntity();
+Calendar jobCalendar = result.getEntity();
 ```
 As a result we have common caledar descriptor `ReportJobCalendar`.
 ####Adding or Updating an Exclusion Calendar
