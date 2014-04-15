@@ -22,11 +22,13 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSource;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -34,8 +36,11 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.security.SecureRandom;
 
 public class SessionStorage {
+
+    private static final Log log = LogFactory.getLog(SessionStorage.class);
 
     private RestClientConfiguration configuration;
     private AuthenticationCredentials credentials;
@@ -48,8 +53,34 @@ public class SessionStorage {
         init();
     }
 
+    private void initSSL(ClientBuilder clientBuilder) {
+        try {
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+                @Override
+                public boolean verify(String s, SSLSession sslSession) {
+                    return true;
+                }
+            };
+            sslContext.init(null, configuration.getTrustManagers(), new SecureRandom());
+
+            clientBuilder.sslContext(sslContext);
+            clientBuilder.hostnameVerifier(hostnameVerifier);
+
+        } catch (Exception e) {
+            log.error("Unable to init SSL context", e);
+            throw new RuntimeException("Unable to init SSL context", e);
+        }
+    }
+
     private void init() {
-        Client client = ClientBuilder.newClient();
+
+        ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+        if (configuration.getJasperReportsServerUrl().startsWith("https")) {
+            initSSL(clientBuilder);
+        }
+
+        Client client = clientBuilder.build();
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         login();
         rootTarget.register(new SessionOutputFilter(sessionId));
@@ -87,32 +118,36 @@ public class SessionStorage {
     }
 
     /*public static void main(String[] args) throws InterruptedException {
+//        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:8081/jasperserver-pro");
         RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:4444/jasperserver");
-        configuration1.setContentMimeType(MimeType.XML);
-        configuration1.setAcceptMimeType(MimeType.XML);
+//        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:8080/jasperserver");
         JasperserverRestClient client = new JasperserverRestClient(configuration1);
 
+        //Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
         Session session = client.authenticate("jasperadmin", "jasperadmin");
 
-        OperationResult<JobExtension> result = session
+        OperationResult<Job> result1 = session
                 .jobsService()
                 .job(21281)
                 .get();
 
-        JobExtension job = result.getEntity();
+        Job jobExtension = result1.getEntity();
 
-        job.setLabel("NewScheduledReport");
-        job.setDescription("blablabla");
-        JobSource source = job.getSource();
-        source.setReportUnitURI("/reports/samples/Employees");
+        Job job = new Job();
+        job.setAlert(jobExtension.getAlert());
+        job.setBaseOutputFilename(jobExtension.getBaseOutputFilename() + "2");
+        job.setDescription(jobExtension.getDescription());
+        job.setLabel(jobExtension.getLabel());
+        job.setOutputFormats(jobExtension.getOutputFormats());
+        job.setTrigger(jobExtension.getTrigger());
+        job.setSource(jobExtension.getSource());
+        job.setRepositoryDestination(jobExtension.getRepositoryDestination());
 
-        OperationResult<JobExtension> result1 = session
+        OperationResult<? extends Job> result = session
                 .jobsService()
                 .scheduleReport(job);
 
-        job = result.getEntity();
-
-        System.out.println(job);
+        System.out.println(result.getEntity());
 
     }*/
 }

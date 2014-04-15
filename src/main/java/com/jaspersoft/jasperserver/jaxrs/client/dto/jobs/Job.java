@@ -50,6 +50,8 @@ public class Job {
     private Set<OutputFormat> outputFormats;
     private JobTrigger trigger;
 
+    private String outputTimeZone;
+
     public Long getId() {
         return id;
     }
@@ -170,6 +172,14 @@ public class Job {
 
     public void setOutputFormats(Set<OutputFormat> outputFormats) {
         this.outputFormats = outputFormats;
+    }
+
+    public String getOutputTimeZone() {
+        return outputTimeZone;
+    }
+
+    public void setOutputTimeZone(String outputTimeZone) {
+        this.outputTimeZone = outputTimeZone;
     }
 
     @Override

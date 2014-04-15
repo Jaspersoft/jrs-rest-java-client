@@ -26,7 +26,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.NoTimezon
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
 
-public class JobTrigger {
+public abstract class JobTrigger {
 
     private Long id;
     private Integer version;

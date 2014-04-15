@@ -44,7 +44,7 @@ import java.util.TimeZone;
 public class JobsServiceTest extends Assert {
 
     private static JasperserverRestClient client;
-    private JobExtension job;
+    private Job job;
 
     public JobsServiceTest() {
         RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
@@ -83,7 +83,7 @@ public class JobsServiceTest extends Assert {
 
     @Test
     public void testViewJobDefinition(){
-        OperationResult<JobExtension> result = client
+        OperationResult<Job> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .job(21281)
@@ -99,13 +99,13 @@ public class JobsServiceTest extends Assert {
         Long jobId = job.getId();
         job.setLabel(label);
 
-        OperationResult<JobExtension> result = client
+        OperationResult<Job> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .job(jobId)
                 .update(job);
         assertNotNull(result);
-        JobExtension job = result.getEntity();
+        Job job = result.getEntity();
         assertNotNull(job);
         this.job = job;
         assertEquals(job.getLabel(), label);
@@ -114,7 +114,7 @@ public class JobsServiceTest extends Assert {
     @Test(dependsOnMethods = "testEditJobDefinition")
     public void testExtendedJobSearch(){
 
-        JobExtension criteria = new JobExtension();
+        Job criteria = new Job();
         criteria.setLabel("updatedLabel");
         criteria.setAlert(new JobAlert());        //tests nested objects
 
@@ -136,7 +136,7 @@ public class JobsServiceTest extends Assert {
         JobSource source = job.getSource();
         source.setReportUnitURI("/reports/samples/Employees");
 
-        OperationResult<JobExtension> result = client
+        OperationResult<Job> result = client
                 .authenticate("jasperadmin", "jasperadmin")
                 .jobsService()
                 .scheduleReport(job);

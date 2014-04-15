@@ -24,7 +24,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.InputStream;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,18 +36,36 @@ import java.util.regex.Pattern;
 public class RestClientConfiguration {
 
     private static final Log log = LogFactory.getLog(RestClientConfiguration.class);
-    private static final Pattern URL_PATTERN = Pattern.compile("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+    private static final Pattern URL_PATTERN = Pattern.compile("\\b(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
 
     private String jasperReportsServerUrl;
     private MimeType contentMimeType = MimeType.JSON;
     private MimeType acceptMimeType = MimeType.JSON;
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
+    private TrustManager[] trustManagers;
 
-    public RestClientConfiguration(String jasperReportsServerUrl){
+    public RestClientConfiguration(String jasperReportsServerUrl) {
+        this();
         setJasperReportsServerUrl(jasperReportsServerUrl);
     }
 
-    public RestClientConfiguration() {}
+    public RestClientConfiguration() {
+        trustManagers = new TrustManager[]{
+                new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                    }
+
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
+                }};
+    }
 
     public String getJasperReportsServerUrl() {
         return jasperReportsServerUrl;
@@ -80,7 +102,15 @@ public class RestClientConfiguration {
         this.jrsVersion = jrsVersion;
     }
 
-    public static RestClientConfiguration loadConfiguration(String path){
+    public TrustManager[] getTrustManagers() {
+        return trustManagers;
+    }
+
+    public void setTrustManagers(TrustManager[] trustManagers) {
+        this.trustManagers = trustManagers;
+    }
+
+    public static RestClientConfiguration loadConfiguration(String path) {
         Properties properties = loadProperties(path);
 
         RestClientConfiguration configuration = new RestClientConfiguration();
@@ -101,7 +131,7 @@ public class RestClientConfiguration {
         return configuration;
     }
 
-    private static Properties loadProperties(String path){
+    private static Properties loadProperties(String path) {
         Properties properties = new Properties();
         try {
             InputStream is = RestClientConfiguration.class.getClassLoader().getResourceAsStream(path);

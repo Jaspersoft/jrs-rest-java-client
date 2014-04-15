@@ -26,7 +26,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.Calend
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobExtension;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
@@ -45,9 +45,9 @@ public class JobsService extends AbstractAdapter {
         return new SingleJobOperationsAdapter(sessionStorage, String.valueOf(jobId));
     }
 
-    public OperationResult<JobExtension> scheduleReport(JobExtension report) {
-        JerseyRequest<JobExtension> request =
-                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
+    public OperationResult<Job> scheduleReport(Job report) {
+        JerseyRequest<Job> request =
+                buildRequest(sessionStorage, Job.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
 
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
@@ -60,9 +60,9 @@ public class JobsService extends AbstractAdapter {
         return request.put(report);
     }
 
-    public <R> RequestExecution asyncScheduleReport(final JobExtension report, final Callback<OperationResult<JobExtension>, R> callback) {
-        final JerseyRequest<JobExtension> request =
-                buildRequest(sessionStorage, JobExtension.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
+    public <R> RequestExecution asyncScheduleReport(final Job report, final Callback<OperationResult<Job>, R> callback) {
+        final JerseyRequest<Job> request =
+                buildRequest(sessionStorage, Job.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
 
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));

@@ -67,7 +67,7 @@ public class DefaultErrorHandler implements ErrorHandler {
             if (response.hasEntity()) {
                 entity = response.readEntity(expectedType);
             }
-        } catch (MessageBodyProviderNotFoundException e){
+        } catch (MessageBodyProviderNotFoundException e) {
             log.warn("Cannot read entity from response body: unexpected body content");
         } catch (ProcessingException e) {
             log.warn("Cannot read entity from response body", e);
@@ -86,9 +86,11 @@ public class DefaultErrorHandler implements ErrorHandler {
                 Class<? extends JSClientWebException> exceptionType =
                         JRSExceptionsMapping.ERROR_CODE_TO_TYPE_MAP.get(errorDescriptor.getErrorCode());
 
-                String message = errorDescriptor.getMessage();
-                exception = exceptionType.getConstructor(String.class, List.class)
-                        .newInstance(message != null ? message : errorDescriptor.getErrorCode(), Arrays.asList(errorDescriptor));
+                if (exceptionType != null) {
+                    String message = errorDescriptor.getMessage();
+                    exception = exceptionType.getConstructor(String.class, List.class)
+                            .newInstance(message != null ? message : errorDescriptor.getErrorCode(), Arrays.asList(errorDescriptor));
+                }
             } catch (Exception e) {
                 log.warn("Cannot instantiate exception.", e);
             }
