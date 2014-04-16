@@ -28,6 +28,23 @@ import java.util.Date;
 
 public abstract class JobTrigger {
 
+    /**
+     * Start type that indicates that the job should be scheduled to start
+     * immediately.
+     *
+     * @see #getStartType()
+     */
+    public static final byte START_TYPE_NOW = 1;
+
+    /**
+     * Start type that indicates that the job should be scheduled to start
+     * at the specified start date.
+     *
+     * @see #getStartType()
+     * @see #getStartDate()
+     */
+    public static final byte START_TYPE_SCHEDULE = 2;
+
     private Long id;
     private Integer version;
     private String timezone;

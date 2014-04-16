@@ -23,7 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +38,10 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SessionStorage {
 
@@ -128,15 +132,41 @@ public class SessionStorage {
     }
 
     /*public static void main(String[] args) throws InterruptedException {
-//        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:8081/jasperserver-pro");
-        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:8080/jasperserver");
-//        RestClientConfiguration configuration1 = new RestClientConfiguration("http://localhost:8080/jasperserver");
-        JasperserverRestClient client = new JasperserverRestClient(configuration1);
 
-        //Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
+        RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
+        JasperserverRestClient client = new JasperserverRestClient(configuration);
         Session session = client.authenticate("jasperadmin", "jasperadmin");
 
+        Job job = new Job();
+        job.setLabel("Test Job");
+        job.setBaseOutputFilename("TestJobFile");
 
+        JobSource source = new JobSource();
+        source.setReportUnitURI("/reports/samples/StandardChartsEyeCandyReport");
+        job.setSource(source);
+
+        SimpleTrigger trigger = new SimpleTrigger();
+        trigger.setOccurrenceCount(2);
+        trigger.setRecurrenceInterval(1000);
+        trigger.setRecurrenceIntervalUnit(IntervalUnitType.HOUR);
+        trigger.setStartType(JobTrigger.START_TYPE_SCHEDULE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, 1);
+        trigger.setStartDate(calendar.getTime());
+        job.setTrigger(trigger);
+
+        Set<OutputFormat> outputFormats = new HashSet<OutputFormat>(Arrays.asList(OutputFormat.PDF));
+        job.setOutputFormats(outputFormats);
+
+        RepositoryDestination repositoryDestination = new RepositoryDestination();
+        repositoryDestination.setDefaultReportOutputFolderURI("/reports");
+        repositoryDestination.setFolderURI("/reports");
+        job.setRepositoryDestination(repositoryDestination);
+
+        OperationResult<Job> result = session
+                .jobsService()
+                .scheduleReport(job);
+        System.out.println(result.getEntity());
 
     }*/
 }

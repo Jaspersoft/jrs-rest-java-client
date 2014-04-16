@@ -54,23 +54,20 @@ public class DefaultErrorHandler implements ErrorHandler {
 
     @Override
     public void handleError(Response response) {
-        if (response.hasEntity()) {
+        if (response.hasEntity())
             response.bufferEntity();
-            handleBodyError(response);
-        }
+        handleBodyError(response);
         handleStatusCodeError(response, null);
     }
 
     protected <T> T readBody(Response response, Class<T> expectedType) {
         T entity = null;
         try {
-            if (response.hasEntity()) {
-                entity = response.readEntity(expectedType);
-            }
+            entity = response.readEntity(expectedType);
         } catch (MessageBodyProviderNotFoundException e) {
             log.warn("Cannot read entity from response body: unexpected body content");
         } catch (ProcessingException e) {
-            log.warn("Cannot read entity from response body", e);
+            log.warn("Cannot read entity from response body");
         }
         return entity;
     }
