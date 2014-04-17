@@ -48,11 +48,11 @@ public class ReportJobSourceParametersXmlAdapter extends XmlAdapter<ReportParame
                 Object currentValue = v.get(currentKey);
                 if (REPORT_TIME_ZONE.equals(currentKey) && currentValue instanceof TimeZone) {
                     currentValue = ((TimeZone) currentValue).getID();
-                }else if(currentValue instanceof Collection){
+                }/*else if(currentValue instanceof Collection){
                     final ValuesCollection collectionWrapper = new ValuesCollection();
                     collectionWrapper.setCollection((Collection<Object>) currentValue);
                     currentValue = collectionWrapper;
-                }
+                }*/
                 result.put(currentKey, currentValue);
             }
         }
