@@ -129,7 +129,7 @@ public class SessionStorage {
         return rootTarget;
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    /*public static void main(String[] args) throws InterruptedException {
 
         RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro/");
         //RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
@@ -179,5 +179,5 @@ public class SessionStorage {
 
         System.out.println(jobOperationResult.getEntity());
 
-    }
+    }*/
 }
