@@ -52,6 +52,7 @@ public final class JRSExceptionsMapping {
                 put(ReportExportException.ERROR_EXPORTING_REPORT_UNIT, ReportExportException.class);
                 put(ReportExportException.ERROR_EXPORT_PARAMETERS_MISSED, ReportExportException.class);
                 put(ResourceNotFoundException.ERROR_CODE_RESOURCE_NOT_FOUND, ResourceNotFoundException.class);
+                put(UnexpectedErrorException.ERROR_CODE_UNEXPECTED_ERROR, UnexpectedErrorException.class);
             }};
 
     private JRSExceptionsMapping(){}
