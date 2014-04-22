@@ -21,9 +21,11 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersConverter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 import org.apache.commons.logging.Log;
@@ -131,53 +133,30 @@ public class SessionStorage {
 
     /*public static void main(String[] args) throws InterruptedException {
 
-        RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro/");
-        //RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
+        //RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro/");
+        RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
         JasperserverRestClient client = new JasperserverRestClient(configuration);
-        Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
-        //Session session = client.authenticate("jasperadmin", "jasperadmin");
+        //Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
+        Session session = client.authenticate("jasperadmin", "jasperadmin");
 
-        Job job = new Job();
-        job.setLabel("Test Job");
-        job.setBaseOutputFilename("TestJobFile");
-
-        JobSource source = new JobSource();
-        source.setReportUnitURI("/public/Samples/Reports/14.PerformanceSummary");
-        //source.setReportUnitURI("/reports/samples/EmployeeAccounts");
-        Map<String, Object> reportParameters = new HashMap<String, Object>();
-        reportParameters.put("Product_Family", Arrays.asList("Food"));
-        //reportParameters.put("EmployeeID", Arrays.asList("kristen"));
-        source.setParameters(reportParameters);
-        job.setSource(source);
-
-        SimpleTrigger trigger = new SimpleTrigger();
-        trigger.setOccurrenceCount(2);
-        trigger.setRecurrenceInterval(1000);
-        trigger.setRecurrenceIntervalUnit(IntervalUnitType.HOUR);
-        trigger.setStartType(JobTrigger.START_TYPE_NOW);
-        //trigger.setStartDate(new Date());
-        job.setTrigger(trigger);
-
-        Set<OutputFormat> outputFormats = new HashSet<OutputFormat>(Arrays.asList(OutputFormat.PDF));
-        job.setOutputFormats(outputFormats);
-
-        RepositoryDestination repositoryDestination = new RepositoryDestination();
-        repositoryDestination.setFolderURI("/public/Samples/Reports");
-        repositoryDestination.setSaveToRepository(true);
-        job.setRepositoryDestination(repositoryDestination);
-
-        OperationResult<Job> result = session
-                .jobsService()
-                .scheduleReport(job);
-        System.out.println(result.getEntity());
-
-
-        *//*OperationResult<Job> jobOperationResult = session
-                .jobsService()
-                .job(3620)
+        OperationResult<InputControlStateListWrapper> wrapper = session
+                .reportingService()
+                .report("/reports/samples/Cascading_multi_select_report")
+                .reportParameters("Country_multi_select")
+                .parameter("Country_multi_select", "Mexico1")
+                .values()
                 .get();
 
-        System.out.println(jobOperationResult.getEntity());*//*
+        Job job = new Job();
+        JobSource source = new JobSource();
+        InputControlStateListWrapper entity = wrapper.getEntity();
+        source.setParameters(ReportParametersConverter.getValueMapFromInputControlStates(entity.getInputControlStateList()));
+        job.setSource(source);
+        session
+                .jobsService()
+                .scheduleReport(job);
+        System.out.println(wrapper.getEntity());
+
 
     }*/
 }

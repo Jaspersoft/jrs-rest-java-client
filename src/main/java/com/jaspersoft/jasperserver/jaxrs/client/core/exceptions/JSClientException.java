@@ -35,9 +35,9 @@ public class JSClientException extends RuntimeException {
         super(cause);
     }
 
-    protected JSClientException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    /*protected JSClientException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-    }
+    }*/
 
     public JSClientException(String message) {
         super(message);
