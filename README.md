@@ -1191,17 +1191,11 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
         <dependency>
             <groupId>com.jaspersoft</groupId>
             <artifactId>jrs-rest-java-client</artifactId>
-            <version>5.5.0-SNAPSHOT</version>
+            <version>5.5.0.2-ALPHA-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
     <repositories>
-
-        <repository>
-            <id>jaspersoft-clients-releases</id>
-            <name>Jaspersoft clients releases</name>
-            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jaspersoft-clients-releases</url>
-        </repository>
 
         <repository>
             <id>jaspersoft-clients-snapshots</id>
