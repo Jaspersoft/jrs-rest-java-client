@@ -40,18 +40,11 @@ JasperserverRestClient client = new JasperserverRestClient(configuration);
 
 Authentication
 ---------------
-There are two types of authentication: with encription on and off.
-####Basic authentication (encryption off)
-Specify login and password (not encrypted) in `authenticate()` method.
+This library automatically encrypts your password before send it if encryption is on, so to authenticate you need just specify login and password (not encrypted) in `authenticate()` method.
 ```java
 Session session = client.authenticate("jasperadmin", "jasperadmin");
 //authentication with multitenancy enabled
 Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
-```
-####Authentication with encrypted password
-All exactly the same, but you need to pass encrypted password.
-```java
-Session session = client.authenticate("jasperadmin", "8deb4666e0811b048d400522b2c7d5847119f91fa5ba055ecc193034d84aa1f25d20b5203399591849bb6f04b498b9e21df9ee6d6ca2c1c8b35d591831703b54a358d5d7b8d5155f923f358e6dc449a31d687400d9865b2e971ce333245ef10bed01868e4deef3f88168634225bf8809bb1e89cd2dbc5e9f10728d010b9f799a");
 ```
 ####Invalidating session
 Not to store session on server you can invalidate it with `logout()` method.
