@@ -25,16 +25,10 @@ public class AuthenticationCredentials {
 
     private String username;
     private String password;
-    private boolean isPasswordEncrypted;
 
     public AuthenticationCredentials(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public AuthenticationCredentials(String username, String password, boolean isPasswordEncrypted) {
-        this(username, password);
-        this.isPasswordEncrypted = isPasswordEncrypted;
     }
 
     public String getUsername() {
@@ -51,14 +45,6 @@ public class AuthenticationCredentials {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean isPasswordEncrypted() {
-        return isPasswordEncrypted;
-    }
-
-    public void setPasswordEncrypted(boolean passwordEncrypted) {
-        isPasswordEncrypted = passwordEncrypted;
     }
 
 }

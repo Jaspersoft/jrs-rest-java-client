@@ -43,6 +43,9 @@ public final class ResponseStatus {
      */
     public static final int NO_CONTENT = 204;
 
+
+    public static final int FOUND = 302;
+
     /**
      * Malformed syntax or a bad query.
      */

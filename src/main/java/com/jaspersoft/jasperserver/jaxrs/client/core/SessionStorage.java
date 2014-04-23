@@ -21,18 +21,17 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersConverter;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
-import com.sun.jersey.api.json.JSONConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.glassfish.jersey.client.ClientProperties;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -41,7 +40,10 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SessionStorage {
 
@@ -101,18 +103,59 @@ public class SessionStorage {
     }
 
     private void login() {
+
+        Map<String, String> securityAttributes = getSecurityAttributes();
+
         Form form = new Form();
         form
                 .param("j_username", credentials.getUsername())
-                .param("j_password", credentials.getPassword());
+                .param("j_password", securityAttributes.get("password"));
 
-        WebTarget target = rootTarget.path("/rest/login");
-        Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+        Response response = rootTarget
+                .path("/j_spring_security_check")
+                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE)
+                .request()
+                .cookie("JSESSIONID", securityAttributes.get("sessionId"))
+                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
 
-        if (response.getStatus() == ResponseStatus.OK)
-            this.sessionId = response.getCookies().get("JSESSIONID").getValue();
-        else
+        if (response.getStatus() == ResponseStatus.FOUND) {
+            this.sessionId = parseSessionId(response);
+        } else
             new DefaultErrorHandler().handleError(response);
+    }
+
+    private Map<String, String> getSecurityAttributes() {
+        Response encryptionParamsResponse = rootTarget.path("/GetEncryptionKey").request().get();
+        Map<String, String> encryptionParams = EncryptionUtils.parseEncryptionParams(encryptionParamsResponse);
+        String loginSessionId = encryptionParamsResponse.getCookies().get("JSESSIONID").getValue();
+        String encryptedPassword;
+        if (encryptionParams != null)
+            encryptedPassword = EncryptionUtils.encryptPassword(credentials.getPassword(), encryptionParams.get("n"), encryptionParams.get("e"));
+        else
+            encryptedPassword = credentials.getPassword();
+
+        Map<String, String> securityAttributes = new HashMap<String, String>();
+        securityAttributes.put("password", encryptedPassword);
+        securityAttributes.put("sessionId", loginSessionId);
+
+        return securityAttributes;
+    }
+
+    private String parseSessionId(Response response) {
+        String cookieList = response.getHeaderString("Set-Cookie");
+
+        if (cookieList != null) {
+            Pattern pattern = Pattern.compile("JSESSIONID=(\\w+);");
+            Matcher matcher;
+            matcher = pattern.matcher(cookieList);
+            if (matcher.find())
+                return matcher.group(1);
+        }
+
+        if (response.getHeaderString("Location").endsWith("error=1"))
+            throw new AuthenticationFailedException("Wrong credentials");
+
+        throw new JSClientException("Unable to obtain JSESSIONID");
     }
 
     public RestClientConfiguration getConfiguration() {
@@ -133,30 +176,16 @@ public class SessionStorage {
 
     /*public static void main(String[] args) throws InterruptedException {
 
-        //RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro/");
         RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
         JasperserverRestClient client = new JasperserverRestClient(configuration);
-        //Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
         Session session = client.authenticate("jasperadmin", "jasperadmin");
 
-        OperationResult<InputControlStateListWrapper> wrapper = session
-                .reportingService()
-                .report("/reports/samples/Cascading_multi_select_report")
-                .reportParameters("Country_multi_select")
-                .parameter("Country_multi_select", "Mexico1")
-                .values()
+        OperationResult<UsersListWrapper> result = session
+                .usersService()
+                .allUsers()
                 .get();
 
-        Job job = new Job();
-        JobSource source = new JobSource();
-        InputControlStateListWrapper entity = wrapper.getEntity();
-        source.setParameters(ReportParametersConverter.getValueMapFromInputControlStates(entity.getInputControlStateList()));
-        job.setSource(source);
-        session
-                .jobsService()
-                .scheduleReport(job);
-        System.out.println(wrapper.getEntity());
-
+        System.out.println(result.getEntity());
 
     }*/
 }
