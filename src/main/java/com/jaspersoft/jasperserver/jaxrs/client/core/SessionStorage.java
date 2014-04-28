@@ -21,9 +21,14 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControl;
+import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.PageRange;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,9 +44,9 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.*;
 import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -176,16 +181,79 @@ public class SessionStorage {
 
     /*public static void main(String[] args) throws InterruptedException {
 
-        RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
+        RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro/");
+//        RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
         JasperserverRestClient client = new JasperserverRestClient(configuration);
         Session session = client.authenticate("jasperadmin", "jasperadmin");
 
-        OperationResult<UsersListWrapper> result = session
-                .usersService()
-                .allUsers()
+        Set<String> values = new HashSet<String>();
+        values.add("Best Oatmeal");
+        values.add("CDR Canola Oil");
+        values.add("Cormorant Toilet Bowl Cleaner");
+
+        OperationResult<InputStream> result = session
+                .reportingService()
+                .report("/public/Samples/Reports/1._Geographic_Results_by_Segment_Report")
+                .prepareForRun(ReportOutputFormat.PDF, 1)
+                .parameter("sales_fact_ALL__store_sales_2013_1", 19)
+                .parameter("sales__product__low_fat_1", "true")
+                .parameter("sales__product__recyclable_package_1", "false")
+                .parameter("sales__product__product_name_1", values)
+                .run();
+
+        InputStream inputStream = result.getEntity();
+
+        OutputStream outputStream = null;
+
+        try {
+
+            // write the inputStream to a FileOutputStream
+            outputStream =
+                    new FileOutputStream(new File("d:/test/report.pdf"));
+
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+
+            System.out.println("Done!");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    // outputStream.flush();
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+        System.out.println(inputStream);
+
+        *//*OperationResult<ReportInputControlsListWrapper> result = session
+                .reportingService()
+                .report("/public/Samples/Reports/1._Geographic_Results_by_Segment_Report")
+                .reportParameters()
+                .parameter("sales__product__low_fat_1", "false")
                 .get();
 
-        System.out.println(result.getEntity());
+        List<ReportInputControl> inputParameters = result.getEntity().getInputParameters();
+        for (ReportInputControl inputControl : inputParameters) {
+            System.out.println(inputControl);
+        }*//*
 
     }*/
 }

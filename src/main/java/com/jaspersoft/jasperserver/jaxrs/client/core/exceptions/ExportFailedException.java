@@ -26,6 +26,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
 import java.util.List;
 
 public class ExportFailedException extends JSClientWebException {
+
+    public static final String ERROR_CODE_EXPORT_FAILED = "export.failed";
+
     public ExportFailedException() {
         super();    //To change body of overridden methods use File | Settings | File Templates.
     }

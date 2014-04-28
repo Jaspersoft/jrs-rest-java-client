@@ -45,6 +45,8 @@ public class RestClientConfiguration {
     private TrustManager[] trustManagers;
     private Long connectionTimeout;
     private Long readTimeout;
+    private String datePattern = "yyyy-MM-dd";
+    private String dateTimePattern = "yyyy-MM-dd HH:mm:ss";
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
@@ -126,6 +128,22 @@ public class RestClientConfiguration {
 
     public void setReadTimeout(Long readTimeout) {
         this.readTimeout = readTimeout;
+    }
+
+    public String getDatePattern() {
+        return datePattern;
+    }
+
+    public void setDatePattern(String datePattern) {
+        this.datePattern = datePattern;
+    }
+
+    public String getDateTimePattern() {
+        return dateTimePattern;
+    }
+
+    public void setDateTimePattern(String dateTimePattern) {
+        this.dateTimePattern = dateTimePattern;
     }
 
     public static RestClientConfiguration loadConfiguration(String path) {
