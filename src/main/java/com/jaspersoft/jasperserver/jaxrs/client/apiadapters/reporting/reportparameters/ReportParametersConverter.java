@@ -21,13 +21,12 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters;
 
+import com.jaspersoft.jasperserver.dto.reports.ReportParameter;
+import com.jaspersoft.jasperserver.dto.reports.ReportParameters;
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.InputControlOption;
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.InputControlState;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ReportParametersConverter {
 
@@ -39,6 +38,18 @@ public class ReportParametersConverter {
         }
 
         return valueMap;
+    }
+
+    public static ReportParameters toReportParameters(List<InputControlState> states){
+        List<ReportParameter> reportParameterList = new ArrayList<ReportParameter>();
+        for (InputControlState inputControlState : states) {
+            ReportParameter parameter = new ReportParameter();
+            parameter.setName(inputControlState.getId());
+            parameter.setValues(Arrays.asList(getValueFromInputControlState(inputControlState)));
+
+            reportParameterList.add(parameter);
+        }
+        return new ReportParameters(reportParameterList);
     }
 
     protected static String[] getValueFromInputControlState(InputControlState state) {

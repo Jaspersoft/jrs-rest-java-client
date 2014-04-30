@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
@@ -153,15 +155,40 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
 
                 htmlReport.addAttachment(attachment);
             }
+
+            return htmlReport;
         }
         throw new JSClientException("Output format is not 'HTML'");
     }
 
+    public <R> RequestExecution asyncHtmlReport(final ExportDescriptor htmlExport, final Callback<HtmlReport, R> callback) {
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(htmlReport(htmlExport));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
     private byte[] toByteArray(InputStream is) {
         try {
-            byte[] bytes = new byte[is.available()];
-            is.read(bytes);
-            return bytes;
+            List<Byte> bytes = new ArrayList<Byte>();
+            byte[] buff = new byte[is.available()];
+            int readBytes;
+            while ((readBytes = is.read(buff)) != -1){
+                for (byte b : buff) {
+                    bytes.add(b);
+                }
+            }
+
+            byte[] result = new byte[bytes.size()];
+            for (int i = 0; i < bytes.size(); i++) {
+                result[i] = bytes.get(i);
+            }
+            return result;
         } catch (IOException e) {
             throw new JSClientException("Error while reading report content", e);
         }

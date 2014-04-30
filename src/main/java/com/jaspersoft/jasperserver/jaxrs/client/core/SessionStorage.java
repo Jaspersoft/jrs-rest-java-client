@@ -27,6 +27,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.Attachment
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.HtmlReport;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.PageRange;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersConverter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
@@ -35,6 +36,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.AttachmentDescriptor
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -185,19 +187,27 @@ public class SessionStorage {
         return rootTarget;
     }
 
-    /*public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
 
         //RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro/");
         RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
         JasperserverRestClient client = new JasperserverRestClient(configuration);
         Session session = client.authenticate("jasperadmin", "jasperadmin");
 
+        OperationResult<InputControlStateListWrapper> operationResult = session
+                .reportingService()
+                .report("/reports/samples/SalesByMonth")
+                .reportParameters()
+                .values()
+                .get();
+
         ReportExecutionRequest.Builder requestBuilder = new ReportExecutionRequest.Builder();
         ReportExecutionRequest request = requestBuilder
                 .setOutputFormat(ReportOutputFormat.HTML)
                 .setAttachmentsPrefix("./images/")
-                .setReportUnitUri("/reports/samples/AllAccounts")
-                .setAsync(true)
+                .setReportUnitUri("/reports/samples/SalesByMonth")
+                //.setAsync(true)
+                .setParameters(ReportParametersConverter.toReportParameters(operationResult.getEntity().getInputControlStateList()))
                 .build();
 
         OperationResult<ReportExecutionDescriptor> result = session
@@ -256,5 +266,5 @@ public class SessionStorage {
 
             }
         }
-    }*/
+    }
 }
