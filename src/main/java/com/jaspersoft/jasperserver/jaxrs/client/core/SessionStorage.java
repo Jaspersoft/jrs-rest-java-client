@@ -23,12 +23,18 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControl;
 import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.Attachment;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.HtmlReport;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.PageRange;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.AttachmentDescriptor;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportDescriptor;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -181,55 +187,65 @@ public class SessionStorage {
 
     /*public static void main(String[] args) throws InterruptedException {
 
-        RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro/");
-//        RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
+        //RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro/");
+        RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
         JasperserverRestClient client = new JasperserverRestClient(configuration);
         Session session = client.authenticate("jasperadmin", "jasperadmin");
 
-        Set<String> values = new HashSet<String>();
-        values.add("Best Oatmeal");
-        values.add("CDR Canola Oil");
-        values.add("Cormorant Toilet Bowl Cleaner");
+        ReportExecutionRequest.Builder requestBuilder = new ReportExecutionRequest.Builder();
+        ReportExecutionRequest request = requestBuilder
+                .setOutputFormat(ReportOutputFormat.HTML)
+                .setAttachmentsPrefix("./images/")
+                .setReportUnitUri("/reports/samples/AllAccounts")
+                .setAsync(true)
+                .build();
 
-        OperationResult<InputStream> result = session
+        OperationResult<ReportExecutionDescriptor> result = session
                 .reportingService()
-                .report("/public/Samples/Reports/1._Geographic_Results_by_Segment_Report")
-                .prepareForRun(ReportOutputFormat.PDF, 1)
-                .parameter("sales_fact_ALL__store_sales_2013_1", 19)
-                .parameter("sales__product__low_fat_1", "true")
-                .parameter("sales__product__recyclable_package_1", "false")
-                .parameter("sales__product__product_name_1", values)
-                .run();
+                .newReportExecutionRequest(request);
 
-        InputStream inputStream = result.getEntity();
+        ReportExecutionDescriptor executionDescriptor = result.getEntity();
+
+        System.out.println(executionDescriptor);
+
+
+        List<ExportDescriptor> exports = executionDescriptor.getExports();
+        ExportDescriptor htmlExport = null;
+        for (ExportDescriptor exportDescriptor : exports) {
+            if (exportDescriptor.getOutputResource().getContentType().equals("text/html"))
+                htmlExport = exportDescriptor;
+        }
+
+        HtmlReport htmlReport = session
+                .reportingService()
+                .reportExecutionRequest(executionDescriptor.getRequestId())
+                .export(htmlExport.getId())
+                .htmlReport(htmlExport);
+
+        File directory = new File("d:/test/myreport/images");
+        directory.mkdirs();
+
+        toFile(htmlReport.getHtml(), "index.html");
+        for (Attachment attachment : htmlReport.getAttachments()) {
+            String filename = "/images/" + attachment.getName();
+            toFile(attachment.getContent(), filename);
+        }
+
+    }
+
+    public static void toFile(byte[] content, String filename) {
 
         OutputStream outputStream = null;
 
         try {
-
             // write the inputStream to a FileOutputStream
-            outputStream =
-                    new FileOutputStream(new File("d:/test/report.pdf"));
-
-            int read = 0;
-            byte[] bytes = new byte[1024];
-
-            while ((read = inputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, read);
-            }
-
+            outputStream = new FileOutputStream(new File("d:/test/myreport/" + filename));
+            outputStream.write(content, 0, content.length);
             System.out.println("Done!");
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
             if (outputStream != null) {
                 try {
                     // outputStream.flush();
@@ -240,20 +256,5 @@ public class SessionStorage {
 
             }
         }
-
-        System.out.println(inputStream);
-
-        *//*OperationResult<ReportInputControlsListWrapper> result = session
-                .reportingService()
-                .report("/public/Samples/Reports/1._Geographic_Results_by_Segment_Report")
-                .reportParameters()
-                .parameter("sales__product__low_fat_1", "false")
-                .get();
-
-        List<ReportInputControl> inputParameters = result.getEntity().getInputParameters();
-        for (ReportInputControl inputControl : inputParameters) {
-            System.out.println(inputControl);
-        }*//*
-
     }*/
 }
