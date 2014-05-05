@@ -32,6 +32,8 @@ public class PageRange {
     }
 
     public String getRange(){
+        if (startIndex == endIndex)
+            return String.valueOf(startIndex);
         return startIndex + "-" + endIndex;
     }
 }

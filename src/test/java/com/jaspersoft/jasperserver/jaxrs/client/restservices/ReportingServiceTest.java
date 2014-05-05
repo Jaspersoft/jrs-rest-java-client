@@ -89,14 +89,14 @@ public class ReportingServiceTest extends Assert {
 
     @Test(dependsOnMethods = {"testGetReportExecutionDetails"}, priority = 3)
     public void testGetExportOutputResource() {
-        OperationResult<InputStream> operationResult =
+        OperationResult<String> operationResult =
                 session
                         .reportingService()
                         .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
                         .export("html")
                         .outputResource();
 
-        InputStream file = operationResult.getEntity();
+        String file = operationResult.getEntity();
         assertNotEquals(file, null);
     }
 

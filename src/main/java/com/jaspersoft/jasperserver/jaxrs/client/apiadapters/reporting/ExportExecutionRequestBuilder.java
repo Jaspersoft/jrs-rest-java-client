@@ -50,8 +50,13 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
         this.exportId = exportId;
     }
 
-    public OperationResult<InputStream> outputResource() {
-        return buildRequest(sessionStorage, InputStream.class,
+    /**
+     * <code>OperationResult</code> should be parametrized with <code>String</code> if you're exporting HTML,
+     * in other cases it should be parametrized with <code>InputStream</code>
+     */
+    public OperationResult outputResource() {
+        boolean isHtmlExport = exportId.toLowerCase().startsWith("html");
+        return buildRequest(sessionStorage, isHtmlExport ? String.class : InputStream.class,
                 new String[]{"/reportExecutions", requestId, "/exports", exportId, "/outputResource"})
                 .get();
     }
@@ -139,10 +144,10 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
 
     public HtmlReport htmlReport(ExportDescriptor htmlExport) {
         if (exportId.toLowerCase().startsWith("html") && htmlExport.getId().toLowerCase().startsWith("html")) {
-            HtmlReport htmlReport = new HtmlReport();
+            HtmlReport htmlReport = new HtmlReport(htmlExport.getId());
 
-            OperationResult<InputStream> markup = outputResource();
-            htmlReport.setHtml(toByteArray(markup.getEntity()));
+            OperationResult<String> markup = outputResource();
+            htmlReport.setHtml(markup.getEntity());
 
             for (AttachmentDescriptor attachmentDescriptor : htmlExport.getAttachments()) {
                 String fileName = attachmentDescriptor.getFileName();
@@ -176,12 +181,10 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
     private byte[] toByteArray(InputStream is) {
         try {
             List<Byte> bytes = new ArrayList<Byte>();
-            byte[] buff = new byte[is.available()];
-            int readBytes;
-            while ((readBytes = is.read(buff)) != -1){
-                for (byte b : buff) {
+            byte[] buff = new byte[1024];
+            while (is.read(buff) != -1) {
+                for (byte b : buff)
                     bytes.add(b);
-                }
             }
 
             byte[] result = new byte[bytes.size()];

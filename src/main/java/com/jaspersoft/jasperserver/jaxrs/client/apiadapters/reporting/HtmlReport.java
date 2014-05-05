@@ -26,19 +26,29 @@ import java.util.List;
 
 public class HtmlReport {
 
-    private byte[] html;
+    private String id;
+    private String html;
     private List<Attachment> attachments;
     private String attachmentsPrefix;
 
-    public HtmlReport(){
+    public HtmlReport(String id){
+        this.id = id;
         attachments = new ArrayList<Attachment>();
     }
 
-    public byte[] getHtml() {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getHtml() {
         return html;
     }
 
-    public void setHtml(byte[] html) {
+    public void setHtml(String html) {
         this.html = html;
     }
 

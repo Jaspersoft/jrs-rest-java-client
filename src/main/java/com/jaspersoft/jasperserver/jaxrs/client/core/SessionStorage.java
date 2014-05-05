@@ -206,6 +206,7 @@ public class SessionStorage {
                 .setOutputFormat(ReportOutputFormat.HTML)
                 .setAttachmentsPrefix("./images/")
                 .setReportUnitUri("/reports/samples/SalesByMonth")
+                        .setPages(new PageRange(1, 1))
                 //.setAsync(true)
                 .setParameters(ReportParametersConverter.toReportParameters(operationResult.getEntity().getInputControlStateList()))
                 .build();
@@ -235,7 +236,7 @@ public class SessionStorage {
         File directory = new File("d:/test/myreport/images");
         directory.mkdirs();
 
-        toFile(htmlReport.getHtml(), "index.html");
+        toFile(htmlReport.getHtml().getBytes(), "index.html");
         for (Attachment attachment : htmlReport.getAttachments()) {
             String filename = "/images/" + attachment.getName();
             toFile(attachment.getContent(), filename);
@@ -250,7 +251,7 @@ public class SessionStorage {
         try {
             // write the inputStream to a FileOutputStream
             outputStream = new FileOutputStream(new File("d:/test/myreport/" + filename));
-            outputStream.write(content, 0, content.length);
+            outputStream.write(content);
             System.out.println("Done!");
 
         } catch (IOException e) {
