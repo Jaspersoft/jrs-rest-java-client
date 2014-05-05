@@ -206,7 +206,7 @@ public class SessionStorage {
                 .setOutputFormat(ReportOutputFormat.HTML)
                 .setAttachmentsPrefix("./images/")
                 .setReportUnitUri("/reports/samples/SalesByMonth")
-                        .setPages(new PageRange(1, 1))
+                        .setPages(new PageRange(6, 9))
                 //.setAsync(true)
                 .setParameters(ReportParametersConverter.toReportParameters(operationResult.getEntity().getInputControlStateList()))
                 .build();

@@ -149,16 +149,19 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
             OperationResult<String> markup = outputResource();
             htmlReport.setHtml(markup.getEntity());
 
-            for (AttachmentDescriptor attachmentDescriptor : htmlExport.getAttachments()) {
-                String fileName = attachmentDescriptor.getFileName();
-                OperationResult<InputStream> streamOperationResult = attachment(fileName);
+            List<AttachmentDescriptor> attachments = htmlExport.getAttachments();
+            if (attachments != null) {
+                for (AttachmentDescriptor attachmentDescriptor : attachments) {
+                    String fileName = attachmentDescriptor.getFileName();
+                    OperationResult<InputStream> streamOperationResult = attachment(fileName);
 
-                Attachment attachment = new Attachment();
-                attachment.setName(attachmentDescriptor.getFileName());
-                attachment.setMimeType(attachmentDescriptor.getContentType());
-                attachment.setContent(toByteArray(streamOperationResult.getEntity()));
+                    Attachment attachment = new Attachment();
+                    attachment.setName(attachmentDescriptor.getFileName());
+                    attachment.setMimeType(attachmentDescriptor.getContentType());
+                    attachment.setContent(toByteArray(streamOperationResult.getEntity()));
 
-                htmlReport.addAttachment(attachment);
+                    htmlReport.addAttachment(attachment);
+                }
             }
 
             return htmlReport;
