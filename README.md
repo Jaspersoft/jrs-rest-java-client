@@ -252,6 +252,20 @@ InputControlStateListWrapper inputControlsValues =
                 .getEntity();
 ```
 
+####QueryExecutor Service
+In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service. 
+For now the only resource that supports queries is a Domain.
+
+The following code executes query and retrieves a result of execution as QueryResult entity.
+```java
+QueryResult newQueryResult = session.queryExecutorService().
+        addResourceUri("/organizations/organization_1/Domains/Simple_Domain").
+        addQuery(testQuery).
+        buildQueryAdapter().
+        retrieveQueryResult().
+        getEntity();
+```
+
 Administration services:
 ========================
 Only administrative users may access the REST services for administration.
@@ -662,8 +676,8 @@ OperationResult<ClientResource> result = client
         .createNew(folder);
 ```
 ####Modifying a Resource
-Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual fields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.  
-The `patchResource()` method updates individual descriptor fields on the target resource. It also accept expressions that modify the descriptor in the Spring Expression Language. This expression language lets you easily modify the structure and values of descriptors.
+Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual queryFields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.  
+The `patchResource()` method updates individual descriptor queryFields on the target resource. It also accept expressions that modify the descriptor in the Spring Expression Language. This expression language lets you easily modify the structure and values of descriptors.
 ```java
 PatchDescriptor patchDescriptor = new PatchDescriptor();
 patchDescriptor.setVersion(0);
@@ -838,7 +852,7 @@ Job job = result.getEntity();
 ```
 This code returns a job element that gives the output, scheduling, and parameter details, if any, for the job.
 ####Extended Job Search
-The `search()` method is used for more advanced job searches. Some field of the jobsummary descriptor can be used directly as parameters, and fields of the job descriptor can also be used as search criteria. You can also control the pagination and sorting order of the reply.
+The `search()` method is used for more advanced job searches. Some field of the jobsummary descriptor can be used directly as parameters, and queryFields of the job descriptor can also be used as search criteria. You can also control the pagination and sorting order of the reply.
 ```java
 Job criteria = new Job);
 criteria.setLabel("updatedLabel");
@@ -853,7 +867,7 @@ OperationResult<JobSummaryListWrapper> result = client
 
 JobSummaryListWrapper jobSummaryListWrapper = result.getEntity();
 ```
-The `criteria` parameter lets you specify a search on fields in the job descriptor, such as output formats. Some fields may be specified in both the search parameter and in a dedicated parameter, for example label. In that case, the search specified in the parameter takes precedence.   For example, you can search for all jobs that specify output format of PDF. The criteria to specify this
+The `criteria` parameter lets you specify a search on queryFields in the job descriptor, such as output formats. Some queryFields may be specified in both the search parameter and in a dedicated parameter, for example label. In that case, the search specified in the parameter takes precedence.   For example, you can search for all jobs that specify output format of PDF. The criteria to specify this
 field is:
 ```java
 List<String> outputFormats = new ArrayList<String>();
@@ -907,7 +921,7 @@ OperationResult<Job> result = client
 Job job = result.getEntity();
 ```
 ####Updating Jobs in Bulk
-To update several jobs at once you should specify jobs IDs as parameters, and send a descriptor with filled fields to update.
+To update several jobs at once you should specify jobs IDs as parameters, and send a descriptor with filled queryFields to update.
 ```java
 Job jobDescriptor = new Job();
 jobDescriptor.setDescription("Bulk update description");
@@ -1067,6 +1081,28 @@ OperationResult<StateDto> operationResult =
 
 StateDto state = operationResult.getEntity();
 ```
+
+####DomainMetadata Service
+
+The DomainMetadata Service gives access to the sets and items exposed by a Domain for use in Ad
+Hoc reports. Items are database fields exposed by the Domain, after all joins, filters, and calculated fields have
+been applied to the database tables selected in the Domain. Sets are groups of items, arranged by the Domain
+creator for use by report creators.
+
+A limitation of the DomainMetadata Service only allows it to operate on Domains with a single data
+island. A data island is a group of fields that are all related by joins between the database tables in the
+Domain. Fields that belong to tables that are not joined in the Domain belong to separate data islands.
+
+The following code retrieves metadata of Domain.
+```java
+OperationResult<DomainMetaData> result = session.domainService().
+        addDomainUri("/Foodmart_Sales").
+        buildDomainMetadataAdapter().
+        retrieveDomainMetaData();
+  
+DomainMetaData domainMetaData = result.getEntity();
+```
+
 REST Server Information
 ========================
 Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
