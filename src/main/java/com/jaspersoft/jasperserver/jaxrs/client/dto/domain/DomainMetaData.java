@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @author Paul Lysak
  */
-@XmlRootElement(name = "domainMetadata")
+@XmlRootElement(name = "getDomainMetaData")
 public class DomainMetaData {
 
     private Map<String, String> properties;

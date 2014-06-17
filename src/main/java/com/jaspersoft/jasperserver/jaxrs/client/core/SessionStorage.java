@@ -175,7 +175,7 @@ public class SessionStorage {
         OperationResult<Job> jobOperationResult = session
                 .jobsService()
                 .job(3620)
-                .get();
+                .queryResult();
 
         System.out.println(jobOperationResult.getEntity());
 

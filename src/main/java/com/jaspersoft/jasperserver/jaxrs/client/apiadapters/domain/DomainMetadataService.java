@@ -24,24 +24,17 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 /**
- * Wrapper class for DomainMetadata adapter
+ * This class is used for building DomainMetadata stuff
  *
  * @author Krasnyanskiy.Alexander
  */
 public class DomainMetadataService extends AbstractAdapter {
 
-    private String domainURI;
-
     public DomainMetadataService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
-    public DomainMetadataService addDomainUri(String domainURI) {
-        this.domainURI = domainURI;
-        return this;
-    }
-
-    public DomainMetadataAdapter buildDomainMetadataAdapter() {
+    public DomainMetadataAdapter domainMetadataAdapter(String domainURI) {
         return new DomainMetadataAdapter(sessionStorage, domainURI);
     }
 }

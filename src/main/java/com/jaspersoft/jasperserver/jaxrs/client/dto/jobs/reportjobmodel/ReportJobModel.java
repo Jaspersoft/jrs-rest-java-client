@@ -25,7 +25,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
  * Definition model of a report execution job. Model is used in search/ update only.
  *
  * <p>
- * A report job definition specifies wich report to execute and when,
+ * A report job definition specifies wich report to query and when,
  * what output to generate and where to send the output.
  * </p>
  *
@@ -261,7 +261,7 @@ public class ReportJobModel extends Job {
     }
 
     /**
-     * Sets a locale to be used to execute the report.
+     * Sets a locale to be used to query the report.
      *
      * <p>
      * The report output will be localized according to the provided locale.

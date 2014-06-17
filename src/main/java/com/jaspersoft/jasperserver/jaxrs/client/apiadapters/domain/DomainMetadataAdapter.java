@@ -33,12 +33,15 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
  * @author Krasnyanksiy.Alexander
  */
 public class DomainMetadataAdapter extends AbstractAdapter {
-    private final SessionStorage sessionStorage;
+
     private final StringBuilder uri;
 
+    /*
+     to pass a domainURI use simple string with first slash (e.g.
+     '/PathToDomain' but not 'PathToDomain' or 'PathToDomain/')
+     */
     public DomainMetadataAdapter(SessionStorage sessionStorage, String domainURI) {
         super(sessionStorage);
-        this.sessionStorage = sessionStorage;
         this.uri = new StringBuilder(domainURI);
     }
 
@@ -58,7 +61,12 @@ public class DomainMetadataAdapter extends AbstractAdapter {
         );
     }
 
-    public OperationResult<DomainMetaData> retrieveDomainMetaData() {
+    /**
+     * returns a Jersey result of computation
+     *
+     * @return OperationResult
+     */
+    public OperationResult<DomainMetaData> getDomainMetaData() {
         return buildRequest().get();
     }
 }

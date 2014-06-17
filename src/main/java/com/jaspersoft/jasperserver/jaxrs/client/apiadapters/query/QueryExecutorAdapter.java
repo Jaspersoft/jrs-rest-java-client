@@ -35,13 +35,11 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.query.QueryResult;
  * @author Krasnyanksiy.Alexander
  */
 public class QueryExecutorAdapter extends AbstractAdapter {
-    private final SessionStorage sessionStorage;
     private final StringBuilder uri;
     private final Query query;
 
-    public QueryExecutorAdapter(SessionStorage sessionStorage, String uri, Query query) {
+    public QueryExecutorAdapter(SessionStorage sessionStorage, Query query, String uri) {
         super(sessionStorage);
-        this.sessionStorage = sessionStorage;
         this.uri = new StringBuilder(uri);
         this.query = query;
     }
@@ -62,9 +60,17 @@ public class QueryExecutorAdapter extends AbstractAdapter {
         );
     }
 
-    public OperationResult<QueryResult> retrieveQueryResult() {
+    /**
+     * The contentType parameter must be "application/xml" only according to
+     * JasperReports Server Web Services Guide (3.6 The v2/queryExecutor Service).
+     *
+     * @param contentType the ContentType or request
+     * @param acceptType  the AcceptType or response
+     * @return OperationResult
+     */
+    public OperationResult<QueryResult> queryResult(String contentType, String acceptType) {
         JerseyRequest<QueryResult> req = buildRequest();
-        req.setContentType("application/xml").setAccept("application/xml");
+        req.setContentType(contentType).setAccept(acceptType);
         return req.post(query);
     }
 }

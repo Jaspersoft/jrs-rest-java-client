@@ -26,11 +26,11 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSource;
 import java.util.Map;
 
 /**
- * The source of a report job, consisting of a report to execute and a set of
+ * The source of a report job, consisting of a report to query and a set of
  * report input values. Model is used in search/ update only.
  *
  * <p>
- * A report job definition specifies wich report to execute and when,
+ * A report job definition specifies wich report to query and when,
  * what output to generate and where to send the output.
  * </p>
  *
@@ -53,7 +53,7 @@ public class ReportJobSourceModel extends JobSource {
 	 * Defines the report which should be executed by the job.
 	 *
 	 * @param reportUnitURI the repository URI/path of the report that the job
-	 * should execute
+	 * should query
 	 */
 	public void setReportUnitURI(String reportUnitURI) {
 //        isReportUnitURIModified = true;

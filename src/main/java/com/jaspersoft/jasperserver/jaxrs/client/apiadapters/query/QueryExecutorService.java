@@ -32,24 +32,11 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
  */
 public class QueryExecutorService extends AbstractAdapter {
 
-    private String resourceURI;
-    private Query query;
-
     public QueryExecutorService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
-    public QueryExecutorService addResourceUri(String resourceURI) {
-        this.resourceURI = resourceURI;
-        return this;
-    }
-
-    public QueryExecutorService addQuery(Query query) {
-        this.query = query;
-        return this;
-    }
-
-    public QueryExecutorAdapter buildQueryAdapter() {
-        return new QueryExecutorAdapter(sessionStorage, resourceURI, query);
+    public QueryExecutorAdapter query(Query query, String resourceURI) {
+        return new QueryExecutorAdapter(sessionStorage, query, resourceURI);
     }
 }
