@@ -25,6 +25,7 @@ import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionMask;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionRecipient;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionResourceParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -49,23 +50,23 @@ public class PermissionsServiceTest extends Assert {
 
         try {
             client
-                    .authenticate("jasperadmin", "jasperadmin")
+                    .authenticate("superuser", "superuser")
                     .permissionsService()
-                    .resource("/datasources")
-                    .permissionRecipient(PermissionRecipient.USER, "joeuser")
+                    .resource("/public/Samples/Data_Sources")
+                    .permissionRecipient(PermissionRecipient.USER, "organization_1/joeuser")
                     .delete();
 
             client
-                    .authenticate("jasperadmin", "jasperadmin")
+                    .authenticate("superuser", "superuser")
                     .permissionsService()
-                    .resource("/")
-                    .permissionRecipient(PermissionRecipient.USER, "joeuser")
+                    .resource("/public")
+                    .permissionRecipient(PermissionRecipient.USER, "organization_1/joeuser")
                     .delete();
 
             client
-                    .authenticate("jasperadmin", "jasperadmin")
+                    .authenticate("superuser", "superuser")
                     .permissionsService()
-                    .resource("/themes")
+                    .resource("/public/audit")
                     .delete();
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,9 +83,10 @@ public class PermissionsServiceTest extends Assert {
     public void testGetPermissionForResourceBatch() {
         OperationResult<RepositoryPermissionListWrapper> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .permissionsService()
-                        .resource("/datasources")
+                        .resource("/public/Samples/Data_Sources")
+                        .param(PermissionResourceParameter.EFFECTIVE_PERMISSIONS, "true")
                         .get();
 
         RepositoryPermissionListWrapper permissions = operationResult.getEntity();
@@ -94,14 +96,14 @@ public class PermissionsServiceTest extends Assert {
     @Test(enabled = true)
     public void testAddPermissionBatch() {
         List<RepositoryPermission> permissionList = new ArrayList<RepositoryPermission>();
-        permissionList.add(new RepositoryPermission("/themes", "user:/joeuser", 30));
-        //permissionList.add(new RepositoryPermission("/themes", "role:/ROLE_ADMINISTRATOR", 30));
+        permissionList.add(new RepositoryPermission("/public/audit", "user:/organization_1/joeuser", 30));
+        //permissionList.add(new RepositoryPermission("/public/audit", "role:/ROLE_ADMINISTRATOR", 30));
 
         RepositoryPermissionListWrapper permissionListWrapper = new RepositoryPermissionListWrapper(permissionList);
 
         OperationResult operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .permissionsService()
                         .createNew(permissionListWrapper);
 
@@ -112,16 +114,16 @@ public class PermissionsServiceTest extends Assert {
     @Test(dependsOnMethods = {"testAddPermissionBatch"}, enabled = true)
     public void testUpdatePermissionBatch() {
         List<RepositoryPermission> permissionList = new ArrayList<RepositoryPermission>();
-        permissionList.add(new RepositoryPermission("/themes", "user:/joeuser", 1));
-        //permissionList.add(new RepositoryPermission("/themes", "role:/ROLE_ADMINISTRATOR", 1));
+        permissionList.add(new RepositoryPermission("/public/audit", "user:/organization_1/joeuser", 1));
+        //permissionList.add(new RepositoryPermission("/public/audit", "role:/ROLE_ADMINISTRATOR", 1));
 
         RepositoryPermissionListWrapper permissionListWrapper = new RepositoryPermissionListWrapper(permissionList);
 
         OperationResult operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .permissionsService()
-                        .resource("/themes")
+                        .resource("/public/audit")
                         .createOrUpdate(permissionListWrapper);
 
         Response response = operationResult.getResponse();
@@ -133,9 +135,9 @@ public class PermissionsServiceTest extends Assert {
     public void testDeletePermissionBatch() {
         OperationResult operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .permissionsService()
-                        .resource("/themes")
+                        .resource("/public/audit")
                         .delete();
 
         Response response = operationResult.getResponse();
@@ -143,14 +145,15 @@ public class PermissionsServiceTest extends Assert {
         assertEquals(response.getStatus(), 204);
     }
 
-    @Test
+    @Test(enabled = false)
     public void testGetPermissionForResourceWithPermissionRecipientSingle() {
         OperationResult<RepositoryPermission> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .permissionsService()
-                        .resource("/datasources")
-                        .permissionRecipient(PermissionRecipient.ROLE, "ROLE_USER")
+                        .resource("/public/Samples/Data_Sources")
+                        .param(PermissionResourceParameter.EFFECTIVE_PERMISSIONS, "true")
+                        .permissionRecipient(PermissionRecipient.ROLE, "ROLE_ADMINISTRATOR")
                         .get();
 
         RepositoryPermission permission = operationResult.getEntity();
@@ -161,13 +164,13 @@ public class PermissionsServiceTest extends Assert {
     public void testAddPermissionSingle() {
         RepositoryPermission permission = new RepositoryPermission();
         permission
-                .setUri("/")
-                .setRecipient("user:/joeuser")
+                .setUri("/public")
+                .setRecipient("user:/organization_1/joeuser")
                 .setMask(PermissionMask.READ_WRITE_DELETE);
 
         OperationResult operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .permissionsService()
                         .createNew(permission);
 
@@ -179,16 +182,16 @@ public class PermissionsServiceTest extends Assert {
     public void testUpdatePermissionSingle() {
         RepositoryPermission permission = new RepositoryPermission();
         permission
-                .setUri("/")
-                .setRecipient("user:/joeuser")
+                .setUri("/public")
+                .setRecipient("user:/organization_1/joeuser")
                 .setMask(1);
 
         OperationResult<RepositoryPermission> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .permissionsService()
-                        .resource("/")
-                        .permissionRecipient(PermissionRecipient.USER, "joeuser")
+                        .resource("/public")
+                        .permissionRecipient(PermissionRecipient.USER, "organization_1/joeuser")
                         .createOrUpdate(permission);
 
         Response response = operationResult.getResponse();
@@ -200,10 +203,10 @@ public class PermissionsServiceTest extends Assert {
     public void testDeletePermissionSingle() {
         OperationResult operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .permissionsService()
-                        .resource("/")
-                        .permissionRecipient(PermissionRecipient.USER, "joeuser")
+                        .resource("/public")
+                        .permissionRecipient(PermissionRecipient.USER, "organization_1/joeuser")
                         .delete();
 
         Response response = operationResult.getResponse();

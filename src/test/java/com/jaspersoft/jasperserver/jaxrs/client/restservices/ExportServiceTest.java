@@ -48,7 +48,7 @@ public class ExportServiceTest extends Assert {
     public void testCreateExportTask() {
         OperationResult<StateDto> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .exportService()
                         .newTask()
                         .user("jasperadmin")
@@ -65,7 +65,7 @@ public class ExportServiceTest extends Assert {
     public void testCreateExportTaskAndGet() {
         OperationResult<StateDto> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .exportService()
                         .task(stateDto.getId())
                         .state();
@@ -78,7 +78,7 @@ public class ExportServiceTest extends Assert {
     public void testGetExportInputStream() throws InterruptedException, IOException {
         OperationResult<InputStream> operationResult1 =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .exportService()
                         .task(stateDto.getId())
                         .fetch();

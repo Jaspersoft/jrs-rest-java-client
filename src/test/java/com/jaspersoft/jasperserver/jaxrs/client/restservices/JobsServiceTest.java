@@ -54,12 +54,12 @@ public class JobsServiceTest extends Assert {
     @AfterClass
     public static void tearDown(){
         OperationResult<JobSummaryListWrapper> allJobs = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService().jobs().search();
         for (JobSummary job : allJobs.getEntity().getJobsummary()){
-            if (job.getId() != 21281)
+            if (job.getId() != 1697)
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .jobsService()
                         .job(job.getId())
                         .delete();
@@ -69,7 +69,7 @@ public class JobsServiceTest extends Assert {
     @Test
     public void testGetAllJobs(){
         OperationResult<JobSummaryListWrapper> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .jobs()
                 .search();
@@ -84,9 +84,9 @@ public class JobsServiceTest extends Assert {
     @Test
     public void testViewJobDefinition(){
         OperationResult<Job> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
-                .job(21281)
+                .job(1697)
                 .get();
 
         job = result.getEntity();
@@ -100,7 +100,7 @@ public class JobsServiceTest extends Assert {
         job.setLabel(label);
 
         OperationResult<Job> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .job(jobId)
                 .update(job);
@@ -119,7 +119,7 @@ public class JobsServiceTest extends Assert {
         criteria.setAlert(new JobAlert());        //tests nested objects
 
         OperationResult<JobSummaryListWrapper> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .jobs()
                 .parameter(JobsParameter.SEARCH_LABEL, "hello")
@@ -134,10 +134,10 @@ public class JobsServiceTest extends Assert {
         job.setLabel("NewScheduledReport");
         job.setDescription("blablabla");
         JobSource source = job.getSource();
-        source.setReportUnitURI("/reports/samples/Employees");
+        source.setReportUnitURI("/public/Samples/Reports/5g.AccountsReport");
 
         OperationResult<Job> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .scheduleReport(job);
 
@@ -149,7 +149,7 @@ public class JobsServiceTest extends Assert {
     @Test(dependsOnMethods = "testScheduleJob")
     public void testDeleteJob(){
         OperationResult result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .job(job.getId())
                 .delete();
@@ -160,9 +160,9 @@ public class JobsServiceTest extends Assert {
     @Test
     public void testViewJobStatus(){
         OperationResult<JobState> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
-                .job(21281)
+                .job(1697)
                 .state();
         assertNotNull(result);
         JobState jobState = result.getEntity();
@@ -175,10 +175,10 @@ public class JobsServiceTest extends Assert {
         jobModel.setDescription("Bulk update description");
 
         OperationResult<JobIdListWrapper> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "21281")
+                .parameter(JobsParameter.JOB_ID, "1697")
                 .updateWithProcessedParameters(jobModel);
 
         assertNotNull(result);
@@ -191,10 +191,10 @@ public class JobsServiceTest extends Assert {
         jobDescriptor.setDescription("Bulk update description");
 
         OperationResult<JobIdListWrapper> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "21281")
+                .parameter(JobsParameter.JOB_ID, "1697")
                 .update(jobDescriptor);
 
         assertNotNull(result);
@@ -204,10 +204,10 @@ public class JobsServiceTest extends Assert {
     @Test(dependsOnMethods = "testUpdateJobsInBulkWithJobDescriptor")
     public void testResumeJobs(){
         OperationResult<JobIdListWrapper> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "21281")
+                .parameter(JobsParameter.JOB_ID, "1697")
                 .resume();
         assertNotNull(result);
         assertNotNull(result.getEntity());
@@ -216,10 +216,10 @@ public class JobsServiceTest extends Assert {
     @Test(dependsOnMethods = "testResumeJobs")
     public void testPauseJobs(){
         OperationResult<JobIdListWrapper> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "21281")
+                .parameter(JobsParameter.JOB_ID, "1697")
                 .pause();
         assertNotNull(result);
         assertNotNull(result.getEntity());
@@ -230,10 +230,10 @@ public class JobsServiceTest extends Assert {
     @Test(dependsOnMethods = {"testPauseJobs", "testGetAllJobs"})
     public void testRestartJobs(){
         OperationResult<JobIdListWrapper> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .jobs()
-                .parameter(JobsParameter.JOB_ID, "21281")
+                .parameter(JobsParameter.JOB_ID, "1697")
                 .restart();
         assertNotNull(result);
         JobIdListWrapper entity = result.getEntity();
@@ -245,7 +245,7 @@ public class JobsServiceTest extends Assert {
     /*@Test
     public void testSpecifyFtpOutput(){
         client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .scheduleReport(new Object());
     }*/
@@ -253,7 +253,7 @@ public class JobsServiceTest extends Assert {
     @Test
     public void testListAllRegisteredCalendars(){
         OperationResult<CalendarNameListWrapper> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .calendars();
         assertNotNull(result);
@@ -264,7 +264,7 @@ public class JobsServiceTest extends Assert {
     @Test
     public void testListAllRegisteredCalendarNamesWithType(){
         OperationResult<CalendarNameListWrapper> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .calendars(CalendarType.holiday);
         assertNotNull(result);
@@ -281,7 +281,7 @@ public class JobsServiceTest extends Assert {
         calendar.setExcludeDaysFlags(new boolean[]{true, false, false, false, false, true, true});
 
         OperationResult result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .calendar("testCalendar")
                 .createNew(calendar);
@@ -292,7 +292,7 @@ public class JobsServiceTest extends Assert {
     @Test(dependsOnMethods = "testAddOrUpdateCalendar")
     public void testViewCalendar(){
         OperationResult<Calendar> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .calendar("testCalendar")
                 .get();
@@ -305,7 +305,7 @@ public class JobsServiceTest extends Assert {
     @Test(dependsOnMethods = "testViewCalendar")
     public void testDeleteCalendar(){
         OperationResult result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .jobsService()
                 .calendar("testCalendar")
                 .delete();

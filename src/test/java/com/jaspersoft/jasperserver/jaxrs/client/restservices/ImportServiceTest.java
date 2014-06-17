@@ -51,7 +51,7 @@ public class ImportServiceTest extends Assert {
         URL url = ImportService.class.getClassLoader().getResource("testExportArchive.zip");
         OperationResult<StateDto> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .importService()
                         .newTask()
                         .parameter(ImportParameter.INCLUDE_ACCESS_EVENTS, true)
@@ -65,7 +65,7 @@ public class ImportServiceTest extends Assert {
     public void testGetImportTaskState() {
         OperationResult<StateDto> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .importService()
                         .task(stateDto.getId())
                         .state();

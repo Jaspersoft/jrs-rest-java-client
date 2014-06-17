@@ -44,8 +44,8 @@ public class SessionsTest extends Assert {
 
     @Test
     public void sessionsIdMustBeDifferentForDifferentUsers(){
-        Session jasperadminSession = client.authenticate("jasperadmin", "jasperadmin");
-        Session joeuserSession = client.authenticate("joeuser", "joeuser");
+        Session jasperadminSession = client.authenticate("jasperadmin|organization_1", "jasperadmin");
+        Session joeuserSession = client.authenticate("joeuser|organization_1", "joeuser");
 
         jasperadminSession.resourcesService().resource("/reports/samples/StandardChartsEyeCandyReport").details();
         joeuserSession.resourcesService().resource("/reports/samples/StandardChartsEyeCandyReport").details();
@@ -58,8 +58,8 @@ public class SessionsTest extends Assert {
 
     @Test
     public void sessionsIdMustBeDifferentForDifferentAuthentications() {
-        Session jasperadminSession1 = client.authenticate("jasperadmin", "jasperadmin");
-        Session jasperadminSession2 = client.authenticate("jasperadmin", "jasperadmin");
+        Session jasperadminSession1 = client.authenticate("jasperadmin|organization_1", "jasperadmin");
+        Session jasperadminSession2 = client.authenticate("jasperadmin|organization_1", "jasperadmin");
 
         jasperadminSession1.resourcesService().resource("/reports/samples/StandardChartsEyeCandyReport").details();
         jasperadminSession2.resourcesService().resource("/reports/samples/StandardChartsEyeCandyReport").details();
@@ -72,7 +72,7 @@ public class SessionsTest extends Assert {
 
     @Test
     public void sessionIdMustBeSameWithinAuthentication() throws Exception {
-        Session jasperadminSession = client.authenticate("jasperadmin", "jasperadmin");
+        Session jasperadminSession = client.authenticate("jasperadmin|organization_1", "jasperadmin");
 
         jasperadminSession.resourcesService().resource("/reports/samples/StandardChartsEyeCandyReport").details();
         String sessionId1 = jasperadminSession.getStorage().getSessionId();

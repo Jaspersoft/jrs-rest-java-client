@@ -65,7 +65,7 @@ public class AuthorityDemoTest extends Assert {
     public static void tearDown() {
         try {
             client
-                    .authenticate("jasperadmin", "jasperadmin")
+                    .authenticate("superuser", "superuser")
                     .usersService()
                     .username(user.getUsername())
                     .delete();
@@ -78,7 +78,7 @@ public class AuthorityDemoTest extends Assert {
     public void testCreateUser() {
         OperationResult result =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .usersService()
                         .username(user.getUsername())
                         .createOrUpdate(user);
@@ -92,7 +92,7 @@ public class AuthorityDemoTest extends Assert {
 
         ClientRole role =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .rolesService()
                         .rolename("ROLE_ADMINISTRATOR")
                         .get()
@@ -106,7 +106,7 @@ public class AuthorityDemoTest extends Assert {
 
         OperationResult result =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .usersService()
                         .username(user.getUsername())
                         .createOrUpdate(user);
@@ -124,7 +124,7 @@ public class AuthorityDemoTest extends Assert {
 
         OperationResult result =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .usersService()
                         .username(user.getUsername())
                         .attribute(attribute.getName())
@@ -143,7 +143,7 @@ public class AuthorityDemoTest extends Assert {
                 .setMask(PermissionMask.READ_ONLY);
 
         OperationResult result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .permissionsService()
                 .createNew(permission);
 
@@ -170,7 +170,7 @@ public class AuthorityDemoTest extends Assert {
     public void testDeleteUserAttribute() {
         OperationResult result =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .usersService()
                         .username(user.getUsername())
                         .attribute("someAttribute")
@@ -185,7 +185,7 @@ public class AuthorityDemoTest extends Assert {
     public void testDeleteUserPermission() {
         OperationResult result =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .permissionsService()
                         .resource("/")
                         .permissionRecipient(PermissionRecipient.USER, "john.doe")
@@ -201,7 +201,7 @@ public class AuthorityDemoTest extends Assert {
     public void testDeleteUser() {
         OperationResult result =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .usersService()
                         .username(user.getUsername())
                         .delete();

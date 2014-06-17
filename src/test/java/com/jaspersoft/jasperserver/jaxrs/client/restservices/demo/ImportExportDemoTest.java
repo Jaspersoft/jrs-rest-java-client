@@ -56,8 +56,9 @@ public class ImportExportDemoTest extends Assert {
                 .setFullName("John Doe");
 
         try {
-            client.authenticate("jasperadmin", "jasperadmin")
+            client.authenticate("superuser", "superuser")
                     .usersService()
+                    .organization("organization_1")
                     .username(user.getUsername())
                     .createOrUpdate(user);
         } catch (Exception e) {}
@@ -66,8 +67,9 @@ public class ImportExportDemoTest extends Assert {
     @AfterClass
     public static void tearDown(){
         try {
-            client.authenticate("jasperadmin", "jasperadmin")
+            client.authenticate("superuser", "superuser")
                     .usersService()
+                    .organization("organization_1")
                     .username("john.doe")
                     .delete();
         } catch (Exception e) {}
@@ -76,17 +78,17 @@ public class ImportExportDemoTest extends Assert {
     @Test
     public void testExport() {
 
-        StateDto exportState = client.authenticate("jasperadmin", "jasperadmin")
+        StateDto exportState = client.authenticate("superuser", "superuser")
                 .exportService()
                 .newTask()
                 .role("ROLE_ADMINISTRATOR").role("ROLE_USER")
-                .user("jasperadmin").user("john.doe")
+                .user("jasperadmin|organization_1").user("john.doe|organization_1")
                 .uri("/")
                 .parameter(ExportParameter.ROLE_USERS).parameter(ExportParameter.REPOSITORY_PERMISSIONS)
                 .create()
                 .getEntity();
 
-        export = client.authenticate("jasperadmin", "jasperadmin")
+        export = client.authenticate("superuser", "superuser")
                 .exportService()
                 .task(exportState.getId())
                 .fetch()
@@ -97,15 +99,17 @@ public class ImportExportDemoTest extends Assert {
     @Test(dependsOnMethods = "testExport", expectedExceptions = JSClientWebException.class)
     public void testDeleteJohnDoeUserAndCheckAbsence() {
         OperationResult result =
-                client.authenticate("jasperadmin", "jasperadmin")
+                client.authenticate("superuser", "superuser")
                         .usersService()
+                        .organization("organization_1")
                         .username("john.doe")
                         .delete();
         assertEquals(result.getResponse().getStatus(), ResponseStatus.NO_CONTENT);
 
         OperationResult<ClientUser> result1 =
-                client.authenticate("jasperadmin", "jasperadmin")
+                client.authenticate("superuser", "superuser")
                         .usersService()
+                        .organization("organization_1")
                         .username("john.doe")
                         .get();
 
@@ -116,14 +120,14 @@ public class ImportExportDemoTest extends Assert {
     @Test(dependsOnMethods = "testDeleteJohnDoeUserAndCheckAbsence")
     public void testImport() {
 
-        StateDto stateDto = client.authenticate("jasperadmin", "jasperadmin")
+        StateDto stateDto = client.authenticate("superuser", "superuser")
                 .importService()
                 .newTask()
                 .create(export)
                 .getEntity();
 
         while (true){
-            StateDto state = client.authenticate("jasperadmin", "jasperadmin")
+            StateDto state = client.authenticate("superuser", "superuser")
                     .importService()
                     .task(stateDto.getId())
                     .state()
@@ -136,8 +140,9 @@ public class ImportExportDemoTest extends Assert {
     @Test(dependsOnMethods = "testImport")
     public void testGetJohnDoeUserAfterImport(){
         OperationResult<ClientUser> result1 =
-                client.authenticate("jasperadmin", "jasperadmin")
+                client.authenticate("superuser", "superuser")
                         .usersService()
+                        .organization("organization_1")
                         .username("john.doe")
                         .get();
         assertNotEquals(result1.getEntity(), null);

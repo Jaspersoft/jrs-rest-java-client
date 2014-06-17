@@ -42,7 +42,7 @@ public class ServerInfoServiceTest extends Assert {
     @Test
     public void testGetServerInfoDetails() throws Exception {
         OperationResult<ServerInfo> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .serverInfoService()
                 .details();
 
@@ -53,73 +53,73 @@ public class ServerInfoServiceTest extends Assert {
     @Test
     public void testGetEdition() throws Exception {
         OperationResult<String> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .serverInfoService()
                 .edition();
 
         String edition = result.getEntity();
-        assertEquals(edition, "CE");
+        assertEquals(edition, "PRO");
     }
 
     @Test
     public void testGetVersion() throws Exception {
         OperationResult<String> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .serverInfoService()
                 .version();
 
         String version = result.getEntity();
-        assertEquals(version, "6.0.0");
+        assertEquals(version, "5.6.0");
     }
 
-    @Test
+    @Test(enabled = false)
     public void testGetBuild() throws Exception {
         OperationResult<String> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .serverInfoService()
                 .build();
 
         String build = result.getEntity();
-        assertEquals(build, "BUILD_DATE_STAMP_BUILD_TIME_STAMP");
+        assertEquals(build, "20140522_1943");
     }
 
     @Test
     public void testGetFeatures() throws Exception {
         OperationResult<String> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .serverInfoService()
                 .features();
 
         String features = result.getEntity();
-        assertNull(features);
+        assertEquals(features, "Fusion AHD EXP DB ANA AUD MT ");
     }
 
     @Test
     public void testGetEditionName() throws Exception {
         OperationResult<String> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .serverInfoService()
                 .editionName();
 
         String editionName = result.getEntity();
-        assertNull(editionName);
+        assertEquals(editionName, "Enterprise");
     }
 
     @Test
     public void testGetLicenceType() throws Exception {
         OperationResult<String> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .serverInfoService()
                 .licenseType();
 
         String licenceType = result.getEntity();
-        assertNull(licenceType);
+        assertEquals(licenceType, "Commercial");
     }
 
     @Test
     public void testGetExpiration() throws Exception {
         OperationResult<String> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .serverInfoService()
                 .expiration();
 
@@ -130,7 +130,7 @@ public class ServerInfoServiceTest extends Assert {
     @Test
     public void testGetDateFormatPattern() throws Exception {
         OperationResult<String> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .serverInfoService()
                 .dateFormatPattern();
 
@@ -141,7 +141,7 @@ public class ServerInfoServiceTest extends Assert {
     @Test
     public void testGetDateTimeFormatPattern() throws Exception {
         OperationResult<String> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .serverInfoService()
                 .dateTimeFormatPattern();
 

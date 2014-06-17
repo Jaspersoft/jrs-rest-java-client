@@ -48,7 +48,7 @@ public class RolesServiceTest extends Assert {
     public void testGetRole() {
         OperationResult<ClientRole> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .rolesService()
                         .rolename("ROLE_ADMINISTRATOR")
                         .get();
@@ -62,7 +62,7 @@ public class RolesServiceTest extends Assert {
     public void testGetNonexistentRole() {
         OperationResult<ClientRole> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .rolesService()
                         .rolename("ROLE_HELLO")
                         .get();
@@ -75,24 +75,24 @@ public class RolesServiceTest extends Assert {
     public void testGetAllRoles() {
         OperationResult<RolesListWrapper> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .rolesService()
                         .allRoles()
                         .get();
 
         RolesListWrapper rolesListWrapper = operationResult.getEntity();
         assertNotEquals(rolesListWrapper, null);
-        assertEquals(rolesListWrapper.getRoleList().size(), 3);
+        assertEquals(rolesListWrapper.getRoleList().size(), 7);
     }
 
     @Test
     public void testGetAllRolesWithQueryParams() {
         OperationResult<RolesListWrapper> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .rolesService()
                         .allRoles()
-                        .param(RolesParameter.USER, "jasperadmin")
+                        .param(RolesParameter.USER, "jasperadmin|organization_1")
                         .get();
 
         RolesListWrapper rolesListWrapper = operationResult.getEntity();
@@ -109,7 +109,7 @@ public class RolesServiceTest extends Assert {
 
         OperationResult<RolesListWrapper> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .rolesService()
                         .rolename(role.getName())
                         .createOrUpdate(role);
@@ -128,7 +128,7 @@ public class RolesServiceTest extends Assert {
 
         OperationResult<RolesListWrapper> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .rolesService()
                         .rolename(roleHello.getName())
                         .createOrUpdate(roleHello);
@@ -143,7 +143,7 @@ public class RolesServiceTest extends Assert {
 
         OperationResult<ClientRole> operationResult =
                 client
-                        .authenticate("jasperadmin", "jasperadmin")
+                        .authenticate("superuser", "superuser")
                         .rolesService()
                         .rolename("ROLE_HELLO")
                         .delete();

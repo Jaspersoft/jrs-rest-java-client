@@ -50,7 +50,7 @@ public class ResourcesServiceTest extends Assert {
     @Test
     public void testResourcesSearchWithoutParams() {
         OperationResult<ClientResourceListWrapper> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resources()
                 .search();
@@ -61,10 +61,10 @@ public class ResourcesServiceTest extends Assert {
     @Test
     public void testResourcesSearchWithParams() {
         OperationResult<ClientResourceListWrapper> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resources()
-                .parameter(ResourceSearchParameter.FOLDER_URI, "/reports/samples")
+                .parameter(ResourceSearchParameter.FOLDER_URI, "/public/Samples/Reports")
                 .parameter(ResourceSearchParameter.LIMIT, "5")
                 .search();
         ClientResourceListWrapper resourceListWrapper = result.getEntity();
@@ -75,7 +75,7 @@ public class ResourcesServiceTest extends Assert {
     @Test
     public void testGetResourceDetails() {
         OperationResult<ClientResource> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource("/properties/GlobalPropertiesList")
                 .details();
@@ -87,7 +87,7 @@ public class ResourcesServiceTest extends Assert {
     @Test
     public void testGetRootFolderDetails(){
         OperationResult<ClientResource> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource("/")
                 .details();
@@ -100,9 +100,9 @@ public class ResourcesServiceTest extends Assert {
     @Test
     public void testGetFileDetails() {
         OperationResult<ClientResource> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
-                .resource("/images/JRLogo")
+                .resource("/public/Samples/Resources/Images/Jaspersoft_logo.png")
                 .details();
 
         ClientFile jrLogo = (ClientFile) result.getEntity();
@@ -112,9 +112,9 @@ public class ResourcesServiceTest extends Assert {
     @Test
     public void testGetResourceDetailsExpanded() {
         OperationResult<ClientResource> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
-                .resource("/reports/interactive/CustomersReport")
+                .resource("/public/Samples/Reports/5g.AccountsReport")
                 .parameter(ResourceServiceParameter.EXPANDED, "true")
                 .details();
 
@@ -126,7 +126,7 @@ public class ResourcesServiceTest extends Assert {
     @Test
     public void testDownloadBinaryFile() throws IOException {
         OperationResult<InputStream> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource("/themes/default/buttons.css")
                 .downloadBinary();
@@ -149,7 +149,7 @@ public class ResourcesServiceTest extends Assert {
                 .setVersion(0);
 
         OperationResult<ClientResource> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource(folder.getUri())
                 .createOrUpdate(folder);
@@ -173,7 +173,7 @@ public class ResourcesServiceTest extends Assert {
                 .setVersion(0);
 
         OperationResult<ClientResource> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource(folder.getUri())
                 .createNew(folder);
@@ -191,7 +191,7 @@ public class ResourcesServiceTest extends Assert {
         patchDescriptor.field("label", "Patch Label");
 
         OperationResult<ClientFolder> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource("/reports/testFolder")
                 .patchResource(ClientFolder.class, patchDescriptor);
@@ -210,7 +210,7 @@ public class ResourcesServiceTest extends Assert {
         patchDescriptor.field("label", "Patch Label");
 
         OperationResult<ClientResource> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource("/reports/testFolder")
                 .patchResource(patchDescriptor);
@@ -220,7 +220,7 @@ public class ResourcesServiceTest extends Assert {
     public void testMoveResource() {
 
         OperationResult<ClientResource> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource("/datasources")
                 .moveFrom("/reports/testFolder");
@@ -236,7 +236,7 @@ public class ResourcesServiceTest extends Assert {
     public void testCopyResource() {
 
         OperationResult<ClientResource> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource("/reports")
                 .copyFrom("/datasources/testFolder");
@@ -253,7 +253,7 @@ public class ResourcesServiceTest extends Assert {
         URL url = ResourcesServiceTest.class.getClassLoader().getResource("stateChart.png");
 
         OperationResult<ClientFile> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource("/reports/testFolder")
                 .uploadFile(new File(url.toURI()), ClientFile.FileType.img, "testFile", "testFileDesc");
@@ -267,13 +267,13 @@ public class ResourcesServiceTest extends Assert {
     public void testDeleteResource() {
 
         OperationResult result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource("/reports/testFolder")
                 .delete();
 
         OperationResult result1 = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .resourcesService()
                 .resource("/datasources/testFolder")
                 .delete();

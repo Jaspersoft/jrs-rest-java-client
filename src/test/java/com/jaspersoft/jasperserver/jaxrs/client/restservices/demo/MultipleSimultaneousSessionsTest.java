@@ -47,7 +47,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
             private void init(){
                 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
                 JasperserverRestClient client = new JasperserverRestClient(configuration);
-                session = client.authenticate("jasperadmin", "jasperadmin");
+                session = client.authenticate("superuser", "superuser");
             }
 
             public void createNewReportRequest(){
@@ -79,6 +79,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                 assertNotEquals(statusEntity, null);
             }
 
+            private String htmlExportId;
             public void getReportExecutionDetails(){
                 OperationResult<ReportExecutionDescriptor> operationResult =
                         session
@@ -87,6 +88,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                                 .executionDetails();
 
                 ReportExecutionDescriptor descriptor = operationResult.getEntity();
+                htmlExportId = descriptor.getExports().get(0).getId();
                 assertNotEquals(descriptor, null);
             }
 
@@ -95,7 +97,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                         session
                                 .reportingService()
                                 .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                                .export("html")
+                                .export(htmlExportId)
                                 .outputResource();
 
                 InputStream file = operationResult.getEntity();
@@ -131,7 +133,7 @@ public class MultipleSimultaneousSessionsTest extends Assert {
                         session
                                 .reportingService()
                                 .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                                .export("html")
+                                .export(htmlExportId)
                                 .status();
 
                 ReportExecutionStatusEntity statusEntity = operationResult.getEntity();

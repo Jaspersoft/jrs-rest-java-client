@@ -44,7 +44,7 @@ public class RunReportServiceTest extends Assert {
     @Test
     public void testRunReport() throws IOException {
         OperationResult<InputStream> result = client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("jasperadmin|organization_1", "jasperadmin")
                 .reportingService()
                 .report("/reports/samples/Cascading_multi_select_report")
                 .prepareForRun(ReportOutputFormat.HTML, NUMBER_OF_PAGES)

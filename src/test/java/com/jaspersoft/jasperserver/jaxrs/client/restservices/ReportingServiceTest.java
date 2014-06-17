@@ -21,6 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.restservices;
 
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.HtmlReport;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
@@ -42,7 +43,7 @@ public class ReportingServiceTest extends Assert {
     public static void setUp() {
         RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
         JasperserverRestClient client = new JasperserverRestClient(configuration);
-        session = client.authenticate("jasperadmin", "jasperadmin");
+        session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
     }
 
     @Test(priority = 0)
@@ -75,6 +76,8 @@ public class ReportingServiceTest extends Assert {
         assertNotEquals(statusEntity, null);
     }
 
+    private ExportDescriptor htmlExport;
+
     @Test(dependsOnMethods = {"testGetReportExecutionStatus"}, priority = 2)
     public void testGetReportExecutionDetails() {
         OperationResult<ReportExecutionDescriptor> operationResult =
@@ -84,20 +87,20 @@ public class ReportingServiceTest extends Assert {
                         .executionDetails();
 
         ReportExecutionDescriptor descriptor = operationResult.getEntity();
+        htmlExport = descriptor.getExports().get(0);
         assertNotEquals(descriptor, null);
     }
 
     @Test(dependsOnMethods = {"testGetReportExecutionDetails"}, priority = 3)
     public void testGetExportOutputResource() {
-        OperationResult<String> operationResult =
+        HtmlReport report =
                 session
                         .reportingService()
                         .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                        .export("html")
-                        .outputResource();
+                        .export(htmlExport.getId())
+                        .htmlReport(htmlExport);
 
-        String file = operationResult.getEntity();
-        assertNotEquals(file, null);
+        assertNotEquals(report, null);
     }
 
     @Test(dependsOnMethods = {"testGetExportOutputResource"}, priority = 4)
@@ -146,14 +149,14 @@ public class ReportingServiceTest extends Assert {
                 session
                         .reportingService()
                         .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                        .export("html")
+                        .export(htmlExport.getId())
                         .status();
 
         ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
         assertNotEquals(statusEntity, null);
     }
 
-    @Test(dependsOnMethods = {"testGetExportAttachment"})
+    @Test(dependsOnMethods = {"testGetExportAttachment"}, enabled = false)
     public void testCancelRequestExecution() {
 
         ReportExecutionRequest request = new ReportExecutionRequest();

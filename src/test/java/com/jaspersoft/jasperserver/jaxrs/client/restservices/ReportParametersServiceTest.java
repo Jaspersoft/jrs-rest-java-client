@@ -46,9 +46,9 @@ public class ReportParametersServiceTest extends Assert {
     @Test
     public void testGetInputControlsStructure() {
         ReportInputControlsListWrapper inputControls =
-                client.authenticate("jasperadmin", "jasperadmin")
+                client.authenticate("jasperadmin|organization_1", "jasperadmin")
                         .reportingService()
-                        .report("/reports/samples/Cascading_multi_select_report")
+                        .report("/adhoc/topics/Cascading_multi_select_topic")
                         .reportParameters()
                         .get()
                         .getEntity();
@@ -56,7 +56,7 @@ public class ReportParametersServiceTest extends Assert {
         this.inputControls = inputControls.getInputParameters();
     }
 
-    @Test(dependsOnMethods = "testGetInputControlsStructure")
+    @Test(dependsOnMethods = "testGetInputControlsStructure", enabled = false)
     public void testReorderInputControls(){
         ReportInputControl inputControl0 = inputControls.get(0);
         inputControls.add(0, inputControls.get(1));
@@ -65,9 +65,9 @@ public class ReportParametersServiceTest extends Assert {
         inputControls.remove(2);
 
         ReportInputControlsListWrapper inputControls =
-                client.authenticate("jasperadmin", "jasperadmin")
+                client.authenticate("jasperadmin|organization_1", "jasperadmin")
                         .reportingService()
-                        .report("/reports/samples/Cascading_multi_select_report")
+                        .report("/adhoc/topics/Cascading_multi_select_topic")
                         .reportParameters()
                         .reorder(this.inputControls)
                         .getEntity();
@@ -77,9 +77,9 @@ public class ReportParametersServiceTest extends Assert {
     @Test
     public void testGetInputControlsStructureForSpecifiedInputControls() {
         ReportInputControlsListWrapper inputControls =
-                client.authenticate("jasperadmin", "jasperadmin")
+                client.authenticate("jasperadmin|organization_1", "jasperadmin")
                         .reportingService()
-                        .report("/reports/samples/Cascading_multi_select_report")
+                        .report("/adhoc/topics/Cascading_multi_select_topic")
                         .reportParameters("Cascading_name_single_select")
                         .get()
                         .getEntity();
@@ -90,9 +90,9 @@ public class ReportParametersServiceTest extends Assert {
     @Test
     public void testGetInputControlsValues() {
         InputControlStateListWrapper inputControlsValues =
-                client.authenticate("jasperadmin", "jasperadmin")
+                client.authenticate("jasperadmin|organization_1", "jasperadmin")
                         .reportingService()
-                        .report("/reports/samples/Cascading_multi_select_report")
+                        .report("/adhoc/topics/Cascading_multi_select_topic")
                         .reportParameters()
                         .values()
                         .get()
@@ -103,9 +103,9 @@ public class ReportParametersServiceTest extends Assert {
     @Test
     public void testGetInputControlsValuesForSpecifiedInputControls() {
         InputControlStateListWrapper inputControlsValues =
-                client.authenticate("jasperadmin", "jasperadmin")
+                client.authenticate("jasperadmin|organization_1", "jasperadmin")
                         .reportingService()
-                        .report("/reports/samples/Cascading_multi_select_report")
+                        .report("/adhoc/topics/Cascading_multi_select_topic")
                         .reportParameters("Cascading_name_single_select")
                         .values()
                         .get()
@@ -118,9 +118,9 @@ public class ReportParametersServiceTest extends Assert {
     public void testUpdatedInputControlsValues() {
 
         InputControlStateListWrapper inputControlsValues =
-                client.authenticate("jasperadmin", "jasperadmin")
+                client.authenticate("jasperadmin|organization_1", "jasperadmin")
                         .reportingService()
-                        .report("/reports/samples/Cascading_multi_select_report")
+                        .report("/adhoc/topics/Cascading_multi_select_topic")
                         .reportParameters()
                         .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
                         .values()
@@ -136,9 +136,9 @@ public class ReportParametersServiceTest extends Assert {
     public void testUpdatedInputControlsValuesForSpecifiedInputControls() {
 
         InputControlStateListWrapper inputControlsValues =
-                client.authenticate("jasperadmin", "jasperadmin")
+                client.authenticate("jasperadmin|organization_1", "jasperadmin")
                         .reportingService()
-                        .report("/reports/samples/Cascading_multi_select_report")
+                        .report("/adhoc/topics/Cascading_multi_select_topic")
                         .reportParameters("Cascading_name_single_select")
                         .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
                         .values()

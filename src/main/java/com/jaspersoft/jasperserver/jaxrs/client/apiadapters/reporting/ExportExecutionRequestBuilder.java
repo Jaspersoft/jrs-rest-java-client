@@ -54,11 +54,14 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
      * <code>OperationResult</code> should be parametrized with <code>String</code> if you're exporting HTML,
      * in other cases it should be parametrized with <code>InputStream</code>
      */
-    public OperationResult outputResource() {
-        boolean isHtmlExport = exportId.toLowerCase().startsWith("html");
+    private OperationResult outputResource(boolean isHtmlExport) {
         return buildRequest(sessionStorage, isHtmlExport ? String.class : InputStream.class,
                 new String[]{"/reportExecutions", requestId, "/exports", exportId, "/outputResource"})
                 .get();
+    }
+
+    public OperationResult<InputStream> outputResource() {
+        return outputResource(false);
     }
 
     public <R> RequestExecution asyncOutputResource(final Callback<OperationResult<InputStream>, R> callback) {
@@ -143,10 +146,10 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
     }
 
     public HtmlReport htmlReport(ExportDescriptor htmlExport) {
-        if (exportId.toLowerCase().startsWith("html") && htmlExport.getId().toLowerCase().startsWith("html")) {
+        //if (exportId.toLowerCase().startsWith("html") && htmlExport.getId().toLowerCase().startsWith("html")) {
             HtmlReport htmlReport = new HtmlReport(htmlExport.getId());
 
-            OperationResult<String> markup = outputResource();
+            OperationResult<String> markup = outputResource(true);
             htmlReport.setHtml(markup.getEntity());
 
             List<AttachmentDescriptor> attachments = htmlExport.getAttachments();
@@ -165,8 +168,8 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
             }
 
             return htmlReport;
-        }
-        throw new JSClientException("Output format is not 'HTML'");
+        //}
+        //throw new JSClientException("Output format is not 'HTML'");
     }
 
     public <R> RequestExecution asyncHtmlReport(final ExportDescriptor htmlExport, final Callback<HtmlReport, R> callback) {

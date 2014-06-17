@@ -26,10 +26,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.Permissi
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AccessDeniedException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ReportExportException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.*;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -47,7 +44,7 @@ public class WebExceptionsTest extends Assert {
     @Test(expectedExceptions = ResourceNotFoundException.class)
     public void testGetNonexistentResource() {
         client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .usersService()
                 .username("lalala")
                 .get();
@@ -56,7 +53,7 @@ public class WebExceptionsTest extends Assert {
     @Test(expectedExceptions = AuthenticationFailedException.class)
     public void testGetResourceByNotAuthorizedUser() {
         client
-                .authenticate("jasperadmin", "")
+                .authenticate("superuser", "")
                 .usersService()
                 .username("lalala")
                 .get();
@@ -68,20 +65,21 @@ public class WebExceptionsTest extends Assert {
         * setting own permissions is forbidden for user
         */
         RepositoryPermission permission = new RepositoryPermission()
-                .setRecipient("user:/jasperadmin")
+                .setRecipient("user:/organization_1/jasperadmin")
                 .setUri("/themes")
                 .setMask(PermissionMask.READ_WRITE_DELETE);
 
         client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("superuser", "superuser")
                 .permissionsService()
                 .createNew(permission);
     }
 
-    @Test(expectedExceptions = ReportExportException.class)
+    //@Test(expectedExceptions = ReportExportException.class)
+    @Test(expectedExceptions = BadRequestException.class)
     public void testSendIncorrectRequest() {
         client
-                .authenticate("jasperadmin", "jasperadmin")
+                .authenticate("jasperadmin|organization_1", "jasperadmin")
                 .reportingService()
                 .report("/reports/samples/Cascading_multi_select_report")
                 .prepareForRun(ReportOutputFormat.HTML, 1000000)
