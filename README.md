@@ -258,10 +258,10 @@ For now the only resource that supports queries is a Domain.
 
 The following code executes query and retrieves a result of execution as QueryResult entity.
 ```java
-        QueryResult newQueryResult = session.queryExecutorService()
-                .query(testQuery, resourceURI)
-                .queryResult("application/xml", "application/json")
-                .getEntity();
+QueryResult newQueryResult = session.queryExecutorService()
+        .query(testQuery, resourceURI)
+        .queryResult("application/xml", "application/json")
+        .getEntity();
 ```
 
 Administration services:
@@ -1093,11 +1093,11 @@ Domain. Fields that belong to tables that are not joined in the Domain belong to
 
 The following code retrieves metadata of Domain.
 ```java
-        OperationResult<DomainMetaData> result = session.domainService()
-                .domainMetadataAdapter("/Foodmart_Sales")
-                .getDomainMetaData();
+OperationResult<DomainMetaData> result = session.domainService()
+        .domainMetadataAdapter("/Foodmart_Sales")
+        .getDomainMetaData();
   
-        DomainMetaData domainMetaData = result.getEntity();
+DomainMetaData domainMetaData = result.getEntity();
 ```
 
 REST Server Information
