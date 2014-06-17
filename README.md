@@ -245,6 +245,20 @@ InputControlStateListWrapper inputControlsValues =
                 .getEntity();
 ```
 
+####QueryExecutor Service
+In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service. 
+For now the only resource that supports queries is a Domain.
+
+The following code executes query and retrieves a result of execution as QueryResult entity.
+```java
+QueryResult newQueryResult = session.queryExecutorService().
+        addResourceUri("/organizations/organization_1/Domains/Simple_Domain").
+        addQuery(testQuery).
+        buildQueryAdapter().
+        retrieveQueryResult().
+        getEntity();
+```
+
 Administration services:
 ========================
 Only administrative users may access the REST services for administration.
@@ -1060,6 +1074,28 @@ OperationResult<StateDto> operationResult =
 
 StateDto state = operationResult.getEntity();
 ```
+
+####DomainMetadata Service
+
+The DomainMetadata Service gives access to the sets and items exposed by a Domain for use in Ad
+Hoc reports. Items are database fields exposed by the Domain, after all joins, filters, and calculated fields have
+been applied to the database tables selected in the Domain. Sets are groups of items, arranged by the Domain
+creator for use by report creators.
+
+A limitation of the DomainMetadata Service only allows it to operate on Domains with a single data
+island. A data island is a group of fields that are all related by joins between the database tables in the
+Domain. Fields that belong to tables that are not joined in the Domain belong to separate data islands.
+
+The following code retrieves metadata of Domain.
+```java
+OperationResult<DomainMetaData> result = session.domainService().
+        addDomainUri("/Foodmart_Sales").
+        buildDomainMetadataAdapter().
+        retrieveDomainMetaData();
+  
+DomainMetaData domainMetaData = result.getEntity();
+```
+
 REST Server Information
 ========================
 Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
@@ -1191,10 +1227,6 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
     <repositories>
 
         <repository>
-            <id>jaspersoft-clients-snapshots</id>
-            <name>Jaspersoft clients snapshots</name>
-            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jaspersoft-clients-snapshots</url>
-        </repository>
 
     </repositories>
 ```
@@ -1208,6 +1240,7 @@ Unless you have purchased a commercial license agreement from Jaspersoft,
 the following license terms apply:
 
 This program is free software: you can redistribute it and/or modify
+
 it under the terms of the GNU Lesser General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
@@ -1215,7 +1248,9 @@ License, or (at your option) any later version.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+
 GNU Lesser General Public License for more details.
+
 
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.

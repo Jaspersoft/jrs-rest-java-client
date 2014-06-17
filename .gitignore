@@ -1,0 +1,12 @@
+#IDEA
+.idea
+.svn
+*.iml
+target/
+libs/
+out/
+
+*.class
+
+# Package Files #
+*.jar
