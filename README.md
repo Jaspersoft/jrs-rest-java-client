@@ -97,7 +97,7 @@ Table of Contents
 
 Introduction
 -------------
-With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests. To use library in your maven-based application you need just to specify dependency and repository which are given below or download jar file manually from 
+With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests. To use library in your maven-based application you need just to specify dependency and repository which are given below or download jar file manually from
 ```
 http://jaspersoft.artifactoryonline.com/jaspersoft/repo/com/jaspersoft/jrs-rest-java-client/{version}/jrs-rest-java-client-{version}.jar
 ```
@@ -106,7 +106,7 @@ Configuration
 -------------
 To start working with the library you should firstly configure one ore more instances of `JasperserverRestClient`.
 To do this you should create instance of `RestClientConfiguration`. It can be done in two ways:
-####Loading configuration from file: 
+####Loading configuration from file:
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
 ```
@@ -116,11 +116,11 @@ File should contain only URL which is entry point to your server's REST services
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
 ```
 ####HTTPS configuration
-<strong>To use HTTPS you need:</strong>  
-1. Configure your server to support HTTPS  
-2. Download [InstallCert](http://miteff.com/files/InstallCert-bin.zip) util and follow  [InstallCert-Guide](http://www.mkyong.com/webservices/jax-ws/suncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target/) instructions.  
-3. Set HTTPS as your protocol in server URL, e.g. `https://localhost:8443/jasperserver`  
-4. Configure trusted certificates if needed  
+<strong>To use HTTPS you need:</strong>
+1. Configure your server to support HTTPS
+2. Download [InstallCert](http://miteff.com/files/InstallCert-bin.zip) util and follow  [InstallCert-Guide](http://www.mkyong.com/webservices/jax-ws/suncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target/) instructions.
+3. Set HTTPS as your protocol in server URL, e.g. `https://localhost:8443/jasperserver`
+4. Configure trusted certificates if needed
 
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("https://localhost:8443/jasperserver");
@@ -181,7 +181,7 @@ request
         .setAsync(true)                         //this means that report will be run on server asynchronously
         .setOutputFormat("html");               //report can be requested in different formats e.g. html, pdf, etc.
 
-OperationResult<ReportExecutionDescriptor> operationResult =        
+OperationResult<ReportExecutionDescriptor> operationResult =
         session                                 //pay attention to this, all requests are in the same session!!!
                 .reportingService()
                 .newReportExecutionRequest(request);
@@ -238,7 +238,7 @@ for(AttachmentDescriptor attDescriptor : htmlExportDescriptor.getAttachments()){
                     .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
                     .export(htmlExportDescriptor.getId())
                     .attachment(attDescriptor.getFileName());
-    
+
     InputStream file = operationResult.getEntity();
     //doing something with file
 }
@@ -297,7 +297,7 @@ OperationResult<ReportExecutionStatusEntity> operationResult1 =
 ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
 ```
 ###Report Parameters services:
-The reports service includes methods for reading and setting report parameters. 
+The reports service includes methods for reading and setting report parameters.
 ####Listing Report Parameters Structure
 The following code returns a description of the structure of the report parameters for a given report.
 ```java
@@ -309,7 +309,7 @@ ReportInputControlsListWrapper inputControls =
                 .get()
                 .getEntity();
 ```
-The response contains the structure of the report parameters for the report. It contains the information needed by your application to display the report parameters to your users and allow them to make a selection. In particular, this includes any cascading structure as a set of dependencies between report parameters. Each report parameter also has a type that indicates how the user should be allowed to make a choice: bool, singleSelect, singleSelectRadio, multiSelectCheckbox, multiSelect, singleValue, singleValueText, singleValueNumber, singleValueDate, singleValueDatetime, singleValueTime.  
+The response contains the structure of the report parameters for the report. It contains the information needed by your application to display the report parameters to your users and allow them to make a selection. In particular, this includes any cascading structure as a set of dependencies between report parameters. Each report parameter also has a type that indicates how the user should be allowed to make a choice: bool, singleSelect, singleSelectRadio, multiSelectCheckbox, multiSelect, singleValue, singleValueText, singleValueNumber, singleValueDate, singleValueDatetime, singleValueTime.
 The structure includes a set of validation rules for each report parameter. These rules indicate what type of validation your client should perform on report parameter values it receives from your users, and if the validation fails, the message to display. Depending on the type of the report parameter, the following validations are possible:
 * mandatoryValidationRule – This input is required and your client should ensure the user enters a value.
 * dateTimeFormatValidation – This input must have a data time format and your client should ensure the user enters a valid date and time.
@@ -326,7 +326,7 @@ InputControlStateListWrapper inputControlsValues =
                 .get()
                 .getEntity();
 ```
-The response contains the structure of the report parameters for the report.   
+The response contains the structure of the report parameters for the report.
 If a selection-type report parameter has a null value, it is given as `~NULL~`. If no selection is made, its value is given as `~NOTHING~`.
 ####Setting Report Parameter Values
 The following code updates the state of current report parameter values, so they are set for the next run of the report.
@@ -341,21 +341,17 @@ InputControlStateListWrapper inputControlsValues =
                 .update()
                 .getEntity();
 ```
-
 ####QueryExecutor Service
-In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service. 
+In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
 For now the only resource that supports queries is a Domain.
 
 The following code executes query and retrieves a result of execution as QueryResult entity.
 ```java
-QueryResult newQueryResult = session.queryExecutorService().
-        addResourceUri("/organizations/organization_1/Domains/Simple_Domain").
-        addQuery(testQuery).
-        buildQueryAdapter().
-        retrieveQueryResult().
-        getEntity();
+QueryResult queryResult = session.queryExecutorService()
+        .query(queryFromXmlFile, "/organizations/organization_1/Domains/Simple_Domain")
+        .execute()
+        .getEntity();
 ```
-
 Administration services:
 ========================
 Only administrative users may access the REST services for administration.
@@ -391,7 +387,7 @@ OperationResult<Organization> result = session
         .organizations()
         .create(organization);
 ```
-The descriptor sent in the request should contain all the properties you want to set on the new organization. Specify the `parentId` value to set the parent of the organization, not the `tenantUri` or `tenantFolderUri` properties.  
+The descriptor sent in the request should contain all the properties you want to set on the new organization. Specify the `parentId` value to set the parent of the organization, not the `tenantUri` or `tenantFolderUri` properties.
 However, all properties have defaults or can be determined based on the alias value. The minimal descriptor necessary to create an organization is simply the alias property. In this case, the organization is created as child of the logged-in user’s home organization.
 ####Modifying Organization Properties
 To modify the properties of an organization, use the `update` method and specify the organization ID in the URL. The request must include an organization descriptor with the values you want to change. You cannot change the ID of an organization, only its name (used for display) and its alias (used for logging in).
@@ -412,8 +408,8 @@ OperationResult result = session
         .organization("myOrg1")
         .delete();
 ```
-  
-  
+
+
 ######Each of administration services can work both with enabled and disabled multitenancy mode.
 ```java
 //with multitenancy
@@ -422,7 +418,7 @@ client
         .usersService()
         .organization("myOrg1")
         ....
-//without multitenancy        
+//without multitenancy
 client
         .authenticate("jasperadmin", "jasperadmin")
         .usersService()
@@ -475,8 +471,8 @@ client
     .usersService()
     .username(user.getUsername())
     .createOrUpdate(user);
-    
-//Granting new user with admin role    
+
+//Granting new user with admin role
 ClientRole role = client
         .authenticate("jasperadmin", "jasperadmin")
         .rolesService()
@@ -728,7 +724,7 @@ There are two operations on file resources:
 * Viewing the file resource details to determine the file format
 * Downloading the binary file contents
 
-To view the file resource details, specify the URL of the file in `resource()` method and use the code form [Viewing Resource Details](https://github.com/boryskolesnykov/jasperserver-rest-client/edit/master/README.md#viewing-resource-details) section.  
+To view the file resource details, specify the URL of the file in `resource()` method and use the code form [Viewing Resource Details](https://github.com/boryskolesnykov/jasperserver-rest-client/edit/master/README.md#viewing-resource-details) section.
 To download file binary content, specify the URL of the file in `resource()` method and use the code below
 ```java
 OperationResult<InputStream> result = client
@@ -766,7 +762,7 @@ OperationResult<ClientResource> result = client
         .createNew(folder);
 ```
 ####Modifying a Resource
-Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual fields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.  
+Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual fields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.
 The `patchResource()` method updates individual descriptor fields on the target resource. It also accept expressions that modify the descriptor in the Spring Expression Language. This expression language lets you easily modify the structure and values of descriptors.
 ```java
 PatchDescriptor patchDescriptor = new PatchDescriptor();
@@ -827,12 +823,12 @@ OperationResult result = client
         .delete();
 ```
 ###The Permissions Service
-In the permissions service, the syntax is expanded so that you can specify the resource, the recipient (user name or role name) and the permission value within the URL. This makes it simpler to set permissions because you don’t need to send a resource descriptor to describe the permissions. In order to set, modify, or delete permissions, you must use credentials or login with a user that has “administer” permissions on the target resource.  
-Because a permission can apply to either a user or a role, the permissions service uses the concept of a “recipient”. A recipient specifies whether the permission applies to a user or a role, and gives the ID of the user or role.  
+In the permissions service, the syntax is expanded so that you can specify the resource, the recipient (user name or role name) and the permission value within the URL. This makes it simpler to set permissions because you don’t need to send a resource descriptor to describe the permissions. In order to set, modify, or delete permissions, you must use credentials or login with a user that has “administer” permissions on the target resource.
+Because a permission can apply to either a user or a role, the permissions service uses the concept of a “recipient”. A recipient specifies whether the permission applies to a user or a role, and gives the ID of the user or role.
 There are two qualities of a permission:
 * The assigned permission is one that is set explicitly for a given resource and a given user or role. Not all permissions are assigned, in which case the permission is inherited from the parent folder.
 * The effective permission is the permission that is being enforced, whether it is assigned or inherited.
- 
+
 ####Viewing Multiple Permissions
 
 ```java
@@ -946,7 +942,7 @@ The `search()` method is used for more advanced job searches. Some field of the 
 ```java
 Job criteria = new Job);
 criteria.setLabel("updatedLabel");
-criteria.setAlert(new JobAlert());        
+criteria.setAlert(new JobAlert());
 
 OperationResult<JobSummaryListWrapper> result = client
         .authenticate("jasperadmin", "jasperadmin")
@@ -1171,7 +1167,6 @@ OperationResult<StateDto> operationResult =
 
 StateDto state = operationResult.getEntity();
 ```
-
 ####DomainMetadata Service
 
 The DomainMetadata Service gives access to the sets and items exposed by a Domain for use in Ad
@@ -1185,14 +1180,11 @@ Domain. Fields that belong to tables that are not joined in the Domain belong to
 
 The following code retrieves metadata of Domain.
 ```java
-OperationResult<DomainMetaData> result = session.domainService().
-        addDomainUri("/Foodmart_Sales").
-        buildDomainMetadataAdapter().
-        retrieveDomainMetaData();
-  
-DomainMetaData domainMetaData = result.getEntity();
+DomainMetaData domainMetaData = session.domainService()
+        .domainMetadata("/Foodmart_Sales")
+        .retrieve()
+        .getEntity();
 ```
-
 REST Server Information
 ========================
 Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
@@ -1209,7 +1201,7 @@ You can access each value separately with the following code:
 ```java
 OperationResult<String> result = client
         .authenticate("jasperadmin", "jasperadmin")
-        .serverInfoService() 
+        .serverInfoService()
         .edition();
         //.version();
         //.licenseType();
@@ -1224,7 +1216,7 @@ String edition = result.getEntity();
 ```
 
 ###Exception handling
-You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method. 
+You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method.
 
 JRS REST client exception handling system is based on `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` interface. Its `void handleError(Response response)` method is responsible for all error handling logic. You can use existed handlers, define your own handlers or extend existed handlers.
 
@@ -1248,7 +1240,7 @@ RequestExecution requestExecution = session
                 System.out.println(data.getEntity());
             }
         });
-        
+
         requestExecution.cancel();
 ```
 
@@ -1279,7 +1271,7 @@ RestClientConfiguration configuration = RestClientConfiguration.loadConfiguratio
 ```
 
 ###Possible issues
-1. <strong>Deploying jrs-rest-client within web app to any Appplication Server, e.g. JBoss, Glassfish, WebSphere etc.</strong>  
+1. <strong>Deploying jrs-rest-client within web app to any Appplication Server, e.g. JBoss, Glassfish, WebSphere etc.</strong>
 jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your application server does not support this version you will get an error. To solve this problem you need to add to your application a deployment configuration specific for your AS where you need to exclude modules with old JAX-RS API version. Example of such descriptor for JBoss AS you can find below:
 
 ```xml
@@ -1322,6 +1314,10 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
     <repositories>
 
         <repository>
+            <id>jaspersoft-clients-snapshots</id>
+            <name>Jaspersoft clients snapshots</name>
+            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jaspersoft-clients-snapshots</url>
+        </repository>
 
     </repositories>
 ```
@@ -1335,7 +1331,6 @@ Unless you have purchased a commercial license agreement from Jaspersoft,
 the following license terms apply:
 
 This program is free software: you can redistribute it and/or modify
-
 it under the terms of the GNU Lesser General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
@@ -1343,10 +1338,7 @@ License, or (at your option) any later version.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-
 GNU Lesser General Public License for more details.
-
 
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
-

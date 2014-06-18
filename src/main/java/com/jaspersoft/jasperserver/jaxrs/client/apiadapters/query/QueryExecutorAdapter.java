@@ -22,6 +22,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -35,13 +36,11 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.query.QueryResult;
  * @author Krasnyanksiy.Alexander
  */
 public class QueryExecutorAdapter extends AbstractAdapter {
-    private final SessionStorage sessionStorage;
     private final StringBuilder uri;
     private final Query query;
 
-    public QueryExecutorAdapter(SessionStorage sessionStorage, String uri, Query query) {
+    public QueryExecutorAdapter(SessionStorage sessionStorage, Query query, String uri) {
         super(sessionStorage);
-        this.sessionStorage = sessionStorage;
         this.uri = new StringBuilder(uri);
         this.query = query;
     }
@@ -62,9 +61,26 @@ public class QueryExecutorAdapter extends AbstractAdapter {
         );
     }
 
-    public OperationResult<QueryResult> retrieveQueryResult() {
+    /**
+     * The contentType parameter must be "application/xml" only according to
+     * JasperReports Server Web Services Guide (3.6 The v2/queryExecutor Service).
+     *
+     * @return OperationResult
+     */
+    public OperationResult<QueryResult> execute() {
         JerseyRequest<QueryResult> req = buildRequest();
-        req.setContentType("application/xml").setAccept("application/xml");
+
+        /**
+         * For now JSON format is unsupported on v2/queryExecutor Service as ContentType
+         * therefore ContentType was hardcoded to XML.
+         */
+        req.setContentType("application/xml");
+
+        // Just uncomment code below when JSON ContentType will be available on v2/queryExecutor Service
+        // request handler.
+
+        //String contentType = MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/{mime}");
+
         return req.post(query);
     }
 }

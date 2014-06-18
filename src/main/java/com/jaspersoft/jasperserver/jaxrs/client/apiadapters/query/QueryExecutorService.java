@@ -27,29 +27,16 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
 /**
  * Part of the Report Services API. Exposes queries that you can run on the
  * client side.
- *
- * @author Krasnyanksiy.Alexander
  */
 public class QueryExecutorService extends AbstractAdapter {
-
-    private String resourceURI;
-    private Query query;
 
     public QueryExecutorService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
-    public QueryExecutorService addResourceUri(String resourceURI) {
-        this.resourceURI = resourceURI;
-        return this;
-    }
-
-    public QueryExecutorService addQuery(Query query) {
-        this.query = query;
-        return this;
-    }
-
-    public QueryExecutorAdapter buildQueryAdapter() {
-        return new QueryExecutorAdapter(sessionStorage, resourceURI, query);
+    // to pass 'resourceURI' param use a simple string with first slash (e.g. '/PathToResource'
+    // but not 'PathToResource' or 'PathToResource/')
+    public QueryExecutorAdapter query(Query query, String resourceURI) {
+        return new QueryExecutorAdapter(sessionStorage, query, resourceURI);
     }
 }
