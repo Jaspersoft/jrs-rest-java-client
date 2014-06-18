@@ -61,12 +61,6 @@ public class QueryExecutorAdapter extends AbstractAdapter {
         );
     }
 
-    /**
-     * The contentType parameter must be "application/xml" only according to
-     * JasperReports Server Web Services Guide (3.6 The v2/queryExecutor Service).
-     *
-     * @return OperationResult
-     */
     public OperationResult<QueryResult> execute() {
         JerseyRequest<QueryResult> req = buildRequest();
 

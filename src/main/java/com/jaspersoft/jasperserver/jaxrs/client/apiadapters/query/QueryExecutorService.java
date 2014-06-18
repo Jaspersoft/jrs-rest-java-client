@@ -34,8 +34,10 @@ public class QueryExecutorService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    // to pass 'resourceURI' param use a simple string with first slash (e.g. '/PathToResource'
-    // but not 'PathToResource' or 'PathToResource/')
+    /**
+     * to pass 'resourceURI' param use a simple string with first slash (e.g. '/PathToResource'
+     * but not 'PathToResource' or 'PathToResource/')
+     */
     public QueryExecutorAdapter query(Query query, String resourceURI) {
         return new QueryExecutorAdapter(sessionStorage, query, resourceURI);
     }

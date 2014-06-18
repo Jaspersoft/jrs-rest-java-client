@@ -58,7 +58,7 @@ public class DomainMetadataAdapter extends AbstractAdapter {
         );
     }
 
-    public OperationResult<DomainMetaData> retrieveDomainMetaData() {
+    public OperationResult<DomainMetaData> retrieve() {
         return buildRequest().get();
     }
 }
