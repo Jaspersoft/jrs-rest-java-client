@@ -2,6 +2,9 @@
 ----------------------
 ###Features
 * Automatical password encryption (if encryption is on)
+* Added ability to get report in HTML format with all its attachments in one call.
+* Added builder for `ReportExecutionRequest`.
+* Added utils to work with input controls.
 
 ###Bug fixes
 * Java 6 compatibility
