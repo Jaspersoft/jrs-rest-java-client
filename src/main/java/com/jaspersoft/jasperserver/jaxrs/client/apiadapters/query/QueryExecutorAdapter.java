@@ -71,12 +71,13 @@ public class QueryExecutorAdapter extends AbstractAdapter {
         JerseyRequest<QueryResult> req = buildRequest();
 
         /**
-         * For now JSON format is unsupported on the server side as ContentType therefore ContentType was
-         * hardcoded to XML.
+         * For now JSON format is unsupported on v2/queryExecutor Service as ContentType
+         * therefore ContentType was hardcoded to XML.
          */
         req.setContentType("application/xml");
 
-        // Just uncomment code below when JSON ContentType will be available on server side request handler
+        // Just uncomment code below when JSON ContentType will be available on v2/queryExecutor Service
+        // request handler.
         /*
         String contentType = MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/{mime}");
         if (contentType.equals("application/json")) {
