@@ -67,7 +67,7 @@ public class QueryExecutorAdapter extends AbstractAdapter {
      *
      * @return OperationResult
      */
-    public OperationResult<QueryResult> retrieve() {
+    public OperationResult<QueryResult> execute() {
         JerseyRequest<QueryResult> req = buildRequest();
 
         /**
@@ -78,13 +78,8 @@ public class QueryExecutorAdapter extends AbstractAdapter {
 
         // Just uncomment code below when JSON ContentType will be available on v2/queryExecutor Service
         // request handler.
-        /*
-        String contentType = MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/{mime}");
-        if (contentType.equals("application/json")) {
-            throw new UnsupportedContentTypeException("ContentType 'application/json' is unsupported so far! " +
-                    "Please use 'application/xml' for QueryExecutorService");
-        }
-        */
+
+        //String contentType = MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/{mime}");
 
         return req.post(query);
     }
