@@ -77,7 +77,6 @@ public class QueryExecutorAdapter extends AbstractAdapter {
         req.setContentType("application/xml");
 
         // Just uncomment code below when JSON ContentType will be available on server side request handler
-
         /*String contentType = MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/{mime}");
         if (contentType.equals("application/json")) {
             throw new UnsupportedContentTypeException("ContentType 'application/json' is unsupported so far! " +
