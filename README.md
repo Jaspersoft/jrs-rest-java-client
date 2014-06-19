@@ -86,14 +86,16 @@ Table of Contents
     * [Fetching the Export Output](#fetching-the-export-output).
   2. [Import service](#import-service).
     * [Checking the Import State](#checking-the-import-state).
-11. [REST Server Information](#rest-server-information).
-12. [Exception handling](#exception-handling).
-13. [Asynchronous API](#asynchronous-api).
-14. [Getting serialized content from response](#getting-serialized-content-from-response).
-15. [Switching between JSON and XML](#switching-between-json-and-xml).
-16. [Possible issues](#possible-issues).
-17. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-18. [License](#license).
+11. [Domain metadata service](#domainmetadata-service).
+12. [Query executor service](#queryexecutor-service)
+13. [REST Server Information](#rest-server-information).
+14. [Exception handling](#exception-handling).
+15. [Asynchronous API](#asynchronous-api).
+16. [Getting serialized content from response](#getting-serialized-content-from-response).
+17. [Switching between JSON and XML](#switching-between-json-and-xml).
+18. [Possible issues](#possible-issues).
+19. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+20. [License](#license).
 
 Introduction
 -------------
@@ -340,17 +342,6 @@ InputControlStateListWrapper inputControlsValues =
                 .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
                 .update()
                 .getEntity();
-```
-####QueryExecutor Service
-In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
-For now the only resource that supports queries is a Domain.
-
-The following code executes query and retrieves a result of execution as QueryResult entity.
-```java
-QueryResult queryResult = session.queryExecutorService()
-        .query(queryFromXmlFile, "/organizations/organization_1/Domains/Simple_Domain")
-        .execute()
-        .getEntity();
 ```
 Administration services:
 ========================
@@ -1167,8 +1158,8 @@ OperationResult<StateDto> operationResult =
 
 StateDto state = operationResult.getEntity();
 ```
-####DomainMetadata Service
 
+####DomainMetadata Service
 The DomainMetadata Service gives access to the sets and items exposed by a Domain for use in Ad
 Hoc reports. Items are database fields exposed by the Domain, after all joins, filters, and calculated fields have
 been applied to the database tables selected in the Domain. Sets are groups of items, arranged by the Domain
@@ -1185,6 +1176,19 @@ DomainMetaData domainMetaData = session.domainService()
         .retrieve()
         .getEntity();
 ```
+
+####QueryExecutor Service
+In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
+For now the only resource that supports queries is a Domain.
+
+The following code executes query and retrieves a result of execution as QueryResult entity.
+```java
+QueryResult queryResult = session.queryExecutorService()
+        .query(queryFromXmlFile, "/organizations/organization_1/Domains/Simple_Domain")
+        .execute()
+        .getEntity();
+```
+
 REST Server Information
 ========================
 Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
