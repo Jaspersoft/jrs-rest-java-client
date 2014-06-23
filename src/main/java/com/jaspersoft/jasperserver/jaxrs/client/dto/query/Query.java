@@ -23,15 +23,17 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.query;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author Krasnyanksiy.Alexander
+ * @author Alexander Krasnyanskiy
  */
 @XmlRootElement(name = "query")
 public class Query {
 
-    List<QueryField> queryFields;
+    protected List<QueryField> queryFields;
 
     @XmlElementWrapper(name = "queryFields")
     @XmlElement(name = "queryField")

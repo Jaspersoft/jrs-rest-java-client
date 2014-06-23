@@ -30,35 +30,22 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
 /**
  * This class is used for retrieving a DomainMetaData entity.
  *
- * @author Krasnyanksiy.Alexander
+ * @author Alexander Krasnyanskiy
  */
 public class DomainMetadataAdapter extends AbstractAdapter {
-    private final SessionStorage sessionStorage;
-    private final StringBuilder uri;
+    private final StringBuilder domainURI;
 
     public DomainMetadataAdapter(SessionStorage sessionStorage, String domainURI) {
         super(sessionStorage);
-        this.sessionStorage = sessionStorage;
-        this.uri = new StringBuilder(domainURI);
-    }
-
-    /**
-     * Support method for building Jersey request
-     *
-     * @return JerseyRequest instance
-     */
-    private JerseyRequest<DomainMetaData> buildRequest() {
-        return JerseyRequest.buildRequest(
-                sessionStorage,
-                DomainMetaData.class,
-                new String[]{
-                        uri.insert(0, "/domains").append("/metadata").toString()
-                },
-                new DefaultErrorHandler()
-        );
+        this.domainURI = new StringBuilder(domainURI);
     }
 
     public OperationResult<DomainMetaData> retrieve() {
-        return buildRequest().get();
+        return JerseyRequest.buildRequest(
+                sessionStorage,
+                DomainMetaData.class,
+                new String[]{domainURI.insert(0, "/domains").append("/metadata").toString()},
+                new DefaultErrorHandler())
+                .get();
     }
 }
