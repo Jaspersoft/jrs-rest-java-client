@@ -24,9 +24,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 /**
- * Wrapper class for DomainMetadata adapter
+ * Factory class for DomainMetadata adapter
  *
- * @author Krasnyanskiy.Alexander
+ * @author Alexander Krasnyanskiy
  */
 public class DomainMetadataService extends AbstractAdapter {
 
@@ -34,8 +34,10 @@ public class DomainMetadataService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    // to pass 'domainURI' param use a simple string with first slash (e.g. '/PathToDomain'
-    // but not 'PathToDomain' or 'PathToDomain/')
+    /**
+     * to pass 'domainURI' param use a simple string with first slash (e.g. '/PathToDomain'
+     * but not 'PathToDomain' or 'PathToDomain/')
+     */
     public DomainMetadataAdapter domainMetadata(String domainURI) {
         return new DomainMetadataAdapter(sessionStorage, domainURI);
     }

@@ -22,7 +22,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -33,48 +32,31 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.query.QueryResult;
  * This class is used for executing queries and retrieving a result of execution
  * as QueryResult entity.
  *
- * @author Krasnyanksiy.Alexander
+ * @author Alexander Krasnyanskiy
  */
 public class QueryExecutorAdapter extends AbstractAdapter {
-    private final StringBuilder uri;
+    private final StringBuilder resourceUri;
     private final Query query;
 
-    public QueryExecutorAdapter(SessionStorage sessionStorage, Query query, String uri) {
+    public QueryExecutorAdapter(SessionStorage sessionStorage, Query query, String resourceUri) {
         super(sessionStorage);
-        this.uri = new StringBuilder(uri);
+        this.resourceUri = new StringBuilder(resourceUri);
         this.query = query;
     }
 
-    /**
-     * Support method for building Jersey request
-     *
-     * @return JerseyRequest instance
-     */
-    private JerseyRequest<QueryResult> buildRequest() {
-        return JerseyRequest.buildRequest(
+    public OperationResult<QueryResult> execute() {
+        JerseyRequest<QueryResult> req = JerseyRequest.buildRequest(
                 sessionStorage,
                 QueryResult.class,
-                new String[]{
-                        uri.insert(0, "/queryExecutor").toString()
-                },
+                new String[]{resourceUri.insert(0, "/queryExecutor").toString()},
                 new DefaultErrorHandler()
         );
-    }
-
-    public OperationResult<QueryResult> execute() {
-        JerseyRequest<QueryResult> req = buildRequest();
 
         /**
          * For now JSON format is unsupported on v2/queryExecutor Service as ContentType
          * therefore ContentType was hardcoded to XML.
          */
         req.setContentType("application/xml");
-
-        // Just uncomment code below when JSON ContentType will be available on v2/queryExecutor Service
-        // request handler.
-
-        //String contentType = MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/{mime}");
-
         return req.post(query);
     }
 }

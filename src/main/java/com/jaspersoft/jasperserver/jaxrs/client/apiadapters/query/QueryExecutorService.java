@@ -27,6 +27,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
 /**
  * Part of the Report Services API. Exposes queries that you can run on the
  * client side.
+ *
+ * @author Alexander Krasnyanskiy
  */
 public class QueryExecutorService extends AbstractAdapter {
 
