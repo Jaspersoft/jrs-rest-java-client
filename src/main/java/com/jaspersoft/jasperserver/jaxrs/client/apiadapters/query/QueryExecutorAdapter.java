@@ -22,6 +22,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -35,12 +36,12 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.query.QueryResult;
  * @author Alexander Krasnyanskiy
  */
 public class QueryExecutorAdapter extends AbstractAdapter {
-    private final StringBuilder resourceUri;
+    private final String resourceUri;
     private final Query query;
 
     public QueryExecutorAdapter(SessionStorage sessionStorage, Query query, String resourceUri) {
         super(sessionStorage);
-        this.resourceUri = new StringBuilder(resourceUri);
+        this.resourceUri = resourceUri;
         this.query = query;
     }
 
@@ -48,15 +49,22 @@ public class QueryExecutorAdapter extends AbstractAdapter {
         JerseyRequest<QueryResult> req = JerseyRequest.buildRequest(
                 sessionStorage,
                 QueryResult.class,
-                new String[]{resourceUri.insert(0, "/queryExecutor").toString()},
+                new String[]{new StringBuilder(resourceUri).insert(0, "/queryExecutor").toString()},
                 new DefaultErrorHandler()
         );
 
         /**
          * For now JSON format is unsupported on v2/queryExecutor Service as ContentType
-         * therefore ContentType was hardcoded to XML.
+         * therefore ContentType was hardcoded to XML
          */
         req.setContentType("application/xml");
         return req.post(query);
+    }
+
+    /**
+     * this getter is used for Unit Testing needs only
+     */
+    public String getResourceUri() {
+        return resourceUri;
     }
 }

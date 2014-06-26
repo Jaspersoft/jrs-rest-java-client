@@ -33,19 +33,26 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
  * @author Alexander Krasnyanskiy
  */
 public class DomainMetadataAdapter extends AbstractAdapter {
-    private final StringBuilder domainURI;
+    private final String domainURI;
 
     public DomainMetadataAdapter(SessionStorage sessionStorage, String domainURI) {
         super(sessionStorage);
-        this.domainURI = new StringBuilder(domainURI);
+        this.domainURI = domainURI;
     }
 
     public OperationResult<DomainMetaData> retrieve() {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 DomainMetaData.class,
-                new String[]{domainURI.insert(0, "/domains").append("/metadata").toString()},
-                new DefaultErrorHandler())
-                .get();
+                new String[]{new StringBuilder(domainURI).insert(0, "/domains").append("/metadata").toString()},
+                new DefaultErrorHandler()
+        ).get();
+    }
+
+    /**
+     * this getter is using for Unit testing needs only
+     */
+    public String getDomainURI() {
+        return domainURI;
     }
 }

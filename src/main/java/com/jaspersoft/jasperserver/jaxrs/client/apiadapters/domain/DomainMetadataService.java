@@ -35,7 +35,7 @@ public class DomainMetadataService extends AbstractAdapter {
     }
 
     /**
-     * to pass 'domainURI' param use a simple string with first slash (e.g. '/PathToDomain'
+     * To pass 'domainURI' param use a simple string with first slash (e.g. '/PathToDomain'
      * but not 'PathToDomain' or 'PathToDomain/')
      */
     public DomainMetadataAdapter domainMetadata(String domainURI) {

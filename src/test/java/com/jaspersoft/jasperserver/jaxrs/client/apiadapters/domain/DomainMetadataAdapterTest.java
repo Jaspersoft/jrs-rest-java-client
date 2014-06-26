@@ -1,59 +1,78 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
 import org.mockito.Mock;
-import org.testng.Assert;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.testng.PowerMockObjectFactory;
+import org.powermock.modules.testng.PowerMockTestCase;
+import org.testng.IObjectFactory;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.ObjectFactory;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.reset;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.*;
+import static org.testng.Assert.assertEquals;
 
-public class DomainMetadataAdapterTest extends Assert {
-
-    @Mock
-    private DomainMetadataAdapter adapterMock;
-
-    @Mock
-    private OperationResult<DomainMetaData> expected;
+@PrepareForTest(JerseyRequest.class)
+public class DomainMetadataAdapterTest extends PowerMockTestCase {
 
     @Mock
-    private SessionStorage storageMock;
+    private SessionStorage sessionStorageMock;
 
     @Mock
-    private DomainMetaData entityMock;
+    private JerseyRequest<DomainMetaData> jerseyRequestMock;
+
+    @Mock
+    private OperationResult<DomainMetaData> operationResultMock;
+
+    private final String VALID_URI_FAKE = "very/valid/path/to/domain";
+    private DomainMetadataAdapter domainMetadataAdapter;
 
     @BeforeMethod
-    public void setUp() {
+    public void setUp() throws Exception {
         initMocks(this);
+        domainMetadataAdapter = new DomainMetadataAdapter(sessionStorageMock, VALID_URI_FAKE);
     }
 
     @Test
-    public void should_return_operation_result() {
-        when(adapterMock.retrieve()).thenReturn(expected);
-        assertEquals(expected, adapterMock.retrieve());
+    public void should_pass_not_null_SessionStorage__and_domainUri_to_super_class_without_any_changes() {
+        assertEquals(sessionStorageMock, domainMetadataAdapter.getSessionStorage());
+        assertEquals(VALID_URI_FAKE, domainMetadataAdapter.getDomainURI());
     }
 
     @Test
-    public void should_pass_not_null_session_storage_to_super_class_without_any_changes() {
-        final String fakeValidUri = "very/valid/path/to/domain";
-        final DomainMetadataAdapter adapterSpy = spy(new DomainMetadataAdapter(storageMock, fakeValidUri));
+    public void should_return_proper_OperationResult_object() {
+        mockStatic(JerseyRequest.class);
 
-        assertNotNull(adapterSpy.getSessionStorage());
-        assertEquals(storageMock, adapterSpy.getSessionStorage());
-        verify(adapterSpy, times(2)).getSessionStorage();
+        when(JerseyRequest.buildRequest(
+                any(SessionStorage.class),
+                any(Class.class),
+                any(String[].class),
+                any(ErrorHandler.class)
+        )).thenReturn(jerseyRequestMock);
+
+        doReturn(operationResultMock)
+                .when(jerseyRequestMock)
+                .get();
+
+        assertEquals(operationResultMock, domainMetadataAdapter.retrieve());
     }
 
-    /**
-     * this test is actually checks if the OperationResult is valid
-     * (this means that OperationResult contains a correct entity)
-     */
-    @Test
-    public void should_return_dto_object_from_operation_result() {
-        when(adapterMock.retrieve()).thenReturn(expected);
-        when(expected.getEntity()).thenReturn(entityMock);
-        assertEquals(entityMock, adapterMock.retrieve().getEntity());
+    @AfterMethod
+    public void tearDown() throws Exception {
+        reset(sessionStorageMock, jerseyRequestMock, operationResultMock);
+    }
+
+    @ObjectFactory
+    public IObjectFactory getObjectFactory() {
+        return new PowerMockObjectFactory();
     }
 }
