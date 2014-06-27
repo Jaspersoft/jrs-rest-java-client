@@ -34,6 +34,8 @@ public class ExportExecutionOptions {
     private String outputFormat;
     private String attachmentsPrefix;
     private String pages;
+    private String baseUrl;
+    private boolean allowInlineScripts = true;
 
     public ExportExecutionOptions setPages(String pages) {
         this.pages = pages;
@@ -61,6 +63,22 @@ public class ExportExecutionOptions {
     public ExportExecutionOptions setOutputFormat(String outputFormat) {
         this.outputFormat = outputFormat;
         return this;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    public boolean isAllowInlineScripts() {
+        return allowInlineScripts;
+    }
+
+    public void setAllowInlineScripts(boolean allowInlineScripts) {
+        this.allowInlineScripts = allowInlineScripts;
     }
 
     @Override
