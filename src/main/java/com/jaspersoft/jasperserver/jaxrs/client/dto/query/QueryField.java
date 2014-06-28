@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
 /**
- * @author Krasnyanksiy.Alexander
+ * @author Alexander Krasnyanskiy
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class QueryField {
@@ -34,6 +34,10 @@ public class QueryField {
     private String id;
 
     public QueryField() {
+    }
+
+    public QueryField(String id) {
+        this.id = id;
     }
 
     public String getId() {
