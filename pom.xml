@@ -17,19 +17,16 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>com.jaspersoft.jasperserver</groupId>
             <artifactId>jasperserver-dto</artifactId>
             <version>5.6.0-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
             <version>2.5</version>
         </dependency>
-
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-json</artifactId>
@@ -45,19 +42,16 @@
             <artifactId>jersey-media-json-jackson</artifactId>
             <version>2.5.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
             <version>1.50</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
         </dependency>
-
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-testng</artifactId>
@@ -70,11 +64,11 @@
             <version>${powermock.version}</version>
         </dependency>
         <!--to delete easymock-->
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-easymock-release-full</artifactId>
-            <version>${powermock.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.powermock</groupId>-->
+            <!--<artifactId>powermock-easymock-release-full</artifactId>-->
+            <!--<version>${powermock.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
@@ -82,27 +76,22 @@
         </dependency>
     </dependencies>
     <repositories>
-
         <repository>
             <id>jrs-ce-releases</id>
             <name>JasperReports Server CE releases repository</name>
             <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-releases/</url>
         </repository>
-
         <repository>
             <id>jrs-ce-snapshots</id>
             <name>JasperReports Server CE snapshots repository</name>
             <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-snapshots/</url>
         </repository>
-
     </repositories>
-
     <scm>
         <connection>scm:git:http://github.com/Jaspersoft/jrs-rest-java-client</connection>
         <developerConnection>scm:git:https://github.com/Jaspersoft/jrs-rest-java-client</developerConnection>
         <tag>HEAD</tag>
     </scm>
-
     <build>
         <plugins>
             <plugin>
@@ -118,7 +107,6 @@
             </plugin>
         </plugins>
     </build>
-
     <developers>
         <developer>
             <id>borys.kolesnykov</id>
@@ -130,6 +118,14 @@
             </roles>
             <timezone>+3</timezone>
         </developer>
+        <developer>
+            <id>Krasnyanskiy</id>
+            <name>Alexander Krasnyanskiy</name>
+            <email>krasnyanskiy.alex@gmail.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+3</timezone>
+        </developer>
     </developers>
-
 </project>

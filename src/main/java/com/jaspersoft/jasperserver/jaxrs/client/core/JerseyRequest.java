@@ -53,7 +53,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     }
 
     public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path, ErrorHandler errorHandler) {
-        JerseyRequest<T> request = new JerseyRequest<>(sessionStorage, responseClass);
+        JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, responseClass);
         if (errorHandler != null) {
             request.errorHandler = errorHandler;
         } else {

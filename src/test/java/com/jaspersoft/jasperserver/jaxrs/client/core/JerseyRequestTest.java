@@ -3,8 +3,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
+import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import com.sun.jersey.multipart.impl.MultiPartWriter;
 import org.glassfish.jersey.client.JerseyWebTarget;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -73,18 +76,16 @@ public class JerseyRequestTest extends PowerMockTestCase {
     public void setUp() throws Exception {
         initMocks(this);
 
-
-
         // General expectations setup
 
-//        whenNew(OperationResultFactoryImpl.class).withNoArguments().thenReturn(operationResultFactory);
-//        when(sessionStorage.getConfiguration()).thenReturn(clientConfiguration);
-//        when(clientConfiguration.getContentMimeType()).thenReturn(MimeType.JSON);
-//        when(sessionStorage.getRootTarget()).thenReturn(webTarget);
-//        when(webTarget.path(anyString())).thenReturn(webTarget);
-//        when(webTarget.register(CustomRepresentationTypeProvider.class)).thenReturn(webTarget);
-//        when(webTarget.register(JacksonFeature.class)).thenReturn(webTarget);
-//        when(webTarget.register(MultiPartWriter.class)).thenReturn(webTarget);
+        whenNew(OperationResultFactoryImpl.class).withNoArguments().thenReturn(operationResultFactory);
+        when(sessionStorage.getConfiguration()).thenReturn(clientConfiguration);
+        when(clientConfiguration.getContentMimeType()).thenReturn(MimeType.JSON);
+        when(sessionStorage.getRootTarget()).thenReturn(webTarget);
+        when(webTarget.path(Mockito.anyString())).thenReturn(webTarget);
+        when(webTarget.register(CustomRepresentationTypeProvider.class)).thenReturn(webTarget);
+        when(webTarget.register(JacksonFeature.class)).thenReturn(webTarget);
+        when(webTarget.register(MultiPartWriter.class)).thenReturn(webTarget);
     }
 
     /**
@@ -101,7 +102,7 @@ public class JerseyRequestTest extends PowerMockTestCase {
         JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath); // invocation ot outer method
 
         // Then
-        PowerMockito.verifyStatic(times(1)); // this verify invocation refers to the line below (4 params method)
+        PowerMockito.verifyStatic(times(1)); // this is verify invocation refers to the line below (4 params method)
         JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath, null);
     }
 
@@ -397,6 +398,7 @@ public class JerseyRequestTest extends PowerMockTestCase {
 
     @AfterMethod
     public void tearDown() {
-        reset(sessionStorage, dummyErrorHandler, expected, webTarget, clientConfiguration, operationResultFactory, dummyEntity);
+        reset(sessionStorage, dummyErrorHandler, expected, webTarget, clientConfiguration,
+                operationResultFactory, dummyEntity);
     }
 }
