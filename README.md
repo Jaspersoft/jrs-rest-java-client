@@ -1,4 +1,4 @@
-Jasperserver REST Client for Java https://travis-ci.org/Krasnyanskiy/jrs-rest-java-client.svg?branch=develop
+Jasperserver REST Client for Java [![Build Status](https://travis-ci.org/Krasnyanskiy/jrs-rest-java-client.svg?branch=develop)](https://travis-ci.org/Krasnyanskiy/jrs-rest-java-client)
 
 Table of Contents
 ------------------
