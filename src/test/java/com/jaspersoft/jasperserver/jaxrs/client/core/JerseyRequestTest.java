@@ -382,16 +382,17 @@ public class JerseyRequestTest extends PowerMockTestCase {
     @Test(testName = "setHeaders")
     public void should_set_headers_and_return_RequestBuilder_object() {
 
+        // Given
+        JerseyRequest<Class> expected = new JerseyRequest<Class>(sessionStorage, Class.class);
         MultivaluedMap<String, String> fakeParams = new MultivaluedMapImpl() {{
             add("key", "value");
         }};
 
-        // run
-        JerseyRequest<Class> expected = new JerseyRequest<Class>(sessionStorage, Class.class);
+        // When
         RequestBuilder<Class> retrieved = expected.setHeaders(fakeParams);
         MultivaluedMap<String, String> headersParam = ((JerseyRequest<Class>) retrieved).getHeaders();
 
-        // assertion and verification
+        // Than
         assertSame(expected, retrieved);
         assertEquals(headersParam, fakeParams);
     }
