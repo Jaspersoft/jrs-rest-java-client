@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.jaspersoft</groupId>
@@ -68,8 +69,18 @@
             <artifactId>powermock-api-mockito</artifactId>
             <version>${powermock.version}</version>
         </dependency>
+        <!--to delete easymock-->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-easymock-release-full</artifactId>
+            <version>${powermock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.2</version>
+        </dependency>
     </dependencies>
-
     <repositories>
 
         <repository>
@@ -99,7 +110,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.9</version>
                 <configuration>
-                    <skipTests>true</skipTests>
+                    <!--<skipTests>false</skipTests>-->
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/conf.xml</suiteXmlFile>
+                    </suiteXmlFiles>
                 </configuration>
             </plugin>
         </plugins>

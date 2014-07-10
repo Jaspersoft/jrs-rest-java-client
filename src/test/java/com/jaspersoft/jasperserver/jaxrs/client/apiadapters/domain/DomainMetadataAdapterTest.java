@@ -7,12 +7,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockObjectFactory;
 import org.powermock.modules.testng.PowerMockTestCase;
-import org.testng.IObjectFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.ObjectFactory;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.any;
@@ -21,6 +18,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.testng.Assert.assertEquals;
 
+/**
+* Unit tests for {@link DomainMetadataAdapterTest}.
+*/
 @PrepareForTest(JerseyRequest.class)
 public class DomainMetadataAdapterTest extends PowerMockTestCase {
 
@@ -69,10 +69,5 @@ public class DomainMetadataAdapterTest extends PowerMockTestCase {
     @AfterMethod
     public void tearDown() throws Exception {
         reset(sessionStorageMock, jerseyRequestMock, operationResultMock);
-    }
-
-    @ObjectFactory
-    public IObjectFactory getObjectFactory() {
-        return new PowerMockObjectFactory();
     }
 }

@@ -8,12 +8,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.query.QueryResult;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockObjectFactory;
 import org.powermock.modules.testng.PowerMockTestCase;
-import org.testng.IObjectFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.ObjectFactory;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.any;
@@ -24,6 +21,9 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertEquals;
 
+/**
+* Unit tests for {@link QueryExecutorAdapterTest}.
+*/
 @PrepareForTest(JerseyRequest.class)
 public class QueryExecutorAdapterTest extends PowerMockTestCase {
 
@@ -76,10 +76,5 @@ public class QueryExecutorAdapterTest extends PowerMockTestCase {
     @AfterMethod
     public void tearDown() throws Exception {
         reset(sessionStorageMock, jerseyRequestMock, operationResultMock, dummyQuery);
-    }
-
-    @ObjectFactory
-    public IObjectFactory getObjectFactory() {
-        return new PowerMockObjectFactory();
     }
 }

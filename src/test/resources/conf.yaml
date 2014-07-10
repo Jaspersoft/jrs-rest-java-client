@@ -1,0 +1,7 @@
+name: YAML Test suite
+parallel: classes
+threadCount: 10
+tests:
+  - name: Default tests
+    packages:
+      - com.jaspersoft.jasperserver.jaxrs.client.*

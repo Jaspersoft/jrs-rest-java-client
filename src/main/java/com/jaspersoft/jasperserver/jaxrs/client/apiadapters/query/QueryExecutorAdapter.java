@@ -62,7 +62,7 @@ public class QueryExecutorAdapter extends AbstractAdapter {
     }
 
     /**
-     * this getter is used for Unit Testing needs only
+     * This getter is used for Unit Testing needs only
      */
     public String getResourceUri() {
         return resourceUri;

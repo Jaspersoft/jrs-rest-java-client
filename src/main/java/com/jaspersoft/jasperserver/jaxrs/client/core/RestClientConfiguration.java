@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import org.apache.commons.logging.Log;
@@ -49,7 +48,7 @@ public class RestClientConfiguration {
     private String dateTimePattern = "yyyy-MM-dd HH:mm:ss";
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
-        this();
+        this(); // untestable invocation, but we can test behaviour of the class by observing changes in its state (trustManagers)
         setJasperReportsServerUrl(jasperReportsServerUrl);
     }
 
@@ -75,7 +74,7 @@ public class RestClientConfiguration {
         return jasperReportsServerUrl;
     }
 
-    public void setJasperReportsServerUrl(String jasperReportsServerUrl) {
+    public final void setJasperReportsServerUrl(String jasperReportsServerUrl) {
         Matcher matcher = URL_PATTERN.matcher(jasperReportsServerUrl);
         if (!matcher.matches())
             throw new IllegalArgumentException("Given parameter is not a URL");
@@ -153,12 +152,14 @@ public class RestClientConfiguration {
         configuration.setJasperReportsServerUrl(properties.getProperty("url"));
 
         String connectionTimeout = properties.getProperty("connectionTimeout");
-        if (connectionTimeout != null && !connectionTimeout.equals(""))
+        if (connectionTimeout != null && !connectionTimeout.equals("")) {
             configuration.setConnectionTimeout(Long.valueOf(connectionTimeout));
+        }
 
         String readTimeout = properties.getProperty("readTimeout");
-        if (readTimeout != null && !readTimeout.equals(""))
-            configuration.setConnectionTimeout(Long.valueOf(readTimeout));
+        if (readTimeout != null && !readTimeout.equals("")) {
+            configuration.setReadTimeout(Long.valueOf(readTimeout));
+        }
 
         try {
             configuration.setContentMimeType(MimeType.valueOf(properties.getProperty("contentMimeType")));
@@ -185,5 +186,4 @@ public class RestClientConfiguration {
         }
         return properties;
     }
-
 }
