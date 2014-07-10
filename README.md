@@ -1,3 +1,5 @@
+Jasperserver REST Client for Java https://travis-ci.org/Krasnyanskiy/jrs-rest-java-client.svg?branch=develop
+
 Table of Contents
 ------------------
 1. [Introduction](#introduction).
