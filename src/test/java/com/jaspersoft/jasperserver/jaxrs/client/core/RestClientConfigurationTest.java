@@ -25,7 +25,7 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertNull;
 
 /**
-* Unit tests for {@link RestClientConfigurationTest}.
+* Unit tests for {@link RestClientConfigurationTest}
 *
 * @author Alexander Krasnyanskiy
 */
