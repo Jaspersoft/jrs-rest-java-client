@@ -7,32 +7,32 @@ import org.testng.annotations.Test;
 public class AuthenticationCredentialsTest {
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
 
     }
 
     @AfterMethod
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 
     @Test
-    public void testGetUsername() throws Exception {
+    public void testGetUsername() {
 
     }
 
     @Test
-    public void testSetUsername() throws Exception {
+    public void testSetUsername() {
 
     }
 
     @Test
-    public void testGetPassword() throws Exception {
+    public void testGetPassword() {
 
     }
 
     @Test
-    public void testSetPassword() throws Exception {
+    public void testSetPassword() {
 
     }
 }

@@ -2,7 +2,5 @@ language: java
 install: mvn install -Dmaven.compiler.target=1.6 -Dmaven.compiler.source=1.6 -DskipTests=true
 script: mvn test -Dmaven.compiler.target=1.6 -Dmaven.compiler.source=1.6
 
-# mvn cobertura:cobertura coveralls:cobertura
-
 after_success:
   - mvn clean cobertura:cobertura coveralls:cobertura

@@ -7,22 +7,22 @@ import org.testng.annotations.Test;
 public class EncryptionUtilsTest {
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
 
     }
 
     @AfterMethod
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 
     @Test
-    public void testEncryptPassword() throws Exception {
+    public void testEncryptPassword() {
 
     }
 
     @Test
-    public void testParseEncryptionParams() throws Exception {
+    public void testParseEncryptionParams() {
 
     }
 }

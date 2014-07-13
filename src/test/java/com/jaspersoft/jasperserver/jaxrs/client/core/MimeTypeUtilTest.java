@@ -7,22 +7,22 @@ import org.testng.annotations.Test;
 public class MimeTypeUtilTest {
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
 
     }
 
     @AfterMethod
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 
     @Test
-    public void testToCorrectContentMime() throws Exception {
+    public void testToCorrectContentMime() {
 
     }
 
     @Test
-    public void testToCorrectAcceptMime() throws Exception {
+    public void testToCorrectAcceptMime() {
 
     }
 }
