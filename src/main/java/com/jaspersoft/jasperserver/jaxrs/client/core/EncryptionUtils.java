@@ -43,7 +43,7 @@ public class EncryptionUtils {
     private static final Log log = LogFactory.getLog(EncryptionUtils.class);
 
     public static String encryptPassword(String plainPassword, String n, String e) {
-        String encryptedUtfProPass = null;
+        String encryptedUtfProPass;
         try {
             PublicKey publicKey = getPublicKey(n, e);
             encryptedUtfProPass = getEncryptedPassword(publicKey, plainPassword);

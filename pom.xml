@@ -63,12 +63,11 @@
             <artifactId>powermock-api-mockito</artifactId>
             <version>${powermock.version}</version>
         </dependency>
-        <!--to delete easymock-->
-        <!--<dependency>-->
-        <!--<groupId>org.powermock</groupId>-->
-        <!--<artifactId>powermock-easymock-release-full</artifactId>-->
-        <!--<version>${powermock.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-easymock</artifactId>
+            <version>${powermock.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
@@ -92,33 +91,6 @@
         <developerConnection>scm:git:https://github.com/Jaspersoft/jrs-rest-java-client</developerConnection>
         <tag>HEAD</tag>
     </scm>
-
-    <!--<build>-->
-        <!--<plugins>-->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-surefire-plugin</artifactId>-->
-                <!--<version>2.9</version>-->
-                <!--<configuration>-->
-                    <!--&lt;!&ndash;<skipTests>false</skipTests>&ndash;&gt;-->
-                    <!--<suiteXmlFiles>-->
-                        <!--<suiteXmlFile>src/test/resources/conf.xml</suiteXmlFile>-->
-                    <!--</suiteXmlFiles>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-
-            <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>cobertura-maven-plugin</artifactId>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<groupId>org.eluder.coveralls</groupId>-->
-                <!--<artifactId>coveralls-maven-plugin</artifactId>-->
-                <!--<version>2.2.0</version>-->
-            <!--</plugin>-->
-        <!--</plugins>-->
-    <!--</build>-->
-
     <build>
         <plugins>
             <plugin>

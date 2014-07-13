@@ -54,13 +54,15 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         assertEquals(retrieved, configurationMock);
     }
 
-    @Test(testName = "JasperserverRestClient_constructor", expectedExceptions = IllegalArgumentException.class)
+    @Test(testName = "JasperserverRestClient_constructor",
+            expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_pass_null_param_to_the_constructor() {
         new JasperserverRestClient(null);
     }
 
     @Test
-    public void test() throws Exception {
+    public void should_return_proper_Session_object() throws Exception {
+
         // Given
         final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
         final String USER_NAME = "John";
