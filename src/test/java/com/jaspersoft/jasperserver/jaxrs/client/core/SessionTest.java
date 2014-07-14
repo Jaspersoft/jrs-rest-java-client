@@ -117,7 +117,6 @@ public class SessionTest extends PowerMockTestCase {
         // Than
         assertNotNull(session);
         assertEquals(retrieved, expectedSessionStorage);
-        //verify(sessionSpy, times(1)).getStorage();
     }
 
     @Test(testName = "logout")
