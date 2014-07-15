@@ -28,5 +28,4 @@ public class WithEntityOperationResult<T> extends OperationResult<T> {
     public WithEntityOperationResult(Response response, Class<? extends T> entityClass) {
         super(response, entityClass);
     }
-
 }
