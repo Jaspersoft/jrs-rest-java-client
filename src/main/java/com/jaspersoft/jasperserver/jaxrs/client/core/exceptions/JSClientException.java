@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
 public class JSClientException extends RuntimeException {
@@ -34,10 +33,6 @@ public class JSClientException extends RuntimeException {
     public JSClientException(Throwable cause) {
         super(cause);
     }
-
-    /*protected JSClientException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }*/
 
     public JSClientException(String message) {
         super(message);

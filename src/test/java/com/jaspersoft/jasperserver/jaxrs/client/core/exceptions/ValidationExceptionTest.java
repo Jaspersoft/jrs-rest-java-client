@@ -10,26 +10,26 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
- * Unit tests for {@link InternalServerErrorException}
+ * Unit tests for {@link ValidationException}
  */
-public class InternalServerErrorExceptionTest {
+public class ValidationExceptionTest {
 
     @Test
     public void should_invoke_parent_constructor() {
-        InternalServerErrorException exception = new InternalServerErrorException();
+        ValidationException exception = new ValidationException();
         assertNotNull(exception.getErrorDescriptors());
     }
 
     @Test
     public void should_pass_message_to_parent_class() {
-        InternalServerErrorException exception = new InternalServerErrorException("msg");
+        ValidationException exception = new ValidationException("msg");
         assertEquals("msg", exception.getMessage());
     }
 
     @Test
     public void should_pass_message_and_descriptors_to_parent_class() {
         List<ErrorDescriptor> expected = new ArrayList<ErrorDescriptor>();
-        InternalServerErrorException exception = new InternalServerErrorException("msg", expected);
+        ValidationException exception = new ValidationException("msg", expected);
         assertEquals(expected, exception.getErrorDescriptors());
         assertEquals("msg", exception.getMessage());
     }

@@ -28,9 +28,10 @@ public class OperationResultFactoryImplTest {
     }
 
     @Test
-    public void test() {
+    public void should_return_proper_OperationResult_object() {
         OperationResult<TestableClientResource> retrieved =
-                new OperationResultFactoryImpl().getOperationResult(responseMock, TestableClientResource.class);
+                new OperationResultFactoryImpl()
+                        .getOperationResult(responseMock, TestableClientResource.class);
 
         assertNotNull(retrieved);
         assertTrue(instanceOf(NullEntityOperationResult.class).matches(retrieved));

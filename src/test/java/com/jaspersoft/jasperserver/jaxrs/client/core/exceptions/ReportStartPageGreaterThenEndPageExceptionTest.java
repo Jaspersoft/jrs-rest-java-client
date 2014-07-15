@@ -36,6 +36,4 @@ public class ReportStartPageGreaterThenEndPageExceptionTest {
         assertEquals(expected, exception.getErrorDescriptors());
         assertEquals("msg", exception.getMessage());
     }
-
-
 }

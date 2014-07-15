@@ -13,6 +13,7 @@ import static org.testng.Assert.assertNotNull;
  * Unit tests for {@link PatchException}
  */
 public class PatchExceptionTest {
+
     @Test
     public void should_invoke_parent_constructor() {
         PatchException exception = new PatchException();

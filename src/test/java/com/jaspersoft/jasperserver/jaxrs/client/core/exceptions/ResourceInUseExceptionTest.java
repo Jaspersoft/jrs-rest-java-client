@@ -10,27 +10,31 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
- * Unit tests for {@link InternalServerErrorException}
+ * Unit tests for {@link ResourceInUseException}
  */
-public class InternalServerErrorExceptionTest {
+public class ResourceInUseExceptionTest {
 
     @Test
     public void should_invoke_parent_constructor() {
-        InternalServerErrorException exception = new InternalServerErrorException();
+        ResourceInUseException exception =
+                new ResourceInUseException();
         assertNotNull(exception.getErrorDescriptors());
     }
 
     @Test
     public void should_pass_message_to_parent_class() {
-        InternalServerErrorException exception = new InternalServerErrorException("msg");
+        ResourceInUseException exception =
+                new ResourceInUseException("msg");
         assertEquals("msg", exception.getMessage());
     }
 
     @Test
     public void should_pass_message_and_descriptors_to_parent_class() {
         List<ErrorDescriptor> expected = new ArrayList<ErrorDescriptor>();
-        InternalServerErrorException exception = new InternalServerErrorException("msg", expected);
+        ResourceInUseException exception =
+                new ResourceInUseException("msg", expected);
         assertEquals(expected, exception.getErrorDescriptors());
         assertEquals("msg", exception.getMessage());
     }
+
 }
