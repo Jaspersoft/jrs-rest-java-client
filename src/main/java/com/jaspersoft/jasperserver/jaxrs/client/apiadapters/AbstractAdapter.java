@@ -31,4 +31,10 @@ public abstract class AbstractAdapter {
         this.sessionStorage = sessionStorage;
     }
 
+    /**
+     * this getter is using for Unit testing needs only
+     */
+    public SessionStorage getSessionStorage() {
+        return sessionStorage;
+    }
 }

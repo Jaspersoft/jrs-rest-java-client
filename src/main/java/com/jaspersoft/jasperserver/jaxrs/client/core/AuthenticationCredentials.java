@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 public class AuthenticationCredentials {
@@ -46,5 +45,4 @@ public class AuthenticationCredentials {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }

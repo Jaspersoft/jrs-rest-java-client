@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.jaspersoft</groupId>
@@ -12,22 +13,20 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <powermock.version>1.5.5</powermock.version>
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>com.jaspersoft.jasperserver</groupId>
             <artifactId>jasperserver-dto</artifactId>
             <version>5.6.0-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
             <version>2.5</version>
         </dependency>
-
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-json</artifactId>
@@ -43,65 +42,98 @@
             <artifactId>jersey-media-json-jackson</artifactId>
             <version>2.5.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
             <version>1.50</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
         </dependency>
-
-
-
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.8.7</version>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng</artifactId>
+            <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-easymock</artifactId>
+            <version>${powermock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.2</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.bouncycastle</groupId>-->
+            <!--<artifactId>bcprov-jdk16</artifactId>-->
+            <!--<version>1.45</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.bouncycastle</groupId>-->
+            <!--<artifactId>bcpg-jdk16</artifactId>-->
+            <!--<version>1.46</version>-->
+        <!--</dependency>-->
     </dependencies>
-
     <repositories>
-
         <repository>
             <id>jrs-ce-releases</id>
             <name>JasperReports Server CE releases repository</name>
             <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-releases/</url>
         </repository>
-
         <repository>
             <id>jrs-ce-snapshots</id>
             <name>JasperReports Server CE snapshots repository</name>
             <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-snapshots/</url>
         </repository>
-
     </repositories>
-
     <scm>
         <connection>scm:git:http://github.com/Jaspersoft/jrs-rest-java-client</connection>
         <developerConnection>scm:git:https://github.com/Jaspersoft/jrs-rest-java-client</developerConnection>
         <tag>HEAD</tag>
     </scm>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.9</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
                 <configuration>
-                    <skipTests>true</skipTests>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <format>xml</format>
+                    <maxmem>256m</maxmem>
+                    <aggregate>true</aggregate>
+                    <check/>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <configuration>
+                    <repoToken>GJiEKl32LnBMkwmX8r98ntgjCkGoRHBpz</repoToken>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
     <developers>
         <developer>
             <id>borys.kolesnykov</id>
@@ -114,5 +146,4 @@
             <timezone>+3</timezone>
         </developer>
     </developers>
-
 </project>

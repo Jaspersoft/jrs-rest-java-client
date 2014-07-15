@@ -60,4 +60,7 @@ public abstract class OperationResult<T> {
         return response;
     }
 
+    public Class<? extends T> getEntityClass() {
+        return entityClass;
+    }
 }
