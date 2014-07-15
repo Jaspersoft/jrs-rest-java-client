@@ -1,9 +1,9 @@
 language: java
-#install: mvn install -Dmaven.compiler.target=1.6 -Dmaven.compiler.source=1.6 -DskipTests=true
-#script: mvn test -Dmaven.compiler.target=1.6 -Dmaven.compiler.source=1.6
+install: mvn install -Dmaven.compiler.target=1.6 -Dmaven.compiler.source=1.6 -DskipTests=true
+script: mvn test -Dmaven.compiler.target=1.6 -Dmaven.compiler.source=1.6
 
-jdk:
-- oraclejdk6
+#jdk:
+#- oraclejdk6
 
 branches:
   only:
