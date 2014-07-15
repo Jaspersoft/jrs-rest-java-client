@@ -2,6 +2,10 @@ language: java
 install: mvn install -Dmaven.compiler.target=1.6 -Dmaven.compiler.source=1.6 -DskipTests=true
 script: mvn test -Dmaven.compiler.target=1.6 -Dmaven.compiler.source=1.6
 
+branches:
+  only:
+    - develop
+
 after_success:
 #  - mvn clean cobertura:cobertura coveralls:cobertura
   - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:cobertura
