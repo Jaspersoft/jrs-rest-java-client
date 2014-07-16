@@ -18,13 +18,11 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 public abstract class AbstractAdapter {
-
     protected final SessionStorage sessionStorage;
 
     public AbstractAdapter(SessionStorage sessionStorage) {
@@ -32,7 +30,7 @@ public abstract class AbstractAdapter {
     }
 
     /**
-     * this getter is using for Unit testing needs only
+     * This getter is using for Unit testing needs only
      */
     public SessionStorage getSessionStorage() {
         return sessionStorage;

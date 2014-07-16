@@ -56,8 +56,7 @@ public enum OrganizationParameter {
      * users.
      * Type: Boolean (Optional)
      */
-    CREATE_DEFAULT_USERS("createDefaultUsers")
-    ;
+    CREATE_DEFAULT_USERS("createDefaultUsers");
 
     private String paramName;
 
@@ -68,5 +67,4 @@ public enum OrganizationParameter {
     public String getParamName() {
         return paramName;
     }
-
 }
