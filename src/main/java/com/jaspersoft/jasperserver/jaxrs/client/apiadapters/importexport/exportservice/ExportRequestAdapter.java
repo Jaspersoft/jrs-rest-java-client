@@ -55,14 +55,12 @@ public class ExportRequestAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncState(final Callback<OperationResult<StateDto>, R> callback) {
         final JerseyRequest<StateDto> request = buildRequest(sessionStorage, StateDto.class, new String[]{"/export", taskId, STATE_URI});
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
@@ -80,43 +78,38 @@ public class ExportRequestAdapter extends AbstractAdapter {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ignored) {
+                // NOP
             }
         }
-
-        JerseyRequest<InputStream> request =
-                buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/exportFile"});
+        JerseyRequest<InputStream> request = buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/exportFile"});
         request.setAccept("application/zip");
-
         return request.get();
     }
 
     public <R> RequestExecution asyncFetch(final Callback<OperationResult<InputStream>, R> callback) {
-        final JerseyRequest<InputStream> request =
-                buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/exportFile"});
+        final JerseyRequest<InputStream> request = buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/exportFile"});
         request.setAccept("application/zip");
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 StateDto state;
                 while (!"finished".equals((state = state().getEntity()).getPhase())) {
-
                     if ("failed".equals(state.getPhase())) {
-                        if (state.getErrorDescriptor() != null)
+                        if (state.getErrorDescriptor() != null) {
                             throw new ExportFailedException(state.getErrorDescriptor().getMessage(), Arrays.asList(state.getErrorDescriptor()));
-                        else
+                        } else {
                             throw new ExportFailedException(state.getMessage());
+                        }
                     }
-
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException ignored) {
+                        // NOP
                     }
                 }
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }

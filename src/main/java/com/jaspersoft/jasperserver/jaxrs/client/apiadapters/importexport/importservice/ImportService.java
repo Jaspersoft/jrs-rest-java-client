@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
@@ -30,14 +29,14 @@ public class ImportService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    public ImportTaskRequestAdapter newTask(){
+    public ImportTaskRequestAdapter newTask() {
         return new ImportTaskRequestAdapter(sessionStorage);
     }
 
-    public ImportRequestAdapter task(String taskId){
-        if ("".equals(taskId) || "/".equals(taskId))
-            throw new  IllegalArgumentException("'taskId' mustn't be an empty string");
+    public ImportRequestAdapter task(String taskId) {
+        if ("".equals(taskId) || "/".equals(taskId)) {
+            throw new IllegalArgumentException("'taskId' mustn't be an empty string");
+        }
         return new ImportRequestAdapter(sessionStorage, taskId);
     }
-
 }
