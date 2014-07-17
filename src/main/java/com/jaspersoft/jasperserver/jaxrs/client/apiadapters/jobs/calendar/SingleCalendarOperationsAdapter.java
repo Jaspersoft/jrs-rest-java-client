@@ -50,9 +50,7 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<Calendar> get() {
-        OperationResult<ReportJobCalendar> result =
-                buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName})
-                        .get();
+        OperationResult<ReportJobCalendar> result = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName}).get();
         return convertToLocalCalendarType(result);
     }
 
@@ -130,8 +128,7 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<Calendar>, R> callback) {
-        final JerseyRequest<ReportJobCalendar> request =
-                buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
+        final JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
