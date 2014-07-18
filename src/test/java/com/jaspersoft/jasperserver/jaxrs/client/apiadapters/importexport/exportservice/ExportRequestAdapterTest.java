@@ -64,12 +64,15 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
     @Test(testName = "constructor")
     public void should_pass_corresponding_params_to_the_constructor_and_invoke_parent_class_constructor_with_these_params()
             throws IllegalAccessException {
+
+        // When
         ExportRequestAdapter adapter = new ExportRequestAdapter(sessionStorageMock, taskId);
         SessionStorage retrievedSessionStorage = adapter.getSessionStorage();
 
         Field field = field(ExportRequestAdapter.class, "taskId");
         Object retrievedField = field.get(adapter);
 
+        // Than
         assertSame(retrievedField, taskId);
         assertEquals(retrievedSessionStorage, sessionStorageMock);
     }
@@ -94,7 +97,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
     public void should_retrieve_streamed_OperationResult_object_when_status_is_finished() {
 
         /**
-         * check out link
+         * check this link out
          * {@link http://community.jaspersoft.com/documentation/jasperreports-server-web-services-guide/v56/checking-export-state}
          * for phase names
          */
@@ -119,6 +122,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
     @Test(testName = "fetch", expectedExceptions = ExportFailedException.class)
     public void should_retrieve_streamed_OperationResult_object_when_status_is_failed() {
+
         // Given
         mockStatic(JerseyRequest.class);
         doReturn(operationResultStateDtoMock).when(adapterSpy).state();
@@ -140,6 +144,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
     @Test(testName = "fetch", expectedExceptions = ExportFailedException.class)
     public void should_retrieve_streamed_OperationResult_object_when_status_is_failed_but_state_has_error_descriptor() {
+
         // Given
         mockStatic(JerseyRequest.class);
         doReturn(operationResultStateDtoMock).when(adapterSpy).state();
@@ -162,6 +167,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
     @Test(testName = "fetch", timeOut = 600)
     public void should_retrieve_streamed_OperationResult_object_when_status_is_failed_() {
+
         // Given
         mockStatic(JerseyRequest.class);
         doReturn(operationResultStateDtoMock).when(adapterSpy).state();
