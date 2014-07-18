@@ -50,8 +50,7 @@ public enum PermissionResourceParameter {
      *  dialog) If recipient does not have any permission assigned or
      *  permission is not reachable not uri will be returned.
      */
-    RESOLVE_ALL("resolveAll")
-    ;
+    RESOLVE_ALL("resolveAll");
 
     private String paramName;
 
@@ -62,5 +61,4 @@ public enum PermissionResourceParameter {
     public String getParamName() {
         return paramName;
     }
-
 }
