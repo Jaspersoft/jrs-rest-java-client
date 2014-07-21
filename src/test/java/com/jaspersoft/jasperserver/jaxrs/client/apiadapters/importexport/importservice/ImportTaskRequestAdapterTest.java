@@ -26,6 +26,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.powermock.api.support.membermodification.MemberMatcher.field;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
@@ -85,13 +88,13 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
 
         // Given
         ImportTaskRequestAdapter adapter = PowerMockito.spy(new ImportTaskRequestAdapter(storageMock));
-        PowerMockito.doReturn(operationResultStateDtoMock).when(adapter, "createImport", fileMock);
+        doReturn(operationResultStateDtoMock).when(adapter, "createImport", fileMock);
 
         // When
         OperationResult<StateDto> retrieved = adapter.create(fileMock);
 
         // Than
-        PowerMockito.verifyPrivate(adapter).invoke("createImport", eq(fileMock));
+        verifyPrivate(adapter).invoke("createImport", eq(fileMock));
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultStateDtoMock);
     }
@@ -99,17 +102,17 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
     @Test(testName = "create_with_InputStream_param")
     public void should_pass_InputStream_param_and_invoke_private_method() throws Exception {
 
-        InputStream streamMock = PowerMockito.mock(InputStream.class);
+        InputStream streamMock = mock(InputStream.class);
 
         // Given
         ImportTaskRequestAdapter adapter = PowerMockito.spy(new ImportTaskRequestAdapter(storageMock));
-        PowerMockito.doReturn(operationResultStateDtoMock).when(adapter, "createImport", streamMock);
+        doReturn(operationResultStateDtoMock).when(adapter, "createImport", streamMock);
 
         // When
         OperationResult<StateDto> retrieved = adapter.create(streamMock);
 
         // Than
-        PowerMockito.verifyPrivate(adapter).invoke("createImport", eq(streamMock));
+        verifyPrivate(adapter).invoke("createImport", eq(streamMock));
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultStateDtoMock);
     }
@@ -118,33 +121,33 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
     public void should_invoke_private_method_with_File_parameter_and_return_RequestExecution_object() throws Exception {
 
         // Given
-        RequestExecution requestExecutionMock = PowerMockito.mock(RequestExecution.class);
+        RequestExecution requestExecutionMock = mock(RequestExecution.class);
         ImportTaskRequestAdapter adapter = PowerMockito.spy(new ImportTaskRequestAdapter(storageMock));
-        PowerMockito.doReturn(requestExecutionMock).when(adapter, "asyncCreateImport", fileMock, callbackMock);
+        doReturn(requestExecutionMock).when(adapter, "asyncCreateImport", fileMock, callbackMock);
 
         // When
         RequestExecution retrieved = adapter.asyncCreate(fileMock, callbackMock);
 
         // Than
         assertNotNull(retrieved);
-        PowerMockito.verifyPrivate(adapter).invoke("asyncCreateImport", eq(fileMock), eq(callbackMock));
+        verifyPrivate(adapter).invoke("asyncCreateImport", eq(fileMock), eq(callbackMock));
         assertSame(retrieved, requestExecutionMock);
     }
 
     @Test(testName = "asyncCreate_with_InputStream_param")
     public void should_invoke_private_method_with_InputStream_parameter_and_return_RequestExecution_object() throws Exception {
         // Given
-        RequestExecution requestExecutionMock = PowerMockito.mock(RequestExecution.class);
-        InputStream streamMock = PowerMockito.mock(InputStream.class);
+        RequestExecution requestExecutionMock = mock(RequestExecution.class);
+        InputStream streamMock = mock(InputStream.class);
         ImportTaskRequestAdapter adapter = PowerMockito.spy(new ImportTaskRequestAdapter(storageMock));
-        PowerMockito.doReturn(requestExecutionMock).when(adapter, "asyncCreateImport", streamMock, callbackMock);
+        doReturn(requestExecutionMock).when(adapter, "asyncCreateImport", streamMock, callbackMock);
 
         // When
         RequestExecution retrieved = adapter.asyncCreate(streamMock, callbackMock);
 
         // Than
         assertNotNull(retrieved);
-        PowerMockito.verifyPrivate(adapter).invoke("asyncCreateImport", eq(streamMock), eq(callbackMock));
+        verifyPrivate(adapter).invoke("asyncCreateImport", eq(streamMock), eq(callbackMock));
         assertSame(retrieved, requestExecutionMock);
     }
 

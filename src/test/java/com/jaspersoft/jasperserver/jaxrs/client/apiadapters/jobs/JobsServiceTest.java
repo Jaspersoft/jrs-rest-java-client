@@ -13,7 +13,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.AfterMethod;
@@ -173,7 +172,7 @@ public class JobsServiceTest extends PowerMockTestCase {
     public void should_return_proper_op_result_object() {
 
         // Given
-        JobsService serviceSpy = Mockito.spy(new JobsService(sessionStorageMock));
+        JobsService serviceSpy = spy(new JobsService(sessionStorageMock));
         doReturn(expectedWrapperOperationResultMock).when(serviceSpy).calendars(null);
 
         // When
@@ -192,7 +191,7 @@ public class JobsServiceTest extends PowerMockTestCase {
     public void should_return_RequestExecution_with_CalendarNameListWrapper_instance() {
 
         // Given
-        JobsService serviceSpy = Mockito.spy(new JobsService(sessionStorageMock));
+        JobsService serviceSpy = spy(new JobsService(sessionStorageMock));
         doReturn(executionMock).when(serviceSpy).asyncCalendars(null, callbackMock);
 
         // When
@@ -258,7 +257,7 @@ public class JobsServiceTest extends PowerMockTestCase {
 
         // Given
         final String calendarName = "testCalendar";
-        JobsService serviceSpy = Mockito.spy(new JobsService(sessionStorageMock));
+        JobsService serviceSpy = spy(new JobsService(sessionStorageMock));
         whenNew(SingleCalendarOperationsAdapter.class)
                 .withParameterTypes(SessionStorage.class, String.class)
                 .withArguments(sessionStorageMock, calendarName)
@@ -274,7 +273,7 @@ public class JobsServiceTest extends PowerMockTestCase {
 
     @Test(testName = "calendar", expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_invalid_calendar_name() throws Exception {
-        JobsService serviceSpy = Mockito.spy(new JobsService(sessionStorageMock));
+        JobsService serviceSpy = spy(new JobsService(sessionStorageMock));
         serviceSpy.calendar("");
     }
 

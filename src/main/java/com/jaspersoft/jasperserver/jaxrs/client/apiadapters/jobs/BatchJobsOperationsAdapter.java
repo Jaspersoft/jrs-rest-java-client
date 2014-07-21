@@ -99,7 +99,6 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     private String buildJson(Object object) {
         ObjectMapper mapper = new ObjectMapper();
-
         SerializationConfig serializationConfig = mapper.getSerializationConfig();
         serializationConfig = serializationConfig.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
         AnnotationIntrospector introspector = new JaxbAnnotationIntrospector();
@@ -131,15 +130,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     @Deprecated
     public OperationResult<JobIdListWrapper> updateWithProcessedParameters(ReportJobModel jobModel) {
         throw new UnsupportedOperationException("Operation is not supported yet");
-        /*JerseyRequest<JobIdListWrapper> request =
-                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"}, errorHandler);
-        request.setContentType("application/job+json");
-        request.setAccept("application/job+json");
-        request.addParams(params);
-
-        return request.post(jobModel);*/
     }
-
 
     /**
      * Updates all jobs which ids were specified. Updates only set fields, other fields are ignored.
@@ -147,7 +138,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     public OperationResult<JobIdListWrapper> update(ReportJobModel jobModel) {
         JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
         request.addParams(params);
-        String content = null;
+        String content;
 
         if (sessionStorage.getConfiguration().getContentMimeType() == MimeType.JSON) {
             content = buildJson(jobModel);
