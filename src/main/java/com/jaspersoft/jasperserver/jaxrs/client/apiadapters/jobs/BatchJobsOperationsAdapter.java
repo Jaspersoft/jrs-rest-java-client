@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
@@ -162,7 +161,6 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 //        return task;
         throw new RuntimeException();
     }
-
 
     private List<Long> getIds() {
         List<Long> ids = new ArrayList<Long>();

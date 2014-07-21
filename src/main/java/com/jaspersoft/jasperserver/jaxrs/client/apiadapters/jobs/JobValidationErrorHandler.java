@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ValidationException;
@@ -35,7 +34,7 @@ public class JobValidationErrorHandler extends DefaultErrorHandler {
 
     @Override
     protected void handleBodyError(Response response) {
-        List<ErrorDescriptor> errorDescriptors = null;
+        List<ErrorDescriptor> errorDescriptors;
         if (response.getHeaderString("Content-Type").contains("xml") || response.getHeaderString("Content-Type").contains("json")) {
             ValidationErrorsListWrapper validationErrors = readBody(response, ValidationErrorsListWrapper.class);
             if (validationErrors == null) {
