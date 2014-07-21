@@ -36,15 +36,12 @@ public class JobValidationErrorHandler extends DefaultErrorHandler {
     @Override
     protected void handleBodyError(Response response) {
         List<ErrorDescriptor> errorDescriptors = null;
-        if (response.getHeaderString("Content-Type").contains("xml") ||
-                response.getHeaderString("Content-Type").contains("json")) {
+        if (response.getHeaderString("Content-Type").contains("xml") || response.getHeaderString("Content-Type").contains("json")) {
             ValidationErrorsListWrapper validationErrors = readBody(response, ValidationErrorsListWrapper.class);
-
-            if (validationErrors == null){
+            if (validationErrors == null) {
                 super.handleBodyError(response);
                 return;
             }
-
             errorDescriptors = toErrorDescriptorList(validationErrors);
             throw new ValidationException(generateErrorMessage(errorDescriptors), errorDescriptors);
         }
@@ -59,7 +56,6 @@ public class JobValidationErrorHandler extends DefaultErrorHandler {
             errorDescriptor.setMessage(error.toString() + " (field: " + error.getField() + ")");
             errorDescriptor.setErrorCode(error.getErrorCode());
             errorDescriptor.setParameters(error.getErrorArguments());
-
             errorDescriptors.add(errorDescriptor);
         }
         return errorDescriptors;
@@ -75,5 +71,4 @@ public class JobValidationErrorHandler extends DefaultErrorHandler {
         }
         return sb.toString();
     }
-
 }

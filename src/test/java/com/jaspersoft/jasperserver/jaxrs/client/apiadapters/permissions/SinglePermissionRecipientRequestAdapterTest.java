@@ -18,8 +18,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
@@ -62,7 +65,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
     }
 
     @Test(testName = "createOrUpdate")
-    public void createOrUpdate() throws Exception {
+    public void should_create_or_update_RepositoryPermission_and_return_result_of_operation() throws Exception {
 
         // Given
         SinglePermissionRecipientRequestAdapter adapterSpy = spy(new SinglePermissionRecipientRequestAdapter(storageMock, "resourceUri", "recipient"));
@@ -79,8 +82,8 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         assertSame(retrieved, operationResultMock);
     }
 
-    @Test
-    public void delete() throws Exception {
+    @Test(testName = "delete")
+    public void should_delete_RepositoryPermission_and_return_result() throws Exception {
 
         // Given
         OperationResult opResultMock = PowerMockito.mock(OperationResult.class);
@@ -102,17 +105,38 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
     public void should_invoke_private_method_only_once() throws Exception {
 
         // Given
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock), eq(RepositoryPermission.class), eq(new String[]{"/permissions", "resourceUri"}))).thenReturn(requestMock);
-        PowerMockito.when(requestMock.get()).thenReturn(operationResultMock);
-        SinglePermissionRecipientRequestAdapter spy = PowerMockito.spy(new SinglePermissionRecipientRequestAdapter(storageMock, "resourceUri", "recipient"));
+        mockStatic(JerseyRequest.class);
+        when(JerseyRequest.buildRequest(eq(storageMock), eq(RepositoryPermission.class), eq(new String[]{"/permissions", "resourceUri"}))).thenReturn(requestMock);
+        when(requestMock.get()).thenReturn(operationResultMock);
+        SinglePermissionRecipientRequestAdapter spy = spy(new SinglePermissionRecipientRequestAdapter(storageMock, "resourceUri", "recipient"));
 
         // When
         OperationResult<RepositoryPermission> retrieved = spy.get();
 
         // Than
-        PowerMockito.verifyPrivate(spy, times(1)).invoke("getBuilder", RepositoryPermission.class);
+        verifyStatic(times(1));
+        JerseyRequest.buildRequest(eq(storageMock), eq(RepositoryPermission.class), eq(new String[]{"/permissions", "resourceUri"}));
+
+        // Verify that private method is called only once.
+        verifyPrivate(spy, times(1)).invoke("getBuilder", RepositoryPermission.class);
+
+        // Verify that addMatrixParam method is called with the specified parameters.
+        verify(requestMock).addMatrixParam(eq("recipient"), eq("recipient"));
+
         assertSame(retrieved, operationResultMock);
+    }
+
+    @Test(testName = "get", expectedExceptions = NullPointerException.class)
+    public void should_throw_NPE_exception_when_session_is_null() throws Exception {
+
+        // Given
+        final SessionStorage NULL_STORAGE = null;
+        SinglePermissionRecipientRequestAdapter spy = spy(new SinglePermissionRecipientRequestAdapter(NULL_STORAGE, "resourceUri", "recipient"));
+
+        // When
+        spy.get();
+
+        // Than expect NPE
     }
 
     @AfterMethod

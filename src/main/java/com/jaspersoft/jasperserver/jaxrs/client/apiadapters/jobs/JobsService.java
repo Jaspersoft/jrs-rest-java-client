@@ -46,9 +46,7 @@ public class JobsService extends AbstractAdapter {
     }
 
     public OperationResult<Job> scheduleReport(Job report) {
-        JerseyRequest<Job> request =
-                buildRequest(sessionStorage, Job.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
-
+        JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
@@ -56,14 +54,11 @@ public class JobsService extends AbstractAdapter {
             request.setContentType("application/job+json");
             request.setAccept("application/job+json");
         }
-
         return request.put(report);
     }
 
     public <R> RequestExecution asyncScheduleReport(final Job report, final Callback<OperationResult<Job>, R> callback) {
-        final JerseyRequest<Job> request =
-                buildRequest(sessionStorage, Job.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
-
+        final JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
@@ -71,14 +66,12 @@ public class JobsService extends AbstractAdapter {
             request.setContentType("application/job+json");
             request.setAccept("application/job+json");
         }
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.put(report));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
@@ -92,35 +85,32 @@ public class JobsService extends AbstractAdapter {
     }
 
     public OperationResult<CalendarNameListWrapper> calendars(CalendarType type) {
-        JerseyRequest<CalendarNameListWrapper> request =
-                buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
-        if (type != null)
+        JerseyRequest<CalendarNameListWrapper> request = buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
+        if (type != null) {
             request.addParam("calendarType", type.name().toLowerCase());
-
+        }
         return request.get();
     }
 
     public <R> RequestExecution asyncCalendars(final CalendarType type, final Callback<OperationResult<CalendarNameListWrapper>, R> callback) {
-        final JerseyRequest<CalendarNameListWrapper> request =
-                buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
-        if (type != null)
+        final JerseyRequest<CalendarNameListWrapper> request = buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
+        if (type != null) {
             request.addParam("calendarType", type.name().toLowerCase());
-
+        }
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     public SingleCalendarOperationsAdapter calendar(String calendarName) {
-        if ("".equals(calendarName) || "/".equals(calendarName))
+        if ("".equals(calendarName) || "/".equals(calendarName)) {
             throw new IllegalArgumentException("'calendarName' mustn't be an empty string");
+        }
         return new SingleCalendarOperationsAdapter(sessionStorage, calendarName);
     }
-
 }

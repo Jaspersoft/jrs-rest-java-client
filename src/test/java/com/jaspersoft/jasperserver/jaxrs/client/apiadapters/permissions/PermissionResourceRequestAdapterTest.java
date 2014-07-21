@@ -17,15 +17,17 @@ import org.testng.annotations.Test;
 import javax.ws.rs.core.MultivaluedMap;
 import java.lang.reflect.Field;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.support.membermodification.MemberMatcher.field;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -82,8 +84,10 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
     @Test(testName = "permissionRecipient")
     public void should_return_proper_adapter() throws IllegalAccessException {
 
-        // When
+        // Given
         PermissionResourceRequestAdapter adapter = new PermissionResourceRequestAdapter(sessionStorageMock, fakeUri);
+
+        // When
         SinglePermissionRecipientRequestAdapter retrieved = adapter.permissionRecipient(PermissionRecipient.ROLE, "abc");
 
         Field recipientField = field(SinglePermissionRecipientRequestAdapter.class, "recipient");
@@ -112,31 +116,39 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
         OperationResult<RepositoryPermissionListWrapper> retrieved = adapter.createOrUpdate(wrapperMock);
 
         // Than
+        verifyStatic(times(1));
+        JerseyRequest.buildRequest(sessionStorageMock, RepositoryPermissionListWrapper.class, new String[]{"/permissions", fakeUri});
+
+        verify(requestMock, times(1)).setContentType("application/collection+json");
+        verify(requestMock, times(1)).put(wrapperMock);
+        verifyNoMoreInteractions(requestMock);
+
         assertNotNull(retrieved);
         assertEquals(retrieved, expectedResultMock);
     }
 
     @Test(testName = "param")
     @SuppressWarnings("unchecked")
-    public void should_set_field_of_adapter_and_invoke_param_method_twice() throws IllegalAccessException {
+    public void should_set_field_of_adapter_and_invoke_param_method_only_once() throws IllegalAccessException {
 
         // Given
         PermissionResourceRequestAdapter adapter = spy(new PermissionResourceRequestAdapter(sessionStorageMock, fakeUri));
 
         // When
         adapter.param(PermissionResourceParameter.EFFECTIVE_PERMISSIONS, "somePermissions");
-        adapter.param(PermissionResourceParameter.RECIPIENT_ID, "id");
 
         Field paramsField = field(PermissionResourceRequestAdapter.class, "params");
         MultivaluedMap<String, String> retrieved = (MultivaluedMap<String, String>) paramsField.get(adapter);
 
         // Than
-        assertTrue(retrieved.size() == 2);
-        verify(adapter, times(2)).param(any(PermissionResourceParameter.class), anyString());
+        assertTrue(retrieved.size() == 1);
+        verify(adapter, times(1)).param(PermissionResourceParameter.EFFECTIVE_PERMISSIONS, "somePermissions");
+        verify(adapter, never()).param(PermissionResourceParameter.EFFECTIVE_PERMISSIONS, "wrongPermissions");
     }
 
     @Test(testName = "get")
-    public void should_return_proper_op_result() {
+    @SuppressWarnings("unchecked")
+    public void should_return_proper_op_result() throws IllegalAccessException {
 
         // Given
         mockStatic(JerseyRequest.class);
@@ -147,8 +159,16 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
         PermissionResourceRequestAdapter adapter = new PermissionResourceRequestAdapter(sessionStorageMock, fakeUri);
         OperationResult<RepositoryPermissionListWrapper> retrieved = adapter.get();
 
+        // Retrieving params field
+        Field field = field(PermissionResourceRequestAdapter.class, "params");
+        MultivaluedMap<String, String> paramsField = (MultivaluedMap<String, String>) field.get(adapter);
+
         // Than
         verify(requestMock, times(1)).get();
+        verify(requestMock, times(1)).addParams(paramsField);
+        verify(requestMock, never()).delete();
+        verifyNoMoreInteractions(requestMock); // IMPORTANT: must be only two corresponding invocations and
+                                               // no more on this Request object.
         assertSame(retrieved, expectedResultMock);
     }
 
@@ -165,6 +185,11 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
         OperationResult retrieved = adapter.delete(); // why isn't generified? what comes as a result?
 
         // Than
+        // Verify that static method is called with the specified parameter.
+        verifyStatic(times(1));
+        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(RepositoryPermissionListWrapper.class), eq(new String[]{"/permissions", fakeUri}));
+
+        // Verify that instance method is called only once
         verify(requestMock, times(1)).delete();
         assertSame(retrieved, expectedResultMock);
     }

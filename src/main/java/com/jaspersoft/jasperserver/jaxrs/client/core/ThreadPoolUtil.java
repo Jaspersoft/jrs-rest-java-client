@@ -33,5 +33,4 @@ public class ThreadPoolUtil {
         Future<?> future = executorService.submit(requestExecutionTask.getTask());
         requestExecutionTask.setFuture(future);
     }
-
 }

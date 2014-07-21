@@ -26,6 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.support.membermodification.MemberMatcher.field;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
@@ -103,17 +104,19 @@ public class PermissionsServiceTest extends PowerMockTestCase {
         OperationResult retrieved = service.createNew(permissionMock);
 
         // Than
+        verifyStatic(times(1));
+        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"/permissions"}), any(DefaultErrorHandler.class));
+
         assertSame(retrieved, resultMock);
         verify(requestMock, times(1)).post(permissionMock);
     }
 
-    @Test
-    public void test() {
+    @Test (testName = "createNew_with_list_of_wrapped_RepositoryPermission")
+    public void should_persist_list_of_permissions() {
 
         // Given
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"/permissions"}))).thenReturn(requestMock);
-
         when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
         when(configurationMock.getContentMimeType()).thenReturn(MimeType.JSON);
         doReturn(resultMock).when(requestMock).post(wrapperMock);
@@ -123,8 +126,11 @@ public class PermissionsServiceTest extends PowerMockTestCase {
         OperationResult retrieved = service.createNew(wrapperMock);
 
         // Than
-        assertSame(retrieved, resultMock);
+        verifyStatic(times(1));
+        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"/permissions"}));
+        verify(requestMock, times(1)).setContentType("application/collection+json");
         verify(requestMock, times(1)).post(wrapperMock);
+        assertSame(retrieved, resultMock);
     }
 
     @AfterMethod
