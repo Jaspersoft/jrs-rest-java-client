@@ -12,7 +12,7 @@ import static org.testng.Assert.assertNotNull;
 /**
  * Unit tests for {@link NotAFileException}
  */
-public class NotAFileExceptionTest {
+public class NotAppTestFileExceptionTest {
 
     @Test
     public void should_invoke_parent_constructor() {

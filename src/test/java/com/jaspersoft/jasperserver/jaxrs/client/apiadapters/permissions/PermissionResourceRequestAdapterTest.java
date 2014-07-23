@@ -185,11 +185,11 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
         OperationResult retrieved = adapter.delete(); // why isn't generified? what comes as a result?
 
         // Than
-        // Verify that static method is called with the specified parameter.
+        // Verify that static print is called with the specified parameter.
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(RepositoryPermissionListWrapper.class), eq(new String[]{"/permissions", fakeUri}));
 
-        // Verify that instance method is called only once
+        // Verify that instance print is called only once
         verify(requestMock, times(1)).delete();
         assertSame(retrieved, expectedResultMock);
     }

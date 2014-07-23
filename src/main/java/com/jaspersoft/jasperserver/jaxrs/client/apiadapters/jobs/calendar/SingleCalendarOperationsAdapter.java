@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
@@ -57,9 +56,7 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
     private OperationResult<Calendar> convertToLocalCalendarType(OperationResult<ReportJobCalendar> source) {
         ReportJobCalendar reportJobCalendar = source.getEntity();
         CalendarType calendarType = CalendarType.valueOf(reportJobCalendar.getCalendarType());
-
         Calendar localCalendar = null;
-
         switch (calendarType) {
             case annual: {
                 AnnualCalendar annualCalendar = new AnnualCalendar();
@@ -114,11 +111,10 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
                 break;
             }
         }
-
         final Calendar finalLocalCalendar = localCalendar;
         return new WithEntityOperationResult<Calendar>(source.getResponse(), Calendar.class) {{
-                    this.entity = finalLocalCalendar;
-                }};
+            this.entity = finalLocalCalendar;
+        }};
     }
 
     private void setCommonCalendarFields(Calendar target, ReportJobCalendar src) {
@@ -129,60 +125,48 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<Calendar>, R> callback) {
         final JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(convertToLocalCalendarType(request.get()));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     public OperationResult delete() {
-        return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName})
-                .delete();
+        return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName}).delete();
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
-        final JerseyRequest request =
-                buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName});
-
+        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.delete());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     public OperationResult<ReportJobCalendar> createNew(Calendar calendarDescriptor) {
-        JerseyRequest<ReportJobCalendar> request =
-                buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
+        JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
         request.addParams(params);
-
         return request.put(calendarDescriptor);
     }
 
     public <R> RequestExecution asyncCreateNew(final Calendar calendarDescriptor, final Callback<OperationResult<ReportJobCalendar>, R> callback) {
-        final JerseyRequest<ReportJobCalendar> request =
-                buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
+        final JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
         request.addParams(params);
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.put(calendarDescriptor));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
-
 }

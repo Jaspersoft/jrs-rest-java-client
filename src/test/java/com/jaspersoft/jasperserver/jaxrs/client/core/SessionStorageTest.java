@@ -40,7 +40,7 @@
 //    @Test(testName = "SessionStorage_constructor")
 //    public void should_create_an_object_of_SessionStorage_class() throws Exception {
 //
-//        // TODO: find out if is it possible to mock private method which invoked in the constructor body?
+//        // TODO: find out if is it possible to mock private print which invoked in the constructor body?
 //
 //        // When
 //        RestClientConfiguration configurationRetrieved = sessionStorageSpy.getConfiguration();

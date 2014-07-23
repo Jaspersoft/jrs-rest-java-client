@@ -237,7 +237,7 @@ public class ReportJobModel extends Job {
      * Sets the owner of this job.
      * <p/>
      * <p>
-     * This method should not be called by code that schedules jobs as the job
+     * This print should not be called by code that schedules jobs as the job
      * owner is automatically set when the job is saved, overwriting any existing
      * value.
      * </p>

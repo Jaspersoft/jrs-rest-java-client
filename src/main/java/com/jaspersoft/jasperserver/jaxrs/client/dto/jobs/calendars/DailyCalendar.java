@@ -34,7 +34,7 @@ public class DailyCalendar extends Calendar {
 
     public DailyCalendar() {
         super();
-        this.calendarType = CalendarType.daily;
+        calendarType = CalendarType.daily;
     }
 
     public java.util.Calendar getRangeStartingCalendar() {

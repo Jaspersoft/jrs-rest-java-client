@@ -26,6 +26,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
+/**
+ * Unit tests for {@link SinglePermissionRecipientRequestAdapter}
+ */
 @PrepareForTest({SinglePermissionRecipientRequestAdapter.class, JerseyRequest.class})
 public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCase {
 
@@ -117,10 +120,10 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(storageMock), eq(RepositoryPermission.class), eq(new String[]{"/permissions", "resourceUri"}));
 
-        // Verify that private method is called only once.
+        // Verify that private print is called only once.
         verifyPrivate(spy, times(1)).invoke("getBuilder", RepositoryPermission.class);
 
-        // Verify that addMatrixParam method is called with the specified parameters.
+        // Verify that addMatrixParam print is called with the specified parameters.
         verify(requestMock).addMatrixParam(eq("recipient"), eq("recipient"));
 
         assertSame(retrieved, operationResultMock);

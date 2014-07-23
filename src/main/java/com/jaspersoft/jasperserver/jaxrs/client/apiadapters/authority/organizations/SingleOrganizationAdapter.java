@@ -55,25 +55,21 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<Organization>, R> callback){
         final JerseyRequest<Organization> request = buildRequest();
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     private String prepareJsonForUpdate(Organization organization){
         ObjectMapper mapper = new ObjectMapper();
-
         SerializationConfig serializationConfig = mapper.getSerializationConfig();
         serializationConfig = serializationConfig.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
         AnnotationIntrospector introspector = new JaxbAnnotationIntrospector();
-
         mapper.setSerializationConfig(serializationConfig);
         mapper.setAnnotationIntrospector(introspector);
 
@@ -84,7 +80,6 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
             log.error("Cannot marshal organization object.");
             throw new JSClientException("Cannot marshal organization object.");
         }
-
         return json;
     }
 
@@ -96,14 +91,12 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
     public <R> RequestExecution asyncUpdate(Organization organization, final Callback<OperationResult<Organization>, R> callback){
         final JerseyRequest<Organization> request = buildRequest();
         final String json = prepareJsonForUpdate(organization);
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.put(json));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
@@ -114,24 +107,18 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback){
         final JerseyRequest request = buildRequest();
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.delete());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     private JerseyRequest<Organization> buildRequest() {
-        return JerseyRequest.buildRequest(
-                sessionStorage,
-                Organization.class,
-                new String[]{"/organizations", organizationId},
-                new DefaultErrorHandler());
+        return JerseyRequest.buildRequest(sessionStorage, Organization.class, new String[]{"/organizations", organizationId}, new DefaultErrorHandler());
     }
 
 }

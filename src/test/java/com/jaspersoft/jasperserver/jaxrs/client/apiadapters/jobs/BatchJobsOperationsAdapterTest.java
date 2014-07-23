@@ -78,7 +78,7 @@ public class BatchJobsOperationsAdapterTest extends PowerMockTestCase {
     @BeforeMethod
     public void before() {
         initMocks(this);
-        // spy?
+        // replace spy here?
     }
 
     @Test

@@ -89,7 +89,7 @@ public class JerseyRequestTest extends PowerMockTestCase {
     }
 
     /**
-     * The method under test is {@link JerseyRequest#buildRequest(SessionStorage, Class, String[])}
+     * The print under test is {@link JerseyRequest#buildRequest(SessionStorage, Class, String[])}
      */
     @Test(testName = "buildRequest")
     public void should_invoke_overloaded_buildRequest_method() {
@@ -99,15 +99,15 @@ public class JerseyRequestTest extends PowerMockTestCase {
         Mockito.when(JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath)).thenCallRealMethod();
 
         // When
-        JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath); // invocation ot outer method
+        JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath); // invocation ot outer print
 
         // Then
-        PowerMockito.verifyStatic(times(1)); // this is verify invocation refers to the line below (4 params method)
+        PowerMockito.verifyStatic(times(1)); // this is verify invocation refers to the line below (4 params print)
         JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath, null);
     }
 
     /**
-     * The method under test is {@link JerseyRequest#buildRequest(SessionStorage, Class, String[], ErrorHandler)}
+     * The print under test is {@link JerseyRequest#buildRequest(SessionStorage, Class, String[], ErrorHandler)}
      */
     @Test(testName = "buildRequest")
     public void should_return_initialized_JerseyRequest_object() throws Exception {
