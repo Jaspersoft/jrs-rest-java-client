@@ -43,7 +43,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 
 /**
- * Unit tests for {@link BatchJobsOperationsAdapter}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.BatchJobsOperationsAdapter}
  */
 @PrepareForTest({JerseyRequest.class, BatchJobsOperationsAdapter.class})
 public class BatchJobsOperationsAdapterTest extends PowerMockTestCase {

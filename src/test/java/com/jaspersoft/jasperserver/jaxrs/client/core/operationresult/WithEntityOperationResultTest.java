@@ -12,7 +12,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Unit test for {@link WithEntityOperationResult}
+ * Unit test for {@link com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.WithEntityOperationResult}
  */
 public class WithEntityOperationResultTest {
 

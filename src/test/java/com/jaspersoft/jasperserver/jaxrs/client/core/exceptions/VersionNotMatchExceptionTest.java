@@ -10,7 +10,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
- * Unit tests for {@link VersionNotMatchException}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.VersionNotMatchException}
  */
 public class VersionNotMatchExceptionTest {
 

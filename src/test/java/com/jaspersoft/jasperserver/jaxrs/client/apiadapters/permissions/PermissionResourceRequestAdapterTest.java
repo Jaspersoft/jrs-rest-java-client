@@ -35,7 +35,7 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link PermissionResourceRequestAdapter}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionResourceRequestAdapter}
  */
 @PrepareForTest({JerseyRequest.class})
 public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
@@ -101,7 +101,7 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
         assertEquals(resourceUri, "resourceUri");
     }
 
-    @Test(testName = "createOrUpdate")
+    @Test(testName = "updateOrCreate")
     public void should_return_proper_OperationResult_instance() {
 
         // Given

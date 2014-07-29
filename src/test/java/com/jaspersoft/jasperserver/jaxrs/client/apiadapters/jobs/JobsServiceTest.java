@@ -37,7 +37,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
 /**
- * Unit tests for {@link JobsService}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsService}
  */
 @PrepareForTest({JerseyRequest.class, JobsService.class})
 public class JobsServiceTest extends PowerMockTestCase {

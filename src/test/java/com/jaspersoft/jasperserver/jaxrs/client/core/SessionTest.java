@@ -39,7 +39,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link Session}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.Session}
  */
 @PrepareForTest(Session.class)
 public class SessionTest extends PowerMockTestCase {

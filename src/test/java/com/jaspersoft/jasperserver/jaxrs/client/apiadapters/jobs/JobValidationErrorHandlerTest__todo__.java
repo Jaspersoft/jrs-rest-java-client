@@ -23,7 +23,7 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 
 /**
- * Unit tests for {@link JobValidationErrorHandler}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobValidationErrorHandler}
  */
 @PrepareForTest({JobValidationErrorHandler.class, DefaultErrorHandler.class})
 public class JobValidationErrorHandlerTest__todo__ extends PowerMockTestCase {

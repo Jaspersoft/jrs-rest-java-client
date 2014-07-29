@@ -22,7 +22,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Unit tests for {@link QueryExecutorAdapter}.
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorAdapter}.
  */
 @PrepareForTest(JerseyRequest.class)
 public class QueryExecutorAdapterTest extends PowerMockTestCase {

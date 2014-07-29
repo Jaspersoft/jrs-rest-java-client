@@ -11,7 +11,7 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link Query}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query}
  */
 public class QueryTest {
 

@@ -14,7 +14,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
- * Unit tests for {@link DomainMetadataService}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataService}
  */
 public class DomainMetadataServiceTest {
 

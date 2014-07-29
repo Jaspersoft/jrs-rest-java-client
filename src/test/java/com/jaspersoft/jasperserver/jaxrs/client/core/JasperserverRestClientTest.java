@@ -18,7 +18,7 @@ import static org.powermock.api.support.membermodification.MemberModifier.suppre
 import static org.testng.Assert.assertEquals;
 
 /**
- * Unit tests for {@link JasperserverRestClient}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient}
  */
 @PrepareForTest({JasperserverRestClient.class, SessionStorage.class})
 public class JasperserverRestClientTest extends PowerMockTestCase {

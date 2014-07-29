@@ -18,7 +18,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNotSame;
 
 /**
- * Unit tests for {@link AuthenticationCredentials}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.AuthenticationCredentials}
  */
 @PrepareForTest(AuthenticationCredentials.class)
 public class AuthenticationCredentialsTest extends PowerMockTestCase {

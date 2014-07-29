@@ -18,7 +18,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
- * Unit test for {@link SessionOutputFilter}
+ * Unit test for {@link com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter}
  */
 public class SessionOutputFilterTest {
 

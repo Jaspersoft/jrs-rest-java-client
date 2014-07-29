@@ -36,7 +36,7 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertNull;
 
 /**
- * Unit tests for {@link RestClientConfigurationTest}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfigurationTest}
  *
  * @author Alexander Krasnyanskiy
  */

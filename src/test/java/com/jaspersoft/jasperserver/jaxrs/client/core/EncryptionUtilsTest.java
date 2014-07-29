@@ -21,7 +21,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Unit tests for {@link EncryptionUtils}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.EncryptionUtils}
  */
 @PrepareForTest({EncryptionUtils.class, LogFactory.class, Log.class})
 public class EncryptionUtilsTest extends PowerMockTestCase {

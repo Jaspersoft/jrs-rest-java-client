@@ -36,7 +36,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
 /**
- * Unit tests for {@link JerseyRequest}.
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest}.
  */
 @PrepareForTest(JerseyRequest.class)
 public class JerseyRequestTest extends PowerMockTestCase {
@@ -89,7 +89,7 @@ public class JerseyRequestTest extends PowerMockTestCase {
     }
 
     /**
-     * The print under test is {@link JerseyRequest#buildRequest(SessionStorage, Class, String[])}
+     * The print under test is {@link com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest#buildRequest(com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage, Class, String[])}
      */
     @Test(testName = "buildRequest")
     public void should_invoke_overloaded_buildRequest_method() {
@@ -107,7 +107,7 @@ public class JerseyRequestTest extends PowerMockTestCase {
     }
 
     /**
-     * The print under test is {@link JerseyRequest#buildRequest(SessionStorage, Class, String[], ErrorHandler)}
+     * The print under test is {@link com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest#buildRequest(com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage, Class, String[], com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler)}
      */
     @Test(testName = "buildRequest")
     public void should_return_initialized_JerseyRequest_object() throws Exception {

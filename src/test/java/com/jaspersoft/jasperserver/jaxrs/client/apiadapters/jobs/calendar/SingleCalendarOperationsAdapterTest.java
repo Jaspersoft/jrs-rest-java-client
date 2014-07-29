@@ -92,14 +92,14 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void constructor() {
+    public void should_pass_proper_params_to_super_class() {
 
         // When
         SingleCalendarOperationsAdapter calendarOperationsAdapter =
                 new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName");
 
         // Than
-        assertSame(calendarOperationsAdapter.getSessionStorage(), sessionStorageMock); // передали паренту
+        assertSame(calendarOperationsAdapter.getSessionStorage(), sessionStorageMock);
         Object calendarName = Whitebox.getInternalState(calendarOperationsAdapter, "calendarName");
         Object params = Whitebox.getInternalState(calendarOperationsAdapter, "params");
 
@@ -378,13 +378,15 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ReportJobCalendar.class), eq(new String[]{"/jobs", "/calendars", "testCalendarName"}));
         assertSame(retrieved, getResultMock);
 
-        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>)Whitebox.getInternalState(adapterSpy, "params");
+        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapterSpy, "params");
         Mockito.verify(requestMock).addParams(retrievedParams);
         Mockito.verify(requestMock).put(calendarEntityMock);
     }
 
     @AfterMethod
     public void after() {
-        reset(sessionStorageMock);
+        reset(sessionStorageMock, requestMock, objRequestMock, getResultMock, delResultMock,
+                operationResultMock, reportJobCalendarMock, responseMock, withEntityOperationResultMock,
+                calendarEntityMock);
     }
 }

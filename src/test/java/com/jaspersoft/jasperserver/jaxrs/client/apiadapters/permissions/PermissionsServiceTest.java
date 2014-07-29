@@ -32,7 +32,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 /**
- * Unit tests for {@link PermissionsService}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionsService}
  */
 @PrepareForTest({JerseyRequest.class})
 public class PermissionsServiceTest extends PowerMockTestCase {

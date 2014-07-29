@@ -3,7 +3,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles;
 import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -26,13 +25,19 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
 import static org.testng.AssertJUnit.assertSame;
 
 /**
- * Unit tests for {@link BatchRolesRequestAdapter}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.BatchRolesRequestAdapter}
  */
 @PrepareForTest({BatchRolesRequestAdapter.class, MultivaluedHashMap.class, JerseyRequest.class})
 public class BatchRolesRequestAdapterTest extends PowerMockTestCase {
@@ -96,7 +101,7 @@ public class BatchRolesRequestAdapterTest extends PowerMockTestCase {
 
         // Given
         MultivaluedHashMap<String, String> mapMock = PowerMockito.mock(MultivaluedHashMap.class);
-        PowerMockito.whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(mapMock);
+        whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(mapMock);
         BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(sessionStorageMock, "9454");
 
         // When
@@ -104,7 +109,7 @@ public class BatchRolesRequestAdapterTest extends PowerMockTestCase {
 
         // Than
         assertSame(retrieved, adapter);
-        Mockito.verify(mapMock).add(RolesParameter.HAS_ALL_USERS.getParamName(), "value");
+        verify(mapMock).add(RolesParameter.HAS_ALL_USERS.getParamName(), "value");
         Mockito.verifyNoMoreInteractions(mapMock);
     }
 
@@ -112,11 +117,11 @@ public class BatchRolesRequestAdapterTest extends PowerMockTestCase {
     public void get() throws Exception {
 
         // Given
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(RolesListWrapper.class), eq(new String[]{"/organizations/9454/roles"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        PowerMockito.whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(mapMock);
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(eq(sessionStorageMock), eq(RolesListWrapper.class), eq(new String[]{"/organizations/9454/roles"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(mapMock);
 
-        PowerMockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
+        doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
         InOrder inOrder = Mockito.inOrder(jerseyRequestMock);
         BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(sessionStorageMock, "9454");
 
@@ -124,7 +129,7 @@ public class BatchRolesRequestAdapterTest extends PowerMockTestCase {
         OperationResult<RolesListWrapper> retrievedResult = adapter.get();
 
         // Than
-        PowerMockito.verifyStatic(times(1));
+        verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(RolesListWrapper.class), eq(new String[]{"/organizations/9454/roles"}), any(DefaultErrorHandler.class));
 
         assertSame(retrievedResult, expectedOpResultMock);
@@ -135,20 +140,22 @@ public class BatchRolesRequestAdapterTest extends PowerMockTestCase {
     @Test
     public void asyncGet() throws Exception {
 
-        // ?
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(RolesListWrapper.class), eq(new String[]{"/organizations/9454/roles"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        PowerMockito.whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(mapMock);
-        PowerMockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
-        PowerMockito.doReturn(expectedOpResultMock).when(callbackMock).execute(expectedOpResultMock);
+        // Given
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(eq(sessionStorageMock), eq(RolesListWrapper.class), eq(new String[]{"/organizations/9454/roles"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(mapMock);
+        doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
+        doReturn(expectedOpResultMock).when(callbackMock).execute(expectedOpResultMock);
 
+        // When
         BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(sessionStorageMock, "9454");
+        adapter.asyncGet(callbackMock);
 
-        RequestExecution requestExecution = adapter.asyncGet(callbackMock);
-
-        PowerMockito.verifyStatic(times(1));
+        // Than
+        verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(RolesListWrapper.class), eq(new String[]{"/organizations/9454/roles"}), any(DefaultErrorHandler.class));
-        Mockito.verify(jerseyRequestMock, times(1)).addParams(mapMock);
+        verify(jerseyRequestMock, times(1)).addParams(mapMock);
+        verify(callbackMock, times(1)).execute(expectedOpResultMock);
     }
 
     @AfterMethod

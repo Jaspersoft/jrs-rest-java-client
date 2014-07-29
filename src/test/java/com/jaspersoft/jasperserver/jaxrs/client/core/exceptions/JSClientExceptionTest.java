@@ -6,7 +6,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 /**
- * Unit tests for {@link JSClientException}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException}
  */
 public class JSClientExceptionTest {
 

@@ -18,7 +18,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit test for {@link OperationResult}
+ * Unit test for {@link com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult}
  */
 public class OperationResultTest {
 

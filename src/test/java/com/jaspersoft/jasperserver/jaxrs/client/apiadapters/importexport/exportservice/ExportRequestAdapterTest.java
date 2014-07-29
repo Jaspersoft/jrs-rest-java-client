@@ -28,7 +28,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
 /**
- * Unit tests for {@link ExportRequestAdapter}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportRequestAdapter}
  */
 @PrepareForTest({ExportRequestAdapter.class, JerseyRequest.class})
 public class ExportRequestAdapterTest extends PowerMockTestCase {

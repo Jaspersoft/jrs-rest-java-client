@@ -35,7 +35,7 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link ImportTaskRequestAdapter}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportTaskRequestAdapter}
  *
  * @author Alexander Krasnyanskiy
  */

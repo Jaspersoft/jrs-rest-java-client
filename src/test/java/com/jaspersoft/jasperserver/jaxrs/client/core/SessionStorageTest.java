@@ -1,4 +1,4 @@
-//package com.jaspersoft.jasperserver.jaxrs.client.core;
+package com.jaspersoft.jasperserver.jaxrs.client.core;//package com.jaspersoft.jasperserver.jaxrs.client.core;
 //
 //import org.mockito.Mock;
 //import org.powermock.api.mockito.PowerMockito;

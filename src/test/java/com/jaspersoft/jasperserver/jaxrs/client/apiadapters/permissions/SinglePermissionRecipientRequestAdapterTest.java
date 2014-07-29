@@ -27,7 +27,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
 /**
- * Unit tests for {@link SinglePermissionRecipientRequestAdapter}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.SinglePermissionRecipientRequestAdapter}
  */
 @PrepareForTest({SinglePermissionRecipientRequestAdapter.class, JerseyRequest.class})
 public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCase {
@@ -67,7 +67,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         assertNotNull(retrieved);
     }
 
-    @Test(testName = "createOrUpdate")
+    @Test(testName = "updateOrCreate")
     public void should_create_or_update_RepositoryPermission_and_return_result_of_operation() throws Exception {
 
         // Given

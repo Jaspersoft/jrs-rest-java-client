@@ -16,7 +16,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
-* Unit tests for {@link QueryExecutorService}
+* Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorService}
 */
 public class QueryExecutorServiceTest {
 

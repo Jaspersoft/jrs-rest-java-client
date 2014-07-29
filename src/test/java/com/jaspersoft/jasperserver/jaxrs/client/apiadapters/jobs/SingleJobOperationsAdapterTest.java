@@ -33,7 +33,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
 /**
- * Unit tests for {@link SingleJobOperationsAdapter}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.SingleJobOperationsAdapter}
  */
 @PrepareForTest({JerseyRequest.class})
 public class SingleJobOperationsAdapterTest extends PowerMockTestCase {

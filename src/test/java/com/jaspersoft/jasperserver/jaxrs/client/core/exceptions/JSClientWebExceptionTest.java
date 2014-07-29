@@ -14,7 +14,7 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link JSClientWebException}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException}
  */
 public class JSClientWebExceptionTest {
 

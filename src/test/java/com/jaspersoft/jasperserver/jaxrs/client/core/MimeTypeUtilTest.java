@@ -19,7 +19,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Unit tests for {@link MimeTypeUtil}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil}
  */
 @PrepareForTest({MimeTypeUtil.class, MimeType.class, RestClientConfiguration.class})
 public class MimeTypeUtilTest extends PowerMockTestCase {

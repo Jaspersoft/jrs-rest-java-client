@@ -25,7 +25,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 /**
- * Unit tests for {@link ImportRequestAdapter}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportRequestAdapter}
  */
 @PrepareForTest({ImportRequestAdapter.class, JerseyRequest.class})
 public class ImportRequestAdapterTest extends PowerMockTestCase {

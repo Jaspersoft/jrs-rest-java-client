@@ -34,7 +34,7 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link ExportTaskAdapter}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportTaskAdapter}
  */
 @PrepareForTest({JerseyRequest.class})
 public class ExportTaskAdapterTest extends PowerMockTestCase {

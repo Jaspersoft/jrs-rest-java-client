@@ -19,7 +19,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Unit tests for {@link DomainMetadataAdapter}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataAdapter}
  */
 @PrepareForTest(JerseyRequest.class)
 public class DomainMetadataAdapterTest extends PowerMockTestCase {
@@ -43,7 +43,7 @@ public class DomainMetadataAdapterTest extends PowerMockTestCase {
     }
 
     /**
-     * The constructor under test is {@link DomainMetadataAdapter#DomainMetadataAdapter(SessionStorage, String)}
+     * The constructor under test is {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataAdapter#DomainMetadataAdapter(com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage, String)}
      */
     @Test(testName = "DomainMetadataAdapter_constructor")
     public void should_pass_not_null_SessionStorage_and_domainUri_to_super_class_without_any_changes() {
