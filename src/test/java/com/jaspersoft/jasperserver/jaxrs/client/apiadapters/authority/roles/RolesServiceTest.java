@@ -62,7 +62,7 @@ public class RolesServiceTest extends PowerMockTestCase {
                 .withArguments(sessionStorageMock, null, "Admin");
     }
 
-    @Test
+    @Test (expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_role_name_is_empty() throws Exception {
 
         // Given
