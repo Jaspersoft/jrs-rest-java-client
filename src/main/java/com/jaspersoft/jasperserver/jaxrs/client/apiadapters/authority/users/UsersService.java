@@ -47,12 +47,10 @@ public class UsersService extends AbstractAdapter {
         return new SingleUserRequestAdapter(sessionStorage, organizationId, username);
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public SingleUserRequestAdapter user() {
         return new SingleUserRequestAdapter(sessionStorage, organizationId);
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public SingleUserRequestAdapter user(String userId) {
         return new SingleUserRequestAdapter(userId, organizationId, sessionStorage);
     }

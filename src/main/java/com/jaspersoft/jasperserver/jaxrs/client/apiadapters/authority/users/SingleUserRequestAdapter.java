@@ -21,7 +21,6 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
 
     private String userUriPrefix;
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     private StringBuilder uri = new StringBuilder();
 
     @Deprecated
@@ -40,7 +39,6 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      * @param sessionStorage
      * @param organizationId
      */
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public SingleUserRequestAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
         if (organizationId != null) {
@@ -58,7 +56,6 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      * @param organizationId
      * @param sessionStorage
      */
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public SingleUserRequestAdapter(String userId, String organizationId, SessionStorage sessionStorage) {
         super(sessionStorage);
         if (organizationId != null && !organizationId.equals("")
@@ -72,12 +69,10 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         }
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public SingleAttributeAdapter attribute() {
         return new SingleAttributeAdapter(sessionStorage, uri);
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public BatchAttributeAdapter multipleAttributes() {
         return new BatchAttributeAdapter(sessionStorage, uri);
     }
@@ -100,7 +95,6 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return buildRequest().get();
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public OperationResult<ClientUser> get(String userId) {
         uri.append(userId);
         return request().get();
@@ -119,7 +113,6 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return task;
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientUser>, R> callback, String userId) {
         uri.append(userId);
         final JerseyRequest<ClientUser> request = request();
@@ -138,7 +131,6 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return buildRequest().put(user);
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public OperationResult<ClientUser> updateOrCreate(ClientUser user) {
         uri.append(user.getUsername());
         if (!uri.toString().contains("organizations") && user.getTenantId() != null){
@@ -160,7 +152,6 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return task;
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public <R> RequestExecution asyncCreateOrUpdate(final ClientUser user, final Callback<OperationResult<ClientUser>, R> callback, String userId) {
         uri.append(userId);
         final JerseyRequest<ClientUser> request = request();
@@ -179,13 +170,11 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return buildRequest().delete();
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public OperationResult delete(String userId) {
         uri.append(userId);
         return request().delete();
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public OperationResult delete(ClientUser user) {
         uri.append(user.getUsername());
         return request().delete();
@@ -204,7 +193,6 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return task;
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     public <R> RequestExecution asyncDelete(final Callback<OperationResult<ClientUser>, R> callback, String userId) {
         uri.append(userId);
         final JerseyRequest<ClientUser> request = request();
@@ -223,7 +211,6 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return JerseyRequest.buildRequest(sessionStorage, ClientUser.class, new String[]{userUriPrefix}, new DefaultErrorHandler());
     }
 
-    @NewAPI(since = "5.5.0.1-ALPHA")
     private JerseyRequest<ClientUser> request() {
         return JerseyRequest.buildRequest(sessionStorage, ClientUser.class, new String[]{uri.toString()}, new DefaultErrorHandler());
     }

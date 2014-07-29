@@ -2,7 +2,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.att
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.NewAPI;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -11,10 +10,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
-/**
-* @author Alexander Krasnyanskiy
-*/
-@NewAPI(since = "5.5.0.1-ALPHA")
 public class SingleAttributeAdapter extends AbstractAdapter {
 
     private String attributeName;

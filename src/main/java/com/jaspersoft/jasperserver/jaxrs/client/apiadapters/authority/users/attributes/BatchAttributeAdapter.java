@@ -3,7 +3,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.att
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.dto.authority.UserAttributesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.NewAPI;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersAttributesParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
@@ -17,7 +16,6 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.List;
 
-@NewAPI(since = "5.5.0.1-ALPHA")
 public class BatchAttributeAdapter extends AbstractAdapter {
 
     private MultivaluedMap<String, String> params;
