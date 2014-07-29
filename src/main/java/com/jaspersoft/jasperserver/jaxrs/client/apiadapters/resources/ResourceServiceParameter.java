@@ -47,8 +47,7 @@ public enum ResourceServiceParameter {
      *
      * Type/Value: true|false
      */
-    OVERWRITE("overwrite"),
-    ;
+    OVERWRITE("overwrite");
 
     private String name;
 

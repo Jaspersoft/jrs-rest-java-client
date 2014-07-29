@@ -32,12 +32,12 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
 
     private final String roleUriPrefix;
 
-    public SingleRoleRequestAdapter(SessionStorage sessionStorage, String organizationId, String rolename) {
+    public SingleRoleRequestAdapter(SessionStorage sessionStorage, String organizationId, String roleName) {
         super(sessionStorage);
         if (organizationId != null) {
-            roleUriPrefix = "/organizations/" + organizationId + "/roles/" + rolename;
+            roleUriPrefix = "/organizations/" + organizationId + "/roles/" + roleName;
         } else {
-            roleUriPrefix = "/roles/" + rolename;
+            roleUriPrefix = "/roles/" + roleName;
         }
     }
 
@@ -79,6 +79,7 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult<ClientRole>, R> callback) {
         final JerseyRequest<ClientRole> request = buildRequest(ClientRole.class);
+
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {

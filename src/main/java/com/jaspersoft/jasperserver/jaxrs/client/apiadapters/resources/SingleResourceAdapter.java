@@ -26,8 +26,12 @@ import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobValidationErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.sun.jersey.multipart.FormDataMultiPart;
@@ -41,7 +45,6 @@ import java.io.InputStream;
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class SingleResourceAdapter extends AbstractAdapter {
-
     private final String resourceUri;
     private final MultivaluedMap<String, String> params;
 
@@ -63,28 +66,24 @@ public class SingleResourceAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncDetails(final Callback<OperationResult<ClientResource>, R> callback) {
         final JerseyRequest<ClientResource> request = prepareDetailsRequest();
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     private JerseyRequest<ClientResource> prepareDetailsRequest() {
-        JerseyRequest<ClientResource> request =
-                buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri});
+        JerseyRequest<ClientResource> request = buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri});
         request.addParams(params);
-
-        if (isRootFolder(resourceUri))
+        if (isRootFolder(resourceUri)) {
             request.setAccept(ResourceMediaType.FOLDER_JSON);
-        else
+        } else {
             request.setAccept(ResourceMediaType.FILE_JSON);
-
+        }
         return request;
     }
 
@@ -93,21 +92,17 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     public OperationResult<InputStream> downloadBinary() {
-        return buildRequest(sessionStorage, InputStream.class, new String[]{"/resources", resourceUri})
-                .get();
+        return buildRequest(sessionStorage, InputStream.class, new String[]{"/resources", resourceUri}).get();
     }
 
     public <R> RequestExecution asyncDownloadBinary(final Callback<OperationResult<InputStream>, R> callback) {
-        final JerseyRequest<InputStream> request =
-                buildRequest(sessionStorage, InputStream.class, new String[]{"/resources", resourceUri});
-
+        final JerseyRequest<InputStream> request = buildRequest(sessionStorage, InputStream.class, new String[]{"/resources", resourceUri});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
@@ -118,14 +113,12 @@ public class SingleResourceAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncCreateOrUpdate(final ClientResource resource, final Callback<OperationResult<ClientResource>, R> callback) {
         final JerseyRequest<ClientResource> request = prepareCreateOrUpdateRequest(resource);
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.put(resource));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
@@ -136,22 +129,20 @@ public class SingleResourceAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncCreateNew(final ClientResource resource, final Callback<OperationResult<ClientResource>, R> callback) {
         final JerseyRequest<ClientResource> request = prepareCreateOrUpdateRequest(resource);
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.post(resource));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
+    @SuppressWarnings("unchecked")
     private JerseyRequest<ClientResource> prepareCreateOrUpdateRequest(ClientResource resource) {
         Class<? extends ClientResource> resourceType = ResourcesTypeResolverUtil.getResourceType(resource);
-        JerseyRequest<? extends ClientResource> request =
-                buildRequest(sessionStorage, resourceType, new String[]{"/resources", resourceUri}, new ResourceValidationErrorHandler());
+        JerseyRequest<? extends ClientResource> request = buildRequest(sessionStorage, resourceType, new String[]{"/resources", resourceUri}, new ResourceValidationErrorHandler());
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), ResourcesTypeResolverUtil.getMimeType(resourceType)));
         request.addParams(params);
         return (JerseyRequest<ClientResource>) request;
@@ -166,31 +157,28 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     private OperationResult<ClientResource> copyOrMove(boolean moving, String fromUri) {
-
         JerseyRequest<ClientResource> request = prepareCopyOrMoveRequest(fromUri);
-
-        if (moving)
+        if (moving) {
             return request.put("");
-        else
+        } else {
             return request.post(null);
+        }
     }
 
-    private <R> RequestExecution asyncCopyOrMove(final boolean moving, final String fromUri,
-                                                 final Callback<OperationResult<ClientResource>, R> callback) {
+    private <R> RequestExecution asyncCopyOrMove(final boolean moving, final String fromUri, final Callback<OperationResult<ClientResource>, R> callback) {
         final JerseyRequest<ClientResource> request = prepareCopyOrMoveRequest(fromUri);
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 OperationResult<ClientResource> result;
-                if (moving)
+                if (moving) {
                     result = request.put("");
-                else
+                } else {
                     result = request.post(null);
+                }
                 callback.execute(result);
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }

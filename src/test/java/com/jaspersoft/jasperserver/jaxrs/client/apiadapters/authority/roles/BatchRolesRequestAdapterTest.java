@@ -37,7 +37,7 @@ import static org.testng.AssertJUnit.assertNotNull;
 import static org.testng.AssertJUnit.assertSame;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.BatchRolesRequestAdapter}
+ * Unit tests for {@link BatchRolesRequestAdapter}
  */
 @PrepareForTest({BatchRolesRequestAdapter.class, MultivaluedHashMap.class, JerseyRequest.class})
 public class BatchRolesRequestAdapterTest extends PowerMockTestCase {

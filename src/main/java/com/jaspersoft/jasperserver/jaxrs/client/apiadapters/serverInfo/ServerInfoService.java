@@ -52,7 +52,7 @@ public class ServerInfoService extends AbstractAdapter {
     }
 
     public OperationResult<String> version(){
-        return buildServerInfoRequest("/version").get();
+        return buildServerInfoRequest("/since").get();
     }
 
     public OperationResult<String> build(){
