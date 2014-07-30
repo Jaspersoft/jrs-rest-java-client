@@ -195,7 +195,8 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
 
         // Than
         PowerMockito.verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientRole.class), eq(new String[]{roleUriPrefix}), any(DefaultErrorHandler.class));
+        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientRole.class), eq(new String[]{roleUriPrefix}),
+                any(DefaultErrorHandler.class));
         PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest", eq(ClientRole.class));
         Assert.assertNotNull(retrieved);
     }

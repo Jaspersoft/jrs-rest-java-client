@@ -66,7 +66,7 @@ public class BatchAttributeAdapter extends AbstractAdapter {
 
         for (ClientUserAttribute retrievedAttribute : retrievedAttributes) {
             for (ClientUserAttribute additionalAttribute : additionalAttributes) {
-                if (additionalAttribute.getName().equals(retrievedAttribute.getName())){
+                if (additionalAttribute.getName().equals(retrievedAttribute.getName())) {
                     retrievedAttribute.setValue(additionalAttribute.getValue());
                 }
             }
@@ -77,7 +77,8 @@ public class BatchAttributeAdapter extends AbstractAdapter {
         return request().put(newAttributes);
     }
 
-    public <R> RequestExecution asyncCreateOrUpdate(final UserAttributesListWrapper attributesList, final Callback<OperationResult<UserAttributesListWrapper>, R> callback) {
+    public <R> RequestExecution asyncCreateOrUpdate(final UserAttributesListWrapper attributesList,
+                                                    final Callback<OperationResult<UserAttributesListWrapper>, R> callback) {
         final JerseyRequest<UserAttributesListWrapper> request = request();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -109,6 +110,7 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<UserAttributesListWrapper> request() {
-        return JerseyRequest.buildRequest(sessionStorage, UserAttributesListWrapper.class, new String[]{uri.toString(), "/attributes"}, new DefaultErrorHandler());
+        return JerseyRequest.buildRequest(sessionStorage, UserAttributesListWrapper.class,
+                new String[]{uri.toString(), "/attributes"}, new DefaultErrorHandler());
     }
 }

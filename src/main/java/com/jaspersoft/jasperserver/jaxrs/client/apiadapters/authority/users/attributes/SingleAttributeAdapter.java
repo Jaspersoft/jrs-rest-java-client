@@ -25,8 +25,6 @@ public class SingleAttributeAdapter extends AbstractAdapter {
         this.uri = uri;
     }
 
-    // http://23.23.21.26/jasperserver-pro/rest_v2/organizations/MyCoolOrg/users/Simon/attributes/State
-
     public OperationResult<ClientUserAttribute> get(final String attributeName) {
         this.attributeName = attributeName;
         return request().get();

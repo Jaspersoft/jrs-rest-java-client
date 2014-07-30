@@ -222,12 +222,12 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     @Override
     public RequestBuilder<ResponseType> addHeader(String name, String... values) {
         headers.addAll(name, values);
-        return this; // TODO: ask Boris about 'return null'
+        return this;
     }
 
     public RequestBuilder<ResponseType> setHeaders(MultivaluedMap<String, String> headers) {
         this.headers = headers;
-        return this; // TODO: ask Boris about 'return null'
+        return this;
     }
 
     /**
