@@ -40,44 +40,35 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
     public BatchUsersRequestAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
         params = new MultivaluedHashMap<String, String>();
-        if (organizationId != null)
+        if (organizationId != null) {
             uri = "/organizations/" + organizationId + "/users";
-        else
+        } else {
             uri = "/users";
+        }
     }
 
-    public BatchUsersRequestAdapter param(UsersParameter userParam, String value){
+    public BatchUsersRequestAdapter param(UsersParameter userParam, String value) {
         params.add(userParam.getParamName(), value);
         return this;
     }
 
-    public OperationResult<UsersListWrapper> get(){
-        JerseyRequest<UsersListWrapper> request =
-                buildRequest(
-                        sessionStorage,
-                        UsersListWrapper.class,
-                        new String[]{uri},
-                        new DefaultErrorHandler());
+    public OperationResult<UsersListWrapper> get() {
+        JerseyRequest<UsersListWrapper> request = buildRequest(sessionStorage, UsersListWrapper.class,
+                new String[]{uri}, new DefaultErrorHandler());
         request.addParams(params);
         return request.get();
     }
 
-    public <R> RequestExecution asyncGet(final Callback<OperationResult<UsersListWrapper>, R> callback){
-        final JerseyRequest<UsersListWrapper> request =
-                buildRequest(
-                        sessionStorage,
-                        UsersListWrapper.class,
-                        new String[]{uri},
-                        new DefaultErrorHandler());
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<UsersListWrapper>, R> callback) {
+        final JerseyRequest<UsersListWrapper> request = buildRequest(sessionStorage, UsersListWrapper.class,
+                new String[]{uri}, new DefaultErrorHandler());
         request.addParams(params);
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.delete());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }

@@ -219,7 +219,6 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verify(ageAttribute, times(1)).setValue(anyString());
     }
 
-    /*
     @Test
     public void asyncCreateOrUpdate() throws Exception {
 
@@ -238,9 +237,8 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verifyPrivate(adapterSpy, times(1)).invoke("request");
         verify(callbackMock, times(1)).execute(operationResultMock);
     }
-    */
 
-    /*
+
     @Test
     public void asyncDelete() throws Exception {
 
@@ -259,7 +257,6 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verifyPrivate(adapterSpy, times(1)).invoke("request");
         verify(callbackMock, times(1)).execute(operationResultMock);
     }
-    */
 
     @Test(testName = "private")
     public void request() throws Exception {
