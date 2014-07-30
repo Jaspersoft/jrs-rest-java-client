@@ -240,6 +240,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
     }
     */
 
+    /*
     @Test
     public void asyncDelete() throws Exception {
 
@@ -258,6 +259,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verifyPrivate(adapterSpy, times(1)).invoke("request");
         verify(callbackMock, times(1)).execute(operationResultMock);
     }
+    */
 
     @Test(testName = "private")
     public void request() throws Exception {
