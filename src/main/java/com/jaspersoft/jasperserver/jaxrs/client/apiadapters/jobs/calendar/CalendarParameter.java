@@ -33,8 +33,7 @@ public enum CalendarParameter {
      * whether or not to update existing triggers that referenced the already
      * existing calendar so that they are 'correct' based on the new trigger.
      */
-    UPDATE_TRIGGERS("updateTriggers")
-    ;
+    UPDATE_TRIGGERS("updateTriggers");
 
     private String name;
 

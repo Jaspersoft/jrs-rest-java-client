@@ -74,16 +74,15 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncSearch(final Job searchCriteria, final Callback<OperationResult<JobSummaryListWrapper>, R> callback) {
-//        final JerseyRequest<JobSummaryListWrapper> request = prepareSearchRequest(searchCriteria);
-//        RequestExecution task = new RequestExecution(new Runnable() {
-//            @Override
-//            public void run() {
-//                callback.execute(request.get());
-//            }
-//        });
-//        ThreadPoolUtil.runAsynchronously(task);
-//        return task;
-        throw new RuntimeException();
+        final JerseyRequest<JobSummaryListWrapper> request = prepareSearchRequest(searchCriteria);
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.get());
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     private JerseyRequest<JobSummaryListWrapper> prepareSearchRequest(Job searchCriteria) {
@@ -148,18 +147,17 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncUpdate(final ReportJobModel jobModel, final Callback<OperationResult<JobIdListWrapper>, R> callback) {
-//        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
-//        request.addParams(params);
-//        final String jobJson = buildJson(jobModel);
-//        RequestExecution task = new RequestExecution(new Runnable() {
-//            @Override
-//            public void run() {
-//                callback.execute(request.post(jobJson));
-//            }
-//        });
-//        ThreadPoolUtil.runAsynchronously(task);
-//        return task;
-        throw new RuntimeException();
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
+        request.addParams(params);
+        final String jobJson = buildJson(jobModel);
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.post(jobJson));
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     private List<Long> getIds() {
@@ -180,17 +178,16 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncPause(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
-//        final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-//        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"});
-//        RequestExecution task = new RequestExecution(new Runnable() {
-//            @Override
-//            public void run() {
-//                callback.execute(request.post(jobIdListWrapper));
-//            }
-//        });
-//        ThreadPoolUtil.runAsynchronously(task);
-//        return task;
-        throw new RuntimeException();
+        final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"});
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.post(jobIdListWrapper));
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     public OperationResult<JobIdListWrapper> resume() {
@@ -199,17 +196,16 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncResume(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
-//        final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-//        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/resume"});
-//        RequestExecution task = new RequestExecution(new Runnable() {
-//            @Override
-//            public void run() {
-//                callback.execute(request.post(jobIdListWrapper));
-//            }
-//        });
-//        ThreadPoolUtil.runAsynchronously(task);
-//        return task;
-        throw new RuntimeException();
+        final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/resume"});
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.post(jobIdListWrapper));
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     public OperationResult<JobIdListWrapper> restart() {
@@ -218,16 +214,15 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncRestart(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
-//        final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-//        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/restart"});
-//        RequestExecution task = new RequestExecution(new Runnable() {
-//            @Override
-//            public void run() {
-//                callback.execute(request.post(jobIdListWrapper));
-//            }
-//        });
-//        ThreadPoolUtil.runAsynchronously(task);
-//        return task;
-        throw new RuntimeException();
+        final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/restart"});
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.post(jobIdListWrapper));
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 }

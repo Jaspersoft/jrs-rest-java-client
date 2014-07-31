@@ -21,12 +21,16 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.Organization;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.AnnotationIntrospector;
@@ -49,12 +53,12 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         this.organizationId = organizationId;
     }
 
-    public OperationResult<Organization> get() {
+    public OperationResult<ClientTenant> get() {
         return buildRequest().get();
     }
 
-    public <R> RequestExecution asyncGet(final Callback<OperationResult<Organization>, R> callback){
-        final JerseyRequest<Organization> request = buildRequest();
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientTenant>, R> callback){
+        final JerseyRequest<ClientTenant> request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -65,7 +69,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    private String prepareJsonForUpdate(Organization organization){
+    private String prepareJsonForUpdate(ClientTenant clientTenant){
         ObjectMapper mapper = new ObjectMapper();
         SerializationConfig serializationConfig = mapper.getSerializationConfig();
         serializationConfig = serializationConfig.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
@@ -75,7 +79,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
 
         String json;
         try {
-            json = mapper.writeValueAsString(organization);
+            json = mapper.writeValueAsString(clientTenant);
         } catch (IOException e) {
             log.error("Cannot marshal organization object.");
             throw new JSClientException("Cannot marshal organization object.");
@@ -83,14 +87,14 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return json;
     }
 
-    public OperationResult<Organization> update(Organization organization) {
-        String json = prepareJsonForUpdate(organization);
+    public OperationResult<ClientTenant> update(ClientTenant clientTenant) {
+        String json = prepareJsonForUpdate(clientTenant);
         return buildRequest().put(json);
     }
 
-    public <R> RequestExecution asyncUpdate(Organization organization, final Callback<OperationResult<Organization>, R> callback){
-        final JerseyRequest<Organization> request = buildRequest();
-        final String json = prepareJsonForUpdate(organization);
+    public <R> RequestExecution asyncUpdate(ClientTenant clientTenant, final Callback<OperationResult<ClientTenant>, R> callback){
+        final JerseyRequest<ClientTenant> request = buildRequest();
+        final String json = prepareJsonForUpdate(clientTenant);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -117,8 +121,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    private JerseyRequest<Organization> buildRequest() {
-        return JerseyRequest.buildRequest(sessionStorage, Organization.class, new String[]{"/organizations", organizationId}, new DefaultErrorHandler());
+    private JerseyRequest<ClientTenant> buildRequest() {
+        return JerseyRequest.buildRequest(sessionStorage, ClientTenant.class, new String[]{"/organizations", organizationId}, new DefaultErrorHandler());
     }
-
 }

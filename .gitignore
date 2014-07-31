@@ -7,7 +7,7 @@
 *.iml
 
 
-# output directies
+# output directories
 target/
 libs/
 out/

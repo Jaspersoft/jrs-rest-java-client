@@ -44,7 +44,8 @@ public class ReportParametersValuesAdapter extends AbstractAdapter {
         this.reportUnitUri = reportUnitUri;
     }
 
-    public ReportParametersValuesAdapter(SessionStorage sessionStorage, String reportUnitUri, String idsPathSegment, MultivaluedMap<String, String> params) {
+    public ReportParametersValuesAdapter(SessionStorage sessionStorage, String reportUnitUri, String idsPathSegment,
+                                         MultivaluedMap<String, String> params) {
         this(sessionStorage, reportUnitUri);
         this.idsPathSegment = idsPathSegment;
         this.params = params;
@@ -70,9 +71,10 @@ public class ReportParametersValuesAdapter extends AbstractAdapter {
         return task;
     }
 
-    private JerseyRequest<InputControlStateListWrapper> prepareRequest(){
+    private JerseyRequest<InputControlStateListWrapper> prepareRequest() {
         JerseyRequest<InputControlStateListWrapper> request =
-                buildRequest(sessionStorage, InputControlStateListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"}, new DefaultErrorHandler());
+                buildRequest(sessionStorage, InputControlStateListWrapper.class,
+                        new String[]{"/reports", reportUnitUri, "/inputControls"}, new DefaultErrorHandler());
         if (idsPathSegment != null) {
             request.setPath(idsPathSegment);
         }

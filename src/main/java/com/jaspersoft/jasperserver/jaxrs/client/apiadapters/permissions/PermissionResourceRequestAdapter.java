@@ -74,12 +74,6 @@ public class PermissionResourceRequestAdapter extends AbstractAdapter {
     public OperationResult<RepositoryPermissionListWrapper> get(){
         JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
         request.addParams(params);
-
-        /**
-         * WRONG code!
-         */
-        //request.setPath("TO FAIL THE TEST"); // TODO: delete
-
         return request.get();
     }
 

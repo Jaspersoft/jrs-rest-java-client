@@ -3,11 +3,13 @@ install: mvn install -Dmaven.compiler.target=1.6 -Dmaven.compiler.source=1.6 -Ds
 script: mvn test -Dmaven.compiler.target=1.6 -Dmaven.compiler.source=1.6
 
 #jdk:
-#- oraclejdk6
+#- oraclejdk7
 
 notifications:
   email:
     - krasnyanskiy.alex@gmail.com
+    - igor.nesterenko@globallogic.com
+    - borys.kolesnykov@globallogic.com
 
 branches:
   only:

@@ -20,14 +20,13 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query;
 
+import com.jaspersoft.jasperserver.dto.query.QueryResult;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.query.QueryResult;
 
 /**
  * This class is used for executing queries and retrieving a result of execution
