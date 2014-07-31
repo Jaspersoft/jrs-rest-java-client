@@ -18,21 +18,28 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ExportFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
 
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class ExportRequestAdapter extends AbstractAdapter {
+
+    private ExecutorService service = Executors.newFixedThreadPool(4);
 
     private static final String STATE_URI = "/state";
     private final String taskId;
@@ -43,77 +50,67 @@ public class ExportRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<StateDto> state() {
-        return buildRequest(sessionStorage, StateDto.class, new String[]{"/export", taskId, STATE_URI})
-                .get();
+        return buildRequest(sessionStorage, StateDto.class, new String[]{"/export", taskId, STATE_URI}).get();
     }
 
-    public <R> RequestExecution asyncState(final Callback<OperationResult<StateDto>, R> callback){
-        final JerseyRequest<StateDto> request =
-                buildRequest(sessionStorage, StateDto.class, new String[]{"/export", taskId, STATE_URI});
-
+    public <R> RequestExecution asyncState(final Callback<OperationResult<StateDto>, R> callback) {
+        final JerseyRequest<StateDto> request = buildRequest(sessionStorage, StateDto.class, new String[]{"/export", taskId, STATE_URI});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     public OperationResult<InputStream> fetch() {
-
         StateDto state;
         while (!"finished".equals((state = state().getEntity()).getPhase())) {
-
-            if ("failed".equals(state.getPhase())){
-                if (state.getErrorDescriptor() != null)
+            if ("failed".equals(state.getPhase())) {
+                if (state.getErrorDescriptor() != null) {
                     throw new ExportFailedException(state.getErrorDescriptor().getMessage(), Arrays.asList(state.getErrorDescriptor()));
-                else
+                } else {
                     throw new ExportFailedException(state.getMessage());
+                }
             }
-
             try {
                 Thread.sleep(500);
-            } catch (InterruptedException ignored) {}
+            } catch (InterruptedException ignored) {
+                // NOP
+            }
         }
-
-        JerseyRequest<InputStream> request =
-                buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/mockFilename"});
+        JerseyRequest<InputStream> request = buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/exportFile"});
         request.setAccept("application/zip");
-
         return request.get();
     }
 
-    public <R> RequestExecution asyncFetch(final Callback<OperationResult<InputStream>, R> callback){
-        final JerseyRequest<InputStream> request =
-                buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/mockFilename"});
+    public <R> RequestExecution asyncFetch(final Callback<OperationResult<InputStream>, R> callback) {
+        final JerseyRequest<InputStream> request = buildRequest(sessionStorage, InputStream.class, new String[]{"/export", taskId, "/exportFile"});
         request.setAccept("application/zip");
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 StateDto state;
                 while (!"finished".equals((state = state().getEntity()).getPhase())) {
-
-                    if ("failed".equals(state.getPhase())){
-                        if (state.getErrorDescriptor() != null)
+                    if ("failed".equals(state.getPhase())) {
+                        if (state.getErrorDescriptor() != null) {
                             throw new ExportFailedException(state.getErrorDescriptor().getMessage(), Arrays.asList(state.getErrorDescriptor()));
-                        else
+                        } else {
                             throw new ExportFailedException(state.getMessage());
+                        }
                     }
-
                     try {
                         Thread.sleep(500);
-                    } catch (InterruptedException ignored) {}
+                    } catch (InterruptedException ignored) {
+                        // NOP
+                    }
                 }
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
-
 }

@@ -29,10 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author: Zakhar.Tomchenco
+ * @author Zakhar Tomchenko
  */
 @XmlRootElement(name = "export")
 public class ExportTaskDto {
+
     @XmlElementWrapper(name = "parameters")
     @XmlElement(name = "parameter")
     private List<String> exportParams;

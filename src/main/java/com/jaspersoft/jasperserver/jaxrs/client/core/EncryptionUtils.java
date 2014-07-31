@@ -28,19 +28,12 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.ws.rs.core.Response;
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
-import java.security.InvalidKeyException;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +43,7 @@ public class EncryptionUtils {
     private static final Log log = LogFactory.getLog(EncryptionUtils.class);
 
     public static String encryptPassword(String plainPassword, String n, String e) {
-        String encryptedUtfProPass = null;
+        String encryptedUtfProPass;
         try {
             PublicKey publicKey = getPublicKey(n, e);
             encryptedUtfProPass = getEncryptedPassword(publicKey, plainPassword);
@@ -61,7 +54,7 @@ public class EncryptionUtils {
         return encryptedUtfProPass;
     }
 
-    public static Map<String, String> parseEncryptionParams(Response response){
+    public static Map<String, String> parseEncryptionParams(Response response) {
         Map<String, String> encryptionParams = new HashMap<String, String>();
         String encryptionParamsJson = response.readEntity(String.class);
         try {
@@ -87,10 +80,8 @@ public class EncryptionUtils {
         return sb.toString();
     }
 
-    private static String getEncryptedPassword(PublicKey publicKey, String pwd)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
-            UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
-        byte[] encryptedUtfPass = new byte[0];
+    private static String getEncryptedPassword(PublicKey publicKey, String pwd) throws Exception {
+        byte[] encryptedUtfPass;
         Cipher enc = Cipher.getInstance("RSA/NONE/NoPadding", new BouncyCastleProvider());
         enc.init(Cipher.ENCRYPT_MODE, publicKey);
         String utfPass = URLEncoder.encode(pwd, CharEncoding.UTF_8);
@@ -99,7 +90,7 @@ public class EncryptionUtils {
         return byteArrayToHexString(encryptedUtfPass);
     }
 
-    private static PublicKey getPublicKey(String n, String e) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    private static PublicKey getPublicKey(String n, String e) throws Exception {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         int radix = 16;
         BigInteger modulus = new BigInteger(n, radix);
@@ -107,5 +98,4 @@ public class EncryptionUtils {
         RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
         return keyFactory.generatePublic(publicKeySpec);
     }
-
 }

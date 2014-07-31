@@ -22,7 +22,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ExportFailedException extends JSClientWebException {
@@ -39,5 +41,9 @@ public class ExportFailedException extends JSClientWebException {
 
     public ExportFailedException(String message, List<ErrorDescriptor> errorDescriptors) {
         super(message, errorDescriptors);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public ExportFailedException(StateDto stateDto) {
+        this(stateDto.getErrorDescriptor().getMessage(), Arrays.asList(stateDto.getErrorDescriptor()));
     }
 }

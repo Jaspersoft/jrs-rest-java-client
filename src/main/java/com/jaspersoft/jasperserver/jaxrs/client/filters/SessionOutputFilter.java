@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.filters;
 
 import javax.ws.rs.client.ClientRequestContext;
@@ -36,13 +35,8 @@ public class SessionOutputFilter implements ClientRequestFilter {
     }
 
     @Override
-    public void filter(ClientRequestContext requestContext)
-            throws IOException {
-
-        List<Object> cookies = new ArrayList<Object>() {{
-            add("JSESSIONID=" + sessionId);
-        }};
+    public void filter(ClientRequestContext requestContext) throws IOException {
+        List<Object> cookies = new ArrayList<Object>() {{add("JSESSIONID=" + sessionId);}};
         requestContext.getHeaders().put("Cookie", cookies);
-
     }
 }

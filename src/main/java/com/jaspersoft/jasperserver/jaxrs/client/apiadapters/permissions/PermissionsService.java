@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
@@ -37,27 +36,24 @@ public class PermissionsService extends AbstractAdapter {
     }
 
     public PermissionResourceRequestAdapter resource(String resourceUri) {
-        if ("".equals(resourceUri))
-            throw new  IllegalArgumentException("'resourceUri' mustn't be an empty string");
+        if ("".equals(resourceUri)) {
+            throw new IllegalArgumentException("'resourceUri' mustn't be an empty string");
+        }
         return new PermissionResourceRequestAdapter(sessionStorage, resourceUri);
     }
 
-    public OperationResult createNew(RepositoryPermission permission){
-        return buildRequest(sessionStorage, Object.class, new String[]{"/permissions"}, new DefaultErrorHandler())
-                .post(permission);
+    public OperationResult createNew(RepositoryPermission permission) {
+        return buildRequest(sessionStorage, Object.class, new String[]{"/permissions"}, new DefaultErrorHandler()).post(permission);
     }
 
     public <R> RequestExecution asyncCreateNew(final RepositoryPermission permission, final Callback<OperationResult, R> callback) {
-        final JerseyRequest request =
-                buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
-
+        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.post(permission));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
@@ -69,19 +65,15 @@ public class PermissionsService extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncCreateNew(final RepositoryPermissionListWrapper permissions, final Callback<OperationResult, R> callback) {
-        final JerseyRequest request =
-                buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
+        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.post(permissions));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
-
 }

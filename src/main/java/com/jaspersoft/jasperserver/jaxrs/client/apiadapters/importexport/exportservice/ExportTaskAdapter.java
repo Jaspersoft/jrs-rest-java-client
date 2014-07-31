@@ -37,7 +37,7 @@ public class ExportTaskAdapter extends AbstractAdapter {
 
     private final ExportTaskDto exportTaskDto;
 
-    public ExportTaskAdapter(SessionStorage sessionStorage){
+    public ExportTaskAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
         this.exportTaskDto = new ExportTaskDto();
         this.exportTaskDto.setParameters(new ArrayList<String>());
@@ -46,69 +46,65 @@ public class ExportTaskAdapter extends AbstractAdapter {
         this.exportTaskDto.setUris(new ArrayList<String>());
     }
 
-    public ExportTaskAdapter role(String role){
+    public ExportTaskAdapter role(String role) {
         exportTaskDto.getRoles().add(role);
         return this;
     }
 
-    public ExportTaskAdapter roles(List<String> roles){
+    public ExportTaskAdapter roles(List<String> roles) {
         exportTaskDto.getRoles().addAll(roles);
         return this;
     }
 
-    public ExportTaskAdapter user(String user){
+    public ExportTaskAdapter user(String user) {
         exportTaskDto.getUsers().add(user);
         return this;
     }
 
-    public ExportTaskAdapter users(List<String> users){
+    public ExportTaskAdapter users(List<String> users) {
         exportTaskDto.getUsers().addAll(users);
         return this;
     }
 
-    public ExportTaskAdapter uri(String uri){
+    public ExportTaskAdapter uri(String uri) {
         exportTaskDto.getUris().add(uri);
         return this;
     }
 
-    public ExportTaskAdapter uris(List<String> uris){
+    public ExportTaskAdapter uris(List<String> uris) {
         exportTaskDto.getUris().addAll(uris);
         return this;
     }
 
-    public ExportTaskAdapter parameter(ExportParameter parameter){
+    public ExportTaskAdapter parameter(ExportParameter parameter) {
         exportTaskDto.getParameters().add(parameter.getParamName());
         return this;
     }
 
-    public ExportTaskAdapter parameters(List<ExportParameter> parameters){
-        for (ExportParameter exportParameter : parameters)
+    public ExportTaskAdapter parameters(List<ExportParameter> parameters) {
+        for (ExportParameter exportParameter : parameters) {
             parameter(exportParameter);
+        }
         return this;
     }
 
-    public OperationResult<StateDto> create(){
-        return buildRequest(sessionStorage, StateDto.class, new String[]{"/export"}, new DefaultErrorHandler())
-                .post(exportTaskDto);
+    public OperationResult<StateDto> create() {
+        return buildRequest(sessionStorage, StateDto.class, new String[]{"/export"},
+                new DefaultErrorHandler()).post(exportTaskDto);
     }
 
-    public <R> RequestExecution asyncCreate(final Callback<OperationResult<StateDto>, R> callback){
-        final JerseyRequest<StateDto> request =
-                buildRequest(sessionStorage, StateDto.class, new String[]{"/export"});
+    public <R> RequestExecution asyncCreate(final Callback<OperationResult<StateDto>, R> callback) {
+        final JerseyRequest<StateDto> request = buildRequest(sessionStorage, StateDto.class, new String[]{"/export"});
         request.setAccept("application/zip");
-
-        //guarantee that exportTaskDto won't be modified from another thread
+        // Guarantee that exportTaskDto won't be modified from another thread
         final ExportTaskDto localCopy = new ExportTaskDto(exportTaskDto);
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.post(localCopy));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
-
 }

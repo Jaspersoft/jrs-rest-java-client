@@ -54,8 +54,9 @@ public class DefaultErrorHandler implements ErrorHandler {
 
     @Override
     public void handleError(Response response) {
-        if (response.hasEntity())
+        if (response.hasEntity()) {
             response.bufferEntity();
+        }
         handleBodyError(response);
         handleStatusCodeError(response, null);
     }
@@ -74,24 +75,24 @@ public class DefaultErrorHandler implements ErrorHandler {
 
     protected void handleBodyError(Response response) {
         String contentType = response.getHeaderString("Content-Type");
-        if (contentType != null && contentType.contains("text/html")) return;
-
+        if (contentType != null && contentType.contains("text/html")) {
+            return;
+        }
         ErrorDescriptor errorDescriptor = readBody(response, ErrorDescriptor.class);
         if (errorDescriptor != null) {
             JSClientWebException exception = null;
             try {
-                Class<? extends JSClientWebException> exceptionType =
-                        JRSExceptionsMapping.ERROR_CODE_TO_TYPE_MAP.get(errorDescriptor.getErrorCode());
-
+                Class<? extends JSClientWebException> exceptionType = JRSExceptionsMapping.ERROR_CODE_TO_TYPE_MAP.get(errorDescriptor.getErrorCode());
                 if (exceptionType != null) {
                     String message = errorDescriptor.getMessage();
-                    exception = exceptionType.getConstructor(String.class, List.class)
-                            .newInstance(message != null ? message : errorDescriptor.getErrorCode(), Arrays.asList(errorDescriptor));
+                    exception = exceptionType.getConstructor(String.class, List.class).newInstance(message != null ? message : errorDescriptor.getErrorCode(), Arrays.asList(errorDescriptor));
                 }
             } catch (Exception e) {
                 log.warn("Cannot instantiate exception.", e);
             }
-            if (exception != null) throw exception;
+            if (exception != null) {
+                throw exception;
+            }
         }
     }
 
@@ -100,12 +101,12 @@ public class DefaultErrorHandler implements ErrorHandler {
         String reasonPhrase = response.getStatusInfo().getReasonPhrase();
         JSClientWebException exception = new JSClientWebException(overridingMessage != null ? overridingMessage : reasonPhrase);
         try {
-            exception = exceptionType.getConstructor(String.class)
-                    .newInstance(overridingMessage != null ? overridingMessage : reasonPhrase);
+            exception = exceptionType.getConstructor(String.class).newInstance(overridingMessage != null ? overridingMessage : reasonPhrase);
         } catch (Exception e) {
             log.error("Cannot instantiate exception", e);
         }
-        if (exception != null) throw exception;
+        if (exception != null) {
+            throw exception;
+        }
     }
-
 }

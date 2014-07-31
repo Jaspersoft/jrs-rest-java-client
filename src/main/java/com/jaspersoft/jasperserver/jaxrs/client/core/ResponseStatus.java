@@ -96,6 +96,6 @@ public final class ResponseStatus {
      */
     public static final int NOT_IMPLEMENTED = 501;
 
-    private ResponseStatus(){}
-
+    private ResponseStatus() {
+    }
 }

@@ -1,3 +1,8 @@
+Rest Client for JasperReports Server [![Build Status](https://travis-ci.org/Krasnyanskiy/jrs-rest-java-client.svg?branch=develop)](https://travis-ci.org/Krasnyanskiy/jrs-rest-java-client) [![Coverage Status](https://coveralls.io/repos/Krasnyanskiy/jrs-rest-java-client/badge.png?branch=develop)](https://coveralls.io/r/Krasnyanskiy/jrs-rest-java-client?branch=develop)
+=========================================
+
+With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests.
+
 Table of Contents
 ------------------
 1. [Introduction](#introduction).

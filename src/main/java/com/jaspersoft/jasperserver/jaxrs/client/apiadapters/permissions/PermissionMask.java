@@ -18,12 +18,9 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 
-
 public final class PermissionMask {
-
     public static final int NO_ACCESS = 0;
     public static final int ADMINISTER = 1;
     public static final int READ_ONLY = 2;
@@ -32,5 +29,7 @@ public final class PermissionMask {
     public static final int READ_WRITE_DELETE = 30;
     public static final int EXECUTE = 32;
 
-    private PermissionMask(){}
+    private PermissionMask(){
+
+    }
 }

@@ -26,12 +26,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
- * @author Krasnyanksiy.Alexander
+ * @author Alexander Krasnyanskiy
  */
 @XmlRootElement(name = "query")
 public class Query {
 
-    List<QueryField> queryFields;
+    protected List<QueryField> queryFields;
 
     @XmlElementWrapper(name = "queryFields")
     @XmlElement(name = "queryField")

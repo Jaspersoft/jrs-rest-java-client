@@ -32,9 +32,10 @@ public class RolesService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    public SingleRoleRequestAdapter rolename(String rolename) {
-        if ("".equals(rolename) || "/".equals(rolename))
-            throw new  IllegalArgumentException("'rolename' mustn't be an empty string");
+    public SingleRoleRequestAdapter roleName(String rolename) {
+        if ("".equals(rolename) || "/".equals(rolename)) {
+            throw new IllegalArgumentException("'roleName' mustn't be an empty string");
+        }
         return new SingleRoleRequestAdapter(sessionStorage, organizationId, rolename);
     }
 
@@ -42,11 +43,11 @@ public class RolesService extends AbstractAdapter {
         return new BatchRolesRequestAdapter(sessionStorage, organizationId);
     }
 
-    public RolesService organization(String organizationId){
-        if ("".equals(organizationId) || "/".equals(organizationId))
-            throw new  IllegalArgumentException("'organizationId' mustn't be an empty string");
+    public RolesService organization(String organizationId) {
+        if ("".equals(organizationId) || "/".equals(organizationId)) {
+            throw new IllegalArgumentException("'organizationId' mustn't be an empty string");
+        }
         this.organizationId = organizationId;
         return this;
     }
-
 }

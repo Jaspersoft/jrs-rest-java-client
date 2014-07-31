@@ -38,8 +38,9 @@ public abstract class OperationResult<T> {
 
     public T getEntity() {
         try {
-            if (entity == null)
+            if (entity == null) {
                 entity = response.readEntity(entityClass);
+            }
             return entity;
         } catch (Exception e) {
             return null;
@@ -60,4 +61,7 @@ public abstract class OperationResult<T> {
         return response;
     }
 
+    public Class<? extends T> getEntityClass() {
+        return entityClass;
+    }
 }

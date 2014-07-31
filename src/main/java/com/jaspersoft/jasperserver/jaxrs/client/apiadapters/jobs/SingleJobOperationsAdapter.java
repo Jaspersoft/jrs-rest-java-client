@@ -30,7 +30,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobState;
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class SingleJobOperationsAdapter extends AbstractAdapter {
-
     private final String jobId;
 
     public SingleJobOperationsAdapter(SessionStorage sessionStorage, String jobId) {
@@ -39,111 +38,91 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<Job> get() {
-        JerseyRequest<Job> request =
-                buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId});
-        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0)
+        JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId});
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-        else
+        } else {
             request.setAccept("application/job+json");
+        }
         return request.get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<Job>, R> callback) {
-        final JerseyRequest<Job> request =
-                buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId});
-
-        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0)
+        final JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId});
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-        else
+        } else {
             request.setAccept("application/job+json");
-
+        }
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     public OperationResult<JobState> state() {
-        return buildRequest(sessionStorage, JobState.class, new String[]{"/jobs", jobId, "/state"})
-                .get();
+        return buildRequest(sessionStorage, JobState.class, new String[]{"/jobs", jobId, "/state"}).get();
     }
 
     public <R> RequestExecution asyncState(final Callback<OperationResult<JobState>, R> callback) {
-        final JerseyRequest<JobState> request =
-                buildRequest(sessionStorage, JobState.class, new String[]{"/jobs", jobId, "/state"});
-
+        final JerseyRequest<JobState> request = buildRequest(sessionStorage, JobState.class, new String[]{"/jobs", jobId, "/state"});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     public OperationResult<Job> update(Job job) {
-        JerseyRequest<Job> request =
-                buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId}, new JobValidationErrorHandler());
-
-        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0){
+        JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId}, new JobValidationErrorHandler());
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-        }
-        else{
+        } else {
             request.setContentType("application/job+json");
             request.setAccept("application/job+json");
         }
-
         return request.post(job);
     }
 
     public <R> RequestExecution asyncUpdate(final Job job, final Callback<OperationResult<Job>, R> callback) {
-        final JerseyRequest<Job> request =
-                buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId}, new JobValidationErrorHandler());
-
-        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0){
+        final JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId}, new JobValidationErrorHandler());
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-        }
-        else{
+        } else {
             request.setContentType("application/job+json");
             request.setAccept("application/job+json");
         }
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.post(job));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     public OperationResult delete() {
-        return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", jobId})
-                .delete();
+        return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", jobId}).delete();
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
-        final JerseyRequest request =
-                buildRequest(sessionStorage, Object.class, new String[]{"/jobs", jobId});
-
+        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/jobs", jobId});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.delete());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }

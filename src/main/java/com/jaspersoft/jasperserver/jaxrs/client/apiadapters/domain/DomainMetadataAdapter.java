@@ -20,45 +20,39 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
 
+import com.jaspersoft.jasperserver.dto.domain.DomainMetaData;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
 
 /**
  * This class is used for retrieving a DomainMetaData entity.
  *
- * @author Krasnyanksiy.Alexander
+ * @author Alexander Krasnyanskiy
  */
 public class DomainMetadataAdapter extends AbstractAdapter {
-    private final SessionStorage sessionStorage;
-    private final StringBuilder uri;
+    private final String domainURI;
 
     public DomainMetadataAdapter(SessionStorage sessionStorage, String domainURI) {
         super(sessionStorage);
-        this.sessionStorage = sessionStorage;
-        this.uri = new StringBuilder(domainURI);
-    }
-
-    /**
-     * Support method for building Jersey request
-     *
-     * @return JerseyRequest instance
-     */
-    private JerseyRequest<DomainMetaData> buildRequest() {
-        return JerseyRequest.buildRequest(
-                sessionStorage,
-                DomainMetaData.class,
-                new String[]{
-                        uri.insert(0, "/domains").append("/metadata").toString()
-                },
-                new DefaultErrorHandler()
-        );
+        this.domainURI = domainURI;
     }
 
     public OperationResult<DomainMetaData> retrieve() {
-        return buildRequest().get();
+        return JerseyRequest.buildRequest(
+                sessionStorage,
+                DomainMetaData.class,
+                new String[]{new StringBuilder(domainURI).insert(0, "/domains").append("/metadata").toString()},
+                new DefaultErrorHandler()
+        ).get();
+    }
+
+    /**
+     * this getter is using for Unit testing needs only
+     */
+    public String getDomainURI() {
+        return domainURI;
     }
 }

@@ -21,11 +21,11 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo;
 
+import com.jaspersoft.jasperserver.dto.serverinfo.ServerInfo;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ServerInfo;
 
 import javax.ws.rs.core.MediaType;
 
@@ -52,7 +52,7 @@ public class ServerInfoService extends AbstractAdapter {
     }
 
     public OperationResult<String> version(){
-        return buildServerInfoRequest("/version").get();
+        return buildServerInfoRequest("/since").get();
     }
 
     public OperationResult<String> build(){

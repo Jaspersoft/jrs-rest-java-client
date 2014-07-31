@@ -52,7 +52,7 @@ public enum UsersParameter {
      *  <b>requiredRole</b> specify role name. In multitenancy environment, there
      *  are a common case when roles with the same name exist in different
      *  organizations, so to separate them specify role name by next pattern
-     *  <b>"{rolename}|{organizationId}"</b> (organization id and role name separated by pipe)
+     *  <b>"{roleName}|{organizationId}"</b> (organization id and role name separated by pipe)
      */
     REQUIRED_ROLE("requiredRole"),
 

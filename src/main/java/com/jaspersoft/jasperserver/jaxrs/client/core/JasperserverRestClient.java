@@ -18,26 +18,21 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 public class JasperserverRestClient {
-
     private final RestClientConfiguration configuration;
 
     public JasperserverRestClient(RestClientConfiguration configuration) {
-        if (configuration == null)
+        if (configuration == null) {
             throw new IllegalArgumentException("You must define the configuration");
+        }
         this.configuration = configuration;
     }
 
     public Session authenticate(String username, String password) {
-
-        AuthenticationCredentials credentials;
-        credentials = new AuthenticationCredentials(username, password);
-
+        AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
         SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
         return new Session(sessionStorage);
     }
-
 }

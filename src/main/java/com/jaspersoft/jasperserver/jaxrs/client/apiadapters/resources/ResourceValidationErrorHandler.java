@@ -24,12 +24,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ValidationException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptorListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ValidationError;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ValidationErrorsListWrapper;
 
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

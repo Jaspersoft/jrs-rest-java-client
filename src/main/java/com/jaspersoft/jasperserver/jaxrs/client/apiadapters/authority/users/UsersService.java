@@ -25,30 +25,37 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 public class UsersService extends AbstractAdapter {
-
     private String organizationId;
 
     public UsersService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
-    public UsersService organization(String organizationId){
-        if ("".equals(organizationId) || "/".equals(organizationId))
-            throw new  IllegalArgumentException("'organizationId' mustn't be an empty string");
+    public UsersService organization(String organizationId) {
+        if ("".equals(organizationId) || "/".equals(organizationId)) {
+            throw new IllegalArgumentException("'organizationId' mustn't be an empty string");
+        }
         this.organizationId = organizationId;
         return this;
     }
 
+    @Deprecated
     public SingleUserRequestAdapter username(String username) {
-        if ("".equals(username) || "/".equals(username))
-            throw new  IllegalArgumentException("'username' mustn't be an empty string");
+        if ("".equals(username) || "/".equals(username)) {
+            throw new IllegalArgumentException("'username' mustn't be an empty string");
+        }
         return new SingleUserRequestAdapter(sessionStorage, organizationId, username);
     }
 
-
-    public BatchUsersRequestAdapter allUsers(){
-        return new BatchUsersRequestAdapter(sessionStorage, organizationId);
+    public SingleUserRequestAdapter user() {
+        return new SingleUserRequestAdapter(sessionStorage, organizationId);
     }
 
+    public SingleUserRequestAdapter user(String userId) {
+        return new SingleUserRequestAdapter(userId, organizationId, sessionStorage);
+    }
 
+    public BatchUsersRequestAdapter allUsers() {
+        return new BatchUsersRequestAdapter(sessionStorage, organizationId);
+    }
 }

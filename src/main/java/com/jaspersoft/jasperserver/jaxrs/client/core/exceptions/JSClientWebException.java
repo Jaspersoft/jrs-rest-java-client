@@ -64,5 +64,4 @@ public class JSClientWebException extends JSClientException {
     public void addErrorDescriptor(ErrorDescriptor errorDescriptor){
         errorDescriptors.add(errorDescriptor);
     }
-
 }
