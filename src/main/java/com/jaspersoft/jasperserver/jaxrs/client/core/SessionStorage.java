@@ -22,15 +22,14 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
-import com.sun.jersey.api.json.JSONConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.glassfish.jersey.client.ClientProperties;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -39,7 +38,6 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.SecureRandom;
-import java.util.*;
 
 public class SessionStorage {
 
@@ -85,11 +83,11 @@ public class SessionStorage {
 
         Client client = clientBuilder.build();
 
-        Long connectionTimeout = configuration.getConnectionTimeout();
+        Integer connectionTimeout = configuration.getConnectionTimeout();
         if (connectionTimeout != null)
             client.property(ClientProperties.CONNECT_TIMEOUT, connectionTimeout);
 
-        Long readTimeout = configuration.getReadTimeout();
+        Integer readTimeout = configuration.getReadTimeout();
         if (readTimeout != null)
             client.property(ClientProperties.READ_TIMEOUT, readTimeout);
 

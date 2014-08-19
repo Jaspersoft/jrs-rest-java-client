@@ -43,8 +43,8 @@ public class RestClientConfiguration {
     private MimeType acceptMimeType = MimeType.JSON;
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
     private TrustManager[] trustManagers;
-    private Long connectionTimeout;
-    private Long readTimeout;
+    private Integer connectionTimeout;
+    private Integer readTimeout;
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
@@ -112,19 +112,19 @@ public class RestClientConfiguration {
         this.trustManagers = trustManagers;
     }
 
-    public Long getConnectionTimeout() {
+    public Integer getConnectionTimeout() {
         return connectionTimeout;
     }
 
-    public void setConnectionTimeout(Long connectionTimeout) {
+    public void setConnectionTimeout(Integer connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
     }
 
-    public Long getReadTimeout() {
+    public Integer getReadTimeout() {
         return readTimeout;
     }
 
-    public void setReadTimeout(Long readTimeout) {
+    public void setReadTimeout(Integer readTimeout) {
         this.readTimeout = readTimeout;
     }
 
@@ -136,11 +136,11 @@ public class RestClientConfiguration {
 
         String connectionTimeout = properties.getProperty("connectionTimeout");
         if (connectionTimeout != null && !connectionTimeout.equals(""))
-            configuration.setConnectionTimeout(Long.valueOf(connectionTimeout));
+            configuration.setConnectionTimeout(Integer.valueOf(connectionTimeout));
 
         String readTimeout = properties.getProperty("readTimeout");
         if (readTimeout != null && !readTimeout.equals(""))
-            configuration.setConnectionTimeout(Long.valueOf(readTimeout));
+            configuration.setConnectionTimeout(Integer.valueOf(readTimeout));
 
         try {
             configuration.setContentMimeType(MimeType.valueOf(properties.getProperty("contentMimeType")));
