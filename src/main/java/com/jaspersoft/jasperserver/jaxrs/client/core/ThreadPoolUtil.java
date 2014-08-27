@@ -34,4 +34,7 @@ public class ThreadPoolUtil {
         requestExecutionTask.setFuture(future);
     }
 
+    public static ExecutorService getExecutorService() {
+        return executorService;
+    }
 }
