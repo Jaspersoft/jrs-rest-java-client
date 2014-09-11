@@ -53,5 +53,4 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
     private Class<? extends ClientResource> getSpecificResourceType(Response response){
         return ResourcesTypeResolverUtil.getClassForMime(response.getHeaderString("Content-Type"));
     }
-
 }

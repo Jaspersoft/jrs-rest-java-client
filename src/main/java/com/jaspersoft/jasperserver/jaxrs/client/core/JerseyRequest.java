@@ -138,14 +138,11 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     }
 
     private Invocation.Builder buildRequest() {
-        Invocation.Builder request =
-                usersWebTarget
-                        .request();
+        Invocation.Builder request = usersWebTarget.request();
         if (acceptType != null) {
             request = request.accept(acceptType);
         }
         addHeaders(request);
-
         return request;
     }
 
@@ -177,8 +174,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         if (response.getStatus() >= 400)
             errorHandler.handleError(response);
 
-        OperationResult<ResponseType> result =
-                operationResultFactory.getOperationResult(response, responseClass);
+        OperationResult<ResponseType> result = operationResultFactory.getOperationResult(response, responseClass);
         //this.sessionStorage.setSessionId(result.getSessionId());
         return result;
     }

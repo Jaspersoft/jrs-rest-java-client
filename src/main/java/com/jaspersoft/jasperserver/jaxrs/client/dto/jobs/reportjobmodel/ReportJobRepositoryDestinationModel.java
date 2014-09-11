@@ -79,7 +79,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * from each execution needs to be kept in the repository.
 	 * </p>
 	 *
-	 * @param sequentialFilenames <code>true</code> if the job output resource
+	 * @param sequentialFilenames <code>true</code> if the job output resources
 	 * names should include a timestamp
 	 */
 	public void setSequentialFilenames(boolean sequentialFilenames) {
@@ -112,7 +112,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 
 	/**
 	 * Sets a date pattern to be used for the timestamp included in job output
-	 * resource names.
+	 * resources names.
 	 *
 	 * <p>
 	 * The pattern should be a valid pattern as defined by

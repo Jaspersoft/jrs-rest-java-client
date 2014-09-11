@@ -149,8 +149,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
 
     private JerseyRequest<ClientResource> prepareCreateOrUpdateRequest(ClientResource resource) {
         Class<? extends ClientResource> resourceType = ResourcesTypeResolverUtil.getResourceType(resource);
-        JerseyRequest<? extends ClientResource> request =
-                buildRequest(sessionStorage, resourceType, new String[]{"/resources", resourceUri}, new DefaultErrorHandler());
+        JerseyRequest<? extends ClientResource> request = buildRequest(sessionStorage, resourceType, new String[]{"/resources", resourceUri}, new DefaultErrorHandler());
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), ResourcesTypeResolverUtil.getMimeType(resourceType)));
         request.addParams(params);
         return (JerseyRequest<ClientResource>) request;
@@ -165,27 +164,26 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     private OperationResult<ClientResource> copyOrMove(boolean moving, String fromUri) {
-
         JerseyRequest<ClientResource> request = prepareCopyOrMoveRequest(fromUri);
-
-        if (moving)
+        if (moving) {
             return request.put("");
-        else
+        } else {
             return request.post(null);
+        }
     }
 
-    private <R> RequestExecution asyncCopyOrMove(final boolean moving, final String fromUri,
-                                                 final Callback<OperationResult<ClientResource>, R> callback) {
+    private <R> RequestExecution asyncCopyOrMove(final boolean moving, final String fromUri, final Callback<OperationResult<ClientResource>, R> callback) {
         final JerseyRequest<ClientResource> request = prepareCopyOrMoveRequest(fromUri);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 OperationResult<ClientResource> result;
-                if (moving)
+                if (moving) {
                     result = request.put("");
-                else
+                } else {
                     result = request.post(null);
+                }
                 callback.execute(result);
             }
         });
@@ -195,8 +193,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<ClientResource> prepareCopyOrMoveRequest(String fromUri) {
-        JerseyRequest<ClientResource> request =
-                buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri}, new DefaultErrorHandler());
+        JerseyRequest<ClientResource> request = buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri}, new DefaultErrorHandler());
         request.addParams(params);
         request.addHeader("Content-Location", fromUri);
         return request;

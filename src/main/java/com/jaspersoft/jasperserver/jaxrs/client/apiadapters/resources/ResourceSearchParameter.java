@@ -110,7 +110,7 @@ public enum ResourceSearchParameter {
     FORCE_TOTAL_COUNT("forceTotalCount"),
 
     /**
-     * Specifies a resource to delete. Repeat this paramter to delete multiple
+     * Specifies a resources to delete. Repeat this paramter to delete multiple
      * resources.
      *
      * Type/Value: String

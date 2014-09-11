@@ -24,6 +24,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
 import com.jaspersoft.jasperserver.dto.resources.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResourceMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.resources.ClientDashboard;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.resources.ClientDomainTopic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +60,8 @@ public class ResourcesTypeResolverUtil {
             put(ClientVirtualDataSource.class, ResourceMediaType.VIRTUAL_DATA_SOURCE_MIME);
             put(ClientXmlaConnection.class, ResourceMediaType.XMLA_CONNECTION_MIME);
             put(ClientResourceLookup.class, ResourceMediaType.RESOURCE_LOOKUP_MIME);
+            put(ClientDashboard.class, ResourceMediaType.DASHBOARD_MIME);
+            put(ClientDomainTopic.class, ResourceMediaType.DOMAIN_TOPIC_MIME);
         }};
 
         mimeToClassMap = new HashMap<String, Class<? extends ClientResource>>();

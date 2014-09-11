@@ -26,15 +26,19 @@ public class MimeTypeUtil {
     private static final String JSON_SUFFIX = "json";
     private static final String XML_SUFFIX = "xml";
 
-    public static String toCorrectContentMime(RestClientConfiguration configuration, String srcMime){
-        if (srcMime.endsWith("+{mime}"))
-            return srcMime.replace("{mime}", configuration.getContentMimeType() == MimeType.JSON ? "json" : "xml");
+    public static String toCorrectContentMime(RestClientConfiguration configuration, String srcMime) {
+        if (srcMime.endsWith("+{mime}")) {
+            String s = srcMime.replace("{mime}", configuration.getContentMimeType() == MimeType.JSON ? "json" : "xml");
+            return s;
+        }
         return srcMime;
     }
 
-    public static String toCorrectAcceptMime(RestClientConfiguration configuration, String srcMime){
-        if (srcMime.endsWith("+{mime}"))
-            return srcMime.replace("{mime}", configuration.getAcceptMimeType() == MimeType.JSON ? "json" : "xml");
+    public static String toCorrectAcceptMime(RestClientConfiguration configuration, String srcMime) {
+        if (srcMime.endsWith("+{mime}")) {
+            String s = srcMime.replace("{mime}", configuration.getAcceptMimeType() == MimeType.JSON ? "json" : "xml");
+            return s;
+        }
         return srcMime;
     }
 }

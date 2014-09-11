@@ -68,6 +68,13 @@
             <artifactId>powermock-api-easymock</artifactId>
             <version>${powermock.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.owlike</groupId>
+            <artifactId>genson</artifactId>
+            <version>0.99</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>
