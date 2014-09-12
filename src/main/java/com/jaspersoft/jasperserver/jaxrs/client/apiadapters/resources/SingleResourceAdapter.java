@@ -199,6 +199,15 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return request;
     }
 
+//    public OperationResult<ClientResource> uploadResources(){
+//        return null;
+//    }
+
+//    private FormDataMultiPart prepareUploadNewForm(File mondrianSchemaXmlFile, ClientFile.FileType fileType, String label, String description) {
+//        FormDataMultiPart form = new FormDataMultiPart();
+//        return form;
+//    }
+
     public OperationResult<ClientFile> uploadFile(File fileContent,
                                                   ClientFile.FileType fileType,
                                                   String label,

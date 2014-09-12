@@ -18,11 +18,30 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
-
-import com.jaspersoft.jasperserver.dto.resources.*;
+import com.jaspersoft.jasperserver.dto.resources.ClientAdhocDataView;
+import com.jaspersoft.jasperserver.dto.resources.ClientAwsDataSource;
+import com.jaspersoft.jasperserver.dto.resources.ClientBeanDataSource;
+import com.jaspersoft.jasperserver.dto.resources.ClientCustomDataSource;
+import com.jaspersoft.jasperserver.dto.resources.ClientDataType;
+import com.jaspersoft.jasperserver.dto.resources.ClientFile;
+import com.jaspersoft.jasperserver.dto.resources.ClientFolder;
+import com.jaspersoft.jasperserver.dto.resources.ClientInputControl;
+import com.jaspersoft.jasperserver.dto.resources.ClientJdbcDataSource;
+import com.jaspersoft.jasperserver.dto.resources.ClientJndiJdbcDataSource;
+import com.jaspersoft.jasperserver.dto.resources.ClientListOfValues;
+import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
+import com.jaspersoft.jasperserver.dto.resources.ClientMondrianXmlaDefinition;
+import com.jaspersoft.jasperserver.dto.resources.ClientOlapUnit;
+import com.jaspersoft.jasperserver.dto.resources.ClientQuery;
+import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
+import com.jaspersoft.jasperserver.dto.resources.ClientResource;
+import com.jaspersoft.jasperserver.dto.resources.ClientResourceLookup;
+import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
+import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
+import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
+import com.jaspersoft.jasperserver.dto.resources.ClientXmlaConnection;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.resources.ClientDashboard;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.resources.ClientDomainTopic;
@@ -33,8 +52,6 @@ import java.util.Map;
 public class ResourcesTypeResolverUtil {
 
     private static final Map<Class<? extends ClientResource>, String> classToMimeMap;
-
-
     private static final Map<String, Class<? extends ClientResource>> mimeToClassMap;
 
     static {
@@ -70,7 +87,6 @@ public class ResourcesTypeResolverUtil {
         }
     }
 
-
     public static String getMimeType(Class<? extends ClientResource> clazz) {
         return classToMimeMap.get(clazz);
     }
@@ -82,5 +98,4 @@ public class ResourcesTypeResolverUtil {
     public static Class<? extends ClientResource> getResourceType(ClientResource resource) {
         return resource.getClass();
     }
-
 }
