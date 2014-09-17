@@ -799,6 +799,25 @@ OperationResult<ClientFile> result = client
         .resource("/reports/testFolder")
         .uploadFile(imageFile, ClientFile.FileType.img, "fileName", "fileDescription");
 ```
+####Uploading SemanticLayerDataSource Resources
+RestClient also supports a way to create complex resources and their nested resources in a single multipart request. One of such resources is `SemanticLayerDataSource`.  
+```java
+HashMap<String, File> resources = new HashMap<String, File>();
+resources.put("resource", resource);
+resources.put("securityFile", securityFile);
+resources.put("schema", schema);
+ 
+resources.put("bundles.bundle[0]", defaultBundle);
+resources.put("bundles.bundle[1]", firstBundle);
+resources.put("bundles.bundle[2]", secondBundle);
+
+ClientSemanticLayerDataSource domain = client
+        .authenticate("superuser", "superuser")
+        .resourcesService()
+        .resource("/public/Samples/Storage")
+        .uploadSemanticLayerDataSource(resources)
+        .getEntity();        
+```
 ####Deleting Resources
 You can delete resources in two ways, one for single resources and one for multiple resources. To delete multiple resources at once, specify multiple URIs with the `ResourceSearchParameter.RESOURCE_URI` parameter.
 ```java
