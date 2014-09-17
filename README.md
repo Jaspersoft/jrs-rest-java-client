@@ -60,7 +60,7 @@ Table of Contents
     * [Modifying a Resource](#modifying-a-resource).
     * [Copying a Resource](#copying-a-resource).
     * [Moving a Resource](#moving-a-resource).
-    * [Uploading SemanticLayerDataSource Resources](#uploading-domain).
+    * [Uploading SemanticLayerDataSource](#uploading-semanticlayerdatasource).
     * [Uploading File Resources](#uploading-file-resources).
     * [Deleting Resources](#deleting-resources).
   2. [The Permissions Service](#the-permissions-service).
@@ -800,7 +800,7 @@ OperationResult<ClientFile> result = client
         .resource("/reports/testFolder")
         .uploadFile(imageFile, ClientFile.FileType.img, "fileName", "fileDescription");
 ```
-####Uploading SemanticLayerDataSource Resources
+####Uploading SemanticLayerDataSource
 RestClient also supports a way to create complex resources and their nested resources in a single multipart request. One of such resources is `SemanticLayerDataSource`.  
 ```java
 HashMap<String, File> resources = new HashMap<String, File>();
