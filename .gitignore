@@ -1,0 +1,30 @@
+# hidden folders
+.idea
+.svn
+
+
+# projects files
+*.iml
+
+
+# output directories
+target/
+libs/
+javax/
+out/
+build/
+
+
+# compiled source
+*.class
+
+
+# package files
+*.jar
+
+
+# OS generated files
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
