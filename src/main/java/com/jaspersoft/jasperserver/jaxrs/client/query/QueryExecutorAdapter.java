@@ -18,41 +18,50 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
+package com.jaspersoft.jasperserver.jaxrs.client.query;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.query.QueryResult;
 
 /**
- * This class is used for retrieving a DomainMetaData entity.
- *
- * @author Alexander Krasnyanskiy
+ * This class is used for executing queries and retrieving a result of execution
+ * as QueryResult entity.
  */
-public class DomainMetadataAdapter extends AbstractAdapter {
-    private final String domainURI;
+public class QueryExecutorAdapter extends AbstractAdapter {
+    private final String resourceUri;
+    private final Query query;
 
-    public DomainMetadataAdapter(SessionStorage sessionStorage, String domainURI) {
+    public QueryExecutorAdapter(SessionStorage sessionStorage, Query query, String resourceUri) {
         super(sessionStorage);
-        this.domainURI = domainURI;
+        this.resourceUri = resourceUri;
+        this.query = query;
     }
 
-    public OperationResult<DomainMetaData> retrieve() {
-        return JerseyRequest.buildRequest(
+    public OperationResult<QueryResult> execute() {
+        JerseyRequest<QueryResult> req = JerseyRequest.buildRequest(
                 sessionStorage,
-                DomainMetaData.class,
-                new String[]{new StringBuilder(domainURI).insert(0, "/domains").append("/metadata").toString()},
+                QueryResult.class,
+                new String[]{new StringBuilder(resourceUri).insert(0, "/queryExecutor").toString()},
                 new DefaultErrorHandler()
-        ).get();
+        );
+
+        /**
+         * For now JSON format is unsupported on v2/queryExecutor Service as ContentType
+         * therefore ContentType was hardcoded to XML
+         */
+        req.setContentType("application/xml");
+        return req.post(query);
     }
 
     /**
-     * this getter is using for Unit testing needs only
+     * This getter is used for Unit Testing needs only
      */
-    public String getDomainURI() {
-        return domainURI;
+    public String getResourceUri() {
+        return resourceUri;
     }
 }

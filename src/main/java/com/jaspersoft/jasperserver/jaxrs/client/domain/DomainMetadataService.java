@@ -18,41 +18,28 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
+package com.jaspersoft.jasperserver.jaxrs.client.domain;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
 
 /**
- * This class is used for retrieving a DomainMetaData entity.
+ * Factory class for DomainMetadata adapter
  *
  * @author Alexander Krasnyanskiy
  */
-public class DomainMetadataAdapter extends AbstractAdapter {
-    private final String domainURI;
+public class DomainMetadataService extends AbstractAdapter {
 
-    public DomainMetadataAdapter(SessionStorage sessionStorage, String domainURI) {
+    public DomainMetadataService(SessionStorage sessionStorage) {
         super(sessionStorage);
-        this.domainURI = domainURI;
-    }
-
-    public OperationResult<DomainMetaData> retrieve() {
-        return JerseyRequest.buildRequest(
-                sessionStorage,
-                DomainMetaData.class,
-                new String[]{new StringBuilder(domainURI).insert(0, "/domains").append("/metadata").toString()},
-                new DefaultErrorHandler()
-        ).get();
     }
 
     /**
-     * this getter is using for Unit testing needs only
+     * To pass 'domainURI' param use a simple string with first slash (e.g. '/PathToDomain'
+     * but not 'PathToDomain' or 'PathToDomain/')
      */
-    public String getDomainURI() {
-        return domainURI;
+    public com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataAdapter domainMetadata(String domainURI) {
+        return new com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataAdapter(sessionStorage, domainURI);
     }
 }

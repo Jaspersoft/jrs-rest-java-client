@@ -21,7 +21,6 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
-import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
@@ -31,6 +30,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.Organization;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.AnnotationIntrospector;
@@ -53,12 +53,12 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         this.organizationId = organizationId;
     }
 
-    public OperationResult<ClientTenant> get() {
+    public OperationResult<Organization> get() {
         return buildRequest().get();
     }
 
-    public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientTenant>, R> callback){
-        final JerseyRequest<ClientTenant> request = buildRequest();
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<Organization>, R> callback){
+        final JerseyRequest<Organization> request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -69,7 +69,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    private String prepareJsonForUpdate(ClientTenant clientTenant){
+    private String prepareJsonForUpdate(Organization clientTenant){
         ObjectMapper mapper = new ObjectMapper();
         SerializationConfig serializationConfig = mapper.getSerializationConfig();
         serializationConfig = serializationConfig.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
@@ -87,13 +87,13 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return json;
     }
 
-    public OperationResult<ClientTenant> update(ClientTenant clientTenant) {
+    public OperationResult<Organization> update(Organization clientTenant) {
         String json = prepareJsonForUpdate(clientTenant);
         return buildRequest().put(json);
     }
 
-    public <R> RequestExecution asyncUpdate(ClientTenant clientTenant, final Callback<OperationResult<ClientTenant>, R> callback){
-        final JerseyRequest<ClientTenant> request = buildRequest();
+    public <R> RequestExecution asyncUpdate(Organization clientTenant, final Callback<OperationResult<Organization>, R> callback){
+        final JerseyRequest<Organization> request = buildRequest();
         final String json = prepareJsonForUpdate(clientTenant);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -121,7 +121,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    private JerseyRequest<ClientTenant> buildRequest() {
-        return JerseyRequest.buildRequest(sessionStorage, ClientTenant.class, new String[]{"/organizations", organizationId}, new DefaultErrorHandler());
+    private JerseyRequest<Organization> buildRequest() {
+        return JerseyRequest.buildRequest(sessionStorage, Organization.class, new String[]{"/organizations", organizationId}, new DefaultErrorHandler());
     }
 }

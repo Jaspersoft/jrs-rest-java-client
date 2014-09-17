@@ -22,15 +22,16 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,24 +65,6 @@ public class RunReportAdapter extends AbstractAdapter {
 
     public RunReportAdapter parameter(String name, String value) {
         params.add(name, value);
-        return this;
-    }
-
-    public RunReportAdapter parameter(String name, Number value) {
-        params.add(name, value.toString());
-        return this;
-    }
-
-    public RunReportAdapter parameter(String name, Date value) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(sessionStorage.getConfiguration().getDatePattern());
-        params.add(name, dateFormat.format(value));
-        return this;
-    }
-
-    public RunReportAdapter parameter(String name, Set<String> values) {
-        for (String value : values) {
-            params.add(name, value);
-        }
         return this;
     }
 

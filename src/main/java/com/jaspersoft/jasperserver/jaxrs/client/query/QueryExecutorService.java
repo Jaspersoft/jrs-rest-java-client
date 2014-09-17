@@ -18,41 +18,30 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
+package com.jaspersoft.jasperserver.jaxrs.client.query;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
 
 /**
- * This class is used for retrieving a DomainMetaData entity.
+ * Part of the Report Services API. Exposes queries that you can run on the
+ * client side.
  *
  * @author Alexander Krasnyanskiy
  */
-public class DomainMetadataAdapter extends AbstractAdapter {
-    private final String domainURI;
+public class QueryExecutorService extends AbstractAdapter {
 
-    public DomainMetadataAdapter(SessionStorage sessionStorage, String domainURI) {
+    public QueryExecutorService(SessionStorage sessionStorage) {
         super(sessionStorage);
-        this.domainURI = domainURI;
-    }
-
-    public OperationResult<DomainMetaData> retrieve() {
-        return JerseyRequest.buildRequest(
-                sessionStorage,
-                DomainMetaData.class,
-                new String[]{new StringBuilder(domainURI).insert(0, "/domains").append("/metadata").toString()},
-                new DefaultErrorHandler()
-        ).get();
     }
 
     /**
-     * this getter is using for Unit testing needs only
+     * to pass 'resourceURI' param use a simple string with first slash (e.g. '/PathToResource'
+     * but not 'PathToResource' or 'PathToResource/')
      */
-    public String getDomainURI() {
-        return domainURI;
+    public com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorAdapter query(Query query, String resourceURI) {
+        return new com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorAdapter(sessionStorage, query, resourceURI);
     }
 }
