@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class NotReadyResultException extends AccessDeniedException {
 
-    public static final String ERROR_CODE_NOT_READY = "resource.not.ready";
+    public static final String ERROR_CODE_NOT_READY = "resources.not.ready";
 
     public NotReadyResultException() {
         super();    //To change body of overridden methods use File | Settings | File Templates.

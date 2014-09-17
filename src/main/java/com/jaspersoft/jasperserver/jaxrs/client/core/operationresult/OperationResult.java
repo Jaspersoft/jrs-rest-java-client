@@ -33,6 +33,7 @@ public abstract class OperationResult<T> {
 
     public OperationResult(Response response, Class<? extends T> entityClass) {
         this.response = response;
+        response.bufferEntity();
         this.entityClass = entityClass;
     }
 

@@ -92,6 +92,15 @@ public interface ResourceMediaType {
     // semanticLayerDataSource
     public static final String SEMANTIC_LAYER_DATA_SOURCE_CLIENT_TYPE = "semanticLayerDataSource";
     public static final String SEMANTIC_LAYER_DATA_SOURCE_MIME = RESOURCE_MEDIA_TYPE_PREFIX + SEMANTIC_LAYER_DATA_SOURCE_CLIENT_TYPE + RESOURCE_MIME_TYPE;
+
+
+    public static final String DASHBOARD_CLIENT_TYPE = "dashboard";
+    public static final String DASHBOARD_MIME = RESOURCE_MEDIA_TYPE_PREFIX + DASHBOARD_CLIENT_TYPE + RESOURCE_MIME_TYPE;
+
+
+    public static final String DOMAIN_TOPIC_CLIENT_TYPE = "domainTopic";
+    public static final String DOMAIN_TOPIC_MIME = RESOURCE_MEDIA_TYPE_PREFIX + DOMAIN_TOPIC_CLIENT_TYPE + RESOURCE_MIME_TYPE;
+
     //Dashboard
     public static final String DASHBOARD_TYPE = "dashboard";
     //DataSources
@@ -106,7 +115,7 @@ public interface ResourceMediaType {
     );
 
     //AnyDatasource
-    //not exist as string representation of resource type
+    //not exist as string representation of resources type
     //used as defenition of any datasource type
     public static final String ANY_DATASOURCE_TYPE = "anyDatasource";
 

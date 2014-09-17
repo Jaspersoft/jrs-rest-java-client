@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class ResourceInUseException extends AccessDeniedException {
 
-    public static final String ERROR_CODE  = "resource.in.use";
+    public static final String ERROR_CODE  = "resources.in.use";
 
     public ResourceInUseException() {
         super();    //To change body of overridden methods use File | Settings | File Templates.

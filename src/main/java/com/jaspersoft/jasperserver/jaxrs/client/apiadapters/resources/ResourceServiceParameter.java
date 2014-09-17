@@ -42,8 +42,8 @@ public enum ResourceServiceParameter {
     CREATE_FOLDERS("createFolders"),
 
     /**
-     * When true, the resource given in the URL is overwritten even if it is a
-     * different type than the resource descriptor in the content. The default is false.
+     * When true, the resources given in the URL is overwritten even if it is a
+     * different type than the resources descriptor in the content. The default is false.
      *
      * Type/Value: true|false
      */

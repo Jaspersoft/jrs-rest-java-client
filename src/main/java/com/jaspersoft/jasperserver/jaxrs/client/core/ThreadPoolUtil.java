@@ -32,6 +32,9 @@ public class ThreadPoolUtil {
     public synchronized static void runAsynchronously(RequestExecution requestExecutionTask){
         Future<?> future = executorService.submit(requestExecutionTask.getTask());
         requestExecutionTask.setFuture(future);
-        // we don't need 'shutdown' method because we have only one pool which wait for for new tasks recursively
+    }
+
+    public static ExecutorService getExecutorService() {
+        return executorService;
     }
 }

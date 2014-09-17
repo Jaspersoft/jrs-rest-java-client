@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
 import com.jaspersoft.jasperserver.dto.common.PatchDescriptor;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
+import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
@@ -41,8 +41,10 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.InputStream;
+import java.util.Map;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
+import static java.util.regex.Pattern.compile;
 
 public class SingleResourceAdapter extends AbstractAdapter {
     private final String resourceUri;
@@ -139,10 +141,9 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return task;
     }
 
-    @SuppressWarnings("unchecked")
     private JerseyRequest<ClientResource> prepareCreateOrUpdateRequest(ClientResource resource) {
         Class<? extends ClientResource> resourceType = ResourcesTypeResolverUtil.getResourceType(resource);
-        JerseyRequest<? extends ClientResource> request = buildRequest(sessionStorage, resourceType, new String[]{"/resources", resourceUri}, new ResourceValidationErrorHandler());
+        JerseyRequest<? extends ClientResource> request = buildRequest(sessionStorage, resourceType, new String[]{"/resources", resourceUri}, new DefaultErrorHandler());
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), ResourcesTypeResolverUtil.getMimeType(resourceType)));
         request.addParams(params);
         return (JerseyRequest<ClientResource>) request;
@@ -167,6 +168,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
 
     private <R> RequestExecution asyncCopyOrMove(final boolean moving, final String fromUri, final Callback<OperationResult<ClientResource>, R> callback) {
         final JerseyRequest<ClientResource> request = prepareCopyOrMoveRequest(fromUri);
+
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -179,26 +181,58 @@ public class SingleResourceAdapter extends AbstractAdapter {
                 callback.execute(result);
             }
         });
+
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     private JerseyRequest<ClientResource> prepareCopyOrMoveRequest(String fromUri) {
-        JerseyRequest<ClientResource> request =
-                buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri}, new DefaultErrorHandler());
+        JerseyRequest<ClientResource> request = buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri}, new DefaultErrorHandler());
         request.addParams(params);
         request.addHeader("Content-Location", fromUri);
         return request;
+    }
+
+    /**
+     * Allows to upload SemanticLayerDataSource to server.
+     *
+     * @param attachedResources map which contains files as values and keys
+     *                          as required files names. Pay attention on naming.
+     *                          Name convention is important.
+     * @return OperationResult instance.
+     */
+    public OperationResult<ClientSemanticLayerDataSource> uploadSemanticLayerDataSource(Map<String, File> attachedResources) {
+
+        // resources
+        File resource = attachedResources.get("resource");
+        File securityFile = attachedResources.get("securityFile");
+        File schema = attachedResources.get("schema");
+
+        // prepare multipart form
+        FormDataMultiPart multipart = new FormDataMultiPart()
+                .field("resource", resource, new MediaType("application", "repository.semanticlayerdatasource+json"))
+                .field("securityFile", securityFile, MediaType.APPLICATION_XML_TYPE)
+                .field("schema", schema, MediaType.APPLICATION_XML_TYPE);
+
+        // add bundles to form
+        for (Map.Entry<String, File> entry : attachedResources.entrySet()) {
+            if (compile("bundles\\.bundle\\[(\\d+)\\]").matcher(entry.getKey()).find()) {
+                String bundleName = entry.getKey();
+                File bundleFile = entry.getValue();
+                multipart.field(bundleName, bundleFile, MediaType.TEXT_PLAIN_TYPE);
+            }
+        }
+
+        JerseyRequest<ClientSemanticLayerDataSource> request = prepareUploadResourcesRequest();
+        return request.post(multipart);
     }
 
     public OperationResult<ClientFile> uploadFile(File fileContent,
                                                   ClientFile.FileType fileType,
                                                   String label,
                                                   String description) {
-
         FormDataMultiPart form = prepareUploadForm(fileContent, fileType, label, description);
         JerseyRequest<ClientFile> request = prepareUploadFileRequest();
-
         return request.post(form);
     }
 
@@ -207,17 +241,14 @@ public class SingleResourceAdapter extends AbstractAdapter {
                                                  final String label,
                                                  final String description,
                                                  final Callback<OperationResult<ClientFile>, R> callback) {
-
         final FormDataMultiPart form = prepareUploadForm(fileContent, fileType, label, description);
         final JerseyRequest<ClientFile> request = prepareUploadFileRequest();
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.post(form));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
@@ -236,30 +267,36 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<ClientFile> prepareUploadFileRequest() {
-        JerseyRequest<ClientFile> request =
-                buildRequest(sessionStorage, ClientFile.class, new String[]{"/resources", resourceUri});
+        JerseyRequest<ClientFile> request = buildRequest(sessionStorage, ClientFile.class, new String[]{"/resources", resourceUri});
         request.addParams(params);
         request.setContentType(MediaType.MULTIPART_FORM_DATA);
         return request;
     }
 
+    /**
+     * Jersey Request setup. Generified with proper entity.
+     *
+     * @return Jersey instance
+     */
+    private JerseyRequest<ClientSemanticLayerDataSource> prepareUploadResourcesRequest() {
+        JerseyRequest<ClientSemanticLayerDataSource> request = buildRequest(sessionStorage, ClientSemanticLayerDataSource.class, new String[]{"/resources", resourceUri});
+        request.setContentType(MediaType.MULTIPART_FORM_DATA);
+        return request;
+    }
+
     public OperationResult delete() {
-        JerseyRequest request =
-                buildRequest(sessionStorage, Object.class, new String[]{"/resources", resourceUri});
+        JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/resources", resourceUri});
         return request.delete();
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
-        final JerseyRequest request =
-                buildRequest(sessionStorage, Object.class, new String[]{"/resources", resourceUri});
-
+        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/resources", resourceUri});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.delete());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
@@ -268,9 +305,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
         throw new UnsupportedOperationException("Server doesn't return proper MIME-type to resolve entity type");
     }
 
-    public <ResourceType extends ClientResource> OperationResult<ResourceType> patchResource(
-            Class<ResourceType> resourceTypeClass, PatchDescriptor descriptor) {
-
+    public <ResourceType extends ClientResource> OperationResult<ResourceType> patchResource(Class<ResourceType> resourceTypeClass, PatchDescriptor descriptor) {
         JerseyRequest<ResourceType> request = preparePatchResourceRequest(resourceTypeClass);
         return request.post(descriptor);
     }
@@ -279,27 +314,20 @@ public class SingleResourceAdapter extends AbstractAdapter {
                                                                                         final PatchDescriptor descriptor,
                                                                                         final Callback<OperationResult<ResourceType>, R> callback) {
         final JerseyRequest request = preparePatchResourceRequest(resourceTypeClass);
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.post(descriptor));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
-    private <ResourceType extends ClientResource> JerseyRequest<ResourceType> preparePatchResourceRequest(
-            Class<ResourceType> resourceTypeClass) {
-        JerseyRequest<ResourceType> request =
-                buildRequest(sessionStorage, resourceTypeClass, new String[]{"/resources", resourceUri});
-        request.setAccept(
-                MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),
-                        ResourcesTypeResolverUtil.getMimeType(resourceTypeClass)));
+    private <ResourceType extends ClientResource> JerseyRequest<ResourceType> preparePatchResourceRequest(Class<ResourceType> resourceTypeClass) {
+        JerseyRequest<ResourceType> request = buildRequest(sessionStorage, resourceTypeClass, new String[]{"/resources", resourceUri});
+        request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), ResourcesTypeResolverUtil.getMimeType(resourceTypeClass)));
         request.addHeader("X-HTTP-Method-Override", "PATCH");
         return request;
     }
-
 }

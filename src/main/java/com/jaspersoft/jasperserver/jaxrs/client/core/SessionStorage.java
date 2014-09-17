@@ -18,10 +18,9 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import org.apache.commons.logging.Log;
@@ -39,10 +38,6 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SessionStorage {
 
@@ -69,8 +64,10 @@ public class SessionStorage {
                 }
             };
             sslContext.init(null, configuration.getTrustManagers(), new SecureRandom());
+
             clientBuilder.sslContext(sslContext);
             clientBuilder.hostnameVerifier(hostnameVerifier);
+
         } catch (Exception e) {
             log.error("Unable to init SSL context", e);
             throw new RuntimeException("Unable to init SSL context", e);
@@ -78,22 +75,21 @@ public class SessionStorage {
     }
 
     private void init() {
+
         ClientBuilder clientBuilder = ClientBuilder.newBuilder();
         if (configuration.getJasperReportsServerUrl().startsWith("https")) {
             initSSL(clientBuilder);
         }
 
         Client client = clientBuilder.build();
-        Long connectionTimeout = configuration.getConnectionTimeout();
 
-        if (connectionTimeout != null) {
+        Integer connectionTimeout = configuration.getConnectionTimeout();
+        if (connectionTimeout != null)
             client.property(ClientProperties.CONNECT_TIMEOUT, connectionTimeout);
-        }
 
-        Long readTimeout = configuration.getReadTimeout();
-        if (readTimeout != null) {
+        Integer readTimeout = configuration.getReadTimeout();
+        if (readTimeout != null)
             client.property(ClientProperties.READ_TIMEOUT, readTimeout);
-        }
 
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         login();
@@ -101,60 +97,18 @@ public class SessionStorage {
     }
 
     private void login() {
-
-        Map<String, String> securityAttributes = getSecurityAttributes();
-
         Form form = new Form();
         form
                 .param("j_username", credentials.getUsername())
-                .param("j_password", securityAttributes.get("password"));
+                .param("j_password", credentials.getPassword());
 
-        Response response = rootTarget
-                .path("/j_spring_security_check")
-                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE)
-                .request()
-                .cookie("JSESSIONID", securityAttributes.get("sessionId"))
-                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+        WebTarget target = rootTarget.path("/rest/login");
+        Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
 
-        if (response.getStatus() == ResponseStatus.FOUND) {
-            this.sessionId = parseSessionId(response);
-        } else
-            new DefaultErrorHandler().handleError(response);
-    }
-
-    private Map<String, String> getSecurityAttributes() {
-        Response encryptionParamsResponse = rootTarget.path("/GetEncryptionKey").request().get();
-        Map<String, String> encryptionParams = EncryptionUtils.parseEncryptionParams(encryptionParamsResponse);
-        String loginSessionId = encryptionParamsResponse.getCookies().get("JSESSIONID").getValue();
-        String encryptedPassword;
-        if (encryptionParams != null)
-            encryptedPassword = EncryptionUtils.encryptPassword(credentials.getPassword(), encryptionParams.get("n"), encryptionParams.get("e"));
+        if (response.getStatus() == ResponseStatus.OK)
+            this.sessionId = response.getCookies().get("JSESSIONID").getValue();
         else
-            encryptedPassword = credentials.getPassword();
-
-        Map<String, String> securityAttributes = new HashMap<String, String>();
-        securityAttributes.put("password", encryptedPassword);
-        securityAttributes.put("sessionId", loginSessionId);
-
-        return securityAttributes;
-    }
-
-    private String parseSessionId(Response response) {
-        String cookieList = response.getHeaderString("Set-Cookie");
-
-        if (cookieList != null) {
-            Pattern pattern = Pattern.compile("JSESSIONID=(\\w+);");
-            Matcher matcher;
-            matcher = pattern.matcher(cookieList);
-            if (matcher.find())
-                return matcher.group(1);
-        }
-
-        if (response.getHeaderString("Location").endsWith("error=1")) {
-            throw new AuthenticationFailedException("Wrong credentials");
-        }
-
-        throw new JSClientException("Unable to obtain JSESSIONID");
+            new DefaultErrorHandler().handleError(response);
     }
 
     public RestClientConfiguration getConfiguration() {
@@ -172,4 +126,56 @@ public class SessionStorage {
     public WebTarget getRootTarget() {
         return rootTarget;
     }
+
+    /*public static void main(String[] args) throws InterruptedException {
+
+        RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro/");
+        //RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
+        JasperserverRestClient client = new JasperserverRestClient(configuration);
+        Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
+        //Session session = client.authenticate("jasperadmin", "jasperadmin");
+
+        Job job = new Job();
+        job.setLabel("Test Job");
+        job.setBaseOutputFilename("TestJobFile");
+
+        JobSource source = new JobSource();
+        source.setReportUnitURI("/public/Samples/Reports/14.PerformanceSummary");
+        //source.setReportUnitURI("/reports/samples/EmployeeAccounts");
+        Map<String, Object> reportParameters = new HashMap<String, Object>();
+        reportParameters.put("Product_Family", Arrays.asList("Food"));
+        //reportParameters.put("EmployeeID", Arrays.asList("kristen"));
+        source.setParameters(reportParameters);
+        job.setSource(source);
+
+        SimpleTrigger trigger = new SimpleTrigger();
+        trigger.setOccurrenceCount(2);
+        trigger.setRecurrenceInterval(1000);
+        trigger.setRecurrenceIntervalUnit(IntervalUnitType.HOUR);
+        //trigger.setStartType(JobTrigger.START_TYPE_NOW);
+        //trigger.setStartDate(new Date());
+        job.setTrigger(trigger);
+
+        Set<OutputFormat> outputFormats = new HashSet<OutputFormat>(Arrays.asList(OutputFormat.PDF));
+        job.setOutputFormats(outputFormats);
+
+        RepositoryDestination repositoryDestination = new RepositoryDestination();
+        repositoryDestination.setFolderURI("/public/Samples/Reports");
+        repositoryDestination.setSaveToRepository(true);
+        job.setRepositoryDestination(repositoryDestination);
+
+        OperationResult<Job> result = session
+                .jobsService()
+                .scheduleReport(job);
+        System.out.println(result.getEntity());
+
+
+        OperationResult<Job> jobOperationResult = session
+                .jobsService()
+                .job(3620)
+                .get();
+
+        System.out.println(jobOperationResult.getEntity());
+
+    }*/
 }

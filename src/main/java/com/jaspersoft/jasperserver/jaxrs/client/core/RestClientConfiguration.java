@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import org.apache.commons.logging.Log;
@@ -42,13 +43,11 @@ public class RestClientConfiguration {
     private MimeType acceptMimeType = MimeType.JSON;
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
     private TrustManager[] trustManagers;
-    private Long connectionTimeout;
-    private Long readTimeout;
-    private String datePattern = "yyyy-MM-dd";
-    private String dateTimePattern = "yyyy-MM-dd HH:mm:ss";
+    private Integer connectionTimeout;
+    private Integer readTimeout;
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
-        this(); // untestable invocation, but we can test behaviour of the class by observing changes in its state (trustManagers)
+        this();
         setJasperReportsServerUrl(jasperReportsServerUrl);
     }
 
@@ -74,7 +73,7 @@ public class RestClientConfiguration {
         return jasperReportsServerUrl;
     }
 
-    public final void setJasperReportsServerUrl(String jasperReportsServerUrl) {
+    public void setJasperReportsServerUrl(String jasperReportsServerUrl) {
         Matcher matcher = URL_PATTERN.matcher(jasperReportsServerUrl);
         if (!matcher.matches())
             throw new IllegalArgumentException("Given parameter is not a URL");
@@ -113,36 +112,20 @@ public class RestClientConfiguration {
         this.trustManagers = trustManagers;
     }
 
-    public Long getConnectionTimeout() {
+    public Integer getConnectionTimeout() {
         return connectionTimeout;
     }
 
-    public void setConnectionTimeout(Long connectionTimeout) {
+    public void setConnectionTimeout(Integer connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
     }
 
-    public Long getReadTimeout() {
+    public Integer getReadTimeout() {
         return readTimeout;
     }
 
-    public void setReadTimeout(Long readTimeout) {
+    public void setReadTimeout(Integer readTimeout) {
         this.readTimeout = readTimeout;
-    }
-
-    public String getDatePattern() {
-        return datePattern;
-    }
-
-    public void setDatePattern(String datePattern) {
-        this.datePattern = datePattern;
-    }
-
-    public String getDateTimePattern() {
-        return dateTimePattern;
-    }
-
-    public void setDateTimePattern(String dateTimePattern) {
-        this.dateTimePattern = dateTimePattern;
     }
 
     public static RestClientConfiguration loadConfiguration(String path) {
@@ -152,14 +135,12 @@ public class RestClientConfiguration {
         configuration.setJasperReportsServerUrl(properties.getProperty("url"));
 
         String connectionTimeout = properties.getProperty("connectionTimeout");
-        if (connectionTimeout != null && !connectionTimeout.equals("")) {
-            configuration.setConnectionTimeout(Long.valueOf(connectionTimeout));
-        }
+        if (connectionTimeout != null && !connectionTimeout.equals(""))
+            configuration.setConnectionTimeout(Integer.valueOf(connectionTimeout));
 
         String readTimeout = properties.getProperty("readTimeout");
-        if (readTimeout != null && !readTimeout.equals("")) {
-            configuration.setReadTimeout(Long.valueOf(readTimeout));
-        }
+        if (readTimeout != null && !readTimeout.equals(""))
+            configuration.setConnectionTimeout(Integer.valueOf(readTimeout));
 
         try {
             configuration.setContentMimeType(MimeType.valueOf(properties.getProperty("contentMimeType")));
@@ -186,4 +167,5 @@ public class RestClientConfiguration {
         }
         return properties;
     }
+
 }

@@ -10,6 +10,7 @@
 # output directories
 target/
 libs/
+javax/
 out/
 build/
 
