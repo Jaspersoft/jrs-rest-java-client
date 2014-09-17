@@ -60,6 +60,7 @@ Table of Contents
     * [Modifying a Resource](#modifying-a-resource).
     * [Copying a Resource](#copying-a-resource).
     * [Moving a Resource](#moving-a-resource).
+    * [Uploading SemanticLayerDataSource Resources](#uploading-domain).
     * [Uploading File Resources](#uploading-file-resources).
     * [Deleting Resources](#deleting-resources).
   2. [The Permissions Service](#the-permissions-service).
