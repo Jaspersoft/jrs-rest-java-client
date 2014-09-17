@@ -25,9 +25,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-/**
- * @author Alexander Krasnyanskiy
- */
 @XmlRootElement(name = "query")
 public class Query {
 

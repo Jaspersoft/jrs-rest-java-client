@@ -1,0 +1,135 @@
+<securityDefinition xmlns="http://www.jaspersoft.com/2007/SL/XMLSchema" version="1.0" itemGroupDefaultAccess="granted">
+
+    <resourceAccessGrants>
+    <!-- Row level security -->
+
+    <!-- What access do roles/users have to the rows in the resource? -->
+
+    <resourceAccessGrantList id="sales_join_resource_access_grant" label="aLabel" resourceId="sales_join">
+      <resourceAccessGrants>
+        <!--
+        This "join" will always be made when a query includes at least 1 item from this
+        resource, even when the query does not include the related dataSet.
+        -->
+        <resourceAccessGrant id="sales_join_ROLE_SUPERMART_MANAGER_row_grant">
+            <principalExpression>authentication.getPrincipal().getRoles().any{ it.getRoleName() in ['ROLE_SUPERMART_MANAGER'] }</principalExpression>
+            <filterExpression>store1.store_country in ('USA') and store1.store_state in ('CA')</filterExpression>
+        </resourceAccessGrant>
+
+    <!-- For multi-tenancy demo. 
+    Assumes state abbreviations are used for the Organization ID (tenantId).
+    Examples:
+      Organization Names : California, Washington, Oregon
+      Organization IDs (tenantId) : ca, wa, or  (tenantId maps to the values held in store_state)
+    -->
+
+    <!-- for Sales -->
+    <!--resourceAccessGrant id="sales_join_ROLE_SUPERMART_TENANTID_row_grant">
+	    <principalExpression>authentication.principal.tenantId != null</principalExpression>
+            <filterExpression>store1.store_state in (groovy('authentication.principal.tenantId.toUpperCase()'))</filterExpression>
+        </resourceAccessGrant-->
+
+      </resourceAccessGrants>
+    </resourceAccessGrantList>
+
+    <!-- for Inventory -->
+    <!--resourceAccessGrantList id="employee_join_resource_access_grant" label="aLabel" resourceId="employee_join">
+      <resourceAccessGrants>
+        <resourceAccessGrant id="employee_join_ROLE_SUPERMART_TENANTID_row_grant">
+	    <principalExpression>authentication.principal.tenantId != null</principalExpression>
+            <filterExpression>store4.store_state in (groovy('authentication.principal.tenantId.toUpperCase()'))</filterExpression>
+        </resourceAccessGrant>
+      </resourceAccessGrants>
+    </resourceAccessGrantList-->
+    
+    <!-- for Expenses -->
+    <!--resourceAccessGrantList id="exp_join_resource_access_grant" label="aLabel" resourceId="exp_join">
+      <resourceAccessGrants>
+        <resourceAccessGrant id="exp_join_ROLE_SUPERMART_TENANTID_row_grant">
+	    <principalExpression>authentication.principal.tenantId != null</principalExpression>
+            <filterExpression>store3.store_state in (groovy('authentication.principal.tenantId.toUpperCase()'))</filterExpression>
+        </resourceAccessGrant>
+      </resourceAccessGrants>
+    </resourceAccessGrantList-->
+    
+    <!-- for Employee -->
+    <!--resourceAccessGrantList id="inv_join_resource_access_grant" label="aLabel" resourceId="inv_join">
+      <resourceAccessGrants>
+        <resourceAccessGrant id="inv_join_ROLE_SUPERMART_TENANTID_row_grant">
+	    <principalExpression>authentication.principal.tenantId != null</principalExpression>
+            <filterExpression>store2.store_state in (groovy('authentication.principal.tenantId.toUpperCase()'))</filterExpression>
+        </resourceAccessGrant>
+      </resourceAccessGrants>
+    </resourceAccessGrantList-->
+
+    <!--
+    <resourceAccessGrantList ....>
+        ...
+    </resourceAccessGrantList ....>
+    -->
+
+    </resourceAccessGrants>
+
+    <!-- Column level grants -->
+
+    <itemGroupAccessGrants>
+
+        <!-- control default access to the item group and its items -->
+
+        <itemGroupAccessGrantList id="restrictedHR__salary" label="aLabel" itemGroupId="salary" defaultAccess="denied">
+          <itemGroupAccessGrants>
+
+            <itemGroupAccessGrant id="restrictedHR__salary__grant1" access="granted">
+                <principalExpression>authentication.getPrincipal().getRoles().any{ it.getRoleName() in ['ROLE_ADMINISTRATOR','ROLE_HR'] }</principalExpression>
+            </itemGroupAccessGrant>
+
+          </itemGroupAccessGrants>
+        </itemGroupAccessGrantList>
+
+	<!-- note That originally there were 2 itemGroupAccessGrantLists for the same item group id. This will fail if the principal expressions for the two
+	     itemGroupAccessGrantLists both evaluate for a given user. Such duplication of itemGroupAccessGrantLists is not needed - 
+	     the two sets of itemGroupAccessGrants can be within the same itemGroupAccessGrantList
+	-->
+        <itemGroupAccessGrantList id="restrictedHR__employee__employee_private" label="aLabel" itemGroupId="employee__employee_private" defaultAccess="denied">
+          <itemGroupAccessGrants>
+
+            <itemGroupAccessGrant id="restrictedHR__employee__employee_private__grant1" access="granted">
+                <principalExpression>authentication.getPrincipal().getRoles().any{ it.getRoleName() in ['ROLE_SUPERMART_MANAGER'] }</principalExpression>
+                <itemAccessGrantList id="restrictedHR__employee__employee_private__grant1__items" defaultAccess="denied">
+                  <itemAccessGrants>
+                    <itemAccessGrant id="restrictedHR__employee__employee_private__grant1__items__grant1" itemId="employee__employee_private__min_scale" access="granted" />
+                    <itemAccessGrant id="restrictedHR__employee__employee_private__grant1__items__grant2" itemId="employee__employee_private__max_scale" access="granted" />
+                  </itemAccessGrants>
+                </itemAccessGrantList>
+            </itemGroupAccessGrant>
+
+            <itemGroupAccessGrant id="restrictedHR__employee_private__grant1" access="granted">
+                <principalExpression>authentication.getPrincipal().getRoles().any{ it.getRoleName() in ['ROLE_ADMINISTRATOR','ROLE_HR'] }</principalExpression>
+            </itemGroupAccessGrant>
+
+          </itemGroupAccessGrants>
+        </itemGroupAccessGrantList>
+
+        <!--itemGroupAccessGrantList id="customerInfo__customer" label="aLabel" itemGroupId="customer" defaultAccess="denied">
+          <itemGroupAccessGrants>
+
+            <itemGroupAccessGrant id="customerInfo__customer__grant1" access="granted">
+                <principalExpression>authentication.getPrincipal().getRoles().any{ it.getRoleName() in ['ROLE_ADMINISTRATOR','ROLE_DEMO'] }</principalExpression>
+            </itemGroupAccessGrant>
+
+          </itemGroupAccessGrants>
+        </itemGroupAccessGrantList>
+
+        <itemGroupAccessGrantList id="customerPrivate__customer_contact" label="aLabel" itemGroupId="customer__customer_contact" defaultAccess="denied">
+          <itemGroupAccessGrants>
+
+            <itemGroupAccessGrant id="customerPrivate__customer_contact__grant1" access="granted">
+                <principalExpression>authentication.getPrincipal().getRoles().any{ it.getRoleName() in ['ROLE_ADMINISTRATOR','ROLE_DEMO'] }</principalExpression>
+            </itemGroupAccessGrant>
+
+          </itemGroupAccessGrants>
+        </itemGroupAccessGrantList-->
+
+    </itemGroupAccessGrants>
+
+</securityDefinition>

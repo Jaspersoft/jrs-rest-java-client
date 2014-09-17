@@ -1,0 +1,52 @@
+{
+    "label": "CustomSupermartDomain",
+    "description" : "My brand new custom supermart domain",
+    "dataSource": {
+        "dataSourceReference": {
+            "uri": "/public/Samples/Data_Sources/FoodmartDataSourceJNDI"
+        }
+    },
+    "schema": {
+        "schemaFile": {
+            "label": "supermartDomain_schema",
+            "description": "supermartDomain_schema",
+            "type": "xml"
+        }
+    },
+    "securityFile": {
+        "securityFile": {
+            "label": "supermartDomain_domain_security",
+            "description": "supermartDomain_domain_security",
+            "type": "xml"
+        }
+    },
+    "bundles": [
+        {
+            "locale": "",
+            "file": {
+                "file": {
+                    "label": "supermart_domain.properties",
+                    "type": "prop"
+                }
+            }
+        },
+        {
+            "locale": "en_US",
+            "file": {
+                "file": {
+                    "label": "supermart_domain_en_US.properties",
+                    "type": "prop"
+                }
+            }
+        },
+        {
+            "locale": "de",
+            "file": {
+                "file": {
+                    "label": "supermart_domain_de.properties",
+                    "type": "prop"
+                }
+            }
+        }
+    ]
+}

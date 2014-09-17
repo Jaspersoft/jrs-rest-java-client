@@ -28,10 +28,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.query.QueryResult;
 
-/**
- * This class is used for executing queries and retrieving a result of execution
- * as QueryResult entity.
- */
 public class QueryExecutorAdapter extends AbstractAdapter {
     private final String resourceUri;
     private final Query query;
@@ -50,18 +46,7 @@ public class QueryExecutorAdapter extends AbstractAdapter {
                 new DefaultErrorHandler()
         );
 
-        /**
-         * For now JSON format is unsupported on v2/queryExecutor Service as ContentType
-         * therefore ContentType was hardcoded to XML
-         */
         req.setContentType("application/xml");
         return req.post(query);
-    }
-
-    /**
-     * This getter is used for Unit Testing needs only
-     */
-    public String getResourceUri() {
-        return resourceUri;
     }
 }

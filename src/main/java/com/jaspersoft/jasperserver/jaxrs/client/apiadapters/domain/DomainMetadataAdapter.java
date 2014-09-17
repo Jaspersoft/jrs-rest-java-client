@@ -27,11 +27,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
 
-/**
- * This class is used for retrieving a DomainMetaData entity.
- *
- * @author Alexander Krasnyanskiy
- */
 public class DomainMetadataAdapter extends AbstractAdapter {
     private final String domainURI;
 
@@ -47,12 +42,5 @@ public class DomainMetadataAdapter extends AbstractAdapter {
                 new String[]{new StringBuilder(domainURI).insert(0, "/domains").append("/metadata").toString()},
                 new DefaultErrorHandler()
         ).get();
-    }
-
-    /**
-     * this getter is using for Unit testing needs only
-     */
-    public String getDomainURI() {
-        return domainURI;
     }
 }
