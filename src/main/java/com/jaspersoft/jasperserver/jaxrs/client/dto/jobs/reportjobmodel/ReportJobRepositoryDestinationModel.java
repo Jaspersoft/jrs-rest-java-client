@@ -63,7 +63,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * </p>
 	 *
 	 * @param folder the URI/path of the repository output folder
-	 * @see ReportJobModel#setBaseOutputFilename(String)
+	 * @see com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel#setBaseOutputFilename(String)
 	 */
 	public void setFolderURI(String folder) {
 //        isFolderURIModified = true;
@@ -79,7 +79,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * from each execution needs to be kept in the repository.
 	 * </p>
 	 *
-	 * @param sequentialFilenames <code>true</code> if the job output resource
+	 * @param sequentialFilenames <code>true</code> if the job output resources
 	 * names should include a timestamp
 	 */
 	public void setSequentialFilenames(boolean sequentialFilenames) {
@@ -112,7 +112,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 
 	/**
 	 * Sets a date pattern to be used for the timestamp included in job output
-	 * resource names.
+	 * resources names.
 	 *
 	 * <p>
 	 * The pattern should be a valid pattern as defined by
@@ -180,7 +180,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * resources are to be be created.
 	 *
 	 * @return the output FTP Information
-	 * @see #setOutputFTPInfoModel(FTPInfoModel)
+	 * @see #setOutputFTPInfoModel(com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.FTPInfoModel)
      * @deprecated use #getOutputFTPInfoModel() instead
 	 */
 	public FtpInfo getOutputFTPInfo() {
@@ -192,7 +192,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	 * resources would be created.
 	 *
 	 * @return FTP information of the output folder
-	 * @see #setOutputFTPInfoModel(FTPInfoModel)
+	 * @see #setOutputFTPInfoModel(com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.FTPInfoModel)
 	 */
 	public FTPInfoModel getOutputFTPInfoModel() {
         FtpInfo model = super.getOutputFTPInfo();

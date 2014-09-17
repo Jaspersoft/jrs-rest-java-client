@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 - 2014 Jaspersoft Corporation. All rights  reserved.
+ * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com.
  *
  * Unless you have purchased  a commercial license agreement from Jaspersoft,
@@ -16,34 +16,21 @@
  * GNU Affero  General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public  License
- * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.core;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.resources;
 
-import java.util.concurrent.Future;
+import com.jaspersoft.jasperserver.dto.resources.AbstractClientReportUnit;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ResourceMediaType;
 
-public class RequestExecution {
+import javax.xml.bind.annotation.XmlRootElement;
 
-    private Runnable task;
-    private Future future;
-
-    public RequestExecution(Runnable task){
-        this.task = task;
-    }
-
-    public void cancel(){
-        future.cancel(true);
-    }
-
-    public Runnable getTask() {
-        return task;
-    }
-
-    public void setFuture(Future future) {
-        this.future = future;
-    }
-
-    public Future getFuture() {
-        return future;
-    }
+/**
+ * <p></p>
+ *
+ * @author Yaroslav.Kovalchyk
+ * @version $Id: ClientDomainTopic.java 32880 2013-08-09 07:09:12Z inesterenko $
+ */
+@XmlRootElement(name = ResourceMediaType.DOMAIN_TOPIC_CLIENT_TYPE)
+public class ClientDomainTopic extends AbstractClientReportUnit<ClientDomainTopic> {
 }

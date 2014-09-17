@@ -43,6 +43,5 @@ public class SessionOutputFilter implements ClientRequestFilter {
             add("JSESSIONID=" + sessionId);
         }};
         requestContext.getHeaders().put("Cookie", cookies);
-
     }
 }

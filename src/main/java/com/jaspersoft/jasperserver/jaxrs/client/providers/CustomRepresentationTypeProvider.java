@@ -36,6 +36,7 @@ import java.lang.reflect.Type;
 
 @Provider
 @Consumes({
+        "application/xml",
         "application/collection+json",
         "application/collection+xml",
         "application/job+json",
@@ -90,6 +91,12 @@ import java.lang.reflect.Type;
         ResourceMediaType.XMLA_CONNECTION_XML,
         ResourceMediaType.RESOURCE_LOOKUP_JSON,
         ResourceMediaType.RESOURCE_LOOKUP_XML,
+        "application/repository.dashboard+json",
+        "application/repository.dashboard+xml",
+        "application/repository.domainTopic+json",
+        "application/repository.domainTopic+xml",
+        "application/repository.semanticlayerdatasource+json",
+        "application/repository.semanticlayerdatasource+xml",
         "text/json",
         "text/xml"})
 @Produces({
@@ -147,9 +154,16 @@ import java.lang.reflect.Type;
         ResourceMediaType.XMLA_CONNECTION_XML,
         ResourceMediaType.RESOURCE_LOOKUP_JSON,
         ResourceMediaType.RESOURCE_LOOKUP_XML,
+        "application/repository.dashboard+json",
+        "application/repository.dashboard+xml",
+        "application/repository.domainTopic+json",
+        "application/repository.domainTopic+xml",
+        ResourceMediaType.SEMANTIC_LAYER_DATA_SOURCE_JSON,
+        ResourceMediaType.SEMANTIC_LAYER_DATA_SOURCE_XML,
+        "application/xml",
         "text/json",
         "text/xml"})
-public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider{
+public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
 
     public CustomRepresentationTypeProvider() {
         super(Annotations.JACKSON, Annotations.JAXB);

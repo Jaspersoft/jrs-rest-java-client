@@ -35,7 +35,7 @@ public enum ExportParameter {
 
     /**
      *  <p>When this option is present, repository permissions are exported
-     *  along with each exported folder and resource.</p>
+     *  along with each exported folder and resources.</p>
      *  <p>This option should only be used in conjunction with uris.</p>
      */
     REPOSITORY_PERMISSIONS("repository-permissions"),
