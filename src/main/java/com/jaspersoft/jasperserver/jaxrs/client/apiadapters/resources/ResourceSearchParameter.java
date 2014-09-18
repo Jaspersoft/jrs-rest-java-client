@@ -115,7 +115,7 @@ public enum ResourceSearchParameter {
      *
      * Type/Value: String
      */
-    RESOURCE_URI("resourceURI")
+    RESOURCE_URI("resourceUri")
 
     ;
 

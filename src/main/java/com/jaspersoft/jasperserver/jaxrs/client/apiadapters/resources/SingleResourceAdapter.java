@@ -274,9 +274,9 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     /**
-     * Jersey Request setup. Generified with proper entity.
+     * Jersey request setup. It generified with a proper entity.
      *
-     * @return Jersey instance
+     * @return JerseyRequest instance
      */
     private JerseyRequest<ClientSemanticLayerDataSource> prepareUploadResourcesRequest() {
         JerseyRequest<ClientSemanticLayerDataSource> request = buildRequest(sessionStorage, ClientSemanticLayerDataSource.class, new String[]{"/resources", resourceUri});
