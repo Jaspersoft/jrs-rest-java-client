@@ -48,7 +48,7 @@ public class ResourcesService extends AbstractAdapter {
 
     public DomainResourceBuilder resource(ClientSemanticLayerDataSource resource) {
         ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource(resource);
-        return ResourceBuilderFactory.getBuilder(/*copy*/resource, sessionStorage);
+        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
     }
 
     public ReportUnitResourceBuilder resource(ClientReportUnit resource) {
