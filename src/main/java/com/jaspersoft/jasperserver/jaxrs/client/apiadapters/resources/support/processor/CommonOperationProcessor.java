@@ -29,8 +29,6 @@ import javax.ws.rs.core.MediaType;
  * @author Alexander Krasnyanskiy
  */
 public interface CommonOperationProcessor<ResourceType> {
-    OperationResult<ResourceType> move();
-    OperationResult<ResourceType> remove();
     OperationResult<ResourceType> create(FormDataMultiPart multipart, MediaType mediaType, String path);
     OperationResult<ResourceType> get(String uri);
 }

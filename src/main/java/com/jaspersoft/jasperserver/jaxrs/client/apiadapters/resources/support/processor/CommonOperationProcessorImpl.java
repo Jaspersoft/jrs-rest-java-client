@@ -43,16 +43,6 @@ public class CommonOperationProcessorImpl<ResourceType> implements CommonOperati
     }
 
     @Override
-    public OperationResult<ResourceType> move() {
-        return null;
-    }
-
-    @Override
-    public OperationResult<ResourceType> remove() {
-        return null;
-    }
-
-    @Override
     public OperationResult<ResourceType> create(FormDataMultiPart multipart, MediaType mediaType, String path) {
         pathToFolder = path;
         multipart.field("resource", resource, mediaType);

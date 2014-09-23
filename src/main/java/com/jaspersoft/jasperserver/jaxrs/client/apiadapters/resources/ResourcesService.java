@@ -47,8 +47,8 @@ public class ResourcesService extends AbstractAdapter {
     }
 
     public DomainResourceBuilder resource(ClientSemanticLayerDataSource resource) {
-        ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource();
-        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
+        ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource(resource);
+        return ResourceBuilderFactory.getBuilder(/*copy*/resource, sessionStorage);
     }
 
     public ReportUnitResourceBuilder resource(ClientReportUnit resource) {
@@ -57,12 +57,12 @@ public class ResourcesService extends AbstractAdapter {
     }
 
     public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resource) {
-        ClientMondrianConnection copy = new ClientMondrianConnection();
+        ClientMondrianConnection copy = new ClientMondrianConnection(resource);
         return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
     }
 
     public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resource) {
-        ClientSecureMondrianConnection copy = new ClientSecureMondrianConnection();
+        ClientSecureMondrianConnection copy = new ClientSecureMondrianConnection(resource);
         return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
     }
 }

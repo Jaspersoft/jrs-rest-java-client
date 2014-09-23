@@ -43,10 +43,6 @@ public abstract class DomainResourceOperationProcessorDecorator {
         this.domain = domain;
     }
 
-    public OperationResult<ClientSemanticLayerDataSource> move() {
-        return processor.move();
-    }
-
     public OperationResult<ClientSemanticLayerDataSource> get() {
         if (domain.getUri() == null) {
             throw new WrongResourceFormatException("Can't find uri!");
