@@ -46,21 +46,23 @@ public class ResourcesService extends AbstractAdapter {
         return new SingleResourceAdapter(sessionStorage, uri);
     }
 
-    public DomainResourceBuilder resource(ClientSemanticLayerDataSource resource){
-        return ResourceBuilderFactory.getBuilder(resource, sessionStorage);
+    public DomainResourceBuilder resource(ClientSemanticLayerDataSource resource) {
+        ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource();
+        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
     }
 
-    public ReportUnitResourceBuilder resource(ClientReportUnit resource){
-        return ResourceBuilderFactory.getBuilder(resource, sessionStorage);
+    public ReportUnitResourceBuilder resource(ClientReportUnit resource) {
+        ClientReportUnit copy = new ClientReportUnit(resource);
+        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
     }
 
-    // todo -@ implement me!
-    public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resource){
-        return ResourceBuilderFactory.getBuilder(resource, sessionStorage);
+    public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resource) {
+        ClientMondrianConnection copy = new ClientMondrianConnection();
+        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
     }
 
-    // todo -@ implement me!
-    public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resource){
-        return ResourceBuilderFactory.getBuilder(resource, sessionStorage);
+    public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resource) {
+        ClientSecureMondrianConnection copy = new ClientSecureMondrianConnection();
+        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
     }
 }

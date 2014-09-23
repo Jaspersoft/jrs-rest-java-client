@@ -25,11 +25,11 @@ public class ResourceBuilderFactory {
      * @return builder for certain entity
      */
     public static DomainResourceBuilder getBuilder(ClientSemanticLayerDataSource entity, SessionStorage sessionStorage) {
-        return new DomainResourceBuilder(/*new Cloner().deepClone(*/entity/*)*/, sessionStorage);
+        return new DomainResourceBuilder(entity, sessionStorage);
     }
 
     public static ReportUnitResourceBuilder getBuilder(ClientReportUnit entity, SessionStorage sessionStorage) {
-        return new ReportUnitResourceBuilder(/*new Cloner().deepClone(*/entity/*)*/, sessionStorage);
+        return new ReportUnitResourceBuilder(entity, sessionStorage);
     }
 
     public static SecureMondrianConnectionResourceBuilder getBuilder(ClientSecureMondrianConnection entity, SessionStorage sessionStorage) {
