@@ -30,7 +30,7 @@ import java.util.Set;
 
 /**
  * This adapter is used for ReportJob.outputFormats serialization.
- * ReportJobOutputFormatsWrapper is used for serialization because of no ability to use @XmlElementWrapper together with @XmlJavaTypeAdapter.
+ * ReportJobOutputFormatsWrapper is used for serialization because of no ability inFolder use @XmlElementWrapper together with @XmlJavaTypeAdapter.
  * See http://java.net/jira/browse/JAXB-787
  *
  * @author Yaroslav.Kovalchyk

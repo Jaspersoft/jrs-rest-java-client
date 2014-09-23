@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Set;
 
 /**
- * This class is used for serialization because of no ability to use @XmlElementWrapper together with @XmlJavaTypeAdapter.
+ * This class is used for serialization because of no ability inFolder use @XmlElementWrapper together with @XmlJavaTypeAdapter.
  * See http://java.net/jira/browse/JAXB-787
  *
  * @author Yaroslav.Kovalchyk

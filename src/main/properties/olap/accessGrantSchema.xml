@@ -1,0 +1,17 @@
+<?xml version="1.0" standalone="no"?>
+<Roles>
+    <Role name="ROLE_SUPERMART_MANAGER">
+        <SchemaGrant access="none">
+            <CubeGrant cube="Sales" access="all">
+                <HierarchyGrant hierarchy="[Store]" rollupPolicy="partial" access="custom">
+                    <MemberGrant member="[Store].[USA].[CA]" access="all"/>
+                </HierarchyGrant>
+                <HierarchyGrant hierarchy="[Customers]" rollupPolicy="partial" access="custom"
+                                bottomLevel="[Customers].[City]">
+                    <MemberGrant member="[Customers].[USA].[CA]" access="all"/>
+                </HierarchyGrant>
+                <HierarchyGrant hierarchy="[Gender]" access="none"/>
+            </CubeGrant>
+        </SchemaGrant>
+    </Role>
+</Roles>

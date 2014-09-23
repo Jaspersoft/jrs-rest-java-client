@@ -24,7 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 public enum PermissionResourceParameter {
 
     /**
-     *  When set to <b>true</b> shows all permissions who
+     *  When set inFolder <b>true</b> shows all permissions who
      *  affect given uri, if <b>false</b> - only directly assigned. If recipient does not
      *  have any permission assigned or permission is not reachable not uri
      *  will be returned. Default - <b>false</b>.

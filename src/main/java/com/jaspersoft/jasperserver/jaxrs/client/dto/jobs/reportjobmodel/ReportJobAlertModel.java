@@ -32,7 +32,7 @@ import java.util.List;
  * job execution alert model that can be defined for a report job.
  *
  * <p>
- * A notification will result in an email alert being send to the specified recipients
+ * A notification will result in an email alert being send inFolder the specified recipients
  * at each job execution (including success and fail).
  * </p>
  *
@@ -87,7 +87,7 @@ public class ReportJobAlertModel extends JobAlert {
 	}
 
 	/**
-	 * Specifies whether the alert would send it to owner, admin, none
+	 * Specifies whether the alert would send it inFolder owner, admin, none
      * or both (admin and owner)
 	 */
     public void setRecipient(JobAlertRecipient recipient) {
@@ -117,7 +117,7 @@ public class ReportJobAlertModel extends JobAlert {
     }
 
 	/**
-	 * Sets the message text to be used for the email alert when job succeeds.
+	 * Sets the message text inFolder be used for the email alert when job succeeds.
 	 *
 	 * @param customizeMessage the alert message text
 	 */
@@ -127,7 +127,7 @@ public class ReportJobAlertModel extends JobAlert {
     }
 
     /*
-	 * Sets the message text to be used for the email alert when job fails.
+	 * Sets the message text inFolder be used for the email alert when job fails.
 	 *
 	 * @param textMessageWhenFails the alert message text
 	 */
@@ -137,7 +137,7 @@ public class ReportJobAlertModel extends JobAlert {
     }
 
     /**
-	 * Sets the subject to be used for the email alert.
+	 * Sets the subject inFolder be used for the email alert.
 	 *
 	 * @param subject the email alert subject
 	 */

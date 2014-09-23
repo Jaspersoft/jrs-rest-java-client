@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<secureMondrianConnection>
+    <creationDate>2014-09-23 17:54:24</creationDate>
+    <description>---</description>
+    <label>MyCool</label>
+    <permissionMask>1</permissionMask>
+    <updateDate>2014-09-23 17:54:24</updateDate>
+    <uri>/here/is/my/folder/MyCool</uri>
+    <version>0</version>
+    <dataSourceReference>
+        <uri>/public/Samples/Data_Sources/FoodmartDataSourceJNDI</uri>
+    </dataSourceReference>
+    <schemaReference>
+        <uri>/here/is/my/folder/MyCool_files/2_schema</uri>
+    </schemaReference>
+    <accessGrantSchemas>
+        <accessGrantSchemaReference>
+            <uri>/here/is/my/folder/MyCool_files/1_schema</uri>
+        </accessGrantSchemaReference>
+    </accessGrantSchemas>
+</secureMondrianConnection>

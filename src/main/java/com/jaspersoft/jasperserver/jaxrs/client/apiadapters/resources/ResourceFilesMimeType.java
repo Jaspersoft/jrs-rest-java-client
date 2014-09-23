@@ -42,8 +42,7 @@ public enum  ResourceFilesMimeType {
     XML("application/xml"),
     CSS("text/css"),
     ACCES_GRANT_SCHEMA("application/accessGrantSchema"),
-    OLAP_MONDRIAN_SCHEMA("application/olapMondrianSchema")
-    ;
+    OLAP_MONDRIAN_SCHEMA("application/olapMondrianSchema");
 
     private String type;
 

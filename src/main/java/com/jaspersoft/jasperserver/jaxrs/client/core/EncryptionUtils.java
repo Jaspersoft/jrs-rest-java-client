@@ -48,8 +48,8 @@ public class EncryptionUtils {
             PublicKey publicKey = getPublicKey(n, e);
             encryptedUtfProPass = getEncryptedPassword(publicKey, plainPassword);
         } catch (Exception ex) {
-            log.error("Failed to encrypt password. Possible encryption provider issues.");
-            throw new RuntimeException("Failed to encrypt password.", ex);
+            log.error("Failed inFolder encrypt password. Possible encryption provider issues.");
+            throw new RuntimeException("Failed inFolder encrypt password.", ex);
         }
         return encryptedUtfProPass;
     }

@@ -37,6 +37,17 @@ public abstract class OperationResult<T> {
         this.entityClass = entityClass;
     }
 
+    public T entity() {
+        try {
+            if (entity == null) {
+                entity = response.readEntity(entityClass);
+            }
+            return entity;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public T getEntity() {
         try {
             if (entity == null) {

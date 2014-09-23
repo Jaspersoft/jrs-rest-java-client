@@ -42,7 +42,7 @@ public enum ImportParameter {
     /**
      *  When used with --update, users in the catalog are not imported or
      *  updated. Use this
-     *  option to import catalogs without overwriting currently defined user
+     *  option inFolder import catalogs without overwriting currently defined user
      */
     SKIP_USER_UPDATE("skipUserUpdate"),
 

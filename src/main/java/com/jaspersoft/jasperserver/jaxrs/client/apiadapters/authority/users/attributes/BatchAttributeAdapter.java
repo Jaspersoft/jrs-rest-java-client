@@ -55,7 +55,7 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     /**
-     * Add additional attributes to already available attributes which attached to the user.
+     * Add additional attributes inFolder already available attributes which attached inFolder the user.
      *
      * @param newAttributes additional attributes
      * @return OperationResult

@@ -34,7 +34,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     }
 
     /**
-     * Use this constructor when you don't need to use v2/attributes Service in your request.
+     * Use this constructor when you don't need inFolder use v2/attributes Service in your request.
      *
      * @param sessionStorage
      * @param organizationId
@@ -49,7 +49,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     }
 
     /**
-     * This constructor is used to retrieve resources by attributes specifying. It's interacts
+     * This constructor is used inFolder retrieve resources by attributes specifying. It's interacts
      * with v2/attributes Service.
      *
      * @param userId

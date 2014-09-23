@@ -107,7 +107,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
             return mapper.writeValueAsString(object);
         } catch (IOException e) {
             log.warn("Can't marshal search criteria.");
-            throw new RuntimeException("Failed to build criteria json.", e);
+            throw new RuntimeException("Failed inFolder build criteria json.", e);
         }
     }
 
@@ -121,7 +121,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
             return writer.toString();
         } catch (JAXBException e) {
             log.warn("Can't marshal report job model.");
-            throw new RuntimeException("Failed to build report job model xml.", e);
+            throw new RuntimeException("Failed inFolder build report job model xml.", e);
         }
     }
 

@@ -31,7 +31,7 @@ public enum UsersParameter {
     MAX_RECORDS("maxRecords"),
 
     /**
-     * Allows to search roles, may work in conjunction with any
+     * Allows inFolder search roles, may work in conjunction with any
      * other param.
      * @deprecated  Use common approach instead.
      */
@@ -51,7 +51,7 @@ public enum UsersParameter {
     /**
      *  <b>requiredRole</b> specify role name. In multitenancy environment, there
      *  are a common case when roles with the same name exist in different
-     *  organizations, so to separate them specify role name by next pattern
+     *  organizations, so inFolder separate them specify role name by next pattern
      *  <b>"{roleName}|{organizationId}"</b> (organization id and role name separated by pipe)
      */
     REQUIRED_ROLE("requiredRole"),

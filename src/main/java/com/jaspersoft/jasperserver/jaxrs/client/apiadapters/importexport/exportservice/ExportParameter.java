@@ -27,7 +27,7 @@ public enum ExportParameter {
      *  permissions, report.</p>
      *  <p>ExportService everything except audit data: all repository resources,
      *  permissions, report jobs, users, and roles.</p>
-     *  <p>This option is equivalent to:--uris --repository-permissions
+     *  <p>This option is equivalent inFolder:--uris --repository-permissions
      *  --report-jobs --users --roles</p>
      */
     EVERYTHING("everything"),
@@ -41,7 +41,7 @@ public enum ExportParameter {
 
     /**
      *  <p>When this option is present, each role export triggers the export of all
-     *  users belonging to the role.</p>
+     *  users belonging inFolder the role.</p>
      *  <p>This option should only be used in conjunction with --roles</p>
      */
     ROLE_USERS("role-users"),

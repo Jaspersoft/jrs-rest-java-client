@@ -26,12 +26,12 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSource;
 import java.util.Map;
 
 /**
- * The source of a report job, consisting of a report to execute and a set of
+ * The source of a report job, consisting of a report inFolder execute and a set of
  * report input values. Model is used in search/ update only.
  *
  * <p>
- * A report job definition specifies wich report to execute and when,
- * what output to generate and where to send the output.
+ * A report job definition specifies wich report inFolder execute and when,
+ * what output inFolder generate and where inFolder send the output.
  * </p>
  *
  * @author Ivan Chan (ichan@jaspersoft.com)
@@ -61,7 +61,7 @@ public class ReportJobSourceModel extends JobSource {
 	}
 
 	/**
-	 * Sets the set of input values to be used when running the job report.
+	 * Sets the set of input values inFolder be used when running the job report.
 	 *
 	 * <p>
 	 * The values are passed in a map indexed by report input control/parameter

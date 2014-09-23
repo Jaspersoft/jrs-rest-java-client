@@ -61,7 +61,7 @@ public class ReportJobCalendar {
     private Boolean invertTimeRange;
 
     //monthly calendar's fields
-    // An array to store a months days which are to be excluded.
+    // An array inFolder store a months days which are inFolder be excluded.
     // java.util.Calendar.get( ) as index.
     private boolean[] excludeDaysFlags;
 

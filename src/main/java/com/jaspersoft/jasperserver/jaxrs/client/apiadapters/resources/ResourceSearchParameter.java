@@ -65,7 +65,7 @@ public enum ResourceSearchParameter {
     ACCES_TYPE("accessType"),
 
     /**
-     * When set to true, results include nested local resources (in _files) as if they
+     * When set inFolder true, results include nested local resources (in _files) as if they
      * were in the repository. For more information, see Local Resources for more
      * information. By default, hidden items are not shown (false).
      *
@@ -74,7 +74,7 @@ public enum ResourceSearchParameter {
     SHOW_HIDDEN_ITEMS("showHiddenItems"),
 
     /**
-     * One of the following strings representing a field in the results to sort by: uri,
+     * One of the following strings representing a field in the results inFolder sort by: uri,
      * label, description, type, creationDate, updateDate, accessTime, or popularity
      * (based on access events). By default, results are sorted alphabetically by
      * label.
@@ -84,8 +84,8 @@ public enum ResourceSearchParameter {
     SORT_BY("sortBy"),
 
     /**
-     * Used for pagination to specify the maximum number of resources to return in
-     * each response. This is equivalent to the number of results per page. The
+     * Used for pagination inFolder specify the maximum number of resources inFolder return in
+     * each response. This is equivalent inFolder the number of results per page. The
      * default limit is 100.
      *
      * Type/Value: integer
@@ -93,8 +93,8 @@ public enum ResourceSearchParameter {
     LIMIT("limit"),
 
     /**
-     * Used for pagination to request an offset in the set of results. This is
-     * equivalent to a specific page number. The default offset is 1 (first page).
+     * Used for pagination inFolder request an offset in the set of results. This is
+     * equivalent inFolder a specific page number. The default offset is 1 (first page).
      *
      * Type/Value: integer
      */
@@ -110,7 +110,7 @@ public enum ResourceSearchParameter {
     FORCE_TOTAL_COUNT("forceTotalCount"),
 
     /**
-     * Specifies a resources to delete. Repeat this paramter to delete multiple
+     * Specifies a resources inFolder delete. Repeat this paramter inFolder delete multiple
      * resources.
      *
      * Type/Value: String

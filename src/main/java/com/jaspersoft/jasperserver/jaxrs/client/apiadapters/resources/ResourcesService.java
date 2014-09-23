@@ -20,7 +20,16 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
+import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
+import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
+import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
+import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.ResourceBuilderFactory;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.DomainResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.MondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.ReportUnitResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.SecureMondrianConnectionResourceBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 public class ResourcesService extends AbstractAdapter {
@@ -35,5 +44,23 @@ public class ResourcesService extends AbstractAdapter {
 
     public SingleResourceAdapter resource(String uri) {
         return new SingleResourceAdapter(sessionStorage, uri);
+    }
+
+    public DomainResourceBuilder resource(ClientSemanticLayerDataSource resource){
+        return ResourceBuilderFactory.getBuilder(resource, sessionStorage);
+    }
+
+    public ReportUnitResourceBuilder resource(ClientReportUnit resource){
+        return ResourceBuilderFactory.getBuilder(resource, sessionStorage);
+    }
+
+    // todo -@ implement me!
+    public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resource){
+        return ResourceBuilderFactory.getBuilder(resource, sessionStorage);
+    }
+
+    // todo -@ implement me!
+    public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resource){
+        return ResourceBuilderFactory.getBuilder(resource, sessionStorage);
     }
 }

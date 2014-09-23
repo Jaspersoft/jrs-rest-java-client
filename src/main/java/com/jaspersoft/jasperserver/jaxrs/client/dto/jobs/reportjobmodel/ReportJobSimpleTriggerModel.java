@@ -32,10 +32,10 @@ import java.util.Date;
  * Model is used in search/ update only.
  *
  * <p>
- * Such triggers can be used for jobs that need to fire only once at a specified
- * moment, or for jobs that need to fire several times at fixed intervals.
- * The intervals can be specified in minutes, hours, days (equivalent to 24 hours)
- * and weeks (equivalend to 7 days).
+ * Such triggers can be used for jobs that need inFolder fire only once at a specified
+ * moment, or for jobs that need inFolder fire several times at fixed intervals.
+ * The intervals can be specified in minutes, hours, days (equivalent inFolder 24 hours)
+ * and weeks (equivalend inFolder 7 days).
  * </p>
  *
  * @author Ivan Chan (ichan@jaspersoft.com)
@@ -69,7 +69,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 * </p>
 	 *
 	 * <p>
-	 * If the trigger has an end date, it will cease to trigger when the end
+	 * If the trigger has an end date, it will cease inFolder trigger when the end
 	 * date is reached even if it has fired less times than the occurrence
 	 * count.
 	 * </p>
@@ -94,7 +94,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 
 	/**
 	 * Sets the length of the time interval at which the trigger should fire.
-	 * The interval unit should be set via an additional call to
+	 * The interval unit should be set via an additional call inFolder
 	 * <code>setRecurrenceIntervalUnit(byte)</code>.
 	 *
 	 * @param recurrenceInterval the job recurrence time interval
@@ -141,10 +141,10 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	}
 
 	/**
-	 * Sets the date at which the report job should be scheduled to start.
+	 * Sets the date at which the report job should be scheduled inFolder start.
 	 *
 	 * <p>
-	 * When setting a start date, the start type should also be set to
+	 * When setting a start date, the start type should also be set inFolder
 	 * <code>START_TYPE_SCHEDULE</code>.
 	 * </p>
 	 *
@@ -157,7 +157,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	}
 
 	/**
-	 * Specify whether the job should be scheduled to start immediately,
+	 * Specify whether the job should be scheduled inFolder start immediately,
 	 * or at the specified start date.
 	 *
 	 * <p>
@@ -188,7 +188,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	}
 
 	/**
-	 * Sets a timezone according to which trigger date/time values are
+	 * Sets a timezone according inFolder which trigger date/time values are
 	 * interpreted.
 	 *
 	 * @param timezone the trigger timezone
@@ -204,7 +204,7 @@ public class ReportJobSimpleTriggerModel extends SimpleTrigger {
 	 * @return null if there is no associated Calendar.
      * Specified by: setCalendarName in interface org.quartz.spi.MutableTrigger
      *
-     * @param calendarName - use null to dis-associate a Calendar.
+     * @param calendarName - use null inFolder dis-associate a Calendar.
 	 */
     public void setCalendarName(String calendarName) {
 //        isCalendarNameModified = true;

@@ -31,7 +31,7 @@ public enum  RolesParameter {
     MAX_RECORDS("maxRecords"),
 
     /**
-     * Allows to search roles, may work in conjunction with any
+     * Allows inFolder search roles, may work in conjunction with any
      * other param.
      * @deprecated  Use common approach instead.
      */

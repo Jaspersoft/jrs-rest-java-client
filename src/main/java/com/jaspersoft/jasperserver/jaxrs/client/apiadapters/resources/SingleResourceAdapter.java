@@ -41,10 +41,8 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.InputStream;
-import java.util.Map;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static java.util.regex.Pattern.compile;
 
 public class SingleResourceAdapter extends AbstractAdapter {
     private final String resourceUri;
@@ -194,37 +192,22 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     /**
-     * Allows to upload SemanticLayerDataSource to server.
+     * Allows to upload resource with MultiPart request.
      *
-     * @param attachedResources map which contains files as values and keys
-     *                          as required files names. Pay attention on naming.
-     *                          Name convention is important.
-     * @return OperationResult instance.
+     * @param multipartResource form
+     * @param clazz entity class
+     * @param <T> type of entity class
+     * @return result instance
      */
-    public OperationResult<ClientSemanticLayerDataSource> uploadSemanticLayerDataSource(Map<String, File> attachedResources) {
+    public <T> OperationResult<T> uploadMultipartResource(FormDataMultiPart multipartResource, Class<T> clazz) {
+        JerseyRequest<T> request = buildRequest(sessionStorage, clazz, new String[]{"/resources", resourceUri});
+        request.setContentType(MediaType.MULTIPART_FORM_DATA);
+        return request.post(multipartResource);
+    }
 
-        // resources
-        File resource = attachedResources.get("resource");
-        File securityFile = attachedResources.get("securityFile");
-        File schema = attachedResources.get("schema");
-
-        // prepare multipart form
-        FormDataMultiPart multipart = new FormDataMultiPart()
-                .field("resource", resource, new MediaType("application", "repository.semanticlayerdatasource+json"))
-                .field("securityFile", securityFile, MediaType.APPLICATION_XML_TYPE)
-                .field("schema", schema, MediaType.APPLICATION_XML_TYPE);
-
-        // add bundles to form
-        for (Map.Entry<String, File> entry : attachedResources.entrySet()) {
-            if (compile("bundles\\.bundle\\[(\\d+)\\]").matcher(entry.getKey()).find()) {
-                String bundleName = entry.getKey();
-                File bundleFile = entry.getValue();
-                multipart.field(bundleName, bundleFile, MediaType.TEXT_PLAIN_TYPE);
-            }
-        }
-
-        JerseyRequest<ClientSemanticLayerDataSource> request = prepareUploadResourcesRequest();
-        return request.post(multipart);
+    public <T> OperationResult<T> get(Class<T> clazz){
+        JerseyRequest<T> request = buildRequest(sessionStorage, clazz, new String[]{"/resources", resourceUri});
+        return request.get();
     }
 
     public OperationResult<ClientFile> uploadFile(File fileContent,
@@ -274,7 +257,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     /**
-     * Jersey request setup. It generified with a proper entity.
+     * Jersey request setup. Generified with a proper entity.
      *
      * @return JerseyRequest instance
      */
@@ -302,7 +285,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     public OperationResult<ClientResource> patchResource(PatchDescriptor descriptor) {
-        throw new UnsupportedOperationException("Server doesn't return proper MIME-type to resolve entity type");
+        throw new UnsupportedOperationException("Server doesn't return proper MIME-type inFolder resolve entity type");
     }
 
     public <ResourceType extends ClientResource> OperationResult<ResourceType> patchResource(Class<ResourceType> resourceTypeClass, PatchDescriptor descriptor) {

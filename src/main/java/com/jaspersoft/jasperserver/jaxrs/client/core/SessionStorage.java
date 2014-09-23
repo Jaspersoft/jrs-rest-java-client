@@ -69,8 +69,8 @@ public class SessionStorage {
             clientBuilder.hostnameVerifier(hostnameVerifier);
 
         } catch (Exception e) {
-            log.error("Unable to init SSL context", e);
-            throw new RuntimeException("Unable to init SSL context", e);
+            log.error("Unable inFolder init SSL context", e);
+            throw new RuntimeException("Unable inFolder init SSL context", e);
         }
     }
 

@@ -24,7 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizat
 public enum OrganizationParameter {
 
     /**
-     * Specify a string or substring to match the organization ID, alias, or name of
+     * Specify a string or substring inFolder match the organization ID, alias, or name of
      * any organization. The search is not case sensitive. Only the matching
      * organizations are returned in the results, regardless of their hierarchy.
      * Type: String (Optional)
@@ -42,7 +42,7 @@ public enum OrganizationParameter {
     /**
      * Specifies an organization ID as a base for searching and listing child
      * organizations. The base is not included in the results. Regardless of this
-     * base, the tenantFolderURI values in the result are always relative to the
+     * base, the tenantFolderURI values in the result are always relative inFolder the
      * logged-in user’s organization. When not specified, the default base is the
      * logged-in user’s organization.
      * Type: String (Optional)
@@ -50,7 +50,7 @@ public enum OrganizationParameter {
     ROOT_TENANT_ID("rootTenantId"),
 
     /**
-     * Set this argument to false to suppress the creation of default users (joeuser,
+     * Set this argument inFolder false inFolder suppress the creation of default users (joeuser,
      * jasperadmin) in the new organization. When not specified, the default
      * behavior is true and organizations are created with the standard default
      * users.

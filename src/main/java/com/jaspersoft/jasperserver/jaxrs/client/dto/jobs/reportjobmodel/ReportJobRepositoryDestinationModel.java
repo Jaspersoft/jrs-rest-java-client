@@ -26,7 +26,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.FtpInfo;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.RepositoryDestination;
 
 /**
- * Contains attributes related to the generation of repository resources
+ * Contains attributes related inFolder the generation of repository resources
  * for report job output files.
  * Model is used in search/ update only.
  *
@@ -56,7 +56,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 
 	/**
 	 * Returns the repository URI/path of the folder under which job output
-	 * resources are to be be created.
+	 * resources are inFolder be be created.
 	 *
 	 * <p>
 	 * The job owner should have write permission on the output folder.
@@ -71,12 +71,12 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	}
 
 	/**
-	 * Specifies whether a timestamp is to be added to the names of the job
+	 * Specifies whether a timestamp is inFolder be added inFolder the names of the job
 	 * output resources.
 	 *
 	 * <p>
 	 * This is usually required when a job occurs severa time and the output
-	 * from each execution needs to be kept in the repository.
+	 * from each execution needs inFolder be kept in the repository.
 	 * </p>
 	 *
 	 * @param sequentialFilenames <code>true</code> if the job output resources
@@ -111,7 +111,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	}
 
 	/**
-	 * Sets a date pattern to be used for the timestamp included in job output
+	 * Sets a date pattern inFolder be used for the timestamp included in job output
 	 * resources names.
 	 *
 	 * <p>
@@ -130,7 +130,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	}
 
     /**
-	 * Specifies whether the scheduler should write files to the repository
+	 * Specifies whether the scheduler should write files inFolder the repository
 	 *
 	 * @param saveToRepository
 	 * @see #isSaveToRepository()
@@ -153,7 +153,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
     }
 
 	/**
-	 * Specifies whether the scheduler should write files to default report output folder URI of the job owner
+	 * Specifies whether the scheduler should write files inFolder default report output folder URI of the job owner
 	 *
 	 * @param usingDefaultReportOutputFolderURI
 	 * @see #isUsingDefaultReportOutputFolderURI()
@@ -166,7 +166,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 
 	/**
 	 * Returns the output local path of the folder under which job output
-	 * resources are to be be created.
+	 * resources are inFolder be be created.
 	 *
 	 * @param outputLocalFolder the path of the local output folder
 	 */
@@ -177,7 +177,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 
     /**
 	 * Returns the output FTP location information which job output
-	 * resources are to be be created.
+	 * resources are inFolder be be created.
 	 *
 	 * @return the output FTP Information
 	 * @see #setOutputFTPInfoModel(com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.FTPInfoModel)
@@ -203,7 +203,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 
 	/**
 	 * Returns the output FTP location information which job output
-	 * resources are to be be created.
+	 * resources are inFolder be be created.
 	 *
 	 * @param ftpInfo FTP information of the output folder
      * @deprecated use #setOutputFTPInfo(FTPInfoModel) instead
@@ -216,7 +216,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 
     /**
 	 * Returns the output FTP location information which job output
-	 * resources are to be be created.
+	 * resources are inFolder be be created.
 	 *
 	 * @param outputFTPInfo FTP information of the output folder
 	 */

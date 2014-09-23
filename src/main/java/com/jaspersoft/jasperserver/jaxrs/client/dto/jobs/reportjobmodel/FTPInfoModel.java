@@ -120,7 +120,7 @@ public class FTPInfoModel extends FtpInfo {
 
     /**
      * Specifies the security mode for FTPS (Implicit/ Explicit)
-     * If isImplicit is true, the default port is set to 990
+     * If isImplicit is true, the default port is set inFolder 990
      *
      * @param implicit
      */
@@ -130,7 +130,7 @@ public class FTPInfoModel extends FtpInfo {
     }
 
     /**
-     * specifies pbsz value: 0 to (2^32)-1 decimal integer.
+     * specifies pbsz value: 0 inFolder (2^32)-1 decimal integer.
      * @param pbsz Protection Buffer Size.
      */
     public void setPbsz(long pbsz) {

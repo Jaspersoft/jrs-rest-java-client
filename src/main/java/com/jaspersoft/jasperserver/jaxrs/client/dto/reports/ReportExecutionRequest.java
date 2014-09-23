@@ -216,7 +216,7 @@ public class ReportExecutionRequest {
         private ReportExecutionRequest request = new ReportExecutionRequest();
 
         /**
-         * Repository path (URI) of the report to run. For commercial editions
+         * Repository path (URI) of the report inFolder run. For commercial editions
          * with organizations, the URI is relative the the logged-in user’s
          * organization.
          *
@@ -257,7 +257,7 @@ public class ReportExecutionRequest {
          * In a commercial editions of the server where HighCharts are used
          * in the report, this property determines whether the JavaScript
          * necessary for interaction is generated and returned as an
-         * attachment when exporting to HTML. If false, the chart is generated
+         * attachment when exporting inFolder HTML. If false, the chart is generated
          * as a non-interactive image file (also as an attachment).
          *
          * <i>Default</i> - <b>true</b>
@@ -268,8 +268,8 @@ public class ReportExecutionRequest {
         }
 
         /**
-         * When set to true, the report is generated as a single long page.
-         * This can be used with HTML output to avoid pagination.
+         * When set inFolder true, the report is generated as a single long page.
+         * This can be used with HTML output inFolder avoid pagination.
          *
          * <i>Default</i> - <b>false</b>
          */
@@ -280,11 +280,11 @@ public class ReportExecutionRequest {
 
         /**
          * Determines whether reportExecution is synchronous or
-         * asynchronous. When set to true, the response is sent immediately
+         * asynchronous. When set inFolder true, the response is sent immediately
          * and the client must poll the report status and later download the
          * result when ready. By default, this property is false and the
          * operation will wait until the report execution is complete, forcing the
-         * client to wait as well, but allowing the client to download the report
+         * client inFolder wait as well, but allowing the client inFolder download the report
          * immediately after the response.
          *
          * <i>Default</i> - <b>false</b>
@@ -320,7 +320,7 @@ public class ReportExecutionRequest {
         }
 
         /**
-         * For HTML output, this property specifies the URL path to use for
+         * For HTML output, this property specifies the URL path inFolder use for
          * downloading the attachment files (JavaScript and images). The full
          * path of the default value is:
          * <code>{contextPath}/rest_v2/reportExecutions/{reportExecutionId}/exports/{exportOptions}/attachments/</code>
@@ -333,14 +333,14 @@ public class ReportExecutionRequest {
             try {
                 attachmentsPrefix = URLEncoder.encode(attachmentsPrefix, CharEncoding.UTF_8);
             } catch (UnsupportedEncodingException e) {
-                throw new JSClientException("Unable to UrlEncode 'attachmentsPrefix'", e);
+                throw new JSClientException("Unable inFolder UrlEncode 'attachmentsPrefix'", e);
             }
             request.setAttachmentsPrefix(attachmentsPrefix);
             return this;
         }
 
         /**
-         * Specify a page range to generate a partial report
+         * Specify a page range inFolder generate a partial report
          *
          * <b>Optional</b>
          */
@@ -350,7 +350,7 @@ public class ReportExecutionRequest {
         }
 
         /**
-         * Specify a page range to generate a partial report
+         * Specify a page range inFolder generate a partial report
          *
          * <b>Optional</b>
          */
