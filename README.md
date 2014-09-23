@@ -60,7 +60,9 @@ Table of Contents
     * [Modifying a Resource](#modifying-a-resource).
     * [Copying a Resource](#copying-a-resource).
     * [Moving a Resource](#moving-a-resource).
-    * [Uploading SemanticLayerDataSource](#uploading-semanticlayerdatasource).
+    * [Uploading SemanticLayerDataSource](#uploading-semanticlayerdatasource).   
+    * [Uploading MondrianConnection](#uploading-mondrianconnection).
+    * [Uploading SecureMondrianConnection](#uploading-securemondrianconnection).    
     * [Uploading File Resources](#uploading-file-resources).
     * [Deleting Resources](#deleting-resources).
   2. [The Permissions Service](#the-permissions-service).
@@ -813,6 +815,26 @@ ClientSemanticLayerDataSource domainEntity = session
             .inFolder("/my/new/folder/")
                 .create()
                     .entity();        
+```
+####Uploading MondrianConnection
+REST Client allows you to create `MondrianConnection` Resource with mondrian schema XML file. You can specify the folder in which the resource will be placed. Provided API allows to add XML schema as `String` or `InputStream`.    
+```java
+ClientMondrianConnection connection = session
+    .resourcesService()
+        .resource(mondrianConnection)
+            .withMondrianSchema(schema, schemaRef)
+        .createInFolder("my/olap/folder")
+            .entity();
+```
+####Uploading SecureMondrianConnection
+To upload `SecureMondrianConnection` Resource with a bunch of support files such as Mondrian schema XML file and AccessGrantSchemas files you can use our new API
+```java
+ClientSecureMondrianConnection entity = session.resourcesService()
+    .resource(secureMondrianConnection)
+        .withMondrianSchema(mondrianSchema)
+        .withAccessGrantSchemas(Arrays.asList(accessGrantSchema))
+    .createInFolder("/my/new/folder/")
+        .entity();
 ```
 ####Deleting Resources
 You can delete resources in two ways, one for single resources and one for multiple resources. To delete multiple resources at once, specify multiple URIs with the `ResourceSearchParameter.RESOURCE_URI` parameter.
