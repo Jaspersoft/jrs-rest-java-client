@@ -21,61 +21,98 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
+import com.jaspersoft.jasperserver.dto.resources.ClientReference;
+import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.decorator.ReportUnitResourceOperationProcessorDecorator;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 import javax.ws.rs.core.MediaType;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Alexander Krasnyanskiy
  */
 public class ReportUnitResourceBuilder extends ReportUnitResourceOperationProcessorDecorator {
-
     public ReportUnitResourceBuilder(ClientReportUnit entity, SessionStorage sessionStorage) {
         super(entity, sessionStorage);
     }
 
-    public ReportUnitResourceBuilder withJrxml(InputStream jrxml) {
+//    public ReportUnitResourceBuilder withJrxml(InputStream jrxml) {
+//        multipart.field("jrxml", jrxml, MediaType.APPLICATION_XML_TYPE);
+//        return this;
+//    }
+
+    public ReportUnitResourceBuilder withJrxml(InputStream jrxml, ClientFile jrxmlDescriptor) {
         multipart.field("jrxml", jrxml, MediaType.APPLICATION_XML_TYPE);
+        super.reportUnit.setJrxml(jrxmlDescriptor);
         return this;
     }
 
-    public ReportUnitResourceBuilder withJrxml(InputStream jrxml, ClientFile jrxmlRef) {
+//    public ReportUnitResourceBuilder withJrxml(String jrxml) {
+//        multipart.field("jrxml", jrxml, MediaType.APPLICATION_XML_TYPE);
+//        return this;
+//    }
+
+    public ReportUnitResourceBuilder withJrxml(String jrxml, ClientFile jrxmlDescriptor) {
         multipart.field("jrxml", jrxml, MediaType.APPLICATION_XML_TYPE);
-        super.reportUnit.setJrxml(jrxmlRef);
+        super.reportUnit.setJrxml(jrxmlDescriptor);
         return this;
     }
 
-    public ReportUnitResourceBuilder withJrxml(String jrxml) {
-        multipart.field("jrxml", jrxml, MediaType.APPLICATION_XML_TYPE);
-        return this;
-    }
+//    public ReportUnitResourceBuilder withFile(String fileName, String file) {
+//        multipart.field("files." + fileName, file, MediaType.TEXT_PLAIN_TYPE);
+//        return this;
+//    }
 
-    public ReportUnitResourceBuilder withJrxml(String jrxml, ClientFile jrxmlRef) {
-        multipart.field("jrxml", jrxml, MediaType.APPLICATION_XML_TYPE);
-        super.reportUnit.setJrxml(jrxmlRef);
-        return this;
-    }
-
-    public ReportUnitResourceBuilder withFile(InputStream file) {
-        //multipart.field("jrxml", file, MediaType.WILDCARD_TYPE);
-        return this;
-    }
-
-    public ReportUnitResourceBuilder withFile(String file) {
-        //multipart.field("file", file, MediaType.WILDCARD_TYPE);
-        //super.reportUnit.setFiles();
-        return this;
-    }
-
-    public ReportUnitResourceBuilder withFile(String file, ClientFile fileRef) {
-//        multipart.field("file", file, MediaType.WILDCARD_TYPE);
-//        Map<String, ClientReferenceableFile> files = super.reportUnit.getFiles();
-//        if (files != null) {
-//            files.put();
+//    public ReportUnitResourceBuilder withFiles(Map<String, InputStream> files) {
+//        for (Map.Entry<String, InputStream> entry : files.entrySet()) {
+//            String fileName = entry.getKey();
+//            InputStream fileContent = entry.getValue();
+//            this.multipart.field("files." + fileName, fileContent, MediaType.TEXT_PLAIN_TYPE);
 //        }
+//        return this;
+//    }
+
+//    public ReportUnitResourceBuilder withFile(String fileName, InputStream file) {
+//        multipart.field("files." + fileName, file, MediaType.TEXT_PLAIN_TYPE);
+//        return this;
+//    }
+
+    public ReportUnitResourceBuilder withNewFile(String content, String fileName, ClientFile fileDescriptor) {
+        multipart.field("files." + fileName, content, MediaType.TEXT_PLAIN_TYPE);
+        Map<String, ClientReferenceableFile> files = super.reportUnit.getFiles();
+        if (files != null) {
+            super.reportUnit.getFiles().put(fileName, fileDescriptor);
+        } else {
+            super.reportUnit.setFiles(new HashMap<String, ClientReferenceableFile>());
+            super.reportUnit.getFiles().put(fileName, fileDescriptor);
+        }
+        return this;
+    }
+
+    public ReportUnitResourceBuilder withNewFile(InputStream content, String fileName, ClientFile fileDescriptor) {
+        multipart.field("files." + fileName, content, MediaType.TEXT_PLAIN_TYPE);
+        Map<String, ClientReferenceableFile> files = super.reportUnit.getFiles();
+        if (files != null) {
+            super.reportUnit.getFiles().put(fileName, fileDescriptor);
+        } else {
+            super.reportUnit.setFiles(new HashMap<String, ClientReferenceableFile>());
+            super.reportUnit.getFiles().put(fileName, fileDescriptor);
+        }
+        return this;
+    }
+
+    public ReportUnitResourceBuilder withNewFileReference(String fileName, ClientReference fileDescriptor) {
+        Map<String, ClientReferenceableFile> files = super.reportUnit.getFiles();
+        if (files != null) {
+            super.reportUnit.getFiles().put(fileName, fileDescriptor);
+        } else {
+            super.reportUnit.setFiles(new HashMap<String, ClientReferenceableFile>());
+            super.reportUnit.getFiles().put(fileName, fileDescriptor);
+        }
         return this;
     }
 }

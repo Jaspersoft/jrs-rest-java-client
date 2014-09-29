@@ -62,7 +62,8 @@ Table of Contents
     * [Moving a Resource](#moving-a-resource).
     * [Uploading SemanticLayerDataSource](#uploading-semanticlayerdatasource).   
     * [Uploading MondrianConnection](#uploading-mondrianconnection).
-    * [Uploading SecureMondrianConnection](#uploading-securemondrianconnection).    
+    * [Uploading SecureMondrianConnection](#uploading-securemondrianconnection).
+    * [Uploading ReportUnit](#uploading-reportunit).
     * [Uploading File Resources](#uploading-file-resources).
     * [Deleting Resources](#deleting-resources).
   2. [The Permissions Service](#the-permissions-service).
@@ -835,6 +836,16 @@ ClientSecureMondrianConnection entity = session.resourcesService()
         .withAccessGrantSchemas(Arrays.asList(accessGrantSchema))
     .createInFolder("/my/new/folder/")
         .entity();
+```
+####Uploading ReportUnit
+To upload `ReportUnit` resource to the server you can use next API, which allows you to do it in a very simple way. You can add JRXML file and a bunch of various files like images and others as well.
+```java
+ClientReportUnit entity = session.resourcesService()
+    .resource(reportUnit)
+        .withJrxml(file, descriptor)
+        .withNewFile(imgFile, "myFile", imgDescriptor)        
+            .createInFolder("/my/new/folder/")
+                .entity();
 ```
 ####Deleting Resources
 You can delete resources in two ways, one for single resources and one for multiple resources. To delete multiple resources at once, specify multiple URIs with the `ResourceSearchParameter.RESOURCE_URI` parameter.
