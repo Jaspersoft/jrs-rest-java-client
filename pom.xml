@@ -144,6 +144,7 @@
                 <version>2.0.0</version>
                 <configuration>
                     <repoToken>VjV7UCgnJbtIOMw0gHvW1H6HrDXyOiwbv</repoToken>
+                    <branch>develop</branch>
                 </configuration>
             </plugin>
         </plugins>
