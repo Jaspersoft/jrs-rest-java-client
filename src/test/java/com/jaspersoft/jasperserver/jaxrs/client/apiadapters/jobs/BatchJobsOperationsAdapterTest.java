@@ -621,59 +621,59 @@ public class BatchJobsOperationsAdapterTest extends PowerMockTestCase {
         //assertTrue(captor.getValue().getIds().get(0) == 12323412342135235L);
     }
 
-    @Test(enabled = true)
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.BatchJobsOperationsAdapter#asyncRestart(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
-     */
-    public void should_force_server_to_restart_jobs_asynchronously() {
-
-        // todo - problem with captor when use it in separate thread
-
-        /* Given */
-        //ArgumentCaptor<JobIdListWrapper> captor = ArgumentCaptor.forClass(JobIdListWrapper.class);
-        PowerMockito.mockStatic(JerseyRequest.class);
-        Mockito.when(buildRequest(
-                eq(sessionStorageMock),
-                eq(JobIdListWrapper.class),
-                eq(new String[]{"/jobs", "/restart"}))).thenReturn(jobIdListWrapperJerseyRequestMock);
-
-        final AtomicInteger newThreadId = new AtomicInteger();
-        final int currentThreadId = (int) Thread.currentThread().getId();
-
-        Mockito.
-                doReturn(jobIdListWrapperOperationResultMock)
-                .when(jobIdListWrapperJerseyRequestMock)
-                .post(anyObject());
-
-        final Callback<OperationResult<JobIdListWrapper>, Integer> callback =
-                Mockito.spy(new Callback<OperationResult<JobIdListWrapper>, Integer>() {
-                    @Override
-                    public Integer execute(OperationResult<JobIdListWrapper> data) {
-                        newThreadId.set((int) Thread.currentThread().getId());
-                        synchronized (this) {
-                            this.notify();
-                        }
-                        return null;
-                    }
-                });
-
-        Mockito.doReturn(1).when(callback).execute(jobIdListWrapperOperationResultMock);
-        BatchJobsOperationsAdapter adapter = new BatchJobsOperationsAdapter(sessionStorageMock);
-        adapter.parameter(JobsParameter.JOB_ID, "12323412342135235");
-        adapter.parameter(JobsParameter.JOB_ID, "12323412342135234");
-
-        /* When */
-        RequestExecution retrieved = adapter.asyncRestart(callback);
-
-        /* Than */
-        Assert.assertNotNull(retrieved);
-        Assert.assertNotSame(currentThreadId, newThreadId.get());
-
-        Mockito.verify(jobIdListWrapperJerseyRequestMock).post(anyObject());
-        //JobIdListWrapper val = captor.getValue();
-        //assertTrue(val.getIds().size() == 2);
-        //assertTrue(val.getIds().get(0) == 12323412342135235L);
-    }
+//    @Test(enabled = true)
+//    /**
+//     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.BatchJobsOperationsAdapter#asyncRestart(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
+//     */
+//    public void should_force_server_to_restart_jobs_asynchronously() {
+//
+//        // todo - problem with captor when use it in separate thread
+//
+//        /* Given */
+//        //ArgumentCaptor<JobIdListWrapper> captor = ArgumentCaptor.forClass(JobIdListWrapper.class);
+//        PowerMockito.mockStatic(JerseyRequest.class);
+//        Mockito.when(buildRequest(
+//                eq(sessionStorageMock),
+//                eq(JobIdListWrapper.class),
+//                eq(new String[]{"/jobs", "/restart"}))).thenReturn(jobIdListWrapperJerseyRequestMock);
+//
+//        final AtomicInteger newThreadId = new AtomicInteger();
+//        final int currentThreadId = (int) Thread.currentThread().getId();
+//
+//        Mockito.
+//                doReturn(jobIdListWrapperOperationResultMock)
+//                .when(jobIdListWrapperJerseyRequestMock)
+//                .post(anyObject());
+//
+//        final Callback<OperationResult<JobIdListWrapper>, Integer> callback =
+//                Mockito.spy(new Callback<OperationResult<JobIdListWrapper>, Integer>() {
+//                    @Override
+//                    public Integer execute(OperationResult<JobIdListWrapper> data) {
+//                        newThreadId.set((int) Thread.currentThread().getId());
+//                        synchronized (this) {
+//                            this.notify();
+//                        }
+//                        return null;
+//                    }
+//                });
+//
+//        Mockito.doReturn(1).when(callback).execute(jobIdListWrapperOperationResultMock);
+//        BatchJobsOperationsAdapter adapter = new BatchJobsOperationsAdapter(sessionStorageMock);
+//        adapter.parameter(JobsParameter.JOB_ID, "12323412342135235");
+//        adapter.parameter(JobsParameter.JOB_ID, "12323412342135234");
+//
+//        /* When */
+//        RequestExecution retrieved = adapter.asyncRestart(callback);
+//
+//        /* Than */
+//        Assert.assertNotNull(retrieved);
+//        Assert.assertNotSame(currentThreadId, newThreadId.get());
+//
+//        Mockito.verify(jobIdListWrapperJerseyRequestMock).post(anyObject());
+//        //JobIdListWrapper val = captor.getValue();
+//        //assertTrue(val.getIds().size() == 2);
+//        //assertTrue(val.getIds().get(0) == 12323412342135235L);
+//    }
 
     @Test
     public void should_update_resource_asynchronously() {
