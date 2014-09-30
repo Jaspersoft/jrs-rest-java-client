@@ -60,17 +60,15 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<UsersListWrapper>, R> callback) {
-        final JerseyRequest<UsersListWrapper> request = buildRequest(sessionStorage, UsersListWrapper.class,
-                new String[]{uri}, new DefaultErrorHandler());
+        final JerseyRequest<UsersListWrapper> request = buildRequest(sessionStorage, UsersListWrapper.class, new String[]{uri}, new DefaultErrorHandler());
         request.addParams(params);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(request.delete());
+                callback.execute(request.get());
             }
         });
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
-
 }

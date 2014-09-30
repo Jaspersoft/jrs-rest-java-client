@@ -50,15 +50,15 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
 
 
     public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage,
-                                                           Class<T> responseClass,
-                                                           String[] path){
+                                                    Class<T> responseClass,
+                                                    String[] path) {
         return buildRequest(sessionStorage, responseClass, path, null);
     }
 
     public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage,
-                                                           Class<T> responseClass,
-                                                           String[] path,
-                                                           ErrorHandler errorHandler) {
+                                                    Class<T> responseClass,
+                                                    String[] path,
+                                                    ErrorHandler errorHandler) {
         JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, responseClass);
 
         if (errorHandler != null)
@@ -112,6 +112,11 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         usersWebTarget = usersWebTarget.path(path);
         return this;
     }
+
+//    public JerseyRequest<ResponseType> addPathSegment(String pathSegment){
+//        usersWebTarget = usersWebTarget.path(pathSegment);
+//        return this;
+//    }
 
     @Override
     public OperationResult<ResponseType> get() throws JSClientWebException {
@@ -238,4 +243,47 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         return null;
     }
 
+
+    /**
+     * getters/setters block
+     */
+    public OperationResultFactory getOperationResultFactory() {
+        return operationResultFactory;
+    }
+
+    public Class<ResponseType> getResponseClass() {
+        return responseClass;
+    }
+
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
+    }
+
+//    public void setErrorHandler(ErrorHandler errorHandler) {
+//        this.errorHandler = errorHandler;
+//    }
+
+    public MultivaluedMap<String, String> getHeaders() {
+        return headers;
+    }
+
+    public WebTarget getUsersWebTarget() {
+        return usersWebTarget;
+    }
+
+//    public void setUsersWebTarget(WebTarget usersWebTarget) {
+//        this.usersWebTarget = usersWebTarget;
+//    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public String getAcceptType() {
+        return acceptType;
+    }
+
+//    public void setAcceptType(String acceptType) {
+//        this.acceptType = acceptType;
+//    }
 }

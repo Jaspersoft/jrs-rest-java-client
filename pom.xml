@@ -48,6 +48,8 @@
             <version>6.8.7</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Mockito & extensions -->
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-testng</artifactId>
@@ -64,6 +66,14 @@
             <artifactId>powermock-api-easymock</artifactId>
             <version>${powermock.version}</version>
         </dependency>
+
+        <!-- EasyMock -->
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.2</version>
+        </dependency>
+
         <dependency>
             <groupId>com.owlike</groupId>
             <artifactId>genson</artifactId>

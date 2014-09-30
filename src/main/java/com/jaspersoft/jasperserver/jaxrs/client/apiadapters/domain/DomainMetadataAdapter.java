@@ -43,4 +43,8 @@ public class DomainMetadataAdapter extends AbstractAdapter {
                 new DefaultErrorHandler()
         ).get();
     }
+
+    public String getDomainURI() {
+        return domainURI;
+    }
 }

@@ -49,4 +49,12 @@ public class QueryExecutorAdapter extends AbstractAdapter {
         req.setContentType("application/xml");
         return req.post(query);
     }
+
+    public String getResourceUri() {
+        return resourceUri;
+    }
+
+    public Query getQuery() {
+        return query;
+    }
 }

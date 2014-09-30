@@ -30,8 +30,7 @@ public class SingleAttributeAdapter extends AbstractAdapter {
         return request().get();
     }
 
-    public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientUserAttribute>, R> callback,
-                                         final String attributeName) {
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientUserAttribute>, R> callback, final String attributeName) {
         this.attributeName = attributeName;
         final JerseyRequest<ClientUserAttribute> request = request();
         RequestExecution task = new RequestExecution(new Runnable() {

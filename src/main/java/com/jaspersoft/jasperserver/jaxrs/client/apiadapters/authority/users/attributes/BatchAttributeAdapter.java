@@ -55,7 +55,7 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     /**
-     * Add additional attributes inFolder already available attributes which attached inFolder the user.
+     * Add additional attributes to already available attributes which attached to the user.
      *
      * @param newAttributes additional attributes
      * @return OperationResult
@@ -110,7 +110,13 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<UserAttributesListWrapper> request() {
-        return JerseyRequest.buildRequest(sessionStorage, UserAttributesListWrapper.class,
-                new String[]{uri.toString(), "/attributes"}, new DefaultErrorHandler());
+        String u = uri.toString();
+        return JerseyRequest
+                .buildRequest(
+                        sessionStorage,
+                        UserAttributesListWrapper.class,
+                        new String[]{u, "/attributes"},
+                        new DefaultErrorHandler()
+                );
     }
 }
