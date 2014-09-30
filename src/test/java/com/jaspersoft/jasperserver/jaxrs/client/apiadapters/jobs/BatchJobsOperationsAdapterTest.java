@@ -627,7 +627,7 @@ public class BatchJobsOperationsAdapterTest extends PowerMockTestCase {
 //     */
 //    public void should_force_server_to_restart_jobs_asynchronously() {
 //
-//        // todo - problem with captor when use it in separate thread
+//        // fixme - the problem with captor when we use it in the separate thread
 //
 //        /* Given */
 //        //ArgumentCaptor<JobIdListWrapper> captor = ArgumentCaptor.forClass(JobIdListWrapper.class);
