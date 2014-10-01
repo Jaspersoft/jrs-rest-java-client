@@ -164,7 +164,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
         }
     }
 
-    private <R> RequestExecution asyncCopyOrMove(final boolean moving, final String fromUri, final Callback<OperationResult<ClientResource>, R> callback) {
+    public <R> RequestExecution asyncCopyOrMove(final boolean moving, final String fromUri, final Callback<OperationResult<ClientResource>, R> callback) {
         final JerseyRequest<ClientResource> request = prepareCopyOrMoveRequest(fromUri);
 
         RequestExecution task = new RequestExecution(new Runnable() {
@@ -219,7 +219,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return request.post(form);
     }
 
-    private <R> RequestExecution asyncUploadFile(final File fileContent,
+    public <R> RequestExecution asyncUploadFile(final File fileContent,
                                                  final ClientFile.FileType fileType,
                                                  final String label,
                                                  final String description,
