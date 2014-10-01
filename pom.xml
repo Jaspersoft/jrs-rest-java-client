@@ -124,19 +124,6 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.jacoco</groupId>-->
-                <!--<artifactId>jacoco-maven-plugin</artifactId>-->
-                <!--<version>0.6.4.201312101107</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>prepare-agent</id>-->
-                        <!--<goals>-->
-                            <!--<goal>prepare-agent</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
@@ -159,7 +146,6 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>2.0.0</version>
                 <configuration>
-                    <repoToken>VjV7UCgnJbtIOMw0gHvW1H6HrDXyOiwbv</repoToken>
                     <branch>develop</branch>
                 </configuration>
             </plugin>
@@ -172,6 +158,15 @@
             <email>borys.kolesnikov@gmail.com</email>
             <roles>
                 <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+3</timezone>
+        </developer>
+        <developer>
+            <id>Krasnyanskiy</id>
+            <name>Alexander Krasnyanskiy</name>
+            <email>krasnyanskiy.alex@gmail.com</email>
+            <roles>
                 <role>developer</role>
             </roles>
             <timezone>+3</timezone>
