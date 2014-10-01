@@ -41,43 +41,57 @@ public class SecureMondrianConnectionResourceBuilder extends SecureMondrianConne
         super(storage, entity);
     }
 
-    public SecureMondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, ClientFile schemaRef) {
+    public SecureMondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, ClientFile schemaDescriptor) {
         multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
-        super.connection.setSchema(schemaRef);
+        super.connection.setSchema(schemaDescriptor);
         return this;
     }
 
-    public SecureMondrianConnectionResourceBuilder withMondrianSchema(InputStream schema) {
+    public SecureMondrianConnectionResourceBuilder withMondrianSchema(String schema, ClientFile schemaDescriptor) {
         multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
+        super.connection.setSchema(schemaDescriptor);
         return this;
     }
 
-    public SecureMondrianConnectionResourceBuilder withMondrianSchema(String schema) {
-        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
-        return this;
-    }
+//    public SecureMondrianConnectionResourceBuilder withMondrianSchema(InputStream schema) {
+//        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
+//        return this;
+//    }
 
-    public SecureMondrianConnectionResourceBuilder withAccessGrantSchemas(List<InputStream> schemas, List<ClientReferenceableFile> schemasRef) {
-        super.connection.setAccessGrants(schemasRef);
+//    public SecureMondrianConnectionResourceBuilder withMondrianSchema(String schema) {
+//        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
+//        return this;
+//    }
+
+    public SecureMondrianConnectionResourceBuilder withAccessGrantSchemasAsStream(List<InputStream> schemas, List<ClientReferenceableFile> schemaDescriptors) {
+        super.connection.setAccessGrants(schemaDescriptors);
         for (InputStream schema : schemas) {
             multipart.field("accessGrantSchemas.accessGrantSchema[" + schemaCounter + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
         }
         return this;
     }
 
-    public SecureMondrianConnectionResourceBuilder withAccessGrantSchemas(List<InputStream> schemas) {
-        for (InputStream schema : schemas) {
-            multipart.field("accessGrantSchemas.accessGrantSchema[" + schemaCounter + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
-        }
-        return this;
-    }
-
-    public SecureMondrianConnectionResourceBuilder withAccessGrantSchemasAsString(List<String> schemas) {
+    public SecureMondrianConnectionResourceBuilder withAccessGrantSchemasAsString(List<String> schemas, List<ClientReferenceableFile> schemaDescriptors) {
+        super.connection.setAccessGrants(schemaDescriptors);
         for (String schema : schemas) {
             multipart.field("accessGrantSchemas.accessGrantSchema[" + schemaCounter + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
         }
         return this;
     }
+
+//    public SecureMondrianConnectionResourceBuilder withAccessGrantSchemas(List<InputStream> schemas) {
+//        for (InputStream schema : schemas) {
+//            multipart.field("accessGrantSchemas.accessGrantSchema[" + schemaCounter + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
+//        }
+//        return this;
+//    }
+
+//    public SecureMondrianConnectionResourceBuilder withAccessGrantSchemasAsString(List<String> schemas) {
+//        for (String schema : schemas) {
+//            multipart.field("accessGrantSchemas.accessGrantSchema[" + schemaCounter + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
+//        }
+//        return this;
+//    }
 
     public SecureMondrianConnectionResourceBuilder withUri(String uri) {
         super.connection.setUri(uri);

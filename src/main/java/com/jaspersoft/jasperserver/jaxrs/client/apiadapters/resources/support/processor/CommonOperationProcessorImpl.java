@@ -33,7 +33,6 @@ import javax.ws.rs.core.MediaType;
 public class CommonOperationProcessorImpl<ResourceType> implements CommonOperationProcessor<ResourceType> {
     private ResourceType resource;
     private Class<ResourceType> resourceTypeClass;
-    private String pathToFolder;
     private SessionStorage sessionStorage;
 
     public CommonOperationProcessorImpl(ResourceType resource, Class<ResourceType> resourceTypeClass, SessionStorage sessionStorage) {
@@ -44,13 +43,16 @@ public class CommonOperationProcessorImpl<ResourceType> implements CommonOperati
 
     @Override
     public OperationResult<ResourceType> create(FormDataMultiPart multipart, MediaType mediaType, String path) {
-        pathToFolder = path;
         multipart.field("resource", resource, mediaType);
-        return new SingleResourceAdapter(sessionStorage, pathToFolder).uploadMultipartResource(multipart, resourceTypeClass);
+        return new SingleResourceAdapter(sessionStorage, path).uploadMultipartResource(multipart, resourceTypeClass);
     }
 
     @Override
     public OperationResult<ResourceType> get(String uri) {
         return new SingleResourceAdapter(sessionStorage, uri).get(resourceTypeClass);
+    }
+
+    public SessionStorage getSessionStorage() {
+        return sessionStorage;
     }
 }

@@ -37,7 +37,7 @@ import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertSame;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService}
+ * Unit tests for {@link ReportingService}
  */
 @PrepareForTest({JerseyRequest.class, ReportingService.class})
 public class ReportingServiceTest extends PowerMockTestCase {
@@ -61,9 +61,9 @@ public class ReportingServiceTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService#asyncNewReportExecutionRequest(com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest, com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
+     * for {@link ReportingService#asyncNewReportExecutionRequest(ReportExecutionRequest, com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
      */
-    public void should_return_strangely_wrapped_ReportExecutionDescriptor() throws InterruptedException {
+    public void should_return_wrapped_ReportExecutionDescriptor() throws InterruptedException {
 
         /* Given */
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -104,7 +104,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService#newReportExecutionRequest(com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest)}
+     * for {@link ReportingService#newReportExecutionRequest(ReportExecutionRequest)}
      */
     public void should_return_operation_result_with_proper_object() {
 
@@ -129,7 +129,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService#reportExecutionRequest(String)}
+     * for {@link ReportingService#reportExecutionRequest(String)}
      */
     public void should_return_proper_builder_instance() throws Exception {
 
@@ -149,7 +149,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService#runningReportsAndJobs()}
+     * for {@link ReportingService#runningReportsAndJobs()}
      */
     public void should_return_proper_ReportsAndJobsSearch_instance() throws Exception {
 
@@ -169,7 +169,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService#report(String)}
+     * for {@link ReportingService#report(String)}
      */
     public void should_return_proper_ReportsAdapter_instance() throws Exception {
 

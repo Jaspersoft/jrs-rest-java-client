@@ -45,4 +45,16 @@ public abstract class SecureMondrianConnectionResourceOperationProcessorDecorato
     public OperationResult<ClientSecureMondrianConnection> createInFolder(String path) {
         return processor.create(multipart, new MediaType("application", "repository.secureMondrianConnection+xml"), path);
     }
+
+    public CommonOperationProcessorImpl<ClientSecureMondrianConnection> getProcessor() {
+        return processor;
+    }
+
+    public ClientSecureMondrianConnection getConnection() {
+        return connection;
+    }
+
+    public FormDataMultiPart getMultipart() {
+        return multipart;
+    }
 }

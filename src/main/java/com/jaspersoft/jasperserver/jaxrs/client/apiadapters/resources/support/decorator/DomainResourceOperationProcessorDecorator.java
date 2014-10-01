@@ -53,4 +53,16 @@ public abstract class DomainResourceOperationProcessorDecorator {
     public OperationResult<ClientSemanticLayerDataSource> createInFolder(String path) {
         return processor.create(multipart, new MediaType("application", "repository.semanticlayerdatasource+json"), path);
     }
+
+    public CommonOperationProcessorImpl<ClientSemanticLayerDataSource> getProcessor() {
+        return processor;
+    }
+
+    public ClientSemanticLayerDataSource getDomain() {
+        return domain;
+    }
+
+    public FormDataMultiPart getMultipart() {
+        return multipart;
+    }
 }
