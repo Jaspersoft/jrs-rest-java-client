@@ -13,6 +13,7 @@ notifications:
 branches:
   only:
     - develop
+    - master
 
 env:
   global:
