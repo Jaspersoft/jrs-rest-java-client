@@ -229,7 +229,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
     }
 
     @Test
-    public void should_1() throws InterruptedException {
+    public void should_create_resource_asynchronously() throws InterruptedException {
 
         PowerMockito.mockStatic(JerseyRequest.class);
         PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock), eq(RepositoryPermission.class), eq(new String[]{"/permissions", "resourceUri"}))).thenReturn(requestMock);

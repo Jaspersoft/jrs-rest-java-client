@@ -280,7 +280,7 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_1() throws InterruptedException {
+    public void should_create_resource_asynchronously() throws InterruptedException {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);

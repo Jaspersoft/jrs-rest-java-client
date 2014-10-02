@@ -131,7 +131,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test1() {
+    public void should_set_uri() {
 
         // When
         final SingleUserRequestAdapter adapter = new SingleUserRequestAdapter("Simon", "MyCoolOrg", sessionStorageMock);
@@ -144,7 +144,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test2() {
+    public void should_set_user_name() {
 
         // When
         final SingleUserRequestAdapter adapter = new SingleUserRequestAdapter("Simon", null, sessionStorageMock);
@@ -157,7 +157,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void test3() {
+    public void should_throw_exception_when_params_are_wrong() {
 
         // When
         final SingleUserRequestAdapter adapter = new SingleUserRequestAdapter(null, null, sessionStorageMock);
@@ -269,7 +269,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test8() throws Exception {
+    public void should_retrieve_user() throws Exception {
 
         // Given
         final String userId = "Simon";
@@ -286,10 +286,11 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // Than
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/" + userId}), any(DefaultErrorHandler.class));
+        assertNotNull(retrieved);
     }
 
     @Test
-    public void test9() throws Exception {
+    public void should_retrieve_user_by_id() throws Exception {
 
         // Given
         final String userId = "Simon";
@@ -511,7 +512,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test10() throws Exception {
+    public void should_delete_user_asynchronously_() throws Exception {
 
         // Given
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -549,7 +550,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test11() throws Exception {
+    public void should_delete_user_asynchronously() throws Exception {
 
         // Given
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -593,7 +594,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
      * Test for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.SingleUserRequestAdapter#delete()} and for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.SingleUserRequestAdapter#buildRequest}
      */
     @Test
-    public void test12() {
+    public void should_delete_user_() {
 
         // Given
         mockStatic(JerseyRequest.class);
@@ -609,13 +610,14 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/Simon"}), any(DefaultErrorHandler.class));
         verify(userJerseyRequestMock, times(1)).delete();
+        assertNotNull(retrieved);
     }
 
     @Test
     /**
      * Test for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.SingleUserRequestAdapter#createOrUpdate(com.jaspersoft.jasperserver.dto.authority.ClientUser)} and for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.SingleUserRequestAdapter#buildRequest}
      */
-    public void test__() {
+    public void test_update_user() {
 
         // Given
         mockStatic(JerseyRequest.class);
@@ -631,6 +633,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/Simon"}), any(DefaultErrorHandler.class));
         verify(userJerseyRequestMock, times(1)).put(userMock);
+        assertNotNull(retrieved);
     }
 
     @Test

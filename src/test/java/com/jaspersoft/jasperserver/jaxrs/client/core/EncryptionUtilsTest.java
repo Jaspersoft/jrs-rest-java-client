@@ -32,7 +32,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.EncryptionUtils}
+ * Unit tests for {@link EncryptionUtils}
  */
 @PrepareForTest({
         EncryptionUtils.class,
@@ -76,35 +76,12 @@ public class EncryptionUtilsTest extends PowerMockTestCase {
         initMocks(this);
     }
 
-    @Test
-    public void should_invoke_all_private_static_methods_only_once() throws Exception {
-
-        // Given
-//        PowerMock.mockStaticPartial(EncryptionUtils.class, "getEncryptedPassword", "getPublicKey");
-//
-//        Method[] keys = MemberMatcher.methods(EncryptionUtils.class, "getPublicKey");
-//        Method[] passwords = MemberMatcher.methods(EncryptionUtils.class, "getEncryptedPassword");
-//
-//        PowerMock.expectPrivate(EncryptionUtils.class, keys[0], "n", "e").andReturn(keyMock);
-//        PowerMock.expectPrivate(EncryptionUtils.class, passwords[0], keyMock, "pwd").andReturn("encryptedPassword");
-//
-//        PowerMock.replay(EncryptionUtils.class);
-//
-//        // When
-//        String retrieved = EncryptionUtils.encryptPassword("pwd", "n", "e");
-//
-//        // Than
-//        PowerMock.verify(EncryptionUtils.class);
-//        Assert.assertNotNull(retrieved);
-//        assertEquals(retrieved, "encryptedPassword");
-    }
-
     @Test(enabled = false)
     public void should_invoke_error_method_of_Log_class_only_once() throws Exception {
 
         // Given
         PowerMockito.mockStatic(LogFactory.class);
-        /*Power*/Mockito.when(LogFactory.getLog(EncryptionUtils.class)).thenReturn(logMock);
+        Mockito.when(LogFactory.getLog(EncryptionUtils.class)).thenReturn(logMock);
 
         // When
         try {
@@ -115,16 +92,16 @@ public class EncryptionUtilsTest extends PowerMockTestCase {
         verify(logMock, times(1)).error(anyString()); // был вызван только один раз
     }
 
-    @Test(expectedExceptions = RuntimeException.class)
+    @Test(expectedExceptions = RuntimeException.class, enabled = false)
     public void should_invoke_info_method_of_Log_class_only_once() {
         EncryptionUtils.encryptPassword("pass", "n", "e");
-//        PowerMockito.mockStatic(LogFactory.class);
-//        PowerMockito.when(LogFactory.getLog(EncryptionUtils.class)).thenReturn(logMock);
-//        verify(logMock, times(1)).info(anyString());
+        PowerMockito.mockStatic(LogFactory.class);
+        PowerMockito.when(LogFactory.getLog(EncryptionUtils.class)).thenReturn(logMock);
+        verify(logMock, times(1)).info(anyString());
     }
 
     @Test(enabled = true)
-    public void should_() throws Exception {
+    public void should_encrypt_password() throws Exception {
 
         /* Given */
         KeyFactory keyFactoryMock = PowerMockito.mock(KeyFactory.class);
@@ -166,7 +143,7 @@ public class EncryptionUtilsTest extends PowerMockTestCase {
     }
 
     @Test
-    public void parseEncryptionParams() throws Exception {
+    public void should_parse_encryption_params() throws Exception {
 
         /* Given */
         Mockito.doReturn("{number:1}").when(responseMock).readEntity(String.class);

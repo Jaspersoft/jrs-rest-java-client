@@ -43,7 +43,7 @@ import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertSame;
 
 /**
-* Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.SingleOrganizationAdapter}
+* Unit tests for {@link SingleOrganizationAdapter}
 */
 @PrepareForTest({JerseyRequest.class, SingleOrganizationAdapter.class})
 public class SingleOrganizationAdapterTest extends PowerMockTestCase {
@@ -74,36 +74,6 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
 
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
         assertEquals(RETRIEVED, EXPECTED);
-    }
-
-    @Test
-    public void buildRequest() throws Exception {
-
-//        // Given
-//        mockStatic(JerseyRequest.class);
-//        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, "MyCoolOrg"));
-//        String organizationId = (String) getInternalState(adapter, "organizationId");
-//
-//        when(JerseyRequest.buildRequest(
-//                eq(sessionStorageMock),
-//                eq(Organization.class),
-//                eq(new String[]{"/organizations", organizationId}),
-//                any(DefaultErrorHandler.class))).thenReturn(requestMock);
-//
-//        Mockito.when(requestMock.delete()).thenReturn(resultMock);
-//
-//        // When
-//        OperationResult retrieved = adapter.delete();
-//
-//        // Than
-//        verifyStatic(times(1));
-//        JerseyRequest.buildRequest(
-//                eq(sessionStorageMock),
-//                eq(ClientTenant.class),
-//                eq(new String[]{"/organizations", organizationId}),
-//                any(DefaultErrorHandler.class));
-//        verifyPrivate(adapter, times(1)).invoke("buildRequest");
-//        Assert.assertNotNull(retrieved);
     }
 
     @Test
@@ -145,13 +115,8 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void prepareJsonForUpdate() {
-        // todo
-    }
-
-    @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.SingleOrganizationAdapter#asyncGet(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
+     * for {@link SingleOrganizationAdapter#asyncGet(Callback)}
      */
     public void should_fire_get_method_asynchronously_and_return_holder_object_with_result_of_execution() throws Exception {
 
@@ -192,7 +157,7 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.SingleOrganizationAdapter#asyncUpdate(com.jaspersoft.jasperserver.dto.authority.ClientTenant, com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
+     * for {@link SingleOrganizationAdapter#asyncUpdate(ClientTenant, Callback)}
      */
     public void should_fire_update_method_asynchronously_and_return_holder_object_with_result_of_execution() throws Exception {
 
@@ -238,7 +203,7 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.SingleOrganizationAdapter#asyncDelete(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
+     * for {@link SingleOrganizationAdapter#asyncDelete(Callback)}
      */
     public void should_fire_delete_method_asynchronously_and_return_holder_object_with_result_of_execution() throws Exception {
 

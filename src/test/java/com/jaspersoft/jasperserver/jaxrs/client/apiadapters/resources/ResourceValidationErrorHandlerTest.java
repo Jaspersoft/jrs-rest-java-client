@@ -52,7 +52,7 @@ public class ResourceValidationErrorHandlerTest {
     }
 
     @Test
-    public void should_3() {
+    public void should_throw_exception_during_error_handling() {
 
         Mockito.doReturn("application/json").when(responseMock).getHeaderString("Content-Type");
         Mockito.doReturn(null).when(responseMock).readEntity(ErrorDescriptor[].class);

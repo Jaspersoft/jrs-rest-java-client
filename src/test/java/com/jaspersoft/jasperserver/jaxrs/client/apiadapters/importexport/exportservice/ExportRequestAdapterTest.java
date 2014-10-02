@@ -394,16 +394,6 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
         assertNotNull(retrieved);
     }
 
-
-    @Test
-    public void test() {
-
-        /* Given */
-        //PowerMockito.mockStatic(JerseyRequest.class);
-        //PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/export", taskId, "/exportFile"}))).thenReturn(requestInputStreamMock);
-        //ExportRequestAdapter adapterSpy = PowerMockito.spy(new ExportRequestAdapter(sessionStorageMock, taskId));
-    }
-
     @Test(enabled = false)
     /**
      * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportRequestAdapter#asyncFetch(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
@@ -546,7 +536,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_1() throws InterruptedException {
+    public void should_fetch_export_asynchronously() throws InterruptedException {
 
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
@@ -607,7 +597,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_2() throws InterruptedException {
+    public void should_throw_exception_while_fetching_resource_() throws InterruptedException {
 
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
@@ -672,7 +662,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_3() throws InterruptedException {
+    public void should_throw_exception_while_fetching_resource() throws InterruptedException {
 
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();

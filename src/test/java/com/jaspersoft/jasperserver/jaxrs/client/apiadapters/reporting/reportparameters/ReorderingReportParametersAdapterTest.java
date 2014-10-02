@@ -109,9 +109,6 @@ public class ReorderingReportParametersAdapterTest extends PowerMockTestCase {
         verify(requestMock, times(1)).put(wrapperMock);
 
         verifyNew(ReportInputControlsListWrapper.class, times(1)).withArguments(inputControlsMock);
-
-        //PowerMockito.verifyStatic(times(1));
-        //buildRequest(eq(sessionStorageMock), eq(ReportInputControlsListWrapper.class), eq(new String[]{"/reports", reportUnitUri, "/inputControls"}));
     }
 
     @Test

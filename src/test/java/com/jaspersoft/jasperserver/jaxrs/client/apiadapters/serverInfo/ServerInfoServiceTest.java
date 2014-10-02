@@ -51,7 +51,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test10() throws Exception {
+    public void should_return_date_time_format_pattern() throws Exception {
         PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/datetimeFormatPattern");
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 
@@ -62,7 +62,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test9() throws Exception {
+    public void should_return_proper_date_format_pattern() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
         PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/dateFormatPattern");
@@ -75,7 +75,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test8() throws Exception {
+    public void should_return_proper_expiration() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
         PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/expiration");
@@ -88,7 +88,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test7() throws Exception {
+    public void should_return_proper_licence_type() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
         PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/licenseType");
@@ -101,7 +101,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test6() throws Exception {
+    public void should_return_proper_edition_name() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
         PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/editionName");
@@ -114,7 +114,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test5() throws Exception {
+    public void should_return_proper_features() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
         PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/features");
@@ -127,7 +127,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test4() throws Exception {
+    public void should_return_proper_build() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
         PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/build");
@@ -140,7 +140,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test3() throws Exception {
+    public void should_return_proper_server_version() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
         PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/since");
@@ -153,7 +153,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test2() {
+    public void should_return_proper_server_details() {
 
         PowerMockito.mockStatic(JerseyRequest.class);
         PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ServerInfo.class), eq(new String[]{"/serverInfo"}))).thenReturn(serverInfoJerseyRequest);
@@ -168,7 +168,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test1() {
+    public void should_return_proper_edition() {
 
         // Given
         final String path = "/edition";

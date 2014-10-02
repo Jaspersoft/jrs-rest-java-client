@@ -55,7 +55,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     }
 
     @Test(testName = "JasperserverRestClient_constructor",
-            expectedExceptions = IllegalArgumentException.class)
+          expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_pass_null_param_to_the_constructor() {
         new JasperserverRestClient(null);
     }

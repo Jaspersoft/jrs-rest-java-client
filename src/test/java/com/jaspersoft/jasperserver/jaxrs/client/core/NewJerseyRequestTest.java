@@ -67,7 +67,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_invoke_private_logic_and_sublogic_and_subsublogic() {
+    public void should_invoke_private_logic_and_sublogic_andsubsub_logic() {
 
         /* Given */
         Mockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -81,7 +81,8 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         InOrder inOrder = Mockito.inOrder(targetMock);
 
         /* When */
-        JerseyRequest<StateDto> retrieved = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"}, handlerMock);
+        JerseyRequest<StateDto> retrieved = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass,
+                new String[]{"/uri"}, handlerMock);
 
         /* Than */
         assertNotNull(retrieved);
@@ -126,7 +127,8 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         InOrder inOrder = Mockito.inOrder(targetMock);
 
         /* When */
-        JerseyRequest<StateDto> retrieved = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"}, handlerMock);
+        JerseyRequest<StateDto> retrieved = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass,
+                new String[]{"/uri"}, handlerMock);
 
         /* Than */
         assertNotNull(retrieved);
@@ -178,11 +180,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_do_everithing() {
-
-        // todo - OperationResultFactoryImpl # isClientResource(...) - doesn't work even if i pass
-        // todo   ClientResource successor class. WTF?
-        // todo   Need to think about it
+    public void should_invoke_deep_logic_of_unit() {
 
         /* Given */
         Mockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -191,8 +189,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(targetMock).when(sessionStorageMock).getRootTarget();
         Mockito.doReturn(targetMock).when(targetMock).path(anyString());
         Mockito.doReturn(targetMock).when(targetMock).register(any(Class.class));
-
-        // Be careful, it's hard to understand and painful
         Mockito.doReturn(builderMock).when(targetMock).request();
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).get();
@@ -220,10 +216,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
     @SuppressWarnings("unchecked")
     public void should_do_post() {
 
-        // todo - OperationResultFactoryImpl # isClientResource(...) - doesn't work even if i pass
-        // todo   ClientResource successor class. WTF?
-        // todo   Need to think about it
-
         /* Given */
         Mockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         Mockito.doReturn(MimeType.XML).when(configurationMock).getContentMimeType();
@@ -231,8 +223,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(targetMock).when(sessionStorageMock).getRootTarget();
         Mockito.doReturn(targetMock).when(targetMock).path(anyString());
         Mockito.doReturn(targetMock).when(targetMock).register(any(Class.class));
-
-        // Be careful, it's hard to understand and painful
         Mockito.doReturn(builderMock).when(targetMock).request();
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).post(any(Entity.class));
@@ -267,8 +257,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(targetMock).when(sessionStorageMock).getRootTarget();
         Mockito.doReturn(targetMock).when(targetMock).path(anyString());
         Mockito.doReturn(targetMock).when(targetMock).register(any(Class.class));
-
-        // Be careful, it's hard to understand and painful
         Mockito.doReturn(builderMock).when(targetMock).request();
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).put(any(Entity.class));
@@ -303,8 +291,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(targetMock).when(sessionStorageMock).getRootTarget();
         Mockito.doReturn(targetMock).when(targetMock).path(anyString());
         Mockito.doReturn(targetMock).when(targetMock).register(any(Class.class));
-
-        // Be careful, it's hard to understand and painful
         Mockito.doReturn(builderMock).when(targetMock).request();
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).delete();
@@ -329,47 +315,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(responseMock, times(1)).getStatus();
     }
 
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void should_do_() {
-
-//        /* Given */
-//        ErrorDescriptor dummyDescriptor = new ErrorDescriptor();
-//        dummyDescriptor.setErrorCode("resource.not.found");
-//
-//        Mockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-//        Mockito.doReturn(MimeType.XML).when(configurationMock).getContentMimeType();
-//        Mockito.doReturn(MimeType.XML).when(configurationMock).getAcceptMimeType();
-//        Mockito.doReturn(targetMock).when(sessionStorageMock).getRootTarget();
-//        Mockito.doReturn(targetMock).when(targetMock).path(anyString());
-//        Mockito.doReturn(targetMock).when(targetMock).register(any(Class.class));
-//
-//        // Be careful, it's hard to understand and painful
-//        Mockito.doReturn(builderMock).when(targetMock).request();
-//        Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
-//        Mockito.doReturn(responseMock).when(builderMock).delete();
-//        Mockito.doReturn(builderMock).when(builderMock).accept("application/xml");
-//        Mockito.doReturn(true).when(responseMock).hasEntity();
-//        Mockito.doReturn(404).when(responseMock).getStatus();
-//        Mockito.doReturn("application/json").when(responseMock).getHeaderString("Content-Type");
-//        Mockito.doReturn(dummyDescriptor).when(responseMock).readEntity(ErrorDescriptor.class);
-//
-//        Class stateDtoClass = ClientFolder.class;
-//
-//
-//        /* When */
-//        JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"});
-//
-//
-//        try {
-//            OperationResult<StateDto> retrieved = jerseyRequest.delete();
-//        } catch (JSClientWebException e) {
-//            assertNotNull(e);
-//            assertTrue(instanceOf(ResourceNotFoundException.class).matches(e));
-//        }
-    }
-
     @Test
     @SuppressWarnings("unchecked")
     public void should_set_headers_with_proper_param() {
@@ -381,8 +326,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(targetMock).when(sessionStorageMock).getRootTarget();
         Mockito.doReturn(targetMock).when(targetMock).path(anyString());
         Mockito.doReturn(targetMock).when(targetMock).register(any(Class.class));
-
-        // Be careful, it's hard to understand and painful
         Mockito.doReturn(builderMock).when(targetMock).request();
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).delete();
@@ -421,8 +364,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(targetMock).when(sessionStorageMock).getRootTarget();
         Mockito.doReturn(targetMock).when(targetMock).path(anyString());
         Mockito.doReturn(targetMock).when(targetMock).register(any(Class.class));
-
-        // Be careful, it's hard to understand and painful
         Mockito.doReturn(builderMock).when(targetMock).request();
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).delete();
@@ -457,7 +398,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_invoke_private_() {
+    public void should_invoke_private_logic() {
 
         /* Given */
         Mockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -470,7 +411,8 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Class stateDtoClass = StateDto.class;
 
         /* When */
-        JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"}, handlerMock);
+        JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass,
+                new String[]{"/uri"}, handlerMock);
         RequestBuilder<StateDto> retrieved = jerseyRequest.addParam("param", "val");
 
         /* Than */
@@ -480,7 +422,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_invoke_private_1() {
+    public void should_invoke_private_logic_() {
 
         /* Given */
         Mockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -500,7 +442,8 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         }};
 
         /* When */
-        JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"}, handlerMock);
+        JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass,
+                new String[]{"/uri"}, handlerMock);
         RequestBuilder<StateDto> retrieved = jerseyRequest.addParams(params);
 
         /* Than */
@@ -510,7 +453,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_2() {
+    public void should_add_proper_amount_of_matrix_param() {
 
         /* Given */
         Mockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -529,7 +472,8 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         }};
 
         /* When */
-        JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"}, handlerMock);
+        JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass,
+                new String[]{"/uri"}, handlerMock);
         RequestBuilder<StateDto> retrieved = jerseyRequest.addMatrixParam("name", "val1", "val2");
 
         /* Than */
@@ -539,7 +483,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_3() {
+    public void should_add_proper_matrix_params() {
 
         /* Given */
         Mockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -568,7 +512,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_4() {
+    public void should_set_proper_content_type() {
 
         /* Given */
         Mockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -591,7 +535,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_5() {
+    public void should_set_accept_type() {
 
         /* Given */
         Mockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();

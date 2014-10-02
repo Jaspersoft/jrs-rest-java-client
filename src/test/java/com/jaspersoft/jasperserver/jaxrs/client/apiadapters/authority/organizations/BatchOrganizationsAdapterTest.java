@@ -123,7 +123,7 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_() throws InterruptedException {
+    public void should_execute_create_method_logic_asynchronously() throws InterruptedException {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);
@@ -164,7 +164,7 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_0() {
+    public void should_execute_create_method_logic() {
 
         //create
         PowerMockito.mockStatic(JerseyRequest.class);
@@ -180,7 +180,7 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_1() {
+    public void should_retrieve_resource() {
 
         //create
         PowerMockito.mockStatic(JerseyRequest.class);

@@ -62,7 +62,7 @@ public class SessionStorageTest extends PowerMockTestCase {
     }
 
     @Test(enabled = false)
-    public void test() throws Exception {
+    public void should_create_new_instance_session_storage() throws Exception {
 
         /* Given */
         PowerMockito.suppress(method(SessionStorage.class, "init"));
@@ -72,97 +72,6 @@ public class SessionStorageTest extends PowerMockTestCase {
         SessionStorage sessionStorageSpy = PowerMockito.spy(new SessionStorage(configurationMock, credentialsMock));
 
         assertNotNull(sessionStorageSpy);
-    }
-
-    @Test(enabled = true)
-    public void should_invoke_private_methods_during_object_constructing() throws Exception {
-
-//        /* Given */
-//        TrustManager[] managers = new TrustManager[]{
-//                new X509TrustManager() {
-//                    @Override
-//                    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-//                    }
-//
-//                    @Override
-//                    public X509Certificate[] getAcceptedIssuers() {
-//                        return null;
-//                    }
-//
-//                    @Override
-//                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
-//                    }
-//                }};
-//
-//        PowerMockito.mockStatic(ClientBuilder.class);
-//        PowerMockito.when(ClientBuilder.newBuilder()).thenReturn(builderMock);
-//
-//        PowerMockito.mockStatic(SSLContext.class);
-//        PowerMockito.when(SSLContext.getInstance("SSL")).thenReturn(ctxMock);
-//
-//        PowerMockito.mockStatic(EncryptionUtils.class);
-//        PowerMockito.when(EncryptionUtils.parseEncryptionParams(responseMock)).thenReturn(new HashMap<String, String>() {{
-//            put("n", "abc");
-//            put("e", "abc");
-//        }});
-//
-//
-//        PowerMockito.doReturn("https://abc").when(configurationMock).getJasperReportsServerUrl();
-//        PowerMockito.doReturn(managers).when(configurationMock).getTrustManagers();
-//        PowerMockito.doReturn(100).when(configurationMock).getReadTimeout();
-//        PowerMockito.doReturn("qwerty").when(credentialsMock).getPassword();
-//
-//
-//        PowerMockito.suppress(method(SSLContext.class, "init", KeyManager[].class, TrustManager[].class, SecureRandom.class));
-//        //PowerMockito.suppress(increment(SessionStorage.class, "login"));
-//
-//        PowerMockito.when(builderMock.sslContext(ctxMock)).thenReturn(builderMock);
-//        PowerMockito.when(builderMock.hostnameVerifier(any(HostnameVerifier.class))).thenReturn(builderMock);
-//        PowerMockito.when(builderMock.build()).thenReturn(clientMock);
-//        PowerMockito.when(clientMock.target("https://abc")).thenReturn(targetMock);
-//        PowerMockito.when(targetMock.path(anyString())).thenReturn(targetMock);
-//        PowerMockito.when(targetMock.request()).thenReturn(invocationBuilderMock);
-//        PowerMockito.when(targetMock.property(anyString(), any(Boolean.class))).thenReturn(targetMock);
-//        PowerMockito.when(invocationBuilderMock.get()).thenReturn(responseMock);
-//        PowerMockito.when(responseMock.getStatus()).thenReturn(302);
-//        PowerMockito.when(responseMock.getHeaderString(anyString())).thenReturn("JSESSIONID=ABC;");
-//        PowerMockito.when(invocationBuilderMock.cookie(anyString(), anyString())).thenReturn(invocationBuilderMock);
-//
-//        // ???
-//        PowerMockito.when(invocationBuilderMock.post(any(javax.ws.rs.client.Entity.class))).thenReturn(responseMock);
-//
-//        PowerMockito.when(responseMock.readEntity(String.class)).thenReturn("abc");
-//        PowerMockito.when(responseMock.getCookies()).thenReturn(new HashMap<String, NewCookie>() {{
-//            put("JSESSIONID", new NewCookie(new Cookie("name", "value", "domain", "version")));
-//        }});
-//
-//        /* When */
-//
-//        SessionStorage sessionStorageSpy = PowerMockito.spy(new SessionStorage(configurationMock, credentialsMock));
-//
-//
-//        /* Than */
-//
-//        assertNotNull(sessionStorageSpy);
-//
-//        Mockito.verify(builderMock, times(1)).build();
-//        //Mockito.verify(ctxMock, times(1)).init(null, any(TrustManager[].class), any(SecureRandom.class));
-//        Mockito.verify(builderMock, times(1)).sslContext(ctxMock);
-//        Mockito.verify(builderMock, times(1)).hostnameVerifier(any(HostnameVerifier.class));
-//
-//        Mockito.verify(configurationMock, times(1)).getConnectionTimeout();
-//        Mockito.verify(configurationMock, times(2)).getJasperReportsServerUrl();
-//
-//        Mockito.verify(clientMock, times(1)).target(anyString());
-//        Mockito.verify(clientMock, times(2)).property(anyString(), anyLong());
-//
-//        Mockito.verify(targetMock, times(1)).register(any(SessionOutputFilter.class));
-//
-//        PowerMockito.verifyStatic(times(1));
-//        ClientBuilder.newBuilder();
-//
-//        PowerMockito.verifyStatic(times(1));
-//        SSLContext.getInstance("SSL");
     }
 
     @Test(expectedExceptions = RuntimeException.class)

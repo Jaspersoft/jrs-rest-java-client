@@ -15,7 +15,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +97,7 @@ public class JobValidationErrorHandlerTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_1() {
+    public void should_convert_error_descriptor_to_list() {
         List<ValidationError> errors = new ArrayList<ValidationError>() {{
             add(new ValidationError("code1", new Object[]{}, "msg_1"));
             add(new ValidationError("code2", new Object[]{}, "msg_2"));
@@ -108,28 +107,6 @@ public class JobValidationErrorHandlerTest extends PowerMockTestCase {
         List<ErrorDescriptor> retrieved = handler.toErrorDescriptorList(wrapperMock);
         Assert.assertTrue(retrieved.size() == 2);
         Assert.assertSame(retrieved.get(0).getErrorCode(), "code1");
-    }
-
-    @Test(enabled = false)
-    public void should_2() throws Exception {
-
-        List<ValidationError> errors = new ArrayList<ValidationError>() {{
-            add(new ValidationError("code1", new Object[]{}, "msg_1"));
-            add(new ValidationError("code2", new Object[]{}, "msg_2"));
-        }};
-
-        Mockito.doReturn(errors).when(wrapperMock).getErrors();
-        JobValidationErrorHandler handler = new JobValidationErrorHandler();
-        List<ErrorDescriptor> retrieved = handler.toErrorDescriptorList(wrapperMock);
-
-        Class<JobValidationErrorHandler> clazz = JobValidationErrorHandler.class;
-        Method method = clazz.getDeclaredMethod("generateErrorMessage", List.class);
-        method.setAccessible(true);
-        String res = (String) method.invoke(handler, retrieved);
-
-        String expected = "\n\t\t" + "msg_1 (field: null)" + "\n\t\t" + "msg_2 (field: null)";
-
-        Assert.assertEquals(expected, res);
     }
 
     @AfterMethod

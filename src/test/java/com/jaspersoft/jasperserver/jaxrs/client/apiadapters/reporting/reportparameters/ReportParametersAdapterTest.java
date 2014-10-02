@@ -67,9 +67,6 @@ public class ReportParametersAdapterTest extends PowerMockTestCase {
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-//        ArgumentCaptor<ReportParameters> parametersCaptor = ArgumentCaptor.forClass(ReportParameters.class);
-//        ArgumentCaptor<String> segmentCaptor = ArgumentCaptor.forClass(String.class);
-
         mockStatic(JerseyRequest.class);
         when(buildRequest(
                         eq(sessionStorageMock),
@@ -115,20 +112,9 @@ public class ReportParametersAdapterTest extends PowerMockTestCase {
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
-//        verify(requestMock).post(parametersCaptor.capture());
         verify(requestMock).setContentType(MediaType.APPLICATION_XML);
         verify(requestMock).setAccept(MediaType.APPLICATION_XML);
-        //verify(requestMock).addPathSegment(segmentCaptor.capture());
         verify(callbackSpy, times(1)).execute(operationResultMock);
-
-//        ReportParameters overheardParameters = parametersCaptor.getValue();
-//        String overheardSegment = segmentCaptor.getValue();
-
-//        assertEquals(overheardSegment, "_segment");
-//        assertEquals(overheardParameters.getReportParameters().get(0).getName(), "param1");
-//        assertEquals(overheardParameters.getReportParameters().get(1).getName(), "param2");
-//        assertEquals(overheardParameters.getReportParameters().get(0).getValues().get(0), "value1");
-//        assertEquals(overheardParameters.getReportParameters().get(1).getValues().get(0), "value2");
     }
 
     @Test

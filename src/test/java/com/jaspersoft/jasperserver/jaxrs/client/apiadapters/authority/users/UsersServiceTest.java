@@ -39,7 +39,7 @@ public class UsersServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void org (){
+    public void should_set_ord_id (){
         UsersService service = new UsersService(sessionStorageMock);
         UsersService retrieved = service.organization("MyCoolOrg");
 
@@ -48,13 +48,13 @@ public class UsersServiceTest extends PowerMockTestCase {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void org2 (){
+    public void should_throw_exception_when_not_specified_ord_name (){
         UsersService service = new UsersService(sessionStorageMock);
         UsersService retrieved = service.organization("");
     }
 
     @Test
-    public void username() throws Exception {
+    public void should_return_proper_user_adapter_when_invoke_username_method() throws Exception {
         UsersService service = new UsersService(sessionStorageMock);
         PowerMockito.whenNew(SingleUserRequestAdapter.class).withArguments(sessionStorageMock, null, "Simon")
                 .thenReturn(singleUserRequestAdapterMock);
@@ -65,13 +65,13 @@ public class UsersServiceTest extends PowerMockTestCase {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void username2() {
+    public void should_throw_exception_when_username_not_specified() {
         UsersService service = new UsersService(sessionStorageMock);
         service.username("");
     }
 
     @Test
-    public void user1() throws Exception {
+    public void should_return_proper_user_adapter_() throws Exception {
         UsersService service = new UsersService(sessionStorageMock);
         PowerMockito.whenNew(SingleUserRequestAdapter.class).withArguments(eq(sessionStorageMock),
                 anyString()).thenReturn(singleUserRequestAdapterMock);
@@ -81,14 +81,14 @@ public class UsersServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void user2() throws Exception {
+    public void should_return_proper_user_adapter() throws Exception {
         UsersService service = new UsersService(sessionStorageMock);
         SingleUserRequestAdapter retrieved = service.user("Simon");
         assertNotNull(retrieved);
     }
 
     @Test
-    public void allUsers() throws Exception {
+    public void should_return_BatchUsersRequestAdapter() throws Exception {
         UsersService service = new UsersService(sessionStorageMock);
         PowerMockito.whenNew(BatchUsersRequestAdapter.class).withArguments(eq(sessionStorageMock),
                 anyString()).thenReturn(batchUsersRequestAdapterMock);

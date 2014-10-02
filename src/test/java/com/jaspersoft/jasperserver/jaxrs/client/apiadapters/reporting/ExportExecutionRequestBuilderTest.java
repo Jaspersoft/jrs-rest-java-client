@@ -210,7 +210,7 @@ public class ExportExecutionRequestBuilderTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_5() throws InterruptedException {
+    public void should_retrieve_output_resource_asynchronously() throws InterruptedException {
 
         /** Given **/
         String requestId = "requestId";
@@ -255,7 +255,7 @@ public class ExportExecutionRequestBuilderTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_1() throws InterruptedException {
+    public void should_send_html_report_asynchronously() throws InterruptedException {
 
         /** Given **/
         String requestId = "requestId";
@@ -318,7 +318,7 @@ public class ExportExecutionRequestBuilderTest extends PowerMockTestCase {
 
 
     @Test
-    public void should_3() throws InterruptedException {
+    public void should_retrieve_status_entity_asynchronously() throws InterruptedException {
 
         /** Given **/
         String requestId = "requestId";
@@ -365,7 +365,7 @@ public class ExportExecutionRequestBuilderTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_8() {
+    public void should_get_attachment_as_stream() {
 
         /** Given **/
         String requestId = "requestId";

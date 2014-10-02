@@ -3,7 +3,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 import com.jaspersoft.jasperserver.dto.resources.ClientDashboard;
 import com.jaspersoft.jasperserver.dto.resources.ClientFolder;
 import com.jaspersoft.jasperserver.dto.resources.ClientQuery;
-import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesTypeResolverUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.support.TestableClientResource;
 import org.mockito.Mock;
@@ -33,7 +32,7 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit test for {@link com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl}
+ * Unit test for {@link OperationResultFactoryImpl}
  */
 @PrepareForTest({OperationResultFactoryImpl.class, WithEntityOperationResult.class, ResourcesTypeResolverUtil.class})
 public class OperationResultFactoryImplTest extends PowerMockTestCase {
@@ -54,7 +53,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl#getOperationResult(javax.ws.rs.core.Response, Class)}
+     * for {@link OperationResultFactoryImpl#getOperationResult(Response, Class)}
      */
     public void should_return_proper_OperationResult_object() {
         OperationResult<TestableClientResource> retrieved = new OperationResultFactoryImpl().getOperationResult(responseMock, TestableClientResource.class);
@@ -64,7 +63,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl#getOperationResult(javax.ws.rs.core.Response, Class)}
+     * for {@link OperationResultFactoryImpl#getOperationResult(Response, Class)}
      */
     public void should_invoke_all_private_logic_of_method() throws Exception {
 
@@ -86,7 +85,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl#getAppropriateOperationResultInstance(javax.ws.rs.core.Response, Class)}
+     * for {@link OperationResultFactoryImpl#getAppropriateOperationResultInstance(Response, Class)}
      */
     public void should_return_result_with_entity_when_response_has_entity_when_invoking_getAppropriateOperationResultInstance_method() throws Exception {
 
@@ -144,7 +143,6 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
         OperationResultFactoryImpl factorySpy = PowerMockito.spy(new OperationResultFactoryImpl());
         PowerMockito.doReturn(true).when(factorySpy, "isClientResource", ClientDashboard.class);
-//        PowerMockito.doReturn(ClientDashboard.class).when(factorySpy, "getSpecificResourceType", responseMock);
         PowerMockito.doReturn("json").when(responseMock).getHeaderString("Content-Type");
 
         /* Indirect call of private method getSpecificResourceType() */
@@ -152,17 +150,8 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
         /* Than */
         assertNotNull(retrievedResult);
-//        PowerMockito.verifyPrivate(factorySpy, times(1)).invoke("getSpecificResourceType", responseMock);
-
         PowerMockito.verifyStatic(times(1));
         ResourcesTypeResolverUtil.getClassForMime(anyString());
-    }
-
-    @Test
-    public void should_() {
-        OperationResultFactoryImpl factory = new OperationResultFactoryImpl();
-        OperationResult<ClientVirtualDataSource> retrieved = factory.getOperationResult(responseMock, ClientVirtualDataSource.class);
-
     }
 
     @AfterMethod

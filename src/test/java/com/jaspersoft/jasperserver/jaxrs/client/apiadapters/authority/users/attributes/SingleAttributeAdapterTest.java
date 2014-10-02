@@ -161,57 +161,6 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
     }
 
 
-    @Test(timeOut = 1000)
-    @SuppressWarnings("unchecked")
-    public void asyncUpdateOrCreate() throws Exception {
-
-        /*
-        // Given
-        StringBuilder builderMock = PowerMockito.mock(StringBuilder.class);
-        SingleAttributeAdapter adapterSpy = PowerMockito.spy(new SingleAttributeAdapter(sessionStorageMock, builderMock));
-
-        doReturn(requestMock).when(adapterSpy, "request");
-        doReturn(operationResultMock).when(requestMock).put(userAttributeMock);
-        doReturn(resultMock).when(callbackMock).execute(operationResultMock);
-
-        // When
-        adapterSpy.asyncUpdateOrCreate(userAttributeMock, callbackMock, "State"); // State = attribute name
-
-        // Than
-        verifyPrivate(adapterSpy, times(1)).invoke("request");
-        verify(callbackMock, times(1)).execute(operationResultMock);
-        PowerMockito.verifyNoMoreInteractions(callbackMock);
-        */
-    }
-
-
-    @Test(testName = "private")
-    public void request() throws Exception {
-
-        // Given
-//        final String attribute = "State";
-//        PowerMockito.mockStatic(JerseyRequest.class);
-//
-//        PowerMockito.when(
-//                buildRequest(
-//                        eq(sessionStorageMock),
-//                        eq(ClientUserAttribute.class),
-//                        eq(new String[]{/*"/uri", "/attributes/", attribute}*/ "abc"}),
-//                        eq(new DefaultErrorHandler())))
-//                .thenReturn(requestMock);
-//
-//        SingleAttributeAdapter adapterSpy = PowerMockito.spy(new SingleAttributeAdapter(sessionStorageMock, new StringBuilder("/uri")));
-//
-//        // When
-//        adapterSpy.delete(attribute);
-//
-//        // Than
-//        PowerMockito.verifyStatic(times(1));
-//        buildRequest(eq(sessionStorageMock), eq(ClientUserAttribute.class), eq(new String[]{/*"/uri", "/attributes/", attribute*/ "abc"}), eq(new DefaultErrorHandler()));
-//        PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("request");
-    }
-
-
     @Test
     public void updateOrCreate() throws Exception {
 

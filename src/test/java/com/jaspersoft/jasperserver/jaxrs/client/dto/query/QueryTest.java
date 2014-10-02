@@ -55,13 +55,8 @@ public class QueryTest {
         final Query query = new Query();
         final int hash = queryFields.hashCode();
 
-        // When - Than
         assertTrue(query.hashCode() == 0);
-
-        // When
         query.setQueryFields(queryFields);
-
-        // Than
         assertTrue(query.hashCode() == hash);
     }
 }

@@ -11,6 +11,9 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertSame;
 
+/**
+ * Unit tests for {@link SecureMondrianConnectionResourceBuilder}
+ */
 public class SecureMondrianConnectionResourceBuilderTest {
 
     @Mock
@@ -33,11 +36,6 @@ public class SecureMondrianConnectionResourceBuilderTest {
 
         assertSame(retrievedStorage, sessionStorageMock);
         assertSame(retrievedConnection, dummyMondrianConnection);
-    }
-
-    @Test
-    public void should_pass_string_security_file_to_parent_class_and_return_this() {
-        // todo  write me
     }
 
     @AfterMethod

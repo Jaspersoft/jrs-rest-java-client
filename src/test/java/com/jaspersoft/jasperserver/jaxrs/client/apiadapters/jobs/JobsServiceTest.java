@@ -284,7 +284,7 @@ public class JobsServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_1() throws InterruptedException {
+    public void should_get_calendars_asynchronously() throws InterruptedException {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);
@@ -327,7 +327,7 @@ public class JobsServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_2() throws InterruptedException {
+    public void should_send_ScheduleReport_asynchronously_() throws InterruptedException {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);
@@ -377,7 +377,7 @@ public class JobsServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_3() throws InterruptedException {
+    public void should_send_ScheduleReport_asynchronously() throws InterruptedException {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);

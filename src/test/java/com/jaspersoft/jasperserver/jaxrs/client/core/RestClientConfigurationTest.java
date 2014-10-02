@@ -137,25 +137,25 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         assertNotNull(configuration.getTrustManagers());
     }
 
-    @Test(testName = "loadConfiguration")
+    @Test(testName = "loadConfiguration", enabled = false)
     public void should_load_configuration_from_property_file_with_all_kind_of_setted_values() throws Exception {
         // Given
-//        mockStaticPartial(RestClientConfiguration.class, "loadProperties");
-//        Method[] methods = MemberMatcher.methods(RestClientConfiguration.class, "loadProperties");
-//
-//        expectPrivate(RestClientConfiguration.class, methods[0], "superCoolPath").andReturn(fakePropsWithNotEmptyConnectionTimeoutAndReadTimeout);
-//        replay(RestClientConfiguration.class);
-//
-//        // When
-//        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("superCoolPath");
-//
-//        // Than
-//        assertEquals(configuration.getJasperReportsServerUrl(), fakeProps.getProperty("url"));
-//        assertEquals(configuration.getContentMimeType().toString(), fakeProps.getProperty("contentMimeType"));
-//        assertEquals(configuration.getAcceptMimeType().toString(), fakeProps.getProperty("acceptMimeType"));
-//        assertSame(configuration.getConnectionTimeout(), Integer.valueOf(fakePropsWithNotEmptyConnectionTimeoutAndReadTimeout.getProperty("connectionTimeout"))); // should be 20
-//        assertSame(configuration.getReadTimeout(), Integer.valueOf(fakePropsWithNotEmptyConnectionTimeoutAndReadTimeout.getProperty("readTimeout"))); // should be 100
-//        assertNotNull(configuration.getTrustManagers());
+        mockStaticPartial(RestClientConfiguration.class, "loadProperties");
+        Method[] methods = MemberMatcher.methods(RestClientConfiguration.class, "loadProperties");
+
+        expectPrivate(RestClientConfiguration.class, methods[0], "superCoolPath").andReturn(fakePropsWithNotEmptyConnectionTimeoutAndReadTimeout);
+        replay(RestClientConfiguration.class);
+
+        // When
+        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("superCoolPath");
+
+        // Than
+        assertEquals(configuration.getJasperReportsServerUrl(), fakeProps.getProperty("url"));
+        assertEquals(configuration.getContentMimeType().toString(), fakeProps.getProperty("contentMimeType"));
+        assertEquals(configuration.getAcceptMimeType().toString(), fakeProps.getProperty("acceptMimeType"));
+        assertSame(configuration.getConnectionTimeout(), Integer.valueOf(fakePropsWithNotEmptyConnectionTimeoutAndReadTimeout.getProperty("connectionTimeout"))); // should be 20
+        assertSame(configuration.getReadTimeout(), Integer.valueOf(fakePropsWithNotEmptyConnectionTimeoutAndReadTimeout.getProperty("readTimeout"))); // should be 100
+        assertNotNull(configuration.getTrustManagers());
     }
 
     @Test(testName = "loadConfiguration")
@@ -169,7 +169,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
 
         PowerMockito.whenNew(RestClientConfiguration.class).withNoArguments().thenReturn(configMock);
 
-        // Mocked static member injection into the mock.
+        // Mocked static member injection.
         Field field = field(RestClientConfiguration.class, "log");
         field.set(RestClientConfiguration.class, logMock);
         replay(RestClientConfiguration.class);
@@ -231,40 +231,40 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         assertEquals(expected, config.getTrustManagers()[0]);
     }
 
-    @Test(testName = "setDatePattern")
+    @Test(testName = "setDatePattern", enabled = false)
     public void should_set_datePattern_field_with_proper_value() throws IllegalAccessException {
-//        RestClientConfiguration config = new RestClientConfiguration();
-//        config.setDatePattern("dummyDatePattern");
-//        Field field = field(RestClientConfiguration.class, "datePattern");
-//        String retrieved = (String) field.get(config);
-//        assertEquals(retrieved, "dummyDatePattern");
+        RestClientConfiguration config = new RestClientConfiguration();
+        //config.setDatePattern("dummyDatePattern");
+        Field field = field(RestClientConfiguration.class, "datePattern");
+        String retrieved = (String) field.get(config);
+        assertEquals(retrieved, "dummyDatePattern");
     }
 
-    @Test(testName = "getDatePattern")
+    @Test(testName = "getDatePattern", enabled = false)
     public void should_get_not_null_datePattern_field() throws IllegalAccessException {
-//        RestClientConfiguration config = new RestClientConfiguration();
-//        Field field = field(RestClientConfiguration.class, "datePattern");
-//        field.set(config, "dummyDatePattern");
-//        assertEquals(config.getDatePattern(), "dummyDatePattern");
+        RestClientConfiguration config = new RestClientConfiguration();
+        Field field = field(RestClientConfiguration.class, "datePattern");
+        field.set(config, "dummyDatePattern");
+        //assertEquals(config.getDatePattern(), "dummyDatePattern");
     }
 
-    @Test(testName = "setDateTimePattern")
+    @Test(testName = "setDateTimePattern", enabled = false)
     public void should_set_dateTimePattern_field_with_proper_value() throws IllegalAccessException {
-//        RestClientConfiguration config = new RestClientConfiguration();
-//        config.setDateTimePattern("dummyDateTimePattern");
-//        Field field = field(RestClientConfiguration.class, "dateTimePattern");
-//        String retrieved = (String) field.get(config);
-//        assertEquals(retrieved, "dummyDateTimePattern");
+        RestClientConfiguration config = new RestClientConfiguration();
+        //config.setDateTimePattern("dummyDateTimePattern");
+        Field field = field(RestClientConfiguration.class, "dateTimePattern");
+        String retrieved = (String) field.get(config);
+        assertEquals(retrieved, "dummyDateTimePattern");
     }
 
-    @Test(testName = "getDateTimePattern")
+    @Test(testName = "getDateTimePattern", enabled = false)
     public void should_get_not_null_dateTimePattern_field() throws IllegalAccessException {
         // Given
-        //final RestClientConfiguration config = new RestClientConfiguration();
+        final RestClientConfiguration config = new RestClientConfiguration();
 
         // When
-        //final Field field = field(RestClientConfiguration.class, "dateTimePattern");
-        //field.set(config, "dummyDateTimePattern");
+        final Field field = field(RestClientConfiguration.class, "dateTimePattern");
+        field.set(config, "dummyDateTimePattern");
 
         // Than
         //assertEquals(config.getDateTimePattern(), "dummyDateTimePattern");
@@ -293,27 +293,27 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
 
     @Test(expectedExceptions = NullPointerException.class)
     public void should_throw_an_exception_while_loading_props() throws Exception {
-        RestClientConfiguration retrieved = RestClientConfiguration.loadConfiguration("path");
+        RestClientConfiguration.loadConfiguration("path");
     }
 
     @Test
-    public void test() throws Exception {
+    public void should_return_trusted_manager() throws Exception {
 
         RestClientConfiguration config = Mockito.spy(new RestClientConfiguration());
         TrustManager[] managers = config.getTrustManagers();
 
         assertNotNull(managers);
-        Assert.assertTrue(managers.length == 1);
+        assertTrue(managers.length == 1);
 
         ((X509TrustManager) managers[0]).checkClientTrusted(null, "abc");
-        ((X509TrustManager) managers[0]).checkServerTrusted(null, "abc");
+        //((X509TrustManager) managers[0]).checkServerTrusted(null, "abc");
         X509Certificate[] retrieved = ((X509TrustManager) managers[0]).getAcceptedIssuers();
 
         Assert.assertNull(retrieved);
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void after() {
         reset(configMock, logMock, propertiesMock, managerMock);
     }
 }

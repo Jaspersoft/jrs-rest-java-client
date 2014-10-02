@@ -271,7 +271,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_1() {
+    public void should_return_operation_result_with_proper_entity() {
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionStatusEntity.class), eq(new String[]{"/reportExecutions", "requestId", "/status"}))).thenReturn(reportExecutionStatusEntityJerseyRequestMock);
         doReturn(reportExecutionStatusEntityOperationResultMock).when(reportExecutionStatusEntityJerseyRequestMock).get();
@@ -282,7 +282,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_2() {
+    public void test_return_execution_details() {
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"/reportExecutions", "requestId"}))).thenReturn(reportExecutionDescriptorJerseyRequestMock);
         doReturn(reportExecutionDescriptorOperationResultMock).when(reportExecutionDescriptorJerseyRequestMock).get();
@@ -295,7 +295,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
 
 
     @Test
-    public void should_3() {
+    public void test_cancel_execution() {
 
         ArgumentCaptor<ReportExecutionStatusEntity> captor = ArgumentCaptor.forClass(ReportExecutionStatusEntity.class);
 
@@ -316,7 +316,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_4() {
+    public void test_run_export_and_return_descriptor() {
 
         mockStatic(JerseyRequest.class);
         Mockito.when(buildRequest(eq(sessionStorageMock), eq(ExportExecutionDescriptor.class), eq(new String[]{"/reportExecutions", "requestId", "/exports"}))).thenReturn(exportExecutionDescriptorJerseyRequestMock);
@@ -333,7 +333,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_5() {
+    public void should_set_export_id() {
 
         ReportExecutionRequestBuilder builder = new ReportExecutionRequestBuilder(sessionStorageMock, "requestId");
         ExportExecutionRequestBuilder retrieved = builder.export("_id");

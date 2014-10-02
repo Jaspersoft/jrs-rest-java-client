@@ -93,9 +93,6 @@ public class SingleAttributeInterfaceAdapterTest extends PowerMockTestCase {
     @Test
     public void should_invoke_retrieving_logic_in_separate_thread_and_return_RequestExecution_object() throws Exception {
 
-        // todo: проверить, почему не работать верификация вызова приватного метода
-        // (PowerMockito.verifyPrivate(adapter, times(1)).invoke("buildRequest");)
-
         /* Given */
         SingleAttributeInterfaceAdapter adapter = spy(new SingleAttributeInterfaceAdapter(sessionStorageMock, "/organizations/MyCoolOrg/users/Simon", "State"));
         doReturn(requestMock).when(adapter, "buildRequest");

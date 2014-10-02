@@ -31,7 +31,7 @@ public class OrganizationsServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void organizations() throws Exception {
+    public void should_return_proper_instance_of_BatchOrganizationsAdapter() throws Exception {
 
         // Given
         whenNew(BatchOrganizationsAdapter.class).withArguments(sessionStorageMock).thenReturn(batchOrganizationsAdapter);
@@ -45,7 +45,7 @@ public class OrganizationsServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void organization() throws Exception {
+    public void should_return_proper_instance_of_SingleOrganizationAdapter() throws Exception {
 
         // Given
         whenNew(SingleOrganizationAdapter.class).withArguments(sessionStorageMock, "orgId").thenReturn(singleOrganizationAdapter);
@@ -59,7 +59,7 @@ public class OrganizationsServiceTest extends PowerMockTestCase {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void organization2() throws Exception {
+    public void should_throw_exception() throws Exception {
 
         // Given
         OrganizationsService service = new OrganizationsService(sessionStorageMock);

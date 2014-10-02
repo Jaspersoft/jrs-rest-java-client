@@ -36,7 +36,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNotSame;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.SingleRoleRequestAdapter}
+ * Unit tests for {@link SingleRoleRequestAdapter}
  */
 @PrepareForTest({SingleRoleRequestAdapter.class, JerseyRequest.class})
 public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
@@ -81,7 +81,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test(enabled = false)
-    public void asyncDelete() throws Exception {
+    public void should_delete_role_in_separate_thread() throws Exception {
 
         // Given
         SingleRoleRequestAdapter adapterSpy = PowerMockito.spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
@@ -138,13 +138,9 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.SingleRoleRequestAdapter#asyncCreateOrUpdate(com.jaspersoft.jasperserver.dto.authority.ClientRole, com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
+     * for {@link SingleRoleRequestAdapter#asyncCreateOrUpdate(ClientRole, Callback)}
      */
     public void should_create_or_update_user_role_asynchronously() throws Exception {
-
-        // todo (1) - we need to verify invocation of buildRequest length as well (its a length of class)
-        // todo (2) - we also need to verify invocation of runAsynchronously length (its a length of class too)
-        // todo (3) - we need to verify no more action on mocks (use @link verifyNoMoreInteractions length)
 
         /* Given */
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -183,7 +179,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test(enabled = false)
-    public void asyncGet() throws Exception {
+    public void should_retrieve_role_asynchronously() throws Exception {
 
         // Given
         SingleRoleRequestAdapter adapterSpy = PowerMockito.spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
@@ -200,7 +196,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void get() throws Exception {
+    public void should_retrieve_role() throws Exception {
 
         // Given
         SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
@@ -217,7 +213,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void createOrUpdate() throws Exception {
+    public void should_update_role() throws Exception {
 
         // Given
         SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
@@ -234,7 +230,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void delete() throws Exception {
+    public void should_delete_role() throws Exception {
 
         // Given
         SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
@@ -251,7 +247,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void testPrivateMethod() throws Exception {
+    public void should_invoke_private_logic_while_invocation_of_delete() throws Exception {
 
         PowerMockito.mockStatic(JerseyRequest.class);
         SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock,
@@ -273,7 +269,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_1() throws Exception {
+    public void should_retrieve_role_asynchronously_() throws Exception {
 
         /* Given */
         final AtomicInteger newThreadId = new AtomicInteger();

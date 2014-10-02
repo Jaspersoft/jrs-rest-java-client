@@ -79,7 +79,7 @@ public class ReportParametersConverterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_covnerted_params() {
+    public void should_return_converted_params() {
 
         InputControlOption option1 = new InputControlOption().setSelected(true);
         option1.setValue("OptionValue");

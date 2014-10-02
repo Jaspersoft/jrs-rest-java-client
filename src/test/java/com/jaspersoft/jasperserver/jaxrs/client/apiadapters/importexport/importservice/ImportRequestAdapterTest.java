@@ -81,7 +81,7 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test () throws InterruptedException {
+    public void should_retrieve_state_asynchronously () throws InterruptedException {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);

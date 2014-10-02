@@ -2,11 +2,13 @@ package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import org.mockito.Mock;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
 
+import static org.mockito.Mockito.reset;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertEquals;
 
@@ -30,8 +32,8 @@ public class WithEntityOperationResultTest {
         assertEquals(responseMock, operationResult.getResponse());
     }
 
-//    @AfterMethod
-//    public void after() {
-//        reset(responseMock);
-//    }
+    @AfterMethod
+    public void after() {
+        reset(responseMock);
+    }
 }

@@ -37,7 +37,7 @@ public class MimeTypeUtilTest extends PowerMockTestCase {
     }
 
     @Test
-    public void test_for_times (){
+    public void test_invoke_toCorrectContentMime_method_only_once (){
         PowerMockito.mockStatic(MimeTypeUtil.class);
         MimeTypeUtil.toCorrectContentMime(configurationMock, "abc");
         PowerMockito.verifyStatic(Mockito.times(1));
@@ -45,7 +45,7 @@ public class MimeTypeUtilTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_() {
+    public void should_return_correct_content_mime() {
         mockStatic(MimeTypeUtil.class);
         expect(MimeTypeUtil.toCorrectContentMime(configurationMock, collectionMime)).andReturn("application/collection+json");
         replay(MimeTypeUtil.class);

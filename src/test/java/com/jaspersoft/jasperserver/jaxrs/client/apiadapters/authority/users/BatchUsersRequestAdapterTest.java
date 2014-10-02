@@ -99,7 +99,7 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void param() throws Exception {
+    public void should_set_param() throws Exception {
 
         // Given
         BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, "MyCoolOrg"));
@@ -117,7 +117,7 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void get() throws Exception {
+    public void should_retrieve_users() throws Exception {
 
         // Given
         PowerMockito.mockStatic(JerseyRequest.class);
@@ -149,7 +149,7 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
 
     @Test(enabled = false)
     @SuppressWarnings("unchecked")
-    public void asyncGet() throws Exception {
+    public void should_retrieve_users_wrapped_in_oparation_result_wrapper() throws Exception {
 
         // Given
         PowerMockito.mockStatic(JerseyRequest.class);

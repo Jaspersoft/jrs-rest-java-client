@@ -53,7 +53,7 @@ import static org.testng.AssertJUnit.assertSame;
 import static org.testng.AssertJUnit.assertTrue;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter}
+ * Unit tests for {@link SingleCalendarOperationsAdapter}
  */
 @PrepareForTest({JerseyRequest.class, SingleCalendarOperationsAdapter.class, MultivaluedHashMap.class})
 public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
@@ -500,13 +500,10 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
                 eq(sessionStorageMock),
                 eq(ReportJobCalendar.class),
                 eq(new String[]{"/jobs", "/calendars", "testCalendarName"}));
-
-        //Mockito.verify(callbackMock3).execute(getResultMock);
-        //Mockito.verify(requestMock).addParams(paramsSpy);
     }
 
     @Test
-    public void should_1() throws InterruptedException {
+    public void should_delete_calendar_asynchronously() throws InterruptedException {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);

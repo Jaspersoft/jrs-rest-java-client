@@ -169,54 +169,6 @@ public class RunReportAdapterTest extends PowerMockTestCase {
         verifyNoMoreInteractions(requestMock);
     }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void should_1() {
-
-//        Mockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-//        Mockito.doReturn("MM/dd/yyyy").when(configurationMock).getDatePattern();
-//
-//        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", ReportOutputFormat.CSV, new Integer[]{5});
-//        RunReportAdapter retrieved = adapter.parameter("date", new Date("08/05/2014"));
-//
-//        assertSame(adapter, retrieved);
-//        assertEquals(((MultivaluedHashMap<String, String>) Whitebox.getInternalState(retrieved, "params")).get("date").get(0), "08/05/2014");
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void should_2() {
-
-//        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", ReportOutputFormat.CSV, new Integer[]{5});
-//        RunReportAdapter retrieved = adapter.parameter("n", new BigInteger("12345"));
-//
-//        assertSame(adapter, retrieved);
-//        assertEquals(((MultivaluedHashMap<String, String>) Whitebox.getInternalState(retrieved, "params")).get("n").get(0), "12345");
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void should_3() {
-
-//        Set<String> dummySet = new HashSet<String>();
-//        dummySet.add("a");
-//        dummySet.add("b");
-//        dummySet.add("c");
-//
-//        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", ReportOutputFormat.CSV, new Integer[]{5});
-//        RunReportAdapter retrieved = adapter.parameter("n", dummySet);
-//
-//        assertSame(adapter, retrieved);
-//
-//        List<String> params = ((MultivaluedHashMap<String, String>) Whitebox.getInternalState(retrieved, "params")).get("n");
-//
-//        assertTrue(params.size() == dummySet.size());
-//
-//        for (String param : params) {
-//            assertTrue(dummySet.contains(param));
-//        }
-    }
-
     @AfterMethod
     public void after() {
         reset(sessionStorageMock, requestMock, resultMock, configurationMock);

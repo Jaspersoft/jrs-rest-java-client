@@ -10,7 +10,7 @@ import static org.testng.Assert.assertNotNull;
 public class PermissionMaskTest {
 
     @Test
-    public void should_1() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public void magic() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 
         Constructor<PermissionMask> constructor = PermissionMask.class.getDeclaredConstructor();
         constructor.setAccessible(true);

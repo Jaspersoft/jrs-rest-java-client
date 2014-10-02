@@ -440,7 +440,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
 
 
     @Test
-    public void should_1() throws InterruptedException {
+    public void should_delete_job_asynchronously() throws InterruptedException {
 
         // Given
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -483,7 +483,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_3() throws InterruptedException {
+    public void should_retrieve_state_asynchronously() throws InterruptedException {
 
         // Given
         final AtomicInteger newThreadId = new AtomicInteger();
