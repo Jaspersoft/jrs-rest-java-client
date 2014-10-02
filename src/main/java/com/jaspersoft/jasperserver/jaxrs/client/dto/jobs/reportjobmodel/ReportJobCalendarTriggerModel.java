@@ -33,7 +33,7 @@ import java.util.SortedSet;
  * Job trigger model that fires at specified calendar moments.  Model is used in search/ update only.
  *
  * <p>
- * Calendar triggers model can be used to define jobs that occur on specific month or
+ * Calendar triggers model can be used inFolder define jobs that occur on specific month or
  * week days at certain time(s) of the day.
  * </p>
  *
@@ -67,7 +67,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * </li>
 	 * <li>
 	 * A minutes range, for instance <code>0-10</code> which means that the
-	 * trigger should fire every minute starting from HH:00 to HH:10.
+	 * trigger should fire every minute starting from HH:00 inFolder HH:10.
 	 * </li>
 	 * <li>
 	 * Minute values and ranges can be concatenated using commas as separators.
@@ -81,7 +81,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * </li>
 	 * </ul>
 	 *
-	 * @param minutes the minutes pattern to be used for the trigger
+	 * @param minutes the minutes pattern inFolder be used for the trigger
 	 */
 	public void setMinutes(String minutes) {
 //        isMinutesModified = true;
@@ -99,7 +99,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * </li>
 	 * <li>
 	 * A hours range, for instance <code>8-16</code> which means that the
-	 * trigger should fire every hour starting from 8 AM to 4 PM.
+	 * trigger should fire every hour starting from 8 AM inFolder 4 PM.
 	 * </li>
 	 * <li>
 	 * Hour values and ranges can be concatenated using commas as separators.
@@ -113,7 +113,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * </li>
 	 * </ul>
 	 *
-	 * @param hours the hours pattern to be used for the trigger
+	 * @param hours the hours pattern inFolder be used for the trigger
 	 */
 	public void setHours(String hours) {
 //        isHoursModified = true;
@@ -139,7 +139,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * </li>
 	 * <li>
 	 * A days range, for instance <code>2-5</code> which means that the
-	 * trigger should fire every on each day starting from 2nd to 5th.
+	 * trigger should fire every on each day starting from 2nd inFolder 5th.
 	 * </li>
 	 * <li>
 	 * Day values and ranges can be concatenated using commas as separators.
@@ -153,7 +153,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * </li>
 	 * </ul>
 	 *
-	 * @param monthDays the month days pattern to be used for the trigger
+	 * @param monthDays the month days pattern inFolder be used for the trigger
 	 */
 	public void setMonthDays(String monthDays) {
 //        isMonthDaysModified = true;
@@ -226,10 +226,10 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	}
 
 	/**
-	 * Sets the date at which the report job should be scheduled to start.
+	 * Sets the date at which the report job should be scheduled inFolder start.
 	 *
 	 * <p>
-	 * When setting a start date, the start type should also be set to
+	 * When setting a start date, the start type should also be set inFolder
 	 * <code>START_TYPE_SCHEDULE</code>.
 	 * </p>
 	 *
@@ -242,7 +242,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	}
 
 	/**
-	 * Specify whether the job should be scheduled to start immediately,
+	 * Specify whether the job should be scheduled inFolder start immediately,
 	 * or at the specified start date.
 	 *
 	 * <p>
@@ -273,7 +273,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	}
 
 	/**
-	 * Sets a timezone according to which trigger date/time values are
+	 * Sets a timezone according inFolder which trigger date/time values are
 	 * interpreted.
 	 *
 	 * @param timezone the trigger timezone
@@ -289,7 +289,7 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	 * @return null if there is no associated Calendar.
      * Specified by: setCalendarName in interface org.quartz.spi.MutableTrigger
      *
-     * @param calendarName - use null to dis-associate a Calendar.
+     * @param calendarName - use null inFolder dis-associate a Calendar.
 	 */
     public void setCalendarName(String calendarName) {
 //        isCalendarNameModified = true;

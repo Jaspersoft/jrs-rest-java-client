@@ -22,7 +22,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.Organization;
@@ -66,20 +70,20 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult<Organization> create(Organization organization) {
+    public OperationResult<Organization> create(Organization clientTenant) {
         JerseyRequest<Organization> request = buildRequest(Organization.class);
         request.addParams(params);
-        return request.post(organization);
+        return request.post(clientTenant);
     }
 
-    public <R> RequestExecution asyncCreate(final Organization organization, final Callback<OperationResult<Organization>, R> callback){
+    public <R> RequestExecution asyncCreate(final Organization clientTenant, final Callback<OperationResult<Organization>, R> callback){
         final JerseyRequest<Organization> request = buildRequest(Organization.class);
         request.addParams(params);
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(request.post(organization));
+                callback.execute(request.post(clientTenant));
             }
         });
 
@@ -90,5 +94,4 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
     private <T> JerseyRequest<T> buildRequest(Class<T> responseType) {
         return JerseyRequest.buildRequest(sessionStorage, responseType, new String[]{"/organizations"}, new DefaultErrorHandler());
     }
-
 }

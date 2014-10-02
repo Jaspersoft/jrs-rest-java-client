@@ -28,6 +28,7 @@ public class OutputResourceDescriptor {
 
     private String contentType;
     private String fileName;
+    private Boolean outputFinal;
 
     public String getContentType() {
         return contentType;
@@ -45,27 +46,42 @@ public class OutputResourceDescriptor {
         this.fileName = fileName;
     }
 
+    public Boolean getOutputFinal() {
+        return outputFinal;
+    }
+
+    public void setOutputFinal(Boolean outputFinal) {
+        this.outputFinal = outputFinal;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof OutputResourceDescriptor)) return false;
 
         OutputResourceDescriptor that = (OutputResourceDescriptor) o;
 
         if (contentType != null ? !contentType.equals(that.contentType) : that.contentType != null) return false;
+        if (fileName != null ? !fileName.equals(that.fileName) : that.fileName != null) return false;
+        if (outputFinal != null ? !outputFinal.equals(that.outputFinal) : that.outputFinal != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return contentType != null ? contentType.hashCode() : 0;
+        int result = contentType != null ? contentType.hashCode() : 0;
+        result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
+        result = 31 * result + (outputFinal != null ? outputFinal.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "OutputResourceDescriptor{" +
                 "contentType='" + contentType + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", outputFinal=" + outputFinal +
                 '}';
     }
 }

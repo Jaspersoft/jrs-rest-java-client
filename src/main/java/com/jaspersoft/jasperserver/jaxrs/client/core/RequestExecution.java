@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import java.util.concurrent.Future;
@@ -42,5 +41,9 @@ public class RequestExecution {
 
     public void setFuture(Future future) {
         this.future = future;
+    }
+
+    public Future getFuture() {
+        return future;
     }
 }

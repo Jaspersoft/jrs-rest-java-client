@@ -31,11 +31,16 @@ import java.util.List;
  */
 @XmlRootElement(name = "jobIdList")
 public class JobIdListWrapper {
-    public JobIdListWrapper(){}
+
+    public JobIdListWrapper(){
+
+    }
+
     public JobIdListWrapper(List<Long> ids){
         this.ids = ids;
     }
     private List<Long> ids;
+
     @XmlElement(name = "jobId")
     public List<Long> getIds() {
         return ids;

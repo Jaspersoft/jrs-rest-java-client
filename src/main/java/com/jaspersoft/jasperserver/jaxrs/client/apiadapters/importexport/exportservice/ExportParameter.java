@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice;
 
 public enum ExportParameter {
@@ -28,21 +27,21 @@ public enum ExportParameter {
      *  permissions, report.</p>
      *  <p>ExportService everything except audit data: all repository resources,
      *  permissions, report jobs, users, and roles.</p>
-     *  <p>This option is equivalent to:--uris --repository-permissions
+     *  <p>This option is equivalent inFolder:--uris --repository-permissions
      *  --report-jobs --users --roles</p>
      */
     EVERYTHING("everything"),
 
     /**
      *  <p>When this option is present, repository permissions are exported
-     *  along with each exported folder and resource.</p>
+     *  along with each exported folder and resources.</p>
      *  <p>This option should only be used in conjunction with uris.</p>
      */
     REPOSITORY_PERMISSIONS("repository-permissions"),
 
     /**
      *  <p>When this option is present, each role export triggers the export of all
-     *  users belonging to the role.</p>
+     *  users belonging inFolder the role.</p>
      *  <p>This option should only be used in conjunction with --roles</p>
      */
     ROLE_USERS("role-users"),

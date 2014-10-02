@@ -34,5 +34,4 @@ public class NullEntityOperationResult<T> extends OperationResult<T> {
     public T getEntity() {
         return null;
     }
-
 }

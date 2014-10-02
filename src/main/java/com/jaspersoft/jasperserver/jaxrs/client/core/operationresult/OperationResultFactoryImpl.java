@@ -31,27 +31,27 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
 
     @Override
     public <T> OperationResult<T> getOperationResult(Response response, Class<T> responseClass) {
-        if (isClientResource(responseClass))
+        if (isClientResource(responseClass)) {
             responseClass = (Class<T>) getSpecificResourceType(response);
-
+        }
         return getAppropriateOperationResultInstance(response, responseClass);
     }
 
-    private <T> OperationResult<T> getAppropriateOperationResultInstance(Response response, Class<T> responseClass){
+    private <T> OperationResult<T> getAppropriateOperationResultInstance(Response response, Class<T> responseClass) {
         OperationResult<T> result;
-        if (response.hasEntity())
+        if (response.hasEntity()) {
             result = new WithEntityOperationResult<T>(response, responseClass);
-        else
+        } else {
             result = new NullEntityOperationResult(response, responseClass);
+        }
         return result;
     }
 
-    private boolean isClientResource(Class<?> clazz){
+    private boolean isClientResource(Class<?> clazz) {
         return clazz != Object.class && clazz.isAssignableFrom(ClientResource.class);
     }
 
-    private Class<? extends ClientResource> getSpecificResourceType(Response response){
+    private Class<? extends ClientResource> getSpecificResourceType(Response response) {
         return ResourcesTypeResolverUtil.getClassForMime(response.getHeaderString("Content-Type"));
     }
-
 }

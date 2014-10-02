@@ -24,7 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 public enum JobsParameter {
 
     /**
-     * URI of report to schedule. Report
+     * URI of report inFolder schedule. Report
      * options URI can also be used
      * here
      */
@@ -37,7 +37,7 @@ public enum JobsParameter {
     SEARCH_OWNER("owner"),
 
     /**
-     * Label of the jobs to find.
+     * Label of the jobs inFolder find.
      */
     SEARCH_LABEL("label"),
 
@@ -68,7 +68,7 @@ public enum JobsParameter {
     SEARCH_NUMBER_OF_ROWS("numberOfRows"),
 
     /**
-     * Field name to sort by.
+     * Field name inFolder sort by.
      * Supported values:
      * NONE
      * SORTBY_JOBID
@@ -91,7 +91,7 @@ public enum JobsParameter {
     SEARCH_IS_ASCENDING("isAscending"),
 
     /**
-     * Can be used multiple times to create a list of jobIDs to update
+     * Can be used multiple times inFolder createInFolder a list of jobIDs inFolder update
      */
     JOB_ID("id"),
 

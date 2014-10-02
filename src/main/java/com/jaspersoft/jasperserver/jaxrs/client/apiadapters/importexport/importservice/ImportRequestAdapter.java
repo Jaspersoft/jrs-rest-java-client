@@ -22,7 +22,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
@@ -34,29 +38,26 @@ public class ImportRequestAdapter extends AbstractAdapter {
     private static final String STATE_URI = "/state";
     private String taskId;
 
-    public ImportRequestAdapter(SessionStorage sessionStorage, String taskId){
+    public ImportRequestAdapter(SessionStorage sessionStorage, String taskId) {
         super(sessionStorage);
         this.taskId = taskId;
     }
 
-    public OperationResult<StateDto> state(){
-        return buildRequest(sessionStorage, StateDto.class, new String[]{"/import", taskId, STATE_URI}, new DefaultErrorHandler())
+    public OperationResult<StateDto> state() {
+        return buildRequest(sessionStorage, StateDto.class,
+                new String[]{"/import", taskId, STATE_URI}, new DefaultErrorHandler())
                 .get();
     }
 
-    public <R> RequestExecution asyncState(final Callback<OperationResult<StateDto>, R> callback){
-        final JerseyRequest<StateDto> request =
-                buildRequest(sessionStorage, StateDto.class, new String[]{"/import", taskId, STATE_URI});
-
+    public <R> RequestExecution asyncState(final Callback<OperationResult<StateDto>, R> callback) {
+        final JerseyRequest<StateDto> request = buildRequest(sessionStorage, StateDto.class, new String[]{"/import", taskId, STATE_URI});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
-
 }

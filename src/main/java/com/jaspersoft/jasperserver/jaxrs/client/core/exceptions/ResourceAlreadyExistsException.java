@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class ResourceAlreadyExistsException extends JSClientWebException {
 
-    public static final String RESOURCE_ALREADY_EXISTS = "resource.already.exists";
+    public static final String RESOURCE_ALREADY_EXISTS = "resources.already.exists";
 
     public ResourceAlreadyExistsException() {
         super();    //To change body of overridden methods use File | Settings | File Templates.

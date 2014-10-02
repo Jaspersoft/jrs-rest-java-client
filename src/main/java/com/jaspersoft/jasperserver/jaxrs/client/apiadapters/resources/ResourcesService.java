@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
@@ -30,14 +29,31 @@ public class ResourcesService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    public BatchResourcesAdapter resources(){
+    public BatchResourcesAdapter resources() {
         return new BatchResourcesAdapter(sessionStorage);
     }
 
-    public SingleResourceAdapter resource(String uri){
+    public SingleResourceAdapter resource(String uri) {
         return new SingleResourceAdapter(sessionStorage, uri);
     }
 
+//    public DomainResourceBuilder resource(ClientSemanticLayerDataSource resource) {
+//        ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource(resource);
+//        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
+//    }
 
+//    public ReportUnitResourceBuilder resource(ClientReportUnit resource) {
+//        ClientReportUnit copy = new ClientReportUnit(resource);
+//        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
+//    }
 
+//    public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resource) {
+//        ClientMondrianConnection copy = new ClientMondrianConnection(resource);
+//        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
+//    }
+
+//    public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resource) {
+//        ClientSecureMondrianConnection copy = new ClientSecureMondrianConnection(resource);
+//        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
+//    }
 }

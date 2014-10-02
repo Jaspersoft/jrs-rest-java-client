@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
@@ -30,14 +29,14 @@ public class OrganizationsService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    public BatchOrganizationsAdapter organizations(){
+    public BatchOrganizationsAdapter organizations() {
         return new BatchOrganizationsAdapter(sessionStorage);
     }
 
-    public SingleOrganizationAdapter organization(String organizationId){
-        if ("".equals(organizationId) || "/".equals(organizationId))
-            throw new  IllegalArgumentException("'organizationId' mustn't be an empty string");
+    public SingleOrganizationAdapter organization(String organizationId) {
+        if ("".equals(organizationId) || "/".equals(organizationId)) {
+            throw new IllegalArgumentException("'organizationId' mustn't be an empty string");
+        }
         return new SingleOrganizationAdapter(sessionStorage, organizationId);
     }
-
 }

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
@@ -76,21 +75,18 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     public <R> RequestExecution asyncSearch(final Job searchCriteria, final Callback<OperationResult<JobSummaryListWrapper>, R> callback) {
         final JerseyRequest<JobSummaryListWrapper> request = prepareSearchRequest(searchCriteria);
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.get());
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
-    private JerseyRequest<JobSummaryListWrapper> prepareSearchRequest(Job searchCriteria){
-        JerseyRequest<JobSummaryListWrapper> request =
-                buildRequest(sessionStorage, JobSummaryListWrapper.class, new String[]{"/jobs"});
+    private JerseyRequest<JobSummaryListWrapper> prepareSearchRequest(Job searchCriteria) {
+        JerseyRequest<JobSummaryListWrapper> request = buildRequest(sessionStorage, JobSummaryListWrapper.class, new String[]{"/jobs"});
         request.addParams(params);
         if (searchCriteria != null) {
             String criteriaJson = buildJson(searchCriteria);
@@ -99,13 +95,11 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
         return request;
     }
 
-    private String buildJson(Object object){
+    private String buildJson(Object object) {
         ObjectMapper mapper = new ObjectMapper();
-
         SerializationConfig serializationConfig = mapper.getSerializationConfig();
         serializationConfig = serializationConfig.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
         AnnotationIntrospector introspector = new JaxbAnnotationIntrospector();
-
         mapper.setSerializationConfig(serializationConfig);
         mapper.setAnnotationIntrospector(introspector);
 
@@ -113,148 +107,122 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
             return mapper.writeValueAsString(object);
         } catch (IOException e) {
             log.warn("Can't marshal search criteria.");
-            throw new RuntimeException("Failed to build criteria json.", e);
+            throw new RuntimeException("Failed inFolder build criteria json.", e);
         }
     }
 
-    private String buildXml(ReportJobModel reportJobModel){
+    private String buildXml(ReportJobModel reportJobModel) {
         try {
             StringWriter writer = new StringWriter();
             JAXBContext jaxbContext = JAXBContext.newInstance(ReportJobModel.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
             jaxbMarshaller.marshal(reportJobModel, writer);
             return writer.toString();
         } catch (JAXBException e) {
             log.warn("Can't marshal report job model.");
-            throw new RuntimeException("Failed to build report job model xml.", e);
+            throw new RuntimeException("Failed inFolder build report job model xml.", e);
         }
     }
 
+    @Deprecated
     public OperationResult<JobIdListWrapper> updateWithProcessedParameters(ReportJobModel jobModel) {
         throw new UnsupportedOperationException("Operation is not supported yet");
-        /*JerseyRequest<JobIdListWrapper> request =
-                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"}, errorHandler);
-        request.setContentType("application/job+json");
-        request.setAccept("application/job+json");
-        request.addParams(params);
-
-        return request.post(jobModel);*/
     }
-
 
     /**
      * Updates all jobs which ids were specified. Updates only set fields, other fields are ignored.
      */
     public OperationResult<JobIdListWrapper> update(ReportJobModel jobModel) {
-
-        JerseyRequest<JobIdListWrapper> request =
-                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
+        JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
         request.addParams(params);
+        String content;
 
-        String content = null;
-        if (sessionStorage.getConfiguration().getContentMimeType() == MimeType.JSON)
+        if (sessionStorage.getConfiguration().getContentMimeType() == MimeType.JSON) {
             content = buildJson(jobModel);
-        else
+        } else {
             content = buildXml(jobModel);
-
+        }
         return request.post(content);
     }
 
     public <R> RequestExecution asyncUpdate(final ReportJobModel jobModel, final Callback<OperationResult<JobIdListWrapper>, R> callback) {
-        final JerseyRequest<JobIdListWrapper> request =
-                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
         request.addParams(params);
-
         final String jobJson = buildJson(jobModel);
-
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.post(jobJson));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
-
     private List<Long> getIds() {
         List<Long> ids = new ArrayList<Long>();
         List<String> idsTemp = params.get(JobsParameter.JOB_ID.getName());
+
         if (idsTemp != null) {
-            for (String id : idsTemp)
+            for (String id : idsTemp) {
                 ids.add(Long.parseLong(id));
+            }
         }
         return ids;
     }
 
     public OperationResult<JobIdListWrapper> pause() {
         JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"})
-                .post(jobIdListWrapper);
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"}).post(jobIdListWrapper);
     }
 
     public <R> RequestExecution asyncPause(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
         final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> request =
-                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"});
-
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.post(jobIdListWrapper));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     public OperationResult<JobIdListWrapper> resume() {
         JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/resume"})
-                .post(jobIdListWrapper);
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/resume"}).post(jobIdListWrapper);
     }
 
     public <R> RequestExecution asyncResume(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
         final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> request =
-                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/resume"});
-
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/resume"});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.post(jobIdListWrapper));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
 
     public OperationResult<JobIdListWrapper> restart() {
         JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/restart"})
-                .post(jobIdListWrapper);
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/restart"}).post(jobIdListWrapper);
     }
 
     public <R> RequestExecution asyncRestart(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
         final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> request =
-                buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/restart"});
-
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/restart"});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 callback.execute(request.post(jobIdListWrapper));
             }
         });
-
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
-
 }

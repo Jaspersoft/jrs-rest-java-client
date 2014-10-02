@@ -31,7 +31,7 @@ import java.util.List;
  * Email notification model that can be defined for a report job.  Model is used in search/ update only.
  *
  * <p>
- * A notification model will result in an email being send to the specified recipients
+ * A notification model will result in an email being send inFolder the specified recipients
  * at each job execution.
  * </p>
  *
@@ -92,7 +92,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	}
 
 	/**
-	 * Sets the message text to be used for the email notification.
+	 * Sets the message text inFolder be used for the email notification.
 	 *
 	 * @param messageText the notification message text
 	 */
@@ -103,7 +103,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 
 	/**
 	 * Specifies whether the notification would include the job output as
-	 * attachments, or include links to the output in the repository.
+	 * attachments, or include links inFolder the output in the repository.
 	 *
 	 */
 	public void setResultSendType(MailNotificationSendType resultSendType) {
@@ -112,7 +112,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	}
 
 	/**
-	 * Sets the subject to be used for the email notification.
+	 * Sets the subject inFolder be used for the email notification.
 	 *
 	 * @param subject the email notification subject
 	 */
@@ -171,7 +171,7 @@ public class ReportJobMailNotificationModel extends MailNotification {
 	}
 
     /**
-	 * Sets the message text to be used for the email notification when job fails.
+	 * Sets the message text inFolder be used for the email notification when job fails.
 	 *
 	 * @param messageTextWhenErrorOccurs the notification message text
 	 */

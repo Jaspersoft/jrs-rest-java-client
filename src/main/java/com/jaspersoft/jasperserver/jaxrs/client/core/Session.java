@@ -18,17 +18,18 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionsService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo.ServerInfoService;
@@ -37,12 +38,11 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-
 public class Session {
 
     private SessionStorage storage;
 
-    public Session(SessionStorage sessionStorage){
+    public Session(SessionStorage sessionStorage) {
         this.storage = sessionStorage;
     }
 
@@ -50,13 +50,15 @@ public class Session {
         return storage;
     }
 
-    public void logout(){
+    public void logout() {
         WebTarget target = storage.getRootTarget().path("/exituser.html");
         Response response = target.request().get();
-        if (response.getStatus() >= 400) new DefaultErrorHandler().handleError(response);
+        if (response.getStatus() >= 400) {
+            new DefaultErrorHandler().handleError(response);
+        }
     }
 
-    public <ServiceType extends AbstractAdapter> ServiceType getService(Class<ServiceType> serviceClass){
+    public <ServiceType extends AbstractAdapter> ServiceType getService(Class<ServiceType> serviceClass) {
         try {
             return serviceClass.getConstructor(SessionStorage.class).newInstance(storage);
         } catch (Exception e) {
@@ -64,44 +66,51 @@ public class Session {
         }
     }
 
-    public OrganizationsService organizationsService(){
+    public OrganizationsService organizationsService() {
         return getService(OrganizationsService.class);
     }
 
-    public ServerInfoService serverInfoService(){
+    public ServerInfoService serverInfoService() {
         return getService(ServerInfoService.class);
     }
 
-    public UsersService usersService(){
+    public UsersService usersService() {
         return getService(UsersService.class);
     }
 
-    public RolesService rolesService(){
+    public RolesService rolesService() {
         return getService(RolesService.class);
     }
 
-    public PermissionsService permissionsService(){
+    public PermissionsService permissionsService() {
         return getService(PermissionsService.class);
     }
 
-    public ExportService exportService(){
+    public ExportService exportService() {
         return getService(ExportService.class);
     }
 
-    public ImportService importService(){
+    public ImportService importService() {
         return getService(ImportService.class);
     }
 
-    public ReportingService reportingService(){
+    public ReportingService reportingService() {
         return getService(ReportingService.class);
     }
 
-    public ResourcesService resourcesService(){
+    public ResourcesService resourcesService() {
         return getService(ResourcesService.class);
     }
 
-    public JobsService jobsService(){
+    public JobsService jobsService() {
         return getService(JobsService.class);
     }
 
+    public DomainMetadataService domainService() {
+        return getService(DomainMetadataService.class);
+    }
+
+    public QueryExecutorService queryExecutorService() {
+        return getService(QueryExecutorService.class);
+    }
 }

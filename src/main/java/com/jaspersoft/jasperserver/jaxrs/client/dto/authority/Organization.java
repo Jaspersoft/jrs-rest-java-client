@@ -36,7 +36,6 @@ public class Organization {
     private String tenantFolderUri = null;
     private String theme = null;
 
-
     public String getTenantDesc() {
         return tenantDesc;
     }

@@ -34,7 +34,7 @@ public final class ResponseStatus {
     public static final int UPDATED = 200;
 
     /**
-     * Successful creation of a resource.
+     * Successful creation of a resources.
      */
     public static final int CREATED = 201;
 
@@ -42,6 +42,9 @@ public final class ResponseStatus {
      * The request was processed successfully, but no response body is needed.
      */
     public static final int NO_CONTENT = 204;
+
+
+    public static final int FOUND = 302;
 
     /**
      * Malformed syntax or a bad query.
@@ -64,12 +67,12 @@ public final class ResponseStatus {
     public static final int NOT_FOUND = 404;
 
     /**
-     * Method not allowed on resource.
+     * Method not allowed on resources.
      */
     public static final int NOT_ALLOWED = 405;
 
     /**
-     * Requested representation not available for the resource.
+     * Requested representation not available for the resources.
      */
     public static final int NOT_ACCEPTABLE = 406;
 
@@ -79,7 +82,7 @@ public final class ResponseStatus {
     public static final int CONFLICT = 409;
 
     /**
-     * Representation not supported for the resource.
+     * Representation not supported for the resources.
      */
     public static final int UNSUPPORTED_TYPE = 415;
 
@@ -93,6 +96,6 @@ public final class ResponseStatus {
      */
     public static final int NOT_IMPLEMENTED = 501;
 
-    private ResponseStatus(){}
-
+    private ResponseStatus() {
+    }
 }

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientResourceListWrapper;
@@ -33,7 +32,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class BatchResourcesAdapter extends AbstractAdapter {
-
     private MultivaluedMap<String, String> params;
 
     public BatchResourcesAdapter(SessionStorage sessionStorage) {
@@ -88,4 +86,11 @@ public class BatchResourcesAdapter extends AbstractAdapter {
         return request;
     }
 
+//    public MultivaluedMap<String, String> getParams() {
+//        return params;
+//    }
+
+//    public void setParams(MultivaluedMap<String, String> params) {
+//        this.params = params;
+//    }
 }

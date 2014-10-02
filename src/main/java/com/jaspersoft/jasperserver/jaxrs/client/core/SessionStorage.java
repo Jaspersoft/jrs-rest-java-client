@@ -22,15 +22,14 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.*;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
-import com.sun.jersey.api.json.JSONConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.glassfish.jersey.client.ClientProperties;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -39,7 +38,6 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.SecureRandom;
-import java.util.*;
 
 public class SessionStorage {
 
@@ -71,8 +69,8 @@ public class SessionStorage {
             clientBuilder.hostnameVerifier(hostnameVerifier);
 
         } catch (Exception e) {
-            log.error("Unable to init SSL context", e);
-            throw new RuntimeException("Unable to init SSL context", e);
+            log.error("Unable inFolder init SSL context", e);
+            throw new RuntimeException("Unable inFolder init SSL context", e);
         }
     }
 
@@ -85,11 +83,11 @@ public class SessionStorage {
 
         Client client = clientBuilder.build();
 
-        Long connectionTimeout = configuration.getConnectionTimeout();
+        Integer connectionTimeout = configuration.getConnectionTimeout();
         if (connectionTimeout != null)
             client.property(ClientProperties.CONNECT_TIMEOUT, connectionTimeout);
 
-        Long readTimeout = configuration.getReadTimeout();
+        Integer readTimeout = configuration.getReadTimeout();
         if (readTimeout != null)
             client.property(ClientProperties.READ_TIMEOUT, readTimeout);
 
@@ -128,56 +126,4 @@ public class SessionStorage {
     public WebTarget getRootTarget() {
         return rootTarget;
     }
-
-    /*public static void main(String[] args) throws InterruptedException {
-
-        RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro/");
-        //RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver/");
-        JasperserverRestClient client = new JasperserverRestClient(configuration);
-        Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
-        //Session session = client.authenticate("jasperadmin", "jasperadmin");
-
-        Job job = new Job();
-        job.setLabel("Test Job");
-        job.setBaseOutputFilename("TestJobFile");
-
-        JobSource source = new JobSource();
-        source.setReportUnitURI("/public/Samples/Reports/14.PerformanceSummary");
-        //source.setReportUnitURI("/reports/samples/EmployeeAccounts");
-        Map<String, Object> reportParameters = new HashMap<String, Object>();
-        reportParameters.put("Product_Family", Arrays.asList("Food"));
-        //reportParameters.put("EmployeeID", Arrays.asList("kristen"));
-        source.setParameters(reportParameters);
-        job.setSource(source);
-
-        SimpleTrigger trigger = new SimpleTrigger();
-        trigger.setOccurrenceCount(2);
-        trigger.setRecurrenceInterval(1000);
-        trigger.setRecurrenceIntervalUnit(IntervalUnitType.HOUR);
-        //trigger.setStartType(JobTrigger.START_TYPE_NOW);
-        //trigger.setStartDate(new Date());
-        job.setTrigger(trigger);
-
-        Set<OutputFormat> outputFormats = new HashSet<OutputFormat>(Arrays.asList(OutputFormat.PDF));
-        job.setOutputFormats(outputFormats);
-
-        RepositoryDestination repositoryDestination = new RepositoryDestination();
-        repositoryDestination.setFolderURI("/public/Samples/Reports");
-        repositoryDestination.setSaveToRepository(true);
-        job.setRepositoryDestination(repositoryDestination);
-
-        OperationResult<Job> result = session
-                .jobsService()
-                .scheduleReport(job);
-        System.out.println(result.getEntity());
-
-
-        OperationResult<Job> jobOperationResult = session
-                .jobsService()
-                .job(3620)
-                .get();
-
-        System.out.println(jobOperationResult.getEntity());
-
-    }*/
 }

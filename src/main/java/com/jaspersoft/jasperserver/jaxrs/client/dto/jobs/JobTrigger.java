@@ -29,7 +29,7 @@ import java.util.Date;
 public abstract class JobTrigger {
 
     /**
-     * Start type that indicates that the job should be scheduled to start
+     * Start type that indicates that the job should be scheduled inFolder start
      * immediately.
      *
      * @see #getStartType()
@@ -37,7 +37,7 @@ public abstract class JobTrigger {
     public static final byte START_TYPE_NOW = 1;
 
     /**
-     * Start type that indicates that the job should be scheduled to start
+     * Start type that indicates that the job should be scheduled inFolder start
      * at the specified start date.
      *
      * @see #getStartType()

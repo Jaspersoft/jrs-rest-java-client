@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class ResourceNotFoundException extends JSClientWebException {
 
-    public static final String ERROR_CODE_RESOURCE_NOT_FOUND = "resource.not.found";
+    public static final String ERROR_CODE_RESOURCE_NOT_FOUND = "resources.not.found";
 
     public ResourceNotFoundException() {
         super();    //To change body of overridden methods use File | Settings | File Templates.

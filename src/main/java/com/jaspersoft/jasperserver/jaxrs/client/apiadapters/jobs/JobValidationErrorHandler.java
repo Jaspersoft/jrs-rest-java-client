@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ValidationException;
@@ -35,16 +34,13 @@ public class JobValidationErrorHandler extends DefaultErrorHandler {
 
     @Override
     protected void handleBodyError(Response response) {
-        List<ErrorDescriptor> errorDescriptors = null;
-        if (response.getHeaderString("Content-Type").contains("xml") ||
-                response.getHeaderString("Content-Type").contains("json")) {
+        List<ErrorDescriptor> errorDescriptors;
+        if (response.getHeaderString("Content-Type").contains("xml") || response.getHeaderString("Content-Type").contains("json")) {
             ValidationErrorsListWrapper validationErrors = readBody(response, ValidationErrorsListWrapper.class);
-
-            if (validationErrors == null){
+            if (validationErrors == null) {
                 super.handleBodyError(response);
                 return;
             }
-
             errorDescriptors = toErrorDescriptorList(validationErrors);
             throw new ValidationException(generateErrorMessage(errorDescriptors), errorDescriptors);
         }
@@ -59,7 +55,6 @@ public class JobValidationErrorHandler extends DefaultErrorHandler {
             errorDescriptor.setMessage(error.toString() + " (field: " + error.getField() + ")");
             errorDescriptor.setErrorCode(error.getErrorCode());
             errorDescriptor.setParameters(error.getErrorArguments());
-
             errorDescriptors.add(errorDescriptor);
         }
         return errorDescriptors;
@@ -75,5 +70,4 @@ public class JobValidationErrorHandler extends DefaultErrorHandler {
         }
         return sb.toString();
     }
-
 }

@@ -1,6 +1,114 @@
+Rest Client for JasperReports Server [![Build Status](https://travis-ci.org/Jaspersoft/jrs-rest-java-client.svg?branch=develop)](https://travis-ci.org/Jaspersoft/jrs-rest-java-client) [![Coverage Status](https://coveralls.io/repos/Jaspersoft/jrs-rest-java-client/badge.png?branch=develop)](https://coveralls.io/r/Jaspersoft/jrs-rest-java-client?branch=develop)
+=========================================
+
+With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests.
+
+Table of Contents
+------------------
+1. [Introduction](#introduction).
+2. [Configuration](#configuration).
+  * [Loading configuration from file](#loading-configuration-from-file).
+  * [Creation of manual configuration](#creation-of-manual-configuration).
+  * [HTTPS configuration](#https-configuration).
+  * [Client instantiation](#client-instantiation).
+3. [Authentication](#authentication).
+  * [Invalidating session](#invalidating-session).
+4. [Report services](#report-services).
+  * [Running a report](#running-a-report).
+  * [Requesting report execution status](#requesting-report-execution-status).
+  * [Requesting report execution details](#requesting-report-execution-details).
+  * [Requesting Report Output](#requesting-report-output).
+  * [Download file attachments for report output](#download-file-attachments-for-report-output).
+  * [Exporting a Report Asynchronously](#exporting-a-report-asynchronously).
+  * [Polling Export Execution](#polling-export-execution).
+  * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
+  * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
+5. [Report Parameters services](#report-parameters-services).
+  * [Listing Report Parameters Structure](#listing-report-parameters-structure).
+  * [Listing Report Parameter Values](#listing-report-parameter-values).
+  * [Setting Report Parameter Values](#setting-report-parameter-values).
+6. [Administration services](#administration-services).
+  1. [Organizations service](#organizations-service).
+    * [Searching for Organizations](#searching-for-organizations).
+    * [Viewing an Organization](#viewing-an-organization).
+    * [Creating an Organization](#creating-an-organization).
+    * [Modifying Organization Properties](#modifying-organization-properties).
+    * [Deleting an Organization](#deleting-an-organization).
+  2. [Users service](#users-service).
+    * [Searching for Users](#searching-for-users).
+    * [Viewing a User](#viewing-a-user).
+    * [Creating a User](#creating-a-user).
+    * [Modifying User Properties](#modifying-user-properties).
+    * [Deleting a User](#deleting-a-user).
+  3. [Attributes service](#attributes-service).
+    * [Viewing User Attributes](#viewing-user-attributes).
+    * [Setting User Attributes](#setting-user-attributes).
+    * [Deleting User Attributes](#deleting-user-attributes).
+  4. [The Roles Service](#the-roles-service).
+    * [Searching for Roles](#searching-for-roles).
+    * [Viewing a Role](#viewing-a-role).
+    * [Creating a Role](#creating-a-role).
+    * [Modifying a Role](#modifying-a-role).
+    * [Setting Role Membership](#setting-role-membership).
+    * [Deleting a Role](#deleting-a-role).
+7. [Repository Services](#repository-services).
+  1. [Resources Service](#resources-service).
+    * [Searching the Repository](#searching-the-repository).
+    * [Viewing Resource Details](#viewing-resource-details).
+    * [Downloading File Resources](#downloading-file-resources).
+    * [Creating a Resource](#creating-a-resource).
+    * [Modifying a Resource](#modifying-a-resource).
+    * [Copying a Resource](#copying-a-resource).
+    * [Moving a Resource](#moving-a-resource).
+    * [Uploading SemanticLayerDataSource](#uploading-semanticlayerdatasource).   
+    * [Uploading MondrianConnection](#uploading-mondrianconnection).
+    * [Uploading SecureMondrianConnection](#uploading-securemondrianconnection).
+    * [Uploading ReportUnit](#uploading-reportunit).
+    * [Uploading File Resources](#uploading-file-resources).
+    * [Deleting Resources](#deleting-resources).
+  2. [The Permissions Service](#the-permissions-service).
+    * [Viewing Multiple Permissions](#viewing-multiple-permissions).
+    * [Viewing a Single Permission](#viewing-a-single-permission).
+    * [Setting Multiple Permissions](#setting-multiple-permissions).
+    * [Setting a Single Permission](#setting-a-single-permission).
+    * [Deleting Permissions in Bulk](#deleting-permissions-in-bulk).
+    * [Deleting a Single Permission](#deleting-a-single-permission).
+8. [Jobs service](#jobs-service).
+  * [Listing Report Jobs](#listing-report-jobs).
+  * [Viewing a Job Definition](#viewing-a-job-definition).
+  * [Extended Job Search](#extended-job-search).
+  * [Scheduling a Report](#scheduling-a-report).
+  * [Viewing Job Status](#viewing-job-status).
+  * [Editing a Job Definition](#editing-a-job-definition).
+  * [Updating Jobs in Bulk](#updating-jobs-in-bulk).
+  * [Pausing Jobs](#pausing-jobs).
+  * [Resuming Jobs](#resuming-jobs).
+  * [Restarting Failed Jobs](#restarting-failed-jobs).
+9. [Calendars service](#calendars-service).
+  * [Listing All Registered Calendar Names](#listing-all-registered-calendar-names).
+  * [Viewing an Exclusion Calendar](#viewing-an-exclusion-calendar).
+  * [Adding or Updating an Exclusion Calendar](#adding-or-updating-an-exclusion-calendar).
+  * [Deleting an Exclusion Calendar](#deleting-an-exclusion-calendar).
+10. [Import/Export](#importexport).
+  1. [Export service](#export-service).
+    * [Checking the Export State](#checking-the-export-state).
+    * [Fetching the Export Output](#fetching-the-export-output).
+  2. [Import service](#import-service).
+    * [Checking the Import State](#checking-the-import-state).
+11. [Domain metadata service](#domainmetadata-service).
+12. [Query executor service](#queryexecutor-service)
+13. [REST Server Information](#rest-server-information).
+14. [Exception handling](#exception-handling).
+15. [Asynchronous API](#asynchronous-api).
+16. [Getting serialized content from response](#getting-serialized-content-from-response).
+17. [Switching between JSON and XML](#switching-between-json-and-xml).
+18. [Possible issues](#possible-issues).
+19. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+20. [License](#license).
+
 Introduction
 -------------
-With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests. To use library in your maven-based application you need just to specify dependency and repository which are given below or download jar file manually from 
+With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests. To use library in your maven-based application you need just to specify dependency and repository which are given below or download jar file manually from
 ```
 http://jaspersoft.artifactoryonline.com/jaspersoft/repo/com/jaspersoft/jrs-rest-java-client/{version}/jrs-rest-java-client-{version}.jar
 ```
@@ -9,7 +117,7 @@ Configuration
 -------------
 To start working with the library you should firstly configure one ore more instances of `JasperserverRestClient`.
 To do this you should create instance of `RestClientConfiguration`. It can be done in two ways:
-####Loading configuration from file: 
+####Loading configuration from file:
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
 ```
@@ -19,11 +127,11 @@ File should contain only URL which is entry point to your server's REST services
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
 ```
 ####HTTPS configuration
-<strong>To use HTTPS you need:</strong>  
-1. Configure your server to support HTTPS  
-2. Download [InstallCert](http://miteff.com/files/InstallCert-bin.zip) util and follow  [InstallCert-Guide](http://www.mkyong.com/webservices/jax-ws/suncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target/) instructions.  
-3. Set HTTPS as your protocol in server URL, e.g. `https://localhost:8443/jasperserver`  
-4. Configure trusted certificates if needed  
+<strong>To use HTTPS you need:</strong>
+1. Configure your server to support HTTPS
+2. Download [InstallCert](http://miteff.com/files/InstallCert-bin.zip) util and follow  [InstallCert-Guide](http://www.mkyong.com/webservices/jax-ws/suncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target/) instructions.
+3. Set HTTPS as your protocol in server URL, e.g. `https://localhost:8443/jasperserver`
+4. Configure trusted certificates if needed
 
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("https://localhost:8443/jasperserver");
@@ -40,18 +148,11 @@ JasperserverRestClient client = new JasperserverRestClient(configuration);
 
 Authentication
 ---------------
-There are two types of authentication: with encription on and off.
-####Basic authentication (encryption off)
-Specify login and password (not encrypted) in `authenticate()` method.
+This library automatically encrypts your password before send it if encryption is on, so to authenticate you need just specify login and password (not encrypted) in `authenticate()` method.
 ```java
 Session session = client.authenticate("jasperadmin", "jasperadmin");
 //authentication with multitenancy enabled
 Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
-```
-####Authentication with encrypted password
-All exactly the same, but you need to pass encrypted password.
-```java
-Session session = client.authenticate("jasperadmin", "8deb4666e0811b048d400522b2c7d5847119f91fa5ba055ecc193034d84aa1f25d20b5203399591849bb6f04b498b9e21df9ee6d6ca2c1c8b35d591831703b54a358d5d7b8d5155f923f358e6dc449a31d687400d9865b2e971ce333245ef10bed01868e4deef3f88168634225bf8809bb1e89cd2dbc5e9f10728d010b9f799a");
 ```
 ####Invalidating session
 Not to store session on server you can invalidate it with `logout()` method.
@@ -91,7 +192,7 @@ request
         .setAsync(true)                         //this means that report will be run on server asynchronously
         .setOutputFormat("html");               //report can be requested in different formats e.g. html, pdf, etc.
 
-OperationResult<ReportExecutionDescriptor> operationResult =        
+OperationResult<ReportExecutionDescriptor> operationResult =
         session                                 //pay attention to this, all requests are in the same session!!!
                 .reportingService()
                 .newReportExecutionRequest(request);
@@ -148,7 +249,7 @@ for(AttachmentDescriptor attDescriptor : htmlExportDescriptor.getAttachments()){
                     .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
                     .export(htmlExportDescriptor.getId())
                     .attachment(attDescriptor.getFileName());
-    
+
     InputStream file = operationResult.getEntity();
     //doing something with file
 }
@@ -207,7 +308,7 @@ OperationResult<ReportExecutionStatusEntity> operationResult1 =
 ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
 ```
 ###Report Parameters services:
-The reports service includes methods for reading and setting report parameters. 
+The reports service includes methods for reading and setting report parameters.
 ####Listing Report Parameters Structure
 The following code returns a description of the structure of the report parameters for a given report.
 ```java
@@ -219,7 +320,7 @@ ReportInputControlsListWrapper inputControls =
                 .get()
                 .getEntity();
 ```
-The response contains the structure of the report parameters for the report. It contains the information needed by your application to display the report parameters to your users and allow them to make a selection. In particular, this includes any cascading structure as a set of dependencies between report parameters. Each report parameter also has a type that indicates how the user should be allowed to make a choice: bool, singleSelect, singleSelectRadio, multiSelectCheckbox, multiSelect, singleValue, singleValueText, singleValueNumber, singleValueDate, singleValueDatetime, singleValueTime.  
+The response contains the structure of the report parameters for the report. It contains the information needed by your application to display the report parameters to your users and allow them to make a selection. In particular, this includes any cascading structure as a set of dependencies between report parameters. Each report parameter also has a type that indicates how the user should be allowed to make a choice: bool, singleSelect, singleSelectRadio, multiSelectCheckbox, multiSelect, singleValue, singleValueText, singleValueNumber, singleValueDate, singleValueDatetime, singleValueTime.
 The structure includes a set of validation rules for each report parameter. These rules indicate what type of validation your client should perform on report parameter values it receives from your users, and if the validation fails, the message to display. Depending on the type of the report parameter, the following validations are possible:
 * mandatoryValidationRule – This input is required and your client should ensure the user enters a value.
 * dateTimeFormatValidation – This input must have a data time format and your client should ensure the user enters a valid date and time.
@@ -236,7 +337,7 @@ InputControlStateListWrapper inputControlsValues =
                 .get()
                 .getEntity();
 ```
-The response contains the structure of the report parameters for the report.   
+The response contains the structure of the report parameters for the report.
 If a selection-type report parameter has a null value, it is given as `~NULL~`. If no selection is made, its value is given as `~NOTHING~`.
 ####Setting Report Parameter Values
 The following code updates the state of current report parameter values, so they are set for the next run of the report.
@@ -251,7 +352,6 @@ InputControlStateListWrapper inputControlsValues =
                 .update()
                 .getEntity();
 ```
-
 Administration services:
 ========================
 Only administrative users may access the REST services for administration.
@@ -287,7 +387,7 @@ OperationResult<Organization> result = session
         .organizations()
         .create(organization);
 ```
-The descriptor sent in the request should contain all the properties you want to set on the new organization. Specify the `parentId` value to set the parent of the organization, not the `tenantUri` or `tenantFolderUri` properties.  
+The descriptor sent in the request should contain all the properties you want to set on the new organization. Specify the `parentId` value to set the parent of the organization, not the `tenantUri` or `tenantFolderUri` properties.
 However, all properties have defaults or can be determined based on the alias value. The minimal descriptor necessary to create an organization is simply the alias property. In this case, the organization is created as child of the logged-in user’s home organization.
 ####Modifying Organization Properties
 To modify the properties of an organization, use the `update` method and specify the organization ID in the URL. The request must include an organization descriptor with the values you want to change. You cannot change the ID of an organization, only its name (used for display) and its alias (used for logging in).
@@ -308,8 +408,8 @@ OperationResult result = session
         .organization("myOrg1")
         .delete();
 ```
-  
-  
+
+
 ######Each of administration services can work both with enabled and disabled multitenancy mode.
 ```java
 //with multitenancy
@@ -318,7 +418,7 @@ client
         .usersService()
         .organization("myOrg1")
         ....
-//without multitenancy        
+//without multitenancy
 client
         .authenticate("jasperadmin", "jasperadmin")
         .usersService()
@@ -371,8 +471,8 @@ client
     .usersService()
     .username(user.getUsername())
     .createOrUpdate(user);
-    
-//Granting new user with admin role    
+
+//Granting new user with admin role
 ClientRole role = client
         .authenticate("jasperadmin", "jasperadmin")
         .rolesService()
@@ -624,7 +724,7 @@ There are two operations on file resources:
 * Viewing the file resource details to determine the file format
 * Downloading the binary file contents
 
-To view the file resource details, specify the URL of the file in `resource()` method and use the code form [Viewing Resource Details](https://github.com/boryskolesnykov/jasperserver-rest-client/edit/master/README.md#viewing-resource-details) section.  
+To view the file resource details, specify the URL of the file in `resource()` method and use the code form [Viewing Resource Details](https://github.com/boryskolesnykov/jasperserver-rest-client/edit/master/README.md#viewing-resource-details) section.
 To download file binary content, specify the URL of the file in `resource()` method and use the code below
 ```java
 OperationResult<InputStream> result = client
@@ -662,7 +762,7 @@ OperationResult<ClientResource> result = client
         .createNew(folder);
 ```
 ####Modifying a Resource
-Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual fields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.  
+Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual fields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.
 The `patchResource()` method updates individual descriptor fields on the target resource. It also accept expressions that modify the descriptor in the Spring Expression Language. This expression language lets you easily modify the structure and values of descriptors.
 ```java
 PatchDescriptor patchDescriptor = new PatchDescriptor();
@@ -703,6 +803,50 @@ OperationResult<ClientFile> result = client
         .resource("/reports/testFolder")
         .uploadFile(imageFile, ClientFile.FileType.img, "fileName", "fileDescription");
 ```
+####Uploading SemanticLayerDataSource
+RestClient also supports a way to create complex resources and their nested resources in a single multipart request. One of such resources is `SemanticLayerDataSource`.  
+```java
+ClientSemanticLayerDataSource domainEntity = session
+        .resourcesService()
+            .resource(domain)
+                .withBundle(defBundle, newDefaultBundle)
+                .withBundle(enUSBundle, newEnUsBundle)
+                .withSecurityFile(securityFile, securityFile)
+                .withSchema(schemaFile, schema)
+            .inFolder("/my/new/folder/")
+                .create()
+                    .entity();        
+```
+####Uploading MondrianConnection
+REST Client allows you to create `MondrianConnection` Resource with mondrian schema XML file. You can specify the folder in which the resource will be placed. Provided API allows to add XML schema as `String` or `InputStream`.    
+```java
+ClientMondrianConnection connection = session
+    .resourcesService()
+        .resource(mondrianConnection)
+            .withMondrianSchema(schema, schemaRef)
+        .createInFolder("my/olap/folder")
+            .entity();
+```
+####Uploading SecureMondrianConnection
+To upload `SecureMondrianConnection` Resource with a bunch of support files such as Mondrian schema XML file and AccessGrantSchemas files you can use our new API
+```java
+ClientSecureMondrianConnection entity = session.resourcesService()
+    .resource(secureMondrianConnection)
+        .withMondrianSchema(mondrianSchema)
+        .withAccessGrantSchemas(Arrays.asList(accessGrantSchema))
+    .createInFolder("/my/new/folder/")
+        .entity();
+```
+####Uploading ReportUnit
+To upload `ReportUnit` resource to the server you can use next API, which allows you to do it in a very simple way. You can add JRXML file and a bunch of various files like images and others as well.
+```java
+ClientReportUnit entity = session.resourcesService()
+    .resource(reportUnit)
+        .withJrxml(file, descriptor)
+        .withNewFile(imgFile, "myFile", imgDescriptor)        
+            .createInFolder("/my/new/folder/")
+                .entity();
+```
 ####Deleting Resources
 You can delete resources in two ways, one for single resources and one for multiple resources. To delete multiple resources at once, specify multiple URIs with the `ResourceSearchParameter.RESOURCE_URI` parameter.
 ```java
@@ -723,12 +867,12 @@ OperationResult result = client
         .delete();
 ```
 ###The Permissions Service
-In the permissions service, the syntax is expanded so that you can specify the resource, the recipient (user name or role name) and the permission value within the URL. This makes it simpler to set permissions because you don’t need to send a resource descriptor to describe the permissions. In order to set, modify, or delete permissions, you must use credentials or login with a user that has “administer” permissions on the target resource.  
-Because a permission can apply to either a user or a role, the permissions service uses the concept of a “recipient”. A recipient specifies whether the permission applies to a user or a role, and gives the ID of the user or role.  
+In the permissions service, the syntax is expanded so that you can specify the resource, the recipient (user name or role name) and the permission value within the URL. This makes it simpler to set permissions because you don’t need to send a resource descriptor to describe the permissions. In order to set, modify, or delete permissions, you must use credentials or login with a user that has “administer” permissions on the target resource.
+Because a permission can apply to either a user or a role, the permissions service uses the concept of a “recipient”. A recipient specifies whether the permission applies to a user or a role, and gives the ID of the user or role.
 There are two qualities of a permission:
 * The assigned permission is one that is set explicitly for a given resource and a given user or role. Not all permissions are assigned, in which case the permission is inherited from the parent folder.
 * The effective permission is the permission that is being enforced, whether it is assigned or inherited.
- 
+
 ####Viewing Multiple Permissions
 
 ```java
@@ -842,7 +986,7 @@ The `search()` method is used for more advanced job searches. Some field of the 
 ```java
 Job criteria = new Job);
 criteria.setLabel("updatedLabel");
-criteria.setAlert(new JobAlert());        
+criteria.setAlert(new JobAlert());
 
 OperationResult<JobSummaryListWrapper> result = client
         .authenticate("jasperadmin", "jasperadmin")
@@ -1067,6 +1211,37 @@ OperationResult<StateDto> operationResult =
 
 StateDto state = operationResult.getEntity();
 ```
+
+####DomainMetadata Service
+The DomainMetadata Service gives access to the sets and items exposed by a Domain for use in Ad
+Hoc reports. Items are database fields exposed by the Domain, after all joins, filters, and calculated fields have
+been applied to the database tables selected in the Domain. Sets are groups of items, arranged by the Domain
+creator for use by report creators.
+
+A limitation of the DomainMetadata Service only allows it to operate on Domains with a single data
+island. A data island is a group of fields that are all related by joins between the database tables in the
+Domain. Fields that belong to tables that are not joined in the Domain belong to separate data islands.
+
+The following code retrieves metadata of Domain.
+```java
+DomainMetaData domainMetaData = session.domainService()
+        .domainMetadata("/Foodmart_Sales")
+        .retrieve()
+        .getEntity();
+```
+
+####QueryExecutor Service
+In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
+For now the only resource that supports queries is a Domain.
+
+The following code executes query and retrieves a result of execution as QueryResult entity.
+```java
+QueryResult queryResult = session.queryExecutorService()
+        .query(queryFromXmlFile, "/organizations/organization_1/Domains/Simple_Domain")
+        .execute()
+        .getEntity();
+```
+
 REST Server Information
 ========================
 Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
@@ -1083,7 +1258,7 @@ You can access each value separately with the following code:
 ```java
 OperationResult<String> result = client
         .authenticate("jasperadmin", "jasperadmin")
-        .serverInfoService() 
+        .serverInfoService()
         .edition();
         //.version();
         //.licenseType();
@@ -1097,9 +1272,8 @@ OperationResult<String> result = client
 String edition = result.getEntity();
 ```
 
-Exception handling
-=====================
-You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method. 
+###Exception handling
+You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method.
 
 JRS REST client exception handling system is based on `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` interface. Its `void handleError(Response response)` method is responsible for all error handling logic. You can use existed handlers, define your own handlers or extend existed handlers.
 
@@ -1108,8 +1282,7 @@ JRS REST client exception handling system is based on `com.jaspersoft.jasperserv
 2. You can create your own handler by implementing `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler`.
 3. You can extend `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` or any other handler and override its methods `void handleBodyError(Response response)` and/or `void handleStatusCodeError(Response response, String overridingMessage)`.
 
-Asynchronous API
-==================
+###Asynchronous API
 Each operation which requests server has its asynchronous brother which has same name with `async` prefix, e. g. `get() -> asyncGet()`. Each of these operations take a `com.jaspersoft.jasperserver.jaxrs.client.core.Callback` implementation with `execute()` method implemented. `execute()` takes an `OperationResult` instance as a parameter. The `execute` method is called when the response from server came.
 Each of these `async` operations returns `com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution` instance which gives you ability to cancel execution.
 Example:
@@ -1124,7 +1297,7 @@ RequestExecution requestExecution = session
                 System.out.println(data.getEntity());
             }
         });
-        
+
         requestExecution.cancel();
 ```
 
@@ -1155,7 +1328,7 @@ RestClientConfiguration configuration = RestClientConfiguration.loadConfiguratio
 ```
 
 ###Possible issues
-1. <strong>Deploying jrs-rest-client within web app to any Appplication Server, e.g. JBoss, Glassfish, WebSphere etc.</strong>  
+1. <strong>Deploying jrs-rest-client within web app to any Appplication Server, e.g. JBoss, Glassfish, WebSphere etc.</strong>
 jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your application server does not support this version you will get an error. To solve this problem you need to add to your application a deployment configuration specific for your AS where you need to exclude modules with old JAX-RS API version. Example of such descriptor for JBoss AS you can find below:
 
 ```xml
@@ -1191,16 +1364,16 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
         <dependency>
             <groupId>com.jaspersoft</groupId>
             <artifactId>jrs-rest-java-client</artifactId>
-            <version>5.5.0.1-ALPHA</version>
+            <version>5.5.0.2-ALPHA-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
     <repositories>
 
         <repository>
-            <id>jaspersoft-clients-releases</id>
-            <name>Jaspersoft clients releases</name>
-            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jaspersoft-clients-releases</url>
+            <id>jaspersoft-clients-snapshots</id>
+            <name>Jaspersoft clients snapshots</name>
+            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jaspersoft-clients-snapshots</url>
         </repository>
 
     </repositories>
@@ -1215,15 +1388,14 @@ Unless you have purchased a commercial license agreement from Jaspersoft,
 the following license terms apply:
 
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
+it under the terms of the GNU Lesser General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero  General Public License for more details.
+GNU Lesser General Public License for more details.
 
-You should have received a copy of the GNU Affero General Public  License
+You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
-

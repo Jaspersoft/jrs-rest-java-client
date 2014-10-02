@@ -104,8 +104,8 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
         return task;
     }
 
-    public ExportExecutionRequestBuilder export(String exportOutput) {
-        return new ExportExecutionRequestBuilder(sessionStorage, requestId, exportOutput);
+    public ExportExecutionRequestBuilder export(String exportId) {
+        return new ExportExecutionRequestBuilder(sessionStorage, requestId, exportId);
     }
 
     public OperationResult<ExportExecutionDescriptor> runExport(ExportExecutionOptions exportExecutionOptions) {
