@@ -195,8 +195,8 @@ public class SingleResourceAdapter extends AbstractAdapter {
      * Allows to upload resource with MultiPart request.
      *
      * @param multipartResource form
-     * @param clazz entity class
-     * @param <T> type of entity class
+     * @param clazz             entity class
+     * @param <T>               type of entity class
      * @return result instance
      */
     public <T> OperationResult<T> uploadMultipartResource(FormDataMultiPart multipartResource, Class<T> clazz) {
@@ -205,9 +205,17 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return request.post(multipartResource);
     }
 
-    public <T> OperationResult<T> get(Class<T> clazz){
+    public <T> OperationResult<T> get(Class<T> clazz) {
         JerseyRequest<T> request = buildRequest(sessionStorage, clazz, new String[]{"/resources", resourceUri});
         return request.get();
+    }
+
+    public OperationResult<ClientFile> updateFile(File file, ClientFile.FileType fileType,
+                                                  String label,
+                                                  String description) {
+        FormDataMultiPart form = prepareUploadForm(file, fileType, label, description);
+        JerseyRequest<ClientFile> request = prepareUploadFileRequest();
+        return request.put(form);
     }
 
     public OperationResult<ClientFile> uploadFile(File fileContent,
@@ -220,10 +228,10 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncUploadFile(final File fileContent,
-                                                 final ClientFile.FileType fileType,
-                                                 final String label,
-                                                 final String description,
-                                                 final Callback<OperationResult<ClientFile>, R> callback) {
+                                                final ClientFile.FileType fileType,
+                                                final String label,
+                                                final String description,
+                                                final Callback<OperationResult<ClientFile>, R> callback) {
         final FormDataMultiPart form = prepareUploadForm(fileContent, fileType, label, description);
         final JerseyRequest<ClientFile> request = prepareUploadFileRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
@@ -236,16 +244,13 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return task;
     }
 
-    private FormDataMultiPart prepareUploadForm(File fileContent,
-                                                ClientFile.FileType fileType,
-                                                String label,
-                                                String description) {
+    private FormDataMultiPart prepareUploadForm(File fileContent, ClientFile.FileType fileType,
+                                                String label, String description) {
         FormDataMultiPart form = new FormDataMultiPart();
-        form
-                .field("data", fileContent, MediaType.WILDCARD_TYPE)
-                .field("label", label)
-                .field("description", description)
-                .field("type", fileType.name());
+        form.field("data", fileContent, MediaType.WILDCARD_TYPE);
+        form.field("label", label);
+        form.field("description", description);
+        form.field("type", fileType.name());
         return form;
     }
 

@@ -113,7 +113,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
         verifyNoMoreInteractions(resultMock);
     }
 
-    @Test
+    @Test (enabled = false)
     /**
      * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.BatchResourcesAdapter#asyncSearch(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
      */
