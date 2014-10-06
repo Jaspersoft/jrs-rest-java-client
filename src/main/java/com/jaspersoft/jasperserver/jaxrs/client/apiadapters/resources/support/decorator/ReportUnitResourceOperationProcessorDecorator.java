@@ -32,7 +32,6 @@ import javax.ws.rs.core.MediaType;
  * @author Alexander Krasnyanskiy
  */
 public abstract class ReportUnitResourceOperationProcessorDecorator {
-
     protected CommonOperationProcessorImpl<ClientReportUnit> processor;
     protected ClientReportUnit reportUnit;
     protected FormDataMultiPart multipart;
@@ -45,5 +44,17 @@ public abstract class ReportUnitResourceOperationProcessorDecorator {
 
     public OperationResult<ClientReportUnit> createInFolder(String path) {
         return processor.create(multipart, new MediaType("application", "repository.reportUnit+json"), path);
+    }
+
+    public CommonOperationProcessorImpl<ClientReportUnit> getProcessor() {
+        return processor;
+    }
+
+    public ClientReportUnit getReportUnit() {
+        return reportUnit;
+    }
+
+    public FormDataMultiPart getMultipart() {
+        return multipart;
     }
 }

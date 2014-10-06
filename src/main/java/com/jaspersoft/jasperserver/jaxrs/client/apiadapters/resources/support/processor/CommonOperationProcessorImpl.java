@@ -55,4 +55,8 @@ public class CommonOperationProcessorImpl<ResourceType> implements CommonOperati
     public SessionStorage getSessionStorage() {
         return sessionStorage;
     }
+
+    public ResourceType getResource() {
+        return resource;
+    }
 }

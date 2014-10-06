@@ -85,12 +85,4 @@ public class BatchResourcesAdapter extends AbstractAdapter {
         request.addParams(params);
         return request;
     }
-
-//    public MultivaluedMap<String, String> getParams() {
-//        return params;
-//    }
-
-//    public void setParams(MultivaluedMap<String, String> params) {
-//        this.params = params;
-//    }
 }
