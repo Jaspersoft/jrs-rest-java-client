@@ -113,11 +113,6 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         return this;
     }
 
-//    public JerseyRequest<ResponseType> addPathSegment(String pathSegment){
-//        usersWebTarget = usersWebTarget.path(pathSegment);
-//        return this;
-//    }
-
     @Override
     public OperationResult<ResponseType> get() throws JSClientWebException {
         Invocation.Builder request = buildRequest();
@@ -180,7 +175,6 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
             errorHandler.handleError(response);
 
         OperationResult<ResponseType> result = operationResultFactory.getOperationResult(response, responseClass);
-        //this.sessionStorage.setSessionId(result.getSessionId());
         return result;
     }
 
@@ -259,10 +253,6 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         return errorHandler;
     }
 
-//    public void setErrorHandler(ErrorHandler errorHandler) {
-//        this.errorHandler = errorHandler;
-//    }
-
     public MultivaluedMap<String, String> getHeaders() {
         return headers;
     }
@@ -271,10 +261,6 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         return usersWebTarget;
     }
 
-//    public void setUsersWebTarget(WebTarget usersWebTarget) {
-//        this.usersWebTarget = usersWebTarget;
-//    }
-
     public String getContentType() {
         return contentType;
     }
@@ -282,8 +268,4 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     public String getAcceptType() {
         return acceptType;
     }
-
-//    public void setAcceptType(String acceptType) {
-//        this.acceptType = acceptType;
-//    }
 }

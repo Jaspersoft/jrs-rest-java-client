@@ -33,17 +33,18 @@ import java.io.InputStream;
  */
 public class MondrianConnectionResourceBuilder extends MondrianConnectionResourceOperationProcessorDecorator {
     public MondrianConnectionResourceBuilder(ClientMondrianConnection entity, SessionStorage storage) {
-        super(storage, entity);
+        super(entity, storage);
     }
 
     public MondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, ClientFile schemaRef) {
-        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
+        super.multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
         super.connection.setSchema(schemaRef);
         return this;
     }
 
+    @Deprecated
     public MondrianConnectionResourceBuilder withMondrianSchema(InputStream schema) {
-        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
+        super.multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
         return this;
     }
 

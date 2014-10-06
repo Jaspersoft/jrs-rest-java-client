@@ -36,7 +36,7 @@ public abstract class MondrianConnectionResourceOperationProcessorDecorator {
     protected ClientMondrianConnection connection;
     protected FormDataMultiPart multipart;
 
-    public MondrianConnectionResourceOperationProcessorDecorator(SessionStorage sessionStorage, ClientMondrianConnection connection) {
+    public MondrianConnectionResourceOperationProcessorDecorator(ClientMondrianConnection connection, SessionStorage sessionStorage) {
         this.processor = new CommonOperationProcessorImpl(connection, connection.getClass(), sessionStorage);
         this.multipart = new FormDataMultiPart();
         this.connection = connection;
@@ -46,4 +46,15 @@ public abstract class MondrianConnectionResourceOperationProcessorDecorator {
         return processor.create(multipart, new MediaType("application", "repository.mondrianConnection+xml"), path);
     }
 
+    public CommonOperationProcessorImpl<ClientMondrianConnection> getProcessor() {
+        return processor;
+    }
+
+    public ClientMondrianConnection getConnection() {
+        return connection;
+    }
+
+    public FormDataMultiPart getMultipart() {
+        return multipart;
+    }
 }

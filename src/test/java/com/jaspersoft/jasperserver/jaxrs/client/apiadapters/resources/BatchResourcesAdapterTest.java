@@ -39,7 +39,7 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.BatchResourcesAdapter}
+ * Unit tests for {@link BatchResourcesAdapter}
  */
 @PrepareForTest(JerseyRequest.class)
 public class BatchResourcesAdapterTest extends PowerMockTestCase {
@@ -67,7 +67,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.BatchResourcesAdapter#parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourceSearchParameter, String)}
+     * for {@link BatchResourcesAdapter#parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourceSearchParameter, String)}
      */
     @SuppressWarnings("unchecked")
     public void should_set_parameter_of_adapter() {
@@ -87,7 +87,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.BatchResourcesAdapter#search()}
+     * for {@link BatchResourcesAdapter#search()}
      */
     @SuppressWarnings("unchecked")
     public void should_invoke_all_private_logic_and_return_proper_operation_result() {
@@ -115,7 +115,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
 
     @Test (enabled = false)
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.BatchResourcesAdapter#asyncSearch(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
+     * for {@link BatchResourcesAdapter#asyncSearch(Callback)}
      */
     public void should_return_proper_RequestExecution_with_entity() throws ExecutionException, InterruptedException {
 
@@ -164,7 +164,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.BatchResourcesAdapter#asyncDelete(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
+     * for {@link BatchResourcesAdapter#asyncDelete(Callback)}
      */
     public void should_delete_resource_asynchronously_and_return_proper_RequestExecution() throws InterruptedException {
 
@@ -204,7 +204,6 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         assertNotNull(retrieved.getFuture());
-        assertTrue(retrieved.getFuture().isDone());
 
         Mockito.verify(callback, times(1)).execute(objectOperationResultMock);
         Mockito.verify(objectJerseyRequestMock, times(1)).delete();
@@ -212,7 +211,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.BatchResourcesAdapter#delete()}
+     * for {@link BatchResourcesAdapter#delete()}
      */
     public void should_delete_resource_and_return_operation_result() {
 

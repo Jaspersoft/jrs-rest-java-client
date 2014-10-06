@@ -34,7 +34,6 @@ import java.util.List;
  * @author Alexander Krasnyanskiy
  */
 public class SecureMondrianConnectionResourceBuilder extends SecureMondrianConnectionResourceOperationProcessorDecorator {
-
     private int schemaCounter = 0;
 
     public SecureMondrianConnectionResourceBuilder(ClientSecureMondrianConnection entity, SessionStorage storage) {
@@ -42,33 +41,33 @@ public class SecureMondrianConnectionResourceBuilder extends SecureMondrianConne
     }
 
     public SecureMondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, ClientFile schemaDescriptor) {
-        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
+        super.multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
         super.connection.setSchema(schemaDescriptor);
         return this;
     }
 
     public SecureMondrianConnectionResourceBuilder withMondrianSchema(String schema, ClientFile schemaDescriptor) {
-        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
+        super.multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
         super.connection.setSchema(schemaDescriptor);
         return this;
     }
 
     @Deprecated
     public SecureMondrianConnectionResourceBuilder withMondrianSchema(InputStream schema) {
-        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
+        super.multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
         return this;
     }
 
     @Deprecated
     public SecureMondrianConnectionResourceBuilder withMondrianSchema(String schema) {
-        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
+        super.multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
         return this;
     }
 
     public SecureMondrianConnectionResourceBuilder withAccessGrantSchemasAsStream(List<InputStream> schemas, List<ClientReferenceableFile> schemaDescriptors) {
         super.connection.setAccessGrants(schemaDescriptors);
         for (InputStream schema : schemas) {
-            multipart.field("accessGrantSchemas.accessGrantSchema[" + schemaCounter + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
+            super.multipart.field("accessGrantSchemas.accessGrantSchema[" + (this.schemaCounter++) + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
         }
         return this;
     }
@@ -76,7 +75,7 @@ public class SecureMondrianConnectionResourceBuilder extends SecureMondrianConne
     public SecureMondrianConnectionResourceBuilder withAccessGrantSchemasAsString(List<String> schemas, List<ClientReferenceableFile> schemaDescriptors) {
         super.connection.setAccessGrants(schemaDescriptors);
         for (String schema : schemas) {
-            multipart.field("accessGrantSchemas.accessGrantSchema[" + schemaCounter + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
+            super.multipart.field("accessGrantSchemas.accessGrantSchema[" + (this.schemaCounter++) + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
         }
         return this;
     }
@@ -84,7 +83,7 @@ public class SecureMondrianConnectionResourceBuilder extends SecureMondrianConne
     @Deprecated
     public SecureMondrianConnectionResourceBuilder withAccessGrantSchemas(List<InputStream> schemas) {
         for (InputStream schema : schemas) {
-            multipart.field("accessGrantSchemas.accessGrantSchema[" + schemaCounter + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
+            super.multipart.field("accessGrantSchemas.accessGrantSchema[" + (this.schemaCounter++) + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
         }
         return this;
     }
@@ -92,7 +91,7 @@ public class SecureMondrianConnectionResourceBuilder extends SecureMondrianConne
     @Deprecated
     public SecureMondrianConnectionResourceBuilder withAccessGrantSchemasAsString(List<String> schemas) {
         for (String schema : schemas) {
-            multipart.field("accessGrantSchemas.accessGrantSchema[" + schemaCounter + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
+            super.multipart.field("accessGrantSchemas.accessGrantSchema[" + (this.schemaCounter++) + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
         }
         return this;
     }
