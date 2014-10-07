@@ -62,7 +62,7 @@ public enum ResourceSearchParameter {
      *
      * Type/Value: viewed|modified
      */
-    ACCES_TYPE("accessType"),
+    ACCESS_TYPE("accessType"),
 
     /**
      * When set inFolder true, results include nested local resources (in _files) as if they
