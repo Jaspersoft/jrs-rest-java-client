@@ -21,11 +21,15 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.config.ConfigurationReaderAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.core.config.ConfigType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.config.ServerMetaData;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -48,7 +52,46 @@ public class RestClientConfiguration {
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
-        setJasperReportsServerUrl(jasperReportsServerUrl);
+        setUrl(jasperReportsServerUrl);
+    }
+
+    /**
+     * Search for config file config.{json/xml/yml} in the classpath
+     *
+     * @param type XML/YML/JSON
+     * @throws IOException
+     */
+    public RestClientConfiguration(ConfigType type) {
+        this();
+        InputStream configFile = RestClientConfiguration.class.getResourceAsStream("/config." + type);
+        ServerMetaData metaData;
+        try {
+            metaData = new ConfigurationReaderAdapter().configure(configFile, type).getServer();
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        if (metaData.getUrl() != null) setUrl(metaData.getUrl());
+        if (metaData.getVersion() != null) jrsVersion = metaData.getVersion();
+        if (metaData.getHeaders() != null && metaData.getHeaders().getContentType() != null) contentMimeType = metaData.getHeaders().getContentType();
+        if (metaData.getHeaders() != null && metaData.getHeaders().getAccept() != null) acceptMimeType = metaData.getHeaders().getAccept();
+        if (metaData.getTimeout() != null && metaData.getTimeout().getConnection() != null) connectionTimeout = metaData.getTimeout().getConnection();
+        if (metaData.getTimeout() != null && metaData.getTimeout().getRead() != null) readTimeout = metaData.getTimeout().getRead();
+    }
+
+    public RestClientConfiguration(InputStream configFile, ConfigType type) {
+        this();
+        ServerMetaData metaData = null;
+        try {
+            metaData = new ConfigurationReaderAdapter().configure(configFile, type).getServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (metaData.getUrl() != null) setUrl(metaData.getUrl());
+        if (metaData.getVersion() != null) jrsVersion = metaData.getVersion();
+        if (metaData.getHeaders() != null && metaData.getHeaders().getContentType() != null) contentMimeType = metaData.getHeaders().getContentType();
+        if (metaData.getHeaders() != null && metaData.getHeaders().getAccept() != null) acceptMimeType = metaData.getHeaders().getAccept();
+        if (metaData.getTimeout() != null && metaData.getTimeout().getConnection() != null) connectionTimeout = metaData.getTimeout().getConnection();
+        if (metaData.getTimeout() != null && metaData.getTimeout().getRead() != null) readTimeout = metaData.getTimeout().getRead();
     }
 
     public RestClientConfiguration() {
@@ -73,7 +116,7 @@ public class RestClientConfiguration {
         return jasperReportsServerUrl;
     }
 
-    public void setJasperReportsServerUrl(String jasperReportsServerUrl) {
+    public void setUrl(String jasperReportsServerUrl) {
         Matcher matcher = URL_PATTERN.matcher(jasperReportsServerUrl);
         if (!matcher.matches())
             throw new IllegalArgumentException("Given parameter is not a URL");
@@ -132,7 +175,7 @@ public class RestClientConfiguration {
         Properties properties = loadProperties(path);
 
         RestClientConfiguration configuration = new RestClientConfiguration();
-        configuration.setJasperReportsServerUrl(properties.getProperty("url"));
+        configuration.setUrl(properties.getProperty("url"));
 
         String connectionTimeout = properties.getProperty("connectionTimeout");
         if (connectionTimeout != null && !connectionTimeout.equals(""))
@@ -167,5 +210,4 @@ public class RestClientConfiguration {
         }
         return properties;
     }
-
 }

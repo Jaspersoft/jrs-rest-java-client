@@ -29,5 +29,5 @@ public enum JRSVersion implements Comparable<JRSVersion> {
     v5_1_0,
     v5_2_0,
     v5_5_0,
-    v5_6_1
+    v, v5_6_1
 }

@@ -58,6 +58,4 @@ public enum ResourceServiceParameter {
     public String getName() {
         return name;
     }
-
-
 }

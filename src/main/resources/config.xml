@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <server>
+        <url>http://172.28.146.32:8080/jasperserver-pro</url>
+        <version>4.7.0</version>
+        <headers>
+            <accept>JSON</accept>
+            <content-type>JSON</content-type>
+        </headers>
+        <timeout>
+            <connection>5000</connection>
+            <read>1000</read>
+        </timeout>
+    </server>
+</config>

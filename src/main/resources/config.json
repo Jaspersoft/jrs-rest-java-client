@@ -1,0 +1,14 @@
+{
+    "server": {
+        "url": "http://172.28.146.32:8080/jasperserver-pro",
+        "version": "5.0.0",
+        "headers": {
+            "accept": "JSON",
+            "content-type": "JSON"
+        },
+        "timeout": {
+            "connection": 5500,
+            "read": 1000
+        }
+    }
+}

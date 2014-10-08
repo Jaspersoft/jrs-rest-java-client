@@ -1,0 +1,17 @@
+#
+# REST Client Configuration
+#
+# @author Alexander Krasnyanskiy
+#
+---
+server:
+  url: http://127.0.0.1:8080/jasperserver-pro
+  version: 5.6.1
+
+  headers:
+    accept: XML
+    content-type: XML
+
+  timeout:
+    connection: 5500
+    read: 1000
