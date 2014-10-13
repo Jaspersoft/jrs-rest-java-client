@@ -7,3 +7,11 @@
 server:
   url: http://localhost:4444/jasperserver-pro
   version: 5.6.1
+
+  headers:
+    accept: JSON
+    content-type: JSON
+
+  timeout:
+    connection: 5500
+    read: 1000

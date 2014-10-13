@@ -23,8 +23,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
@@ -105,10 +103,8 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     private String buildJson(Object object) {
 
         ObjectMapper mapper = new ObjectMapper();
-        SerializationConfig serializationConfig = mapper.getSerializationConfig();
-        serializationConfig = serializationConfig.withSerializationInclusion(JsonInclude.Include.NON_NULL);
         AnnotationIntrospector introspector = new JaxbAnnotationIntrospector(TypeFactory.defaultInstance());
-        mapper.setSerializationConfig(serializationConfig);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.setAnnotationIntrospector(introspector);
 
         try {

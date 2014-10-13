@@ -14,7 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <fasterxml.version>2.4.2</fasterxml.version>
+        <fasterxml.version>2.3.2</fasterxml.version>
         <jersey.version>2.13</jersey.version>
     </properties>
 
@@ -73,11 +73,13 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
             <version>${powermock.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-easymock</artifactId>
             <version>${powermock.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- EasyMock -->
@@ -85,13 +87,14 @@
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>3.2</version>
+            <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.owlike</groupId>
-            <artifactId>genson</artifactId>
-            <version>0.99</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.owlike</groupId>-->
+            <!--<artifactId>genson</artifactId>-->
+            <!--<version>0.99</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
@@ -108,12 +111,12 @@
             <version>2.4</version>
         </dependency>
 
-        <!-- Yml support -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${fasterxml.version}</version>
-        </dependency>
+        <!-- Yml util -->
+        <!--<dependency>-->
+            <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+            <!--<artifactId>jackson-databind</artifactId>-->
+            <!--<version>${fasterxml.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
@@ -166,7 +169,7 @@
                     <instrumentation>
                         <excludes>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/dto/**</exclude>
-                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/support/**</exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/util/**</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>

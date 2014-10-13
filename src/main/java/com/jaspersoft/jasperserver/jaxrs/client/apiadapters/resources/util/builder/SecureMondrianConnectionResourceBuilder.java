@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.builder;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.decorator.SecureMondrianConnectionResourceOperationProcessorDecorator;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.decorator.SecureMondrianConnectionResourceOperationProcessorDecorator;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 import javax.ws.rs.core.MediaType;

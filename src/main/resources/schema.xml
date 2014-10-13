@@ -1,0 +1,1050 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.jaspersoft.com/2007/SL/XMLSchema" version="1.0">
+    <itemGroups>
+        <itemGroup descriptionId="supermart.sales_fact_ALL.description" id="_sales_fact_ALL" labelId="supermart.sales_fact_ALL.label" resourceId="sales_join">
+            <itemGroups>
+                <itemGroup descriptionId="supermart.product.description" id="sales__product" labelId="supermart.product.label" resourceId="sales_join">
+                    <items>
+                        <item descriptionId="supermart.product.brand_name.description" id="sales__product__brand_name" labelId="supermart.product.brand_name.label" resourceId="sales_join.product1.brand_name" />
+                        <item descriptionId="supermart.product.product_name.description" id="sales__product__product_name" labelId="supermart.product.product_name.label" resourceId="sales_join.product1.product_name" />
+                        <item descriptionId="supermart.product.SKU.description" id="sales__product__SKU" labelId="supermart.product.SKU.label" resourceId="sales_join.product1.sku" />
+                        <item descriptionId="supermart.product.SRP.description" id="sales__product__SRP" labelId="supermart.product.SRP.label" resourceId="sales_join.product1.srp" />
+                        <item descriptionId="supermart.product.gross_weight.description" id="sales__product__gross_weight" labelId="supermart.product.gross_weight.label" resourceId="sales_join.product1.gross_weight" />
+                        <item descriptionId="supermart.product.net_weight.description" id="sales__product__net_weight" labelId="supermart.product.net_weight.label" resourceId="sales_join.product1.net_weight" />
+                        <item descriptionId="supermart.product.recyclable_package.description" id="sales__product__recyclable_package" labelId="supermart.product.recyclable_package.label" resourceId="sales_join.product1.recyclable_package" />
+                        <item descriptionId="supermart.product.low_fat.description" id="sales__product__low_fat" labelId="supermart.product.low_fat.label" resourceId="sales_join.product1.low_fat" />
+                        <item descriptionId="supermart.product.units_per_case.description" id="sales__product__units_per_case" labelId="supermart.product.units_per_case.label" resourceId="sales_join.product1.units_per_case" />
+                        <item descriptionId="supermart.product.cases_per_pallet.description" id="sales__product__cases_per_pallet" labelId="supermart.product.cases_per_pallet.label" resourceId="sales_join.product1.cases_per_pallet" />
+                        <item descriptionId="supermart.product.shelf_width.description" id="sales__product__shelf_width" labelId="supermart.product.shelf_width.label" resourceId="sales_join.product1.shelf_width" />
+                        <item descriptionId="supermart.product.shelf_height.description" id="sales__product__shelf_height" labelId="supermart.product.shelf_height.label" resourceId="sales_join.product1.shelf_height" />
+                        <item descriptionId="supermart.product.shelf_depth.description" id="sales__product__shelf_depth" labelId="supermart.product.shelf_depth.label" resourceId="sales_join.product1.shelf_depth" />
+                    </items>
+                </itemGroup>
+                <itemGroup descriptionId="supermart.store.description" id="sales__store" labelId="supermart.store.label" resourceId="sales_join">
+                    <itemGroups>
+                        <itemGroup descriptionId="supermart.store_contact.description" id="sales__store__store_contact" labelId="supermart.store_contact.label" resourceId="sales_join">
+                            <items>
+                                <item descriptionId="supermart.store.store_number.description" id="sales__store__store_contact__store_number" labelId="supermart.store.store_number.description" resourceId="sales_join.store1.store_number" />
+                                <item descriptionId="supermart.store.store_street_address.description" id="sales__store__store_contact__store_street_address" labelId="supermart.store.store_street_address.label" resourceId="sales_join.store1.store_street_address" />
+                                <item descriptionId="supermart.store.store_city.description" id="sales__store__store_contact__store_city" labelId="supermart.store.store_city.label" resourceId="sales_join.store1.store_city" />
+                                <item descriptionId="supermart.store.store_state.description" id="sales__store__store_contact__store_state" labelId="supermart.store.store_state.label" resourceId="sales_join.store1.store_state" />
+                                <item descriptionId="supermart.store.store_postal_code.description" id="sales__store__store_contact__store_postal_code" labelId="supermart.store.store_postal_code.label" resourceId="sales_join.store1.store_postal_code" />
+                                <item descriptionId="supermart.store.store_country.description" id="sales__store__store_contact__store_country" labelId="supermart.store.store_country.label" resourceId="sales_join.store1.store_country" />
+                                <item descriptionId="supermart.store.store_manager.description" id="sales__store__store_contact__store_manager" labelId="supermart.store.store_manager.label" resourceId="sales_join.store1.store_manager" />
+                                <item descriptionId="supermart.store.store_phone.description" id="sales__store__store_contact__store_phone" labelId="supermart.store.store_phone.label" resourceId="sales_join.store1.store_phone" />
+                                <item descriptionId="supermart.store.store_fax.description" id="sales__store__store_contact__store_fax" labelId="supermart.store.store_fax.label" resourceId="sales_join.store1.store_fax" />
+                            </items>
+                        </itemGroup>
+                        <itemGroup descriptionId="supermart.region.description" id="sales__store__region" labelId="supermart.region.label" resourceId="sales_join">
+                            <items>
+                                <item descriptionId="supermart.region.sales_city.description" id="sales__store__region__sales_city" labelId="supermart.region.sales_city.label" resourceId="sales_join.region11.sales_city" />
+                                <item descriptionId="supermart.region.sales_state_province.description" id="sales__store__region__sales_state_province" labelId="supermart.region.sales_state_province.label" resourceId="sales_join.region11.sales_state_province" />
+                                <item descriptionId="supermart.region.sales_district.description" id="sales__store__region__sales_district" labelId="supermart.region.sales_district.label" resourceId="sales_join.region11.sales_district" />
+                                <item descriptionId="supermart.region.sales_region.description" id="sales__store__region__sales_region" labelId="supermart.region.sales_region.label" resourceId="sales_join.region11.sales_region" />
+                                <item descriptionId="supermart.region.sales_country.description" id="sales__store__region__sales_country" labelId="supermart.region.sales_country.label" resourceId="sales_join.region11.sales_country" />
+                            </items>
+                        </itemGroup>
+                        <itemGroup descriptionId="supermart.store_features.description" id="sales__store__store_features" labelId="supermart.store_features.label" resourceId="sales_join">
+                            <items>
+                                <item descriptionId="supermart.store.first_opened_date.description" id="sales__store__store_features__first_opened_date" labelId="supermart.store.first_opened_date.label" resourceId="sales_join.store1.first_opened_date" />
+                                <item descriptionId="supermart.store.last_remodel_date.description" id="sales__store__store_features__last_remodel_date" labelId="supermart.store.last_remodel_date.label" resourceId="sales_join.store1.last_remodel_date" />
+                                <item descriptionId="supermart.store.store_sqft.description" id="sales__store__store_features__store_sqft" labelId="supermart.store.store_sqft.label" resourceId="sales_join.store1.store_sqft" />
+                                <item descriptionId="supermart.store.grocery_sqft.description" id="sales__store__store_features__grocery_sqft" labelId="supermart.store.grocery_sqft.label" resourceId="sales_join.store1.grocery_sqft" />
+                                <item descriptionId="supermart.store.frozen_sqft.description" id="sales__store__store_features__frozen_sqft" labelId="supermart.store.frozen_sqft.label" resourceId="sales_join.store1.frozen_sqft" />
+                                <item descriptionId="supermart.store.meat_sqft.description" id="sales__store__store_features__meat_sqft" labelId="supermart.store.meat_sqft.label" resourceId="sales_join.store1.meat_sqft" />
+                                <item descriptionId="supermart.store.coffee_bar.description" id="sales__store__store_features__coffee_bar" labelId="supermart.store.coffee_bar.label" resourceId="sales_join.store1.coffee_bar" />
+                                <item descriptionId="supermart.store.video_store.description" id="sales__store__store_features__video_store" labelId="supermart.store.video_store.label" resourceId="sales_join.store1.video_store" />
+                                <item descriptionId="supermart.store.salad_bar.description" id="sales__store__store_features__salad_bar" labelId="supermart.store.salad_bar.label" resourceId="sales_join.store1.salad_bar" />
+                                <item descriptionId="supermart.store.prepared_food.description" id="sales__store__store_features__prepared_food" labelId="supermart.store.prepared_food.label" resourceId="sales_join.store1.prepared_food" />
+                                <item descriptionId="supermart.store.florist.description" id="sales__store__store_features__florist" labelId="supermart.store.florist.label" resourceId="sales_join.store1.florist" />
+                            </items>
+                        </itemGroup>
+                    </itemGroups>
+                    <items>
+                        <item descriptionId="supermart.store.store_type.description" id="sales__store__store_type" labelId="supermart.store.store_type.label" resourceId="sales_join.store1.store_type" />
+                        <item descriptionId="supermart.store.store_name.description" id="sales__store__store_name" labelId="supermart.store.store_name.label" resourceId="sales_join.store1.store_name" />
+                    </items>
+                </itemGroup>
+            </itemGroups>
+            <items>
+                <item descriptionId="supermart.sales_fact_1998.store_sales.description" id="sales_fact_ALL__store_sales_98" labelId="supermart.sales_fact_1998.store_sales.label" resourceId="sales_join.sales_fact_1998_1.store_sales" />
+                <item descriptionId="supermart.sales_fact_1998.store_cost.description" id="sales_fact_ALL__store_cost_98" labelId="supermart.sales_fact_1998.store_cost.label" resourceId="sales_join.sales_fact_1998_1.store_cost" />
+                <item descriptionId="supermart.sales_fact_1998.unit_sales.description" id="sales_fact_ALL__unit_sales_98" labelId="supermart.sales_fact_1998.unit_sales.label" resourceId="sales_join.sales_fact_1998_1.unit_sales" />
+            </items>
+        </itemGroup>
+        <itemGroup descriptionId="supermart.inventory_fact_ALL.description" id="inventory_fact_ALL" labelId="supermart.inventory_fact_ALL.label" resourceId="inv_join">
+            <itemGroups>
+                <itemGroup descriptionId="supermart.store.description" id="inv_store" labelId="supermart.store.label" resourceId="inv_join">
+                    <itemGroups>
+                        <itemGroup descriptionId="supermart.store_contact.description" id="inv_store__store_contact" labelId="supermart.store_contact.label" resourceId="inv_join">
+                            <items>
+                                <item descriptionId="supermart.store.store_number.description" id="inv_store__store_contact__store_number" labelId="supermart.store.store_number.description" resourceId="inv_join.store2.store_number" />
+                                <item descriptionId="supermart.store.store_street_address.description" id="inv_store__store_contact__store_street_address" labelId="supermart.store.store_street_address.label" resourceId="inv_join.store2.store_street_address" />
+                                <item descriptionId="supermart.store.store_city.description" id="inv_store__store_contact__store_city" labelId="supermart.store.store_city.label" resourceId="inv_join.store2.store_city" />
+                                <item descriptionId="supermart.store.store_state.description" id="inv_store__store_contact__store_state" labelId="supermart.store.store_state.label" resourceId="inv_join.store2.store_state" />
+                                <item descriptionId="supermart.store.store_postal_code.description" id="inv_store__store_contact__store_postal_code" labelId="supermart.store.store_postal_code.label" resourceId="inv_join.store2.store_postal_code" />
+                                <item descriptionId="supermart.store.store_country.description" id="inv_store__store_contact__store_country" labelId="supermart.store.store_country.label" resourceId="inv_join.store2.store_country" />
+                                <item descriptionId="supermart.store.store_manager.description" id="inv_store__store_contact__store_manager" labelId="supermart.store.store_manager.label" resourceId="inv_join.store2.store_manager" />
+                                <item descriptionId="supermart.store.store_phone.description" id="inv_store__store_contact__store_phone" labelId="supermart.store.store_phone.label" resourceId="inv_join.store2.store_phone" />
+                                <item descriptionId="supermart.store.store_fax.description" id="inv_store__store_contact__store_fax" labelId="supermart.store.store_fax.label" resourceId="inv_join.store2.store_fax" />
+                            </items>
+                        </itemGroup>
+                        <itemGroup descriptionId="supermart.region.description" id="inv_store__region" labelId="supermart.region.label" resourceId="inv_join">
+                            <items>
+                                <item descriptionId="supermart.region.sales_city.description" id="inv_store__region__sales_city" labelId="supermart.region.sales_city.label" resourceId="inv_join.region2.sales_city" />
+                                <item descriptionId="supermart.region.sales_state_province.description" id="inv_store__region__sales_state_province" labelId="supermart.region.sales_state_province.label" resourceId="inv_join.region2.sales_state_province" />
+                                <item descriptionId="supermart.region.sales_district.description" id="inv_store__region__sales_district" labelId="supermart.region.sales_district.label" resourceId="inv_join.region2.sales_district" />
+                                <item descriptionId="supermart.region.sales_region.description" id="inv_store__region__sales_region" labelId="supermart.region.sales_region.label" resourceId="inv_join.region2.sales_region" />
+                                <item descriptionId="supermart.region.sales_country.description" id="inv_store__region__sales_country" labelId="supermart.region.sales_country.label" resourceId="inv_join.region2.sales_country" />
+                            </items>
+                        </itemGroup>
+                        <itemGroup descriptionId="supermart.store_features.description" id="inv_store__store_features" labelId="supermart.store_features.label" resourceId="inv_join">
+                            <items>
+                                <item descriptionId="supermart.store.first_opened_date.description" id="inv_store__store_features__first_opened_date" labelId="supermart.store.first_opened_date.label" resourceId="inv_join.store2.first_opened_date" />
+                                <item descriptionId="supermart.store.last_remodel_date.description" id="inv_store__store_features__last_remodel_date" labelId="supermart.store.last_remodel_date.label" resourceId="inv_join.store2.last_remodel_date" />
+                                <item descriptionId="supermart.store.store_sqft.description" id="inv_store__store_features__store_sqft" labelId="supermart.store.store_sqft.label" resourceId="inv_join.store2.store_sqft" />
+                                <item descriptionId="supermart.store.grocery_sqft.description" id="inv_store__store_features__grocery_sqft" labelId="supermart.store.grocery_sqft.label" resourceId="inv_join.store2.grocery_sqft" />
+                                <item descriptionId="supermart.store.frozen_sqft.description" id="inv_store__store_features__frozen_sqft" labelId="supermart.store.frozen_sqft.label" resourceId="inv_join.store2.frozen_sqft" />
+                                <item descriptionId="supermart.store.meat_sqft.description" id="inv_store__store_features__meat_sqft" labelId="supermart.store.meat_sqft.label" resourceId="inv_join.store2.meat_sqft" />
+                                <item descriptionId="supermart.store.coffee_bar.description" id="inv_store__store_features__coffee_bar" labelId="supermart.store.coffee_bar.label" resourceId="inv_join.store2.coffee_bar" />
+                                <item descriptionId="supermart.store.video_store.description" id="inv_store__store_features__video_store" labelId="supermart.store.video_store.label" resourceId="inv_join.store2.video_store" />
+                                <item descriptionId="supermart.store.salad_bar.description" id="inv_store__store_features__salad_bar" labelId="supermart.store.salad_bar.label" resourceId="inv_join.store2.salad_bar" />
+                                <item descriptionId="supermart.store.prepared_food.description" id="inv_store__store_features__prepared_food" labelId="supermart.store.prepared_food.label" resourceId="inv_join.store2.prepared_food" />
+                                <item descriptionId="supermart.store.florist.description" id="inv_store__store_features__florist" labelId="supermart.store.florist.label" resourceId="inv_join.store2.florist" />
+                            </items>
+                        </itemGroup>
+                    </itemGroups>
+                    <items>
+                        <item descriptionId="supermart.store.store_type.description" id="inv_store__store_type" labelId="supermart.store.store_type.label" resourceId="inv_join.store2.store_type" />
+                        <item descriptionId="supermart.store.store_name.description" id="inv_store__store_name" labelId="supermart.store.store_name.label" resourceId="inv_join.store2.store_name" />
+                    </items>
+                </itemGroup>
+                <itemGroup descriptionId="supermart.product.description" id="inv__product" labelId="supermart.product.label" resourceId="inv_join">
+                    <items>
+                        <item descriptionId="supermart.product.brand_name.description" id="inv__product__brand_name" labelId="supermart.product.brand_name.label" resourceId="inv_join.product2.brand_name" />
+                        <item descriptionId="supermart.product.product_name.description" id="inv__product__product_name" labelId="supermart.product.product_name.label" resourceId="inv_join.product2.product_name" />
+                        <item descriptionId="supermart.product.SKU.description" id="inv__product__SKU" labelId="supermart.product.SKU.label" resourceId="inv_join.product2.sku" />
+                        <item descriptionId="supermart.product.SRP.description" id="inv__product__SRP" labelId="supermart.product.SRP.label" resourceId="inv_join.product2.srp" />
+                        <item descriptionId="supermart.product.gross_weight.description" id="inv__product__gross_weight" labelId="supermart.product.gross_weight.label" resourceId="inv_join.product2.gross_weight" />
+                        <item descriptionId="supermart.product.net_weight.description" id="inv__product__net_weight" labelId="supermart.product.net_weight.label" resourceId="inv_join.product2.net_weight" />
+                        <item descriptionId="supermart.product.recyclable_package.description" id="inv__product__recyclable_package" labelId="supermart.product.recyclable_package.label" resourceId="inv_join.product2.recyclable_package" />
+                        <item descriptionId="supermart.product.low_fat.description" id="inv__product__low_fat" labelId="supermart.product.low_fat.label" resourceId="inv_join.product2.low_fat" />
+                        <item descriptionId="supermart.product.units_per_case.description" id="inv__product__units_per_case" labelId="supermart.product.units_per_case.label" resourceId="inv_join.product2.units_per_case" />
+                        <item descriptionId="supermart.product.cases_per_pallet.description" id="inv__product__cases_per_pallet" labelId="supermart.product.cases_per_pallet.label" resourceId="inv_join.product2.cases_per_pallet" />
+                        <item descriptionId="supermart.product.shelf_width.description" id="inv__product__shelf_width" labelId="supermart.product.shelf_width.label" resourceId="inv_join.product2.shelf_width" />
+                        <item descriptionId="supermart.product.shelf_height.description" id="inv__product__shelf_height" labelId="supermart.product.shelf_height.label" resourceId="inv_join.product2.shelf_height" />
+                        <item descriptionId="supermart.product.shelf_depth.description" id="inv__product__shelf_depth" labelId="supermart.product.shelf_depth.label" resourceId="inv_join.product2.shelf_depth" />
+                    </items>
+                </itemGroup>
+            </itemGroups>
+            <items>
+                <item descriptionId="supermart.inventory_fact_1998.units_ordered.description" id="inventory_fact_ALL__units_ordered_98" labelId="supermart.inventory_fact_1998.units_ordered.label" resourceId="inv_join.inventory_fact_1998_2.units_ordered" />
+                <item descriptionId="supermart.inventory_fact_1998.units_shipped.description" id="inventory_fact_ALL__units_shipped_98" labelId="supermart.inventory_fact_1998.units_shipped.label" resourceId="inv_join.inventory_fact_1998_2.units_shipped" />
+                <item descriptionId="supermart.inventory_fact_1998.warehouse_sales.description" id="inventory_fact_ALL__warehouse_sales_98" labelId="supermart.inventory_fact_1998.warehouse_sales.label" resourceId="inv_join.inventory_fact_1998_2.warehouse_sales" />
+                <item descriptionId="supermart.inventory_fact_1998.warehouse_cost.description" id="inventory_fact_ALL__warehouse_cost_98" labelId="supermart.inventory_fact_1998.warehouse_cost.label" resourceId="inv_join.inventory_fact_1998_2.warehouse_cost" />
+                <item descriptionId="supermart.inventory_fact_1998.supply_time.description" id="inventory_fact_ALL__supply_time_98" labelId="supermart.inventory_fact_1998.supply_time.label" resourceId="inv_join.inventory_fact_1998_2.supply_time" />
+                <item descriptionId="supermart.inventory_fact_1998.store_invoice.description" id="inventory_fact_ALL__store_invoice_98" labelId="supermart.inventory_fact_1998.store_invoice.label" resourceId="inv_join.inventory_fact_1998_2.store_invoice" />
+                <item descriptionId="supermart.inventory_fact_1998.warehouse_profit.description" id="inventory_fact_ALL__warehouse_profit_98" labelId="supermart.inventory_fact_1998.warehouse_profit.label" resourceId="inv_join.inventory_fact_1998_2.warehouse_profit" />
+            </items>
+        </itemGroup>
+        <itemGroup descriptionId="supermart.expense_fact.description" id="expense_fact" labelId="supermart.expense_fact.label" resourceId="exp_join">
+            <itemGroups>
+                <itemGroup descriptionId="supermart.account.description" id="account" labelId="supermart.account.label" resourceId="exp_join">
+                    <items>
+                        <item descriptionId="supermart.account.account_description.description" id="account__account_description" labelId="supermart.account.account_description.label" resourceId="exp_join.account3.account_description" />
+                        <item descriptionId="supermart.account.account_type.description" id="account__account_type" labelId="supermart.account.account_type.label" resourceId="exp_join.account3.account_type" />
+                    </items>
+                </itemGroup>
+                <itemGroup descriptionId="supermart.store.description" id="exp_store" labelId="supermart.store.label" resourceId="exp_join">
+                    <itemGroups>
+                        <itemGroup descriptionId="supermart.store_contact.description" id="exp_store__store_contact" labelId="supermart.store_contact.label" resourceId="exp_join">
+                            <items>
+                                <item descriptionId="supermart.store.store_number.description" id="exp_store__store_contact__store_number" labelId="supermart.store.store_number.description" resourceId="exp_join.store3.store_number" />
+                                <item descriptionId="supermart.store.store_street_address.description" id="exp_store__store_contact__store_street_address" labelId="supermart.store.store_street_address.label" resourceId="exp_join.store3.store_street_address" />
+                                <item descriptionId="supermart.store.store_city.description" id="exp_store__store_contact__store_city" labelId="supermart.store.store_city.label" resourceId="exp_join.store3.store_city" />
+                                <item descriptionId="supermart.store.store_state.description" id="exp_store__store_contact__store_state" labelId="supermart.store.store_state.label" resourceId="exp_join.store3.store_state" />
+                                <item descriptionId="supermart.store.store_postal_code.description" id="exp_store__store_contact__store_postal_code" labelId="supermart.store.store_postal_code.label" resourceId="exp_join.store3.store_postal_code" />
+                                <item descriptionId="supermart.store.store_country.description" id="exp_store__store_contact__store_country" labelId="supermart.store.store_country.label" resourceId="exp_join.store3.store_country" />
+                                <item descriptionId="supermart.store.store_manager.description" id="exp_store__store_contact__store_manager" labelId="supermart.store.store_manager.label" resourceId="exp_join.store3.store_manager" />
+                                <item descriptionId="supermart.store.store_phone.description" id="exp_store__store_contact__store_phone" labelId="supermart.store.store_phone.label" resourceId="exp_join.store3.store_phone" />
+                                <item descriptionId="supermart.store.store_fax.description" id="exp_store__store_contact__store_fax" labelId="supermart.store.store_fax.label" resourceId="exp_join.store3.store_fax" />
+                            </items>
+                        </itemGroup>
+                        <itemGroup descriptionId="supermart.region.description" id="exp_store__region" labelId="supermart.region.label" resourceId="exp_join">
+                            <items>
+                                <item descriptionId="supermart.region.sales_city.description" id="exp_store__region__sales_city" labelId="supermart.region.sales_city.label" resourceId="exp_join.region3.sales_city" />
+                                <item descriptionId="supermart.region.sales_state_province.description" id="exp_store__region__sales_state_province" labelId="supermart.region.sales_state_province.label" resourceId="exp_join.region3.sales_state_province" />
+                                <item descriptionId="supermart.region.sales_district.description" id="exp_store__region__sales_district" labelId="supermart.region.sales_district.label" resourceId="exp_join.region3.sales_district" />
+                                <item descriptionId="supermart.region.sales_region.description" id="exp_store__region__sales_region" labelId="supermart.region.sales_region.label" resourceId="exp_join.region3.sales_region" />
+                                <item descriptionId="supermart.region.sales_country.description" id="exp_store__region__sales_country" labelId="supermart.region.sales_country.label" resourceId="exp_join.region3.sales_country" />
+                            </items>
+                        </itemGroup>
+                        <itemGroup descriptionId="supermart.store_features.description" id="exp_store__store_features" labelId="supermart.store_features.label" resourceId="exp_join">
+                            <items>
+                                <item descriptionId="supermart.store.first_opened_date.description" id="exp_store__store_features__first_opened_date" labelId="supermart.store.first_opened_date.label" resourceId="exp_join.store3.first_opened_date" />
+                                <item descriptionId="supermart.store.last_remodel_date.description" id="exp_store__store_features__last_remodel_date" labelId="supermart.store.last_remodel_date.label" resourceId="exp_join.store3.last_remodel_date" />
+                                <item descriptionId="supermart.store.store_sqft.description" id="exp_store__store_features__store_sqft" labelId="supermart.store.store_sqft.label" resourceId="exp_join.store3.store_sqft" />
+                                <item descriptionId="supermart.store.grocery_sqft.description" id="exp_store__store_features__grocery_sqft" labelId="supermart.store.grocery_sqft.label" resourceId="exp_join.store3.grocery_sqft" />
+                                <item descriptionId="supermart.store.frozen_sqft.description" id="exp_store__store_features__frozen_sqft" labelId="supermart.store.frozen_sqft.label" resourceId="exp_join.store3.frozen_sqft" />
+                                <item descriptionId="supermart.store.meat_sqft.description" id="exp_store__store_features__meat_sqft" labelId="supermart.store.meat_sqft.label" resourceId="exp_join.store3.meat_sqft" />
+                                <item descriptionId="supermart.store.coffee_bar.description" id="exp_store__store_features__coffee_bar" labelId="supermart.store.coffee_bar.label" resourceId="exp_join.store3.coffee_bar" />
+                                <item descriptionId="supermart.store.video_store.description" id="exp_store__store_features__video_store" labelId="supermart.store.video_store.label" resourceId="exp_join.store3.video_store" />
+                                <item descriptionId="supermart.store.salad_bar.description" id="exp_store__store_features__salad_bar" labelId="supermart.store.salad_bar.label" resourceId="exp_join.store3.salad_bar" />
+                                <item descriptionId="supermart.store.prepared_food.description" id="exp_store__store_features__prepared_food" labelId="supermart.store.prepared_food.label" resourceId="exp_join.store3.prepared_food" />
+                                <item descriptionId="supermart.store.florist.description" id="exp_store__store_features__florist" labelId="supermart.store.florist.label" resourceId="exp_join.store3.florist" />
+                            </items>
+                        </itemGroup>
+                    </itemGroups>
+                    <items>
+                        <item descriptionId="supermart.store.store_type.description" id="exp_store__store_type" labelId="supermart.store.store_type.label" resourceId="exp_join.store3.store_type" />
+                        <item descriptionId="supermart.store.store_name.description" id="exp_store__store_name" labelId="supermart.store.store_name.label" resourceId="exp_join.store3.store_name" />
+                    </items>
+                </itemGroup>
+            </itemGroups>
+            <items>
+                <item descriptionId="supermart.expense_fact.exp_date.description" id="expense_fact__exp_date" labelId="supermart.expense_fact.exp_date.label" resourceId="exp_join.expense_fact3.exp_date" />
+                <item descriptionId="supermart.expense_fact.amount.description" id="expense_fact__amount" labelId="supermart.expense_fact.amount.label" resourceId="exp_join.expense_fact3.amount" />
+            </items>
+        </itemGroup>
+        <itemGroup descriptionId="supermart.employee.description" id="employee" labelId="supermart.employee.label" resourceId="employee_join">
+            <itemGroups>
+                <itemGroup descriptionId="supermart.employee_private.label" id="employee__employee_private" labelId="supermart.employee_private.label" resourceId="employee_join">
+                    <items>
+                        <item descriptionId="supermart.employee.birth_date.description" id="employee__employee_private__birth_date" labelId="supermart.employee.birth_date.label" resourceId="employee_join.employee4.birth_date" />
+                        <item descriptionId="supermart.employee.salary.description" id="employee__employee_private__salary" labelId="supermart.employee.salary.label" resourceId="employee_join.employee4.salary" />
+                        <item descriptionId="supermart.employee.education_level.description" id="employee__employee_private__education_level" labelId="supermart.employee.education_level.label" resourceId="employee_join.employee4.education_level" />
+                        <item descriptionId="supermart.employee.marital_status.description" id="employee__employee_private__marital_status" labelId="supermart.employee.marital_status.label" resourceId="employee_join.employee4.marital_status" />
+                        <item descriptionId="supermart.employee.gender.description" id="employee__employee_private__gender" labelId="supermart.employee.gender.label" resourceId="employee_join.employee4.gender" />
+                        <item descriptionId="supermart.position.pay_type.description" id="employee__employee_private__pay_type" labelId="supermart.position.pay_type.label" resourceId="employee_join.position4.pay_type" />
+                        <item descriptionId="supermart.position.min_scale.description" id="employee__employee_private__min_scale" labelId="supermart.position.min_scale.label" resourceId="employee_join.position4.min_scale" />
+                        <item descriptionId="supermart.position.max_scale.description" id="employee__employee_private__max_scale" labelId="supermart.position.max_scale.label" resourceId="employee_join.position4.max_scale" />
+                    </items>
+                </itemGroup>
+                <itemGroup descriptionId="supermart.salary.description" id="salary" labelId="supermart.salary.label" resourceId="employee_join">
+                    <items>
+                        <item descriptionId="supermart.salary.pay_date.description" id="salary__pay_date" labelId="supermart.salary.pay_date.label" resourceId="employee_join.salary4.pay_date" />
+                        <item descriptionId="supermart.salary.salary_paid.description" id="salary__salary_paid" labelId="supermart.salary.salary_paid.label" resourceId="employee_join.salary4.salary_paid" />
+                        <item descriptionId="supermart.salary.overtime_paid.description" id="salary__overtime_paid" labelId="supermart.salary.overtime_paid.label" resourceId="employee_join.salary4.overtime_paid" />
+                        <item descriptionId="supermart.salary.vacation_accrued.description" id="salary__vacation_accrued" labelId="supermart.salary.vacation_accrued.label" resourceId="employee_join.salary4.vacation_accrued" />
+                        <item descriptionId="supermart.salary.vacation_used.description" id="salary__vacation_used" labelId="supermart.salary.vacation_used.label" resourceId="employee_join.salary4.vacation_used" />
+                    </items>
+                </itemGroup>
+                <itemGroup descriptionId="supermart.store.description" id="emp_store" labelId="supermart.store.label" resourceId="employee_join">
+                    <itemGroups>
+                        <itemGroup descriptionId="supermart.store_contact.description" id="emp_store__store_contact" labelId="supermart.store_contact.label" resourceId="employee_join">
+                            <items>
+                                <item descriptionId="supermart.store.store_number.description" id="emp_store__store_contact__store_number" labelId="supermart.store.store_number.description" resourceId="employee_join.store4.store_number" />
+                                <item descriptionId="supermart.store.store_street_address.description" id="emp_store__store_contact__store_street_address" labelId="supermart.store.store_street_address.label" resourceId="employee_join.store4.store_street_address" />
+                                <item descriptionId="supermart.store.store_city.description" id="emp_store__store_contact__store_city" labelId="supermart.store.store_city.label" resourceId="employee_join.store4.store_city" />
+                                <item descriptionId="supermart.store.store_state.description" id="emp_store__store_contact__store_state" labelId="supermart.store.store_state.label" resourceId="employee_join.store4.store_state" />
+                                <item descriptionId="supermart.store.store_postal_code.description" id="emp_store__store_contact__store_postal_code" labelId="supermart.store.store_postal_code.label" resourceId="employee_join.store4.store_postal_code" />
+                                <item descriptionId="supermart.store.store_country.description" id="emp_store__store_contact__store_country" labelId="supermart.store.store_country.label" resourceId="employee_join.store4.store_country" />
+                                <item descriptionId="supermart.store.store_manager.description" id="emp_store__store_contact__store_manager" labelId="supermart.store.store_manager.label" resourceId="employee_join.store4.store_manager" />
+                                <item descriptionId="supermart.store.store_phone.description" id="emp_store__store_contact__store_phone" labelId="supermart.store.store_phone.label" resourceId="employee_join.store4.store_phone" />
+                                <item descriptionId="supermart.store.store_fax.description" id="emp_store__store_contact__store_fax" labelId="supermart.store.store_fax.label" resourceId="employee_join.store4.store_fax" />
+                            </items>
+                        </itemGroup>
+                        <itemGroup descriptionId="supermart.region.description" id="emp_store__region" labelId="supermart.region.label" resourceId="employee_join">
+                            <items>
+                                <item descriptionId="supermart.region.sales_city.description" id="emp_store__region__sales_city" labelId="supermart.region.sales_city.label" resourceId="employee_join.region4.sales_city" />
+                                <item descriptionId="supermart.region.sales_state_province.description" id="emp_store__region__sales_state_province" labelId="supermart.region.sales_state_province.label" resourceId="employee_join.region4.sales_state_province" />
+                                <item descriptionId="supermart.region.sales_district.description" id="emp_store__region__sales_district" labelId="supermart.region.sales_district.label" resourceId="employee_join.region4.sales_district" />
+                                <item descriptionId="supermart.region.sales_region.description" id="emp_store__region__sales_region" labelId="supermart.region.sales_region.label" resourceId="employee_join.region4.sales_region" />
+                                <item descriptionId="supermart.region.sales_country.description" id="emp_store__region__sales_country" labelId="supermart.region.sales_country.label" resourceId="employee_join.region4.sales_country" />
+                            </items>
+                        </itemGroup>
+                        <itemGroup descriptionId="supermart.store_features.description" id="emp_store__store_features" labelId="supermart.store_features.label" resourceId="employee_join">
+                            <items>
+                                <item descriptionId="supermart.store.first_opened_date.description" id="emp_store__store_features__first_opened_date" labelId="supermart.store.first_opened_date.label" resourceId="employee_join.store4.first_opened_date" />
+                                <item descriptionId="supermart.store.last_remodel_date.description" id="emp_store__store_features__last_remodel_date" labelId="supermart.store.last_remodel_date.label" resourceId="employee_join.store4.last_remodel_date" />
+                                <item descriptionId="supermart.store.store_sqft.description" id="emp_store__store_features__store_sqft" labelId="supermart.store.store_sqft.label" resourceId="employee_join.store4.store_sqft" />
+                                <item descriptionId="supermart.store.grocery_sqft.description" id="emp_store__store_features__grocery_sqft" labelId="supermart.store.grocery_sqft.label" resourceId="employee_join.store4.grocery_sqft" />
+                                <item descriptionId="supermart.store.frozen_sqft.description" id="emp_store__store_features__frozen_sqft" labelId="supermart.store.frozen_sqft.label" resourceId="employee_join.store4.frozen_sqft" />
+                                <item descriptionId="supermart.store.meat_sqft.description" id="emp_store__store_features__meat_sqft" labelId="supermart.store.meat_sqft.label" resourceId="employee_join.store4.meat_sqft" />
+                                <item descriptionId="supermart.store.coffee_bar.description" id="emp_store__store_features__coffee_bar" labelId="supermart.store.coffee_bar.label" resourceId="employee_join.store4.coffee_bar" />
+                                <item descriptionId="supermart.store.video_store.description" id="emp_store__store_features__video_store" labelId="supermart.store.video_store.label" resourceId="employee_join.store4.video_store" />
+                                <item descriptionId="supermart.store.salad_bar.description" id="emp_store__store_features__salad_bar" labelId="supermart.store.salad_bar.label" resourceId="employee_join.store4.salad_bar" />
+                                <item descriptionId="supermart.store.prepared_food.description" id="emp_store__store_features__prepared_food" labelId="supermart.store.prepared_food.label" resourceId="employee_join.store4.prepared_food" />
+                                <item descriptionId="supermart.store.florist.description" id="emp_store__store_features__florist" labelId="supermart.store.florist.label" resourceId="employee_join.store4.florist" />
+                            </items>
+                        </itemGroup>
+                    </itemGroups>
+                    <items>
+                        <item descriptionId="supermart.store.store_type.description" id="emp_store__store_type" labelId="supermart.store.store_type.label" resourceId="employee_join.store4.store_type" />
+                        <item descriptionId="supermart.store.store_name.description" id="emp_store__store_name" labelId="supermart.store.store_name.label" resourceId="employee_join.store4.store_name" />
+                    </items>
+                </itemGroup>
+            </itemGroups>
+            <items>
+                <item descriptionId="supermart.employee.employee_id.description" id="employee__employee_id" labelId="supermart.employee.employee_id.label" resourceId="employee_join.employee4.employee_id" />
+                <item descriptionId="supermart.employee.full_name.description" id="employee__full_name" labelId="supermart.employee.full_name.label" resourceId="employee_join.employee4.full_name" />
+                <item descriptionId="supermart.employee.first_name.description" id="employee__first_name" labelId="supermart.employee.first_name.label" resourceId="employee_join.employee4.first_name" />
+                <item descriptionId="supermart.employee.last_name.description" id="employee__last_name" labelId="supermart.employee.last_name.label" resourceId="employee_join.employee4.last_name" />
+                <item descriptionId="supermart.department.department_description.description" id="employee__department_description" labelId="supermart.department.department_description.label" resourceId="employee_join.department4.department_description" />
+                <item descriptionId="supermart.employee.position_title.description" id="employee__position_title" labelId="supermart.employee.position_title.label" resourceId="employee_join.employee4.position_title" />
+                <item descriptionId="supermart.employee.management_role.description" id="employee__management_role" labelId="supermart.employee.management_role.label" resourceId="employee_join.employee4.management_role" />
+                <item descriptionId="supermart.employee.hire_date.description" id="employee__hire_date" labelId="supermart.employee.hire_date.label" resourceId="employee_join.employee4.hire_date" />
+                <item descriptionId="supermart.employee.end_date.description" id="employee__end_date" labelId="supermart.employee.end_date.label" resourceId="employee_join.employee4.end_date" />
+            </items>
+        </itemGroup>
+    </itemGroups>
+    <resources>
+        <jdbcTable id="sales_fact_1998_1" datasourceId="dsFoodMart" tableName="public.sales_fact_1998">
+            <fieldList>
+                <field id="product_id" type="java.lang.Integer" />
+                <field id="time_id" type="java.lang.Integer" />
+                <field id="customer_id" type="java.lang.Integer" />
+                <field id="promotion_id" type="java.lang.Integer" />
+                <field id="store_id" type="java.lang.Integer" />
+                <field id="store_sales" type="java.math.BigDecimal" />
+                <field id="store_cost" type="java.math.BigDecimal" />
+                <field id="unit_sales" type="java.math.BigDecimal" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="store1" datasourceId="dsFoodMart" tableName="public.store">
+            <fieldList>
+                <field id="coffee_bar" type="java.lang.Boolean" />
+                <field id="first_opened_date" type="java.sql.Timestamp" />
+                <field id="florist" type="java.lang.Boolean" />
+                <field id="frozen_sqft" type="java.lang.Integer" />
+                <field id="grocery_sqft" type="java.lang.Integer" />
+                <field id="last_remodel_date" type="java.sql.Timestamp" />
+                <field id="meat_sqft" type="java.lang.Integer" />
+                <field id="prepared_food" type="java.lang.Boolean" />
+                <field id="region_id" type="java.lang.Integer" />
+                <field id="salad_bar" type="java.lang.Boolean" />
+                <field id="store_city" type="java.lang.String" />
+                <field id="store_country" type="java.lang.String" />
+                <field id="store_fax" type="java.lang.String" />
+                <field id="store_id" type="java.lang.Integer" />
+                <field id="store_manager" type="java.lang.String" />
+                <field id="store_name" type="java.lang.String" />
+                <field id="store_number" type="java.lang.Integer" />
+                <field id="store_phone" type="java.lang.String" />
+                <field id="store_postal_code" type="java.lang.String" />
+                <field id="store_sqft" type="java.lang.Integer" />
+                <field id="store_state" type="java.lang.String" />
+                <field id="store_street_address" type="java.lang.String" />
+                <field id="store_type" type="java.lang.String" />
+                <field id="video_store" type="java.lang.Boolean" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="customer1" datasourceId="dsFoodMart" tableName="public.customer">
+            <fieldList>
+                <field id="account_num" type="java.lang.Long" />
+                <field id="address1" type="java.lang.String" />
+                <field id="address2" type="java.lang.String" />
+                <field id="address3" type="java.lang.String" />
+                <field id="address4" type="java.lang.String" />
+                <field id="birthdate" type="java.util.Date" />
+                <field id="city" type="java.lang.String" />
+                <field id="country" type="java.lang.String" />
+                <field id="customer_id" type="java.lang.Integer" />
+                <field id="customer_region_id" type="java.lang.Integer" />
+                <field id="date_accnt_opened" type="java.util.Date" />
+                <field id="education" type="java.lang.String" />
+                <field id="fname" type="java.lang.String" />
+                <field id="fullname" type="java.lang.String" />
+                <field id="gender" type="java.lang.String" />
+                <field id="houseowner" type="java.lang.String" />
+                <field id="lname" type="java.lang.String" />
+                <field id="marital_status" type="java.lang.String" />
+                <field id="member_card" type="java.lang.String" />
+                <field id="mi" type="java.lang.String" />
+                <field id="num_cars_owned" type="java.lang.Integer" />
+                <field id="num_children_at_home" type="java.lang.Short" />
+                <field id="occupation" type="java.lang.String" />
+                <field id="phone1" type="java.lang.String" />
+                <field id="phone2" type="java.lang.String" />
+                <field id="postal_code" type="java.lang.String" />
+                <field id="state_province" type="java.lang.String" />
+                <field id="total_children" type="java.lang.Short" />
+                <field id="yearly_income" type="java.lang.String" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="product1" datasourceId="dsFoodMart" tableName="public.product">
+            <fieldList>
+                <field id="brand_name" type="java.lang.String" />
+                <field id="cases_per_pallet" type="java.lang.Short" />
+                <field id="gross_weight" type="java.lang.Double" />
+                <field id="low_fat" type="java.lang.Boolean" />
+                <field id="net_weight" type="java.lang.Double" />
+                <field id="product_class_id" type="java.lang.Integer" />
+                <field id="product_id" type="java.lang.Integer" />
+                <field id="product_name" type="java.lang.String" />
+                <field id="recyclable_package" type="java.lang.Boolean" />
+                <field id="shelf_depth" type="java.lang.Double" />
+                <field id="shelf_height" type="java.lang.Double" />
+                <field id="shelf_width" type="java.lang.Double" />
+                <field id="sku" type="java.lang.Long" />
+                <field id="srp" type="java.math.BigDecimal" />
+                <field id="units_per_case" type="java.lang.Short" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="product_class1" datasourceId="dsFoodMart" tableName="public.product_class">
+            <fieldList>
+                <field id="product_class_id" type="java.lang.Integer" />
+                <field id="product_subcategory" type="java.lang.String" />
+                <field id="product_category" type="java.lang.String" />
+                <field id="product_department" type="java.lang.String" />
+                <field id="product_family" type="java.lang.String" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="time_by_day1" datasourceId="dsFoodMart" tableName="public.time_by_day">
+            <fieldList>
+                <field id="day_of_month" type="java.lang.Short" />
+                <field id="day_of_week" type="java.lang.Integer" />
+                <field id="fiscal_period" type="java.lang.String" />
+                <field id="month_of_year" type="java.lang.Short" />
+                <field id="quarter" type="java.lang.String" />
+                <field id="the_date" type="java.sql.Timestamp" />
+                <field id="the_day" type="java.lang.String" />
+                <field id="the_month" type="java.lang.String" />
+                <field id="the_year" type="java.lang.Short" />
+                <field id="time_id" type="java.lang.Integer" />
+                <field id="week_of_year" type="java.lang.Integer" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="region11" datasourceId="dsFoodMart" tableName="public.region">
+            <fieldList>
+                <field id="region_id" type="java.lang.Integer" />
+                <field id="sales_city" type="java.lang.String" />
+                <field id="sales_state_province" type="java.lang.String" />
+                <field id="sales_district" type="java.lang.String" />
+                <field id="sales_region" type="java.lang.String" />
+                <field id="sales_country" type="java.lang.String" />
+                <field id="sales_district_id" type="java.lang.Integer" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="region12" datasourceId="dsFoodMart" tableName="public.region">
+            <fieldList>
+                <field id="region_id" type="java.lang.Integer" />
+                <field id="sales_city" type="java.lang.String" />
+                <field id="sales_state_province" type="java.lang.String" />
+                <field id="sales_district" type="java.lang.String" />
+                <field id="sales_region" type="java.lang.String" />
+                <field id="sales_country" type="java.lang.String" />
+                <field id="sales_district_id" type="java.lang.Integer" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcQuery id="inventory_fact_1998_2" datasourceId="dsFoodMart">
+            <fieldList>
+                <field id="product_id" type="java.lang.Integer" />
+                <field id="time_id" type="java.lang.Integer" />
+                <field id="warehouse_id" type="java.lang.Integer" />
+                <field id="store_id" type="java.lang.Integer" />
+                <field id="units_ordered" type="java.lang.Integer" />
+                <field id="units_shipped" type="java.lang.Integer" />
+                <field id="warehouse_sales" type="java.math.BigDecimal" />
+                <field id="warehouse_cost" type="java.math.BigDecimal" />
+                <field id="supply_time" type="java.lang.Short" />
+                <field id="store_invoice" type="java.math.BigDecimal" />
+                <field id="warehouse_profit" type="java.math.BigDecimal" />
+            </fieldList>
+            <query>select
+
+                i2.product_id as product_id,
+                i2.time_id as time_id,
+                i2.warehouse_id as warehouse_id,
+                i2.store_id as store_id,
+                i2.units_ordered as units_ordered,
+                i2.units_shipped as units_shipped,
+                i2.warehouse_sales as warehouse_sales,
+                i2.warehouse_cost as warehouse_cost,
+                i2.supply_time as supply_time,
+                i2.store_invoice as store_invoice,
+
+                (i2.warehouse_sales - i2.warehouse_cost) as warehouse_profit
+
+                from
+                inventory_fact_1998 i2</query>
+        </jdbcQuery>
+        <jdbcTable id="store2" datasourceId="dsFoodMart" tableName="public.store">
+            <fieldList>
+                <field id="coffee_bar" type="java.lang.Boolean" />
+                <field id="first_opened_date" type="java.sql.Timestamp" />
+                <field id="florist" type="java.lang.Boolean" />
+                <field id="frozen_sqft" type="java.lang.Integer" />
+                <field id="grocery_sqft" type="java.lang.Integer" />
+                <field id="last_remodel_date" type="java.sql.Timestamp" />
+                <field id="meat_sqft" type="java.lang.Integer" />
+                <field id="prepared_food" type="java.lang.Boolean" />
+                <field id="region_id" type="java.lang.Integer" />
+                <field id="salad_bar" type="java.lang.Boolean" />
+                <field id="store_city" type="java.lang.String" />
+                <field id="store_country" type="java.lang.String" />
+                <field id="store_fax" type="java.lang.String" />
+                <field id="store_id" type="java.lang.Integer" />
+                <field id="store_manager" type="java.lang.String" />
+                <field id="store_name" type="java.lang.String" />
+                <field id="store_number" type="java.lang.Integer" />
+                <field id="store_phone" type="java.lang.String" />
+                <field id="store_postal_code" type="java.lang.String" />
+                <field id="store_sqft" type="java.lang.Integer" />
+                <field id="store_state" type="java.lang.String" />
+                <field id="store_street_address" type="java.lang.String" />
+                <field id="store_type" type="java.lang.String" />
+                <field id="video_store" type="java.lang.Boolean" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="product2" datasourceId="dsFoodMart" tableName="public.product">
+            <fieldList>
+                <field id="brand_name" type="java.lang.String" />
+                <field id="cases_per_pallet" type="java.lang.Short" />
+                <field id="gross_weight" type="java.lang.Double" />
+                <field id="low_fat" type="java.lang.Boolean" />
+                <field id="net_weight" type="java.lang.Double" />
+                <field id="product_class_id" type="java.lang.Integer" />
+                <field id="product_id" type="java.lang.Integer" />
+                <field id="product_name" type="java.lang.String" />
+                <field id="recyclable_package" type="java.lang.Boolean" />
+                <field id="shelf_depth" type="java.lang.Double" />
+                <field id="shelf_height" type="java.lang.Double" />
+                <field id="shelf_width" type="java.lang.Double" />
+                <field id="sku" type="java.lang.Long" />
+                <field id="srp" type="java.math.BigDecimal" />
+                <field id="units_per_case" type="java.lang.Short" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="product_class2" datasourceId="dsFoodMart" tableName="public.product_class">
+            <fieldList>
+                <field id="product_class_id" type="java.lang.Integer" />
+                <field id="product_subcategory" type="java.lang.String" />
+                <field id="product_category" type="java.lang.String" />
+                <field id="product_department" type="java.lang.String" />
+                <field id="product_family" type="java.lang.String" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="time_by_day2" datasourceId="dsFoodMart" tableName="public.time_by_day">
+            <fieldList>
+                <field id="day_of_month" type="java.lang.Short" />
+                <field id="day_of_week" type="java.lang.Integer" />
+                <field id="fiscal_period" type="java.lang.String" />
+                <field id="month_of_year" type="java.lang.Short" />
+                <field id="quarter" type="java.lang.String" />
+                <field id="the_date" type="java.sql.Timestamp" />
+                <field id="the_day" type="java.lang.String" />
+                <field id="the_month" type="java.lang.String" />
+                <field id="the_year" type="java.lang.Short" />
+                <field id="time_id" type="java.lang.Integer" />
+                <field id="week_of_year" type="java.lang.Integer" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="region2" datasourceId="dsFoodMart" tableName="public.region">
+            <fieldList>
+                <field id="region_id" type="java.lang.Integer" />
+                <field id="sales_city" type="java.lang.String" />
+                <field id="sales_state_province" type="java.lang.String" />
+                <field id="sales_district" type="java.lang.String" />
+                <field id="sales_region" type="java.lang.String" />
+                <field id="sales_country" type="java.lang.String" />
+                <field id="sales_district_id" type="java.lang.Integer" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="warehouse2" datasourceId="dsFoodMart" tableName="public.warehouse">
+            <fieldList>
+                <field id="warehouse_id" type="java.lang.Integer" />
+                <field id="warehouse_class_id" type="java.lang.Integer" />
+                <field id="stores_id" type="java.lang.Integer" />
+                <field id="warehouse_name" type="java.lang.String" />
+                <field id="wa_address1" type="java.lang.String" />
+                <field id="wa_address2" type="java.lang.String" />
+                <field id="wa_address3" type="java.lang.String" />
+                <field id="wa_address4" type="java.lang.String" />
+                <field id="warehouse_city" type="java.lang.String" />
+                <field id="warehouse_state_province" type="java.lang.String" />
+                <field id="warehouse_postal_code" type="java.lang.String" />
+                <field id="warehouse_country" type="java.lang.String" />
+                <field id="warehouse_owner_name" type="java.lang.String" />
+                <field id="warehouse_phone" type="java.lang.String" />
+                <field id="warehouse_fax" type="java.lang.String" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="warehouse_class2" datasourceId="dsFoodMart" tableName="public.warehouse_class">
+            <fieldList>
+                <field id="warehouse_class_id" type="java.lang.Integer" />
+                <field id="description" type="java.lang.String" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="expense_fact3" datasourceId="dsFoodMart" tableName="public.expense_fact">
+            <fieldList>
+                <field id="account_id" type="java.lang.Integer" />
+                <field id="amount" type="java.math.BigDecimal" />
+                <field id="category_id" type="java.lang.String" />
+                <field id="currency_id" type="java.lang.Integer" />
+                <field id="exp_date" type="java.sql.Timestamp" />
+                <field id="store_id" type="java.lang.Integer" />
+                <field id="time_id" type="java.lang.Integer" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="account3" datasourceId="dsFoodMart" tableName="public.account">
+            <fieldList>
+                <field id="account_id" type="java.lang.Integer" />
+                <field id="account_parent" type="java.lang.Integer" />
+                <field id="account_description" type="java.lang.String" />
+                <field id="account_type" type="java.lang.String" />
+                <field id="account_rollup" type="java.lang.String" />
+                <field id="custom_members" type="java.lang.String" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="category3" datasourceId="dsFoodMart" tableName="public.category">
+            <fieldList>
+                <field id="category_id" type="java.lang.String" />
+                <field id="category_parent" type="java.lang.String" />
+                <field id="category_description" type="java.lang.String" />
+                <field id="category_rollup" type="java.lang.String" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="region3" datasourceId="dsFoodMart" tableName="public.region">
+            <fieldList>
+                <field id="region_id" type="java.lang.Integer" />
+                <field id="sales_city" type="java.lang.String" />
+                <field id="sales_state_province" type="java.lang.String" />
+                <field id="sales_district" type="java.lang.String" />
+                <field id="sales_region" type="java.lang.String" />
+                <field id="sales_country" type="java.lang.String" />
+                <field id="sales_district_id" type="java.lang.Integer" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="store3" datasourceId="dsFoodMart" tableName="public.store">
+            <fieldList>
+                <field id="coffee_bar" type="java.lang.Boolean" />
+                <field id="first_opened_date" type="java.sql.Timestamp" />
+                <field id="florist" type="java.lang.Boolean" />
+                <field id="frozen_sqft" type="java.lang.Integer" />
+                <field id="grocery_sqft" type="java.lang.Integer" />
+                <field id="last_remodel_date" type="java.sql.Timestamp" />
+                <field id="meat_sqft" type="java.lang.Integer" />
+                <field id="prepared_food" type="java.lang.Boolean" />
+                <field id="region_id" type="java.lang.Integer" />
+                <field id="salad_bar" type="java.lang.Boolean" />
+                <field id="store_city" type="java.lang.String" />
+                <field id="store_country" type="java.lang.String" />
+                <field id="store_fax" type="java.lang.String" />
+                <field id="store_id" type="java.lang.Integer" />
+                <field id="store_manager" type="java.lang.String" />
+                <field id="store_name" type="java.lang.String" />
+                <field id="store_number" type="java.lang.Integer" />
+                <field id="store_phone" type="java.lang.String" />
+                <field id="store_postal_code" type="java.lang.String" />
+                <field id="store_sqft" type="java.lang.Integer" />
+                <field id="store_state" type="java.lang.String" />
+                <field id="store_street_address" type="java.lang.String" />
+                <field id="store_type" type="java.lang.String" />
+                <field id="video_store" type="java.lang.Boolean" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="employee4" datasourceId="dsFoodMart" tableName="public.employee">
+            <fieldList>
+                <field id="birth_date" type="java.util.Date" />
+                <field id="department_id" type="java.lang.Integer" />
+                <field id="education_level" type="java.lang.String" />
+                <field id="employee_id" type="java.lang.Integer" />
+                <field id="end_date" type="java.sql.Timestamp" />
+                <field id="first_name" type="java.lang.String" />
+                <field id="full_name" type="java.lang.String" />
+                <field id="gender" type="java.lang.String" />
+                <field id="hire_date" type="java.sql.Timestamp" />
+                <field id="last_name" type="java.lang.String" />
+                <field id="management_role" type="java.lang.String" />
+                <field id="marital_status" type="java.lang.String" />
+                <field id="position_id" type="java.lang.Integer" />
+                <field id="position_title" type="java.lang.String" />
+                <field id="salary" type="java.math.BigDecimal" />
+                <field id="store_id" type="java.lang.Integer" />
+                <field id="supervisor_id" type="java.lang.Integer" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="region4" datasourceId="dsFoodMart" tableName="public.region">
+            <fieldList>
+                <field id="region_id" type="java.lang.Integer" />
+                <field id="sales_city" type="java.lang.String" />
+                <field id="sales_state_province" type="java.lang.String" />
+                <field id="sales_district" type="java.lang.String" />
+                <field id="sales_region" type="java.lang.String" />
+                <field id="sales_country" type="java.lang.String" />
+                <field id="sales_district_id" type="java.lang.Integer" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="store4" datasourceId="dsFoodMart" tableName="public.store">
+            <fieldList>
+                <field id="coffee_bar" type="java.lang.Boolean" />
+                <field id="first_opened_date" type="java.sql.Timestamp" />
+                <field id="florist" type="java.lang.Boolean" />
+                <field id="frozen_sqft" type="java.lang.Integer" />
+                <field id="grocery_sqft" type="java.lang.Integer" />
+                <field id="last_remodel_date" type="java.sql.Timestamp" />
+                <field id="meat_sqft" type="java.lang.Integer" />
+                <field id="prepared_food" type="java.lang.Boolean" />
+                <field id="region_id" type="java.lang.Integer" />
+                <field id="salad_bar" type="java.lang.Boolean" />
+                <field id="store_city" type="java.lang.String" />
+                <field id="store_country" type="java.lang.String" />
+                <field id="store_fax" type="java.lang.String" />
+                <field id="store_id" type="java.lang.Integer" />
+                <field id="store_manager" type="java.lang.String" />
+                <field id="store_name" type="java.lang.String" />
+                <field id="store_number" type="java.lang.Integer" />
+                <field id="store_phone" type="java.lang.String" />
+                <field id="store_postal_code" type="java.lang.String" />
+                <field id="store_sqft" type="java.lang.Integer" />
+                <field id="store_state" type="java.lang.String" />
+                <field id="store_street_address" type="java.lang.String" />
+                <field id="store_type" type="java.lang.String" />
+                <field id="video_store" type="java.lang.Boolean" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="department4" datasourceId="dsFoodMart" tableName="public.department">
+            <fieldList>
+                <field id="department_id" type="java.lang.Integer" />
+                <field id="department_description" type="java.lang.String" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="position4" datasourceId="dsFoodMart" tableName="public.position">
+            <fieldList>
+                <field id="management_role" type="java.lang.String" />
+                <field id="max_scale" type="java.math.BigDecimal" />
+                <field id="min_scale" type="java.math.BigDecimal" />
+                <field id="pay_type" type="java.lang.String" />
+                <field id="position_id" type="java.lang.Integer" />
+                <field id="position_title" type="java.lang.String" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="salary4" datasourceId="dsFoodMart" tableName="public.salary">
+            <fieldList>
+                <field id="currency_id" type="java.lang.Integer" />
+                <field id="department_id" type="java.lang.Integer" />
+                <field id="employee_id" type="java.lang.Integer" />
+                <field id="overtime_paid" type="java.math.BigDecimal" />
+                <field id="pay_date" type="java.sql.Timestamp" />
+                <field id="salary_paid" type="java.math.BigDecimal" />
+                <field id="vacation_accrued" type="java.lang.Double" />
+                <field id="vacation_used" type="java.lang.Double" />
+            </fieldList>
+        </jdbcTable>
+        <jdbcTable id="employee_join" datasourceId="dsFoodMart" tableName="public.store">
+            <fieldList>
+                <field id="store4.coffee_bar" type="java.lang.Boolean" />
+                <field id="store4.first_opened_date" type="java.sql.Timestamp" />
+                <field id="store4.florist" type="java.lang.Boolean" />
+                <field id="store4.frozen_sqft" type="java.lang.Integer" />
+                <field id="store4.grocery_sqft" type="java.lang.Integer" />
+                <field id="store4.last_remodel_date" type="java.sql.Timestamp" />
+                <field id="store4.meat_sqft" type="java.lang.Integer" />
+                <field id="store4.prepared_food" type="java.lang.Boolean" />
+                <field id="store4.region_id" type="java.lang.Integer" />
+                <field id="store4.salad_bar" type="java.lang.Boolean" />
+                <field id="store4.store_city" type="java.lang.String" />
+                <field id="store4.store_country" type="java.lang.String" />
+                <field id="store4.store_fax" type="java.lang.String" />
+                <field id="store4.store_id" type="java.lang.Integer" />
+                <field id="store4.store_manager" type="java.lang.String" />
+                <field id="store4.store_name" type="java.lang.String" />
+                <field id="store4.store_number" type="java.lang.Integer" />
+                <field id="store4.store_phone" type="java.lang.String" />
+                <field id="store4.store_postal_code" type="java.lang.String" />
+                <field id="store4.store_sqft" type="java.lang.Integer" />
+                <field id="store4.store_state" type="java.lang.String" />
+                <field id="store4.store_street_address" type="java.lang.String" />
+                <field id="store4.store_type" type="java.lang.String" />
+                <field id="store4.video_store" type="java.lang.Boolean" />
+                <field id="position4.management_role" type="java.lang.String" />
+                <field id="position4.max_scale" type="java.math.BigDecimal" />
+                <field id="position4.min_scale" type="java.math.BigDecimal" />
+                <field id="position4.pay_type" type="java.lang.String" />
+                <field id="position4.position_id" type="java.lang.Integer" />
+                <field id="position4.position_title" type="java.lang.String" />
+                <field id="region4.region_id" type="java.lang.Integer" />
+                <field id="region4.sales_city" type="java.lang.String" />
+                <field id="region4.sales_state_province" type="java.lang.String" />
+                <field id="region4.sales_district" type="java.lang.String" />
+                <field id="region4.sales_region" type="java.lang.String" />
+                <field id="region4.sales_country" type="java.lang.String" />
+                <field id="region4.sales_district_id" type="java.lang.Integer" />
+                <field id="employee4.birth_date" type="java.util.Date" />
+                <field id="employee4.department_id" type="java.lang.Integer" />
+                <field id="employee4.education_level" type="java.lang.String" />
+                <field id="employee4.employee_id" type="java.lang.Integer" />
+                <field id="employee4.end_date" type="java.sql.Timestamp" />
+                <field id="employee4.first_name" type="java.lang.String" />
+                <field id="employee4.full_name" type="java.lang.String" />
+                <field id="employee4.gender" type="java.lang.String" />
+                <field id="employee4.hire_date" type="java.sql.Timestamp" />
+                <field id="employee4.last_name" type="java.lang.String" />
+                <field id="employee4.management_role" type="java.lang.String" />
+                <field id="employee4.marital_status" type="java.lang.String" />
+                <field id="employee4.position_id" type="java.lang.Integer" />
+                <field id="employee4.position_title" type="java.lang.String" />
+                <field id="employee4.salary" type="java.math.BigDecimal" />
+                <field id="employee4.store_id" type="java.lang.Integer" />
+                <field id="employee4.supervisor_id" type="java.lang.Integer" />
+                <field id="department4.department_id" type="java.lang.Integer" />
+                <field id="department4.department_description" type="java.lang.String" />
+                <field id="salary4.currency_id" type="java.lang.Integer" />
+                <field id="salary4.department_id" type="java.lang.Integer" />
+                <field id="salary4.employee_id" type="java.lang.Integer" />
+                <field id="salary4.overtime_paid" type="java.math.BigDecimal" />
+                <field id="salary4.pay_date" type="java.sql.Timestamp" />
+                <field id="salary4.salary_paid" type="java.math.BigDecimal" />
+                <field id="salary4.vacation_accrued" type="java.lang.Double" />
+                <field id="salary4.vacation_used" type="java.lang.Double" />
+            </fieldList>
+            <joinInfo alias="store4" referenceId="store4" />
+            <joinedDataSetList>
+                <joinedDataSetRef>
+                    <joinString>join employee4 employee4 on (store4.store_id == employee4.store_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join department4 department4 on (department4.department_id == employee4.department_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join position4 position4 on (position4.position_id == employee4.position_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join salary4 salary4 on (salary4.employee_id == employee4.employee_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join region4 region4 on (region4.region_id == store4.region_id)</joinString>
+                </joinedDataSetRef>
+            </joinedDataSetList>
+        </jdbcTable>
+        <jdbcTable id="sales_join" datasourceId="dsFoodMart" tableName="public.store">
+            <fieldList>
+                <field id="product1.brand_name" type="java.lang.String" />
+                <field id="product1.cases_per_pallet" type="java.lang.Short" />
+                <field id="product1.gross_weight" type="java.lang.Double" />
+                <field id="product1.low_fat" type="java.lang.Boolean" />
+                <field id="product1.net_weight" type="java.lang.Double" />
+                <field id="product1.product_class_id" type="java.lang.Integer" />
+                <field id="product1.product_id" type="java.lang.Integer" />
+                <field id="product1.product_name" type="java.lang.String" />
+                <field id="product1.recyclable_package" type="java.lang.Boolean" />
+                <field id="product1.shelf_depth" type="java.lang.Double" />
+                <field id="product1.shelf_height" type="java.lang.Double" />
+                <field id="product1.shelf_width" type="java.lang.Double" />
+                <field id="product1.sku" type="java.lang.Long" />
+                <field id="product1.srp" type="java.math.BigDecimal" />
+                <field id="product1.units_per_case" type="java.lang.Short" />
+                <field id="store1.coffee_bar" type="java.lang.Boolean" />
+                <field id="store1.first_opened_date" type="java.sql.Timestamp" />
+                <field id="store1.florist" type="java.lang.Boolean" />
+                <field id="store1.frozen_sqft" type="java.lang.Integer" />
+                <field id="store1.grocery_sqft" type="java.lang.Integer" />
+                <field id="store1.last_remodel_date" type="java.sql.Timestamp" />
+                <field id="store1.meat_sqft" type="java.lang.Integer" />
+                <field id="store1.prepared_food" type="java.lang.Boolean" />
+                <field id="store1.region_id" type="java.lang.Integer" />
+                <field id="store1.salad_bar" type="java.lang.Boolean" />
+                <field id="store1.store_city" type="java.lang.String" />
+                <field id="store1.store_country" type="java.lang.String" />
+                <field id="store1.store_fax" type="java.lang.String" />
+                <field id="store1.store_id" type="java.lang.Integer" />
+                <field id="store1.store_manager" type="java.lang.String" />
+                <field id="store1.store_name" type="java.lang.String" />
+                <field id="store1.store_number" type="java.lang.Integer" />
+                <field id="store1.store_phone" type="java.lang.String" />
+                <field id="store1.store_postal_code" type="java.lang.String" />
+                <field id="store1.store_sqft" type="java.lang.Integer" />
+                <field id="store1.store_state" type="java.lang.String" />
+                <field id="store1.store_street_address" type="java.lang.String" />
+                <field id="store1.store_type" type="java.lang.String" />
+                <field id="store1.video_store" type="java.lang.Boolean" />
+                <field id="time_by_day1.day_of_month" type="java.lang.Short" />
+                <field id="time_by_day1.day_of_week" type="java.lang.Integer" />
+                <field id="time_by_day1.fiscal_period" type="java.lang.String" />
+                <field id="time_by_day1.month_of_year" type="java.lang.Short" />
+                <field id="time_by_day1.quarter" type="java.lang.String" />
+                <field id="time_by_day1.the_date" type="java.sql.Timestamp" />
+                <field id="time_by_day1.the_day" type="java.lang.String" />
+                <field id="time_by_day1.the_month" type="java.lang.String" />
+                <field id="time_by_day1.the_year" type="java.lang.Short" />
+                <field id="time_by_day1.time_id" type="java.lang.Integer" />
+                <field id="time_by_day1.week_of_year" type="java.lang.Integer" />
+                <field id="sales_fact_1998_1.product_id" type="java.lang.Integer" />
+                <field id="sales_fact_1998_1.time_id" type="java.lang.Integer" />
+                <field id="sales_fact_1998_1.customer_id" type="java.lang.Integer" />
+                <field id="sales_fact_1998_1.promotion_id" type="java.lang.Integer" />
+                <field id="sales_fact_1998_1.store_id" type="java.lang.Integer" />
+                <field id="sales_fact_1998_1.store_sales" type="java.math.BigDecimal" />
+                <field id="sales_fact_1998_1.store_cost" type="java.math.BigDecimal" />
+                <field id="sales_fact_1998_1.unit_sales" type="java.math.BigDecimal" />
+                <field id="region11.region_id" type="java.lang.Integer" />
+                <field id="region11.sales_city" type="java.lang.String" />
+                <field id="region11.sales_state_province" type="java.lang.String" />
+                <field id="region11.sales_district" type="java.lang.String" />
+                <field id="region11.sales_region" type="java.lang.String" />
+                <field id="region11.sales_country" type="java.lang.String" />
+                <field id="region11.sales_district_id" type="java.lang.Integer" />
+            </fieldList>
+            <joinInfo alias="store1" referenceId="store1" />
+            <joinedDataSetList>
+                <joinedDataSetRef>
+                    <joinString>join sales_fact_1998_1 sales_fact_1998_1 on (store1.store_id == sales_fact_1998_1.store_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join product1 product1 on (product1.product_id == sales_fact_1998_1.product_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join time_by_day1 time_by_day1 on (time_by_day1.time_id == sales_fact_1998_1.time_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join region11 region11 on (region11.region_id == store1.region_id)</joinString>
+                </joinedDataSetRef>
+            </joinedDataSetList>
+        </jdbcTable>
+        <jdbcTable id="exp_join" datasourceId="dsFoodMart" tableName="public.account">
+            <fieldList>
+                <field id="store3.coffee_bar" type="java.lang.Boolean" />
+                <field id="store3.first_opened_date" type="java.sql.Timestamp" />
+                <field id="store3.florist" type="java.lang.Boolean" />
+                <field id="store3.frozen_sqft" type="java.lang.Integer" />
+                <field id="store3.grocery_sqft" type="java.lang.Integer" />
+                <field id="store3.last_remodel_date" type="java.sql.Timestamp" />
+                <field id="store3.meat_sqft" type="java.lang.Integer" />
+                <field id="store3.prepared_food" type="java.lang.Boolean" />
+                <field id="store3.region_id" type="java.lang.Integer" />
+                <field id="store3.salad_bar" type="java.lang.Boolean" />
+                <field id="store3.store_city" type="java.lang.String" />
+                <field id="store3.store_country" type="java.lang.String" />
+                <field id="store3.store_fax" type="java.lang.String" />
+                <field id="store3.store_id" type="java.lang.Integer" />
+                <field id="store3.store_manager" type="java.lang.String" />
+                <field id="store3.store_name" type="java.lang.String" />
+                <field id="store3.store_number" type="java.lang.Integer" />
+                <field id="store3.store_phone" type="java.lang.String" />
+                <field id="store3.store_postal_code" type="java.lang.String" />
+                <field id="store3.store_sqft" type="java.lang.Integer" />
+                <field id="store3.store_state" type="java.lang.String" />
+                <field id="store3.store_street_address" type="java.lang.String" />
+                <field id="store3.store_type" type="java.lang.String" />
+                <field id="store3.video_store" type="java.lang.Boolean" />
+                <field id="expense_fact3.account_id" type="java.lang.Integer" />
+                <field id="expense_fact3.amount" type="java.math.BigDecimal" />
+                <field id="expense_fact3.category_id" type="java.lang.String" />
+                <field id="expense_fact3.currency_id" type="java.lang.Integer" />
+                <field id="expense_fact3.exp_date" type="java.sql.Timestamp" />
+                <field id="expense_fact3.store_id" type="java.lang.Integer" />
+                <field id="expense_fact3.time_id" type="java.lang.Integer" />
+                <field id="region3.region_id" type="java.lang.Integer" />
+                <field id="region3.sales_city" type="java.lang.String" />
+                <field id="region3.sales_state_province" type="java.lang.String" />
+                <field id="region3.sales_district" type="java.lang.String" />
+                <field id="region3.sales_region" type="java.lang.String" />
+                <field id="region3.sales_country" type="java.lang.String" />
+                <field id="region3.sales_district_id" type="java.lang.Integer" />
+                <field id="account3.account_id" type="java.lang.Integer" />
+                <field id="account3.account_parent" type="java.lang.Integer" />
+                <field id="account3.account_description" type="java.lang.String" />
+                <field id="account3.account_type" type="java.lang.String" />
+                <field id="account3.account_rollup" type="java.lang.String" />
+                <field id="account3.custom_members" type="java.lang.String" />
+                <field id="category3.category_id" type="java.lang.String" />
+                <field id="category3.category_parent" type="java.lang.String" />
+                <field id="category3.category_description" type="java.lang.String" />
+                <field id="category3.category_rollup" type="java.lang.String" />
+            </fieldList>
+            <joinInfo alias="account3" referenceId="account3" />
+            <joinedDataSetList>
+                <joinedDataSetRef>
+                    <joinString>join expense_fact3 expense_fact3 on (account3.account_id == expense_fact3.account_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join category3 category3 on (category3.category_id == expense_fact3.category_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join store3 store3 on (store3.store_id == expense_fact3.store_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join region3 region3 on (region3.region_id == store3.region_id)</joinString>
+                </joinedDataSetRef>
+            </joinedDataSetList>
+        </jdbcTable>
+        <jdbcTable id="inv_join" datasourceId="dsFoodMart" tableName="public.store">
+            <fieldList>
+                <field id="store2.coffee_bar" type="java.lang.Boolean" />
+                <field id="store2.first_opened_date" type="java.sql.Timestamp" />
+                <field id="store2.florist" type="java.lang.Boolean" />
+                <field id="store2.frozen_sqft" type="java.lang.Integer" />
+                <field id="store2.grocery_sqft" type="java.lang.Integer" />
+                <field id="store2.last_remodel_date" type="java.sql.Timestamp" />
+                <field id="store2.meat_sqft" type="java.lang.Integer" />
+                <field id="store2.prepared_food" type="java.lang.Boolean" />
+                <field id="store2.region_id" type="java.lang.Integer" />
+                <field id="store2.salad_bar" type="java.lang.Boolean" />
+                <field id="store2.store_city" type="java.lang.String" />
+                <field id="store2.store_country" type="java.lang.String" />
+                <field id="store2.store_fax" type="java.lang.String" />
+                <field id="store2.store_id" type="java.lang.Integer" />
+                <field id="store2.store_manager" type="java.lang.String" />
+                <field id="store2.store_name" type="java.lang.String" />
+                <field id="store2.store_number" type="java.lang.Integer" />
+                <field id="store2.store_phone" type="java.lang.String" />
+                <field id="store2.store_postal_code" type="java.lang.String" />
+                <field id="store2.store_sqft" type="java.lang.Integer" />
+                <field id="store2.store_state" type="java.lang.String" />
+                <field id="store2.store_street_address" type="java.lang.String" />
+                <field id="store2.store_type" type="java.lang.String" />
+                <field id="store2.video_store" type="java.lang.Boolean" />
+                <field id="region2.region_id" type="java.lang.Integer" />
+                <field id="region2.sales_city" type="java.lang.String" />
+                <field id="region2.sales_state_province" type="java.lang.String" />
+                <field id="region2.sales_district" type="java.lang.String" />
+                <field id="region2.sales_region" type="java.lang.String" />
+                <field id="region2.sales_country" type="java.lang.String" />
+                <field id="region2.sales_district_id" type="java.lang.Integer" />
+                <field id="product2.brand_name" type="java.lang.String" />
+                <field id="product2.cases_per_pallet" type="java.lang.Short" />
+                <field id="product2.gross_weight" type="java.lang.Double" />
+                <field id="product2.low_fat" type="java.lang.Boolean" />
+                <field id="product2.net_weight" type="java.lang.Double" />
+                <field id="product2.product_class_id" type="java.lang.Integer" />
+                <field id="product2.product_id" type="java.lang.Integer" />
+                <field id="product2.product_name" type="java.lang.String" />
+                <field id="product2.recyclable_package" type="java.lang.Boolean" />
+                <field id="product2.shelf_depth" type="java.lang.Double" />
+                <field id="product2.shelf_height" type="java.lang.Double" />
+                <field id="product2.shelf_width" type="java.lang.Double" />
+                <field id="product2.sku" type="java.lang.Long" />
+                <field id="product2.srp" type="java.math.BigDecimal" />
+                <field id="product2.units_per_case" type="java.lang.Short" />
+                <field id="inventory_fact_1998_2.product_id" type="java.lang.Integer" />
+                <field id="inventory_fact_1998_2.time_id" type="java.lang.Integer" />
+                <field id="inventory_fact_1998_2.warehouse_id" type="java.lang.Integer" />
+                <field id="inventory_fact_1998_2.store_id" type="java.lang.Integer" />
+                <field id="inventory_fact_1998_2.units_ordered" type="java.lang.Integer" />
+                <field id="inventory_fact_1998_2.units_shipped" type="java.lang.Integer" />
+                <field id="inventory_fact_1998_2.warehouse_sales" type="java.math.BigDecimal" />
+                <field id="inventory_fact_1998_2.warehouse_cost" type="java.math.BigDecimal" />
+                <field id="inventory_fact_1998_2.supply_time" type="java.lang.Short" />
+                <field id="inventory_fact_1998_2.store_invoice" type="java.math.BigDecimal" />
+                <field id="inventory_fact_1998_2.warehouse_profit" type="java.math.BigDecimal" />
+                <field id="time_by_day2.day_of_month" type="java.lang.Short" />
+                <field id="time_by_day2.day_of_week" type="java.lang.Integer" />
+                <field id="time_by_day2.fiscal_period" type="java.lang.String" />
+                <field id="time_by_day2.month_of_year" type="java.lang.Short" />
+                <field id="time_by_day2.quarter" type="java.lang.String" />
+                <field id="time_by_day2.the_date" type="java.sql.Timestamp" />
+                <field id="time_by_day2.the_day" type="java.lang.String" />
+                <field id="time_by_day2.the_month" type="java.lang.String" />
+                <field id="time_by_day2.the_year" type="java.lang.Short" />
+                <field id="time_by_day2.time_id" type="java.lang.Integer" />
+                <field id="time_by_day2.week_of_year" type="java.lang.Integer" />
+            </fieldList>
+            <joinInfo alias="store2" referenceId="store2" />
+            <joinedDataSetList>
+                <joinedDataSetRef>
+                    <joinString>join inventory_fact_1998_2 inventory_fact_1998_2 on (store2.store_id == inventory_fact_1998_2.store_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join product2 product2 on (product2.product_id == inventory_fact_1998_2.product_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join time_by_day2 time_by_day2 on (time_by_day2.time_id == inventory_fact_1998_2.time_id)</joinString>
+                </joinedDataSetRef>
+                <joinedDataSetRef>
+                    <joinString>join region2 region2 on (region2.region_id == store2.region_id)</joinString>
+                </joinedDataSetRef>
+            </joinedDataSetList>
+        </jdbcTable>
+    </resources>
+</schema>
