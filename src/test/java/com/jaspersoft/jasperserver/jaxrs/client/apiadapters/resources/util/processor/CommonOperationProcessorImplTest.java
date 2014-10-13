@@ -1,10 +1,10 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.processor;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.processor;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.sun.jersey.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;

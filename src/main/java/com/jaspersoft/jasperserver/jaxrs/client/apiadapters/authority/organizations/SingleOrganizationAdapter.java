@@ -21,6 +21,11 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
@@ -33,11 +38,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.Organization;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.map.AnnotationIntrospector;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 
 import java.io.IOException;
 
@@ -70,11 +70,17 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
     }
 
     private String prepareJsonForUpdate(Organization clientTenant){
+
+//        ObjectMapper mapper = new ObjectMapper();
+//        SerializationConfig serializationConfig = mapper.getSerializationConfig();
+//        serializationConfig = serializationConfig.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+//        AnnotationIntrospector introspector = new JaxbAnnotationIntrospector();
+//        mapper.setSerializationConfig(serializationConfig);
+//        mapper.setAnnotationIntrospector(introspector);
+
         ObjectMapper mapper = new ObjectMapper();
-        SerializationConfig serializationConfig = mapper.getSerializationConfig();
-        serializationConfig = serializationConfig.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-        AnnotationIntrospector introspector = new JaxbAnnotationIntrospector();
-        mapper.setSerializationConfig(serializationConfig);
+        AnnotationIntrospector introspector = new JaxbAnnotationIntrospector(TypeFactory.defaultInstance());
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.setAnnotationIntrospector(introspector);
 
         String json;

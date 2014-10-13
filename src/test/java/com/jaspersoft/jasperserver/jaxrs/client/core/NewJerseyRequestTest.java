@@ -7,8 +7,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.WithEntityOperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
-import com.sun.jersey.multipart.impl.MultiPartWriter;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -107,7 +107,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         inOrder.verify(targetMock).path("/rest_v2");
         inOrder.verify(targetMock).register(CustomRepresentationTypeProvider.class);
         inOrder.verify(targetMock).register(JacksonFeature.class);
-        inOrder.verify(targetMock).register(MultiPartWriter.class);
+        inOrder.verify(targetMock).register(MultiPartFeature.class);
         inOrder.verify(targetMock).path("/uri");
     }
 
@@ -153,7 +153,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         inOrder.verify(targetMock).path("/rest_v2");
         inOrder.verify(targetMock).register(CustomRepresentationTypeProvider.class);
         inOrder.verify(targetMock).register(JacksonFeature.class);
-        inOrder.verify(targetMock).register(MultiPartWriter.class);
+        inOrder.verify(targetMock).register(MultiPartFeature.class);
         inOrder.verify(targetMock).path("/uri");
     }
 

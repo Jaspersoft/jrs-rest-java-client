@@ -18,14 +18,14 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.decorator;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.decorator;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.WrongResourceFormatException;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.processor.CommonOperationProcessorImpl;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.WrongResourceFormatException;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.processor.CommonOperationProcessorImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.sun.jersey.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 import javax.ws.rs.core.MediaType;
 

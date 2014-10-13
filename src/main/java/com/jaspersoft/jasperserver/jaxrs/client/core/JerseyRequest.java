@@ -28,8 +28,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
-import com.sun.jersey.multipart.impl.MultiPartWriter;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -100,12 +100,11 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         else
             this.acceptType = MediaType.APPLICATION_XML;
 
-
         this.headers = new MultivaluedHashMap<String, String>();
         this.usersWebTarget = sessionStorage.getRootTarget().path("/rest_v2")
                 .register(CustomRepresentationTypeProvider.class)
                 .register(JacksonFeature.class)
-                .register(MultiPartWriter.class);
+                .register(MultiPartFeature.class);
     }
 
     public JerseyRequest<ResponseType> setPath(String path) {

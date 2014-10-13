@@ -7,14 +7,15 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>5.6.0-BETA</version>
+    <version>5.6.0b-SNAPSHOT</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <fasterxml.version>2.4.2</fasterxml.version>
+        <fasterxml.version>2.3.2</fasterxml.version>
+        <jersey.version>2.13</jersey.version>
     </properties>
 
     <dependencies>
@@ -26,22 +27,33 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>2.5</version>
+            <version>${jersey.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-json</artifactId>
-            <version>1.18</version>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jettison</artifactId>
+            <version>${jersey.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-multipart</artifactId>
-            <version>1.17</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.sun.jersey</groupId>-->
+            <!--<artifactId>jersey-json</artifactId>-->
+            <!--<version>1.18</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.sun.jersey.contribs</groupId>-->
+            <!--<artifactId>jersey-multipart</artifactId>-->
+            <!--<version>${jersey.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
-            <version>2.5.1</version>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>${jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
@@ -61,11 +73,13 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
             <version>${powermock.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-easymock</artifactId>
             <version>${powermock.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- EasyMock -->
@@ -73,13 +87,14 @@
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>3.2</version>
+            <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.owlike</groupId>
-            <artifactId>genson</artifactId>
-            <version>0.99</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.owlike</groupId>-->
+            <!--<artifactId>genson</artifactId>-->
+            <!--<version>0.99</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
@@ -96,12 +111,12 @@
             <version>2.4</version>
         </dependency>
 
-        <!-- Yaml support -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${fasterxml.version}</version>
-        </dependency>
+        <!-- Yml util -->
+        <!--<dependency>-->
+            <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+            <!--<artifactId>jackson-databind</artifactId>-->
+            <!--<version>${fasterxml.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
@@ -154,7 +169,7 @@
                     <instrumentation>
                         <excludes>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/dto/**</exclude>
-                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/support/**</exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/util/**</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>

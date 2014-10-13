@@ -1,13 +1,13 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.DomainResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.MondrianConnectionResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.ReportUnitResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.SecureMondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.builder.DomainResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.builder.MondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.builder.ReportUnitResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.builder.SecureMondrianConnectionResourceBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;

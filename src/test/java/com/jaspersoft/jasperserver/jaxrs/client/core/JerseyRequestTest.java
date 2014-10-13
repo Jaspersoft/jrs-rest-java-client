@@ -4,9 +4,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHa
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
-import com.sun.jersey.multipart.impl.MultiPartWriter;
 import org.glassfish.jersey.client.JerseyWebTarget;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -81,7 +81,7 @@ public class JerseyRequestTest extends PowerMockTestCase {
         when(webTarget.path(Mockito.anyString())).thenReturn(webTarget);
         when(webTarget.register(CustomRepresentationTypeProvider.class)).thenReturn(webTarget);
         when(webTarget.register(JacksonFeature.class)).thenReturn(webTarget);
-        when(webTarget.register(MultiPartWriter.class)).thenReturn(webTarget);
+        when(webTarget.register(MultiPartFeature.class)).thenReturn(webTarget);
     }
 
     /**

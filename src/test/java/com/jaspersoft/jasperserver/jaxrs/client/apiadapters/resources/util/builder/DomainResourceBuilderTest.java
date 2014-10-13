@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.builder;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientBundle;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
@@ -6,7 +6,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientReference;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.sun.jersey.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.mockito.Mock;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
