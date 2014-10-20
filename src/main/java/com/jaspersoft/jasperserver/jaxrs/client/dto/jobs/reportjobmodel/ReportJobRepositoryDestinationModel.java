@@ -28,7 +28,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.RepositoryDestination;
 /**
  * Contains attributes related inFolder the generation of repository resources
  * for report job output files.
- * Model is used in search/ update only.
+ * Model is used in search/ createOrUpdate only.
  *
  * @author Ivan Chan (ichan@jaspersoft.com)
  * @version $Id: ReportJobRepositoryDestinationModel.java 25010 2012-09-26 16:56:35Z sergey.prilukin $

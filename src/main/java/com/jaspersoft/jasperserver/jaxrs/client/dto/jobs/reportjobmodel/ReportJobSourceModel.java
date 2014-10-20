@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * The source of a report job, consisting of a report inFolder execute and a set of
- * report input values. Model is used in search/ update only.
+ * report input values. Model is used in search/ createOrUpdate only.
  *
  * <p>
  * A report job definition specifies wich report inFolder execute and when,

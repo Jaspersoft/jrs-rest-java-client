@@ -93,7 +93,7 @@
 //    }
 //
 //    @Test
-//    public void update() throws Exception {
+//    public void createOrUpdate() throws Exception {
 //
 //        // Given
 //        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, "MyCoolOrg"));
@@ -102,7 +102,7 @@
 //        doReturn(resultMock).when(requestMock).put("json");
 //
 //        // When
-//        adapter.update(tenantMock);
+//        adapter.createOrUpdate(tenantMock);
 //
 //        // Than
 //        verifyPrivate(adapter, times(1)).invoke("buildRequest");
@@ -155,7 +155,7 @@
 //
 //    @Test
 //    /**
-//     * for {@link SingleOrganizationAdapter#asyncUpdate(ClientTenant, Callback)}
+//     * for {@link SingleOrganizationAdapter#asyncCreateOrUpdate(ClientTenant, Callback)}
 //     */
 //    public void should_fire_update_method_asynchronously_and_return_holder_object_with_result_of_execution() throws Exception {
 //
@@ -184,7 +184,7 @@
 //        doReturn(null).when(callback).execute(resultMock);
 //
 //        /* When */
-//        RequestExecution retrieved = adapter.asyncUpdate(tenantMock, callback);
+//        RequestExecution retrieved = adapter.asyncCreateOrUpdate(tenantMock, callback);
 //
 //        synchronized (callback) {
 //            callback.wait(1000);
@@ -266,7 +266,7 @@
 //        InOrder inOrder = Mockito.inOrder(mapperMock);
 //
 //        /* When */
-//        adapter.update(tenantMock);
+//        adapter.createOrUpdate(tenantMock);
 //
 //        /* Than */
 //        inOrder.verify(mapperMock).getSerializationConfig();
@@ -300,7 +300,7 @@
 //
 //        /* When */
 //        try{
-//            adapter.update(tenantMock);
+//            adapter.createOrUpdate(tenantMock);
 //        }catch (JSClientException e){
 //            assertNotNull(e);
 //            assertEquals(e.getMessage(), "Cannot marshal organization object.");

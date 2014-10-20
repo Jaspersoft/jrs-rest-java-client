@@ -1,0 +1,18 @@
+#
+# REST Client Configuration for test enviranment (cloud)
+#
+# @author Alexander Krasnyanskiy
+#
+---
+server:
+  url: http://172.28.146.32:8080/jasperserver-pro
+  version: 5.6.0
+
+  headers:
+    accept: JSON
+    content-type: JSON
+
+#  timeout:
+#    connection: 200000
+#    read: 200000
+#  url: http://localhost:4444/jasperserver-pro

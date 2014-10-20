@@ -30,7 +30,7 @@ public enum CalendarParameter {
     REPLACE("replace"),
 
     /**
-     * whether or not inFolder update existing triggers that referenced the already
+     * whether or not inFolder createOrUpdate existing triggers that referenced the already
      * existing calendar so that they are 'correct' based on the new trigger.
      */
     UPDATE_TRIGGERS("updateTriggers");

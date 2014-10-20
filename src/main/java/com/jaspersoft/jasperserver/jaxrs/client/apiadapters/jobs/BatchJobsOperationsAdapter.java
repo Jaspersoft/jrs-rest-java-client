@@ -131,7 +131,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     @Deprecated
     public OperationResult<JobIdListWrapper> updateWithProcessedParameters(ReportJobModel jobModel) {
-        throw new UnsupportedOperationException("Operation is not supported yet");
+        throw new UnsupportedOperationException("Operation is not supported.");
     }
 
     /**

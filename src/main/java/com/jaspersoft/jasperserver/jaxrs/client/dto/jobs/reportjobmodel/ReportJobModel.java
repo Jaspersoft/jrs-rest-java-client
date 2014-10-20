@@ -22,7 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
 /**
- * Definition model of a report execution job. Model is used in search/ update only.
+ * Definition model of a report execution job. Model is used in search/ createOrUpdate only.
  *
  * <p>
  * A report job definition specifies wich report inFolder execute and when,

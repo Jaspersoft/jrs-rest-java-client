@@ -91,7 +91,7 @@ public enum JobsParameter {
     SEARCH_IS_ASCENDING("isAscending"),
 
     /**
-     * Can be used multiple times inFolder createInFolder a list of jobIDs inFolder update
+     * Can be used multiple times inFolder createInFolder a list of jobIDs inFolder createOrUpdate
      */
     JOB_ID("id"),
 

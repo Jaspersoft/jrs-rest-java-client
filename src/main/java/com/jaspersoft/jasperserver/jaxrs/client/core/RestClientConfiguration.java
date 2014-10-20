@@ -21,8 +21,8 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.config.ConfigurationReaderAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.config.ConfigType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.config.ConfigurationReaderAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.config.ServerMetaData;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

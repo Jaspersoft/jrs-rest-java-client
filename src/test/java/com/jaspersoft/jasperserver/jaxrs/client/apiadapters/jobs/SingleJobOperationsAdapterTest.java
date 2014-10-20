@@ -163,7 +163,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         assertSame(retrieved, jobStateOperationResultMock);
     }
 
-    @Test(testName = "update")
+    @Test(testName = "createOrUpdate")
     public void should_return_prepared_op_result_when_jrs_version_is_5_6_1() {
 
         // Given
@@ -190,7 +190,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         assertSame(retrieved, jobOperationResultMock);
     }
 
-    @Test(testName = "update")
+    @Test(testName = "createOrUpdate")
     public void should_return_prepared_op_result_when_jrs_version_is_4_7_0() {
 
         // Given

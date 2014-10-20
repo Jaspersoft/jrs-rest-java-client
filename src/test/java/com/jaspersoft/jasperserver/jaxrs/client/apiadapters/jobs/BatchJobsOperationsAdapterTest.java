@@ -242,7 +242,7 @@
 //        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) params.get(adapter);
 //
 //        // When
-//        OperationResult<JobIdListWrapper> retrieved = adapter.update(reportJobModelMock);
+//        OperationResult<JobIdListWrapper> retrieved = adapter.createOrUpdate(reportJobModelMock);
 //
 //        // Than
 //        PowerMockito.verifyStatic(times(1));
@@ -272,7 +272,7 @@
 //        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) params.get(adapter);
 //
 //        // When
-//        OperationResult<JobIdListWrapper> retrieved = adapter.update(reportJobModelMock);
+//        OperationResult<JobIdListWrapper> retrieved = adapter.createOrUpdate(reportJobModelMock);
 //
 //        // Than
 //        PowerMockito.verifyStatic(times(1));
@@ -552,7 +552,7 @@
 //        model.setLabel("label");
 //
 //        /* When */
-//        RequestExecution retrieved = adapterSpy.asyncUpdate(model, callback);
+//        RequestExecution retrieved = adapterSpy.asyncCreateOrUpdate(model, callback);
 //
 //        /* Than */
 //        Assert.assertNotNull(retrieved);
@@ -593,7 +593,7 @@
 //        model.setLabel("label");
 //
 //        /* When */
-//        OperationResult<JobIdListWrapper> retrieved = adapterSpy.update(model);
+//        OperationResult<JobIdListWrapper> retrieved = adapterSpy.createOrUpdate(model);
 //
 //        /* Than */
 //        assertNotNull(retrieved);

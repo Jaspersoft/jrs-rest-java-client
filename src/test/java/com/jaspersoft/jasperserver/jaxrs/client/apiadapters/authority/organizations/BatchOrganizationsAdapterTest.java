@@ -1,13 +1,13 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
+import com.jaspersoft.jasperserver.dto.authority.OrganizationsListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.Organization;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.OrganizationsListWrapper;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -45,15 +45,15 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
     private OperationResult<OrganizationsListWrapper> resultMock;
 
     @Mock
-    private JerseyRequest<Organization> tenantJerseyRequestMock;
+    private JerseyRequest<ClientTenant> tenantJerseyRequestMock;
     @Mock
-    private OperationResult<Organization> tenantOperationResultMock;
+    private OperationResult<ClientTenant> tenantOperationResultMock;
 
     @Mock
     private MultivaluedHashMap<String, String> paramsMock;
 
     @Mock
-    public Organization tenantMock;
+    public ClientTenant tenantMock;
 
     @BeforeMethod
     public void before() {
@@ -127,16 +127,16 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(Organization.class), eq(new String[]{"/organizations"}), any(DefaultErrorHandler.class))).thenReturn(tenantJerseyRequestMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"/organizations"}), any(DefaultErrorHandler.class))).thenReturn(tenantJerseyRequestMock);
         PowerMockito.doReturn(tenantOperationResultMock).when(tenantJerseyRequestMock).post(tenantMock);
         BatchOrganizationsAdapter adapterSpy = PowerMockito.spy(new BatchOrganizationsAdapter(sessionStorageMock));
 
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        final Callback<OperationResult<Organization>, Void> callback = PowerMockito.spy(new Callback<OperationResult<Organization>, Void>() {
+        final Callback<OperationResult<ClientTenant>, Void> callback = PowerMockito.spy(new Callback<OperationResult<ClientTenant>, Void>() {
             @Override
-            public Void execute(OperationResult<Organization> data) {
+            public Void execute(OperationResult<ClientTenant> data) {
                 newThreadId.set((int) Thread.currentThread().getId());
                 synchronized (this) {
                     this.notify();
@@ -168,11 +168,11 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
 
         //create
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(Organization.class), eq(new String[]{"/organizations"}), any(DefaultErrorHandler.class))).thenReturn(tenantJerseyRequestMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"/organizations"}), any(DefaultErrorHandler.class))).thenReturn(tenantJerseyRequestMock);
         PowerMockito.doReturn(tenantOperationResultMock).when(tenantJerseyRequestMock).post(tenantMock);
         BatchOrganizationsAdapter adapterSpy = PowerMockito.spy(new BatchOrganizationsAdapter(sessionStorageMock));
 
-        OperationResult<Organization> retrievedResult = adapterSpy.create(tenantMock);
+        OperationResult<ClientTenant> retrievedResult = adapterSpy.create(tenantMock);
 
         assertSame(retrievedResult, tenantOperationResultMock);
         Mockito.verify(tenantJerseyRequestMock, times(1)).post(tenantMock);

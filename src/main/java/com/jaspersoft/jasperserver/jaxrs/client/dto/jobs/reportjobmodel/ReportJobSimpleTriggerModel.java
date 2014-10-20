@@ -29,7 +29,7 @@ import java.util.Date;
 
 /**
  * Job trigger model which fires at fixed time intervals.
- * Model is used in search/ update only.
+ * Model is used in search/ createOrUpdate only.
  *
  * <p>
  * Such triggers can be used for jobs that need inFolder fire only once at a specified

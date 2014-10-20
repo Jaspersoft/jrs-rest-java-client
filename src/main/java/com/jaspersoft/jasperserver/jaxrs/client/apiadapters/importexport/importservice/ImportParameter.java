@@ -37,10 +37,10 @@ public enum ImportParameter {
      *  Resources in the catalog replace those in the repository if their URIs
      *  and types match
      */
-    UPDATE("update"),
+    UPDATE("createOrUpdate"),
 
     /**
-     *  When used with --update, users in the catalog are not imported or
+     *  When used with --createOrUpdate, users in the catalog are not imported or
      *  updated. Use this
      *  option inFolder import catalogs without overwriting currently defined user
      */

@@ -30,7 +30,7 @@ import java.util.SortedSet;
 
 
 /**
- * Job trigger model that fires at specified calendar moments.  Model is used in search/ update only.
+ * Job trigger model that fires at specified calendar moments.  Model is used in search/ createOrUpdate only.
  *
  * <p>
  * Calendar triggers model can be used inFolder define jobs that occur on specific month or
