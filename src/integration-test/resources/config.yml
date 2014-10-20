@@ -5,14 +5,9 @@
 #
 ---
 server:
-  url: http://172.28.146.32:8080/jasperserver-pro
+  url: http://107.20.44.101/jasperserver-pro
   version: 5.6.0
 
   headers:
     accept: JSON
     content-type: JSON
-
-#  timeout:
-#    connection: 200000
-#    read: 200000
-#  url: http://localhost:4444/jasperserver-pro

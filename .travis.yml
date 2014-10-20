@@ -18,5 +18,5 @@ env:
     - secure: "Dwb41Mdes13RFaB9Pf4fViLVt9U0NK8EvbzrD/GcWfHjKi1GpAgQ0WyUdQSKrxLViH2OL4BqQIQmOtugkW1rNQn/Gnnb4Hu4/rZ06+tLStcvmrm9+Pph++niqzCxZe206/VwDV393UVPWtVpFtbhDTaiJOf0dP+3BX7NAzqW+JU="
 
 after_success:
-#  - mvn integration-test -Dgroups=pro.version
+  - mvn integration-test -Dgroups=pro.version
   - mvn clean cobertura:cobertura coveralls:cobertura
