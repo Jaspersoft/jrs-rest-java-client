@@ -22,8 +22,6 @@ import static java.lang.Thread.sleep;
  */
 public class UploadResourceIT {
 
-    // todo:  (run_by_group)  mvn integration-test -Dgroups=pro.version
-
     private static final String USERNAME = "superuser";
     private static final String PASSWORD = "superuser";
 
@@ -49,12 +47,12 @@ public class UploadResourceIT {
 
     @Test(groups = {"pro.version"})
     public void should_upload_() throws InterruptedException {
-        System.out.println("Yes!");
+        // ...
     }
 
     @Test(groups = {"ce.version"})
     public void should_upload() {
-        System.out.println("No!");
+        // ...
     }
 
     @AfterClass(groups = {"pro.version"})
