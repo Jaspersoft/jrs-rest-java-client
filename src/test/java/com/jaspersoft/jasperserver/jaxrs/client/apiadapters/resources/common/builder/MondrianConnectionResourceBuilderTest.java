@@ -1,8 +1,8 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.builder;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.common.builder;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.decorator.MondrianConnectionResourceOperationProcessorDecorator;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.common.decorator.MondrianConnectionResourceOperationProcessorDecorator;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;

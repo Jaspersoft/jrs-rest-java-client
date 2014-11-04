@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.common;
 
 import org.testng.annotations.Test;
 

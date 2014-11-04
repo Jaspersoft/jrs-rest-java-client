@@ -14,7 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- JS DTO -->
+        <!-- JRS DTO -->
         <jasperserver.dto.version>5.6.1</jasperserver.dto.version>
 
 
@@ -30,16 +30,30 @@
 
         <!-- Build options -->
         <build.profile.id>dev</build.profile.id>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skip.integration.tests>true</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
 
 
+        <!-- Coverage tools dependencies -->
+        <coveralls.plugin.version>2.0.0</coveralls.plugin.version>
+        <cobertura.maven.plugin.version>2.5.2</cobertura.maven.plugin.version>
+
+
         <!-- Miscellaneous -->
+        <jdk.version>1.6</jdk.version>
+
         <bouncycastle.bcprov.version>1.51</bouncycastle.bcprov.version>
         <apache.commons.version>3.0</apache.commons.version>
         <commons.io.version>2.4</commons.io.version>
         <fasterxml.version>2.3.2</fasterxml.version>
+
+
+        <!-- All maven stuff -->
+        <maven.resources.plugin.version>2.5</maven.resources.plugin.version>
+        <maven.compiler.plugin.version>2.5.1</maven.compiler.plugin.version>
+        <maven.failsafe.plugin.version>2.12</maven.failsafe.plugin.version>
+        <maven.surefire.version>2.12</maven.surefire.version>
+        <maven.build.helper.version>1.7</maven.build.helper.version>
     </properties>
 
     <profiles>
@@ -198,7 +212,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
+                <version>${maven.build.helper.version}</version>
                 <executions>
                     <execution>
                         <id>add-integration-test-sources</id>
@@ -220,7 +234,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12</version>
+                <version>${maven.surefire.version}</version>
                 <configuration>
                     <skipTests>${skip.unit.tests}</skipTests>
                     <excludes>
@@ -234,7 +248,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.12</version>
+                <version>${maven.failsafe.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>integration-tests</id>
@@ -252,17 +266,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.5</version>
+                <version>${maven.resources.plugin.version}</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
@@ -271,7 +285,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.5.2</version>
+                <version>${cobertura.maven.plugin.version}</version>
                 <configuration>
                     <format>xml</format>
                     <maxmem>256m</maxmem>
@@ -290,7 +304,7 @@
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
-                <version>2.0.0</version>
+                <version>${coveralls.plugin.version}</version>
                 <configuration>
                     <branch>develop</branch>
                 </configuration>

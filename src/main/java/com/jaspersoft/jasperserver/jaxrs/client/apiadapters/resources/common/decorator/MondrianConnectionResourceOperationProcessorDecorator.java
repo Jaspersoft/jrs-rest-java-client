@@ -18,10 +18,10 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.decorator;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.common.decorator;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.processor.CommonOperationProcessorImpl;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.common.processor.CommonOperationProcessorImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;

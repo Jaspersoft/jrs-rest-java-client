@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * This class is needed because of bug in JAXB.
- * XmlElementWrapper annotation doesn't util @XmlJavaTypeAdapter
+ * XmlElementWrapper annotation doesn't common @XmlJavaTypeAdapter
  *
  * @author Yaroslav.Kovalchyk
  * @version $Id: ExcludeDaysWrapper.java 23844 2012-05-22 06:23:41Z ykovalchyk $

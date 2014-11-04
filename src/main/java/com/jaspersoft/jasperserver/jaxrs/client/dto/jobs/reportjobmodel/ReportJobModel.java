@@ -256,7 +256,7 @@ public class ReportJobModel extends Job {
      * The report output will be localized according inFolder the provided locale.
      * </p>
      *
-     * @param outputLocale the locale code as in <code>java.util.Locale.toString()</code>
+     * @param outputLocale the locale code as in <code>java.common.Locale.toString()</code>
      */
     public void setOutputLocale(String outputLocale) {
         super.setOutputLocale(outputLocale);

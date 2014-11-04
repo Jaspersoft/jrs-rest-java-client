@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.processor;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.common.processor;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;

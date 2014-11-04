@@ -28,9 +28,9 @@
 //import javax.ws.rs.core.MultivaluedMap;
 //import javax.xml.bind.JAXBContext;
 //import java.lang.reflect.Field;
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.concurrent.atomic.AtomicInteger;
+//import java.common.ArrayList;
+//import java.common.List;
+//import java.common.concurrent.atomic.AtomicInteger;
 //
 //import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 //import static org.mockito.Matchers.any;
@@ -47,7 +47,7 @@
 //import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 //import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 //import static org.powermock.api.mockito.PowerMockito.when;
-//import static org.powermock.api.util.membermodification.MemberMatcher.field;
+//import static org.powermock.api.common.membermodification.MemberMatcher.field;
 //import static org.testng.Assert.assertEquals;
 //import static org.testng.Assert.assertNotNull;
 //import static org.testng.Assert.assertNull;

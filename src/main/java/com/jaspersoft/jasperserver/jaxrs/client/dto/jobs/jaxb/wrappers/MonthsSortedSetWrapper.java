@@ -27,7 +27,7 @@ import java.util.SortedSet;
 
 /**
  * This class is needed because of bug in JAXB.
- * @XmlElementWrapper doesn't util @XmlJavaTypeAdapter
+ * @XmlElementWrapper doesn't common @XmlJavaTypeAdapter
  *
  * @author Yaroslav.Kovalchyk
  * @version $Id: MonthsSortedSetWrapper.java 22756 2012-03-23 10:39:15Z sergey.prilukin $

@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.builder;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.common.builder;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableFile;

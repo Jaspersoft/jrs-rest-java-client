@@ -21,7 +21,7 @@
 //import org.testng.annotations.BeforeMethod;
 //import org.testng.annotations.Test;
 //
-//import java.util.concurrent.atomic.AtomicInteger;
+//import java.common.concurrent.atomic.AtomicInteger;
 //
 //import static org.mockito.Matchers.any;
 //import static org.mockito.Mockito.mock;
@@ -30,7 +30,7 @@
 //import static org.mockito.Mockito.verify;
 //import static org.mockito.Mockito.verifyNoMoreInteractions;
 //import static org.mockito.MockitoAnnotations.initMocks;
-//import static org.mockito.internal.util.reflection.Whitebox.getInternalState;
+//import static org.mockito.internal.common.reflection.Whitebox.getInternalState;
 //import static org.powermock.api.mockito.PowerMockito.doReturn;
 //import static org.powermock.api.mockito.PowerMockito.spy;
 //import static org.powermock.api.mockito.PowerMockito.verifyPrivate;

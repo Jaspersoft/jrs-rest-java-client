@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.processor;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.common.processor;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
