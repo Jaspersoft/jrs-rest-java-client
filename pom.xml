@@ -13,15 +13,33 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <powermock.version>1.5.5</powermock.version>
-        <fasterxml.version>2.3.2</fasterxml.version>
-        <jersey.version>2.13</jersey.version>
-        <restlet.version>2.3-M3</restlet.version>
 
+        <!-- JS DTO -->
+        <jasperserver.dto.version>5.6.1</jasperserver.dto.version>
+
+
+        <!-- Tools for testing -->
+        <testng.version>6.8.8</testng.version>
+        <easymock.version>3.2</easymock.version>
+        <powermock.version>1.5.5</powermock.version>
+
+
+        <!-- Jersey version -->
+        <jersey.version>2.13</jersey.version>
+
+
+        <!-- Build options -->
         <build.profile.id>dev</build.profile.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skip.integration.tests>true</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
+
+
+        <!-- Miscellaneous -->
+        <bouncycastle.bcprov.version>1.51</bouncycastle.bcprov.version>
+        <apache.commons.version>3.0</apache.commons.version>
+        <commons.io.version>2.4</commons.io.version>
+        <fasterxml.version>2.3.2</fasterxml.version>
     </properties>
 
     <profiles>
@@ -44,15 +62,16 @@
         <dependency>
             <groupId>com.jaspersoft.jasperserver</groupId>
             <artifactId>jasperserver-dto</artifactId>
-            <version>5.6.1</version>
+            <version>${jasperserver.dto.version}</version>
         </dependency>
+
+
+        <!-- Jersey dependencies -->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
             <version>${jersey.version}</version>
         </dependency>
-
-        <!-- Jersey dependencies -->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jettison</artifactId>
@@ -69,13 +88,15 @@
             <version>${jersey.version}</version>
         </dependency>
 
+
         <!-- TestNG dependencies -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.8.7</version>
+            <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
+
 
         <!-- Mockito & extensions -->
         <dependency>
@@ -97,29 +118,31 @@
             <scope>test</scope>
         </dependency>
 
+
         <!-- EasyMock dependencies -->
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <version>3.2</version>
+            <version>${easymock.version}</version>
             <scope>test</scope>
         </dependency>
+
 
         <!-- Misc dependencies -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.51</version>
+            <version>${bouncycastle.bcprov.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.0</version>
+            <version>${apache.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
+            <version>${commons.io.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -149,13 +172,16 @@
             <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
         </repository>
     </repositories>
+
+
     <scm>
         <connection>scm:git:http://github.com/Jaspersoft/jrs-rest-java-client</connection>
         <developerConnection>scm:git:https://github.com/Jaspersoft/jrs-rest-java-client</developerConnection>
         <tag>HEAD</tag>
     </scm>
-    <build>
 
+
+    <build>
         <filters>
             <filter>profiles/${build.profile.id}/config.properties</filter>
         </filters>
@@ -189,6 +215,7 @@
                 </executions>
             </plugin>
 
+
             <!-- Used for unit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -201,6 +228,7 @@
                     </excludes>
                 </configuration>
             </plugin>
+
 
             <!-- Used for integration tests -->
             <plugin>
@@ -269,7 +297,7 @@
             </plugin>
 
 
-            <!-- For test -->
+            <!-- `All in one` jar build plugin -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
