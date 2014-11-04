@@ -39,6 +39,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.ws.rs.core.MultivaluedHashMap;
 import java.io.IOException;
 
 
@@ -47,17 +48,19 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
     private static final Log log = LogFactory.getLog(SingleOrganizationAdapter.class);
 
     private final String organizationId;
+    private final MultivaluedHashMap<String, String> params;
 
     public SingleOrganizationAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
         this.organizationId = organizationId;
+        this.params = new MultivaluedHashMap<String, String>();
     }
 
     public OperationResult<ClientTenant> get() {
         return buildRequest().get();
     }
 
-    public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientTenant>, R> callback){
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientTenant>, R> callback) {
         final JerseyRequest<ClientTenant> request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -69,7 +72,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    private String prepareJsonForUpdate(ClientTenant clientTenant){
+    private String prepareJsonForUpdate(ClientTenant clientTenant) {
         ObjectMapper mapper = new ObjectMapper();
         AnnotationIntrospector introspector = new JaxbAnnotationIntrospector(TypeFactory.defaultInstance());
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -90,7 +93,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return buildRequest().put(json);
     }
 
-    public <R> RequestExecution asyncCreateOrUpdate(ClientTenant clientTenant, final Callback<OperationResult<ClientTenant>, R> callback){
+    public <R> RequestExecution asyncCreateOrUpdate(ClientTenant clientTenant, final Callback<OperationResult<ClientTenant>, R> callback) {
         final JerseyRequest<ClientTenant> request = buildRequest();
         final String json = prepareJsonForUpdate(clientTenant);
         RequestExecution task = new RequestExecution(new Runnable() {
@@ -103,11 +106,42 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult delete(){
+    /**
+     * Saves Organization. Use this method only if you want to create a new single Organization
+     * with or without passing OrganizationParameter.
+     *
+     * @param clientTenant instance of Organization
+     * @return persisted wrapped Organization
+     */
+    public OperationResult<ClientTenant> create(ClientTenant clientTenant) {
+        JerseyRequest<ClientTenant> request = request();
+        return params.size() != 0
+                ? request.addParams(params).post(clientTenant)
+                : request.post(clientTenant);
+    }
+
+    /**
+     * Adds parameter to the URI
+     *
+     * @param parameter URI parameter
+     * @param value     parameter value
+     * @return this
+     */
+    public SingleOrganizationAdapter parameter(OrganizationParameter parameter, boolean value) {
+        params.add(parameter.getParamName(), String.valueOf(value));
+        return this;
+    }
+
+    public SingleOrganizationAdapter parameter(OrganizationParameter parameter, String value) {
+        params.add(parameter.getParamName(), value);
+        return this;
+    }
+
+    public OperationResult delete() {
         return buildRequest().delete();
     }
 
-    public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback){
+    public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
         final JerseyRequest request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -121,5 +155,9 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
 
     private JerseyRequest<ClientTenant> buildRequest() {
         return JerseyRequest.buildRequest(sessionStorage, ClientTenant.class, new String[]{"/organizations", organizationId}, new DefaultErrorHandler());
+    }
+
+    private JerseyRequest<ClientTenant> request() {
+        return JerseyRequest.buildRequest(sessionStorage, ClientTenant.class, new String[]{"/organizations"}, new DefaultErrorHandler());
     }
 }

@@ -32,7 +32,7 @@ public class DeleteResourceIT {
     private JasperserverRestClient client;
     private Session session;
 
-    @BeforeMethod
+    @BeforeMethod(enabled = false)
     public void before() throws IOException, URISyntaxException, InterruptedException {
         config = new RestClientConfiguration(ConfigType.YML);
         client = new JasperserverRestClient(config);
@@ -49,17 +49,17 @@ public class DeleteResourceIT {
         });
 
         execution.getFuture();
-        while (!execution.getFuture().isDone()){
+        while (!execution.getFuture().isDone()) {
             sleep(500);
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void test() throws InterruptedException {
         assertTrue(1 == 1);
     }
 
-    @AfterMethod
+    @AfterMethod(enabled = false)
     public void after() throws InterruptedException {
         RequestExecution execution = session.resourcesService().resource("/integrationTestFolder").asyncDelete(new Callback<OperationResult, Integer>() {
             @Override
@@ -69,7 +69,7 @@ public class DeleteResourceIT {
         });
 
         execution.getFuture();
-        while (!execution.getFuture().isDone()){
+        while (!execution.getFuture().isDone()) {
             sleep(500);
         }
     }

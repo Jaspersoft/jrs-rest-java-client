@@ -16,10 +16,12 @@
         <powermock.version>1.5.5</powermock.version>
         <fasterxml.version>2.3.2</fasterxml.version>
         <jersey.version>2.13</jersey.version>
+        <restlet.version>2.3-M3</restlet.version>
+
         <build.profile.id>dev</build.profile.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skip.integration.tests>true</skip.integration.tests>
-        <skip.unit.tests>false</skip.unit.tests>
+        <skip.unit.tests>true</skip.unit.tests>
     </properties>
 
     <profiles>
@@ -30,8 +32,8 @@
             <id>integration-test</id>
             <properties>
                 <build.profile.id>integration-test</build.profile.id>
-                <skip.integration.tests>false</skip.integration.tests>
-                <skip.unit.tests>true</skip.unit.tests>
+                <skip.integration.tests>true</skip.integration.tests>
+                <skip.unit.tests>false</skip.unit.tests>
             </properties>
         </profile>
     </profiles>
@@ -141,6 +143,10 @@
             <id>jrs-ce-snapshots</id>
             <name>JasperReports Server CE snapshots repository</name>
             <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-snapshots/</url>
+        </repository>
+        <repository>
+            <id>opencast-public</id>
+            <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
         </repository>
     </repositories>
     <scm>
@@ -259,6 +265,25 @@
                 <version>2.0.0</version>
                 <configuration>
                     <branch>develop</branch>
+                </configuration>
+            </plugin>
+
+
+            <!-- For test -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
             </plugin>
         </plugins>

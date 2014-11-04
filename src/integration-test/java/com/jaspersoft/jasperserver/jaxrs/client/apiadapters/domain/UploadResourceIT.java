@@ -29,7 +29,7 @@ public class UploadResourceIT {
     private JasperserverRestClient client;
     private Session session;
 
-    @BeforeClass(groups = {"pro.version"})
+    @BeforeClass(groups = {"pro.version"}, enabled = false)
     public void before() throws IOException, URISyntaxException, InterruptedException {
         config = new RestClientConfiguration(ConfigType.YML);
         client = new JasperserverRestClient(config);
@@ -45,17 +45,17 @@ public class UploadResourceIT {
         }
     }
 
-    @Test(groups = {"pro.version"})
+    @Test(groups = {"pro.version"}, enabled = false)
     public void should_upload_() throws InterruptedException {
         // ...
     }
 
-    @Test(groups = {"ce.version"})
+    @Test(groups = {"ce.version"}, enabled = false)
     public void should_upload() {
         // ...
     }
 
-    @AfterClass(groups = {"pro.version"})
+    @AfterClass(groups = {"pro.version"}, enabled = false)
     public void after() throws InterruptedException {
         session.resourcesService().resource("/integrationTestFolder").delete();
         session = null;
