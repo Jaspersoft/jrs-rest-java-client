@@ -104,7 +104,7 @@ Table of Contents
 17. [Switching between JSON and XML](#switching-between-json-and-xml).
 18. [Possible issues](#possible-issues).
 19. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-20. [Integration with Spring based on WildFly 8.x application server](#spring-integration-wildfly)
+20. [Integration with Spring based on WildFly 8.x application server](#integration-with-spring-based-on-wildfly-8.x-application-server)
 21. [License](#license).
 
 Introduction
