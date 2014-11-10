@@ -104,7 +104,8 @@ Table of Contents
 17. [Switching between JSON and XML](#switching-between-json-and-xml).
 18. [Possible issues](#possible-issues).
 19. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-20. [License](#license).
+20. [Integration with Spring based on WildFly 8.x application server](#spring-integration-wildfly)
+21. [License](#license).
 
 Introduction
 -------------
@@ -1378,6 +1379,50 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
 
     </repositories>
 ```
+
+###Integration with Spring based on WildFly 8.x application server
+To run your Spring application on WildFly 8.1 Application Server you can make a few simple steps. First of all Rest Client is written on Jersey so it is very important to exclude WildFly's JSR 311 implementation RestEasy from your AS and replace it with Jersey implementaion. The proper exclusions in your WildFly Deployment Structure Descriptor could be done in the way like this:
+
+```xml
+<jboss-deployment-structure>
+    <deployment>
+        <exclusions>
+            <module name="javaee.api" />
+            <module name="javax.ws.rs.api"/>
+            <module name="org.codehaus.jackson.jackson-core-asl" />
+            <module name="org.jboss.resteasy.resteasy-atom-provider" />
+            <module name="org.jboss.resteasy.resteasy-cdi" />
+            <module name="org.jboss.resteasy.resteasy-crypto" />
+            <module name="org.jboss.resteasy.resteasy-jackson-provider" />
+            <module name="org.jboss.resteasy.resteasy-jaxb-provider" />
+            <module name="org.jboss.resteasy.resteasy-jaxrs" />
+            <module name="org.jboss.resteasy.resteasy-jettison-provider" />
+            <module name="org.jboss.resteasy.resteasy-jsapi" />
+            <module name="org.jboss.resteasy.resteasy-json-p-provider" />
+            <module name="org.jboss.resteasy.resteasy-multipart-provider" />
+            <module name="org.jboss.resteasy.resteasy-validator-provider-11" />
+            <module name="org.jboss.resteasy.resteasy-yaml-provider" />
+        </exclusions>
+    </deployment>
+</jboss-deployment-structure>
+```
+
+Also you need to include in your pom file these dependencies
+```xml
+<dependency>
+    <groupId>org.glassfish.jersey.containers</groupId>
+    <artifactId>jersey-container-servlet</artifactId>
+    <version>2.13</version>
+</dependency>
+<dependency>
+    <groupId>org.glassfish.jersey.containers.glassfish</groupId>
+    <artifactId>jersey-gf-cdi</artifactId>
+    <version>2.13</version>
+</dependency>
+```
+Module jersey-gf-cdi tells the CDI container to leave injections in Jersey code to be handled by Jersey itself. 
+
+You can find sources of working example [here](https://github.com/Jaspersoft/spring-with-jsrc-integration-on-wildfly)
 
 License
 --------

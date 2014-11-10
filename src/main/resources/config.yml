@@ -6,4 +6,10 @@
 ---
 server:
   url: http://localhost:4444/jasperserver-pro
-  version: 5.6.1
+  version: 5.6.0
+
+  headers:
+    accept: XML
+    content-type: XML
+
+

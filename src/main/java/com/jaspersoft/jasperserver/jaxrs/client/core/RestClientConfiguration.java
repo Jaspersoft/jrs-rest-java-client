@@ -59,7 +59,6 @@ public class RestClientConfiguration {
      * Search for config file config.{json/xml/yml} in the classpath
      *
      * @param type XML/YML/JSON
-     * @throws IOException
      */
     public RestClientConfiguration(ConfigType type) {
         this();
