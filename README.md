@@ -477,7 +477,7 @@ client
 ClientRole role = client
         .authenticate("jasperadmin", "jasperadmin")
         .rolesService()
-        .rolename("ROLE_ADMINISTRATOR")
+        .roleName("ROLE_ADMINISTRATOR")
         .get()
         .getEntity();
 

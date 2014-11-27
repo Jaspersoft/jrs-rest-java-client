@@ -1,0 +1,13 @@
+{
+    "fullName": "Amitabh Bachchan",
+    "emailAddress": "amitabh@gmail.com",
+    "externallyDefined": false,
+    "enabled": true,
+    "username": "amitabh",
+    "roles": [
+        {
+            "name": "ROLE_USER",
+            "externallyDefined": false
+        }
+    ]
+}

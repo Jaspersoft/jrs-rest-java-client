@@ -32,7 +32,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     }
 
     /**
-     * Use this constructor only if you don't need to use v2/attributes Service in your request.
+     * Use it only if you don't need to use v2/attributes Service.
      */
     public SingleUserRequestAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
@@ -44,8 +44,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     }
 
     /**
-     * This constructor is used to retrieve resources by attributes specifying. It's interacts
-     * with v2/attributes Service.
+     * Used for retrieving resource by attribute.
      */
     public SingleUserRequestAdapter(String userId, String organizationId, SessionStorage sessionStorage) {
         super(sessionStorage);
@@ -86,7 +85,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
 
     public OperationResult<ClientUser> get(String userId) {
 
-        /* checks if we already have setted userId */
+        /* check if we have already setted up userId */
         if (compile("^.*?users/([^/]+)$").matcher(uri.toString()).find()) {
             return request().get();
         }
@@ -211,7 +210,6 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<ClientUser> request() {
-        //System.out.println(uri.toString());
         return JerseyRequest.buildRequest(sessionStorage, ClientUser.class, new String[]{uri.toString()}, new DefaultErrorHandler());
     }
 }

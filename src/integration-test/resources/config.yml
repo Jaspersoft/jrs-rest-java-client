@@ -5,7 +5,7 @@
 #
 ---
 server:
-  url: http://107.20.44.101/jasperserver-pro
+  url: http://localhost:4444/jasperserver-pro
   version: 5.6.0
 
   headers:
