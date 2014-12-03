@@ -1,0 +1,13 @@
+<query>
+    <queryFields>
+        <queryField id="expense_join_store.ej_store_store_city"/>
+        <queryField id="expense_join_store.ej_store_store_country"/>
+        <queryField id="expense_join_store.ej_store_store_country"/>
+        <queryField id="expense_join_store.ej_store_store_name"/>
+        <queryField id="expense_join_store.ej_store_store_state"/>
+        <queryField id="expense_join_store.ej_store_store_street_address"/>
+    </queryFields>
+    <queryFilterString>expense_join_store.ej_store_store_country == 'USA'
+                       and expense_join_store.ej_store_store_state == 'CA'
+    </queryFilterString>
+</query>

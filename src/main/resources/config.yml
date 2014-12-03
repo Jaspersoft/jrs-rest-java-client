@@ -9,7 +9,7 @@ server:
   version: 5.6.0
 
   headers:
-    accept: XML
-    content-type: XML
+    accept: JSON
+    content-type: JSON
 
 

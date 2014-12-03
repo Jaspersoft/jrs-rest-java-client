@@ -1,19 +1,21 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 
+import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.common.ClientConfigurationFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
 import com.jaspersoft.jasperserver.jaxrs.client.core.config.ConfigType;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 import static org.testng.Assert.assertNotNull;
 
 /**
  * @author Alexander Krasnyanskiy
  */
-public class DomainServiceIT extends ClientConfigurationFactory {
+public class PermissionServiceIT extends ClientConfigurationFactory {
 
     private Session session;
 
@@ -23,14 +25,13 @@ public class DomainServiceIT extends ClientConfigurationFactory {
     }
 
     @Test
-    public void should_return_not_null_entity_when_data_is_exist() {
-        DomainMetaData entity = session
-                .domainService()
-                .domainMetadata("/organizations/organization_1/Domains/supermartDomain")
-                .retrieve()
-                .entity();
-
-        assertNotNull(entity);
+    public void should_return_all_permissions_for_a_given_resource() {
+        List<RepositoryPermission> permissions = session.permissionsService()
+                .resource("/public")
+                .get()
+                .entity()
+                .getPermissions();
+        assertNotNull(permissions);
     }
 
     @AfterMethod

@@ -6,7 +6,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientReference;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import com.sun.jersey.multipart.FormDataBodyPart;
 import org.mockito.Mock;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;

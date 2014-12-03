@@ -20,46 +20,63 @@ public class OrganizationServiceIT extends ClientConfigurationFactory {
 
     @BeforeClass
     public void before() {
+
+        /**
+         * Prepare JRS server for testing
+         */
+        try {
+            session.organizationsService().organization("MyCoolTestOrg").delete();
+        } catch (Exception ignored){
+            /*NOP*/
+        }
         session = getClientSession(ConfigType.YML);
     }
 
-
     @Test
-    public void should_create_Organization() {
+    public void should_create_test_Organization() {
+
         ClientTenant coolOrg = new ClientTenant()
-                .setAlias("MyCoolOrg")
-                .setId("CoolOrg")
-                .setTenantName("MyCoolOrg");
+                .setAlias("MyCoolTestOrg")
+                .setId("MyCoolTestOrg")
+                .setTenantName("MyCoolTestOrg");
+
         ClientTenant created = session.organizationsService()
-                .organization("MyCoolOrg")
+                .organization("MyCoolTestOrg")
                 .create(coolOrg)
                 .entity();
         assertNotNull(created);
     }
 
-
-    @Test(dependsOnMethods = "should_create_Organization")
+    @Test(dependsOnMethods = "should_create_test_Organization")
     public void should_retrieve_Organization_by_id() {
         ClientTenant org = session.organizationsService()
-                .organization("MyCoolOrg")
+                .organization("MyCoolTestOrg")
                 .get()
                 .entity();
         assertNotNull(org);
     }
 
-
-    @Test(dependsOnMethods = "should_create_Organization")
+    @Test(dependsOnMethods = "should_retrieve_Organization_by_id")
     public void should_delete_Organization() {
         Object org = session.organizationsService()
-                .organization("MyCoolOrg")
+                .organization("MyCoolTestOrg")
                 .delete()
                 .entity();
         assertNull(org);
     }
 
-
     @AfterClass
     public void after() {
+
+        /**
+         * Clean up
+         */
+        try {
+            session.organizationsService().organization("MyCoolTestOrg").delete();
+        } catch (Exception ignored){
+            /*NOP*/
+        }
+
         session.logout();
     }
 }

@@ -23,12 +23,14 @@ public class UsersServiceIT extends ClientConfigurationFactory {
         session = getClientSession(ConfigType.YML);
     }
 
-
     @Test
     public void should_create_a_new_User() {
         ClientUser created = session.usersService()
                 .username("Purushottama")
-                .createOrUpdate(new ClientUser().setUsername("Purushottama"))
+                .createOrUpdate(new ClientUser()
+                        .setUsername("Purushottama")
+                        .setPassword("qwerty")
+                        .setFullName("Purushottama"))
                 .entity();
         assertNotNull(created);
     }
@@ -36,29 +38,32 @@ public class UsersServiceIT extends ClientConfigurationFactory {
     @Test(dependsOnMethods = "should_create_a_new_User")
     public void should_retrieve_the_create_User() {
         ClientUser retrieved = session.usersService()
-                .username("Purushottama")
+                .user()
                 .get("Purushottama")
                 .entity();
         assertNotNull(retrieved);
     }
 
-    @Test(dependsOnMethods = "should_create_a_new_User")
+    @Test(dependsOnMethods = "should_retrieve_the_create_User")
     public void should_update_an_existed_User() {
         ClientUser user = session.usersService()
-                .username("Purushottama")
+                .user()
                 .get("Purushottama")
                 .entity();
+        assertNotNull(user);
         user.setPassword("TheDarkSecret");
         ClientUser updated = session.usersService()
-                .username("Purushottama")
-                .createOrUpdate(user)
+                .user()
+                .updateOrCreate(user)
                 .entity();
         assertNotNull(updated);
-        assertTrue(updated.getPassword().equals("TheDarkSecret"));
+        assertTrue(updated.getFullName().equals("Purushottama"));
     }
 
     @AfterClass
     public void after() {
+        session.usersService().user().delete("Purushottama");
         session.logout();
+        session = null;
     }
 }

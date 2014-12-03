@@ -28,9 +28,11 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.query.QueryResult;
 
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
+
 public class QueryExecutorAdapter extends AbstractAdapter {
-    private final String resourceUri;
-    private final Query query;
+    private String resourceUri;
+    private Query query;
 
     public QueryExecutorAdapter(SessionStorage sessionStorage, Query query, String resourceUri) {
         super(sessionStorage);
@@ -38,14 +40,46 @@ public class QueryExecutorAdapter extends AbstractAdapter {
         this.query = query;
     }
 
+
+    /**
+     * Constructs an instance of QueryExecutorAdapter class.
+     * Please notice that we set the stringified query later
+     * with {@link QueryExecutorAdapter#execute(String)}
+     * method.
+     *
+     * @param sessionStorage SessionStorage
+     * @param resourceUri URI
+     */
+    public QueryExecutorAdapter(SessionStorage sessionStorage, String resourceUri) {
+        super(sessionStorage);
+        this.resourceUri = resourceUri;
+    }
+
+
     public OperationResult<QueryResult> execute() {
-        JerseyRequest<QueryResult> req = JerseyRequest.buildRequest(
+        JerseyRequest<QueryResult> req = buildRequest(
                 sessionStorage,
                 QueryResult.class,
                 new String[]{new StringBuilder(resourceUri).insert(0, "/queryExecutor").toString()},
                 new DefaultErrorHandler()
         );
 
+        req.setContentType("application/xml");
+        return req.post(query);
+    }
+
+
+    /**
+     * Executes the given query.
+     * @param query Query as string
+     * @return wrapped QueryResult
+     */
+    public OperationResult<QueryResult> execute(String query) {
+        JerseyRequest<QueryResult> req = buildRequest(
+                sessionStorage, QueryResult.class,
+                new String[]{new StringBuilder(resourceUri).insert(0, "/queryExecutor").toString()},
+                new DefaultErrorHandler()
+        );
         req.setContentType("application/xml");
         return req.post(query);
     }

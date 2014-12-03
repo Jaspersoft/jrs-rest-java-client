@@ -4,6 +4,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.common.ClientConfigu
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
 import com.jaspersoft.jasperserver.jaxrs.client.core.config.ConfigType;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -11,18 +12,16 @@ import org.testng.annotations.Test;
 import java.io.InputStream;
 
 import static java.lang.Thread.sleep;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 /**
- * @author Alexander Krasnyanskiy
- */
+* @author Alexander Krasnyanskiy
+*/
 public class ImportServiceIT extends ClientConfigurationFactory {
 
 
     private Session session;
     private StateDto state;
-    InputStream importData;
+    private InputStream importData;
 
     @BeforeClass
     public void before() {
@@ -31,7 +30,6 @@ public class ImportServiceIT extends ClientConfigurationFactory {
         importData = ImportServiceIT.class.getResourceAsStream("/data/" + fileName);
     }
 
-
     @Test
     public void should_upload_import_file_to_JRS() throws InterruptedException {
         state = session.importService()
@@ -39,11 +37,10 @@ public class ImportServiceIT extends ClientConfigurationFactory {
                 .create(importData)
                 .entity();
 
-        assertNotNull(state);
+        Assert.assertNotNull(state);
         waitForUpload();
-        assertEquals(getPhase(), "finished");
+        Assert.assertEquals(getPhase(), "finished");
     }
-
 
     private void waitForUpload() throws InterruptedException {
         String currentPhase = "undefined";
@@ -57,7 +54,6 @@ public class ImportServiceIT extends ClientConfigurationFactory {
         } while (true);
     }
 
-
     private String getPhase() {
         if (state != null) {
             return session.exportService().task(state.getId()).state().entity().getPhase();
@@ -65,16 +61,13 @@ public class ImportServiceIT extends ClientConfigurationFactory {
         throw new RuntimeException("state is null");
     }
 
-
     @AfterClass
     public void after() {
 
-        // Clean up
-        session.resourcesService()
-                .resource("/public/Samples/TestReportResource")
-                .delete();
+        // CleanUp
+        session.resourcesService().resource("/public/Samples/TestReportResource").delete();
 
-        // ...and log out
+        // ...and logOut
         session.logout();
         importData = null;
         state = null;

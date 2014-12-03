@@ -33,4 +33,8 @@ public class QueryExecutorService extends AbstractAdapter {
     public QueryExecutorAdapter query(Query query, String resourceURI) {
         return new QueryExecutorAdapter(sessionStorage, query, resourceURI);
     }
+
+    public QueryExecutorAdapter queryFor(String resourceURI){
+        return new QueryExecutorAdapter(sessionStorage, resourceURI);
+    }
 }

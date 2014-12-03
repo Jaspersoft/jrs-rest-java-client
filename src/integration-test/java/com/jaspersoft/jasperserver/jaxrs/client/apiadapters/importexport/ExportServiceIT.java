@@ -8,8 +8,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.InputStream;
-
 import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportParameter.EVERYTHING;
 import static org.testng.Assert.assertNotNull;
 
@@ -50,14 +48,14 @@ public class ExportServiceIT extends ClientConfigurationFactory {
     }
 
 
-    @Test(dependsOnMethods = "should_return_state_instance_with_job_state")
-    public void should_return_zip_file_with_export_result() {
-        InputStream zipFile = session.exportService()
-                .task(state.getId())
-                .fetch()
-                .entity();
-        assertNotNull(zipFile);
-    }
+//    @Test(dependsOnMethods = "should_return_state_instance_with_job_state")
+//    public void should_return_zip_file_with_export_result() {
+//        InputStream zipFile = session.exportService()
+//                .task(state.getId())
+//                .fetch()
+//                .entity();
+//        assertNotNull(zipFile);
+//    }
 
 
     @AfterClass
