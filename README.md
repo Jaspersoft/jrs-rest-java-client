@@ -104,7 +104,7 @@ Table of Contents
 17. [Switching between JSON and XML](#switching-between-json-and-xml).
 18. [Possible issues](#possible-issues).
 19. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-20. [Integration with Spring based on WildFly 8.x application server](#spring-integration-wildfly)
+20. [Integration with Spring based on WildFly application server](#integration-with-spring-based-on-wildfly-application-server)
 21. [License](#license).
 
 Introduction
@@ -1380,8 +1380,8 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
     </repositories>
 ```
 
-###Integration with Spring based on WildFly 8.x application server
-To run your Spring application on WildFly 8.1 Application Server you can make a few simple steps. First of all Rest Client is written on Jersey so it is very important to exclude WildFly's JSR 311 implementation RestEasy from your AS and replace it with Jersey implementaion. The proper exclusions in your WildFly Deployment Structure Descriptor could be done in the way like this:
+###Integration with Spring based on WildFly application server
+To run your [Spring](http://spring.io) application on [WildFly 8.1](http://wildfly.org) Application Server you can make a few simple steps. First of all `JSRC` is written on [Jersey](https://jersey.java.net) so it is very important to exclude WildFly's JSR 311 implementation [RestEasy](http://resteasy.jboss.org) from your AS and replace it with Jersey implementaion. The proper exclusions in your `WildFly Deployment Structure Descriptor` could be done in the way like this:
 
 ```xml
 <jboss-deployment-structure>
