@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 /**
  * @author Alexander Krasnyanskiy
  */
-public class ServerInfoServiceIT extends ClientConfigurationFactory {
+public class ServerinfoServiceIT extends ClientConfigurationFactory {
 
     private Session session;
 
@@ -29,6 +29,5 @@ public class ServerInfoServiceIT extends ClientConfigurationFactory {
     @AfterMethod
     public void after() {
         session.logout();
-        session = null;
     }
 }
