@@ -39,6 +39,5 @@ public class ReportingServiceIT extends ClientConfigurationFactory {
     @AfterMethod
     public void after() {
         session.logout();
-        session = null;
     }
 }

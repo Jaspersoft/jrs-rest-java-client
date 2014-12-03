@@ -37,6 +37,5 @@ public class PermissionServiceIT extends ClientConfigurationFactory {
     @AfterMethod
     public void after() {
         session.logout();
-        session = null;
     }
 }

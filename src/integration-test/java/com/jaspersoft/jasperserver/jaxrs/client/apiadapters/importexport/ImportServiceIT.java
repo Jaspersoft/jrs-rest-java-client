@@ -64,10 +64,7 @@ public class ImportServiceIT extends ClientConfigurationFactory {
     @AfterClass
     public void after() {
 
-        // CleanUp
         session.resourcesService().resource("/public/Samples/TestReportResource").delete();
-
-        // ...and logOut
         session.logout();
         importData = null;
         state = null;

@@ -64,6 +64,5 @@ public class UsersServiceIT extends ClientConfigurationFactory {
     public void after() {
         session.usersService().user().delete("Purushottama");
         session.logout();
-        session = null;
     }
 }
