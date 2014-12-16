@@ -22,7 +22,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.testng.Assert.assertSame;
 
 @PrepareForTest({JerseyRequest.class, ServerInfoService.class})
-public class ServerInfoServiceTest extends PowerMockTestCase {
+public class ServerinfoServiceTest extends PowerMockTestCase {
 
     @Mock
     private SessionStorage sessionStorageMock;

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 /**
  * @author Alexander Krasnyanskiy
  */
-public class ServerinfoServiceIT extends ClientConfigurationFactory {
+public class ServerInfoServiceIT extends ClientConfigurationFactory {
 
     private Session session;
 

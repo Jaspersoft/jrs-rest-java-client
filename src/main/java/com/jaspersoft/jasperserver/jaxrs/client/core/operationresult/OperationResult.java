@@ -48,7 +48,7 @@ public abstract class OperationResult<T> {
             }
             return entity;
         } catch (Exception e) {
-            log.debug(e.getCause());
+            //log.debug(e.getCause());
             return null;
         }
     }
@@ -60,7 +60,7 @@ public abstract class OperationResult<T> {
             }
             return entity;
         } catch (Exception e) {
-            log.debug(e.getCause());
+            //log.debug(e.getCause());
             return null;
         }
     }
