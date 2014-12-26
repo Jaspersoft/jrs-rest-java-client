@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 /**
- * Searching report jobs by runtime information
+ * Searching thumbnail jobs by runtime information
  * 
  * @author Ivan Chan (ichan@jaspersoft.com)
  * @version $Id: ReportJobStateModel.java 25420 2012-10-20 16:36:09Z sergey.prilukin $

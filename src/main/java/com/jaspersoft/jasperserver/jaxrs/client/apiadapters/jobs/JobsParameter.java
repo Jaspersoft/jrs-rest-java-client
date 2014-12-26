@@ -24,7 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 public enum JobsParameter {
 
     /**
-     * URI of report inFolder schedule. Report
+     * URI of thumbnail inFolder schedule. Report
      * options URI can also be used
      * here
      */

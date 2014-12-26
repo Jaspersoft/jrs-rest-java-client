@@ -33,6 +33,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorS
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo.ServerInfoService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails.ThumbnailsService;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 
 import javax.ws.rs.client.WebTarget;
@@ -112,5 +113,9 @@ public class Session {
 
     public QueryExecutorService queryExecutorService() {
         return getService(QueryExecutorService.class);
+    }
+
+    public ThumbnailsService thumbnailsService(){
+        return getService(ThumbnailsService.class);
     }
 }

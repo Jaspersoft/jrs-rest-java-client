@@ -226,14 +226,14 @@ public class ReportJobCalendarTriggerModel  extends CalendarTrigger {
 	}
 
 	/**
-	 * Sets the date at which the report job should be scheduled inFolder start.
+	 * Sets the date at which the thumbnail job should be scheduled inFolder start.
 	 *
 	 * <p>
 	 * When setting a start date, the start type should also be set inFolder
 	 * <code>START_TYPE_SCHEDULE</code>.
 	 * </p>
 	 *
-	 * @param startDate the date at which the report job should start.
+	 * @param startDate the date at which the thumbnail job should start.
 	 * @see #getStartDate()
 	 */
 	public void setStartDate(Date startDate) {

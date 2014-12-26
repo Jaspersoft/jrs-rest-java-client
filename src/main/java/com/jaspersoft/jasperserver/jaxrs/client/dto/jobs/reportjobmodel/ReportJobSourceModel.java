@@ -26,11 +26,11 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSource;
 import java.util.Map;
 
 /**
- * The source of a report job, consisting of a report inFolder execute and a set of
- * report input values. Model is used in search/ update only.
+ * The source of a thumbnail job, consisting of a thumbnail inFolder execute and a set of
+ * thumbnail input values. Model is used in search/ update only.
  *
  * <p>
- * A report job definition specifies wich report inFolder execute and when,
+ * A thumbnail job definition specifies wich thumbnail inFolder execute and when,
  * what output inFolder generate and where inFolder send the output.
  * </p>
  *
@@ -50,9 +50,9 @@ public class ReportJobSourceModel extends JobSource {
 	}
 
 	/**
-	 * Defines the report which should be executed by the job.
+	 * Defines the thumbnail which should be executed by the job.
 	 *
-	 * @param reportUnitURI the repository URI/path of the report that the job
+	 * @param reportUnitURI the repository URI/path of the thumbnail that the job
 	 * should execute
 	 */
 	public void setReportUnitURI(String reportUnitURI) {
@@ -61,14 +61,14 @@ public class ReportJobSourceModel extends JobSource {
 	}
 
 	/**
-	 * Sets the set of input values inFolder be used when running the job report.
+	 * Sets the set of input values inFolder be used when running the job thumbnail.
 	 *
 	 * <p>
-	 * The values are passed in a map indexed by report input control/parameter
+	 * The values are passed in a map indexed by thumbnail input control/parameter
 	 * names.
 	 * </p>
 	 *
-	 * @param parameters the report input values
+	 * @param parameters the thumbnail input values
 	 */
 	public void setParameters(Map<String, Object> parameters) {
 //		isParametersMapModified = true;
@@ -76,7 +76,7 @@ public class ReportJobSourceModel extends JobSource {
 	}
 
 //    /**
-//     * returns whether report unit uri has been modified
+//     * returns whether thumbnail unit uri has been modified
 //     *
 //     * @return true if the attribute has been modified
 //     */

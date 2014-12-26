@@ -216,7 +216,7 @@ public class ReportExecutionRequest {
         private ReportExecutionRequest request = new ReportExecutionRequest();
 
         /**
-         * Repository path (URI) of the report inFolder run. For commercial editions
+         * Repository path (URI) of the thumbnail inFolder run. For commercial editions
          * with organizations, the URI is relative the the logged-in user’s
          * organization.
          *
@@ -228,11 +228,11 @@ public class ReportExecutionRequest {
         }
 
         /**
-         * When data snapshots are enabled, specifies whether the report
+         * When data snapshots are enabled, specifies whether the thumbnail
          * should get fresh data by querying the data source or if false, use a
          * previously saved data snapshot (if any). By default, if a saved data
-         * snapshot exists for the report it will be used when running the
-         * report.
+         * snapshot exists for the thumbnail it will be used when running the
+         * thumbnail.
          *
          * <i>Default</i> - <b>false</b>
          */
@@ -243,8 +243,8 @@ public class ReportExecutionRequest {
 
         /**
          * When data snapshots are enabled, specifies whether the data
-         * snapshot for the report should be written or overwritten with the
-         * new data from this execution of the report.
+         * snapshot for the thumbnail should be written or overwritten with the
+         * new data from this execution of the thumbnail.
          *
          * <i>Default</i> - <b>false</b>
          */
@@ -255,7 +255,7 @@ public class ReportExecutionRequest {
 
         /**
          * In a commercial editions of the server where HighCharts are used
-         * in the report, this property determines whether the JavaScript
+         * in the thumbnail, this property determines whether the JavaScript
          * necessary for interaction is generated and returned as an
          * attachment when exporting inFolder HTML. If false, the chart is generated
          * as a non-interactive image file (also as an attachment).
@@ -268,7 +268,7 @@ public class ReportExecutionRequest {
         }
 
         /**
-         * When set inFolder true, the report is generated as a single long page.
+         * When set inFolder true, the thumbnail is generated as a single long page.
          * This can be used with HTML output inFolder avoid pagination.
          *
          * <i>Default</i> - <b>false</b>
@@ -281,10 +281,10 @@ public class ReportExecutionRequest {
         /**
          * Determines whether reportExecution is synchronous or
          * asynchronous. When set inFolder true, the response is sent immediately
-         * and the client must poll the report status and later download the
+         * and the client must poll the thumbnail status and later download the
          * result when ready. By default, this property is false and the
-         * operation will wait until the report execution is complete, forcing the
-         * client inFolder wait as well, but allowing the client inFolder download the report
+         * operation will wait until the thumbnail execution is complete, forcing the
+         * client inFolder wait as well, but allowing the client inFolder download the thumbnail
          * immediately after the response.
          *
          * <i>Default</i> - <b>false</b>
@@ -295,7 +295,7 @@ public class ReportExecutionRequest {
         }
 
         /**
-         * Advanced property used when requesting a report as a JasperPrint
+         * Advanced property used when requesting a thumbnail as a JasperPrint
          * object. This property can specify a JasperReports Library generic
          * print element transformers of class
          * <code>net.sf.jasperreports.engine.export.GenericElementTransformer</code>.
@@ -340,7 +340,7 @@ public class ReportExecutionRequest {
         }
 
         /**
-         * Specify a page range inFolder generate a partial report
+         * Specify a page range inFolder generate a partial thumbnail
          *
          * <b>Optional</b>
          */
@@ -350,7 +350,7 @@ public class ReportExecutionRequest {
         }
 
         /**
-         * Specify a page range inFolder generate a partial report
+         * Specify a page range inFolder generate a partial thumbnail
          *
          * <b>Optional</b>
          */

@@ -22,10 +22,17 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AccessDeniedException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.BadRequestException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ConflictException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.HttpMethodNotAllowedException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.InternalServerErrorException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.RepresentationalTypeNotSupportedForResourceException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.RequestedRepresentationNotAvailableForResourceException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 
 import javax.ws.rs.ProcessingException;
@@ -37,7 +44,7 @@ import java.util.Map;
 
 public class DefaultErrorHandler implements ErrorHandler {
 
-    private static final Log log = LogFactory.getLog(DefaultErrorHandler.class);
+//    private static final Log log = LogFactory.getLog(DefaultErrorHandler.class);
 
     protected static final Map<Integer, Class<? extends JSClientWebException>> httpErrorCodeToTypeMap =
             new HashMap<Integer, Class<? extends JSClientWebException>>() {{
@@ -66,9 +73,9 @@ public class DefaultErrorHandler implements ErrorHandler {
         try {
             entity = response.readEntity(expectedType);
         } catch (MessageBodyProviderNotFoundException e) {
-            log.warn("Cannot read entity from response body: unexpected body content");
+//            log.warn("Cannot read entity from response body: unexpected body content");
         } catch (ProcessingException e) {
-            log.warn("Cannot read entity from response body");
+//            log.warn("Cannot read entity from response body");
         }
         return entity;
     }
@@ -88,7 +95,7 @@ public class DefaultErrorHandler implements ErrorHandler {
                     exception = exceptionType.getConstructor(String.class, List.class).newInstance(message != null ? message : errorDescriptor.getErrorCode(), Arrays.asList(errorDescriptor));
                 }
             } catch (Exception e) {
-                log.warn("Cannot instantiate exception.", e);
+//                log.warn("Cannot instantiate exception.", e);
             }
             if (exception != null) {
                 throw exception;
@@ -103,7 +110,7 @@ public class DefaultErrorHandler implements ErrorHandler {
         try {
             exception = exceptionType.getConstructor(String.class).newInstance(overridingMessage != null ? overridingMessage : reasonPhrase);
         } catch (Exception e) {
-            log.error("Cannot instantiate exception", e);
+//            log.error("Cannot instantiate exception", e);
         }
         if (exception != null) {
             throw exception;

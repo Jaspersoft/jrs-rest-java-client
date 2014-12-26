@@ -23,8 +23,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.glassfish.jersey.client.ClientProperties;
 
 import javax.net.ssl.HostnameVerifier;
@@ -41,7 +41,7 @@ import java.security.SecureRandom;
 
 public class SessionStorage {
 
-    private static final Log log = LogFactory.getLog(SessionStorage.class);
+//    private static final Log log = LogFactory.getLog(SessionStorage.class);
 
     private RestClientConfiguration configuration;
     private AuthenticationCredentials credentials;
@@ -69,28 +69,25 @@ public class SessionStorage {
             clientBuilder.hostnameVerifier(hostnameVerifier);
 
         } catch (Exception e) {
-            log.error("Unable inFolder init SSL context", e);
+//            log.error("Unable inFolder init SSL context", e);
             throw new RuntimeException("Unable inFolder init SSL context", e);
         }
     }
 
     private void init() {
-
         ClientBuilder clientBuilder = ClientBuilder.newBuilder();
         if (configuration.getJasperReportsServerUrl().startsWith("https")) {
             initSSL(clientBuilder);
         }
-
         Client client = clientBuilder.build();
-
         Integer connectionTimeout = configuration.getConnectionTimeout();
-        if (connectionTimeout != null)
+        if (connectionTimeout != null) {
             client.property(ClientProperties.CONNECT_TIMEOUT, connectionTimeout);
-
+        }
         Integer readTimeout = configuration.getReadTimeout();
-        if (readTimeout != null)
+        if (readTimeout != null) {
             client.property(ClientProperties.READ_TIMEOUT, readTimeout);
-
+        }
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         login();
         rootTarget.register(new SessionOutputFilter(sessionId));
@@ -98,17 +95,16 @@ public class SessionStorage {
 
     private void login() {
         Form form = new Form();
-        form
-                .param("j_username", credentials.getUsername())
-                .param("j_password", credentials.getPassword());
+        form.param("j_username", credentials.getUsername()).param("j_password", credentials.getPassword());
 
         WebTarget target = rootTarget.path("/rest/login");
         Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
 
-        if (response.getStatus() == ResponseStatus.OK)
-            this.sessionId = response.getCookies().get("JSESSIONID").getValue();
-        else
+        if (response.getStatus() == ResponseStatus.OK) {
+            sessionId = response.getCookies().get("JSESSIONID").getValue();
+        } else {
             new DefaultErrorHandler().handleError(response);
+        }
     }
 
     public RestClientConfiguration getConfiguration() {

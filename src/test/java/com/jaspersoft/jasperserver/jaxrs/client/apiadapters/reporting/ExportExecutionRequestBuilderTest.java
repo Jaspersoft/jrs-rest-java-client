@@ -435,7 +435,7 @@ public class ExportExecutionRequestBuilderTest extends PowerMockTestCase {
             builderSpy.htmlReport(descriptor);
         } catch (Exception e) {
             assertTrue(instanceOf(JSClientException.class).matches(e));
-            assertEquals(e.getMessage(), "Error while reading report content");
+            assertEquals(e.getMessage(), "Error while reading thumbnail content");
         }
     }
 

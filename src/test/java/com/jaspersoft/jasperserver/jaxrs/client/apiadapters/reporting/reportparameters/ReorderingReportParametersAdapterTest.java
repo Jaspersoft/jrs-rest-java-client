@@ -57,7 +57,7 @@ public class ReorderingReportParametersAdapterTest extends PowerMockTestCase {
     @Mock
     private OperationResult<ReportInputControlsListWrapper> resultMock;
 
-    private String reportUnitUri = "some/abstract/report/unit/uri";
+    private String reportUnitUri = "some/abstract/thumbnail/unit/uri";
 
     @BeforeMethod
     public void before() {

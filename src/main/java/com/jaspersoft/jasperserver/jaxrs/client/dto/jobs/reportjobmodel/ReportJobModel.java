@@ -22,10 +22,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
 
 /**
- * Definition model of a report execution job. Model is used in search/ update only.
+ * Definition model of a thumbnail execution job. Model is used in search/ update only.
  *
  * <p>
- * A report job definition specifies wich report inFolder execute and when,
+ * A thumbnail job definition specifies wich thumbnail inFolder execute and when,
  * what output inFolder generate and where inFolder send the output.
  * </p>
  *
@@ -202,7 +202,7 @@ public class ReportJobModel extends Job {
     }
 
     /**
-     * Sets a mandatory short description for the report job.
+     * Sets a mandatory short description for the thumbnail job.
      *
      * @param label the job label
      */
@@ -212,7 +212,7 @@ public class ReportJobModel extends Job {
     }
 
     /**
-     * Sets the base filename inFolder be used for the report job output files.
+     * Sets the base filename inFolder be used for the thumbnail job output files.
      *
      * @param baseOutputFilename the job output base filename
      * @see #getBaseOutputFilename()
@@ -250,10 +250,10 @@ public class ReportJobModel extends Job {
     }
 
     /**
-     * Sets a locale inFolder be used inFolder execute the report.
+     * Sets a locale inFolder be used inFolder execute the thumbnail.
      * <p/>
      * <p>
-     * The report output will be localized according inFolder the provided locale.
+     * The thumbnail output will be localized according inFolder the provided locale.
      * </p>
      *
      * @param outputLocale the locale code as in <code>java.util.Locale.toString()</code>

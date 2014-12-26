@@ -27,7 +27,7 @@ import java.util.List;
 
 public class ReportInvalidPageRangeException extends JSClientWebException {
 
-    public static final String INVALID_REPORT_RANGE = "report.invalid.page.range";
+    public static final String INVALID_REPORT_RANGE = "thumbnail.invalid.page.range";
 
     public ReportInvalidPageRangeException() {
         super();

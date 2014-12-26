@@ -24,20 +24,20 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 public enum ReportAndJobSearchParameter {
 
     /**
-     *  This string matches the repository URI of the running report, relative the
+     *  This string matches the repository URI of the running thumbnail, relative the
      *  currently logged-in user’s organization.
      */
     REPORT_URI("reportURI"),
 
     /**
      *  For scheduler jobs, this argument matches the ID of the job that triggered
-     *  the running report.
+     *  the running thumbnail.
      */
     JOB_ID("jobID"),
 
     /**
      *  For scheduler jobs, this argument matches the name of the job that
-     *  triggered the running report.
+     *  triggered the running thumbnail.
      */
     JOB_LABEL("jobLabel"),
 

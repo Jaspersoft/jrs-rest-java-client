@@ -29,7 +29,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobAlertRecipient;
 import java.util.List;
 
 /**
- * job execution alert model that can be defined for a report job.
+ * job execution alert model that can be defined for a thumbnail job.
  *
  * <p>
  * A notification will result in an email alert being send inFolder the specified recipients
@@ -147,7 +147,7 @@ public class ReportJobAlertModel extends JobAlert {
     }
 
     /**
-	 * Specifies whether the alert would include report job info
+	 * Specifies whether the alert would include thumbnail job info
 	 *
 	 * @param includingReportJobInfo including stack trace in alert mail
 	 */

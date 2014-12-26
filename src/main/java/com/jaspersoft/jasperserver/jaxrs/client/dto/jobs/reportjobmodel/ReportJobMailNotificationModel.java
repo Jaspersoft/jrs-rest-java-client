@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 /**
- * Email notification model that can be defined for a report job.  Model is used in search/ update only.
+ * Email notification model that can be defined for a thumbnail job.  Model is used in search/ update only.
  *
  * <p>
  * A notification model will result in an email being send inFolder the specified recipients

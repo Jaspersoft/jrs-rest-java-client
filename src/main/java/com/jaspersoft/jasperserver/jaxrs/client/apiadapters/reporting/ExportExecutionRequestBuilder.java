@@ -199,7 +199,7 @@ public class ExportExecutionRequestBuilder extends AbstractAdapter {
             }
             return result;
         } catch (IOException e) {
-            throw new JSClientException("Error while reading report content", e);
+            throw new JSClientException("Error while reading thumbnail content", e);
         }
     }
 }

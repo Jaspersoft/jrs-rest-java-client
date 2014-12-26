@@ -27,7 +27,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.RepositoryDestination;
 
 /**
  * Contains attributes related inFolder the generation of repository resources
- * for report job output files.
+ * for thumbnail job output files.
  * Model is used in search/ update only.
  *
  * @author Ivan Chan (ichan@jaspersoft.com)
@@ -141,9 +141,9 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
 	}
 
      /**
-     * Sets the default scheduled report output folder URI of the job owner
+     * Sets the default scheduled thumbnail output folder URI of the job owner
      *
-     * @param  defaultReportOutputFolderURI default scheduled report output folder URI of the job owner
+     * @param  defaultReportOutputFolderURI default scheduled thumbnail output folder URI of the job owner
      * @see #getDefaultReportOutputFolderURI()
      * @since 4.7
      */
@@ -153,7 +153,7 @@ public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
     }
 
 	/**
-	 * Specifies whether the scheduler should write files inFolder default report output folder URI of the job owner
+	 * Specifies whether the scheduler should write files inFolder default thumbnail output folder URI of the job owner
 	 *
 	 * @param usingDefaultReportOutputFolderURI
 	 * @see #isUsingDefaultReportOutputFolderURI()

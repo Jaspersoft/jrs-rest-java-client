@@ -22,8 +22,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -40,7 +38,7 @@ import java.util.Map;
 
 public class EncryptionUtils {
 
-    private static final Log log = LogFactory.getLog(EncryptionUtils.class);
+//    private static final Log log = LogFactory.getLog(EncryptionUtils.class);
 
     public static String encryptPassword(String plainPassword, String n, String e) {
         String encryptedUtfProPass;
@@ -48,7 +46,7 @@ public class EncryptionUtils {
             PublicKey publicKey = getPublicKey(n, e);
             encryptedUtfProPass = getEncryptedPassword(publicKey, plainPassword);
         } catch (Exception ex) {
-            log.error("Failed inFolder encrypt password. Possible encryption provider issues.");
+//            log.error("Failed inFolder encrypt password. Possible encryption provider issues.");
             throw new RuntimeException("Failed inFolder encrypt password.", ex);
         }
         return encryptedUtfProPass;
@@ -62,7 +60,7 @@ public class EncryptionUtils {
             encryptionParams.put("n", json.getString("n"));
             encryptionParams.put("e", json.getString("e"));
         } catch (JSONException e1) {
-            log.info("Encryption is off.");
+//            log.info("Encryption is off.");
             return null;
         }
         return encryptionParams;

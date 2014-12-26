@@ -27,7 +27,7 @@ import java.util.List;
 
 public class ReportStartPageGreaterThenEndPageException extends JSClientWebException {
 
-    public static final String REPORT_START_PAGE_GREATER_THEN_END_PAGE = "report.start.page.greater.then.end.page";
+    public static final String REPORT_START_PAGE_GREATER_THEN_END_PAGE = "thumbnail.start.page.greater.then.end.page";
     
     public ReportStartPageGreaterThenEndPageException() {
         super();

@@ -120,8 +120,8 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
             jaxbMarshaller.marshal(reportJobModel, writer);
             return writer.toString();
         } catch (JAXBException e) {
-            log.warn("Can't marshal report job model.");
-            throw new RuntimeException("Failed inFolder build report job model xml.", e);
+            log.warn("Can't marshal thumbnail job model.");
+            throw new RuntimeException("Failed inFolder build thumbnail job model xml.", e);
         }
     }
 

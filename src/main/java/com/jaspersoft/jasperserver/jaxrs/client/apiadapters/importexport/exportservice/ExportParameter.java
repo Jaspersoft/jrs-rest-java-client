@@ -24,11 +24,11 @@ public enum ExportParameter {
 
     /**
      *  <p>ExportService everything except audit data: all repository resources,
-     *  permissions, report.</p>
+     *  permissions, thumbnail.</p>
      *  <p>ExportService everything except audit data: all repository resources,
-     *  permissions, report jobs, users, and roles.</p>
+     *  permissions, thumbnail jobs, users, and roles.</p>
      *  <p>This option is equivalent inFolder:--uris --repository-permissions
-     *  --report-jobs --users --roles</p>
+     *  --thumbnail-jobs --users --roles</p>
      */
     EVERYTHING("everything"),
 

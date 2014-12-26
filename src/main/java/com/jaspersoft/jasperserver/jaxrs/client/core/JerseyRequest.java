@@ -41,71 +41,51 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
-public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType> {
+import static com.jaspersoft.jasperserver.jaxrs.client.core.MimeType.JSON;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
+public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType> {
     private static final int GET = 0;
     private static final int DELETE = 1;
     private static final int POST = 2;
     private static final int PUT = 3;
 
-
-    public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage,
-                                                    Class<T> responseClass,
-                                                    String[] path) {
-        return buildRequest(sessionStorage, responseClass, path, null);
-    }
-
-    public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage,
-                                                    Class<T> responseClass,
-                                                    String[] path,
-                                                    ErrorHandler errorHandler) {
-        JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, responseClass);
-
-        if (errorHandler != null)
-            request.errorHandler = errorHandler;
-        else
-            request.errorHandler = new DefaultErrorHandler();
-
-        for (String pathElem : path)
-            request.setPath(pathElem);
-
-        return request;
-    }
-
-
     private final OperationResultFactory operationResultFactory;
     private final Class<ResponseType> responseClass;
-
     private ErrorHandler errorHandler;
     private MultivaluedMap<String, String> headers;
     private WebTarget usersWebTarget;
     private String contentType;
     private String acceptType;
 
-
     protected JerseyRequest(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
-
-        this.operationResultFactory = new OperationResultFactoryImpl();
+        operationResultFactory = new OperationResultFactoryImpl();
         this.responseClass = responseClass;
 
         RestClientConfiguration configuration = sessionStorage.getConfiguration();
 
-        if (configuration.getContentMimeType() == MimeType.JSON)
-            this.contentType = MediaType.APPLICATION_JSON;
-        else
-            this.contentType = MediaType.APPLICATION_XML;
-
-        if (configuration.getAcceptMimeType() == MimeType.JSON)
-            this.acceptType = MediaType.APPLICATION_JSON;
-        else
-            this.acceptType = MediaType.APPLICATION_XML;
-
-
-        this.headers = new MultivaluedHashMap<String, String>();
-        this.usersWebTarget = sessionStorage.getRootTarget().path("/rest_v2")
+        contentType = configuration.getContentMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
+        acceptType = configuration.getAcceptMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
+        headers = new MultivaluedHashMap<String, String>();
+        usersWebTarget = sessionStorage.getRootTarget()
+                .path("/rest_v2")
                 .register(CustomRepresentationTypeProvider.class)
                 .register(JacksonFeature.class)
                 .register(MultiPartWriter.class);
+    }
+
+    public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path) {
+        return buildRequest(sessionStorage, responseClass, path, null);
+    }
+
+    public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path, ErrorHandler errorHandler) {
+        JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, responseClass);
+        request.errorHandler = errorHandler != null ? errorHandler : new DefaultErrorHandler();
+        for (String pathElem : path) {
+            request.setPath(pathElem);
+        }
+        return request;
     }
 
     public JerseyRequest<ResponseType> setPath(String path) {
@@ -153,30 +133,15 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     private OperationResult<ResponseType> executeRequest(int httpMethod, Invocation.Builder request, Object entity) {
         Response response = null;
         switch (httpMethod) {
-            case GET: {
-                response = request.get();
-                break;
-            }
-            case DELETE: {
-                response = request.delete();
-                break;
-            }
-            case POST: {
-                response = request.post(Entity.entity(entity, contentType));
-                break;
-            }
-            case PUT: {
-                response = request.put(Entity.entity(entity, contentType));
-                break;
-            }
+            case GET: response = request.get(); break;
+            case DELETE: response = request.delete(); break;
+            case POST: response = request.post(Entity.entity(entity, contentType)); break;
+            case PUT: response = request.put(Entity.entity(entity, contentType)); break;
         }
-
-        if (response.getStatus() >= 400)
+        if (response != null && response.getStatus() >= 400) {
             errorHandler.handleError(response);
-
-        OperationResult<ResponseType> result = operationResultFactory.getOperationResult(response, responseClass);
-        //this.sessionStorage.setSessionId(result.getSessionId());
-        return result;
+        }
+        return operationResultFactory.getOperationResult(response, responseClass);
     }
 
     private void addHeaders(Invocation.Builder request) {
