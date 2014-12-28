@@ -5,8 +5,9 @@ import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
 import java.util.List;
 
 /**
- * @author Alex Krasnyanskiy
+ * Fake wrapper class for ResourceThumbnail collection.
  */
+@Deprecated
 public class ResourceThumbnailListWrapper {
     private List<ResourceThumbnail> thumbnails;
 

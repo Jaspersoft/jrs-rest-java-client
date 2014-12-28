@@ -23,10 +23,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesTypeResolverUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnailListWrapper;
 
 import javax.ws.rs.core.Response;
 
-
+@SuppressWarnings("unchecked")
 public class OperationResultFactoryImpl implements OperationResultFactory {
 
     @Override
@@ -37,8 +38,20 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
         return getAppropriateOperationResultInstance(response, responseClass);
     }
 
+    /**
+     * This method is to be changed in the next release when real ResourceThumbnailListWrapper class will be added.
+     */
+    @Deprecated
     private <T> OperationResult<T> getAppropriateOperationResultInstance(Response response, Class<T> responseClass) {
         OperationResult<T> result;
+
+        /// -> code to remove ///
+        if (response.hasEntity() && responseClass.equals(ResourceThumbnailListWrapper.class)) {
+            result = (OperationResult<T>) new ThumbnailsOperationResult(response, (Class<? extends ResourceThumbnailListWrapper>) responseClass);
+        }
+        else
+        /// <- ///
+
         if (response.hasEntity()) {
             result = new WithEntityOperationResult<T>(response, responseClass);
         } else {

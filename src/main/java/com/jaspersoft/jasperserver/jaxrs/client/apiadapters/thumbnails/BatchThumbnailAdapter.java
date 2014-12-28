@@ -8,8 +8,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnailListWrapper;
 
 import javax.ws.rs.core.MultivaluedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Alex Krasnyanskiy
@@ -27,19 +25,20 @@ public class BatchThumbnailAdapter extends AbstractAdapter {
         return this;
     }
 
+    public BatchThumbnailAdapter reports(String... uris) {
+        for (String uri : uris) {
+            params.add("uri", uri);
+        }
+        return this;
+    }
+
     public BatchThumbnailAdapter parameter(ThumbnailsParameter param, Boolean value) {
         params.add(param.toString().toLowerCase(), value.toString());
         return this;
     }
 
     public OperationResult<ResourceThumbnailListWrapper> get() {
-        StringBuilder req = new StringBuilder("");
-        for (Map.Entry<String, List<String>> entry : params.entrySet()) {
-            req.append("&").append(entry.getKey()).append(entry.getValue());
-        }
-        return req.length() >= 2000 // todo: 2000 characters with host name and port?
-                ? request().setContentType("application/x-www-form-urlencoded").post(params)
-                : request().addParams(params).get();
+        return request().setContentType("application/x-www-form-urlencoded").post(params);
     }
 
     private JerseyRequest<ResourceThumbnailListWrapper> request() {

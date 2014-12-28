@@ -41,8 +41,6 @@ import java.security.SecureRandom;
 
 public class SessionStorage {
 
-//    private static final Log log = LogFactory.getLog(SessionStorage.class);
-
     private RestClientConfiguration configuration;
     private AuthenticationCredentials credentials;
     private WebTarget rootTarget;
@@ -69,25 +67,30 @@ public class SessionStorage {
             clientBuilder.hostnameVerifier(hostnameVerifier);
 
         } catch (Exception e) {
-//            log.error("Unable inFolder init SSL context", e);
             throw new RuntimeException("Unable inFolder init SSL context", e);
         }
     }
 
     private void init() {
         ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+
         if (configuration.getJasperReportsServerUrl().startsWith("https")) {
             initSSL(clientBuilder);
         }
+
         Client client = clientBuilder.build();
         Integer connectionTimeout = configuration.getConnectionTimeout();
+
         if (connectionTimeout != null) {
             client.property(ClientProperties.CONNECT_TIMEOUT, connectionTimeout);
         }
+
         Integer readTimeout = configuration.getReadTimeout();
+
         if (readTimeout != null) {
             client.property(ClientProperties.READ_TIMEOUT, readTimeout);
         }
+
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         login();
         rootTarget.register(new SessionOutputFilter(sessionId));

@@ -14,7 +14,7 @@ import java.io.InputStream;
  */
 public class SingleThumbnailAdapter extends AbstractAdapter {
 
-    private final MultivaluedHashMap<String, String> params = new MultivaluedHashMap<String, String>(); // todo: why?
+    private final MultivaluedHashMap<String, String> params = new MultivaluedHashMap<String, String>();
 
     public SingleThumbnailAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);

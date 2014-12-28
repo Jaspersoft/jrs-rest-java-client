@@ -39,10 +39,8 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
     @Mock
     private Response responseMock;
-
     @Mock
     private OperationResult<ClientQuery> operationResultMock;
-
     @Mock
     private WithEntityOperationResult withEntityOperationResultMock;
 

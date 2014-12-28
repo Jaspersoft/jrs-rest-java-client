@@ -18,16 +18,12 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
-
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 
 import javax.ws.rs.core.Response;
 
 public interface OperationResultFactory {
-
     public <T> OperationResult<T> getOperationResult(Response response, Class<T> responseClass) throws JSClientWebException;
-
 }

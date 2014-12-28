@@ -1,0 +1,18 @@
+name: YAML Test suite
+parallel: classes
+threadCount: 10
+tests:
+  - name: Default tests
+#    parameters:
+#      driver: com.mysql.jdbc.Driver
+#      url: jdbc:mysql://localhost:3306/db
+    excludedGroups: [ integration ]
+    packages:
+      - com.example.*
+  - name: Integration tests
+#    parameters:
+#      driver: com.mysql.jdbc.Driver
+#      url: jdbc:mysql://localhost:3306/db
+    includedGroups: [ integration ]
+    packages:
+      - com.example.*
