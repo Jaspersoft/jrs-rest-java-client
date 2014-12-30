@@ -5,6 +5,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 /**
  * @author Alex Krasnyanskiy
+ * @since 6.0.1
  */
 public class ThumbnailsService extends AbstractAdapter {
 

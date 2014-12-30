@@ -8,9 +8,11 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnailListWrapper;
 
 import javax.ws.rs.core.MultivaluedHashMap;
+import java.util.Collection;
 
 /**
  * @author Alex Krasnyanskiy
+ * @since 6.0.1
  */
 public class BatchThumbnailAdapter extends AbstractAdapter {
 
@@ -26,6 +28,13 @@ public class BatchThumbnailAdapter extends AbstractAdapter {
     }
 
     public BatchThumbnailAdapter reports(String... uris) {
+        for (String uri : uris) {
+            params.add("uri", uri);
+        }
+        return this;
+    }
+
+    public BatchThumbnailAdapter reports(Collection<String> uris) {
         for (String uri : uris) {
             params.add("uri", uri);
         }

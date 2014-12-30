@@ -47,7 +47,7 @@ public class QueryTest {
         assertSame(retrieved, expected);
     }
 
-    @Test
+    @Test(enabled = false)
     public void should_return_hash_of_field() {
 
         // Given

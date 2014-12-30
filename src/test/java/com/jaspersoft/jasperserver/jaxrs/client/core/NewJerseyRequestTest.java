@@ -209,7 +209,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(targetMock, times(1)).request();
         Mockito.verify(builderMock, times(1)).accept("application/xml");
         Mockito.verify(builderMock, times(1)).get();
-        Mockito.verify(responseMock, times(1)).hasEntity();
+        Mockito.verify(responseMock, times(2)).hasEntity();
     }
 
     @Test
@@ -243,7 +243,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(targetMock, times(1)).request();
         Mockito.verify(builderMock, times(1)).accept("application/xml");
         Mockito.verify(builderMock, times(1)).post(any(Entity.class));
-        Mockito.verify(responseMock, times(1)).hasEntity();
+        Mockito.verify(responseMock, times(2)).hasEntity();
     }
 
     @Test
@@ -277,7 +277,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(targetMock, times(1)).request();
         Mockito.verify(builderMock, times(1)).accept("application/xml");
         Mockito.verify(builderMock, times(1)).put(any(Entity.class));
-        Mockito.verify(responseMock, times(1)).hasEntity();
+        Mockito.verify(responseMock, times(2)).hasEntity();
     }
 
     @Test
@@ -311,7 +311,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(targetMock, times(1)).request();
         Mockito.verify(builderMock, times(1)).accept("application/xml");
         Mockito.verify(builderMock, times(1)).delete();
-        Mockito.verify(responseMock, times(1)).hasEntity();
+        Mockito.verify(responseMock, times(2)).hasEntity();
         Mockito.verify(responseMock, times(1)).getStatus();
     }
 
@@ -349,7 +349,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(targetMock, times(1)).request();
         Mockito.verify(builderMock, times(1)).accept("application/xml");
         Mockito.verify(builderMock, times(1)).delete();
-        Mockito.verify(responseMock, times(1)).hasEntity();
+        Mockito.verify(responseMock, times(2)).hasEntity();
         Mockito.verify(responseMock, times(1)).getStatus();
     }
 
@@ -392,7 +392,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(targetMock, times(1)).request();
         Mockito.verify(builderMock, times(1)).accept("application/xml");
         Mockito.verify(builderMock, times(1)).delete();
-        Mockito.verify(responseMock, times(1)).hasEntity();
+        Mockito.verify(responseMock, times(2)).hasEntity();
         Mockito.verify(responseMock, times(1)).getStatus();
     }
 

@@ -21,6 +21,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.ServerAttributesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
@@ -115,7 +116,11 @@ public class Session {
         return getService(QueryExecutorService.class);
     }
 
-    public ThumbnailsService thumbnailsService(){
+    public ThumbnailsService thumbnailsService() {
         return getService(ThumbnailsService.class);
+    }
+
+    public ServerAttributesService serverAttributesService() {
+        return getService(ServerAttributesService.class);
     }
 }

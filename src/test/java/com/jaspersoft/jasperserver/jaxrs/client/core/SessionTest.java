@@ -1,6 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.ServerAttributesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
@@ -13,7 +14,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorS
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo.ServerInfoService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails.ThumbnailsService;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.RequestedRepresentationNotAvailableForResourceException;
+import junit.framework.Assert;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.annotations.AfterMethod;
@@ -26,6 +29,7 @@ import javax.ws.rs.core.Response;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
@@ -188,6 +192,23 @@ public class SessionTest {
         QueryExecutorService retrieved = session.queryExecutorService();
         assertNotNull(retrieved);
     }
+
+    @Test
+    public void should_return_proper_ThumbnailsService_instance() {
+        Session sessionSpy = Mockito.spy(new Session(sessionStorageMock));
+        ThumbnailsService service = sessionSpy.thumbnailsService();
+        Assert.assertNotNull(service);
+        Mockito.verify(sessionSpy, times(1)).getService(ThumbnailsService.class);
+    }
+
+    @Test
+    public void should_return_proper_ServerAttributesService_instance() {
+        Session sessionSpy = Mockito.spy(new Session(sessionStorageMock));
+        ServerAttributesService service = sessionSpy.serverAttributesService();
+        Assert.assertNotNull(service);
+        Mockito.verify(sessionSpy, times(1)).getService(ServerAttributesService.class);
+    }
+
 
     @AfterMethod
     public void after() {

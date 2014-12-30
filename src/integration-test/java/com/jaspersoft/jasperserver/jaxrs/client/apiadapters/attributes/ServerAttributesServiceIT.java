@@ -1,0 +1,141 @@
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
+
+import com.jaspersoft.jasperserver.jaxrs.client.core.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttribute;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttributesListWrapper;
+import junit.framework.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.testng.Assert.*;
+
+public class ServerAttributesServiceIT {
+
+    private RestClientConfiguration config;
+    private JasperserverRestClient client;
+    private Session session;
+
+    @BeforeMethod
+    public void before() {
+        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
+        config.setAcceptMimeType(MimeType.JSON);
+        config.setContentMimeType(MimeType.JSON);
+        config.setJrsVersion(JRSVersion.v6_0_1);
+        client = new JasperserverRestClient(config);
+        session = client.authenticate("superuser", "superuser");
+    }
+
+    @Test
+    public void should_create_attributes() {
+        ServerAttributesListWrapper serverAttributes = new ServerAttributesListWrapper();
+        serverAttributes.setAttributes(asList(
+                new ServerAttribute("max_threads", "512"),
+                new ServerAttribute("admin_cell_phone", "03")));
+
+        ServerAttributesListWrapper attributes = session
+                .serverAttributesService()
+                .attributes()
+                .put(serverAttributes)
+                .getEntity();
+
+        Assert.assertNull(attributes);
+    }
+
+    @Test(dependsOnMethods = "should_create_attributes")
+    public void should_return_server_attributes() {
+        List<ServerAttribute> attributes = session
+                .serverAttributesService()
+                .attributes()
+                .get()
+                .getEntity()
+                .getAttributes();
+
+        Assert.assertTrue(attributes.size() >= 2);
+    }
+
+    @Test(dependsOnMethods = "should_return_server_attributes")
+    public void should_return_specified_server_attributes() {
+        List<ServerAttribute> attributes = session
+                .serverAttributesService()
+                .attributes(asList("max_threads", "admin_cell_phone"))
+                .get()
+                .getEntity()
+                .getAttributes();
+
+        Assert.assertTrue(attributes.size() >= 2);
+    }
+
+    @Test(dependsOnMethods = "should_return_specified_server_attributes")
+    public void should_delete_specified_server_attributes() {
+        ServerAttributesListWrapper entity = session
+                .serverAttributesService()
+                .attributes(asList("max_threads"))
+                .delete()
+                .getEntity();
+
+        Assert.assertNull(entity);
+    }
+
+    @Test(dependsOnMethods = "should_delete_specified_server_attributes")
+    public void should_delete_server_attributes() {
+        ServerAttributesListWrapper entity = session
+                .serverAttributesService()
+                .attributes()
+                .delete()
+                .getEntity();
+
+        Assert.assertNull(entity);
+    }
+
+    @Test(dependsOnMethods = "should_delete_server_attributes")
+    public void should_create_single_attribute() {
+        ServerAttribute attribute = new ServerAttribute();
+        attribute.setName("latency");
+        attribute.setValue("5700");
+
+        ServerAttribute entity = session
+                .serverAttributesService()
+                .attribute()
+                .put(attribute)
+                .getEntity();
+        Assert.assertNull(entity);
+    }
+
+    @Test(dependsOnMethods = "should_create_single_attribute")
+    public void should_return_attribute() {
+        ServerAttribute entity = session
+                .serverAttributesService()
+                .attribute("latency")
+                .get()
+                .getEntity();
+        Assert.assertEquals(entity.getValue(), "5700");
+    }
+
+    @Test(dependsOnMethods = "should_return_attribute")
+    public void should_delete_attribute() {
+        ServerAttribute entity = session
+                .serverAttributesService()
+                .attribute("latency")
+                .delete()
+                .getEntity();
+        Assert.assertNull(entity);
+    }
+
+    @AfterMethod
+    public void after() {
+        session.logout();
+        client = null;
+        config = null;
+        session = null;
+    }
+}

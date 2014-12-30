@@ -13,7 +13,10 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
 * Integration tests for {@link ThumbnailsService}
@@ -26,11 +29,10 @@ public class ThumbnailsServiceIT {
 
     @BeforeMethod
     public void before() {
-        config = new RestClientConfiguration("http://23.22.99.213:8080/jasperserver-pro");
+        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
         config.setAcceptMimeType(MimeType.JSON);
         config.setContentMimeType(MimeType.JSON);
         config.setJrsVersion(JRSVersion.v6_0_0);
-
         client = new JasperserverRestClient(config);
         session = client.authenticate("superuser", "superuser");
     }
@@ -40,15 +42,14 @@ public class ThumbnailsServiceIT {
      * Batch thumbnails operation
      */
     public void should_return_list_of_thumbnails() {
-
         List<ResourceThumbnail> entity = session.thumbnailsService()
                 .thumbnails()
-                .reports("/public/Samples/Reports/07g.RevenueDetailReport", "/public/Samples/Reports/03._Store_Segment_Performance_Report")
+                .reports(asList("/public/Samples/Reports/08g.UnitSalesDetailReport",
+                        "/public/Samples/Reports/11g.SalesByMonthReport"))
                 .parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true)
                 .get()
                 .getEntity()
                 .getThumbnails();
-
         Assert.assertNotNull(entity);
         Assert.assertTrue(entity.size() == 2);
     }
@@ -58,14 +59,12 @@ public class ThumbnailsServiceIT {
      * Single thumbnail operation
      */
     public void should_return_single_thumbnail_as_stream() throws IOException {
-
         InputStream entity = session.thumbnailsService()
                 .thumbnail()
-                .report("/public/Samples/Reports/07g.RevenueDetailReport")
+                .report("/public/Samples/Reports/08g.UnitSalesDetailReport")
                 .parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true)
                 .get()
                 .getEntity();
-
         Assert.assertNotNull(entity);
     }
 

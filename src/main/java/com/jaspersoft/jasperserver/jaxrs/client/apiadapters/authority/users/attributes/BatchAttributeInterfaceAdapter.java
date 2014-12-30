@@ -15,9 +15,8 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
 /**
- * @author Alexander Krasnyanskiy
+ * @author Alex Krasnyanskiy
  */
-@Deprecated
 public class BatchAttributeInterfaceAdapter extends AbstractAdapter {
 
     private final String uri;
@@ -29,20 +28,17 @@ public class BatchAttributeInterfaceAdapter extends AbstractAdapter {
         params = new MultivaluedHashMap<String, String>();
     }
 
-    @Deprecated
     public BatchAttributeInterfaceAdapter param(UsersAttributesParameter usersAttributesParam, String value) {
         params.add(usersAttributesParam.getParamName(), value);
         return this;
     }
 
-    @Deprecated
     public OperationResult<UserAttributesListWrapper> get() {
         JerseyRequest<UserAttributesListWrapper> request = buildRequest();
         request.addParams(params);
         return request.get();
     }
 
-    @Deprecated
     public <R> RequestExecution asyncGet(final Callback<OperationResult<UserAttributesListWrapper>, R> callback) {
         final JerseyRequest<UserAttributesListWrapper> request = buildRequest();
         request.addParams(params);
@@ -56,12 +52,10 @@ public class BatchAttributeInterfaceAdapter extends AbstractAdapter {
         return task;
     }
 
-    @Deprecated
     public OperationResult createOrUpdate(UserAttributesListWrapper attributesList) {
         return buildRequest().put(attributesList);
     }
 
-    @Deprecated
     public <R> RequestExecution asyncCreateOrUpdate(final UserAttributesListWrapper attributesList, final Callback<OperationResult<UserAttributesListWrapper>, R> callback) {
         final JerseyRequest<UserAttributesListWrapper> request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
@@ -74,14 +68,12 @@ public class BatchAttributeInterfaceAdapter extends AbstractAdapter {
         return task;
     }
 
-    @Deprecated
     public OperationResult delete() {
         JerseyRequest<UserAttributesListWrapper> request = buildRequest();
         request.addParams(params);
         return request.delete();
     }
 
-    @Deprecated
     public <R> RequestExecution asyncDelete(final Callback<OperationResult<UserAttributesListWrapper>, R> callback) {
         final JerseyRequest<UserAttributesListWrapper> request = buildRequest();
         request.addParams(params);
@@ -95,7 +87,6 @@ public class BatchAttributeInterfaceAdapter extends AbstractAdapter {
         return task;
     }
 
-    @Deprecated
     private JerseyRequest<UserAttributesListWrapper> buildRequest() {
         return JerseyRequest.buildRequest(sessionStorage, UserAttributesListWrapper.class, new String[]{uri, "/attributes"}, new DefaultErrorHandler());
     }

@@ -22,10 +22,13 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
+import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesTypeResolverUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnailListWrapper;
 
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class OperationResultFactoryImpl implements OperationResultFactory {
@@ -48,8 +51,7 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
         /// -> code to remove ///
         if (response.hasEntity() && responseClass.equals(ResourceThumbnailListWrapper.class)) {
             result = (OperationResult<T>) new ThumbnailsOperationResult(response, (Class<? extends ResourceThumbnailListWrapper>) responseClass);
-        }
-        else
+        } else
         /// <- ///
 
         if (response.hasEntity()) {
@@ -66,5 +68,27 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
 
     private Class<? extends ClientResource> getSpecificResourceType(Response response) {
         return ResourcesTypeResolverUtil.getClassForMime(response.getHeaderString("Content-Type"));
+    }
+
+    /**
+     * This is temporary class for managing thumbnails operation result.
+     * Will be removed as soon as the proper ResourceThumbnailListWrapper will be written.
+     */
+    @Deprecated
+    private class ThumbnailsOperationResult extends WithEntityOperationResult<ResourceThumbnailListWrapper> {
+
+        public ThumbnailsOperationResult(Response response, Class<? extends ResourceThumbnailListWrapper> entityClass) {
+            super(response, entityClass);
+        }
+
+        @Override
+        public ResourceThumbnailListWrapper getEntity() {
+            try {
+                return new ResourceThumbnailListWrapper(response.readEntity(new GenericType<List<ResourceThumbnail>>() {
+                }));
+            } catch (Exception e) {
+                return null;
+            }
+        }
     }
 }

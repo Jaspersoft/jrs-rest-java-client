@@ -103,7 +103,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
         assertNotNull(retrievedOperationResult);
         assertSame(retrievedOperationResult, withEntityOperationResultMock);
 
-        verify(responseMock).hasEntity();
+        verify(responseMock, times(2)).hasEntity();
         verifyNew(WithEntityOperationResult.class, times(1)).withArguments(responseMock, ClientQuery.class);
     }
 

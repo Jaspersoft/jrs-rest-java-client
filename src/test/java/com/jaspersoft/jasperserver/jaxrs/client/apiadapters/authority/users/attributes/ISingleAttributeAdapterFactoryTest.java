@@ -37,7 +37,7 @@ import static org.testng.Assert.assertSame;
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.attributes.SingleAttributeAdapter}
  */
 @PrepareForTest({JerseyRequest.class, SingleAttributeAdapter.class, MultivaluedHashMap.class})
-public class SingleAttributeAdapterTest extends PowerMockTestCase {
+public class ISingleAttributeAdapterFactoryTest extends PowerMockTestCase {
 
     @Mock
     private SessionStorage sessionStorageMock;

@@ -22,6 +22,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.attributes.OrganizationBatchAttributeAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.attributes.OrganizationSingleAttributeAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -40,6 +42,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 
 import java.io.IOException;
+import java.util.Collection;
 
 
 public class SingleOrganizationAdapter extends AbstractAdapter {
@@ -57,7 +60,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return buildRequest().get();
     }
 
-    public <R> RequestExecution asyncGet(final Callback<OperationResult<Organization>, R> callback){
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<Organization>, R> callback) {
         final JerseyRequest<Organization> request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -69,7 +72,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    private String prepareJsonForUpdate(Organization clientTenant){
+    private String prepareJsonForUpdate(Organization clientTenant) {
         ObjectMapper mapper = new ObjectMapper();
         SerializationConfig serializationConfig = mapper.getSerializationConfig();
         serializationConfig = serializationConfig.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
@@ -92,7 +95,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return buildRequest().put(json);
     }
 
-    public <R> RequestExecution asyncUpdate(Organization clientTenant, final Callback<OperationResult<Organization>, R> callback){
+    public <R> RequestExecution asyncUpdate(Organization clientTenant, final Callback<OperationResult<Organization>, R> callback) {
         final JerseyRequest<Organization> request = buildRequest();
         final String json = prepareJsonForUpdate(clientTenant);
         RequestExecution task = new RequestExecution(new Runnable() {
@@ -105,11 +108,11 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult delete(){
-        return buildRequest().delete();
+    public OperationResult delete() {
+            return buildRequest().delete();
     }
 
-    public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback){
+    public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
         final JerseyRequest request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -119,6 +122,26 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         });
         ThreadPoolUtil.runAsynchronously(task);
         return task;
+    }
+
+    public OrganizationSingleAttributeAdapter attribute(String attributeName) {
+        return new OrganizationSingleAttributeAdapter(sessionStorage, organizationId, attributeName);
+    }
+
+    public OrganizationSingleAttributeAdapter attribute() {
+        return new OrganizationSingleAttributeAdapter(sessionStorage, organizationId);
+    }
+
+    public OrganizationBatchAttributeAdapter attributes(Collection<String> attributesNames) {
+        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId, attributesNames);
+    }
+
+    public OrganizationBatchAttributeAdapter attributes(String... attributesNames) {
+        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId, attributesNames);
+    }
+
+    public OrganizationBatchAttributeAdapter attributes() {
+        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId);
     }
 
     private JerseyRequest<Organization> buildRequest() {
