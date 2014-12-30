@@ -8,7 +8,6 @@ notifications:
     - krasnyanskiy.alex@gmail.com
     - o.krasnianskyi@globallogic.com
     - igor.nesterenko@globallogic.com
-    - borys.kolesnykov@globallogic.com
 
 branches:
   only:
