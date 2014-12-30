@@ -42,11 +42,10 @@ public class ServerAttributesServiceIT {
                 new ServerAttribute("max_threads", "512"),
                 new ServerAttribute("admin_cell_phone", "03")));
 
-        ServerAttributesListWrapper attributes = session
+        OperationResult<ServerAttributesListWrapper> attributes = session
                 .serverAttributesService()
                 .attributes()
-                .put(serverAttributes)
-                .getEntity();
+                .createOrUpdate(serverAttributes);
 
         Assert.assertNull(attributes);
     }
@@ -77,11 +76,11 @@ public class ServerAttributesServiceIT {
 
     @Test(dependsOnMethods = "should_return_specified_server_attributes")
     public void should_delete_specified_server_attributes() {
-        ServerAttributesListWrapper entity = session
+        OperationResult<ServerAttributesListWrapper> entity = session
                 .serverAttributesService()
                 .attributes(asList("max_threads"))
-                .delete()
-                .getEntity();
+                .delete();
+                //.getEntity();
 
         Assert.assertNull(entity);
     }
@@ -106,7 +105,7 @@ public class ServerAttributesServiceIT {
         ServerAttribute entity = session
                 .serverAttributesService()
                 .attribute()
-                .put(attribute)
+                .createOrUpdate(attribute)
                 .getEntity();
         Assert.assertNull(entity);
     }
@@ -123,11 +122,11 @@ public class ServerAttributesServiceIT {
 
     @Test(dependsOnMethods = "should_return_attribute")
     public void should_delete_attribute() {
-        ServerAttribute entity = session
+        OperationResult<ServerAttribute> entity = session
                 .serverAttributesService()
                 .attribute("latency")
-                .delete()
-                .getEntity();
+                .delete();
+                //.getEntity();
         Assert.assertNull(entity);
     }
 

@@ -1,11 +1,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails;
 
-import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JRSVersion;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnail;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -13,7 +13,6 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;

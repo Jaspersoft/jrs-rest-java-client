@@ -44,6 +44,12 @@ Table of Contents
     * [Viewing User Attributes](#viewing-user-attributes).
     * [Setting User Attributes](#setting-user-attributes).
     * [Deleting User Attributes](#deleting-user-attributes).
+    * [Viewing Organization Attributes](#viewing-organization-attributes).
+    * [Setting Organization Attributes](#setting-organization-attributes).
+    * [Deleting Organization Attributes](#deleting-organization-attributes).
+    * [Viewing Server Attributes](#viewing-server-attributes).
+    * [Setting Server Attributes](#setting-server-attributes).
+    * [Deleting Server Attributes](#deleting-server-attributes).
   4. [The Roles Service](#the-roles-service).
     * [Searching for Roles](#searching-for-roles).
     * [Viewing a Role](#viewing-a-role).
@@ -96,15 +102,16 @@ Table of Contents
   2. [Import service](#import-service).
     * [Checking the Import State](#checking-the-import-state).
 11. [Domain metadata service](#domainmetadata-service).
-12. [Query executor service](#queryexecutor-service)
-13. [REST Server Information](#rest-server-information).
-14. [Exception handling](#exception-handling).
-15. [Asynchronous API](#asynchronous-api).
-16. [Getting serialized content from response](#getting-serialized-content-from-response).
-17. [Switching between JSON and XML](#switching-between-json-and-xml).
-18. [Possible issues](#possible-issues).
-19. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-20. [License](#license).
+12. [Thumbnail Search Service](#thumbnail-search-service).
+13. [Query executor service](#queryexecutor-service).
+14. [REST Server Information](#rest-server-information).
+15. [Exception handling](#exception-handling).
+16. [Asynchronous API](#asynchronous-api).
+17. [Getting serialized content from response](#getting-serialized-content-from-response).
+18. [Switching between JSON and XML](#switching-between-json-and-xml).
+19. [Possible issues](#possible-issues).
+20. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+21. [License](#license).
 
 Introduction
 -------------
@@ -611,6 +618,136 @@ OperationResult operationResult =
                 .createOrUpdate(clientUserAttribute);
 
 Response response = operationResult.getResponse();
+```
+####Viewing Organization Attributes
+The code below retrieves the list of attributes, if any, defined for the organization.
+```java
+List<ClientTenantAttribute> attributes = session
+        .organizationsService()
+        .organization("organization_1")
+        .attributes()
+        .get()
+        .getEntity()
+        .getAttributes();
+```
+You can retrieve any specified attributes. In this case all you can define all needed attributes. See code below.
+```java
+List<ClientTenantAttribute> attributes = session
+        .organizationsService()
+        .organization("organization_1")
+        .attributes(asList("number_of_employees", "number_of_units", "country_code"))
+        .get()
+        .getEntity()
+        .getAttributes();
+```
+Or to get a single organization attribute.
+```java
+ClientTenantAttribute attributes = session
+        .organizationsService()
+        .organization("organization_1")
+        .attribute("industry")
+        .get()
+        .getEntity();
+```
+####Setting Organization Attributes
+Service allows you to create new organization attributes. See code below.
+```java
+TenantAttributesListWrapper attributes = new TenantAttributesListWrapper();
+        attributes.setAttributes(Arrays.asList(
+                new ClientTenantAttribute("number_of_employees", "1000+"),
+                new ClientTenantAttribute("number_of_units", "29"),
+                new ClientTenantAttribute("country_code", "FR")));
+                
+OperationResult<TenantAttributesListWrapper> retrieved = session
+        .organizationsService()
+        .organization("organization_1")
+        .attributes()
+        .createOrUpdate(attributes);
+```
+Or to create a single organization attribute as well.
+```java
+ClientTenantAttribute attribute = new ClientTenantAttribute("industry", "IT");
+OperationResult<ClientTenantAttribute> retrieved = session
+        .organizationsService()
+        .organization("organization_1")
+        .attribute()
+        .createOrUpdate(attribute);
+```
+####Deleting Organization Attributes
+You can also delete a single organization attribute.
+```java
+OperationResult<ClientTenantAttribute> attributes = session
+        .organizationsService()
+        .organization("organization_1")
+        .attribute("industry")
+        .delete();
+```
+Or to delete specified attributes.
+```java
+OperationResult<TenantAttributesListWrapper> attributes = session
+        .organizationsService()
+        .organization("organization_1")
+        .attributes(asList("number_of_employees", "country_code"))
+        .delete();
+```
+####Viewing Server Attributes
+We have also provided service to get server attributes. Code below return available server attributes. 
+```java
+List<ServerAttribute> attributes = session
+        .serverAttributesService()
+        .attributes()
+        .get()
+        .getEntity()
+        .getAttributes();
+```
+Or you can specify any concrete attributes.
+```java
+List<ServerAttribute> attributes = session
+        .serverAttributesService()
+        .attributes(asList("max_threads", "admin_phone_number"))
+        .get()
+        .getEntity()
+        .getAttributes();
+```
+####Setting Server Attributes
+It is possible to create new server attributes.
+```java
+ServerAttributesListWrapper serverAttributes = new ServerAttributesListWrapper();
+        serverAttributes.setAttributes(asList(
+                new ServerAttribute("max_threads", "512"),
+                new ServerAttribute("admin_phone_number", "555 55 555")));
+
+OperationResult<ServerAttributesListWrapper> attributes = session
+        .serverAttributesService()
+        .attributes()
+        .createOrUpdate(serverAttributes);
+```
+Or to create a single server attribute.
+```java
+ServerAttribute attribute = new ServerAttribute();
+attribute.setName("latency");
+attribute.setValue("5700");
+
+ServerAttribute entity = session
+        .serverAttributesService()
+        .attribute()
+        .createOrUpdate(attribute)
+        .getEntity();
+```
+####Deleting Server Attributes
+You can also delete a single server attribute.
+```java
+OperationResult<ServerAttribute> entity = session
+        .serverAttributesService()
+        .attribute("latency")
+        .delete();
+```
+Or any specified attributes.
+```java
+OperationResult<ServerAttributesListWrapper> entity = session
+        .serverAttributesService()
+        .attributes(asList("max_threads", "admin_phone_number"))
+        .delete();
 ```
 ###The Roles Service
 It provides similar methods that allow you to list, view, create, modify, and delete roles. The new service provides improved search functionality, including user-based role searches. Because the role ID is used in the URL, this service can operate only on roles whose ID is less than 100 characters long and does not contain spaces or special symbols. Unlike resource IDs, the role ID is the role name and can be modified.
@@ -1229,7 +1366,28 @@ DomainMetaData domainMetaData = session.domainService()
         .retrieve()
         .getEntity();
 ```
-
+####Thumbnail Search Service
+This service is used for requesting a thumbnail image of an existing resource. You can get a single resource.
+```java
+InputStream entity = session.thumbnailsService()
+        .thumbnail()
+        .report("/public/Samples/Reports/08g.UnitSalesDetailReport")
+        .parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true)
+        .get()
+        .getEntity();
+```
+Or to get thumbnails of multiple resources.
+```java
+List<ResourceThumbnail> entity = session.thumbnailsService()
+        .thumbnails()
+        .reports(asList("/public/Samples/Reports/08g.UnitSalesDetailReport", 
+                        "/public/Samples/Reports/11g.SalesByMonthReport"))
+        .parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true)
+        .get()
+        .getEntity()
+        .getThumbnails();
+```
+Please notice that thumbnail represented by DTO class which contains a Base64 content (not InputStream).
 ####QueryExecutor Service
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
 For now the only resource that supports queries is a Domain.

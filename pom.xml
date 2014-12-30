@@ -17,11 +17,11 @@
     </properties>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>com.jaspersoft.jasperserver</groupId>-->
-            <!--<artifactId>jasperserver-dto</artifactId>-->
-            <!--<version>5.6.1</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.jaspersoft.jasperserver</groupId>
+            <artifactId>jasperserver-dto</artifactId>
+            <version>5.6.1</version>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
@@ -160,7 +160,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <!--<version>${maven.surefire.version}</version>-->
+                <version>2.12</version>
                 <configuration>
                     <skipTests>false</skipTests>
                     <excludes>
@@ -174,7 +174,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <!--<version>${maven.failsafe.plugin.version}</version>-->
+                <version>2.12</version>
                 <configuration>
                     <!-- it gives more memory for IT -->
                     <argLine>-Xmx512m -XX:MaxPermSize=256m</argLine>

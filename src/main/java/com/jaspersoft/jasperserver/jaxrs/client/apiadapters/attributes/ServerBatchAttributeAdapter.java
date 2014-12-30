@@ -45,7 +45,7 @@ public class ServerBatchAttributeAdapter extends AbstractAdapter {
         return request().addParams(params).delete();
     }
 
-    public OperationResult<ServerAttributesListWrapper> put(ServerAttributesListWrapper attributesListWrapper){
+    public OperationResult<ServerAttributesListWrapper> createOrUpdate(ServerAttributesListWrapper attributesListWrapper){
         return request().put(attributesListWrapper);
     }
 

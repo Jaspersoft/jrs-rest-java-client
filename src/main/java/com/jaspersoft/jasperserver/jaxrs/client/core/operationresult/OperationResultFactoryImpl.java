@@ -22,8 +22,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
-import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesTypeResolverUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnail;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnailListWrapper;
 
 import javax.ws.rs.core.GenericType;
@@ -84,8 +84,7 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
         @Override
         public ResourceThumbnailListWrapper getEntity() {
             try {
-                return new ResourceThumbnailListWrapper(response.readEntity(new GenericType<List<ResourceThumbnail>>() {
-                }));
+                return new ResourceThumbnailListWrapper(response.readEntity(new GenericType<List<ResourceThumbnail>>() {}));
             } catch (Exception e) {
                 return null;
             }

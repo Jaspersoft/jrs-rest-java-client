@@ -41,8 +41,8 @@ public class OrganizationsServiceIT {
                 .organizationsService()
                 .organization("organization_1")
                 .attribute()
-                .put(attribute);
-
+                .createOrUpdate(attribute);
+        
         Assert.assertNull(retrieved.getEntity());
     }
 
@@ -76,11 +76,12 @@ public class OrganizationsServiceIT {
                 new ClientTenantAttribute("number_of_employees", "1000+"),
                 new ClientTenantAttribute("number_of_units", "29"),
                 new ClientTenantAttribute("country_code", "FR")));
-        OperationResult<TenantAttributesListWrapper> retrieved = session
+        TenantAttributesListWrapper retrieved = session
                 .organizationsService()
                 .organization("organization_1")
                 .attributes()
-                .put(attributes);
+                .createOrUpdate(attributes)
+                .getEntity();
         Assert.assertNotNull(retrieved);
     }
 

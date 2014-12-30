@@ -32,7 +32,7 @@ public class ServerSingleAttributeAdapter extends AbstractAdapter {
         return request().delete();
     }
 
-    public OperationResult<ServerAttribute> put(ServerAttribute attribute) {
+    public OperationResult<ServerAttribute> createOrUpdate(ServerAttribute attribute) {
         attributeName = attribute.getName();
         return request().put(attribute);
     }

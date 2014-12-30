@@ -47,7 +47,7 @@ public class OrganizationBatchAttributeAdapter extends AbstractAdapter {
         return request().addParams(params).get();
     }
 
-    public OperationResult<TenantAttributesListWrapper> put(TenantAttributesListWrapper entity) {
+    public OperationResult<TenantAttributesListWrapper> createOrUpdate(TenantAttributesListWrapper entity) {
         return request().put(entity);
     }
 

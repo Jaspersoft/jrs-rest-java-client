@@ -31,7 +31,7 @@ public class OrganizationSingleAttributeAdapter extends AbstractAdapter {
         return request().get();
     }
 
-    public OperationResult<ClientTenantAttribute> put(ClientTenantAttribute attribute) {
+    public OperationResult<ClientTenantAttribute> createOrUpdate(ClientTenantAttribute attribute) {
         attributeName = attribute.getName();
         return request().put(attribute);
     }
