@@ -155,6 +155,44 @@
                     <branch>develop</branch>
                 </configuration>
             </plugin>
+
+            <!-- Used for unit tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <!--<version>${maven.surefire.version}</version>-->
+                <configuration>
+                    <skipTests>false</skipTests>
+                    <excludes>
+                        <exclude>**/IT.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+
+            <!-- Used for integration tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <!--<version>${maven.failsafe.plugin.version}</version>-->
+                <configuration>
+                    <!-- it gives more memory for IT -->
+                    <argLine>-Xmx512m -XX:MaxPermSize=256m</argLine>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <skipTests>true</skipTests>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
     <developers>
