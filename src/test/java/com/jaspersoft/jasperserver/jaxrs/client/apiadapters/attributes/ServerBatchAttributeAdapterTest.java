@@ -77,7 +77,7 @@ public class ServerBatchAttributeAdapterTest extends PowerMockTestCase {
 
         /** When **/
         ServerBatchAttributeAdapter adapter = new ServerBatchAttributeAdapter(sessionStorageMock);
-        OperationResult<ServerAttributesListWrapper> retrieved = adapter.put(attributes);
+        OperationResult<ServerAttributesListWrapper> retrieved = adapter.createOrUpdate(attributes);
 
 
         /** Than **/
