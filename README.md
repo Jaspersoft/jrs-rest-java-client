@@ -1367,7 +1367,7 @@ DomainMetaData domainMetaData = session.domainService()
         .getEntity();
 ```
 ####Thumbnail Search Service
-This service is used for requesting a thumbnail image of an existing resource. You can get a single resource.
+This service is used for requesting a thumbnail image of an existing resource. You can get a single resource. See code below.
 ```java
 InputStream entity = session.thumbnailsService()
         .thumbnail()
@@ -1376,7 +1376,7 @@ InputStream entity = session.thumbnailsService()
         .get()
         .getEntity();
 ```
-Or to get thumbnails of multiple resources.
+Or to get multiple resources thumbnails.
 ```java
 List<ResourceThumbnail> entity = session.thumbnailsService()
         .thumbnails()
@@ -1387,7 +1387,7 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
         .getEntity()
         .getThumbnails();
 ```
-Please notice that thumbnail represented by DTO class which contains a Base64 content (not InputStream).
+Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
 ####QueryExecutor Service
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
 For now the only resource that supports queries is a Domain.
