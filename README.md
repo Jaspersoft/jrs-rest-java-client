@@ -630,7 +630,7 @@ List<ClientTenantAttribute> attributes = session
         .getEntity()
         .getAttributes();
 ```
-You can retrieve any specified attributes. In this case all you can define all needed attributes. See code below.
+You can retrieve any specified attributes. In this case all you need is to define required attributes. See code snippet below.
 ```java
 List<ClientTenantAttribute> attributes = session
         .organizationsService()
