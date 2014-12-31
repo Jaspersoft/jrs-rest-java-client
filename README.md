@@ -700,7 +700,7 @@ List<ServerAttribute> attributes = session
         .getEntity()
         .getAttributes();
 ```
-Or you can specify any concrete attributes.
+Or you can specify any concrete attribute.
 ```java
 List<ServerAttribute> attributes = session
         .serverAttributesService()
