@@ -59,7 +59,7 @@ public class CommonOperationProcessorImplTest extends PowerMockTestCase {
         // when
         final CommonOperationProcessorImpl operationProcessor = new CommonOperationProcessorImpl(resource, resourceClass, sessionStorageMock);
 
-        // than
+        // Then
         Object settedResource = Whitebox.getInternalState(operationProcessor, "resource");
         Object settedResourceTypeClass = Whitebox.getInternalState(operationProcessor, "resourceTypeClass");
         Object settedSessionStorage = Whitebox.getInternalState(operationProcessor, "sessionStorage");
@@ -90,7 +90,7 @@ public class CommonOperationProcessorImplTest extends PowerMockTestCase {
         OperationResult retrieved = operationProcessor.create(dummyForm, MediaType.APPLICATION_JSON_TYPE, "/path/to/folder");
 
 
-        // than
+        // Then
         assertNotNull(retrieved);
 
         verifyStatic(times(1));
@@ -120,7 +120,7 @@ public class CommonOperationProcessorImplTest extends PowerMockTestCase {
         OperationResult retrieved = operationProcessor.get("/path/to/folder");
 
 
-        // than
+        // Then
         assertNotNull(retrieved);
 
         verifyStatic(times(1));

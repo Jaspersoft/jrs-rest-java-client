@@ -68,7 +68,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         // When
         OperationResult<RepositoryPermission> retrieved = adapterSpy.get();
 
-        // Than
+        // Then
         verifyPrivate(adapterSpy, times(1)).invoke("getBuilder", eq(RepositoryPermission.class));
         verify(requestMock, times(1)).get();
         assertNotNull(retrieved);
@@ -85,7 +85,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         // When
         OperationResult<RepositoryPermission> retrieved = adapterSpy.createOrUpdate(permissionMock);
 
-        // Than
+        // Then
         verifyPrivate(adapterSpy, times(1)).invoke("getBuilder", eq(RepositoryPermission.class));
         verify(requestMock, times(1)).put(permissionMock);
         assertNotNull(retrieved);
@@ -104,7 +104,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         // When
         OperationResult<RepositoryPermission> retrieved = adapterSpy.delete();
 
-        // Than
+        // Then
         verifyPrivate(adapterSpy, times(1)).invoke("getBuilder", eq(Object.class));
         verify(requestMock, times(1)).delete();
         assertNotNull(retrieved);
@@ -123,7 +123,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         // When
         OperationResult<RepositoryPermission> retrieved = spy.get();
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(storageMock), eq(RepositoryPermission.class), eq(new String[]{"/permissions", "resourceUri"}));
 
@@ -146,7 +146,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         // When
         spy.get();
 
-        // Than expect NPE
+        // Then expect NPE
     }
 
     @Test
@@ -181,7 +181,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         Mockito.verify(requestMock).get();
         Mockito.verify(callback).execute(resultMock);
         Assert.assertNotNull(retrieved);
@@ -221,7 +221,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         Mockito.verify(requestMock).delete();
         Mockito.verify(callback).execute(resultMock);
         Assert.assertNotNull(retrieved);
@@ -260,7 +260,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
 

@@ -39,7 +39,7 @@ public class AuthenticationCredentialsTest extends PowerMockTestCase {
         // When
         AuthenticationCredentials credentials = new AuthenticationCredentials(USERNAME, PASSWORD);
 
-        // Than
+        // Then
         assertNotNull(credentials);
         assertEquals(credentials.getUsername(), USERNAME);
         assertEquals(credentials.getPassword(), PASSWORD);
@@ -55,7 +55,7 @@ public class AuthenticationCredentialsTest extends PowerMockTestCase {
         // When
         credentialsMock.getUsername();
 
-        // Than
+        // Then
         verify(credentialsMock, times(1)).getUsername();
     }
 
@@ -69,7 +69,7 @@ public class AuthenticationCredentialsTest extends PowerMockTestCase {
         // When
         credentialsMock.getPassword();
 
-        // Than
+        // Then
         verify(credentialsMock, times(1)).getPassword();
     }
 
@@ -81,7 +81,7 @@ public class AuthenticationCredentialsTest extends PowerMockTestCase {
         // When
         credentials.setPassword("new_password");
 
-        // Than
+        // Then
         String retrieved = getInternalState(credentials, "password");
         assertEquals(retrieved, "new_password");
     }
@@ -94,7 +94,7 @@ public class AuthenticationCredentialsTest extends PowerMockTestCase {
         // When
         credentials.setUsername("Tom");
 
-        // Than
+        // Then
         String retrieved = getInternalState(credentials, "username");
         assertEquals(retrieved, "Tom");
         assertNotSame(retrieved, "Mike");

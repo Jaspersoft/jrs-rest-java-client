@@ -183,7 +183,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
         ServerInfoService service = new ServerInfoService(sessionStorageMock);
         OperationResult<String> edition = service.edition();
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(String.class), eq(new String[]{"/serverInfo", path}));
 

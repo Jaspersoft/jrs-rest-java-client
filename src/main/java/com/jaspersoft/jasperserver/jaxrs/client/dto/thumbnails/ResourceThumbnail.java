@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Deprecated
 @XmlRootElement
+@SuppressWarnings("deprecation")
 public class ResourceThumbnail {
 
     private String uri;

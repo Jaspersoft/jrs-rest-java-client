@@ -115,7 +115,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         SingleCalendarOperationsAdapter calendarOperationsAdapter =
                 new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName");
 
-        // Than
+        // Then
         assertSame(calendarOperationsAdapter.getSessionStorage(), sessionStorageMock);
         Object calendarName = Whitebox.getInternalState(calendarOperationsAdapter, "calendarName");
         Object params = Whitebox.getInternalState(calendarOperationsAdapter, "params");
@@ -130,17 +130,31 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
+    public void should_set_parameter_field_of_adapter() {
+
+        // Given
+        SingleCalendarOperationsAdapter adapter = new SingleCalendarOperationsAdapter(sessionStorageMock, "MyCal");
+
+        // When
+        adapter.parameter(CalendarParameter.REPLACE, "true");
+        MultivaluedMap<String, String> params = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapter, "params");
+
+        // Then
+        Assert.assertTrue(Boolean.valueOf(params.get("replace").get(0)));
+    }
+
+    @Test(enabled = false)
     public void parameter() throws Exception {
 
         // Given
         PowerMockito.whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(paramsSpy);
-        SingleCalendarOperationsAdapter adapterSpy =
-                Mockito.spy(new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName"));
+        SingleCalendarOperationsAdapter adapterSpy = Mockito.spy(new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName"));
 
         // When
         SingleCalendarOperationsAdapter retrieved = adapterSpy.parameter(CalendarParameter.UPDATE_TRIGGERS, "testValue");
 
-        // Than
+        // Then
         verify(adapterSpy, times(1)).parameter(CalendarParameter.UPDATE_TRIGGERS, "testValue");
         verify(paramsSpy, times(1)).add(CalendarParameter.UPDATE_TRIGGERS.getName(), "testValue");
         verify(paramsSpy, never()).getFirst(anyString());
@@ -164,7 +178,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<Calendar> retrieved = adapterSpy.get();
 
-        // Than
+        // Then
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ReportJobCalendar.class),
                 eq(new String[]{"/jobs", "/calendars", "testCalendarName"}));
@@ -191,7 +205,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<Calendar> retrieved = adapterSpy.get();
 
-        // Than
+        // Then
         assertEquals(retrieved.getEntity(), expected);
         verifyPrivate(adapterSpy, times(1)).invoke("setCommonCalendarFields", eq(new BaseCalendar()), eq(reportJobCalendarMock));
         verify(getResultMock, times(1)).getEntity();
@@ -218,7 +232,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<Calendar> retrieved = adapterSpy.get();
 
-        // Than
+        // Then
         assertEquals(retrieved.getEntity(), expected);
         verifyPrivate(adapterSpy, times(1)).invoke("setCommonCalendarFields", expected, reportJobCalendarMock);
         verify(getResultMock, times(1)).getEntity();
@@ -246,7 +260,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<Calendar> retrieved = adapterSpy.get();
 
-        // Than
+        // Then
         assertEquals(retrieved.getEntity(), expected);
         verifyPrivate(adapterSpy, times(1)).invoke("setCommonCalendarFields", eq(new CronCalendar()), eq(reportJobCalendarMock));
         verify(getResultMock, times(1)).getEntity();
@@ -274,7 +288,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         adapterSpy.get();
 
-        // Than
+        // Then
         //assertEquals(retrieved.getEntity(), expected);
         verifyPrivate(adapterSpy, times(1)).invoke("setCommonCalendarFields", eq(new DailyCalendar()), eq(reportJobCalendarMock));
         verify(getResultMock, times(1)).getEntity();
@@ -301,7 +315,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         adapterSpy.get();
 
-        // Than
+        // Then
         verifyPrivate(adapterSpy, times(1)).invoke("setCommonCalendarFields", eq(new HolidayCalendar()), eq(reportJobCalendarMock));
         verify(getResultMock, times(1)).getEntity();
         verify(reportJobCalendarMock, times(2)).getCalendarType();
@@ -327,7 +341,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         adapterSpy.get();
 
-        // Than
+        // Then
         verifyPrivate(adapterSpy, times(1)).invoke("setCommonCalendarFields", eq(new MonthlyCalendar()), eq(reportJobCalendarMock));
         verify(getResultMock, times(1)).getEntity();
         verify(reportJobCalendarMock, times(2)).getCalendarType();
@@ -353,7 +367,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         adapterSpy.get();
 
-        // Than
+        // Then
         verifyPrivate(adapterSpy, times(1)).invoke("setCommonCalendarFields", eq(new WeeklyCalendar()), eq(reportJobCalendarMock));
         verify(getResultMock, times(1)).getEntity();
         verify(reportJobCalendarMock, times(2)).getCalendarType();
@@ -371,7 +385,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         OperationResult retrieved = adapterSpy.delete();
 
-        // Than
+        // Then
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"/jobs", "/calendars", "testCalendarName"}));
         assertSame(retrieved, delResultMock);
@@ -390,7 +404,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<ReportJobCalendar> retrieved = adapterSpy.createNew(calendarEntityMock);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ReportJobCalendar.class), eq(new String[]{"/jobs", "/calendars", "testCalendarName"}));
         assertSame(retrieved, getResultMock);
@@ -436,17 +450,17 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
 
         // Wait
         synchronized (callback) {
-            callback.wait(1000);
+            callback.wait(500);
         }
 
-        // Than
+        // Then
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
         //Mockito.verify(callback, times(1)).execute(operationResultMock);
         //verifyPrivate(adapterSpy, times(1)).invoke("convertToLocalCalendarType", getResultMock);
     }
 
-    @Test (enabled = false)
+    @Test(enabled = false)
     public void asyncDelete() throws Exception {
 
         PowerMockito.mockStatic(JerseyRequest.class);
@@ -464,7 +478,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         adapterSpy.asyncDelete(resultObjectCallbackMock);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(
                 eq(sessionStorageMock),
@@ -494,7 +508,7 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
         // When
         adapterSpy.asyncCreateNew(calendarEntityMock, callbackMock3);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(
                 eq(sessionStorageMock),
@@ -532,10 +546,10 @@ public class SingleCalendarOperationsAdapterTest extends PowerMockTestCase {
 
         /* Wait */
         synchronized (callback) {
-            callback.wait(1000);
+            callback.wait(500);
         }
 
-        /* Than */
+        /* Then */
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
 

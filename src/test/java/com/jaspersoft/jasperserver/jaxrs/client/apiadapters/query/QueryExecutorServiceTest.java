@@ -21,13 +21,13 @@
 //public class QueryExecutorServiceTest {
 //
 //    @Mock
-//    private SessionStorage sessionStorageMock;
+//    private SessionStorage storageMock;
 //
 //    @Mock
 //    private Query dummyQuery;
 //
 //    @Spy
-//    private QueryExecutorService serviceSpy = new QueryExecutorService(sessionStorageMock);
+//    private QueryExecutorService serviceSpy = new QueryExecutorService(storageMock);
 //
 //    private QueryExecutorAdapter adapter;
 //    private QueryExecutorService service;
@@ -37,13 +37,13 @@
 //    @BeforeMethod
 //    public void setUp() {
 //        initMocks(this);
-//        service = new QueryExecutorService(sessionStorageMock);
-//        adapter = new QueryExecutorAdapter(sessionStorageMock, dummyQuery, VALID_URI_FAKE);
+//        service = new QueryExecutorService(storageMock);
+//        adapter = new QueryExecutorAdapter(storageMock, dummyQuery, VALID_URI_FAKE);
 //    }
 //
 //    @Test
 //    public void should_pass_session_storage_to_super_class_without_any_changes() {
-//        assertEquals(sessionStorageMock, service.getSessionStorage());
+//        assertEquals(storageMock, service.getSessionStorage());
 //    }
 //
 //    @Test
@@ -63,6 +63,6 @@
 //
 //    @AfterMethod
 //    public void tearDown() {
-//        reset(sessionStorageMock, dummyQuery);
+//        reset(storageMock, dummyQuery);
 //    }
 //}

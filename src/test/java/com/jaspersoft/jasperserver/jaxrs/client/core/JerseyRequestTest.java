@@ -117,7 +117,7 @@ public class JerseyRequestTest extends PowerMockTestCase {
         JerseyRequest<Class> retrieved =
                 JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath, dummyErrorHandler);
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertEquals(retrieved, expected);
     }

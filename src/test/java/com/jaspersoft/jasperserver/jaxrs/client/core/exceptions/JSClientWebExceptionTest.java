@@ -49,7 +49,7 @@ public class JSClientWebExceptionTest {
         // When
         exception.setErrorDescriptors(expected);
 
-        // Than
+        // Then
         final Field field = field(JSClientWebException.class, "errorDescriptors");
         final List<ErrorDescriptor> retrieved = (List<ErrorDescriptor>) field.get(exception);
 
@@ -73,7 +73,7 @@ public class JSClientWebExceptionTest {
         // When
         exception.addErrorDescriptor(descriptor);
 
-        // Than
+        // Then
         final Field field = field(JSClientWebException.class, "errorDescriptors");
         final List<ErrorDescriptor> retrieved = (List<ErrorDescriptor>) field.get(exception);
 

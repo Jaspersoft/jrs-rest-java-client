@@ -23,7 +23,7 @@ public class HtmlReportTest {
         /* When */
         HtmlReport report = new HtmlReport("_id");
 
-        /* Than */
+        /* Then */
         assertNotNull(report.getAttachments());
         assertEquals(report.getId(), "_id");
 
@@ -48,7 +48,7 @@ public class HtmlReportTest {
         report.setHtml("fakeHtml");
         report.setId("newId");
 
-        /* Than */
+        /* Then */
         assertEquals(report.getHtml(), "fakeHtml");
         assertNotEquals(report.getId(), "id");
         assertEquals(report.getId(), "newId");

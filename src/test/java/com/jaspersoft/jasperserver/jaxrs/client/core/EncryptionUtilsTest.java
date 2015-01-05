@@ -88,7 +88,7 @@
 //            EncryptionUtils.encryptPassword("pass", "n", "e");
 //        } catch (RuntimeException e) {/* NOP */}
 //
-//        // Than
+//        // Then
 //        verify(logMock, times(1)).error(anyString()); // был вызван только один раз
 //    }
 //
@@ -124,7 +124,7 @@
 //        /* When */
 //        String retrieved = EncryptionUtils.encryptPassword("pass", "n", "e");
 //
-//        /* Than */
+//        /* Then */
 //        assertNotNull(retrieved);
 //        assertEquals(retrieved, "0017177102");
 //
@@ -153,7 +153,7 @@
 //        /* When */
 //        Map<String, String> retrieved = EncryptionUtils.parseEncryptionParams(responseMock);
 //
-//        /* Than */
+//        /* Then */
 //        PowerMockito.verifyNew(JSONObject.class).withArguments("{number:1}");
 //        Mockito.verify(jsonObjectMock, times(2)).getString(anyString());
 //

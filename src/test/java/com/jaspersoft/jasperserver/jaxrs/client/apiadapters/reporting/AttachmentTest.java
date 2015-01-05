@@ -22,7 +22,7 @@ public class AttachmentTest {
         attachment.setMimeType("someType");
         attachment.setName("name");
 
-        /* Than */
+        /* Then */
         assertSame(attachment.getContent(), dummyContent);
         assertSame(attachment.getMimeType(), "someType");
         assertSame(attachment.getName(), "name");

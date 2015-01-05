@@ -85,7 +85,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         // When
         SingleJobOperationsAdapter adapter = spy(new SingleJobOperationsAdapter(sessionStorageMock, expectedJobId));
 
-        // Than
+        // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
         Field field = field(SingleJobOperationsAdapter.class, "jobId");
         String retrievedJobId = (String) field.get(adapter);
@@ -107,7 +107,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         SingleJobOperationsAdapter adapter = spy(new SingleJobOperationsAdapter(sessionStorageMock, expectedJobId));
         OperationResult<Job> retrieved = adapter.get();
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs", expectedJobId}));
         verify(jobRequestMock, times(1)).get();
@@ -132,7 +132,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         SingleJobOperationsAdapter adapter = spy(new SingleJobOperationsAdapter(sessionStorageMock, expectedJobId));
         OperationResult<Job> retrieved = adapter.get();
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs", expectedJobId}));
         verify(jobRequestMock, times(1)).get();
@@ -155,7 +155,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         SingleJobOperationsAdapter adapter = spy(new SingleJobOperationsAdapter(sessionStorageMock, expectedJobId));
         OperationResult<JobState> retrieved = adapter.state();
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(JobState.class),
                 eq(new String[]{"/jobs", expectedJobId, "/state"}));
@@ -179,7 +179,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         SingleJobOperationsAdapter adapter = spy(new SingleJobOperationsAdapter(sessionStorageMock, expectedJobId));
         OperationResult<Job> retrieved = adapter.update(jobMock);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs", expectedJobId}), any(JobValidationErrorHandler.class));
         verify(jobRequestMock, times(1)).post(jobMock);
@@ -206,7 +206,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         SingleJobOperationsAdapter adapter = spy(new SingleJobOperationsAdapter(sessionStorageMock, expectedJobId));
         OperationResult<Job> retrieved = adapter.update(jobMock);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs", expectedJobId}), any(JobValidationErrorHandler.class));
         verify(jobRequestMock, times(1)).post(jobMock);
@@ -230,7 +230,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         SingleJobOperationsAdapter adapter = spy(new SingleJobOperationsAdapter(sessionStorageMock, expectedJobId));
         OperationResult retrieved = adapter.delete();
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"/jobs", expectedJobId}));
         verify(objectJerseyRequestMock, times(1)).delete();
@@ -277,7 +277,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
         Mockito.verify(callback, times(1)).execute(jobOperationResultMock);
@@ -327,7 +327,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
         Mockito.verify(callback, times(1)).execute(jobOperationResultMock);
@@ -378,7 +378,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
         Mockito.verify(callback, times(1)).execute(jobOperationResultMock);
@@ -389,7 +389,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
 
 
     @Test
-    public void should_invoke_asynchronous_method_get_and_return_RequestExecution_with_Future_when_jrs_version_is_lower_than_5_5_0() throws InterruptedException {
+    public void should_invoke_asynchronous_method_get_and_return_RequestExecution_with_Future_when_jrs_version_is_lower_Then_5_5_0() throws InterruptedException {
 
         // Given
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -429,7 +429,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
         Mockito.verify(callback, times(1)).execute(jobOperationResultMock);
@@ -475,7 +475,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
         Mockito.verify(objectJerseyRequestMock, times(1)).delete();
@@ -518,7 +518,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
         Mockito.verify(jobStateJerseyRequestMock, times(1)).get();

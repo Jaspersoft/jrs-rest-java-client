@@ -21,10 +21,10 @@
 //public class DomainMetadataServiceTest {
 //
 //    @Mock
-//    private SessionStorage sessionStorageMock;
+//    private SessionStorage storageMock;
 //
 //    @Spy
-//    private DomainMetadataService serviceSpy = new DomainMetadataService(sessionStorageMock);
+//    private DomainMetadataService serviceSpy = new DomainMetadataService(storageMock);
 //
 //    private DomainMetadataAdapter adapter;
 //    private DomainMetadataService service;
@@ -34,13 +34,13 @@
 //    @BeforeMethod
 //    public void setUp() {
 //        initMocks(this);
-//        adapter = new DomainMetadataAdapter(sessionStorageMock, VALID_URI_FAKE);
-//        service = new DomainMetadataService(sessionStorageMock);
+//        adapter = new DomainMetadataAdapter(storageMock, VALID_URI_FAKE);
+//        service = new DomainMetadataService(storageMock);
 //    }
 //
 //    @Test
 //    public void should_pass_session_storage_to_super_class_without_any_changes() {
-//        assertEquals(sessionStorageMock, service.getSessionStorage());
+//        assertEquals(storageMock, service.getSessionStorage());
 //    }
 //
 //    @Test
@@ -60,6 +60,6 @@
 //
 //    @AfterMethod
 //    public void tearDown() {
-//        reset(sessionStorageMock);
+//        reset(storageMock);
 //    }
 //}

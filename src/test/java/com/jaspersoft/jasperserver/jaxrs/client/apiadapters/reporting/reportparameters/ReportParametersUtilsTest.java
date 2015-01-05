@@ -41,7 +41,7 @@ public class ReportParametersUtilsTest extends PowerMockTestCase {
         ReportParameters retrieved = ReportParametersUtils.toReportParameters(params);
         List<ReportParameter> parameters = retrieved.getReportParameters();
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertFalse(parameters.isEmpty());
         assertTrue(parameters.size() == 2);
@@ -60,7 +60,7 @@ public class ReportParametersUtilsTest extends PowerMockTestCase {
         /* When */
         String retrieved = toPathSegment(inputControlsIds);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertEquals(retrieved, "a;b;c;");
     }

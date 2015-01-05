@@ -78,7 +78,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
         /** When  **/
         BatchResourcesAdapter retrieved = adapter.parameter(ResourceSearchParameter.FOLDER_URI, "uri_");
 
-        /** Than **/
+        /** Then **/
         assertSame(retrieved, adapter);
         MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) Whitebox.getInternalState(retrieved, "params");
         String retrievedUri = retrievedParams.get("folderUri").get(0);
@@ -101,7 +101,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
         /** When **/
         OperationResult<ClientResourceListWrapper> retrievedResult = adapter.search();
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrievedResult);
         assertSame(retrievedResult, resultMock);
 
@@ -152,7 +152,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
         }
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         assertNotNull(retrieved.getFuture());
@@ -200,7 +200,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
         }
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         assertNotNull(retrieved.getFuture());
@@ -226,7 +226,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
         /** When **/
         OperationResult retrieved = adapter.delete();
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertSame(retrieved, objectOperationResultMock);
     }

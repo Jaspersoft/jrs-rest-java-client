@@ -108,7 +108,7 @@ public class ReportParametersAdapterTest extends PowerMockTestCase {
         }
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -144,7 +144,7 @@ public class ReportParametersAdapterTest extends PowerMockTestCase {
         OperationResult<ReportInputControlsListWrapper> retrieved = adapterSpy.get();
 
 
-        /** Than **/
+        /** Then **/
         PowerMockito.verifyStatic();
         buildRequest(
                 eq(sessionStorageMock),
@@ -170,7 +170,7 @@ public class ReportParametersAdapterTest extends PowerMockTestCase {
         /* When */
         ReportParametersValuesAdapter retrieved = adapterSpy.values();
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         List<String> paramValues = retrieved.params.get("p1");
         assertTrue(paramValues.contains("v1"));

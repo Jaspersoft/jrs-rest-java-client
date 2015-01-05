@@ -23,7 +23,7 @@ public class PageRangeTest extends PowerMockTestCase {
         /* When */
         PageRange retrieved = new PageRange(10L, 20L);
 
-        /* Than */
+        /* Then */
         long startIndex = (Long) Whitebox.getInternalState(retrieved, "startIndex");
         long endIndex = (Long) Whitebox.getInternalState(retrieved, "endIndex");
 
@@ -33,7 +33,7 @@ public class PageRangeTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_string_when_startIndex_is_diff_than_endIndex() {
+    public void should_return_proper_string_when_startIndex_is_diff_Then_endIndex() {
         PageRange range = new PageRange(10L, 20L);
         String retrieved = range.getRange();
         assertEquals(retrieved, "10-20");

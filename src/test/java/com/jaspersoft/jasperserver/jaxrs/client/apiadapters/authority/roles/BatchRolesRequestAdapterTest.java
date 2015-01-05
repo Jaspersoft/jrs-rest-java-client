@@ -47,7 +47,7 @@
 //public class BatchRolesRequestAdapterTest extends PowerMockTestCase {
 //
 //    @Mock
-//    private SessionStorage sessionStorageMock;
+//    private SessionStorage storageMock;
 //
 //    @Mock
 //    private MultivaluedHashMap<String, String> mapMock;
@@ -71,14 +71,14 @@
 //    public void constructor() {
 //
 //        // When
-//        BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(sessionStorageMock, "9454");
+//        BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(storageMock, "9454");
 //        MultivaluedMap<String, String> retrievedParams =
 //                (MultivaluedMap<String, String>) Whitebox.getInternalState(adapter, "params");
 //
 //        String retrievedUri = (String) Whitebox.getInternalState(adapter, "uri");
 //
-//        // Than
-//        assertSame(adapter.getSessionStorage(), sessionStorageMock);
+//        // Then
+//        assertSame(adapter.getSessionStorage(), storageMock);
 //        assertEquals(retrievedUri, "/organizations/9454/roles");
 //        assertNotNull(retrievedParams);
 //    }
@@ -88,14 +88,14 @@
 //    public void constructor2() {
 //
 //        // When
-//        BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(sessionStorageMock, null);
+//        BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(storageMock, null);
 //        MultivaluedMap<String, String> retrievedParams =
 //                (MultivaluedMap<String, String>) Whitebox.getInternalState(adapter, "params");
 //
 //        String retrievedUri = (String) Whitebox.getInternalState(adapter, "uri");
 //
-//        // Than
-//        assertSame(adapter.getSessionStorage(), sessionStorageMock);
+//        // Then
+//        assertSame(adapter.getSessionStorage(), storageMock);
 //        assertEquals(retrievedUri, "/roles");
 //        assertNotNull(retrievedParams);
 //    }
@@ -106,12 +106,12 @@
 //        // Given
 //        MultivaluedHashMap<String, String> mapMock = PowerMockito.mock(MultivaluedHashMap.class);
 //        whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(mapMock);
-//        BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(sessionStorageMock, "9454");
+//        BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(storageMock, "9454");
 //
 //        // When
 //        BatchRolesRequestAdapter retrieved = adapter.param(RolesParameter.HAS_ALL_USERS, "value");
 //
-//        // Than
+//        // Then
 //        assertSame(retrieved, adapter);
 //        verify(mapMock).add(RolesParameter.HAS_ALL_USERS.getParamName(), "value");
 //        Mockito.verifyNoMoreInteractions(mapMock);
@@ -122,19 +122,19 @@
 //
 //        // Given
 //        mockStatic(JerseyRequest.class);
-//        when(buildRequest(eq(sessionStorageMock), eq(RolesListWrapper.class), eq(new String[]{"/organizations/9454/roles"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+//        when(buildRequest(eq(storageMock), eq(RolesListWrapper.class), eq(new String[]{"/organizations/9454/roles"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
 //        whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(mapMock);
 //
 //        doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
 //        InOrder inOrder = Mockito.inOrder(jerseyRequestMock);
-//        BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(sessionStorageMock, "9454");
+//        BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(storageMock, "9454");
 //
 //        // When
 //        OperationResult<RolesListWrapper> retrievedResult = adapter.get();
 //
-//        // Than
+//        // Then
 //        verifyStatic(times(1));
-//        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(RolesListWrapper.class), eq(new String[]{"/organizations/9454/roles"}), any(DefaultErrorHandler.class));
+//        JerseyRequest.buildRequest(eq(storageMock), eq(RolesListWrapper.class), eq(new String[]{"/organizations/9454/roles"}), any(DefaultErrorHandler.class));
 //
 //        assertSame(retrievedResult, expectedOpResultMock);
 //        inOrder.verify(jerseyRequestMock, times(1)).addParams(mapMock);
@@ -147,13 +147,13 @@
 //        // Given
 //        mockStatic(JerseyRequest.class);
 //        when(JerseyRequest.buildRequest(
-//                eq(sessionStorageMock), eq(RolesListWrapper.class),
+//                eq(storageMock), eq(RolesListWrapper.class),
 //                eq(new String[]{"/roles"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
 //
 //        final AtomicInteger newThreadId = new AtomicInteger();
 //        final int currentThreadId = (int) Thread.currentThread().getId();
 //
-//        BatchRolesRequestAdapter adapter = spy(new BatchRolesRequestAdapter(sessionStorageMock, null));
+//        BatchRolesRequestAdapter adapter = spy(new BatchRolesRequestAdapter(storageMock, null));
 //
 //        final Callback<OperationResult<RolesListWrapper>, Void> callback = spy(new Callback<OperationResult<RolesListWrapper>, Void>() {
 //            public Void execute(OperationResult<RolesListWrapper> data) {
@@ -176,7 +176,7 @@
 //            callback.wait(1000);
 //        }
 //
-//        // Than
+//        // Then
 //        assertNotNull(retrieved);
 //        assertNotSame(currentThreadId, newThreadId.get());
 //        verify(callback, times(1)).execute(expectedOpResultMock);
@@ -186,6 +186,6 @@
 //
 //    @AfterMethod
 //    public void after() {
-//        reset(sessionStorageMock, mapMock, jerseyRequestMock, expectedOpResultMock, callbackMock);
+//        reset(storageMock, mapMock, jerseyRequestMock, expectedOpResultMock, callbackMock);
 //    }
 //}

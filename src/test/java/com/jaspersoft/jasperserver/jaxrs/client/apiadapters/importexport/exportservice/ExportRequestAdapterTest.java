@@ -99,7 +99,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
         Field field = field(ExportRequestAdapter.class, "taskId");
         Object retrievedField = field.get(adapter);
 
-        // Than
+        // Then
         assertSame(retrievedField, taskId);
         assertEquals(retrievedSessionStorage, sessionStorageMock);
     }
@@ -137,7 +137,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<InputStream> retrieved = adapterSpy.fetch();
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultInputStreamMock);
     }
@@ -286,7 +286,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         Assert.assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(operationResultStateDtoMock);
@@ -329,7 +329,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
             callbackSpy.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         Assert.assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -451,7 +451,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
             callbackSpy.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         Mockito.verify(callbackSpy, times(1)).execute(operationResultInputStreamMock);
         assertNotSame(currentThreadId, newThreadId.get());
         assertNotNull(retrieved);
@@ -474,7 +474,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
             adapterSpy.fetch();
         } catch (ExportFailedException e) {
 
-            /* Than */
+            /* Then */
             verify(adapterSpy, times(1)).state();
             verify(stateMock, times(2)).getPhase();
             assertNotNull(e);
@@ -498,7 +498,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
             adapterSpy.fetch();
         } catch (ExportFailedException e) {
 
-            /* Than */
+            /* Then */
             verify(adapterSpy, times(1)).state();
             verify(stateMock, times(2)).getPhase();
             assertNotNull(e);
@@ -527,7 +527,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
         OperationResult<InputStream> result = adapterSpy.fetch();
 
-        /* Than */
+        /* Then */
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/export", taskId, "/exportFile"}));
 
@@ -586,7 +586,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
             callbackSpy.wait(5000);
         }
 
-        /* Than */
+        /* Then */
         Mockito.verify(callbackSpy, times(1)).execute(operationResultInputStreamMock);
         assertNotSame(currentThreadId, newThreadId.get());
         assertNotNull(retrieved);
@@ -650,7 +650,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
             callbackSpy.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotSame(currentThreadId, newThreadId.get());
         assertNotNull(retrieved);
 
@@ -723,7 +723,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
             callbackSpy.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotSame(currentThreadId, newThreadId.get());
         assertNotNull(retrieved);
 

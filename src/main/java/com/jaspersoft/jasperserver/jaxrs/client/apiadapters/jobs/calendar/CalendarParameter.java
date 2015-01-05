@@ -42,6 +42,6 @@ public enum CalendarParameter {
     }
 
     public String getName() {
-        return null;
+        return name;
     }
 }

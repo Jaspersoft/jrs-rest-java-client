@@ -107,7 +107,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         /* When */
         SessionStorage sessionStorageSpy = PowerMockito.spy(new SessionStorage(configurationMock, credentialsMock));
 
-        /* Than throw an exception */
+        /* Then throw an exception */
     }
 
     @Test(enabled = false)

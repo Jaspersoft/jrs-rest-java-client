@@ -10,6 +10,7 @@ import java.util.List;
  */
 @Deprecated
 @XmlRootElement(name = "attributes")
+@SuppressWarnings("deprecation")
 public class ServerAttributesListWrapper {
 
     private List<ServerAttribute> attributes;

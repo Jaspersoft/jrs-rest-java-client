@@ -55,7 +55,7 @@ public class RolesServiceTest extends PowerMockTestCase {
         // When
         SingleRoleRequestAdapter retrieved = rolesService.roleName("Admin");
 
-        // Than
+        // Then
         assertSame(retrieved, singleRoleRequestAdapterMock);
         PowerMockito.verifyNew(SingleRoleRequestAdapter.class, never()).withNoArguments();
         PowerMockito.verifyNew(SingleRoleRequestAdapter.class, times(1))
@@ -71,7 +71,7 @@ public class RolesServiceTest extends PowerMockTestCase {
         // When
         rolesService.roleName("");
 
-        // Than throw an exception
+        // Then throw an exception
     }
 
     @Test
@@ -85,7 +85,7 @@ public class RolesServiceTest extends PowerMockTestCase {
         // When
         BatchRolesRequestAdapter retrieved = rolesService.allRoles();
 
-        // Than
+        // Then
         assertSame(retrieved, batchRolesRequestAdapterMock);
         PowerMockito.verifyNew(BatchRolesRequestAdapter.class, never()).withNoArguments();
         PowerMockito.verifyNew(BatchRolesRequestAdapter.class, times(1))
@@ -101,7 +101,7 @@ public class RolesServiceTest extends PowerMockTestCase {
         // When
         RolesService retrieved = rolesService.organization("MyCoolOrg");
 
-        // Than
+        // Then
         assertSame(retrieved, rolesService);
         assertEquals(Whitebox.getInternalState(rolesService, "organizationId"), "MyCoolOrg");
     }
@@ -116,7 +116,7 @@ public class RolesServiceTest extends PowerMockTestCase {
         // When
         rolesService.organization("");
 
-        // Than throw an exception
+        // Then throw an exception
     }
 
     @AfterMethod

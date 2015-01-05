@@ -86,7 +86,7 @@ public class PermissionsServiceTest extends PowerMockTestCase {
         Field field = field(PermissionResourceRequestAdapter.class, "resourceUri");
         String resourceUri = (String) field.get(adapter);
 
-        // Than
+        // Then
         assertSame(retrieved, sessionStorageMock);
         assertEquals(resourceUri, fakeUri);
     }
@@ -97,7 +97,7 @@ public class PermissionsServiceTest extends PowerMockTestCase {
         // When
         PermissionsService service = new PermissionsService(sessionStorageMock);
 
-        // Than
+        // Then
         service.resource("");
     }
 
@@ -114,7 +114,7 @@ public class PermissionsServiceTest extends PowerMockTestCase {
         PermissionsService service = new PermissionsService(sessionStorageMock);
         OperationResult retrieved = service.createNew(permissionMock);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"/permissions"}), any(DefaultErrorHandler.class));
 
@@ -136,7 +136,7 @@ public class PermissionsServiceTest extends PowerMockTestCase {
         PermissionsService service = new PermissionsService(sessionStorageMock);
         OperationResult retrieved = service.createNew(wrapperMock);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"/permissions"}));
         verify(requestMock, times(1)).setContentType("application/collection+json");
@@ -177,7 +177,7 @@ public class PermissionsServiceTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         verify(requestMock, times(1)).post(permissionMock);
         verify(callback).execute(resultMock);
         assertNotNull(retrieved);
@@ -220,7 +220,7 @@ public class PermissionsServiceTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         inOrder.verify(requestMock, times(1)).setContentType("application/collection+xml");
         inOrder.verify(requestMock, times(1)).post(permissionListWrapperMock);
 

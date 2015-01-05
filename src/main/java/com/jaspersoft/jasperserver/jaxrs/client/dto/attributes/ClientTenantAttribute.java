@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Deprecated
 @XmlRootElement(name = "attribute")
+@SuppressWarnings("deprecation")
 public class ClientTenantAttribute {
 
     private String name;

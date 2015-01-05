@@ -155,7 +155,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(jerseyRequestMock, times(1)).get();
@@ -175,7 +175,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         /** When **/
         SingleResourceAdapter retrieved = adapter.parameter(ResourceServiceParameter.CREATE_FOLDERS, "true");
 
-        /** Than **/
+        /** Then **/
         assertSame(adapter, retrieved);
         MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) Whitebox.getInternalState(retrieved, "params");
         String param = retrievedParams.get(ResourceServiceParameter.CREATE_FOLDERS.getName()).get(0);
@@ -220,7 +220,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(objectJerseyRequestMock, times(1)).delete();
@@ -271,7 +271,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         }
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(clientFileJerseyRequestMock, times(1)).post(captor.capture());
@@ -304,7 +304,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         /** When **/
         OperationResult<ClientResource> retrieved = adapter.details();
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
 
@@ -365,7 +365,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         }
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -396,7 +396,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         /** When **/
         OperationResult<ClientAdhocDataView> retrieved = adapter.patchResource(ClientAdhocDataView.class, descriptorMock);
 
-        /** Than **/
+        /** Then **/
         verifyStatic();
         buildRequest(eq(sessionStorageMock), eq(ClientAdhocDataView.class), eq(new String[]{"/resources", resourceUri}));
 
@@ -425,7 +425,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         /** When **/
         OperationResult retrieved = adapter.delete();
 
-        /** Than **/
+        /** Then **/
         assertSame(retrieved, objectOperationResultMock);
         Mockito.verify(objectJerseyRequestMock).delete();
         Mockito.verifyNoMoreInteractions(objectJerseyRequestMock);
@@ -446,7 +446,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         /** When **/
         OperationResult<InputStream> retrieved = adapter.downloadBinary();
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertSame(retrieved, inputStreamOperationResultMock);
         Mockito.verify(inputStreamJerseyRequestMock).get();
@@ -493,7 +493,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         }
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -545,7 +545,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -594,7 +594,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         }
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -642,7 +642,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         }
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -695,7 +695,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -728,7 +728,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         OperationResult<ClientResource> retrieved = adapter.createNew(source);
 
 
-        /** Than **/
+        /** Then **/
         assertSame(retrieved, operationResultMock);
 
         Mockito.verify(virtualDataSourceJerseyRequestMock).post(source);
@@ -759,7 +759,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         OperationResult<ClientResource> retrieved = adapter.createOrUpdate(source);
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
         Mockito.verify(virtualDataSourceJerseyRequestMock).put(source);
@@ -786,7 +786,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         OperationResult<ClientFile> retrieved = adapter.uploadFile(fileMock, FileType.txt, "label_", "description_");
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertSame(retrieved, clientFileOperationResultMock);
         verify(clientFileJerseyRequestMock, times(1)).post(captor.capture());
@@ -816,7 +816,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         OperationResult<ClientResource> retrieved = adapter.moveFrom("fromUri");
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
 
@@ -843,7 +843,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         OperationResult<ClientResource> retrieved = adapter.copyFrom("fromUri");
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
 

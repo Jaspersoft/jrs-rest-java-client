@@ -101,7 +101,7 @@ public class ReorderingReportParametersAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 

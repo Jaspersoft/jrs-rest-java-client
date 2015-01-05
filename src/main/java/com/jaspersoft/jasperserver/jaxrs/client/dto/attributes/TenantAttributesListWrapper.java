@@ -10,6 +10,7 @@ import java.util.List;
  */
 @Deprecated
 @XmlRootElement(name = "attributes")
+@SuppressWarnings("deprecation")
 public class TenantAttributesListWrapper {
 
     private List<ClientTenantAttribute> attributes;

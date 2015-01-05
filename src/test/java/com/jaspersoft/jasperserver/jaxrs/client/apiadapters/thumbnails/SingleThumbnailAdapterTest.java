@@ -72,7 +72,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         /** When **/
         SingleThumbnailAdapter retrieved = thumbnailAdapter.report("/public/Samples/Reports/07g.RevenueDetailReport");
 
-        /** Than **/
+        /** Then **/
         MultivaluedHashMap<String, String> params =
                 (MultivaluedHashMap<String, String>) Whitebox.getInternalState(thumbnailAdapter, "params");
         List<String> list = params.get("uri");
@@ -92,7 +92,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         /** When **/
         SingleThumbnailAdapter retrieved = thumbnailAdapter.parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true);
 
-        /** Than **/
+        /** Then **/
         MultivaluedHashMap<String, String> params =
                 (MultivaluedHashMap<String, String>) Whitebox.getInternalState(thumbnailAdapter, "params");
         List<String> list = params.get("default_allowed");
@@ -123,7 +123,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         OperationResult<InputStream> retrieved = thumbnailAdapter.get();
 
 
-        /** Than **/
+        /** Then **/
         Assert.assertNotNull(retrieved);
         Assert.assertSame(retrieved, operationResultMock);
         PowerMockito.verifyStatic(times(1));

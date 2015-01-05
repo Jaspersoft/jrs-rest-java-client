@@ -92,7 +92,7 @@ public class RunReportAdapterTest extends PowerMockTestCase {
             callbackSpy.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         Assert.assertNotNull(retrieved);
         Assert.assertNotNull(retrieved.getFuture());
         Assert.assertNotSame(currentThreadId, newThreadId.get());
@@ -130,7 +130,7 @@ public class RunReportAdapterTest extends PowerMockTestCase {
      * for {@link RunReportAdapter#run()}
      */
     @SuppressWarnings("unchecked")
-    public void should_return_report_as_IS_if_there_is_more_than_one_page_and_there_are_unranged() {
+    public void should_return_report_as_IS_if_there_is_more_Then_one_page_and_there_are_unranged() {
 
         /** Given **/
         mockStatic(JerseyRequest.class);

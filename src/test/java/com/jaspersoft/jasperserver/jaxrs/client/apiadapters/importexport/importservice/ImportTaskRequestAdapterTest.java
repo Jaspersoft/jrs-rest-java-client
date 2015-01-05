@@ -85,7 +85,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         Field field = field(ImportTaskRequestAdapter.class, "params");
         MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.get(retrieved);
 
-        // Than
+        // Then
         verify(expected, times(1)).parameter(ImportParameter.INCLUDE_ACCESS_EVENTS, Boolean.TRUE);
         assertSame(retrieved, expected);
 
@@ -105,7 +105,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<StateDto> retrieved = adapter.create(fileMock);
 
-        // Than
+        // Then
         verifyPrivate(adapter).invoke("createImport", eq(fileMock));
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultStateDtoMock);
@@ -123,7 +123,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<StateDto> retrieved = adapter.create(streamMock);
 
-        // Than
+        // Then
         verifyPrivate(adapter).invoke("createImport", eq(streamMock));
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultStateDtoMock);
@@ -140,7 +140,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         // When
         RequestExecution retrieved = adapter.asyncCreate(fileMock, callbackMock);
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         verifyPrivate(adapter).invoke("asyncCreateImport", eq(fileMock), eq(callbackMock));
         assertSame(retrieved, requestExecutionMock);
@@ -157,7 +157,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         // When
         RequestExecution retrieved = adapter.asyncCreate(streamMock, callbackMock);
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         verifyPrivate(adapter).invoke("asyncCreateImport", eq(streamMock), eq(callbackMock));
         assertSame(retrieved, requestExecutionMock);
@@ -189,7 +189,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         // When
         RequestExecution retrieved = requestAdapterSpy.asyncCreate(fileMock, callbackMock);
 
-        // Than
+        // Then
         Assert.assertNotNull(retrieved);
         Assert.assertNotNull(resultMock);
 
@@ -234,7 +234,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<StateDto> retrieved = requestAdapterSpy.create(fileMock);
 
-        // Than
+        // Then
         Assert.assertSame(retrieved, operationResultStateDtoMock);
 
         PowerMockito.verifyStatic(times(1));

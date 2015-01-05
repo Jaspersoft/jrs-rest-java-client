@@ -55,7 +55,7 @@ public class ThumbnailsServiceTest extends PowerMockTestCase {
         ThumbnailsService thumbnailsService = new ThumbnailsService(sessionStorageMock);
         SingleThumbnailAdapter retrieved = thumbnailsService.thumbnail();
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertSame(retrieved, singleThumbnailAdapterMock);
         verifyNew(SingleThumbnailAdapter.class, times(1)).withArguments(sessionStorageMock);
@@ -74,7 +74,7 @@ public class ThumbnailsServiceTest extends PowerMockTestCase {
         ThumbnailsService thumbnailsService = new ThumbnailsService(sessionStorageMock);
         BatchThumbnailAdapter retrieved = thumbnailsService.thumbnails();
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertSame(retrieved, batchThumbnailAdapterMock);
         verifyNew(BatchThumbnailAdapter.class, times(1)).withArguments(sessionStorageMock);

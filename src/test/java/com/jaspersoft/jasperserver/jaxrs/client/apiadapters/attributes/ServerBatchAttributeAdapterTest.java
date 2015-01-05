@@ -8,7 +8,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttributesListWrapper;
 import junit.framework.Assert;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
@@ -20,36 +19,33 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
-
 import java.util.List;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Unit tests for {@link ServerBatchAttributeAdapter}
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "deprecation"})
 @PrepareForTest({JerseyRequest.class})
 public class ServerBatchAttributeAdapterTest extends PowerMockTestCase {
 
-    @Mock
     private SessionStorage sessionStorageMock;
-    @Mock
     private JerseyRequest<ServerAttributesListWrapper> jerseyRequestMock;
-    @Mock
     private OperationResult<ServerAttributesListWrapper> operationResultMock;
-    @Mock
     private RequestBuilder<ServerAttributesListWrapper> builderMock;
 
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        sessionStorageMock = mock(SessionStorage.class);
+        jerseyRequestMock = mock(JerseyRequest.class);
+        operationResultMock = mock(OperationResult.class);
+        builderMock = mock(RequestBuilder.class);
     }
 
     @Test
@@ -80,7 +76,7 @@ public class ServerBatchAttributeAdapterTest extends PowerMockTestCase {
         OperationResult<ServerAttributesListWrapper> retrieved = adapter.createOrUpdate(attributes);
 
 
-        /** Than **/
+        /** Then **/
         Assert.assertNotNull(retrieved);
         Assert.assertSame(retrieved, operationResultMock);
         PowerMockito.verifyStatic(times(1));
@@ -118,7 +114,7 @@ public class ServerBatchAttributeAdapterTest extends PowerMockTestCase {
         OperationResult<ServerAttributesListWrapper> retrieved = adapter.delete();
 
 
-        /** Than **/
+        /** Then **/
         Assert.assertNotNull(retrieved);
         Assert.assertSame(retrieved, operationResultMock);
         PowerMockito.verifyStatic(times(1));
@@ -159,7 +155,7 @@ public class ServerBatchAttributeAdapterTest extends PowerMockTestCase {
         OperationResult<ServerAttributesListWrapper> retrieved = adapter.get();
 
 
-        /** Than **/
+        /** Then **/
         Assert.assertNotNull(retrieved);
         Assert.assertSame(retrieved, operationResultMock);
         PowerMockito.verifyStatic(times(1));
@@ -176,15 +172,17 @@ public class ServerBatchAttributeAdapterTest extends PowerMockTestCase {
     @Test
     public void should_set_params() {
         ServerBatchAttributeAdapter adapter = new ServerBatchAttributeAdapter(sessionStorageMock, "x", "y", "z");
-        MultivaluedMap<String, String> params = (MultivaluedMap<String, String>)Whitebox.getInternalState(adapter, "params");
+        MultivaluedMap<String, String> params = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapter, "params");
         List<String> list = params.get("name");
         Assert.assertSame(list.size(), 3);
         Assert.assertTrue(list.contains("y") && list.contains("z"));
-
     }
 
     @AfterMethod
     public void after() {
-        reset(sessionStorageMock, jerseyRequestMock, operationResultMock, builderMock);
+        sessionStorageMock = null;
+        jerseyRequestMock = null;
+        operationResultMock = null;
+        builderMock = null;
     }
 }

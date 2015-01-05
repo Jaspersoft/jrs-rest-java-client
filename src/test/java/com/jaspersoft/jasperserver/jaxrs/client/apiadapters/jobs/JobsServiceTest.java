@@ -102,7 +102,7 @@ public class JobsServiceTest extends PowerMockTestCase {
         // When
         BatchJobsOperationsAdapter retrieved = serviceSpy.jobs();
 
-        // Than
+        // Then
         assertSame(retrieved, expectedAdapterMock);
     }
 
@@ -119,7 +119,7 @@ public class JobsServiceTest extends PowerMockTestCase {
         // When
         SingleJobOperationsAdapter retrieved = serviceSpy.job(9056);
 
-        // Than
+        // Then
         verify(serviceSpy, times(1)).job(9056);
         assertSame(retrieved, expectedJobOperationsAdapter);
     }
@@ -140,7 +140,7 @@ public class JobsServiceTest extends PowerMockTestCase {
         // When
         serviceSpy.scheduleReport(reportMock);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs"}), any(JobValidationErrorHandler.class));
         verify(jobRequestMock, times(1)).put(reportMock);
@@ -163,7 +163,7 @@ public class JobsServiceTest extends PowerMockTestCase {
         // When
         OperationResult<Job> retrieved = serviceSpy.scheduleReport(reportMock);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs"}), any(JobValidationErrorHandler.class));
         verify(jobRequestMock, times(1)).put(reportMock);
@@ -184,7 +184,7 @@ public class JobsServiceTest extends PowerMockTestCase {
         // When
         OperationResult<CalendarNameListWrapper> retrieved = serviceSpy.calendars();
 
-        // Than
+        // Then
         verify(serviceSpy, times(1)).calendars();
         verify(serviceSpy, times(1)).calendars(null);
         verify(serviceSpy, never()).calendars(CalendarType.holiday);
@@ -203,7 +203,7 @@ public class JobsServiceTest extends PowerMockTestCase {
         // When
         RequestExecution retrieved = serviceSpy.asyncCalendars(callbackMock);
 
-        // Than
+        // Then
         verify(serviceSpy, times(1)).asyncCalendars(null, callbackMock);
         verify(serviceSpy, never()).asyncCalendars(CalendarType.holiday, callbackMock);
 
@@ -222,7 +222,7 @@ public class JobsServiceTest extends PowerMockTestCase {
         // When
         OperationResult<CalendarNameListWrapper> retrieved = serviceSpy.calendars(CalendarType.daily);
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertSame(retrieved, expectedWrapperOperationResultMock);
 
@@ -246,7 +246,7 @@ public class JobsServiceTest extends PowerMockTestCase {
         // When
         OperationResult<CalendarNameListWrapper> retrieved = serviceSpy.calendars(null);
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertSame(retrieved, expectedWrapperOperationResultMock);
 
@@ -272,7 +272,7 @@ public class JobsServiceTest extends PowerMockTestCase {
         // When
         SingleCalendarOperationsAdapter retrieved = serviceSpy.calendar(calendarName);
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertSame(retrieved, expectedCalendarOperationsAdapterMock);
     }
@@ -317,7 +317,7 @@ public class JobsServiceTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
 
@@ -364,7 +364,7 @@ public class JobsServiceTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
 
@@ -414,7 +414,7 @@ public class JobsServiceTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
 

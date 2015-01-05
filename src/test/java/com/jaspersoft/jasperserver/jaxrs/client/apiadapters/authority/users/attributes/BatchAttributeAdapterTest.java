@@ -48,7 +48,7 @@
 //public class BatchAttributeAdapterTest extends PowerMockTestCase {
 //
 //    @Mock
-//    private SessionStorage sessionStorageMock;
+//    private SessionStorage storageMock;
 //
 //    @Mock
 //    private JerseyRequest<UserAttributesListWrapper> requestMock;
@@ -80,14 +80,14 @@
 //        // When
 //        StringBuilder builderMock = PowerMockito.mock(StringBuilder.class); // PowerMockito is used for mocking
 //        // final class StringBuilder
-//        SessionStorage sessionStorageMock = PowerMockito.mock(SessionStorage.class);
-//        BatchAttributeAdapter adapter = spy(new BatchAttributeAdapter(sessionStorageMock, builderMock));
+//        SessionStorage storageMock = PowerMockito.mock(SessionStorage.class);
+//        BatchAttributeAdapter adapter = spy(new BatchAttributeAdapter(storageMock, builderMock));
 //
-//        // Than
+//        // Then
 //        StringBuilder retrievedUri = (StringBuilder) Whitebox.getInternalState(adapter, "uri");
 //        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapter, "params");
 //
-//        assertSame(adapter.getSessionStorage(), sessionStorageMock);
+//        assertSame(adapter.getSessionStorage(), storageMock);
 //        assertSame(retrievedUri, builderMock);
 //        assertNotNull(retrievedParams);
 //    }
@@ -103,7 +103,7 @@
 //
 //        // Given
 //        StringBuilder builderMock = PowerMockito.mock(StringBuilder.class);
-//        BatchAttributeAdapter adapterSpy = spy(new BatchAttributeAdapter(sessionStorageMock, builderMock));
+//        BatchAttributeAdapter adapterSpy = spy(new BatchAttributeAdapter(storageMock, builderMock));
 //
 //        MultivaluedHashMap<String, String> mapSpy = spy(new MultivaluedHashMap<String, String>());
 //        Whitebox.setInternalState(adapterSpy, "params", mapSpy);
@@ -111,7 +111,7 @@
 //        // When
 //        BatchAttributeAdapter retrieved = adapterSpy.param(UsersAttributesParameter.NAME, "someParameter");
 //
-//        // Than
+//        // Then
 //        assertSame(retrieved, adapterSpy);
 //        verify(mapSpy, times(1)).add("name", "someParameter");
 //    }
@@ -123,7 +123,7 @@
 //
 //        // Given
 //        StringBuilder builderMock = PowerMockito.mock(StringBuilder.class);
-//        BatchAttributeAdapter adapterSpy = spy(new BatchAttributeAdapter(sessionStorageMock, builderMock));
+//        BatchAttributeAdapter adapterSpy = spy(new BatchAttributeAdapter(storageMock, builderMock));
 //        MultivaluedMap<String, String> params = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapterSpy, "params");
 //        PowerMockito.doReturn(requestMock).when(adapterSpy, "request");
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).get();
@@ -131,7 +131,7 @@
 //        // When
 //        OperationResult<UserAttributesListWrapper> retrieved = adapterSpy.get();
 //
-//        // Than
+//        // Then
 //        verifyPrivate(adapterSpy, times(1)).invoke("request");
 //        verify(requestMock).addParams(params);
 //        verify(requestMock, times(1)).get();
@@ -145,7 +145,7 @@
 //
 //        // Given
 //        StringBuilder builderMock = PowerMockito.mock(StringBuilder.class);
-//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(sessionStorageMock, builderMock));
+//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(storageMock, builderMock));
 //        MultivaluedMap<String, String> params = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapterSpy, "params");
 //
 //        PowerMockito.doReturn(requestMock).when(adapterSpy, "request");
@@ -156,7 +156,7 @@
 //        // When
 //        adapterSpy.asyncGet(callbackMock);
 //
-//        // Than
+//        // Then
 //        PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("request");
 //        Mockito.verify(callbackMock, times(1)).execute(operationResultMock);
 //        Mockito.verifyNoMoreInteractions(callbackMock);
@@ -171,14 +171,14 @@
 //
 //        PowerMockito.mockStatic(JerseyRequest.class);
 //        PowerMockito.when(JerseyRequest.buildRequest(
-//                eq(sessionStorageMock),
+//                eq(storageMock),
 //                eq(UserAttributesListWrapper.class),
 //                eq(new String[]{"uri", "/attributes"}),
 //                any(DefaultErrorHandler.class))).thenReturn(requestMock);
 //
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 //        BatchAttributeAdapter adapterSpy =
-//                PowerMockito.spy(new BatchAttributeAdapter(sessionStorageMock, new StringBuilder("uri")));
+//                PowerMockito.spy(new BatchAttributeAdapter(storageMock, new StringBuilder("uri")));
 //
 //        final Callback<OperationResult<UserAttributesListWrapper>, Void> callbackSpy =
 //                PowerMockito.spy(new Callback<OperationResult<UserAttributesListWrapper>, Void>() {
@@ -202,7 +202,7 @@
 //            callbackSpy.wait(1000);
 //        }
 //
-//        /* Than */
+//        /* Then */
 //        assertNotNull(retrieved);
 //        assertNotSame(currentThreadId, newThreadId.get());
 //        verify(callbackSpy, times(1)).execute(operationResultMock);
@@ -247,7 +247,7 @@
 //        expected.setProfileAttributes(list2);
 //
 //        StringBuilder builderMock = PowerMockito.mock(StringBuilder.class);
-//        BatchAttributeAdapter adapterSpy = spy(new BatchAttributeAdapter(sessionStorageMock, builderMock));
+//        BatchAttributeAdapter adapterSpy = spy(new BatchAttributeAdapter(storageMock, builderMock));
 //        PowerMockito.doReturn(requestMock).when(adapterSpy, "request");
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).put(additionalAttributes);
@@ -258,7 +258,7 @@
 //        // When
 //        adapterSpy.updateOrCreate(additionalAttributes);
 //
-//        // Than
+//        // Then
 //        verifyPrivate(adapterSpy, times(2)).invoke("request");
 //        verify(ageAttribute, times(1)).setValue(anyString());
 //    }
@@ -268,7 +268,7 @@
 //
 //        // Given
 //        StringBuilder builderMock = PowerMockito.mock(StringBuilder.class);
-//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(sessionStorageMock, builderMock));
+//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(storageMock, builderMock));
 //
 //        PowerMockito.doReturn(requestMock).when(adapterSpy, "request");
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).put(userAttributesListWrapperMock);
@@ -279,7 +279,7 @@
 //
 //        Thread.sleep(500);
 //
-//        // Than
+//        // Then
 //        PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("request");
 //        Mockito.verify(callbackMock, times(1)).execute(operationResultMock);
 //
@@ -290,7 +290,7 @@
 //
 //        // Given
 //        StringBuilder builderMock = PowerMockito.mock(StringBuilder.class);
-//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(sessionStorageMock, builderMock));
+//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(storageMock, builderMock));
 //
 //        PowerMockito.doReturn(requestMock).when(adapterSpy, "request");
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).delete();
@@ -299,7 +299,7 @@
 //        // When
 //        adapterSpy.asyncDelete(callbackMock);
 //
-//        // Than
+//        // Then
 //        PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("request");
 //        Mockito.verify(callbackMock, times(1)).execute(operationResultMock);
 //    }
@@ -309,17 +309,17 @@
 //
 //        /* Given */
 //        PowerMockito.mockStatic(JerseyRequest.class);
-//        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(UserAttributesListWrapper.class), eq(new String[]{"uri", "/attributes"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+//        PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock), eq(UserAttributesListWrapper.class), eq(new String[]{"uri", "/attributes"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).delete();
 //
 //        /* When */
-//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(sessionStorageMock, new StringBuilder("uri")));
+//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(storageMock, new StringBuilder("uri")));
 //        adapterSpy.delete();
 //
-//        /* Than */
+//        /* Then */
 //        assertNotNull(adapterSpy);
 //        PowerMockito.verifyStatic(times(1));
-//        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(UserAttributesListWrapper.class), eq(new String[]{"uri", "/attributes"}), any(DefaultErrorHandler.class));
+//        JerseyRequest.buildRequest(eq(storageMock), eq(UserAttributesListWrapper.class), eq(new String[]{"uri", "/attributes"}), any(DefaultErrorHandler.class));
 //    }
 //
 //    @Test
@@ -333,10 +333,10 @@
 //        final int currentThreadId = (int) Thread.currentThread().getId();
 //
 //        PowerMockito.mockStatic(JerseyRequest.class);
-//        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(UserAttributesListWrapper.class), eq(new String[]{"uri", "/attributes"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+//        PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock), eq(UserAttributesListWrapper.class), eq(new String[]{"uri", "/attributes"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).delete();
 //
-//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(sessionStorageMock, new StringBuilder("uri")));
+//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(storageMock, new StringBuilder("uri")));
 //        final Callback<OperationResult<UserAttributesListWrapper>, Void> callbackSpy =
 //                PowerMockito.spy(new Callback<OperationResult<UserAttributesListWrapper>, Void>() {
 //                    @Override
@@ -359,7 +359,7 @@
 //            callbackSpy.wait(1000);
 //        }
 //
-//         /* Than */
+//         /* Then */
 //        assertNotNull(retrieved);
 //        assertNotSame(currentThreadId, newThreadId.get());
 //        verify(callbackSpy, times(1)).execute(operationResultMock);
@@ -377,10 +377,10 @@
 //        final int currentThreadId = (int) Thread.currentThread().getId();
 //
 //        PowerMockito.mockStatic(JerseyRequest.class);
-//        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(UserAttributesListWrapper.class), eq(new String[]{"uri", "/attributes"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+//        PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock), eq(UserAttributesListWrapper.class), eq(new String[]{"uri", "/attributes"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).put(userAttributesListWrapperMock);
 //
-//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(sessionStorageMock, new StringBuilder("uri")));
+//        BatchAttributeAdapter adapterSpy = PowerMockito.spy(new BatchAttributeAdapter(storageMock, new StringBuilder("uri")));
 //        final Callback<OperationResult<UserAttributesListWrapper>, Void> callbackSpy =
 //                PowerMockito.spy(new Callback<OperationResult<UserAttributesListWrapper>, Void>() {
 //                    @Override
@@ -403,7 +403,7 @@
 //            callbackSpy.wait(1000);
 //        }
 //
-//         /* Than */
+//         /* Then */
 //        assertNotNull(retrieved);
 //        assertNotSame(currentThreadId, newThreadId.get());
 //        verify(callbackSpy, times(1)).execute(operationResultMock);
@@ -412,7 +412,7 @@
 //
 //    @AfterMethod
 //    public void after() {
-//        reset(sessionStorageMock, requestMock, callbackMock, resultMock, operationResultMock,
+//        reset(storageMock, requestMock, callbackMock, resultMock, operationResultMock,
 //                requestBuilderMock, userAttributesListWrapperMock);
 //    }
 //}

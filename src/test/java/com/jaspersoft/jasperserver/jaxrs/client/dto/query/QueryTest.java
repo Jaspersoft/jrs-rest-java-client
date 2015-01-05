@@ -25,7 +25,7 @@ public class QueryTest {
         // When
         query.setQueryFields(expected);
 
-        // Than
+        // Then
         final Field field = field(Query.class, "queryFields");
         final List<QueryField> retrieved = (List<QueryField>) field.get(query);
         assertSame(retrieved, expected);
@@ -43,7 +43,7 @@ public class QueryTest {
         // When
         List<QueryField> retrieved = query.getQueryFields();
 
-        // Than
+        // Then
         assertSame(retrieved, expected);
     }
 

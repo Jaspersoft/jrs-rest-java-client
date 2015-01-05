@@ -5,6 +5,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityOperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ClientTenantAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.TenantAttributesListWrapper;
@@ -16,7 +17,7 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 
 import static java.util.Arrays.asList;
-import static org.testng.Assert.*;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 public class OrganizationsServiceIT {
 
@@ -76,13 +77,14 @@ public class OrganizationsServiceIT {
                 new ClientTenantAttribute("number_of_employees", "1000+"),
                 new ClientTenantAttribute("number_of_units", "29"),
                 new ClientTenantAttribute("country_code", "FR")));
-        TenantAttributesListWrapper retrieved = session
+
+        OperationResult<TenantAttributesListWrapper> retrieved = session
                 .organizationsService()
                 .organization("organization_1")
                 .attributes()
-                .createOrUpdate(attributes)
-                .getEntity();
-        Assert.assertNotNull(retrieved);
+                .createOrUpdate(attributes);
+
+        Assert.assertTrue(instanceOf(NullEntityOperationResult.class).matches(retrieved));
     }
 
 

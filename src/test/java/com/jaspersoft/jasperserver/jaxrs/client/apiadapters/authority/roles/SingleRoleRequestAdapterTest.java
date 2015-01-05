@@ -92,7 +92,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
         // When
         adapterSpy.asyncDelete(callbackMock);
 
-        // Than
+        // Then
         PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest", eq(ClientRole.class));
         Mockito.verify(callbackMock, times(1)).execute(expectedOpResultMock);
     }
@@ -129,7 +129,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(expectedOpResultMock);
@@ -171,7 +171,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(rolesListWrapperOperationResultMock);
@@ -190,7 +190,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
         // When
         adapterSpy.asyncGet(callbackMock);
 
-        // Than
+        // Then
         PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest", eq(ClientRole.class));
         Mockito.verify(callbackMock, times(1)).execute(expectedOpResultMock);
     }
@@ -206,7 +206,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
         // When
         adapterSpy.get();
 
-        // Than
+        // Then
         PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest", eq(ClientRole.class));
         Mockito.verify(jerseyRequestMock, times(1)).get();
         Mockito.verifyNoMoreInteractions(jerseyRequestMock);
@@ -223,7 +223,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
         // When
         adapterSpy.createOrUpdate(roleMock);
 
-        // Than
+        // Then
         PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest", eq(RolesListWrapper.class));
         Mockito.verify(jerseyRequestMock, times(1)).put(roleMock);
         Mockito.verifyNoMoreInteractions(jerseyRequestMock);
@@ -240,7 +240,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
         // When
         adapterSpy.delete();
 
-        // Than
+        // Then
         PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest", eq(ClientRole.class));
         Mockito.verify(jerseyRequestMock, times(1)).delete();
         Mockito.verifyNoMoreInteractions(jerseyRequestMock);
@@ -260,7 +260,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
         // When
         OperationResult retrieved = adapterSpy.delete();
 
-        // Than
+        // Then
         PowerMockito.verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientRole.class), eq(new String[]{roleUriPrefix}),
                 any(DefaultErrorHandler.class));
@@ -302,7 +302,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(expectedOpResultMock);

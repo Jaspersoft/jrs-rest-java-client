@@ -57,7 +57,7 @@ public class JobValidationErrorHandlerTest extends PowerMockTestCase {
         JobValidationErrorHandler handler = new JobValidationErrorHandler();
         handler.handleBodyError(responseMock);
 
-        /* Than */
+        /* Then */
         Mockito.verify(responseMock, times(1)).getHeaderString("Content-Type");
         Mockito.verify(responseMock, times(1)).readEntity(ValidationErrorsListWrapper.class);
     }
@@ -75,7 +75,7 @@ public class JobValidationErrorHandlerTest extends PowerMockTestCase {
         JobValidationErrorHandler handler = new JobValidationErrorHandler();
         handler.handleBodyError(responseMock);
 
-        /* Than */
+        /* Then */
         Mockito.verify(responseMock, times(wantedNumberOfInvocations)).getHeaderString("Content-Type");
     }
 
@@ -91,7 +91,7 @@ public class JobValidationErrorHandlerTest extends PowerMockTestCase {
         JobValidationErrorHandler handler = Mockito.spy(new JobValidationErrorHandler());
         handler.handleBodyError(responseMock);
 
-        /* Than */
+        /* Then */
         Mockito.verify(responseMock, times(3)).getHeaderString("Content-Type");
         Mockito.verify(handler, times(1)).handleBodyError(responseMock);
     }

@@ -47,7 +47,7 @@ public class ReportsAdapterTest extends PowerMockTestCase {
         /* When */
         ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, "reportUnitUri");
 
-        /* Than */
+        /* Then */
         assertSame(adapterSpy.getSessionStorage(), sessionStorageMock);
         String reportUnitUri = Whitebox.getInternalState(adapterSpy, "reportUnitUri");
         assertEquals(reportUnitUri, "reportUnitUri");
@@ -77,7 +77,7 @@ public class ReportsAdapterTest extends PowerMockTestCase {
         /* When */
         ReportParametersAdapter retrieved = adapterSpy.reportParameters("1", "2", "3", "4", "5");
 
-        /* Than */
+        /* Then */
         assertSame(retrieved, parametersAdapterMock);
         verifyNew(ReportParametersAdapter.class, times(1)).withArguments(sessionStorageMock, "reportUnitUri", "1;2;3;4;5;");
     }
@@ -91,7 +91,7 @@ public class ReportsAdapterTest extends PowerMockTestCase {
         /* When */
         RunReportAdapter retrieved = adapterSpy.prepareForRun(ReportOutputFormat.PDF, 1, 2, 3);
 
-        /* Than */
+        /* Then */
         assertSame(retrieved.getSessionStorage(), sessionStorageMock);
         assertEquals(Whitebox.getInternalState(retrieved, "reportUnitUri"), "reportUnitUri");
         assertEquals(Whitebox.getInternalState(retrieved, "pages"), new String[]{"1", "2", "3"});
@@ -106,7 +106,7 @@ public class ReportsAdapterTest extends PowerMockTestCase {
         /* When */
         RunReportAdapter retrieved = adapterSpy.prepareForRun(ReportOutputFormat.PDF, new PageRange(1, 10));
 
-        /* Than */
+        /* Then */
         assertSame(retrieved.getSessionStorage(), sessionStorageMock);
         assertEquals(Whitebox.getInternalState(retrieved, "reportUnitUri"), "reportUnitUri");
         assertEquals(Whitebox.getInternalState(retrieved, "pages"), new String[]{"1-10"});

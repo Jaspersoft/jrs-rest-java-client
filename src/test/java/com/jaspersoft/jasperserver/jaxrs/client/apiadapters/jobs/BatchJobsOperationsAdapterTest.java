@@ -64,7 +64,7 @@
 //    private ArgumentCaptor<JobIdListWrapper> listWrapperCaptor;
 //
 //    @Mock
-//    private SessionStorage sessionStorageMock;
+//    private SessionStorage storageMock;
 //
 //    @Mock
 //    private OperationResult<JobSummaryListWrapper> wrapperOperationResultMock;
@@ -100,14 +100,14 @@
 //    public void should_create_BatchJobsOperationsAdapter_object_with_proper_fields() throws IllegalAccessException {
 //
 //        // Given
-//        BatchJobsOperationsAdapter adapter = new BatchJobsOperationsAdapter(sessionStorageMock);
+//        BatchJobsOperationsAdapter adapter = new BatchJobsOperationsAdapter(storageMock);
 //
 //        // When
 //        Field field = field(BatchJobsOperationsAdapter.class, "params");
 //        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.get(adapter);
 //
-//        // Than
-//        assertSame(adapter.getSessionStorage(), sessionStorageMock);
+//        // Then
+//        assertSame(adapter.getSessionStorage(), storageMock);
 //        assertNotNull(retrievedParams);
 //    }
 //
@@ -116,14 +116,14 @@
 //    public void should_set_params_and_return_this() throws IllegalAccessException {
 //
 //        // Given
-//        BatchJobsOperationsAdapter adapterSpy = spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapterSpy = spy(new BatchJobsOperationsAdapter(storageMock));
 //
 //        // When
 //        BatchJobsOperationsAdapter theSameObject = adapterSpy.parameter(JobsParameter.JOB_ID, "id");
 //        Field field = field(BatchJobsOperationsAdapter.class, "params");
 //        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.get(adapterSpy);
 //
-//        // Than
+//        // Then
 //        List<String> retrievedList = retrievedParams.get(JobsParameter.JOB_ID.getName());
 //        String retrievedId = retrievedList.get(0);
 //        List<String> noParamList = retrievedParams.get(JobsParameter.SEARCH_LABEL.getName());
@@ -137,13 +137,13 @@
 //    public void should_invoke_parametrized_search_method_with_null_param_and_return_op_result() {
 //
 //        // Given
-//        BatchJobsOperationsAdapter adapterSpy = spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapterSpy = spy(new BatchJobsOperationsAdapter(storageMock));
 //        doReturn(wrapperOperationResultMock).when(adapterSpy).search(null);
 //
 //        // When
 //        OperationResult<JobSummaryListWrapper> retrieved = adapterSpy.search();
 //
-//        // Than
+//        // Then
 //        verify(adapterSpy, times(1)).search(null);
 //        assertSame(retrieved, wrapperOperationResultMock);
 //    }
@@ -153,7 +153,7 @@
 //
 //        // Given
 //        mockStatic(JerseyRequest.class);
-//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //        PowerMockito
 //                .doReturn(jobSummaryListWrapperJerseyRequestMock)
 //                .when(adapter, "prepareSearchRequest", searchCriteriaMock);
@@ -162,7 +162,7 @@
 //        // When
 //        OperationResult<JobSummaryListWrapper> retrieved = adapter.search(searchCriteriaMock);
 //
-//        // Than
+//        // Then
 //        verifyPrivate(adapter, times(1)).invoke("prepareSearchRequest", eq(searchCriteriaMock));
 //        verify(jobSummaryListWrapperJerseyRequestMock, times(1)).get();
 //        assertSame(retrieved, wrapperOperationResultMock);
@@ -174,18 +174,18 @@
 //
 //        // Given
 //        mockStatic(JerseyRequest.class);
-//        when(buildRequest(eq(sessionStorageMock), eq(JobSummaryListWrapper.class),
+//        when(buildRequest(eq(storageMock), eq(JobSummaryListWrapper.class),
 //                eq(new String[]{"/jobs"}))).thenReturn(jobSummaryListWrapperJerseyRequestMock);
-//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //        adapter.search(null);
 //
 //        // When
 //        Field field = field(BatchJobsOperationsAdapter.class, "params");
 //        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.get(adapter);
 //
-//        // Than
+//        // Then
 //        verifyStatic(times(1));
-//        buildRequest(eq(sessionStorageMock), eq(JobSummaryListWrapper.class),
+//        buildRequest(eq(storageMock), eq(JobSummaryListWrapper.class),
 //                eq(new String[]{"/jobs"}));
 //        verifyPrivate(adapter, times(1)).invoke("prepareSearchRequest", null);
 //        verify(jobSummaryListWrapperJerseyRequestMock, times(1)).addParams(retrievedParams);
@@ -197,9 +197,9 @@
 //
 //        // Given
 //        mockStatic(JerseyRequest.class);
-//        when(buildRequest(eq(sessionStorageMock), eq(JobSummaryListWrapper.class),
+//        when(buildRequest(eq(storageMock), eq(JobSummaryListWrapper.class),
 //                eq(new String[]{"/jobs"}))).thenReturn(jobSummaryListWrapperJerseyRequestMock);
-//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //        PowerMockito.doReturn("criteriaJson").when(adapter, "buildJson", searchCriteriaMock);
 //        adapter.search(searchCriteriaMock);
 //
@@ -207,9 +207,9 @@
 //        Field field = field(BatchJobsOperationsAdapter.class, "params");
 //        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.get(adapter);
 //
-//        // Than
+//        // Then
 //        verifyStatic(times(1));
-//        buildRequest(eq(sessionStorageMock), eq(JobSummaryListWrapper.class),
+//        buildRequest(eq(storageMock), eq(JobSummaryListWrapper.class),
 //                eq(new String[]{"/jobs"}));
 //        verifyPrivate(adapter, times(1)).invoke("prepareSearchRequest", searchCriteriaMock);
 //        verify(jobSummaryListWrapperJerseyRequestMock, times(1)).addParams(retrievedParams);
@@ -219,7 +219,7 @@
 //
 //    @Test(expectedExceptions = UnsupportedOperationException.class)
 //    public void updateWithProcessedParameters() {
-//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //        adapter.updateWithProcessedParameters(reportJobModelMock);
 //    }
 //
@@ -229,11 +229,11 @@
 //
 //        // Given
 //        mockStatic(JerseyRequest.class);
-//        when(buildRequest(sessionStorageMock, JobIdListWrapper.class, new String[]{"/jobs"})).thenReturn(jobIdListWrapperJerseyRequestMock);
+//        when(buildRequest(storageMock, JobIdListWrapper.class, new String[]{"/jobs"})).thenReturn(jobIdListWrapperJerseyRequestMock);
 //
-//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //
-//        Mockito.when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+//        Mockito.when(storageMock.getConfiguration()).thenReturn(configurationMock);
 //        Mockito.when(configurationMock.getContentMimeType()).thenReturn(MimeType.JSON);
 //        Mockito.when(jobIdListWrapperJerseyRequestMock.post(anyString())).thenReturn(jobIdListWrapperOperationResultMock);
 //        PowerMockito.doReturn("testJsonContent").when(adapter, "buildJson", reportJobModelMock);
@@ -244,9 +244,9 @@
 //        // When
 //        OperationResult<JobIdListWrapper> retrieved = adapter.update(reportJobModelMock);
 //
-//        // Than
+//        // Then
 //        PowerMockito.verifyStatic(times(1));
-//        buildRequest(sessionStorageMock, JobIdListWrapper.class, new String[]{"/jobs"});
+//        buildRequest(storageMock, JobIdListWrapper.class, new String[]{"/jobs"});
 //
 //        Mockito.verify(jobIdListWrapperJerseyRequestMock, times(1)).addParams(retrievedParams);
 //        Mockito.verify(jobIdListWrapperJerseyRequestMock, times(1)).post("testJsonContent");
@@ -259,11 +259,11 @@
 //
 //        // Given
 //        mockStatic(JerseyRequest.class);
-//        when(buildRequest(sessionStorageMock, JobIdListWrapper.class, new String[]{"/jobs"})).thenReturn(jobIdListWrapperJerseyRequestMock);
+//        when(buildRequest(storageMock, JobIdListWrapper.class, new String[]{"/jobs"})).thenReturn(jobIdListWrapperJerseyRequestMock);
 //
-//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //
-//        Mockito.when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+//        Mockito.when(storageMock.getConfiguration()).thenReturn(configurationMock);
 //        Mockito.when(configurationMock.getContentMimeType()).thenReturn(MimeType.XML);
 //        Mockito.when(jobIdListWrapperJerseyRequestMock.post(anyString())).thenReturn(jobIdListWrapperOperationResultMock);
 //        PowerMockito.doReturn("testXmlContent").when(adapter, "buildXml", reportJobModelMock);
@@ -274,9 +274,9 @@
 //        // When
 //        OperationResult<JobIdListWrapper> retrieved = adapter.update(reportJobModelMock);
 //
-//        // Than
+//        // Then
 //        PowerMockito.verifyStatic(times(1));
-//        buildRequest(sessionStorageMock, JobIdListWrapper.class, new String[]{"/jobs"});
+//        buildRequest(storageMock, JobIdListWrapper.class, new String[]{"/jobs"});
 //
 //        Mockito.verify(jobIdListWrapperJerseyRequestMock, times(1)).addParams(retrievedParams);
 //        Mockito.verify(jobIdListWrapperJerseyRequestMock, times(1)).post("testXmlContent");
@@ -292,18 +292,18 @@
 //        mockStatic(JerseyRequest.class);
 //        ArrayList<Long> ids = new ArrayList<Long>();
 //        PowerMockito.whenNew(JobIdListWrapper.class).withArguments(ids).thenReturn(jobIdListWrapperMock);
-//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
-//        when(buildRequest(sessionStorageMock, JobIdListWrapper.class, new String[]{"/jobs", "/pause"})).thenReturn(jobIdListWrapperJerseyRequestMock);
+//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
+//        when(buildRequest(storageMock, JobIdListWrapper.class, new String[]{"/jobs", "/pause"})).thenReturn(jobIdListWrapperJerseyRequestMock);
 //        when(jobIdListWrapperJerseyRequestMock.post(jobIdListWrapperMock)).thenReturn(jobIdListWrapperOperationResultMock);
 //
 //        // When
 //        OperationResult<JobIdListWrapper> retrieved = adapter.pause();
 //
-//        // Than
+//        // Then
 //        assertNotNull(retrieved);
 //
 //        PowerMockito.verifyStatic(times(1));
-//        buildRequest(sessionStorageMock, JobIdListWrapper.class, new String[]{"/jobs", "/pause"});
+//        buildRequest(storageMock, JobIdListWrapper.class, new String[]{"/jobs", "/pause"});
 //
 //        Mockito.verify(jobIdListWrapperJerseyRequestMock, times(1)).post(jobIdListWrapperMock);
 //    }
@@ -315,18 +315,18 @@
 //        mockStatic(JerseyRequest.class);
 //        ArrayList<Long> ids = new ArrayList<Long>();
 //        PowerMockito.whenNew(JobIdListWrapper.class).withArguments(ids).thenReturn(jobIdListWrapperMock);
-//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
-//        when(buildRequest(sessionStorageMock, JobIdListWrapper.class, new String[]{"/jobs", "/resume"})).thenReturn(jobIdListWrapperJerseyRequestMock);
+//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
+//        when(buildRequest(storageMock, JobIdListWrapper.class, new String[]{"/jobs", "/resume"})).thenReturn(jobIdListWrapperJerseyRequestMock);
 //        when(jobIdListWrapperJerseyRequestMock.post(jobIdListWrapperMock)).thenReturn(jobIdListWrapperOperationResultMock);
 //
 //        // When
 //        OperationResult<JobIdListWrapper> retrieved = adapter.resume();
 //
-//        // Than
+//        // Then
 //        assertNotNull(retrieved);
 //
 //        PowerMockito.verifyStatic(times(1));
-//        buildRequest(sessionStorageMock, JobIdListWrapper.class, new String[]{"/jobs", "/resume"});
+//        buildRequest(storageMock, JobIdListWrapper.class, new String[]{"/jobs", "/resume"});
 //        Mockito.verify(jobIdListWrapperJerseyRequestMock, times(1)).post(jobIdListWrapperMock);
 //    }
 //
@@ -337,9 +337,9 @@
 //        mockStatic(JerseyRequest.class);
 //        ArrayList<Long> ids = new ArrayList<Long>();
 //        PowerMockito.whenNew(JobIdListWrapper.class).withArguments(ids).thenReturn(jobIdListWrapperMock);
-//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapter = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //
-//        when(buildRequest(sessionStorageMock, JobIdListWrapper.class, new String[]{"/jobs", "/restart"}))
+//        when(buildRequest(storageMock, JobIdListWrapper.class, new String[]{"/jobs", "/restart"}))
 //                .thenReturn(jobIdListWrapperJerseyRequestMock);
 //        when(jobIdListWrapperJerseyRequestMock.post(jobIdListWrapperMock))
 //                .thenReturn(jobIdListWrapperOperationResultMock);
@@ -347,11 +347,11 @@
 //        // When
 //        OperationResult<JobIdListWrapper> retrieved = adapter.restart();
 //
-//        // Than
+//        // Then
 //        assertNotNull(retrieved);
 //
 //        PowerMockito.verifyStatic(times(1));
-//        buildRequest(sessionStorageMock, JobIdListWrapper.class, new String[]{"/jobs", "/restart"});
+//        buildRequest(storageMock, JobIdListWrapper.class, new String[]{"/jobs", "/restart"});
 //        Mockito.verify(jobIdListWrapperJerseyRequestMock, times(1)).post(jobIdListWrapperMock);
 //    }
 //
@@ -361,7 +361,7 @@
 //        /* Given */
 //        mockStatic(JerseyRequest.class);
 //        when(buildRequest(
-//                eq(sessionStorageMock),
+//                eq(storageMock),
 //                eq(JobSummaryListWrapper.class),
 //                eq(new String[]{"/jobs"}))).thenReturn(jobSummaryListWrapperJerseyRequestMock);
 //        PowerMockito
@@ -369,7 +369,7 @@
 //                .when(jobSummaryListWrapperJerseyRequestMock)
 //                .get();
 //
-//        BatchJobsOperationsAdapter adapterSpy = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapterSpy = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //
 //        final AtomicInteger newThreadId = new AtomicInteger();
 //        final int currentThreadId = (int) Thread.currentThread().getId();
@@ -401,7 +401,7 @@
 //            callback.wait(1000);
 //        }
 //
-//        /* Than */
+//        /* Then */
 //        Assert.assertNotNull(retrieved);
 //        Assert.assertNotSame(currentThreadId, newThreadId.get());
 //
@@ -424,7 +424,7 @@
 //        ArgumentCaptor<JobIdListWrapper> captor = ArgumentCaptor.forClass(JobIdListWrapper.class);
 //        mockStatic(JerseyRequest.class);
 //        when(buildRequest(
-//                eq(sessionStorageMock),
+//                eq(storageMock),
 //                eq(JobIdListWrapper.class),
 //                eq(new String[]{"/jobs", "/pause"}))).thenReturn(jobIdListWrapperJerseyRequestMock);
 //
@@ -450,14 +450,14 @@
 //
 //        PowerMockito.doReturn(1).when(callback).execute(jobIdListWrapperOperationResultMock);
 //
-//        BatchJobsOperationsAdapter adapterSpy = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapterSpy = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //        adapterSpy.parameter(JobsParameter.JOB_ID, "12323412342135235");
 //        adapterSpy.parameter(JobsParameter.JOB_ID, "12323412342135234");
 //
 //        /* When */
 //        RequestExecution retrieved = adapterSpy.asyncPause(callback);
 //
-//        /* Than */
+//        /* Then */
 //        Assert.assertNotNull(retrieved);
 //        Assert.assertNotSame(currentThreadId, newThreadId.get());
 //
@@ -477,7 +477,7 @@
 //        /* Given */
 //        mockStatic(JerseyRequest.class);
 //        when(buildRequest(
-//                eq(sessionStorageMock),
+//                eq(storageMock),
 //                eq(JobIdListWrapper.class),
 //                eq(new String[]{"/jobs", "/resume"}))).thenReturn(jobIdListWrapperJerseyRequestMock);
 //
@@ -503,14 +503,14 @@
 //
 //        PowerMockito.doReturn(1).when(callback).execute(jobIdListWrapperOperationResultMock);
 //
-//        BatchJobsOperationsAdapter adapterSpy = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapterSpy = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //        adapterSpy.parameter(JobsParameter.JOB_ID, "12323412342135235");
 //        adapterSpy.parameter(JobsParameter.JOB_ID, "12323412342135234");
 //
 //        /* When */
 //        RequestExecution retrieved = adapterSpy.asyncResume(callback);
 //
-//        /* Than */
+//        /* Then */
 //        Assert.assertNotNull(retrieved);
 //        Assert.assertNotSame(currentThreadId, newThreadId.get());
 //
@@ -523,7 +523,7 @@
 //        /* Given */
 //        mockStatic(JerseyRequest.class);
 //        Mockito.when(buildRequest(
-//                eq(sessionStorageMock),
+//                eq(storageMock),
 //                eq(JobIdListWrapper.class),
 //                eq(new String[]{"/jobs"}))).thenReturn(jobIdListWrapperJerseyRequestMock);
 //
@@ -545,7 +545,7 @@
 //                });
 //
 //        Mockito.doReturn(1).when(callback).execute(jobIdListWrapperOperationResultMock);
-//        BatchJobsOperationsAdapter adapterSpy = Mockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapterSpy = Mockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //
 //        ReportJobModel model = new ReportJobModel();
 //        model.setUsername("Bob");
@@ -554,7 +554,7 @@
 //        /* When */
 //        RequestExecution retrieved = adapterSpy.asyncUpdate(model, callback);
 //
-//        /* Than */
+//        /* Then */
 //        Assert.assertNotNull(retrieved);
 //        Assert.assertNotSame(currentThreadId, newThreadId.get());
 //
@@ -569,7 +569,7 @@
 //        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
 //        mockStatic(JerseyRequest.class);
 //        when(buildRequest(
-//                eq(sessionStorageMock),
+//                eq(storageMock),
 //                eq(JobIdListWrapper.class),
 //                eq(new String[]{"/jobs"}))).thenReturn(jobIdListWrapperJerseyRequestMock);
 //
@@ -579,14 +579,14 @@
 //                .post(anyObject());
 //        PowerMockito
 //                .doReturn(configurationMock)
-//                .when(sessionStorageMock)
+//                .when(storageMock)
 //                .getConfiguration();
 //        PowerMockito
 //                .doReturn(MimeType.XML)
 //                .when(configurationMock)
 //                .getContentMimeType();
 //
-//        BatchJobsOperationsAdapter adapterSpy = PowerMockito.spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+//        BatchJobsOperationsAdapter adapterSpy = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //
 //        ReportJobModel model = new ReportJobModel();
 //        model.setUsername("Bob");
@@ -595,17 +595,17 @@
 //        /* When */
 //        OperationResult<JobIdListWrapper> retrieved = adapterSpy.update(model);
 //
-//        /* Than */
+//        /* Then */
 //        assertNotNull(retrieved);
 //
 //        PowerMockito.verifyStatic();
 //        buildRequest(
-//                eq(sessionStorageMock),
+//                eq(storageMock),
 //                eq(JobIdListWrapper.class),
 //                eq(new String[]{"/jobs"}));
 //
 //        Mockito.verify(jobIdListWrapperJerseyRequestMock).post(argumentCaptor.capture());
-//        Mockito.verify(sessionStorageMock).getConfiguration();
+//        Mockito.verify(storageMock).getConfiguration();
 //        Mockito.verify(configurationMock).getContentMimeType();
 //
 //        assertEquals(argumentCaptor.getValue(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
@@ -617,7 +617,7 @@
 //
 //    @AfterMethod
 //    public void after() {
-//        reset(sessionStorageMock, wrapperOperationResultMock, searchCriteriaMock,
+//        reset(storageMock, wrapperOperationResultMock, searchCriteriaMock,
 //                jobSummaryListWrapperJerseyRequestMock, reportJobModelMock, jobIdListWrapperOperationResultMock,
 //                configurationMock, jobIdListWrapperMock);
 //    }

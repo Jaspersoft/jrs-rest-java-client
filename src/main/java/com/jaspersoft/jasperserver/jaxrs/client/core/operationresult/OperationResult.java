@@ -43,7 +43,6 @@ public abstract class OperationResult<T> {
             }
             return entity;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return null;
         }
     }

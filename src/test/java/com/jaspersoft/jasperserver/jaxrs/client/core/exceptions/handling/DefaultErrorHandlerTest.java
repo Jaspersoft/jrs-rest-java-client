@@ -108,7 +108,7 @@
 //        /* When */
 //        OperationResult retrieved = handlerSpy.readBody(responseMock, OperationResult.class);
 //
-//        /* Than */
+//        /* Then */
 //        assertNotNull(retrieved);
 //        assertSame(retrieved, resultMock);
 //    }
@@ -124,7 +124,7 @@
 //        /* When */
 //        OperationResult retrieved = handlerSpy.readBody(responseMock, OperationResult.class);
 //
-//        /* Than */
+//        /* Then */
 //        assertNull(retrieved);
 //    }
 //
@@ -139,7 +139,7 @@
 //        /* When */
 //        OperationResult retrieved = handlerSpy.readBody(responseMock, OperationResult.class);
 //
-//        /* Than */
+//        /* Then */
 //        assertNull(retrieved);
 //    }
 //
@@ -153,7 +153,7 @@
 //        /* When */
 //        handlerSpy.handleBodyError(responseMock);
 //
-//        /* Than */
+//        /* Then */
 //        verify(responseMock).getHeaderString("Content-Type");
 //    }
 //
@@ -170,7 +170,7 @@
 //        /* When */
 //        handlerSpy.handleBodyError(responseMock);
 //
-//        /* Than throw an exception */
+//        /* Then throw an exception */
 //    }
 //
 //    @Test
@@ -186,7 +186,7 @@
 //        /* When */
 //        DefaultErrorHandler handlerSpy = Mockito.spy(new DefaultErrorHandler());
 //
-//        /* Than */
+//        /* Then */
 //        try {
 //            handlerSpy.handleError(responseMock);
 //        } catch (Exception e) {
@@ -211,7 +211,7 @@
 //        DefaultErrorHandler handlerSpy = Mockito.spy(new DefaultErrorHandler());
 //        Whitebox.setInternalState(handlerSpy, "log", logMock);
 //
-//        /* Than */
+//        /* Then */
 //        try {
 //            handlerSpy.handleError(responseMock);
 //        } catch (Exception e) {
@@ -236,7 +236,7 @@
 //            handlerSpy.handleError(responseMock);
 //        } catch (Exception e) {
 //
-//            /* Than */
+//            /* Then */
 //            assertTrue(instanceOf(NotAFileException.class).matches(e));
 //
 //            Mockito.verify(responseMock, times(1)).readEntity(ErrorDescriptor.class);
@@ -271,7 +271,7 @@
 //            handlerSpy.handleError(responseMock);
 //        } catch (Exception e){
 //
-//            /* Than */
+//            /* Then */
 //            Mockito.verify(logMock, times(1)).warn(anyString(), any(NoSuchMethodException.class));
 //        }
 //

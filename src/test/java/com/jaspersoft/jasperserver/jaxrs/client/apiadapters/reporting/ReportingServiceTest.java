@@ -95,7 +95,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(resultMock);
@@ -119,7 +119,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
         /* When */
         OperationResult<ReportExecutionDescriptor> retrieved = serviceSpy.newReportExecutionRequest(executionRequestMock);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertSame(retrieved, resultMock);
 
@@ -141,7 +141,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
         /* When */
         ReportExecutionRequestBuilder retrieved = serviceSpy.reportExecutionRequest("id");
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertSame(retrieved, builderMock);
         verifyNew(ReportExecutionRequestBuilder.class).withArguments(sessionStorageMock, "id");
@@ -161,7 +161,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
         /* When */
         ReportsAndJobsSearchAdapter retrieved = serviceSpy.runningReportsAndJobs();
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertSame(retrieved, adapterMock);
         verifyNew(ReportsAndJobsSearchAdapter.class).withArguments(sessionStorageMock);
@@ -181,7 +181,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
         /* When */
         ReportsAdapter retrieved = serviceSpy.report("reportUnitUri");
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertSame(retrieved, adapterMock);
         verifyNew(ReportsAdapter.class).withArguments(sessionStorageMock, "reportUnitUri");

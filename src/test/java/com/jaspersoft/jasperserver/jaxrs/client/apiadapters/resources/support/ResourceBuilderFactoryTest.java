@@ -58,7 +58,7 @@ public class ResourceBuilderFactoryTest extends PowerMockTestCase {
         /* When */
         DomainResourceBuilder retrieved = ResourceBuilderFactory.getBuilder(dataSource, sessionStorageMock);
 
-        /* Than */
+        /* Then */
         assertSame(retrieved, domainBuilderMock);
         verifyNew(DomainResourceBuilder.class, times(1))
                 .withArguments(dataSource, sessionStorageMock);
@@ -76,7 +76,7 @@ public class ResourceBuilderFactoryTest extends PowerMockTestCase {
         /* When */
         ReportUnitResourceBuilder retrieved = ResourceBuilderFactory.getBuilder(reportUnit, sessionStorageMock);
 
-        /* Than */
+        /* Then */
         assertSame(retrieved, reportUnitBuilderMock);
         verifyNew(ReportUnitResourceBuilder.class, times(1))
                 .withArguments(reportUnit, sessionStorageMock);
@@ -95,7 +95,7 @@ public class ResourceBuilderFactoryTest extends PowerMockTestCase {
         /* When */
         SecureMondrianConnectionResourceBuilder retrieved = ResourceBuilderFactory.getBuilder(connection, sessionStorageMock);
 
-        /* Than */
+        /* Then */
         assertSame(retrieved, secureMondrianConnectionBuilderMock);
         verifyNew(SecureMondrianConnectionResourceBuilder.class, times(1))
                 .withArguments(connection, sessionStorageMock);
@@ -114,7 +114,7 @@ public class ResourceBuilderFactoryTest extends PowerMockTestCase {
         /* When */
         MondrianConnectionResourceBuilder retrieved = ResourceBuilderFactory.getBuilder(mondrianConnection, sessionStorageMock);
 
-        /* Than */
+        /* Then */
         assertSame(retrieved, mondrianConnectionBuilderMock);
         verifyNew(MondrianConnectionResourceBuilder.class, times(1))
                 .withArguments(mondrianConnection, sessionStorageMock);

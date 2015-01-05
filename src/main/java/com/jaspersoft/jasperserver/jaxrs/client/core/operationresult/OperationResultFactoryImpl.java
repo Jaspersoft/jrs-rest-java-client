@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
@@ -48,22 +47,22 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
     private <T> OperationResult<T> getAppropriateOperationResultInstance(Response response, Class<T> responseClass) {
         OperationResult<T> result;
 
-        /// -> code to remove ///
+        // => code to be removed
         if (response.hasEntity() && responseClass.equals(ResourceThumbnailListWrapper.class)) {
             result = (OperationResult<T>) new ThumbnailsOperationResult(response, (Class<? extends ResourceThumbnailListWrapper>) responseClass);
         } else
-        /// <- ///
+        // <=
 
-        if (response.hasEntity()) {
-            result = new WithEntityOperationResult<T>(response, responseClass);
-        } else {
-            result = new NullEntityOperationResult(response, responseClass);
-        }
+            if (response.hasEntity()) {
+                result = new WithEntityOperationResult<T>(response, responseClass);
+            } else {
+                result = new NullEntityOperationResult(response, responseClass);
+            }
         return result;
     }
 
     private boolean isClientResource(Class<?> clazz) {
-        return clazz != Object.class && clazz.isAssignableFrom(ClientResource.class);
+        return clazz != Object.class && ClientResource.class.isAssignableFrom(clazz);
     }
 
     private Class<? extends ClientResource> getSpecificResourceType(Response response) {
@@ -75,7 +74,7 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
      * Will be removed as soon as the proper ResourceThumbnailListWrapper will be written.
      */
     @Deprecated
-    private class ThumbnailsOperationResult extends WithEntityOperationResult<ResourceThumbnailListWrapper> {
+    protected class ThumbnailsOperationResult extends WithEntityOperationResult<ResourceThumbnailListWrapper> {
 
         public ThumbnailsOperationResult(Response response, Class<? extends ResourceThumbnailListWrapper> entityClass) {
             super(response, entityClass);
@@ -84,7 +83,8 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
         @Override
         public ResourceThumbnailListWrapper getEntity() {
             try {
-                return new ResourceThumbnailListWrapper(response.readEntity(new GenericType<List<ResourceThumbnail>>() {}));
+                return new ResourceThumbnailListWrapper(response.readEntity(new GenericType<List<ResourceThumbnail>>() {
+                }));
             } catch (Exception e) {
                 return null;
             }

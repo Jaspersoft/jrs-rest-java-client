@@ -59,7 +59,7 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
         /** When **/
         ServerSingleAttributeAdapter retrieved = attributesService.attribute();
 
-        /** Than **/
+        /** Then **/
         Assert.assertSame(retrieved, singleAttributeAdapterMock);
         PowerMockito.verifyNew(ServerSingleAttributeAdapter.class, times(1))
                 .withArguments(sessionStorageMock);
@@ -82,7 +82,7 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
         /** When **/
         ServerSingleAttributeAdapter retrieved = attributesService.attribute("status");
 
-        /** Than **/
+        /** Then **/
         Assert.assertSame(retrieved, singleAttributeAdapterMock);
         PowerMockito.verifyNew(ServerSingleAttributeAdapter.class, times(1))
                 .withArguments(sessionStorageMock, "status");
@@ -104,7 +104,7 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
         /** When **/
         ServerBatchAttributeAdapter retrieved = attributesService.attributes();
 
-        /** Than **/
+        /** Then **/
         Assert.assertSame(retrieved, batchAttributeAdapterMock);
         PowerMockito.verifyNew(ServerBatchAttributeAdapter.class, times(1))
                 .withArguments(sessionStorageMock);
@@ -127,7 +127,7 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
         /** When **/
         ServerBatchAttributeAdapter retrieved = attributesService.attributes(list);
 
-        /** Than **/
+        /** Then **/
         Assert.assertSame(retrieved, batchAttributeAdapterMock);
         PowerMockito.verifyNew(ServerBatchAttributeAdapter.class, times(1))
                 .withArguments(sessionStorageMock, list);
@@ -149,7 +149,7 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
         /** When **/
         ServerBatchAttributeAdapter retrieved = attributesService.attributes("attr1", "attr2", "attr3");
 
-        /** Than **/
+        /** Then **/
         Assert.assertSame(retrieved, batchAttributeAdapterMock);
         PowerMockito.verifyNew(ServerBatchAttributeAdapter.class, times(1))
                 .withArguments(sessionStorageMock, new String[]{"attr1", "attr2", "attr3"});

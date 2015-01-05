@@ -43,7 +43,7 @@
 //public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
 //
 //    @Mock
-//    private SessionStorage sessionStorageMock;
+//    private SessionStorage storageMock;
 //
 //    @Mock
 //    private JerseyRequest<UsersListWrapper> requestMock;
@@ -70,13 +70,13 @@
 //    public void constructor1() {
 //
 //        // When
-//        BatchUsersRequestAdapter adapter = new BatchUsersRequestAdapter(sessionStorageMock, "MyCoolOrg");
+//        BatchUsersRequestAdapter adapter = new BatchUsersRequestAdapter(storageMock, "MyCoolOrg");
 //        MultivaluedMap<String, String> params =
 //                (MultivaluedMap<String, String>) Whitebox.getInternalState(adapter, "params");
 //        String uri = (String) Whitebox.getInternalState(adapter, "uri");
 //
-//        // Than
-//        assertSame(adapter.getSessionStorage(), sessionStorageMock);
+//        // Then
+//        assertSame(adapter.getSessionStorage(), storageMock);
 //        assertNotNull(params);
 //        assertEquals(uri, "/organizations/MyCoolOrg/users");
 //    }
@@ -86,13 +86,13 @@
 //    public void constructor2() {
 //
 //        // When
-//        BatchUsersRequestAdapter adapter = new BatchUsersRequestAdapter(sessionStorageMock, null);
+//        BatchUsersRequestAdapter adapter = new BatchUsersRequestAdapter(storageMock, null);
 //        MultivaluedMap<String, String> params =
 //                (MultivaluedMap<String, String>) Whitebox.getInternalState(adapter, "params");
 //        String uri = (String) Whitebox.getInternalState(adapter, "uri");
 //
-//        // Than
-//        assertSame(adapter.getSessionStorage(), sessionStorageMock);
+//        // Then
+//        assertSame(adapter.getSessionStorage(), storageMock);
 //        assertNotNull(params);
 //        assertEquals(uri, "/users");
 //    }
@@ -102,7 +102,7 @@
 //    public void should_set_param() throws Exception {
 //
 //        // Given
-//        BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, "MyCoolOrg"));
+//        BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(storageMock, "MyCoolOrg"));
 //
 //        MultivaluedHashMap<String, String> mapSpy = spy(new MultivaluedHashMap<String, String>());
 //        Whitebox.setInternalState(adapterSpy, "params", mapSpy);
@@ -110,7 +110,7 @@
 //        // When
 //        BatchUsersRequestAdapter retrieved = adapterSpy.param(UsersParameter.HAS_ALL_REQUIRED_ROLES, "true");
 //
-//        // Than
+//        // Then
 //        assertSame(retrieved, adapterSpy);
 //        verify(mapSpy, times(1)).add("hasAllRequiredRoles", "true");
 //    }
@@ -121,11 +121,11 @@
 //
 //        // Given
 //        PowerMockito.mockStatic(JerseyRequest.class);
-//        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class),
+//        PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock), eq(UsersListWrapper.class),
 //                eq(new String[]{"/organizations/MyCoolOrg/users"}),
 //                any(DefaultErrorHandler.class))).thenReturn(requestMock);
 //
-//        BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, "MyCoolOrg"));
+//        BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(storageMock, "MyCoolOrg"));
 //        MultivaluedMap<String, String> params =
 //                (MultivaluedMap<String, String>) Whitebox.getInternalState(adapterSpy, "params");
 //
@@ -136,9 +136,9 @@
 //        // When
 //        OperationResult<UsersListWrapper> retrieved = adapterSpy.get();
 //
-//        // Than
+//        // Then
 //        verifyStatic(times(1));
-//        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class),
+//        JerseyRequest.buildRequest(eq(storageMock), eq(UsersListWrapper.class),
 //                eq(new String[]{"/organizations/MyCoolOrg/users"}), any(DefaultErrorHandler.class));
 //
 //        verify(requestMock).addParams(params);
@@ -153,9 +153,9 @@
 //
 //        // Given
 //        PowerMockito.mockStatic(JerseyRequest.class);
-//        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"/organizations/MyCoolOrg/users"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+//        PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock), eq(UsersListWrapper.class), eq(new String[]{"/organizations/MyCoolOrg/users"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
 //
-//        BatchUsersRequestAdapter adapterSpy = PowerMockito.spy(new BatchUsersRequestAdapter(sessionStorageMock, "MyCoolOrg"));
+//        BatchUsersRequestAdapter adapterSpy = PowerMockito.spy(new BatchUsersRequestAdapter(storageMock, "MyCoolOrg"));
 //        MultivaluedMap<String, String> params = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapterSpy, "params");
 //
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).get();
@@ -165,9 +165,9 @@
 //        // When
 //        adapterSpy.asyncGet(callbackMock);
 //
-//        // Than
+//        // Then
 //        PowerMockito.verifyStatic(times(1));
-//        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"/organizations/MyCoolOrg/users"}), any(DefaultErrorHandler.class));
+//        JerseyRequest.buildRequest(eq(storageMock), eq(UsersListWrapper.class), eq(new String[]{"/organizations/MyCoolOrg/users"}), any(DefaultErrorHandler.class));
 //
 //        Mockito.verify(callbackMock, times(1)).execute(operationResultMock);
 //        Mockito.verify(requestMock, times(1)).addParams(params);
@@ -185,12 +185,12 @@
 //
 //        PowerMockito.mockStatic(JerseyRequest.class);
 //        PowerMockito.when(JerseyRequest.buildRequest(
-//                eq(sessionStorageMock),
+//                eq(storageMock),
 //                eq(UsersListWrapper.class),
 //                eq(new String[]{uri}),
 //                any(DefaultErrorHandler.class))).thenReturn(requestMock);
 //
-//        BatchUsersRequestAdapter adapterSpy = PowerMockito.spy(new BatchUsersRequestAdapter(sessionStorageMock, "MyCoolOrg"));
+//        BatchUsersRequestAdapter adapterSpy = PowerMockito.spy(new BatchUsersRequestAdapter(storageMock, "MyCoolOrg"));
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 //
 //        final Callback<OperationResult<UsersListWrapper>, Void> callbackSpy =
@@ -215,7 +215,7 @@
 //            callbackSpy.wait(1000);
 //        }
 //
-//        /* Than */
+//        /* Then */
 //        assertNotNull(retrieved);
 //        assertNotSame(currentThreadId, newThreadId.get());
 //        verify(callbackSpy, times(1)).execute(operationResultMock);
@@ -225,7 +225,7 @@
 //
 //    @AfterMethod
 //    public void after() {
-//        reset(sessionStorageMock, requestMock, callbackMock, resultMock, operationResultMock, requestBuilderMock);
+//        reset(storageMock, requestMock, callbackMock, resultMock, operationResultMock, requestBuilderMock);
 //    }
 //}
 //

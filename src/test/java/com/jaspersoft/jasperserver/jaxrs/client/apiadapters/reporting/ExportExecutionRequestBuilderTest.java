@@ -123,7 +123,7 @@ public class ExportExecutionRequestBuilderTest extends PowerMockTestCase {
         HtmlReport retrieved = builderSpy.htmlReport(descriptorMock);
 
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
 
         verifyStatic(times(1));
@@ -183,7 +183,7 @@ public class ExportExecutionRequestBuilderTest extends PowerMockTestCase {
         }
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -246,7 +246,7 @@ public class ExportExecutionRequestBuilderTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -289,7 +289,7 @@ public class ExportExecutionRequestBuilderTest extends PowerMockTestCase {
         }
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -355,7 +355,7 @@ public class ExportExecutionRequestBuilderTest extends PowerMockTestCase {
         }
 
 
-        /** Than **/
+        /** Then **/
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -385,7 +385,7 @@ public class ExportExecutionRequestBuilderTest extends PowerMockTestCase {
         /** When **/
         OperationResult<InputStream> retrieved = builderSpy.attachment(attachmentId);
 
-        /** Than **/
+        /** Then **/
         verifyStatic();
         buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reportExecutions", requestId, "/exports", exportId, "/attachments", attachmentId}));
 

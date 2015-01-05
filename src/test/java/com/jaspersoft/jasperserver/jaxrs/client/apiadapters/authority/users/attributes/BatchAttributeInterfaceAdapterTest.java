@@ -87,7 +87,7 @@ public class BatchAttributeInterfaceAdapterTest extends PowerMockTestCase {
         // When
         BatchAttributeInterfaceAdapter created = new BatchAttributeInterfaceAdapter(sessionStorageMock, "my/cool/uri");
 
-        // Than
+        // Then
         assertNotNull(created);
         assertSame(created.getSessionStorage(), sessionStorageMock);
 
@@ -140,7 +140,7 @@ public class BatchAttributeInterfaceAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<UserAttributesListWrapper> retrieved = adapter.get();
 
-        // Than
+        // Then
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(UserAttributesListWrapper.class),
                 eq(new String[]{"my/cool/uri", "/attributes"}), any(DefaultErrorHandler.class));
@@ -185,7 +185,7 @@ public class BatchAttributeInterfaceAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(expectedOperationResultMock);
@@ -226,7 +226,7 @@ public class BatchAttributeInterfaceAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(expectedOperationResultMock);
@@ -267,7 +267,7 @@ public class BatchAttributeInterfaceAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(expectedOperationResultMock);
@@ -288,7 +288,7 @@ public class BatchAttributeInterfaceAdapterTest extends PowerMockTestCase {
         // When
         OperationResult retrieved = adapterSpy.createOrUpdate(listWrapperMock);
 
-        // Than
+        // Then
         verifyPrivate(adapterSpy, times(1)).invoke("buildRequest");
         assertSame(retrieved, expectedOperationResultMock);
     }
@@ -310,7 +310,7 @@ public class BatchAttributeInterfaceAdapterTest extends PowerMockTestCase {
         // When
         OperationResult retrieved = adapterSpy.delete();
 
-        // Than
+        // Then
         verifyPrivate(adapterSpy, times(1)).invoke("buildRequest");
         assertSame(retrieved, expectedOperationResultMock);
         inOrder.verify(requestMock, times(1)).addParams(any(MultivaluedHashMap.class));

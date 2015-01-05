@@ -14,6 +14,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
  * @author Alexander Krasnyanskiy
  */
 @Deprecated
+@SuppressWarnings("deprecation")
 public class SingleAttributeInterfaceAdapter extends AbstractAdapter{
 
     private final String uri;

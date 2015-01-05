@@ -80,7 +80,7 @@ public class ExportTaskAdapterTest extends PowerMockTestCase {
         Field field = field(ExportTaskAdapter.class, "exportTaskDto");
         Object retrievedField = field.get(adapter);
 
-        // Than
+        // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
         assertNotNull(retrievedField);
         assertTrue(instanceOf(ExportTaskDto.class).matches(retrievedField));
@@ -121,7 +121,7 @@ public class ExportTaskAdapterTest extends PowerMockTestCase {
         Field field = field(ExportTaskAdapter.class, "exportTaskDto");
         ExportTaskDto retrieved = (ExportTaskDto) field.get(adapter);
 
-        // Than
+        // Then
         verify(adapter, times(1)).roles(fakeRoles);
         assertNotNull(retrievedAdapter);
         assertTrue(retrieved.getRoles().size() == 2);
@@ -160,7 +160,7 @@ public class ExportTaskAdapterTest extends PowerMockTestCase {
         Field field = field(ExportTaskAdapter.class, "exportTaskDto");
         ExportTaskDto exportTaskDto = (ExportTaskDto) field.get(adapter);
 
-        // Than
+        // Then
         verify(adapter, times(1)).users(girls);
         assertNotNull(retrievedAdapter);
         assertTrue(exportTaskDto.getUsers().size() == 3);
@@ -257,7 +257,7 @@ public class ExportTaskAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<StateDto> retrieved = adapter.create();
 
-        // Than
+        // Then
         assertSame(retrieved, operationResultStateDtoMock);
     }
 
@@ -300,7 +300,7 @@ public class ExportTaskAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(operationResultStateDtoMock);

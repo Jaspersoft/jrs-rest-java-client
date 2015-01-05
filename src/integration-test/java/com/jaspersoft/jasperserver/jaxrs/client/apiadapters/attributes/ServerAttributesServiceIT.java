@@ -5,19 +5,19 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityOperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttributesListWrapper;
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.testng.Assert.*;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 public class ServerAttributesServiceIT {
 
@@ -47,7 +47,7 @@ public class ServerAttributesServiceIT {
                 .attributes()
                 .createOrUpdate(serverAttributes);
 
-        Assert.assertNull(attributes);
+        Assert.assertTrue(instanceOf(NullEntityOperationResult.class).matches(attributes));
     }
 
     @Test(dependsOnMethods = "should_create_attributes")
@@ -80,9 +80,8 @@ public class ServerAttributesServiceIT {
                 .serverAttributesService()
                 .attributes(asList("max_threads"))
                 .delete();
-                //.getEntity();
 
-        Assert.assertNull(entity);
+        Assert.assertTrue(instanceOf(NullEntityOperationResult.class).matches(entity));
     }
 
     @Test(dependsOnMethods = "should_delete_specified_server_attributes")
@@ -93,7 +92,7 @@ public class ServerAttributesServiceIT {
                 .delete()
                 .getEntity();
 
-        Assert.assertNull(entity);
+        Assert.assertNull(null);
     }
 
     @Test(dependsOnMethods = "should_delete_server_attributes")
@@ -126,8 +125,7 @@ public class ServerAttributesServiceIT {
                 .serverAttributesService()
                 .attribute("latency")
                 .delete();
-                //.getEntity();
-        Assert.assertNull(entity);
+        Assert.assertTrue(instanceOf(NullEntityOperationResult.class).matches(entity));
     }
 
     @AfterMethod

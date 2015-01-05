@@ -29,7 +29,7 @@
 //public class DomainResourceBuilderTest {
 //
 //    @Mock
-//    private SessionStorage sessionStorageMock;
+//    private SessionStorage storageMock;
 //
 //    private ClientSemanticLayerDataSource dummyDomain;
 //    private ClientFile schemaDescriptor;
@@ -72,17 +72,17 @@
 //
 //    @Test
 //    public void should_pass_params_to_parent_class() {
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        SessionStorage retrievedStorage = created.getProcessor().getSessionStorage();
 //        ClientSemanticLayerDataSource retrievedDomain = created.getDomain();
 //
-//        assertSame(retrievedStorage, sessionStorageMock);
+//        assertSame(retrievedStorage, storageMock);
 //        assertSame(retrievedDomain, dummyDomain);
 //    }
 //
 //    @Test
 //    public void should_pass_string_schema_to_parent_class_and_return_this() {
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        DomainResourceBuilder afterSetup = created.withSchema("file", schemaDescriptor);
 //
 //        FormDataBodyPart form = afterSetup.getMultipart().getField("schema");
@@ -99,7 +99,7 @@
 //    public void should_pass_input_stream_schema_to_parent_class_and_return_this() throws FileNotFoundException {
 //        InputStream dummyStream = new ByteArrayInputStream(new byte[]{});
 //
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        DomainResourceBuilder afterSetup = created.withSchema(dummyStream, schemaDescriptor);
 //
 //        FormDataBodyPart form = afterSetup.getMultipart().getField("schema");
@@ -114,7 +114,7 @@
 //
 //    @Test
 //    public void should_pass_input_stream_security_file_to_parent_class_and_return_this() throws FileNotFoundException {
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        DomainResourceBuilder afterSetup = created.withSecurityFile("file", securityFileDescriptor);
 //
 //        FormDataBodyPart form = afterSetup.getMultipart().getField("securityFile");
@@ -131,7 +131,7 @@
 //    public void should_pass_string_security_file_to_parent_class_and_return_this() throws FileNotFoundException {
 //        InputStream dummyStream = new ByteArrayInputStream(new byte[]{});
 //
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        DomainResourceBuilder afterSetup = created.withSecurityFile(dummyStream, securityFileDescriptor);
 //
 //        FormDataBodyPart form = afterSetup.getMultipart().getField("securityFile");
@@ -146,7 +146,7 @@
 //
 //    @Test
 //    public void should_add_bundle_file_as_string_to_multipart_form() {
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        DomainResourceBuilder afterSetup = created.withBundle("bundle_file", enUsBundleDescriptor);
 //
 //        FormDataBodyPart form = afterSetup.getMultipart().getField("bundles.bundle[0]");
@@ -162,7 +162,7 @@
 //    @Test
 //    public void should_add_bundle_file_as_stream_to_multipart_form() {
 //        InputStream dummyStream = new ByteArrayInputStream(new byte[]{});
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        DomainResourceBuilder afterSetup = created.withBundle(dummyStream, enUsBundleDescriptor);
 //
 //        FormDataBodyPart form = afterSetup.getMultipart().getField("bundles.bundle[0]");
@@ -178,7 +178,7 @@
 //    @Test
 //    public void should_add_second_bundle_to_the_list() {
 //        InputStream dummyStream = new ByteArrayInputStream(new byte[]{});
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        created = created.withBundle(dummyStream, enUsBundleDescriptor);
 //        created = created.withBundle(dummyStream, enUsBundleDescriptor);
 //        assertTrue(created.getMultipart().getFields().size() == 2);
@@ -186,15 +186,15 @@
 //
 //    @Test
 //    public void should_add_second_string_bundle_to_the_list() {
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        created = created.withBundle("a", enUsBundleDescriptor);
 //        created = created.withBundle("a", enUsBundleDescriptor);
 //        assertTrue(created.getMultipart().getFields().size() == 2);
 //    }
 //
 //    @Test
-//    public void should_add_second_string_bundle_to_the_list_when_second_bundle_different_than_first() {
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//    public void should_add_second_string_bundle_to_the_list_when_second_bundle_different_Then_first() {
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        ClientBundle defaultBundle = new ClientBundle()
 //                .setLocale("")
 //                .setFile(new ClientFile()
@@ -207,10 +207,10 @@
 //    }
 //
 //    @Test
-//    public void should_add_second_stream_bundle_to_the_list_when_second_bundle_different_than_first() {
+//    public void should_add_second_stream_bundle_to_the_list_when_second_bundle_different_Then_first() {
 //        InputStream firstBundle = new ByteArrayInputStream(new byte[]{});
 //        InputStream secondBundle = new ByteArrayInputStream(new byte[]{});
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        created = created.withBundle(firstBundle, enUsBundleDescriptor);
 //        created = created.withBundle(secondBundle, defaultBundle);
 //        assertTrue(created.getMultipart().getFields().size() == 2);
@@ -218,7 +218,7 @@
 //
 //    @Test
 //    public void should_add_bundles_as_a_batch() {
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        InputStream firstBundle = new ByteArrayInputStream(new byte[]{});
 //        InputStream secondBundle = new ByteArrayInputStream(new byte[]{});
 //
@@ -235,7 +235,7 @@
 //
 //    @Test
 //    public void should_set_data_source_reference_file() {
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        DomainResourceBuilder retrieved = created.withDataSource(dataSourceDescriptor);
 //        assertSame(retrieved.getDomain().getDataSource(), dataSourceDescriptor);
 //        assertSame(retrieved, created);
@@ -243,7 +243,7 @@
 //
 //    @Test
 //    public void should_set_uri() {
-//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, sessionStorageMock);
+//        DomainResourceBuilder created = new DomainResourceBuilder(dummyDomain, storageMock);
 //        DomainResourceBuilder retrieved = created.withUri("uri");
 //        assertSame(retrieved.getDomain().getUri(), "uri");
 //        assertSame(retrieved, created);
@@ -251,7 +251,7 @@
 //
 //    @AfterMethod
 //    public void after() {
-//        reset(sessionStorageMock);
+//        reset(storageMock);
 //
 //        dummyDomain = null;
 //        schemaDescriptor = null;

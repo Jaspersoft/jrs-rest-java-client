@@ -60,7 +60,7 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
         SessionStorage retrievedSessionStorage = adapter.getSessionStorage();
         String retrievedField = (String) Whitebox.getInternalState(adapter, "taskId");
 
-        // Than
+        // Then
         assertSame(retrievedField, taskId);
         assertEquals(retrievedSessionStorage, storageMock);
     }
@@ -114,7 +114,7 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         Mockito.verify(requestMock).get();
         Mockito.verify(callback).execute(resultMock);
         Assert.assertNotNull(retrieved);

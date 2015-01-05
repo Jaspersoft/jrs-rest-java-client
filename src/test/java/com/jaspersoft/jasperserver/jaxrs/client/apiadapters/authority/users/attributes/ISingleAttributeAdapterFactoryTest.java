@@ -115,7 +115,7 @@ public class ISingleAttributeAdapterFactoryTest extends PowerMockTestCase {
             callbackSpy.wait(100);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         verify(callbackSpy).execute(operationResultMock);
         assertNotSame(currentThreadId, newThreadId.get());
@@ -153,7 +153,7 @@ public class ISingleAttributeAdapterFactoryTest extends PowerMockTestCase {
             callbackSpy.wait(100);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         verify(callbackSpy).execute(operationResultMock);
         verify(ungenerifiedRequestMock).delete();
@@ -174,7 +174,7 @@ public class ISingleAttributeAdapterFactoryTest extends PowerMockTestCase {
         // When
         OperationResult retrieved = adapterSpy.updateOrCreate(userAttributeMock);
 
-        // Than
+        // Then
         verifyPrivate(adapterSpy, times(1)).invoke("request");
         verify(requestMock, times(1)).put(userAttributeMock);
         Assert.assertEquals(Whitebox.getInternalState(adapterSpy, "attributeName"), "State");
@@ -194,7 +194,7 @@ public class ISingleAttributeAdapterFactoryTest extends PowerMockTestCase {
         // When
         OperationResult retrieved = adapterSpy.get("State");
 
-        // Than
+        // Then
         verifyPrivate(adapterSpy, times(1)).invoke("request");
         verify(requestMock, times(1)).get();
         Assert.assertEquals(Whitebox.getInternalState(adapterSpy, "attributeName"), "State");
@@ -244,7 +244,7 @@ public class ISingleAttributeAdapterFactoryTest extends PowerMockTestCase {
             callbackSpy.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callbackSpy, times(1)).execute(operationResultMock);
@@ -272,7 +272,7 @@ public class ISingleAttributeAdapterFactoryTest extends PowerMockTestCase {
         /* When */
         adapterSpy.delete(attributeName);
 
-        /* Than */
+        /* Then */
         PowerMockito.verifyStatic(times(1));
         JerseyRequest.buildRequest(
                 eq(sessionStorageMock),

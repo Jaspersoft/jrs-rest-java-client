@@ -85,7 +85,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         final String retrieved = (String) Whitebox.getInternalState(adapter, "userUriPrefix");
         final String expected = "/organizations/MyCoolOrg/users/Simon";
 
-        // Than
+        // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
         Assert.assertEquals(retrieved, expected);
     }
@@ -99,7 +99,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         final String retrieved = (String) Whitebox.getInternalState(adapter, "userUriPrefix");
         final String expected = "/users/Simon";
 
-        // Than
+        // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
         Assert.assertEquals(retrieved, expected);
     }
@@ -112,7 +112,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         final StringBuilder retrieved = (StringBuilder) Whitebox.getInternalState(adapter, "uri");
         final String expected = "/organizations/MyCoolOrg/users/";
 
-        // Than
+        // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
         Assert.assertEquals(retrieved.toString(), expected);
     }
@@ -125,7 +125,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         final StringBuilder retrieved = (StringBuilder) Whitebox.getInternalState(adapter, "uri");
         final String expected = "/users/";
 
-        // Than
+        // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
         Assert.assertEquals(retrieved.toString(), expected);
     }
@@ -138,7 +138,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         final StringBuilder retrieved = (StringBuilder) Whitebox.getInternalState(adapter, "uri");
         final String expected = "/organizations/MyCoolOrg/users/Simon";
 
-        // Than
+        // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
         assertEquals(retrieved.toString(), expected);
     }
@@ -151,7 +151,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         final StringBuilder retrieved = (StringBuilder) Whitebox.getInternalState(adapter, "uri");
         final String expected = "/users/Simon";
 
-        // Than
+        // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
         assertEquals(retrieved.toString(), expected);
     }
@@ -162,7 +162,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // When
         final SingleUserRequestAdapter adapter = new SingleUserRequestAdapter(null, null, sessionStorageMock);
 
-        // Than
+        // Then
         // throw exception
     }
 
@@ -178,7 +178,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // When
         final SingleAttributeAdapter retrieved = adapter.attribute();
 
-        // Than
+        // Then
         verifyNew(SingleAttributeAdapter.class)
                 .withArguments(eq(sessionStorageMock), any(StringBuilder.class));
         assertSame(retrieved, expectedSingleAttributeAdapterMock);
@@ -196,7 +196,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // When
         BatchAttributeAdapter retrieved = adapter.multipleAttributes();
 
-        // Than
+        // Then
         verifyNew(BatchAttributeAdapter.class)
                 .withArguments(eq(sessionStorageMock), any(StringBuilder.class));
         assertSame(retrieved, expectedBatchAttributeAdapterMock);
@@ -216,7 +216,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // When
         SingleAttributeInterfaceAdapter retrieved = adapter.attribute("State");
 
-        // Than
+        // Then
         verifyNew(SingleAttributeInterfaceAdapter.class).withArguments(eq(sessionStorageMock), eq("/organizations/MyCoolOrg/users/Simon"), eq("State"));
         assertSame(retrieved, expected);
     }
@@ -230,7 +230,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // When
         adapter.attribute("");
 
-        // Than
+        // Then
         // throw an exception
     }
 
@@ -245,7 +245,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // When
         BatchAttributeInterfaceAdapter retrieved = adapter.attributes();
 
-        // Than
+        // Then
         verifyNew(BatchAttributeInterfaceAdapter.class).withArguments(eq(sessionStorageMock), eq("/organizations/MyCoolOrg/users/Simon"));
         assertSame(expected, retrieved);
     }
@@ -262,7 +262,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<ClientUser> retrieved = adapterSpy.get();
 
-        // Than
+        // Then
         verifyPrivate(adapterSpy, times(1)).invoke("buildRequest");
         verify(userJerseyRequestMock, times(1)).get();
         assertSame(retrieved, operationResultMock);
@@ -283,7 +283,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<ClientUser> retrieved = adapterSpy.get(userId);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/" + userId}), any(DefaultErrorHandler.class));
         assertNotNull(retrieved);
@@ -304,7 +304,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // When
         OperationResult<ClientUser> retrieved = adapterSpy.get(userId);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/" + userId}), any(DefaultErrorHandler.class));
     }
@@ -341,7 +341,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(operationResultMock);
         verify(userJerseyRequestMock, times(1)).get();
@@ -355,7 +355,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter(/*sessionStorageMock, null, "Simon"*/ "Simon", null, sessionStorageMock));
+        SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter(/*storageMock, null, "Simon"*/ "Simon", null, sessionStorageMock));
 
         final Callback<OperationResult<ClientUser>, Void> callback = spy(new Callback<OperationResult<ClientUser>, Void>() {
             @Override
@@ -382,7 +382,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
 
         StringBuilder uri = (StringBuilder) Whitebox.getInternalState(adapterSpy, "uri");
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertEquals(uri.toString(), "/users/Simon");
         assertNotSame(currentThreadId, newThreadId.get());
@@ -424,7 +424,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
 
         StringBuilder uri = (StringBuilder) Whitebox.getInternalState(adapterSpy, "uri");
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertEquals(uri.toString(), "/users/Simon");
         assertNotSame(currentThreadId, newThreadId.get());
@@ -463,7 +463,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(operationResultMock);
@@ -503,7 +503,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
 
         StringBuilder uri = (StringBuilder) Whitebox.getInternalState(adapterSpy, "uri");
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertEquals(uri.toString(), "/users/Simon");
         assertNotSame(currentThreadId, newThreadId.get());
@@ -542,7 +542,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(operationResultMock);
@@ -582,7 +582,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
 
         StringBuilder uri = (StringBuilder) Whitebox.getInternalState(adapterSpy, "uri");
 
-        // Than
+        // Then
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         assertEquals(uri.toString(), "/organizations/MyCoolOrg/users/Simon");
@@ -606,7 +606,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // When
         OperationResult retrieved = adapterSpy.delete();
 
-        // Than
+        // Then
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/Simon"}), any(DefaultErrorHandler.class));
         verify(userJerseyRequestMock, times(1)).delete();
@@ -629,7 +629,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         // When
         OperationResult retrieved = adapterSpy.createOrUpdate(userMock);
 
-        // Than
+        // Then
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/Simon"}), any(DefaultErrorHandler.class));
         verify(userJerseyRequestMock, times(1)).put(userMock);
@@ -656,7 +656,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         /* Then */
         OperationResult<ClientUser> retrieved = adapterSpy.updateOrCreate(userMock);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         verify(userMock, times(1)).getUsername();
     }
@@ -681,7 +681,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         /* When */
         OperationResult<ClientUser> retrieved = adapterSpy.updateOrCreate(userMock);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         verify(userMock, times(1)).getUsername();
         verify(userMock, times(2)).getTenantId();
@@ -705,7 +705,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         /* When */
         OperationResult retrieved = adapterSpy.delete(userMock);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         verify(userMock, times(1)).getUsername();
     }
@@ -727,7 +727,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         /* When */
         OperationResult retrieved = adapterSpy.delete("Simon");
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
     }
 

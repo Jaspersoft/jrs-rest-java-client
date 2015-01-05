@@ -34,7 +34,7 @@ public class ReportParametersConverterTest extends PowerMockTestCase {
         /* When */
         Map<String, Object> retrieved = ReportParametersConverter.getValueMapFromInputControlStates(inputControlsIds);
 
-        /* Than */
+        /* Then */
         Assert.assertNotNull(retrieved);
         assertTrue(retrieved.size() == 2);
     }
@@ -51,7 +51,7 @@ public class ReportParametersConverterTest extends PowerMockTestCase {
         /* When */
         Map<String, Object> retrieved = ReportParametersConverter.getValueMapFromInputControlStates(inputControlsIds);
 
-        /* Than */
+        /* Then */
         Assert.assertNotNull(retrieved);
         assertTrue(retrieved.size() == 2);
     }
@@ -68,7 +68,7 @@ public class ReportParametersConverterTest extends PowerMockTestCase {
         /* When */
         ReportParameters retrieved = ReportParametersConverter.toReportParameters(inputControlsIds);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertTrue(retrieved.getReportParameters().size() == 2);
     }

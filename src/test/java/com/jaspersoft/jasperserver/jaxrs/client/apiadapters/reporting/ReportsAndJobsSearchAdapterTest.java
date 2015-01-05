@@ -90,7 +90,7 @@ public class ReportsAndJobsSearchAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
 
@@ -113,7 +113,7 @@ public class ReportsAndJobsSearchAdapterTest extends PowerMockTestCase {
         ReportsAndJobsSearchAdapter retrieved = adapterSpy.parameter(ReportAndJobSearchParameter.JOB_ID, "id");
         MultivaluedHashMap<String, String> params = (MultivaluedHashMap<String, String>) Whitebox.getInternalState(adapterSpy, "params");
 
-        /* Than */
+        /* Then */
         Assert.assertSame(retrieved, adapterSpy);
         Assert.assertTrue(params.size() == 1);
         Assert.assertEquals(params.getFirst(ReportAndJobSearchParameter.JOB_ID.getName()), "id");

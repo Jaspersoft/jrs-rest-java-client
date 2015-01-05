@@ -47,7 +47,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         // When
         final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
 
-        // Than
+        // Then
         final Field field = field(JasperserverRestClient.class, "configuration");
         final RestClientConfiguration retrieved = (RestClientConfiguration) field.get(client);
 
@@ -83,7 +83,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         // When
         Session retrieved = client.authenticate(USER_NAME, PASSWORD);
 
-        // Than
+        // Then
         assertEquals(retrieved, sessionMock);
     }
 

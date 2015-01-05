@@ -123,14 +123,14 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(resultMock);
         verify(requestMock, times(1)).get();
 
         //verifyStatic(times(1));
-        //buildRequest(eq(sessionStorageMock), eq(ReportExecutionStatusEntity.class), eq(new String[]{"/reportExecutions", "requestId", "/status"}));
+        //buildRequest(eq(storageMock), eq(ReportExecutionStatusEntity.class), eq(new String[]{"/reportExecutions", "requestId", "/status"}));
     }
 
     @Test
@@ -170,7 +170,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(reportExecutionDescriptorOperationResultMock);
@@ -178,7 +178,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
 
         // todo: please find out the way to verify invocation of static protectedMethod
         //verifyStatic(times(1));
-        //buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"/reportExecutions", "requestId"}));
+        //buildRequest(eq(storageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"/reportExecutions", "requestId"}));
     }
 
     @Test
@@ -218,7 +218,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(exportExecutionDescriptorOperationResultMock);
@@ -263,7 +263,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(reportExecutionStatusEntityOperationResultMock);

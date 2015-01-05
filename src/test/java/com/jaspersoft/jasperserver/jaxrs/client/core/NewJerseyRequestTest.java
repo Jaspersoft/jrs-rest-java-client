@@ -40,6 +40,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Alexander Krasnyanskiy
  */
+@SuppressWarnings("unchecked")
 public class NewJerseyRequestTest extends PowerMockTestCase {
 
     @Mock
@@ -66,7 +67,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_invoke_private_logic_and_sublogic_andsubsub_logic() {
 
         /* Given */
@@ -84,7 +84,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         JerseyRequest<StateDto> retrieved = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass,
                 new String[]{"/uri"}, handlerMock);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertSame(retrieved.getUsersWebTarget(), targetMock);
         assertSame(retrieved.getAcceptType(), "application/json");
@@ -112,7 +112,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_invoke_private_logic_and_sublogic_and_subsublogic_when_content_type_is_xml() {
 
         /* Given */
@@ -130,7 +129,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         JerseyRequest<StateDto> retrieved = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass,
                 new String[]{"/uri"}, handlerMock);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertSame(retrieved.getUsersWebTarget(), targetMock);
         assertSame(retrieved.getAcceptType(), "application/xml");
@@ -158,7 +157,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_set_field_with_proper_handler() {
 
         /* Given */
@@ -174,12 +172,11 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         /* When */
         JerseyRequest<StateDto> retrieved = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"});
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved.getHeaders());
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_invoke_deep_logic_of_unit() {
 
         /* Given */
@@ -193,6 +190,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).get();
         Mockito.doReturn(builderMock).when(builderMock).accept("application/xml");
+        Mockito.doReturn("application/repository.folder+xml").when(responseMock).getHeaderString("Content-Type");
         Mockito.doReturn(true).when(responseMock).hasEntity();
 
         Class stateDtoClass = ClientFolder.class;
@@ -202,7 +200,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         OperationResult<StateDto> retrieved = jerseyRequest.get();
 
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertTrue(instanceOf(WithEntityOperationResult.class).matches(retrieved));
 
@@ -210,10 +208,10 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(builderMock, times(1)).accept("application/xml");
         Mockito.verify(builderMock, times(1)).get();
         Mockito.verify(responseMock, times(2)).hasEntity();
+        Mockito.verify(responseMock).getHeaderString("Content-Type");
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_do_post() {
 
         /* Given */
@@ -227,6 +225,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).post(any(Entity.class));
         Mockito.doReturn(builderMock).when(builderMock).accept("application/xml");
+        Mockito.doReturn("application/repository.folder+xml").when(responseMock).getHeaderString("Content-Type");
         Mockito.doReturn(true).when(responseMock).hasEntity();
 
         Class stateDtoClass = ClientFolder.class;
@@ -236,7 +235,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"});
         OperationResult<StateDto> retrieved = jerseyRequest.post(dummyFolder);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertTrue(instanceOf(WithEntityOperationResult.class).matches(retrieved));
 
@@ -244,10 +243,10 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(builderMock, times(1)).accept("application/xml");
         Mockito.verify(builderMock, times(1)).post(any(Entity.class));
         Mockito.verify(responseMock, times(2)).hasEntity();
+        Mockito.verify(responseMock).getHeaderString("Content-Type");
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_do_put() {
 
         /* Given */
@@ -261,6 +260,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).put(any(Entity.class));
         Mockito.doReturn(builderMock).when(builderMock).accept("application/xml");
+        Mockito.doReturn("application/repository.folder+xml").when(responseMock).getHeaderString("Content-Type");
         Mockito.doReturn(true).when(responseMock).hasEntity();
 
         Class stateDtoClass = ClientFolder.class;
@@ -270,7 +270,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"});
         OperationResult<StateDto> retrieved = jerseyRequest.put(dummyFolder);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertTrue(instanceOf(WithEntityOperationResult.class).matches(retrieved));
 
@@ -278,10 +278,10 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(builderMock, times(1)).accept("application/xml");
         Mockito.verify(builderMock, times(1)).put(any(Entity.class));
         Mockito.verify(responseMock, times(2)).hasEntity();
+        Mockito.verify(responseMock).getHeaderString("Content-Type");
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_do_delete() {
 
         /* Given */
@@ -295,6 +295,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).delete();
         Mockito.doReturn(builderMock).when(builderMock).accept("application/xml");
+        Mockito.doReturn("application/repository.folder+xml").when(responseMock).getHeaderString("Content-Type");
         Mockito.doReturn(true).when(responseMock).hasEntity();
         Mockito.doReturn(200).when(responseMock).getStatus();
 
@@ -304,7 +305,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"});
         OperationResult<StateDto> retrieved = jerseyRequest.delete();
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertTrue(instanceOf(WithEntityOperationResult.class).matches(retrieved));
 
@@ -313,10 +314,10 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(builderMock, times(1)).delete();
         Mockito.verify(responseMock, times(2)).hasEntity();
         Mockito.verify(responseMock, times(1)).getStatus();
+        Mockito.verify(responseMock).getHeaderString("Content-Type");
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_set_headers_with_proper_param() {
 
         /* Given */
@@ -330,6 +331,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).delete();
         Mockito.doReturn(builderMock).when(builderMock).accept("application/xml");
+        Mockito.doReturn("application/repository.folder+xml").when(responseMock).getHeaderString("Content-Type");
         Mockito.doReturn(true).when(responseMock).hasEntity();
         Mockito.doReturn(200).when(responseMock).getStatus();
 
@@ -340,7 +342,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         jerseyRequest.addHeader("Cache-Control", "no-cache");
         OperationResult<StateDto> retrieved = jerseyRequest.delete();
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertTrue(instanceOf(WithEntityOperationResult.class).matches(retrieved));
         assertTrue(jerseyRequest.getHeaders().size() == 1);
@@ -351,10 +353,10 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.verify(builderMock, times(1)).delete();
         Mockito.verify(responseMock, times(2)).hasEntity();
         Mockito.verify(responseMock, times(1)).getStatus();
+        Mockito.verify(responseMock).getHeaderString("Content-Type");
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_set_headers_with_proper_params() {
 
         /* Given */
@@ -368,6 +370,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
         Mockito.doReturn(responseMock).when(builderMock).delete();
         Mockito.doReturn(builderMock).when(builderMock).accept("application/xml");
+        Mockito.doReturn("application/repository.folder+xml").when(responseMock).getHeaderString("Content-Type");
         Mockito.doReturn(true).when(responseMock).hasEntity();
         Mockito.doReturn(200).when(responseMock).getStatus();
 
@@ -382,7 +385,7 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         }});
         OperationResult<StateDto> retrieved = jerseyRequest.delete();
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         assertTrue(instanceOf(WithEntityOperationResult.class).matches(retrieved));
         assertEquals(jerseyRequest.getHeaders().get("Cache-Control").get(0), "no-cache");
@@ -397,7 +400,6 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_invoke_private_logic() {
 
         /* Given */
@@ -415,13 +417,12 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
                 new String[]{"/uri"}, handlerMock);
         RequestBuilder<StateDto> retrieved = jerseyRequest.addParam("param", "val");
 
-        /* Than */
+        /* Then */
         Mockito.verify(targetMock, times(1)).queryParam("param", "val");
         assertSame(jerseyRequest, retrieved);
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_invoke_private_logic_() {
 
         /* Given */
@@ -446,13 +447,12 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
                 new String[]{"/uri"}, handlerMock);
         RequestBuilder<StateDto> retrieved = jerseyRequest.addParams(params);
 
-        /* Than */
+        /* Then */
         Mockito.verify(targetMock, times(2)).queryParam(anyString(), anyString());
         assertSame(jerseyRequest, retrieved);
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_add_proper_amount_of_matrix_param() {
 
         /* Given */
@@ -476,13 +476,12 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
                 new String[]{"/uri"}, handlerMock);
         RequestBuilder<StateDto> retrieved = jerseyRequest.addMatrixParam("name", "val1", "val2");
 
-        /* Than */
+        /* Then */
         Mockito.verify(targetMock, times(1)).matrixParam(anyString(), anyVararg());
         assertSame(jerseyRequest, retrieved);
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_add_proper_matrix_params() {
 
         /* Given */
@@ -505,13 +504,12 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"}, handlerMock);
         RequestBuilder<StateDto> retrieved = jerseyRequest.addMatrixParams(params);
 
-        /* Than */
+        /* Then */
         Mockito.verify(targetMock, times(2)).matrixParam(anyString(), anyVararg());
         assertSame(jerseyRequest, retrieved);
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_set_proper_content_type() {
 
         /* Given */
@@ -528,13 +526,12 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"}, handlerMock);
         RequestBuilder<StateDto> retrieved = jerseyRequest.setContentType("application/json");
 
-        /* Than */
+        /* Then */
         assertSame(jerseyRequest, retrieved);
-        assertEquals(((JerseyRequest<StateDto>)retrieved).getContentType(), "application/json");
+        assertEquals(((JerseyRequest<StateDto>) retrieved).getContentType(), "application/json");
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void should_set_accept_type() {
 
         /* Given */
@@ -551,9 +548,9 @@ public class NewJerseyRequestTest extends PowerMockTestCase {
         JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"}, handlerMock);
         RequestBuilder<StateDto> retrieved = jerseyRequest.setAccept("application/json");
 
-        /* Than */
+        /* Then */
         assertSame(jerseyRequest, retrieved);
-        assertEquals(((JerseyRequest<StateDto>)retrieved).getAcceptType(), "application/json");
+        assertEquals(((JerseyRequest<StateDto>) retrieved).getAcceptType(), "application/json");
     }
 
     @AfterMethod

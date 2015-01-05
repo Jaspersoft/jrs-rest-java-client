@@ -53,7 +53,7 @@ public class OrganizationsServiceTest extends PowerMockTestCase {
         // When
         BatchOrganizationsAdapter retrieved = service.organizations();
 
-        // Than
+        // Then
         assertSame(retrieved, batchOrganizationsAdapter);
     }
 
@@ -67,7 +67,7 @@ public class OrganizationsServiceTest extends PowerMockTestCase {
         // When
         SingleOrganizationAdapter retrieved = service.organization("orgId");
 
-        // Than
+        // Then
         assertSame(retrieved, singleOrganizationAdapter);
     }
 
@@ -101,7 +101,7 @@ public class OrganizationsServiceTest extends PowerMockTestCase {
 
 
 
-        /** Than **/
+        /** Then **/
         Assert.assertNotNull(retrieved);
         Assert.assertSame(retrieved, operationResultMock);
         PowerMockito.verifyStatic(times(1));

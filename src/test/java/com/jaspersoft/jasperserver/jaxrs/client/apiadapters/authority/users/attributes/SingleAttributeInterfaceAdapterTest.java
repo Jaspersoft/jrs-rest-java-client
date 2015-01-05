@@ -63,7 +63,7 @@ public class SingleAttributeInterfaceAdapterTest extends PowerMockTestCase {
         /* When */
         SingleAttributeInterfaceAdapter adapter = new SingleAttributeInterfaceAdapter(sessionStorageMock, "/organizations/MyCoolOrg/users/Simon", "State");
 
-        /* Than */
+        /* Then */
         String uri = (String) getInternalState(adapter, "uri");
         String attributeName = (String) getInternalState(adapter, "attributeName");
 
@@ -84,7 +84,7 @@ public class SingleAttributeInterfaceAdapterTest extends PowerMockTestCase {
         /* When */
         adapter.get();
 
-        /* Than */
+        /* Then */
         PowerMockito.verifyPrivate(adapter, times(1)).invoke("buildRequest");
         verify(requestMock, times(1)).get();
         Mockito.verifyNoMoreInteractions(requestMock);
@@ -121,7 +121,7 @@ public class SingleAttributeInterfaceAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         verify(requestMock).get();
         verify(callback).execute(resultMock);
         assertNotNull(retrieved);
@@ -159,7 +159,7 @@ public class SingleAttributeInterfaceAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         verify(requestMock).delete();
         verify(callback).execute(resultMock);
         assertNotNull(retrieved);
@@ -197,7 +197,7 @@ public class SingleAttributeInterfaceAdapterTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        /* Than */
+        /* Then */
         verify(requestMock).put(userAttributeMock);
         verify(callback).execute(resultMock);
         assertNotNull(retrieved);
@@ -220,7 +220,7 @@ public class SingleAttributeInterfaceAdapterTest extends PowerMockTestCase {
         /* When */
         OperationResult retrieved = adapter.createOrUpdate(userAttributeMock);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrieved);
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUserAttribute.class), eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes", "State"}), any(DefaultErrorHandler.class));
@@ -240,7 +240,7 @@ public class SingleAttributeInterfaceAdapterTest extends PowerMockTestCase {
         /* When */
         OperationResult retrieved = adapter.delete();
 
-        /* Than */
+        /* Then */
         assertSame(retrieved, resultMock);
         verifyPrivate(adapter, times(1)).invoke("buildRequest");
     }

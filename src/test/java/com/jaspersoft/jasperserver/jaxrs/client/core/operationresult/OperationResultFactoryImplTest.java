@@ -1,62 +1,51 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
+import com.jaspersoft.jasperserver.dto.resources.AbstractClientMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientDashboard;
-import com.jaspersoft.jasperserver.dto.resources.ClientFolder;
 import com.jaspersoft.jasperserver.dto.resources.ClientQuery;
+import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesTypeResolverUtil;
-import com.jaspersoft.jasperserver.jaxrs.client.core.support.TestableClientResource;
-import org.mockito.Mock;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnail;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnailListWrapper;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
 
 /**
  * Unit test for {@link OperationResultFactoryImpl}
  */
-@PrepareForTest({OperationResultFactoryImpl.class, WithEntityOperationResult.class, ResourcesTypeResolverUtil.class})
+@PrepareForTest({
+        OperationResultFactoryImpl.class,
+        WithEntityOperationResult.class,
+        ResourcesTypeResolverUtil.class
+})
+@SuppressWarnings("unchecked")
 public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
-    @Mock
     private Response responseMock;
-    @Mock
     private OperationResult<ClientQuery> operationResultMock;
-    @Mock
     private WithEntityOperationResult withEntityOperationResultMock;
 
     @BeforeMethod
     public void before() {
-        initMocks(this);
-    }
-
-    @Test
-    /**
-     * for {@link OperationResultFactoryImpl#getOperationResult(Response, Class)}
-     */
-    public void should_return_proper_OperationResult_object() {
-        OperationResult<TestableClientResource> retrieved = new OperationResultFactoryImpl().getOperationResult(responseMock, TestableClientResource.class);
-        assertNotNull(retrieved);
-        assertTrue(instanceOf(NullEntityOperationResult.class).matches(retrieved));
+        responseMock = Mockito.mock(Response.class);
+        operationResultMock = Mockito.mock(OperationResult.class);
+        withEntityOperationResultMock = Mockito.mock(WithEntityOperationResult.class);
     }
 
     @Test
@@ -66,19 +55,19 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
     public void should_invoke_all_private_logic_of_method() throws Exception {
 
         /* Given */
-        OperationResultFactoryImpl factorySpy = spy(new OperationResultFactoryImpl());
-        doReturn(true).when(factorySpy, "isClientResource", ClientQuery.class);
-        doReturn(ClientQuery.class).when(factorySpy, "getSpecificResourceType", responseMock);
-        doReturn(operationResultMock).when(factorySpy, "getAppropriateOperationResultInstance", responseMock, ClientQuery.class);
+        OperationResultFactoryImpl factorySpy = PowerMockito.spy(new OperationResultFactoryImpl());
+        PowerMockito.doReturn(true).when(factorySpy, "isClientResource", ClientQuery.class);
+        PowerMockito.doReturn(ClientQuery.class).when(factorySpy, "getSpecificResourceType", responseMock);
+        PowerMockito.doReturn(operationResultMock).when(factorySpy, "getAppropriateOperationResultInstance", responseMock, ClientQuery.class);
 
         /* When */
         OperationResult<ClientQuery> operationResult = factorySpy.getOperationResult(responseMock, ClientQuery.class);
 
-        /* Than */
-        assertNotNull(operationResult);
-        verifyPrivate(factorySpy, times(1)).invoke("isClientResource", ClientQuery.class);
-        verifyPrivate(factorySpy, times(1)).invoke("getSpecificResourceType", responseMock);
-        verifyPrivate(factorySpy, times(1)).invoke("getAppropriateOperationResultInstance", responseMock, ClientQuery.class);
+        /* Then */
+        Assert.assertNotNull(operationResult);
+        PowerMockito.verifyPrivate(factorySpy, times(1)).invoke("isClientResource", ClientQuery.class);
+        PowerMockito.verifyPrivate(factorySpy, times(1)).invoke("getSpecificResourceType", responseMock);
+        PowerMockito.verifyPrivate(factorySpy, times(1)).invoke("getAppropriateOperationResultInstance", responseMock, ClientQuery.class);
     }
 
     @Test
@@ -88,48 +77,27 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
     public void should_return_result_with_entity_when_response_has_entity_when_invoking_getAppropriateOperationResultInstance_method() throws Exception {
 
         /* Given */
-        OperationResultFactoryImpl factorySpy = spy(new OperationResultFactoryImpl());
+        OperationResultFactoryImpl factorySpy = PowerMockito.spy(new OperationResultFactoryImpl());
 
-        doReturn(true).when(factorySpy, "isClientResource", ClientQuery.class);
-        doReturn(ClientQuery.class).when(factorySpy, "getSpecificResourceType", responseMock);
-        doReturn(true).when(responseMock).hasEntity();
+        PowerMockito.doReturn(true).when(factorySpy, "isClientResource", ClientQuery.class);
+        PowerMockito.doReturn(ClientQuery.class).when(factorySpy, "getSpecificResourceType", responseMock);
+        PowerMockito.doReturn(true).when(responseMock).hasEntity();
 
-        whenNew(WithEntityOperationResult.class).withArguments(responseMock, ClientQuery.class).thenReturn(withEntityOperationResultMock);
+        PowerMockito.whenNew(WithEntityOperationResult.class).withArguments(responseMock, ClientQuery.class).thenReturn(withEntityOperationResultMock);
 
         /* When */
         OperationResult<ClientQuery> retrievedOperationResult = factorySpy.getOperationResult(responseMock, ClientQuery.class);
 
-        /* Than */
-        assertNotNull(retrievedOperationResult);
-        assertSame(retrievedOperationResult, withEntityOperationResultMock);
+        /* Then */
+        Assert.assertNotNull(retrievedOperationResult);
+        Assert.assertSame(retrievedOperationResult, withEntityOperationResultMock);
 
-        verify(responseMock, times(2)).hasEntity();
-        verifyNew(WithEntityOperationResult.class, times(1)).withArguments(responseMock, ClientQuery.class);
+        Mockito.verify(responseMock, times(2)).hasEntity();
+        PowerMockito.verifyNew(WithEntityOperationResult.class, times(1)).withArguments(responseMock, ClientQuery.class);
     }
+
 
     @Test(enabled = false)
-    public void test() throws Exception {
-
-        /* Given */
-        mockStatic(ResourcesTypeResolverUtil.class);
-        //PowerMockito.when(ResourcesTypeResolverUtil.getClassForMime("abc")).thenReturn(Class.class);
-        //EasyMock.expect(ResourcesTypeResolverUtil.getClassForMime("abc")).andReturn(ClientFolder.class);
-
-        OperationResultFactoryImpl factorySpy = spy(new OperationResultFactoryImpl());
-        doReturn(true).when(factorySpy, "isClientResource", ClientFolder.class);
-        doReturn("application/json").when(responseMock).getHeaderString("Content-Type");
-        doReturn(operationResultMock).when(factorySpy, "getAppropriateOperationResultInstance", responseMock, ClientFolder.class);
-
-        /* When */
-        OperationResult<ClientFolder> operationResult = factorySpy.getOperationResult(responseMock, ClientFolder.class);
-
-        /* Than */
-        assertNotNull(operationResult);
-        verifyPrivate(factorySpy, times(1)).invoke("isClientResource", ClientFolder.class);
-        verifyPrivate(factorySpy, times(1)).invoke("getAppropriateOperationResultInstance", responseMock, ClientFolder.class);
-    }
-
-    @Test
     public void should_invoke_private_method_getSpecificResourceType() throws Exception {
 
         /* When */
@@ -146,14 +114,56 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
         /* Indirect call of private method getSpecificResourceType() */
         OperationResult<ClientDashboard> retrievedResult = factorySpy.getOperationResult(responseMock, ClientDashboard.class);
 
-        /* Than */
+        /* Then */
         assertNotNull(retrievedResult);
         PowerMockito.verifyStatic(times(1));
         ResourcesTypeResolverUtil.getClassForMime(anyString());
     }
 
+    @Test
+    public void should_return_operation_result_with_wrapped_list_of_thumbnails() {
+
+        /** Given **/
+        Mockito.when(responseMock.hasEntity()).thenReturn(true);
+        Mockito.when(responseMock.readEntity(any(GenericType.class))).thenReturn(asList(new ResourceThumbnail()));
+        OperationResultFactoryImpl factory = new OperationResultFactoryImpl();
+
+        /** When **/
+        OperationResult<ResourceThumbnailListWrapper> operationResult = factory.getOperationResult(responseMock, ResourceThumbnailListWrapper.class);
+
+        /** Then **/
+        Assert.assertNotNull(operationResult);
+        Assert.assertTrue(operationResult.getEntity().getThumbnails().size() == 1);
+    }
+
+    @Test
+    public void should_return_null_entity() {
+        OperationResultFactoryImpl factory = new OperationResultFactoryImpl();
+        OperationResult<ResourceThumbnailListWrapper> operationResult = factory.getOperationResult(responseMock, ResourceThumbnailListWrapper.class);
+        Assert.assertNull(operationResult.getEntity());
+    }
+
+    @Test
+    public void should_return_operation_result_with_proper_class() {
+
+        /** Given **/
+        Mockito.when(responseMock.hasEntity()).thenReturn(true);
+        Mockito.when(responseMock.readEntity(ClientSecureMondrianConnection.class)).thenReturn(new ClientSecureMondrianConnection());
+        Mockito.when(responseMock.getHeaderString("Content-Type")).thenReturn("application/repository.secureMondrianConnection+xml");
+
+        /** When **/
+        OperationResultFactoryImpl factory = new OperationResultFactoryImpl();
+        OperationResult<AbstractClientMondrianConnection> operationResult = factory.getOperationResult(responseMock, AbstractClientMondrianConnection.class);
+
+        /** Then **/
+        Assert.assertNotNull(operationResult);
+        Assert.assertTrue(instanceOf(ClientSecureMondrianConnection.class).matches(operationResult.getEntity()));
+    }
+
     @AfterMethod
     public void after() {
-        Mockito.reset(responseMock, withEntityOperationResultMock, operationResultMock);
+        responseMock = null;
+        withEntityOperationResultMock = null;
+        operationResultMock = null;
     }
 }
