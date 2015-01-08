@@ -29,7 +29,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttribute;
 
 /**
  * @author Alex Krasnyanskiy
- * @since 6.0.1
+ * @since 6.0.1-ALPHA
  */
 public class ServerSingleAttributeAdapter extends AbstractAdapter {
 

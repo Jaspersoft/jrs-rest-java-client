@@ -2,6 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails;
 
 /**
  * @author Alex Krasnyanskiy
+ * @since 6.0.1-ALPHA
  */
 public enum ThumbnailsParameter {
 

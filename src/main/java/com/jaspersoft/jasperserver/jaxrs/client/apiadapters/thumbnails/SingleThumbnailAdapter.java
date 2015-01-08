@@ -11,6 +11,7 @@ import java.io.InputStream;
 
 /**
  * @author Alex Krasnyanskiy
+ * @since 6.0.1-ALPHA
  */
 public class SingleThumbnailAdapter extends AbstractAdapter {
 

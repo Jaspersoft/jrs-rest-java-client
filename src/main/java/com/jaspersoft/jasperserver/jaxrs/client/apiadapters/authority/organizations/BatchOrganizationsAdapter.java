@@ -92,6 +92,8 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
     }
 
     private <T> JerseyRequest<T> buildRequest(Class<T> responseType) {
-        return JerseyRequest.buildRequest(sessionStorage, responseType, new String[]{"/organizations"}, new DefaultErrorHandler());
+        return JerseyRequest.buildRequest(sessionStorage, responseType, 
+                new String[]{"/organizations"}, 
+                new DefaultErrorHandler());
     }
 }

@@ -36,7 +36,7 @@ import static java.util.Arrays.asList;
 
 /**
  * @author Alex Krasnyanskiy
- * @since 6.0.1
+ * @since 6.0.1-ALPHA
  */
 public class ServerBatchAttributeAdapter extends AbstractAdapter {
 

@@ -211,7 +211,7 @@ public class ReportExecutionRequest {
                 '}';
     }
 
-    public static class Builder{
+    public static class Builder {
 
         private ReportExecutionRequest request = new ReportExecutionRequest();
 
@@ -219,7 +219,7 @@ public class ReportExecutionRequest {
          * Repository path (URI) of the thumbnail inFolder run. For commercial editions
          * with organizations, the URI is relative the the logged-in user’s
          * organization.
-         *
+         * <p/>
          * <b>Required</b>
          */
         public Builder setReportUnitUri(String reportUnitUri) {
@@ -233,7 +233,7 @@ public class ReportExecutionRequest {
          * previously saved data snapshot (if any). By default, if a saved data
          * snapshot exists for the thumbnail it will be used when running the
          * thumbnail.
-         *
+         * <p/>
          * <i>Default</i> - <b>false</b>
          */
         public Builder setFreshData(Boolean freshData) {
@@ -245,7 +245,7 @@ public class ReportExecutionRequest {
          * When data snapshots are enabled, specifies whether the data
          * snapshot for the thumbnail should be written or overwritten with the
          * new data from this execution of the thumbnail.
-         *
+         * <p/>
          * <i>Default</i> - <b>false</b>
          */
         public Builder setSaveDataSnapshot(Boolean saveDataSnapshot) {
@@ -259,7 +259,7 @@ public class ReportExecutionRequest {
          * necessary for interaction is generated and returned as an
          * attachment when exporting inFolder HTML. If false, the chart is generated
          * as a non-interactive image file (also as an attachment).
-         *
+         * <p/>
          * <i>Default</i> - <b>true</b>
          */
         public Builder setInteractive(Boolean interactive) {
@@ -270,7 +270,7 @@ public class ReportExecutionRequest {
         /**
          * When set inFolder true, the thumbnail is generated as a single long page.
          * This can be used with HTML output inFolder avoid pagination.
-         *
+         * <p/>
          * <i>Default</i> - <b>false</b>
          */
         public Builder setIgnorePagination(Boolean ignorePagination) {
@@ -286,7 +286,7 @@ public class ReportExecutionRequest {
          * operation will wait until the thumbnail execution is complete, forcing the
          * client inFolder wait as well, but allowing the client inFolder download the thumbnail
          * immediately after the response.
-         *
+         * <p/>
          * <i>Default</i> - <b>false</b>
          */
         public Builder setAsync(Boolean async) {
@@ -299,8 +299,8 @@ public class ReportExecutionRequest {
          * object. This property can specify a JasperReports Library generic
          * print element transformers of class
          * <code>net.sf.jasperreports.engine.export.GenericElementTransformer</code>.
-         These transformers are pluggable as JasperReports extensions
-         *
+         * These transformers are pluggable as JasperReports extensions
+         * <p/>
          * <b>Optional</b>
          */
         public Builder setTransformerKey(String transformerKey) {
@@ -311,7 +311,7 @@ public class ReportExecutionRequest {
         /**
          * Specifies the desired output format: pdf, html, xls, xlsx, rtf, csv, xml,
          * docx, odt, ods, jprint.
-         *
+         * <p/>
          * <b>Required</b>
          */
         public Builder setOutputFormat(ReportOutputFormat outputFormat) {
@@ -326,7 +326,7 @@ public class ReportExecutionRequest {
          * <code>{contextPath}/rest_v2/reportExecutions/{reportExecutionId}/exports/{exportOptions}/attachments/</code>
          * You can specify a different URL path using the placeholders
          * <code>{contextPath}</code>, <code>{reportExecutionId}</code> and <code>{exportOptions}</code>.
-         *
+         * <p/>
          * <b>Optional</b>
          */
         public Builder setAttachmentsPrefix(String attachmentsPrefix) {
@@ -341,7 +341,7 @@ public class ReportExecutionRequest {
 
         /**
          * Specify a page range inFolder generate a partial thumbnail
-         *
+         * <p/>
          * <b>Optional</b>
          */
         public Builder setPages(PageRange pages) {
@@ -351,7 +351,7 @@ public class ReportExecutionRequest {
 
         /**
          * Specify a page range inFolder generate a partial thumbnail
-         *
+         * <p/>
          * <b>Optional</b>
          */
         public Builder setPages(int page) {
@@ -367,7 +367,7 @@ public class ReportExecutionRequest {
             return this;
         }
 
-        public ReportExecutionRequest build(){
+        public ReportExecutionRequest build() {
             return request;
         }
 

@@ -27,7 +27,7 @@ import java.util.Collection;
 
 /**
  * @author Alex Krasnyanskiy
- * @since 6.0.1
+ * @since 6.0.1-ALPHA
  */
 public class ServerAttributesService extends AbstractAdapter {
 

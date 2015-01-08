@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
@@ -109,7 +108,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
     }
 
     public OperationResult delete() {
-            return buildRequest().delete();
+        return buildRequest().delete();
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
@@ -145,6 +144,8 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<Organization> buildRequest() {
-        return JerseyRequest.buildRequest(sessionStorage, Organization.class, new String[]{"/organizations", organizationId}, new DefaultErrorHandler());
+        return JerseyRequest.buildRequest(sessionStorage, Organization.class,
+                new String[]{"/organizations", organizationId},
+                new DefaultErrorHandler());
     }
 }

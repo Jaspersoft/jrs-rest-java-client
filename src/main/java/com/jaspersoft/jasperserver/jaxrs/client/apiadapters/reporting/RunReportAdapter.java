@@ -35,7 +35,7 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
+import static java.util.regex.Pattern.compile;
 
 public class RunReportAdapter extends AbstractAdapter {
 
@@ -51,14 +51,14 @@ public class RunReportAdapter extends AbstractAdapter {
         this.format = format;
     }
 
-    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri,
-                            ReportOutputFormat format, Integer[] pages) {
+    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, ReportOutputFormat format, 
+                            Integer[] pages) {
         this(sessionStorage, reportUnitUri, format);
         this.pages = toStringArray(pages);
     }
 
-    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri,
-                            ReportOutputFormat format, PageRange range) {
+    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, ReportOutputFormat format,
+                            PageRange range) {
         this(sessionStorage, reportUnitUri, format);
         this.pages = new String[]{range.getRange()};
     }
@@ -87,33 +87,34 @@ public class RunReportAdapter extends AbstractAdapter {
         return task;
     }
 
-    private JerseyRequest<InputStream> prepareRunRequest(){
-        JerseyRequest<InputStream> request =
-                buildRequest(sessionStorage, InputStream.class,
-                        new String[]{"/reports", reportUnitUri + "." + format.toString().toLowerCase()}, new RunReportErrorHandler());
+    private JerseyRequest<InputStream> prepareRunRequest() {
+
+        JerseyRequest<InputStream> request = JerseyRequest.buildRequest(
+                sessionStorage,
+                InputStream.class,
+                new String[]{"/reports", reportUnitUri + "." + format.toString().toLowerCase()},
+                new RunReportErrorHandler());
+
         request.addParams(params);
 
         if (pages != null && pages.length > 0) {
             if (pages.length == 1) {
-                final Pattern pattern = Pattern.compile("^(\\d+)-(\\d+)$");
-                final Matcher matcher = pattern.matcher(pages[0]);
-                if (matcher.matches()) {
-                    request.addParam("pages", pages[0]);
-                } else {
-                    request.addParam("page", pages[0]);
-                }
+                Pattern pattern = compile("^(\\d+)-(\\d+)$");
+                Matcher matcher = pattern.matcher(pages[0]);
+                request.addParam(matcher.matches() ? "pages" : "page", pages[0]);
             }
-            if (pages.length > 1)
+            if (pages.length > 1) {
                 request.addParam("pages", pages);
+            }
         }
         return request;
     }
 
     private String[] toStringArray(Integer[] ints) {
         String[] strings = new String[ints.length];
-        for (int i = 0; i < ints.length; i++)
+        for (int i = 0; i < ints.length; i++) {
             strings[i] = ints[i].toString();
+        }
         return strings;
     }
-
 }
