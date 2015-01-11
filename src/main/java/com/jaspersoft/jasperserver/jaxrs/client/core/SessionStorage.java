@@ -23,8 +23,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
 import org.glassfish.jersey.client.ClientProperties;
 
 import javax.net.ssl.HostnameVerifier;
