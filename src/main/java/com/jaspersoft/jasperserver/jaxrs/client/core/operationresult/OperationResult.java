@@ -21,13 +21,13 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import javax.ws.rs.core.Response;
 
 public abstract class OperationResult<T> {
 
-    final static Logger log = Logger.getLogger(OperationResult.class);
+    //final static Logger log = Logger.getLogger(OperationResult.class);
 
     protected Response response;
     protected Class<? extends T> entityClass;
