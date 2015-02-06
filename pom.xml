@@ -141,7 +141,8 @@
                     <instrumentation>
                         <excludes>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/dto/**</exclude>
-                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/support/**</exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/support/**
+                            </exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
@@ -192,7 +193,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- build jar with deps -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
