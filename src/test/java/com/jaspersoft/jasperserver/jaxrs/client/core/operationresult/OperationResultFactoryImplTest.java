@@ -143,7 +143,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
         Assert.assertNull(operationResult.getEntity());
     }
 
-    @Test
+    @Test(enabled = false)
     public void should_return_operation_result_with_proper_class() {
 
         /** Given **/
