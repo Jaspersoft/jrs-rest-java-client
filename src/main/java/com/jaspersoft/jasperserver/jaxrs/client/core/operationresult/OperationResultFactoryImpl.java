@@ -70,8 +70,8 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
     }
 
     /**
-     * This is temporary class for managing thumbnails operation result.
-     * Will be removed as soon as the proper ResourceThumbnailListWrapper will be written.
+     * This is a temporary class for managing thumbnails operation result.
+     * It will be removed as soon as the proper ResourceThumbnailListWrapper will be written.
      */
     @Deprecated
     protected class ThumbnailsOperationResult extends WithEntityOperationResult<ResourceThumbnailListWrapper> {
