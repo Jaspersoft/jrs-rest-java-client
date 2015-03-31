@@ -229,7 +229,7 @@ public class ReportExecutionRequest {
 
         /**
          * When data snapshots are enabled, specifies whether the thumbnail
-         * should get fresh data by querying the data source or if false, use a
+         * should group fresh data by querying the data source or if false, use a
          * previously saved data snapshot (if any). By default, if a saved data
          * snapshot exists for the thumbnail it will be used when running the
          * thumbnail.

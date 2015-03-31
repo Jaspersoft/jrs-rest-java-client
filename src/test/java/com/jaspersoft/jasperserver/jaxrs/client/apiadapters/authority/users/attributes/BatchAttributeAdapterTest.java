@@ -119,22 +119,22 @@
 //
 //    @Test
 //    @SuppressWarnings("unchecked")
-//    public void get() throws Exception {
+//    public void group() throws Exception {
 //
 //        // Given
 //        StringBuilder builderMock = PowerMockito.mock(StringBuilder.class);
 //        BatchAttributeAdapter adapterSpy = spy(new BatchAttributeAdapter(storageMock, builderMock));
 //        MultivaluedMap<String, String> params = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapterSpy, "params");
 //        PowerMockito.doReturn(requestMock).when(adapterSpy, "request");
-//        PowerMockito.doReturn(operationResultMock).when(requestMock).get();
+//        PowerMockito.doReturn(operationResultMock).when(requestMock).group();
 //
 //        // When
-//        OperationResult<UserAttributesListWrapper> retrieved = adapterSpy.get();
+//        OperationResult<UserAttributesListWrapper> retrieved = adapterSpy.group();
 //
 //        // Then
 //        verifyPrivate(adapterSpy, times(1)).invoke("request");
 //        verify(requestMock).addParams(params);
-//        verify(requestMock, times(1)).get();
+//        verify(requestMock, times(1)).group();
 //        verifyNoMoreInteractions(requestMock);
 //        assertSame(retrieved, operationResultMock);
 //    }
@@ -149,7 +149,7 @@
 //        MultivaluedMap<String, String> params = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapterSpy, "params");
 //
 //        PowerMockito.doReturn(requestMock).when(adapterSpy, "request");
-//        PowerMockito.doReturn(operationResultMock).when(requestMock).get();
+//        PowerMockito.doReturn(operationResultMock).when(requestMock).group();
 //        PowerMockito.doReturn(requestBuilderMock).when(requestMock).addParams(params);
 //        PowerMockito.doReturn(resultMock).when(callbackMock).execute(operationResultMock);
 //
@@ -176,7 +176,7 @@
 //                eq(new String[]{"uri", "/attributes"}),
 //                any(DefaultErrorHandler.class))).thenReturn(requestMock);
 //
-//        PowerMockito.doReturn(operationResultMock).when(requestMock).get();
+//        PowerMockito.doReturn(operationResultMock).when(requestMock).group();
 //        BatchAttributeAdapter adapterSpy =
 //                PowerMockito.spy(new BatchAttributeAdapter(storageMock, new StringBuilder("uri")));
 //
@@ -204,9 +204,9 @@
 //
 //        /* Then */
 //        assertNotNull(retrieved);
-//        assertNotSame(currentThreadId, newThreadId.get());
+//        assertNotSame(currentThreadId, newThreadId.group());
 //        verify(callbackSpy, times(1)).execute(operationResultMock);
-//        verify(requestMock, times(1)).get();
+//        verify(requestMock, times(1)).group();
 //    }
 //
 //    @Test(suiteName = "refactored length")
@@ -249,7 +249,7 @@
 //        StringBuilder builderMock = PowerMockito.mock(StringBuilder.class);
 //        BatchAttributeAdapter adapterSpy = spy(new BatchAttributeAdapter(storageMock, builderMock));
 //        PowerMockito.doReturn(requestMock).when(adapterSpy, "request");
-//        PowerMockito.doReturn(operationResultMock).when(requestMock).get();
+//        PowerMockito.doReturn(operationResultMock).when(requestMock).group();
 //        PowerMockito.doReturn(operationResultMock).when(requestMock).put(additionalAttributes);
 //        PowerMockito.doReturn(userAttributesListWrapperMock).when(operationResultMock).getEntity();
 //        PowerMockito.doReturn(expected.getProfileAttributes()).when(userAttributesListWrapperMock)
@@ -361,7 +361,7 @@
 //
 //         /* Then */
 //        assertNotNull(retrieved);
-//        assertNotSame(currentThreadId, newThreadId.get());
+//        assertNotSame(currentThreadId, newThreadId.group());
 //        verify(callbackSpy, times(1)).execute(operationResultMock);
 //        verify(requestMock, times(1)).delete();
 //    }
@@ -405,7 +405,7 @@
 //
 //         /* Then */
 //        assertNotNull(retrieved);
-//        assertNotSame(currentThreadId, newThreadId.get());
+//        assertNotSame(currentThreadId, newThreadId.group());
 //        verify(callbackSpy, times(1)).execute(operationResultMock);
 //        verify(requestMock, times(1)).put(userAttributesListWrapperMock);
 //    }

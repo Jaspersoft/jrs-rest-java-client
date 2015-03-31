@@ -92,7 +92,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         assertEquals(retrievedJobId, expectedJobId);
     }
 
-    @Test(testName = "get")
+    @Test(testName = "group")
     public void should_return_proper_job_operation_result_when_JRS_version_is_v5_6_1() {
 
         // Given

@@ -30,7 +30,7 @@ public abstract class AbstractAdapter {
     }
 
     /**
-     * This getter is using for Unit testing needs only
+     * This getter is used for testing needs only
      */
     public SessionStorage getSessionStorage() {
         return sessionStorage;

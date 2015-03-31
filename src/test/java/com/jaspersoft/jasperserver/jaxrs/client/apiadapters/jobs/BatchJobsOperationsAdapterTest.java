@@ -104,7 +104,7 @@
 //
 //        // When
 //        Field field = field(BatchJobsOperationsAdapter.class, "params");
-//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.get(adapter);
+//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.group(adapter);
 //
 //        // Then
 //        assertSame(adapter.getSessionStorage(), storageMock);
@@ -121,12 +121,12 @@
 //        // When
 //        BatchJobsOperationsAdapter theSameObject = adapterSpy.parameter(JobsParameter.JOB_ID, "id");
 //        Field field = field(BatchJobsOperationsAdapter.class, "params");
-//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.get(adapterSpy);
+//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.group(adapterSpy);
 //
 //        // Then
-//        List<String> retrievedList = retrievedParams.get(JobsParameter.JOB_ID.getName());
-//        String retrievedId = retrievedList.get(0);
-//        List<String> noParamList = retrievedParams.get(JobsParameter.SEARCH_LABEL.getName());
+//        List<String> retrievedList = retrievedParams.group(JobsParameter.JOB_ID.getName());
+//        String retrievedId = retrievedList.group(0);
+//        List<String> noParamList = retrievedParams.group(JobsParameter.SEARCH_LABEL.getName());
 //
 //        assertEquals(retrievedId, "id");
 //        assertNull(noParamList);
@@ -157,14 +157,14 @@
 //        PowerMockito
 //                .doReturn(jobSummaryListWrapperJerseyRequestMock)
 //                .when(adapter, "prepareSearchRequest", searchCriteriaMock);
-//        when(jobSummaryListWrapperJerseyRequestMock.get()).thenReturn(wrapperOperationResultMock);
+//        when(jobSummaryListWrapperJerseyRequestMock.group()).thenReturn(wrapperOperationResultMock);
 //
 //        // When
 //        OperationResult<JobSummaryListWrapper> retrieved = adapter.search(searchCriteriaMock);
 //
 //        // Then
 //        verifyPrivate(adapter, times(1)).invoke("prepareSearchRequest", eq(searchCriteriaMock));
-//        verify(jobSummaryListWrapperJerseyRequestMock, times(1)).get();
+//        verify(jobSummaryListWrapperJerseyRequestMock, times(1)).group();
 //        assertSame(retrieved, wrapperOperationResultMock);
 //    }
 //
@@ -181,7 +181,7 @@
 //
 //        // When
 //        Field field = field(BatchJobsOperationsAdapter.class, "params");
-//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.get(adapter);
+//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.group(adapter);
 //
 //        // Then
 //        verifyStatic(times(1));
@@ -205,7 +205,7 @@
 //
 //        // When
 //        Field field = field(BatchJobsOperationsAdapter.class, "params");
-//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.get(adapter);
+//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.group(adapter);
 //
 //        // Then
 //        verifyStatic(times(1));
@@ -239,7 +239,7 @@
 //        PowerMockito.doReturn("testJsonContent").when(adapter, "buildJson", reportJobModelMock);
 //
 //        Field params = field(BatchJobsOperationsAdapter.class, "params");
-//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) params.get(adapter);
+//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) params.group(adapter);
 //
 //        // When
 //        OperationResult<JobIdListWrapper> retrieved = adapter.update(reportJobModelMock);
@@ -269,7 +269,7 @@
 //        PowerMockito.doReturn("testXmlContent").when(adapter, "buildXml", reportJobModelMock);
 //
 //        Field params = field(BatchJobsOperationsAdapter.class, "params");
-//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) params.get(adapter);
+//        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) params.group(adapter);
 //
 //        // When
 //        OperationResult<JobIdListWrapper> retrieved = adapter.update(reportJobModelMock);
@@ -367,7 +367,7 @@
 //        PowerMockito
 //                .doReturn(wrapperOperationResultMock)
 //                .when(jobSummaryListWrapperJerseyRequestMock)
-//                .get();
+//                .group();
 //
 //        BatchJobsOperationsAdapter adapterSpy = PowerMockito.spy(new BatchJobsOperationsAdapter(storageMock));
 //
@@ -403,9 +403,9 @@
 //
 //        /* Then */
 //        Assert.assertNotNull(retrieved);
-//        Assert.assertNotSame(currentThreadId, newThreadId.get());
+//        Assert.assertNotSame(currentThreadId, newThreadId.group());
 //
-//        Mockito.verify(jobSummaryListWrapperJerseyRequestMock).get();
+//        Mockito.verify(jobSummaryListWrapperJerseyRequestMock).group();
 //        Mockito.verify(callback).execute(wrapperOperationResultMock);
 //        Mockito.verify(jobSummaryListWrapperJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
 //        Mockito.verify(jobSummaryListWrapperJerseyRequestMock)
@@ -459,13 +459,13 @@
 //
 //        /* Then */
 //        Assert.assertNotNull(retrieved);
-//        Assert.assertNotSame(currentThreadId, newThreadId.get());
+//        Assert.assertNotSame(currentThreadId, newThreadId.group());
 //
 //        Mockito.verify(jobIdListWrapperJerseyRequestMock).post(captor.capture());
 //        JobIdListWrapper captured = captor.getValue();
 //        assertTrue(captured.getIds().size() == 2);
 //        List<Long> ids = captured.getIds();
-//        assertTrue(ids.get(0) == 12323412342135235L);
+//        assertTrue(ids.group(0) == 12323412342135235L);
 //    }
 //
 //    @Test
@@ -512,7 +512,7 @@
 //
 //        /* Then */
 //        Assert.assertNotNull(retrieved);
-//        Assert.assertNotSame(currentThreadId, newThreadId.get());
+//        Assert.assertNotSame(currentThreadId, newThreadId.group());
 //
 //        Mockito.verify(jobIdListWrapperJerseyRequestMock).post(any(JobIdListWrapper.class));
 //    }
@@ -556,7 +556,7 @@
 //
 //        /* Then */
 //        Assert.assertNotNull(retrieved);
-//        Assert.assertNotSame(currentThreadId, newThreadId.get());
+//        Assert.assertNotSame(currentThreadId, newThreadId.group());
 //
 //        Mockito.verify(jobIdListWrapperJerseyRequestMock).post(anyObject());
 //        Mockito.verify(callback).execute(jobIdListWrapperOperationResultMock);

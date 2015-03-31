@@ -57,7 +57,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         initMocks(this);
     }
 
-    @Test(testName = "get")
+    @Test(testName = "group")
     public void should_return_a_proper_op_result_with_repo_permission() throws Exception {
 
         // Given
@@ -136,7 +136,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         assertSame(retrieved, resultMock);
     }
 
-    @Test(testName = "get", expectedExceptions = NullPointerException.class)
+    @Test(testName = "group", expectedExceptions = NullPointerException.class)
     public void should_throw_NPE_exception_when_session_is_null() throws Exception {
 
         // Given

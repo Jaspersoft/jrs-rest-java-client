@@ -118,19 +118,19 @@
 //    }
 //
 //    @Test
-//    public void get() throws Exception {
+//    public void group() throws Exception {
 //
 //        // Given
 //        mockStatic(JerseyRequest.class);
 //        when(buildRequest(eq(storageMock), eq(RolesListWrapper.class), eq(new String[]{"/organizations/9454/roles"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
 //        whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(mapMock);
 //
-//        doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
+//        doReturn(expectedOpResultMock).when(jerseyRequestMock).group();
 //        InOrder inOrder = Mockito.inOrder(jerseyRequestMock);
 //        BatchRolesRequestAdapter adapter = new BatchRolesRequestAdapter(storageMock, "9454");
 //
 //        // When
-//        OperationResult<RolesListWrapper> retrievedResult = adapter.get();
+//        OperationResult<RolesListWrapper> retrievedResult = adapter.group();
 //
 //        // Then
 //        verifyStatic(times(1));
@@ -138,7 +138,7 @@
 //
 //        assertSame(retrievedResult, expectedOpResultMock);
 //        inOrder.verify(jerseyRequestMock, times(1)).addParams(mapMock);
-//        inOrder.verify(jerseyRequestMock, times(1)).get();
+//        inOrder.verify(jerseyRequestMock, times(1)).group();
 //    }
 //
 //    @Test
@@ -165,7 +165,7 @@
 //            }
 //        });
 //
-//        doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
+//        doReturn(expectedOpResultMock).when(jerseyRequestMock).group();
 //        doReturn(null).when(callback).execute(expectedOpResultMock);
 //
 //        // When
@@ -178,9 +178,9 @@
 //
 //        // Then
 //        assertNotNull(retrieved);
-//        assertNotSame(currentThreadId, newThreadId.get());
+//        assertNotSame(currentThreadId, newThreadId.group());
 //        verify(callback, times(1)).execute(expectedOpResultMock);
-//        verify(jerseyRequestMock, times(1)).get();
+//        verify(jerseyRequestMock, times(1)).group();
 //        verify(jerseyRequestMock, times(1)).addParams(any(MultivaluedHashMap.class));
 //    }
 //

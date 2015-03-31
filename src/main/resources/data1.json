@@ -1,0 +1,11 @@
+[
+  {
+    "type": "List[Map[String, Object]]"
+  },
+  {
+    "keyOne": "100"
+  },
+  {
+    "keyTwo": "abc"
+  }
+]

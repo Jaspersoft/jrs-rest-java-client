@@ -188,7 +188,7 @@
 //        Mockito.doReturn(targetMock).when(targetMock).register(any(Class.class));
 //        Mockito.doReturn(builderMock).when(targetMock).request();
 //        Mockito.doReturn(builderMock).when(builderMock).header(anyString(), anyString());
-//        Mockito.doReturn(responseMock).when(builderMock).get();
+//        Mockito.doReturn(responseMock).when(builderMock).group();
 //        Mockito.doReturn(builderMock).when(builderMock).accept("application/xml");
 //        Mockito.doReturn("application/repository.folder+xml").when(responseMock).getHeaderString("Content-Type");
 //        Mockito.doReturn(true).when(responseMock).hasEntity();
@@ -197,7 +197,7 @@
 //
 //        /* When */
 //        JerseyRequest<StateDto> jerseyRequest = JerseyRequest.buildRequest(sessionStorageMock, stateDtoClass, new String[]{"/uri"});
-//        OperationResult<StateDto> retrieved = jerseyRequest.get();
+//        OperationResult<StateDto> retrieved = jerseyRequest.group();
 //
 //
 //        /* Then */
@@ -206,7 +206,7 @@
 //
 //        Mockito.verify(targetMock, times(1)).request();
 //        Mockito.verify(builderMock, times(1)).accept("application/xml");
-//        Mockito.verify(builderMock, times(1)).get();
+//        Mockito.verify(builderMock, times(1)).group();
 //        Mockito.verify(responseMock, times(2)).hasEntity();
 //        Mockito.verify(responseMock).getHeaderString("Content-Type");
 //    }
@@ -346,7 +346,7 @@
 //        assertNotNull(retrieved);
 //        assertTrue(instanceOf(WithEntityOperationResult.class).matches(retrieved));
 //        assertTrue(jerseyRequest.getHeaders().size() == 1);
-//        assertEquals(jerseyRequest.getHeaders().get("Cache-Control").get(0), "no-cache");
+//        assertEquals(jerseyRequest.getHeaders().group("Cache-Control").group(0), "no-cache");
 //
 //        Mockito.verify(targetMock, times(1)).request();
 //        Mockito.verify(builderMock, times(1)).accept("application/xml");
@@ -388,7 +388,7 @@
 //        /* Then */
 //        assertNotNull(retrieved);
 //        assertTrue(instanceOf(WithEntityOperationResult.class).matches(retrieved));
-//        assertEquals(jerseyRequest.getHeaders().get("Cache-Control").get(0), "no-cache");
+//        assertEquals(jerseyRequest.getHeaders().group("Cache-Control").group(0), "no-cache");
 //        assertTrue(jerseyRequest.getHeaders().size() == 2);
 //        assertNotNull(jerseyRequest.getOperationResultFactory());
 //
