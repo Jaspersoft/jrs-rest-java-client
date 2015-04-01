@@ -38,7 +38,7 @@ public class SingleSettingsAdapter extends AbstractAdapter {
                 new DefaultErrorHandler());
     }
 
-    enum ServerSettingsGroup {
+    public enum ServerSettingsGroup {
 
         REQUEST("request"),
         DATA_SOURCE_PATTERNS("dataSourcePatterns"),

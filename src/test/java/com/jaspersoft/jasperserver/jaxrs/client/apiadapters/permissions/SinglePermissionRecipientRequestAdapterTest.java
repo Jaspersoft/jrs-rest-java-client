@@ -57,7 +57,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         initMocks(this);
     }
 
-    @Test(testName = "group")
+    @Test
     public void should_return_a_proper_op_result_with_repo_permission() throws Exception {
 
         // Given
@@ -74,7 +74,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         assertNotNull(retrieved);
     }
 
-    @Test(testName = "updateOrCreate")
+    @Test
     public void should_create_or_update_RepositoryPermission_and_return_result_of_operation() throws Exception {
 
         // Given
@@ -92,7 +92,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         assertSame(retrieved, resultMock);
     }
 
-    @Test(testName = "delete")
+    @Test
     public void should_delete_RepositoryPermission_and_return_result() throws Exception {
 
         // Given
@@ -111,7 +111,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         assertSame(retrieved, opResultMock);
     }
 
-    @Test(testName = "getBuilder")
+    @Test
     public void should_invoke_private_method_only_once() throws Exception {
 
         // Given
@@ -136,7 +136,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         assertSame(retrieved, resultMock);
     }
 
-    @Test(testName = "group", expectedExceptions = NullPointerException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void should_throw_NPE_exception_when_session_is_null() throws Exception {
 
         // Given

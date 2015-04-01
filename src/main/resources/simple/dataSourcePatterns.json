@@ -1,0 +1,10 @@
+{
+  "dbHost": "^[\\p{L}\\p{M}\\p{N}_.,\\-]+$",
+  "dbPort": "^[\\p{L}\\p{M}\\p{N}_.,\\-]+$",
+  "dbName": "^[\\p{L}\\p{M}\\p{N}\\s_.,\\-}{]+$",
+  "sName": "^[\\p{L}\\p{M}\\p{N}\\s_.,\\-}{]+$",
+  "driverType": "^[1|2|3|4]{1}$",
+  "schemaName": "^[\\p{L}\\p{M}\\p{N}\\s_.,\\-}{]+$",
+  "informixServerName": "^[\\p{L}\\p{M}\\p{N}\\s_.,\\-}{]+$",
+  "dynamicUrlPartPattern": "([\\p{L}\\p{M}\\p{N}\\s\\_.,\\-}{]+)"
+}

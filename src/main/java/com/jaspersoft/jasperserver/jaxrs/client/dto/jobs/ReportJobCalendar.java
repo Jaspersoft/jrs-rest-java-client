@@ -62,7 +62,7 @@ public class ReportJobCalendar {
 
     //monthly calendar's fields
     // An array inFolder store a months days which are inFolder be excluded.
-    // java.util.Calendar.group( ) as index.
+    // java.util.Calendar.get( ) as index.
     private boolean[] excludeDaysFlags;
 
 

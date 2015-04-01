@@ -1,0 +1,19 @@
+{
+  "newItemsRegistry": [
+    {
+      "id": "table",
+      "label": "dashboard.sidebar.new.content.new.visualization.label",
+      "description": "dashboard.sidebar.new.content.new.visualization.description"
+    },
+    {
+      "id": "text",
+      "label": "dashboard.sidebar.new.content.free.text.label",
+      "description": "dashboard.sidebar.new.content.free.text.description"
+    },
+    {
+      "id": "webPageView",
+      "label": "dashboard.sidebar.new.content.web.page.view.label",
+      "description": "dashboard.sidebar.new.content.web.page.view.description"
+    }
+  ]
+}

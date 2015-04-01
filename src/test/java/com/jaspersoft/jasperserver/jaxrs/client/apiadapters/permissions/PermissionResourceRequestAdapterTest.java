@@ -152,7 +152,7 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
         verify(adapter, never()).param(PermissionResourceParameter.EFFECTIVE_PERMISSIONS, "wrongPermissions");
     }
 
-    @Test(testName = "group")
+    @Test(testName = "get")
     @SuppressWarnings("unchecked")
     public void should_return_proper_op_result() throws IllegalAccessException {
 
