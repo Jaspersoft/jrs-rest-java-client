@@ -43,16 +43,6 @@ public class DomainResourceBuilder extends DomainResourceOperationProcessorDecor
         super(sessionStorage, domain);
     }
 
-//    public DomainResourceBuilder withSchema(InputStream schema) {
-//        multipart.field("schema", schema, MediaType.APPLICATION_XML_TYPE);
-//        return this;
-//    }
-
-//    public DomainResourceBuilder withSchema(String schema) {
-//        multipart.field("schema", schema, MediaType.APPLICATION_XML_TYPE);
-//        return this;
-//    }
-
     public DomainResourceBuilder withSchema(String schema, ClientFile schemaRef) {
         super.multipart.field("schema", schema, MediaType.APPLICATION_XML_TYPE);
         super.domain.setSchema(schemaRef);
@@ -65,32 +55,17 @@ public class DomainResourceBuilder extends DomainResourceOperationProcessorDecor
         return this;
     }
 
-//    public DomainResourceBuilder withSecurityFile(InputStream securityFile) {
-//        multipart.field("securityFile", securityFile, MediaType.APPLICATION_XML_TYPE);
-//        return this;
-//    }
-
     public DomainResourceBuilder withSecurityFile(InputStream securityFile, ClientFile securityFileRef) {
         super.multipart.field("securityFile", securityFile, MediaType.APPLICATION_XML_TYPE);
         super.domain.setSecurityFile(securityFileRef);
         return this;
     }
 
-//    public DomainResourceBuilder withSecurityFile(String securityFile) {
-//        multipart.field("securityFile", securityFile, MediaType.APPLICATION_XML_TYPE);
-//        return this;
-//    }
-
     public DomainResourceBuilder withSecurityFile(String securityFile, ClientFile securityFileRef) {
         super.multipart.field("securityFile", securityFile, MediaType.APPLICATION_XML_TYPE);
         super.domain.setSecurityFile(securityFileRef);
         return this;
     }
-
-//    public DomainResourceBuilder withBundle(InputStream bundle) {
-//        multipart.field("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
-//        return this;
-//    }
 
     public DomainResourceBuilder withBundle(InputStream bundle, ClientBundle bundleRef) {
         super.multipart.field("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
@@ -132,18 +107,6 @@ public class DomainResourceBuilder extends DomainResourceOperationProcessorDecor
         return this;
     }
 
-//    public DomainResourceBuilder withBundle(String bundle) {
-//        multipart.field("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
-//        return this;
-//    }
-
-//    public DomainResourceBuilder withBundles(List<InputStream> bundles) {
-//        for (InputStream bundle : bundles) {
-//            this.multipart.field("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
-//        }
-//        return this;
-//    }
-
     public DomainResourceBuilder withBundles(List<InputStream> bundles, List<ClientBundle> bundlesRef) {
         for (InputStream bundle : bundles) {
             this.multipart.field("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
@@ -151,11 +114,6 @@ public class DomainResourceBuilder extends DomainResourceOperationProcessorDecor
         super.domain.setBundles(bundlesRef);
         return this;
     }
-
-//    public DomainResourceBuilder withDataSource(String uri) {
-//        super.domain.setDataSource(new ClientReference().setUri(uri));
-//        return this;
-//    }
 
     public DomainResourceBuilder withDataSource(ClientReference dataSource) {
         super.domain.setDataSource(dataSource);

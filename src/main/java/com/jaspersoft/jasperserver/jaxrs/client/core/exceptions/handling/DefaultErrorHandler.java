@@ -112,8 +112,6 @@ public class DefaultErrorHandler implements ErrorHandler {
         } catch (Exception e) {
 //            log.error("Cannot instantiate exception", e);
         }
-        if (exception != null) {
-            throw exception;
-        }
+        throw exception;
     }
 }

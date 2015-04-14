@@ -43,28 +43,20 @@ public class JerseyRequestTest extends PowerMockTestCase {
 
     @Mock
     private SessionStorage sessionStorage;
-
     @Mock
     private ErrorHandler dummyErrorHandler;
-
     @Mock
     private JerseyRequest<Class> expected;
-
     @Mock
     private JerseyWebTarget webTarget;
-
     @Mock
     private RestClientConfiguration clientConfiguration;
-
     @Mock
     private OperationResultFactoryImpl operationResultFactory;
-
     @Mock
     private OperationResult operationResult;
-
     @Mock
     private Invocation.Builder builder;
-
     @Mock
     private Object dummyEntity;
 

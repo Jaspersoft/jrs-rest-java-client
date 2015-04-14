@@ -25,13 +25,10 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
 
     @Mock
     private RestClientConfiguration configurationMock;
-
     @Mock
     private AuthenticationCredentials credentialsMock;
-
     @Mock
     private SessionStorage sessionStorageMock;
-
     @Mock
     private Session sessionMock;
 

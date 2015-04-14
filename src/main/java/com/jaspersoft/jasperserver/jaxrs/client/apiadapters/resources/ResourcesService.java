@@ -20,8 +20,18 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
+import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
+import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
+import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
+import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.DomainResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.MondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.ReportUnitResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.SecureMondrianConnectionResourceBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.ResourceBuilderFactory.getBuilder;
 
 public class ResourcesService extends AbstractAdapter {
 
@@ -37,23 +47,32 @@ public class ResourcesService extends AbstractAdapter {
         return new SingleResourceAdapter(sessionStorage, uri);
     }
 
-//    public DomainResourceBuilder resource(ClientSemanticLayerDataSource resource) {
-//        ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource(resource);
-//        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
-//    }
 
-//    public ReportUnitResourceBuilder resource(ClientReportUnit resource) {
-//        ClientReportUnit copy = new ClientReportUnit(resource);
-//        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
-//    }
+    /**
+     * Additional features to work with such resources as
+     * - SemanticLayerDataSource
+     * - ReportUnit
+     * - MondrianConnection
+     * - SecureMondrianConnection
+     */
 
-//    public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resource) {
-//        ClientMondrianConnection copy = new ClientMondrianConnection(resource);
-//        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
-//    }
+    public DomainResourceBuilder resource(ClientSemanticLayerDataSource resource) {
+        ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource(resource);
+        return getBuilder(copy, sessionStorage);
+    }
 
-//    public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resource) {
-//        ClientSecureMondrianConnection copy = new ClientSecureMondrianConnection(resource);
-//        return ResourceBuilderFactory.getBuilder(copy, sessionStorage);
-//    }
+    public ReportUnitResourceBuilder resource(ClientReportUnit resource) {
+        ClientReportUnit copy = new ClientReportUnit(resource);
+        return getBuilder(copy, sessionStorage);
+    }
+
+    public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resource) {
+        ClientMondrianConnection copy = new ClientMondrianConnection(resource);
+        return getBuilder(copy, sessionStorage);
+    }
+
+    public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resource) {
+        ClientSecureMondrianConnection copy = new ClientSecureMondrianConnection(resource);
+        return getBuilder(copy, sessionStorage);
+    }
 }

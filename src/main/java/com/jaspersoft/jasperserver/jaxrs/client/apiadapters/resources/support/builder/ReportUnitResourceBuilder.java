@@ -40,46 +40,17 @@ public class ReportUnitResourceBuilder extends ReportUnitResourceOperationProces
         super(entity, sessionStorage);
     }
 
-//    public ReportUnitResourceBuilder withJrxml(InputStream jrxml) {
-//        multipart.field("jrxml", jrxml, MediaType.APPLICATION_XML_TYPE);
-//        return this;
-//    }
-
     public ReportUnitResourceBuilder withJrxml(InputStream jrxml, ClientFile jrxmlDescriptor) {
         multipart.field("jrxml", jrxml, MediaType.APPLICATION_XML_TYPE);
         super.reportUnit.setJrxml(jrxmlDescriptor);
         return this;
     }
 
-//    public ReportUnitResourceBuilder withJrxml(String jrxml) {
-//        multipart.field("jrxml", jrxml, MediaType.APPLICATION_XML_TYPE);
-//        return this;
-//    }
-
     public ReportUnitResourceBuilder withJrxml(String jrxml, ClientFile jrxmlDescriptor) {
         multipart.field("jrxml", jrxml, MediaType.APPLICATION_XML_TYPE);
         super.reportUnit.setJrxml(jrxmlDescriptor);
         return this;
     }
-
-//    public ReportUnitResourceBuilder withFile(String fileName, String file) {
-//        multipart.field("files." + fileName, file, MediaType.TEXT_PLAIN_TYPE);
-//        return this;
-//    }
-
-//    public ReportUnitResourceBuilder withFiles(Map<String, InputStream> files) {
-//        for (Map.Entry<String, InputStream> entry : files.entrySet()) {
-//            String fileName = entry.getKey();
-//            InputStream fileContent = entry.getValue();
-//            this.multipart.field("files." + fileName, fileContent, MediaType.TEXT_PLAIN_TYPE);
-//        }
-//        return this;
-//    }
-
-//    public ReportUnitResourceBuilder withFile(String fileName, InputStream file) {
-//        multipart.field("files." + fileName, file, MediaType.TEXT_PLAIN_TYPE);
-//        return this;
-//    }
 
     public ReportUnitResourceBuilder withNewFile(String content, String fileName, ClientFile fileDescriptor) {
         multipart.field("files." + fileName, content, MediaType.TEXT_PLAIN_TYPE);

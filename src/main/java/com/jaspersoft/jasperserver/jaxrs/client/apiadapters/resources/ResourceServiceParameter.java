@@ -51,7 +51,7 @@ public enum ResourceServiceParameter {
 
     private String name;
 
-    private ResourceServiceParameter(String name) {
+    ResourceServiceParameter(String name) {
         this.name = name;
     }
 
