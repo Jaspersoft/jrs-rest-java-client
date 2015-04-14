@@ -22,24 +22,28 @@
         <tag>HEAD</tag>
     </scm>
 
-    <distributionManagement>
-        <!--<repository>-->
-            <!--<id>jaspersoft</id>-->
-            <!--<name>jaspersoft-releases</name>-->
-            <!--<url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-releases</url>-->
-        <!--</repository>-->
-        <snapshotRepository>
-            <id>jaspersoft</id>
-            <name>jaspersoft-snapshots</name>
-            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <repositories>
+        <repository>
+            <id>jrs-ce-releases</id>
+            <name>JasperReports Server CE releases repository</name>
+            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-releases/</url>
+        </repository>
+        <repository>
+            <id>jrs-ce-snapshots</id>
+            <name>JasperReports Server CE snapshots repository</name>
+            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-snapshots/</url>
+        </repository>
+        <repository>
+            <id>opencast-public</id>
+            <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
             <groupId>com.jaspersoft.jasperserver</groupId>
             <artifactId>jasperserver-dto</artifactId>
-            <version>6.1.0-SNAPSHOT</version>
+            <version>6.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
