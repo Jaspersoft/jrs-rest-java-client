@@ -22,6 +22,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -39,6 +42,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSource;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.OutputFormat;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.SimpleTrigger;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
@@ -152,18 +158,61 @@ public class JobsService extends AbstractAdapter {
     }
 
     @VisibleForTesting
-    String getJobAsJsonString(Job report) {
-        String jsonStringTemplate = "{\"label\":\"%s\",\"description\":\"%s\","
-                + "\"trigger\":{\"simpleTrigger\":{\"startType\":1,\"misfireInstruction\":0,\"occurrenceCount\":4,\"recurrenceInterval\":1,\"recurrenceIntervalUnit\":\"DAY\"}},"
-                + "\"source\":{\"reportUnitURI\":\"/reports/shared_registry_dynamic\",\"parameters\":{\"parameterValues\":{\"CSV_EXPORT_PATH\":[\"cccc\"],\"SHOW_SORT_TITLE\":[\"false\"],"
-                + "\"HIGHLIGHT_NEW_INVESTORS\":[\"false\"],\"EXCLUDE_INVESTORS\":[\"false\"],\"AFTER_CASH_ONLY_REDEMPTIONS\":[\"false\"],\"CHANGE_VALUE_TO_BASE_CURRENCY\":[\"false\"],"
-                + "\"SHOW_INVESTOR_TOTALS\":[\"false\"],\"BALANCE_DATE\":[\"2015-01-31\"],\"FUND_ID\":[\"5449\"],\"SHOW_AFTER_TRANSACTIONS\":[\"false\"],\"REPORT_STATEMENT_ID\":[\"150000\"],\"LOT_LEVEL_DETAILS\":[\"false\"],"
-                + "\"SHOW_SORT_CATEGORY_SUMMARY\":[\"false\"],\"SORT_ORDER\":[\"HID\"]}}},\"baseOutputFilename\":\"portiss_report" + System.currentTimeMillis()
-                + "\",\"repositoryDestination\":{\"folderURI\":\"/scheduled_reports\",\"sequentialFilenames\":false,\"overwriteFiles\":true,\"saveToRepository\":true,"
-                + "\"usingDefaultReportOutputFolderURI\":false},\"outputFormats\":{\"outputFormat\":[\"XLSX\",\"PDF\"]}}";
+    String getJobAsJsonString(Job job) {
 
-        String jsonString = String.format(jsonStringTemplate, report.getLabel(), report.getDescription());
+        String jsonStringTemplate = "{\"label\":\"%s\",\"description\":\"%s\","
+                + "\"trigger\":{\"simpleTrigger\":{\"startType\":%d,\"misfireInstruction\":%d,\"occurrenceCount\":%d,\"recurrenceInterval\":%d,\"recurrenceIntervalUnit\":\"%s\"}},"
+                + "\"source\":{\"reportUnitURI\":\"%s\",\"parameters\":{\"parameterValues\":%s}},\"baseOutputFilename\":\"%s\","
+                + "\"repositoryDestination\":{\"folderURI\":\"%s\",\"sequentialFilenames\":false,\"overwriteFiles\":true,\"saveToRepository\":true,"
+                + "\"usingDefaultReportOutputFolderURI\":false},\"outputFormats\":{\"outputFormat\":%s}}";
+
+        SimpleTrigger simpleTrigger = (SimpleTrigger) job.getTrigger();
+        JobSource jobSource = job.getSource();
+
+        String jsonString = String.format(jsonStringTemplate, job.getLabel(), job.getDescription(),
+                simpleTrigger.getStartType(), simpleTrigger.getMisfireInstruction(), simpleTrigger.getOccurrenceCount(),
+                simpleTrigger.getRecurrenceInterval(), simpleTrigger.getRecurrenceIntervalUnit().name(),
+                jobSource.getReportUnitURI(), getReportParamsAsJsonString(jobSource.getParameters()), job.getBaseOutputFilename(),
+                job.getRepositoryDestination().getFolderURI(),
+                getOutputFormatsAsJsonString(job.getOutputFormats()));
         return jsonString;
+    }
+
+    private String getReportParamsAsJsonString(Map<String, Object> reportParams) {
+        StringBuilder sb = new StringBuilder(100);
+        sb.append("{");
+
+        for (Entry<String, Object> paramKeyValue : reportParams.entrySet()) {
+            //key
+            sb.append('"').append(paramKeyValue.getKey()).append('"');
+            sb.append(":");
+            //value
+            sb.append("[\"").append(paramKeyValue.getValue()).append("\"]");
+            sb.append(",");
+        }
+
+        //remove the xtra ,
+        sb.setLength(sb.length() - 1);
+
+        sb.append("}");
+        return sb.toString();
+    }
+
+    private String getOutputFormatsAsJsonString(Set<OutputFormat> outputFormats) {
+        StringBuilder sb = new StringBuilder(60);
+
+        sb.append("[");
+
+        for (OutputFormat outputFormat : outputFormats) {
+            sb.append('"').append(outputFormat.name()).append('"').append(",");
+        }
+
+        //remove the xtra ,
+        sb.setLength(sb.length() - 1);
+
+        sb.append("]");
+
+        return sb.toString();
     }
 
     //END: palash: changes to get report scheduling working

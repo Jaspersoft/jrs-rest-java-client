@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -438,11 +438,11 @@ public class JobsServiceTest extends PowerMockTestCase {
     public void testGetJobAsJsonString() {
         //given
         String expected = "{\"label\":\"AAAAAAAAAAAAAAA\",\"description\":\"BBBBBBBBBBBBBBBBBBBBBB\","
-                + "\"trigger\":{\"simpleTrigger\":{\"startType\":1,\"misfireInstruction\":0,\"occurrenceCount\":4,\"recurrenceInterval\":1,\"recurrenceIntervalUnit\":\"DAY\"}},"
-                + "\"source\":{\"reportUnitURI\":\"CCCCCCCCCCCCCCCCCCCC\",\"parameters\":{\"parameterValues\":{\"param_1\":[\"cccc\"],\"param_2\":[\"false\"],"
-                + "\"param_3\":[\"false\"],\"param_4\":[\"false\"]}}},\"baseOutputFilename\":\"DDDDDDDDDDDDDDDDDDDDD\","
+                + "\"trigger\":{\"simpleTrigger\":{\"startType\":1,\"misfireInstruction\":6,\"occurrenceCount\":5,\"recurrenceInterval\":10,\"recurrenceIntervalUnit\":\"WEEK\"}},"
+                + "\"source\":{\"reportUnitURI\":\"CCCCCCCCCCCCCCCCCCCC\",\"parameters\":{\"parameterValues\":{\"param_1\":[\"value_1\"],\"param_2\":[\"value_2\"],"
+                + "\"param_3\":[\"value_3\"],\"param_4\":[\"value_4\"]}}},\"baseOutputFilename\":\"DDDDDDDDDDDDDDDDDDDDD\","
                 + "\"repositoryDestination\":{\"folderURI\":\"EEEEEEEEEEEEEEEEE\",\"sequentialFilenames\":false,\"overwriteFiles\":true,\"saveToRepository\":true,"
-                + "\"usingDefaultReportOutputFolderURI\":false},\"outputFormats\":{\"outputFormat\":[\"XLSX\",\"PDF\"]}}";
+                + "\"usingDefaultReportOutputFolderURI\":false},\"outputFormats\":{\"outputFormat\":[\"XLSX\",\"PDF\",\"CSV\"]}}";
 
         Job job = new Job();
         job.setLabel("AAAAAAAAAAAAAAA");
@@ -450,7 +450,7 @@ public class JobsServiceTest extends PowerMockTestCase {
         JobSource jobSource = new JobSource();
         jobSource.setReportUnitURI("CCCCCCCCCCCCCCCCCCCC");
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new LinkedHashMap<String, Object>();
         parameters.put("param_1", "value_1");
         parameters.put("param_2", "value_2");
         parameters.put("param_3", "value_3");
@@ -458,21 +458,23 @@ public class JobsServiceTest extends PowerMockTestCase {
 
         jobSource.setParameters(parameters);
         job.setSource(jobSource);
-        Set<OutputFormat> outputFormats = new HashSet<OutputFormat>();
-        outputFormats.add(OutputFormat.PDF);
+        Set<OutputFormat> outputFormats = new LinkedHashSet<OutputFormat>();
         outputFormats.add(OutputFormat.XLSX);
+        outputFormats.add(OutputFormat.PDF);
+        outputFormats.add(OutputFormat.CSV);
         job.setOutputFormats(outputFormats);
         RepositoryDestination repositoryDestination = new RepositoryDestination();
         repositoryDestination.setSaveToRepository(true);
-        repositoryDestination.setFolderURI("DDDDDDDDDDDDDDDDDDDDD");
+        repositoryDestination.setFolderURI("EEEEEEEEEEEEEEEEE");
         job.setRepositoryDestination(repositoryDestination);
         SimpleTrigger trigger = new SimpleTrigger();
         trigger.setStartType(SimpleTrigger.START_TYPE_NOW);
-        trigger.setOccurrenceCount(4);
-        trigger.setRecurrenceInterval(1);
-        trigger.setRecurrenceIntervalUnit(IntervalUnitType.DAY);
+        trigger.setMisfireInstruction(6);
+        trigger.setOccurrenceCount(5);
+        trigger.setRecurrenceInterval(10);
+        trigger.setRecurrenceIntervalUnit(IntervalUnitType.WEEK);
         job.setTrigger(trigger);
-        job.setBaseOutputFilename("EEEEEEEEEEEEEEEEE");
+        job.setBaseOutputFilename("DDDDDDDDDDDDDDDDDDDDD");
 
         JobsService testClass = new JobsService(sessionStorageMock);
 
