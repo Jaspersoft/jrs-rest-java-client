@@ -26,6 +26,7 @@ import java.io.IOException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter;
@@ -131,7 +132,7 @@ public class JobsService extends AbstractAdapter {
         request.setContentType("application/job+json");
         request.setAccept("application/job+json");
 
-        String inputJson = getJsonString();
+        String inputJson = getJobAsJsonString(report);
 
         System.err.println("inputJson:\n" + inputJson);
 
@@ -150,8 +151,9 @@ public class JobsService extends AbstractAdapter {
         return jsonNode.findValue("id").asLong();
     }
 
-    private String getJsonString() {
-        String jsonString = "{\"label\":\"New Job for ISS Report\",\"description\":\"New Job for the report template: /reports/shared_registry_dynamic\","
+    @VisibleForTesting
+    String getJobAsJsonString(Job report) {
+        String jsonStringTemplate = "{\"label\":\"%s\",\"description\":\"%s\","
                 + "\"trigger\":{\"simpleTrigger\":{\"startType\":1,\"misfireInstruction\":0,\"occurrenceCount\":4,\"recurrenceInterval\":1,\"recurrenceIntervalUnit\":\"DAY\"}},"
                 + "\"source\":{\"reportUnitURI\":\"/reports/shared_registry_dynamic\",\"parameters\":{\"parameterValues\":{\"CSV_EXPORT_PATH\":[\"cccc\"],\"SHOW_SORT_TITLE\":[\"false\"],"
                 + "\"HIGHLIGHT_NEW_INVESTORS\":[\"false\"],\"EXCLUDE_INVESTORS\":[\"false\"],\"AFTER_CASH_ONLY_REDEMPTIONS\":[\"false\"],\"CHANGE_VALUE_TO_BASE_CURRENCY\":[\"false\"],"
@@ -159,6 +161,8 @@ public class JobsService extends AbstractAdapter {
                 + "\"SHOW_SORT_CATEGORY_SUMMARY\":[\"false\"],\"SORT_ORDER\":[\"HID\"]}}},\"baseOutputFilename\":\"portiss_report" + System.currentTimeMillis()
                 + "\",\"repositoryDestination\":{\"folderURI\":\"/scheduled_reports\",\"sequentialFilenames\":false,\"overwriteFiles\":true,\"saveToRepository\":true,"
                 + "\"usingDefaultReportOutputFolderURI\":false},\"outputFormats\":{\"outputFormat\":[\"XLSX\",\"PDF\"]}}";
+
+        String jsonString = String.format(jsonStringTemplate, report.getLabel(), report.getDescription());
         return jsonString;
     }
 

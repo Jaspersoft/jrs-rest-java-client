@@ -1,17 +1,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JRSVersion;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -22,7 +16,23 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.IntervalUnitType;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSource;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.OutputFormat;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.RepositoryDestination;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.SimpleTrigger;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.mockito.Matchers.any;
@@ -233,7 +243,6 @@ public class JobsServiceTest extends PowerMockTestCase {
         verify(wrapperRequestMock, times(1)).addParam("calendarType", CalendarType.daily.toString().toLowerCase());
     }
 
-
     @Test(testName = "calendars_with_param")
     public void should_return_proper_op_result_object_when_param_is_null() {
 
@@ -256,7 +265,6 @@ public class JobsServiceTest extends PowerMockTestCase {
         verify(wrapperRequestMock, times(1)).get();
         verify(wrapperRequestMock, never()).addParam("calendarType", CalendarType.daily.toString().toLowerCase());
     }
-
 
     @Test(testName = "calendar")
     public void should_return_an_calendar_adapter() throws Exception {
@@ -426,9 +434,58 @@ public class JobsServiceTest extends PowerMockTestCase {
         Mockito.verify(configurationMock).getJrsVersion();
     }
 
+    @Test(testName = "getJobAsJsonString")
+    public void testGetJobAsJsonString() {
+        //given
+        String expected = "{\"label\":\"AAAAAAAAAAAAAAA\",\"description\":\"BBBBBBBBBBBBBBBBBBBBBB\","
+                + "\"trigger\":{\"simpleTrigger\":{\"startType\":1,\"misfireInstruction\":0,\"occurrenceCount\":4,\"recurrenceInterval\":1,\"recurrenceIntervalUnit\":\"DAY\"}},"
+                + "\"source\":{\"reportUnitURI\":\"CCCCCCCCCCCCCCCCCCCC\",\"parameters\":{\"parameterValues\":{\"param_1\":[\"cccc\"],\"param_2\":[\"false\"],"
+                + "\"param_3\":[\"false\"],\"param_4\":[\"false\"]}}},\"baseOutputFilename\":\"DDDDDDDDDDDDDDDDDDDDD\","
+                + "\"repositoryDestination\":{\"folderURI\":\"EEEEEEEEEEEEEEEEE\",\"sequentialFilenames\":false,\"overwriteFiles\":true,\"saveToRepository\":true,"
+                + "\"usingDefaultReportOutputFolderURI\":false},\"outputFormats\":{\"outputFormat\":[\"XLSX\",\"PDF\"]}}";
+
+        Job job = new Job();
+        job.setLabel("AAAAAAAAAAAAAAA");
+        job.setDescription("BBBBBBBBBBBBBBBBBBBBBB");
+        JobSource jobSource = new JobSource();
+        jobSource.setReportUnitURI("CCCCCCCCCCCCCCCCCCCC");
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("param_1", "value_1");
+        parameters.put("param_2", "value_2");
+        parameters.put("param_3", "value_3");
+        parameters.put("param_4", "value_4");
+
+        jobSource.setParameters(parameters);
+        job.setSource(jobSource);
+        Set<OutputFormat> outputFormats = new HashSet<OutputFormat>();
+        outputFormats.add(OutputFormat.PDF);
+        outputFormats.add(OutputFormat.XLSX);
+        job.setOutputFormats(outputFormats);
+        RepositoryDestination repositoryDestination = new RepositoryDestination();
+        repositoryDestination.setSaveToRepository(true);
+        repositoryDestination.setFolderURI("DDDDDDDDDDDDDDDDDDDDD");
+        job.setRepositoryDestination(repositoryDestination);
+        SimpleTrigger trigger = new SimpleTrigger();
+        trigger.setStartType(SimpleTrigger.START_TYPE_NOW);
+        trigger.setOccurrenceCount(4);
+        trigger.setRecurrenceInterval(1);
+        trigger.setRecurrenceIntervalUnit(IntervalUnitType.DAY);
+        job.setTrigger(trigger);
+        job.setBaseOutputFilename("EEEEEEEEEEEEEEEEE");
+
+        JobsService testClass = new JobsService(sessionStorageMock);
+
+        //when
+        String result = testClass.getJobAsJsonString(job);
+
+        //then
+        Assert.assertEquals(result, expected);
+    }
+
     @AfterMethod
     public void after() {
         reset(sessionStorageMock, expectedAdapterMock, expectedJobOperationsAdapter,
-              jobRequestMock, expectedJobOperationResultMock, reportMock, configurationMock);
+                jobRequestMock, expectedJobOperationResultMock, reportMock, configurationMock);
     }
 }
