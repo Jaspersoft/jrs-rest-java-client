@@ -151,14 +151,14 @@ public class JobsService extends AbstractAdapter {
     }
 
     private String getJsonString() {
-        String jsonString = "{\"username\":\"act_issapp_dev|dev\",\"label\":\"New Job for ISS Report\",\"description\":\"New Job for the report template: /reports/shared_registry_dynamic\","
-                + "\"trigger\":{\"simpleTrigger\":{\"id\":112942,\"version\":0,\"startType\":1,\"misfireInstruction\":0,\"occurrenceCount\":4,\"recurrenceInterval\":1,\"recurrenceIntervalUnit\":\"DAY\"}},"
+        String jsonString = "{\"label\":\"New Job for ISS Report\",\"description\":\"New Job for the report template: /reports/shared_registry_dynamic\","
+                + "\"trigger\":{\"simpleTrigger\":{\"startType\":1,\"misfireInstruction\":0,\"occurrenceCount\":4,\"recurrenceInterval\":1,\"recurrenceIntervalUnit\":\"DAY\"}},"
                 + "\"source\":{\"reportUnitURI\":\"/reports/shared_registry_dynamic\",\"parameters\":{\"parameterValues\":{\"CSV_EXPORT_PATH\":[\"cccc\"],\"SHOW_SORT_TITLE\":[\"false\"],"
                 + "\"HIGHLIGHT_NEW_INVESTORS\":[\"false\"],\"EXCLUDE_INVESTORS\":[\"false\"],\"AFTER_CASH_ONLY_REDEMPTIONS\":[\"false\"],\"CHANGE_VALUE_TO_BASE_CURRENCY\":[\"false\"],"
                 + "\"SHOW_INVESTOR_TOTALS\":[\"false\"],\"BALANCE_DATE\":[\"2015-01-31\"],\"FUND_ID\":[\"5449\"],\"SHOW_AFTER_TRANSACTIONS\":[\"false\"],\"REPORT_STATEMENT_ID\":[\"150000\"],\"LOT_LEVEL_DETAILS\":[\"false\"],"
                 + "\"SHOW_SORT_CATEGORY_SUMMARY\":[\"false\"],\"SORT_ORDER\":[\"HID\"]}}},\"baseOutputFilename\":\"portiss_report" + System.currentTimeMillis()
-                + "\",\"repositoryDestination\":{\"id\":112943,\"version\":-1,\"folderURI\":\"/scheduled_reports\",\"sequentialFilenames\":false,\"overwriteFiles\":false,\"saveToRepository\":true,"
-                + "\"usingDefaultReportOutputFolderURI\":false,\"outputFTPInfo\":{\"userName\":\"anonymous\",\"type\":\"ftps\",\"port\":990,\"pbsz\":0,\"implicit\":true}},\"outputFormats\":{\"outputFormat\":[\"XLSX\",\"PDF\"]}}";
+                + "\",\"repositoryDestination\":{\"folderURI\":\"/scheduled_reports\",\"sequentialFilenames\":false,\"overwriteFiles\":true,\"saveToRepository\":true,"
+                + "\"usingDefaultReportOutputFolderURI\":false},\"outputFormats\":{\"outputFormat\":[\"XLSX\",\"PDF\"]}}";
         return jsonString;
     }
 
