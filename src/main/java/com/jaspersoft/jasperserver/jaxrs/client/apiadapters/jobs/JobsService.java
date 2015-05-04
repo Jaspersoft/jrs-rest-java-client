@@ -21,10 +21,21 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
+import java.io.IOException;
+
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
@@ -113,4 +124,44 @@ public class JobsService extends AbstractAdapter {
         }
         return new SingleCalendarOperationsAdapter(sessionStorage, calendarName);
     }
+
+    //START: palash: changes to get report scheduling working
+    public long scheduleReportWithHack(Job report) {
+        JerseyRequest<String> request = buildRequest(sessionStorage, String.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
+        request.setContentType("application/job+json");
+        request.setAccept("application/job+json");
+
+        String inputJson = getJsonString();
+
+        System.err.println("inputJson:\n" + inputJson);
+
+        OperationResult<String> result = request.put(inputJson);
+        String jsonResult = result.getEntity();
+
+        System.err.println("Result:\n" + jsonResult);
+
+        JsonNode jsonNode;
+        try {
+            jsonNode = new ObjectMapper().readTree(jsonResult);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return jsonNode.findValue("id").asLong();
+    }
+
+    private String getJsonString() {
+        String jsonString = "{\"username\":\"act_issapp_dev|dev\",\"label\":\"New Job for ISS Report\",\"description\":\"New Job for the report template: /reports/shared_registry_dynamic\","
+                + "\"trigger\":{\"simpleTrigger\":{\"id\":112942,\"version\":0,\"startType\":1,\"misfireInstruction\":0,\"occurrenceCount\":4,\"recurrenceInterval\":1,\"recurrenceIntervalUnit\":\"DAY\"}},"
+                + "\"source\":{\"reportUnitURI\":\"/reports/shared_registry_dynamic\",\"parameters\":{\"parameterValues\":{\"CSV_EXPORT_PATH\":[\"cccc\"],\"SHOW_SORT_TITLE\":[\"false\"],"
+                + "\"HIGHLIGHT_NEW_INVESTORS\":[\"false\"],\"EXCLUDE_INVESTORS\":[\"false\"],\"AFTER_CASH_ONLY_REDEMPTIONS\":[\"false\"],\"CHANGE_VALUE_TO_BASE_CURRENCY\":[\"false\"],"
+                + "\"SHOW_INVESTOR_TOTALS\":[\"false\"],\"BALANCE_DATE\":[\"2015-01-31\"],\"FUND_ID\":[\"5449\"],\"SHOW_AFTER_TRANSACTIONS\":[\"false\"],\"REPORT_STATEMENT_ID\":[\"150000\"],\"LOT_LEVEL_DETAILS\":[\"false\"],"
+                + "\"SHOW_SORT_CATEGORY_SUMMARY\":[\"false\"],\"SORT_ORDER\":[\"HID\"]}}},\"baseOutputFilename\":\"portiss_report" + System.currentTimeMillis()
+                + "\",\"repositoryDestination\":{\"id\":112943,\"version\":-1,\"folderURI\":\"/scheduled_reports\",\"sequentialFilenames\":false,\"overwriteFiles\":false,\"saveToRepository\":true,"
+                + "\"usingDefaultReportOutputFolderURI\":false,\"outputFTPInfo\":{\"userName\":\"anonymous\",\"type\":\"ftps\",\"port\":990,\"pbsz\":0,\"implicit\":true}},\"outputFormats\":{\"outputFormat\":[\"XLSX\",\"PDF\"]}}";
+        return jsonString;
+    }
+
+    //END: palash: changes to get report scheduling working
+
 }
