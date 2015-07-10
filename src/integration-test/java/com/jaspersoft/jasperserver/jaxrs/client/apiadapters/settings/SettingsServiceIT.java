@@ -37,18 +37,14 @@ public class SettingsServiceIT {
     @Test
     public void should_return_settings_by_request_group() {
 
-        /**
-         * When
-         */
+        // When
         final Map settings = session
                 .settingsService()
                     .settings()
                         .group(REQUEST)
                             .getEntity();
 
-        /**
-         * Then
-         */
+        // Then
         assertNotNull(settings);
         assertFalse(settings.isEmpty());
     }
@@ -57,23 +53,17 @@ public class SettingsServiceIT {
     @SuppressWarnings("unchecked")
     public void should_return_settings_by_global_configuration_group() {
 
-        /**
-         * Given
-         */
-        final int FILE_RESOURCES_TYPES_SIZE = 11;
+        // Given
+        final int FILE_RESOURCES_TYPES_SIZE = 12; // for sample data in JRS 6.1
 
-        /**
-         * When
-         */
+        // When
         final Map settings = session
                 .settingsService()
                     .settings()
                         .group(GLOBAL_CONFIGURATION)
                             .getEntity();
 
-        /**
-         * Then
-         */
+        // Then
         assertNotNull(settings);
         assertFalse(settings.isEmpty());
 
