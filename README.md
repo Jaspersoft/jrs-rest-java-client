@@ -843,27 +843,27 @@ final Map settings = session
 ``` 
 Supported groups are: 
 
-1.	“request”. Returned settings are: maxInactiveInterval, contextPath;
+1.	“request”. Settings related to current AJAX request configuration. Returned settings are: maxInactiveInterval, contextPath;
 
-2.	“dataSourcePatterns”. Returned settings are: dbHost, dbPort, dbPort, dbName, sName, driverType, schemaName, informixServerName, dynamicUrlPartPattern;
+2.	“dataSourcePatterns”. Validation patterns for data source UI. Returned settings are: dbHost, dbPort, dbPort, dbName, sName, driverType, schemaName, informixServerName, dynamicUrlPartPattern;
 
-3.	“userTimeZones”. Returned settings are pairs of code and description;
+3.	“userTimeZones”. Time zones of current user. Time zones of current user. Returned settings are pairs of code and description;
 
-4.	“globalConfiguration”. Returned settings are : paginatorItemsPerPage, paginatorPagesRange, reportLevelConfigurable, paginationForSinglePageReport, calendarInputJsp, userItemsPerPage, roleItemsPerPage, tenantItemsPerPage, userNameNotSupportedSymbols, roleNameNotSupportedSymbols, userNameSeparator, defaultRole, passwordMask, viewReportsFilterList, outputFolderFilterList, outputFolderFilterPatterns, tenantNameNotSupportedSymbols, tenantIdNotSupportedSymbols, resourceIdNotSupportedSymbols, publicFolderUri, themeDefaultName, themeFolderName, themeServletPrefix, dateFormat, currentYearDateFormat, timestampFormat, timeFormat, entitiesPerPage, tempFolderUri, organizationsFolderUri, jdbcDriversFolderUri, emailRegExpPattern, enableSaveToHostFS, allFileResourceTypes, dataSourceTypes;
+4.	“globalConfiguration”. AWS specific settings. Returned settings are : paginatorItemsPerPage, paginatorPagesRange, reportLevelConfigurable, paginationForSinglePageReport, calendarInputJsp, userItemsPerPage, roleItemsPerPage, tenantItemsPerPage, userNameNotSupportedSymbols, roleNameNotSupportedSymbols, userNameSeparator, defaultRole, passwordMask, viewReportsFilterList, outputFolderFilterList, outputFolderFilterPatterns, tenantNameNotSupportedSymbols, tenantIdNotSupportedSymbols, resourceIdNotSupportedSymbols, publicFolderUri, themeDefaultName, themeFolderName, themeServletPrefix, dateFormat, currentYearDateFormat, timestampFormat, timeFormat, entitiesPerPage, tempFolderUri, organizationsFolderUri, jdbcDriversFolderUri, emailRegExpPattern, enableSaveToHostFS, allFileResourceTypes, dataSourceTypes;
 
-5.	“awsSettings”. Returned settings are: productTypeIsEc2, isEc2Instance, productTypeIsJrsAmi, awsRegions, productTypeIsMpAmi, suppressEc2CredentialsWarnings;
+5.	“awsSettings”. AWS specific settings. Returned settings are: productTypeIsEc2, isEc2Instance, productTypeIsJrsAmi, awsRegions, productTypeIsMpAmi, suppressEc2CredentialsWarnings;
 
 6.	“decimalFormatSymbols”. Response is locale dependent;
 
-7.	“dateTimeSettings”. Response is locale dependent; 
+7.	“dateTimeSettings”. All settings related to client date-time formatting. Response is locale dependent; 
 
-8.	“dashboardSettings”. Configuration of settings is depends on configuration of Jaspersoft server;
+8.	“dashboardSettings”. Settings depend on configuration of Jaspersoft server;
 
-9.	“inputControls”.  Configuration of settings is depends on configuration of Jaspersoft server;
+9.	“inputControls”. Different settings for input controls. Configuration of settings depend on configuration of Jaspersoft server;
 
-10.	“metadata”. Configuration of settings is depends on configuration of Jaspersoft server;
+10.	“metadata”. Configuration of settings depends on configuration of Jaspersoft server;
 
-11.	“adhocview”. Configuration of settings is depends on configuration of Jaspersoft server;
+11.	“adhocview”.  Different configuration dictionary values and lists for ad hoc. Configuration of settings depends on configuration of Jaspersoft server.
 
 
 Repository Services
