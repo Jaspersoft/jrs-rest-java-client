@@ -57,6 +57,8 @@ Table of Contents
     * [Modifying a Role](#modifying-a-role).
     * [Setting Role Membership](#setting-role-membership).
     * [Deleting a Role](#deleting-a-role).
+  5. [The Settings Service](#settings-service).
+    * [Getting server specific settings](#getting-settings).
 7. [Repository Services](#repository-services).
   1. [Resources Service](#resources-service).
     * [Searching the Repository](#searching-the-repository).
@@ -823,6 +825,47 @@ OperationResult operationResult =
                 .delete();
 Response response = operationResult.getResponse();
 ```
+Settings Service
+================
+
+It provides method that allow you to get server specific settings, required by UI to work with the server in sync. There can be formats and patterns, modes for some modules etc.
+
+####Getting settings
+To get settings, use the `getEntity()` method  and specify the group of settings in the `group()` method. The method `getEntity()` returns map of settings where the keys in the map are names of the settings and values can be any objects.
+
+```java 
+final Map settings = session
+                .settingsService()
+                    .settings()
+                        .group(group)
+                            .getEntity();
+
+``` 
+Supported groups are: 
+
+1.	“request”. Returned settings are: maxInactiveInterval, contextPath;
+
+2.	“dataSourcePatterns”. Returned settings are: dbHost, dbPort, dbPort, dbName, sName, driverType, schemaName, informixServerName, dynamicUrlPartPattern;
+
+3.	“userTimeZones”. Returned settings are pairs of code and description;
+
+4.	“globalConfiguration”. Returned settings are : paginatorItemsPerPage, paginatorPagesRange, reportLevelConfigurable, paginationForSinglePageReport, calendarInputJsp, userItemsPerPage, roleItemsPerPage, tenantItemsPerPage, userNameNotSupportedSymbols, roleNameNotSupportedSymbols, userNameSeparator, defaultRole, passwordMask, viewReportsFilterList, outputFolderFilterList, outputFolderFilterPatterns, tenantNameNotSupportedSymbols, tenantIdNotSupportedSymbols, resourceIdNotSupportedSymbols, publicFolderUri, themeDefaultName, themeFolderName, themeServletPrefix, dateFormat, currentYearDateFormat, timestampFormat, timeFormat, entitiesPerPage, tempFolderUri, organizationsFolderUri, jdbcDriversFolderUri, emailRegExpPattern, enableSaveToHostFS, allFileResourceTypes, dataSourceTypes;
+
+5.	“awsSettings”. Returned settings are: productTypeIsEc2, isEc2Instance, productTypeIsJrsAmi, awsRegions, productTypeIsMpAmi, suppressEc2CredentialsWarnings;
+
+6.	“decimalFormatSymbols”. Response is locale dependent;
+
+7.	“dateTimeSettings”. Response is locale dependent; 
+
+8.	“dashboardSettings”. Configuration of settings is depends on configuration of Jaspersoft server;
+
+9.	“inputControls”.  Configuration of settings is depends on configuration of Jaspersoft server;
+
+10.	“metadata”. Configuration of settings is depends on configuration of Jaspersoft server;
+
+11.	“adhocview”. Configuration of settings is depends on configuration of Jaspersoft server;
+
+
 Repository Services
 =====================
 ###Resources Service
