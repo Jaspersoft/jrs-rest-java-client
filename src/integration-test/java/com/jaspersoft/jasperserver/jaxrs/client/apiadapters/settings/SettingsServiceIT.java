@@ -13,6 +13,7 @@ import java.util.Map;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter.ServerSettingsGroup.GLOBAL_CONFIGURATION;
 import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter.ServerSettingsGroup.REQUEST;
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter.ServerSettingsGroup.USER_TIME_ZONES;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
@@ -43,6 +44,21 @@ public class SettingsServiceIT {
                     .settings()
                         .group(REQUEST)
                             .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_settings_by_timezones() {
+
+        // When
+        final Map settings = session
+                .settingsService()
+                .settings()
+                .group(USER_TIME_ZONES)
+                .getEntity();
 
         // Then
         assertNotNull(settings);
