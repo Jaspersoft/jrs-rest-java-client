@@ -11,9 +11,7 @@ import org.testng.annotations.Test;
 
 import java.util.Map;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter.ServerSettingsGroup.GLOBAL_CONFIGURATION;
-import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter.ServerSettingsGroup.REQUEST;
-import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter.ServerSettingsGroup.USER_TIME_ZONES;
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter.ServerSettingsGroup.*;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
@@ -51,13 +49,103 @@ public class SettingsServiceIT {
     }
 
     @Test
-    public void should_return_settings_by_timezones() {
+    public void should_return_settings_by_dataSourcePatterns() {
+
+        // When
+        final Map settings = session
+                .settingsService()
+                .settings()
+                .group(DATA_SOURCE_PATTERNS)
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_settings_by_awsSettings() {
+
+        // When
+        final Map settings = session
+                .settingsService()
+                .settings()
+                .group(AWS_SETTINGS)
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_settings_by_decimalFormatSymbols() {
+
+        // When
+        final Map settings = session
+                .settingsService()
+                .settings()
+                .group(DECIMAL_FORMAT_SYMBOLS)
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_settings_by_dateTimeSettings() {
+
+        // When
+        final Map settings = session
+                .settingsService()
+                .settings()
+                .group(DATE_TIME_SETTINGS)
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_settings_by_timeZones() {
 
         // When
         final Map settings = session
                 .settingsService()
                 .settings()
                 .group(USER_TIME_ZONES)
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_settings_by_dashboardSettings() {
+
+        // When
+        final Map settings = session
+                .settingsService()
+                .settings()
+                .group(DASHBOARD_SETTINGS)
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_settings_by_inputControls() {
+
+        // When
+        final Map settings = session
+                .settingsService()
+                .settings()
+                .group(INPUT_CONTROL)
                 .getEntity();
 
         // Then

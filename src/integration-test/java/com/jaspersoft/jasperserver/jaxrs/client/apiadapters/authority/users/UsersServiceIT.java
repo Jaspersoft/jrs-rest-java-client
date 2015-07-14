@@ -2,10 +2,9 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import junit.framework.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -14,13 +13,22 @@ import java.util.List;
  * Created by tetiana.iefimenko on 7/10/2015.
  */
 public class UsersServiceIT {
+    private RestClientConfiguration config;
+    private JasperserverRestClient client;
+    private Session session;
 
+    @BeforeMethod
+    public void before() {
+        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
+        config.setAcceptMimeType(MimeType.JSON);
+        config.setContentMimeType(MimeType.JSON);
+        config.setJrsVersion(JRSVersion.v6_0_0);
+        client = new JasperserverRestClient(config);
+        session = client.authenticate("superuser", "superuser");
+    }
 
     @Test
     public void shouldReturnProperListOfUsers() {
-        RestClientConfiguration cfg = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        JasperserverRestClient client = new JasperserverRestClient(cfg);
-        Session session = client.authenticate("superuser", "superuser");
 
         UsersListWrapper entity = session.usersService()
                 .allUsers()
