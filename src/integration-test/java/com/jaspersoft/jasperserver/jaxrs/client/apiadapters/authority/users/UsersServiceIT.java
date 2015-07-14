@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class UsersServiceIT {
 
+
     @Test
     public void shouldReturnProperListOfUsers() {
         RestClientConfiguration cfg = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
