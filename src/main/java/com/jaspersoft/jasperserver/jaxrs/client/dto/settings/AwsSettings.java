@@ -5,7 +5,8 @@ import java.util.List;
 /**
  * Created by tetiana.iefimenko on 7/14/2015.
  */
-public class AwtSettings {
+public class AwsSettings {
+
 
     private boolean productTypeIsEc2;
     private boolean isEc2Instance;

@@ -5,6 +5,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.AwsSettings;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -76,6 +77,20 @@ public class SettingsServiceIT {
         // Then
         assertNotNull(settings);
         assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_awsObject_by_awsSettings() {
+//TODO implement getAwsSettings firstly
+        // When
+        final AwsSettings settings = session
+                .settingsService()
+                .settings()
+                .getAwsSettings().getEntity();
+
+        // Then
+        assertNotNull(settings);
+
     }
 
     @Test

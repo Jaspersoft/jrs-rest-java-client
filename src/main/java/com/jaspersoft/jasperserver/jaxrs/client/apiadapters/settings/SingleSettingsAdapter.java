@@ -5,6 +5,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.AwsSettings;
 
 import java.util.Map;
 
@@ -36,6 +37,16 @@ public class SingleSettingsAdapter extends AbstractAdapter {
                 Map.class,
                 new String[]{"/settings/" + groupKey},
                 new DefaultErrorHandler());
+    }
+
+    public OperationResult<AwsSettings> getAwsSettings() {
+        JerseyRequest<AwsSettings> jerseyReq = JerseyRequest.buildRequest(
+                sessionStorage,
+                AwsSettings.class,
+                new String[]{"/settings/" + "awsSettings"},
+                new DefaultErrorHandler());
+//TODO inmplement method
+            return jerseyReq.get();
     }
 
     public enum ServerSettingsGroup {
