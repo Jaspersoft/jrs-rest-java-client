@@ -8,34 +8,34 @@ import java.util.List;
 public class AwsSettings {
 
 
-    private boolean productTypeIsEc2;
-    private boolean isEc2Instance;
-    private  boolean productTypeIsJrsAmi;
+    private Boolean productTypeIsEc2;
+    private Boolean isEc2Instance;
+    private  Boolean productTypeIsJrsAmi;
     private List<String> awsRegions;
-    private boolean productTypeIsMpAmi;
-    private boolean suppressEc2CredentialsWarnings;
+    private Boolean productTypeIsMpAmi;
+    private Boolean suppressEc2CredentialsWarnings;
 
-    public boolean isProductTypeIsEc2() {
+    public Boolean isProductTypeIsEc2() {
         return productTypeIsEc2;
     }
 
-    public void setProductTypeIsEc2(boolean productTypeIsEc2) {
+    public void setProductTypeIsEc2(Boolean productTypeIsEc2) {
         this.productTypeIsEc2 = productTypeIsEc2;
     }
 
-    public boolean isEc2Instance() {
+    public Boolean isEc2Instance() {
         return isEc2Instance;
     }
 
-    public void setIsEc2Instance(boolean isEc2Instance) {
+    public void setIsEc2Instance(Boolean isEc2Instance) {
         this.isEc2Instance = isEc2Instance;
     }
 
-    public boolean isProductTypeIsJrsAmi() {
+    public Boolean isProductTypeIsJrsAmi() {
         return productTypeIsJrsAmi;
     }
 
-    public void setProductTypeIsJrsAmi(boolean productTypeIsJrsAmi) {
+    public void setProductTypeIsJrsAmi(Boolean productTypeIsJrsAmi) {
         this.productTypeIsJrsAmi = productTypeIsJrsAmi;
     }
 
@@ -47,19 +47,19 @@ public class AwsSettings {
         this.awsRegions = awsRegions;
     }
 
-    public boolean isProductTypeIsMpAmi() {
+    public Boolean isProductTypeIsMpAmi() {
         return productTypeIsMpAmi;
     }
 
-    public void setProductTypeIsMpAmi(boolean productTypeIsMpAmi) {
+    public void setProductTypeIsMpAmi(Boolean productTypeIsMpAmi) {
         this.productTypeIsMpAmi = productTypeIsMpAmi;
     }
 
-    public boolean isSuppressEc2CredentialsWarnings() {
+    public Boolean isSuppressEc2CredentialsWarnings() {
         return suppressEc2CredentialsWarnings;
     }
 
-    public void setSuppressEc2CredentialsWarnings(boolean suppressEc2CredentialsWarnings) {
+    public void setSuppressEc2CredentialsWarnings(Boolean suppressEc2CredentialsWarnings) {
         this.suppressEc2CredentialsWarnings = suppressEc2CredentialsWarnings;
     }
 }

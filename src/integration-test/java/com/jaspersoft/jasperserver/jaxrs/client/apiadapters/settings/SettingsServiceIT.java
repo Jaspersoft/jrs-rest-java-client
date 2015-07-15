@@ -80,13 +80,12 @@ public class SettingsServiceIT {
     }
 
     @Test
-    public void should_return_awsObject_by_awsSettings() {
-//TODO implement getAwsSettings firstly
+    public void should_return_awsSettingsObject_by_awsSettings() {
         // When
         final AwsSettings settings = session
                 .settingsService()
                 .settings()
-                .getAwsSettings().getEntity();
+                .loadAwsSettings().getEntity();
 
         // Then
         assertNotNull(settings);

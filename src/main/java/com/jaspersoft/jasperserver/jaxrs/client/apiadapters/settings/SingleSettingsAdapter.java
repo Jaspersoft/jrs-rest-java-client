@@ -39,13 +39,13 @@ public class SingleSettingsAdapter extends AbstractAdapter {
                 new DefaultErrorHandler());
     }
 
-    public OperationResult<AwsSettings> getAwsSettings() {
+    public OperationResult<AwsSettings> loadAwsSettings() {
+
         JerseyRequest<AwsSettings> jerseyReq = JerseyRequest.buildRequest(
                 sessionStorage,
                 AwsSettings.class,
                 new String[]{"/settings/" + "awsSettings"},
                 new DefaultErrorHandler());
-//TODO inmplement method
             return jerseyReq.get();
     }
 
