@@ -28,6 +28,7 @@ public class SingleSettingsAdapter extends AbstractAdapter {
 
     public OperationResult<Map> group(ServerSettingsGroup group) {
         this.groupKey = group.getGroup();
+
         return request().get();
     }
 
@@ -67,6 +68,7 @@ public class SingleSettingsAdapter extends AbstractAdapter {
         ADHOC_VIEW("adhocview");
 
         private String group;
+        private Class groupClass;
 
         ServerSettingsGroup(String group) {
             this.group = group;

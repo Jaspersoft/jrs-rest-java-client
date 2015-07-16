@@ -6,6 +6,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter.ServerSettingsGroup.*;
@@ -118,6 +120,20 @@ public class DtoSettingsServiceIT {
                 .settingsService()
                 .settings()
                 .group(INPUT_CONTROL, InputControlsSetiings.class)
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+    }
+
+    @Test
+    public void should_return_timeZonesSettings_object_by_class() {
+
+        // When
+        final List settings = session
+                .settingsService()
+                .settings()
+                .group(USER_TIME_ZONES, ArrayList.class)
                 .getEntity();
 
         // Then
