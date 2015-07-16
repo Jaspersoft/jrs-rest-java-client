@@ -15,6 +15,18 @@ public class AwsSettings {
     private Boolean productTypeIsMpAmi;
     private Boolean suppressEc2CredentialsWarnings;
 
+    public AwsSettings() {
+    }
+
+    public AwsSettings(AwsSettings other) {
+        this.productTypeIsEc2 = other.productTypeIsEc2;
+        this.isEc2Instance = other.isEc2Instance;
+        this.productTypeIsJrsAmi = other.productTypeIsJrsAmi;
+        this.awsRegions = other.awsRegions;
+        this.productTypeIsMpAmi = other.productTypeIsMpAmi;
+        this.suppressEc2CredentialsWarnings = other.suppressEc2CredentialsWarnings;
+    }
+
     public Boolean isProductTypeIsEc2() {
         return productTypeIsEc2;
     }
