@@ -80,19 +80,6 @@ public class SettingsServiceIT {
     }
 
     @Test
-    public void should_return_awsSettingsObject_by_awsSettings() {
-        // When
-        final AwsSettings settings = session
-                .settingsService()
-                .settings()
-                .loadAwsSettings().getEntity();
-
-        // Then
-        assertNotNull(settings);
-
-    }
-
-    @Test
     public void should_return_settings_by_decimalFormatSymbols() {
 
         // When

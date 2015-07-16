@@ -31,6 +31,11 @@ public class SingleSettingsAdapter extends AbstractAdapter {
         return request().get();
     }
 
+    public <T> OperationResult<T> group(ServerSettingsGroup group, Class<T> resultClass) {
+        this.groupKey = group.getGroup();
+        return request(resultClass).get();
+    }
+
     private JerseyRequest<Map> request() {
         return JerseyRequest.buildRequest(
                 sessionStorage,
@@ -39,14 +44,12 @@ public class SingleSettingsAdapter extends AbstractAdapter {
                 new DefaultErrorHandler());
     }
 
-    public OperationResult<AwsSettings> loadAwsSettings() {
-
-        JerseyRequest<AwsSettings> jerseyReq = JerseyRequest.buildRequest(
+    private  <T> JerseyRequest<T> request(Class<T> resultClass) {
+        return JerseyRequest.buildRequest(
                 sessionStorage,
-                AwsSettings.class,
-                new String[]{"/settings/" + "awsSettings"},
+                resultClass,
+                new String[]{"/settings/" + groupKey},
                 new DefaultErrorHandler());
-            return jerseyReq.get();
     }
 
     public enum ServerSettingsGroup {
