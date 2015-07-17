@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.settings;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public class DashboardSettings {
     }
 
     public DashboardSettings(DashboardSettings other) {
-        this.newItemsRegistry = other.newItemsRegistry;
+        this.newItemsRegistry = new LinkedList<ItemRegistry>(other.newItemsRegistry);
     }
 
     public List<ItemRegistry> getNewItemsRegistry() {
