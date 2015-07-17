@@ -6,8 +6,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.GenericType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -132,10 +130,10 @@ public class DtoSettingsServiceIT {
     public void should_return_timeZonesSettings_object_by_class() {
 
         // When
-        final GenericType<List<UserTimeZone>> settings = session
+        final List settings = session
                 .settingsService()
                 .settings()
-                .group(USER_TIME_ZONES, new GenericType<List<UserTimeZone>>(){}.getClass())
+                .group(USER_TIME_ZONES, ArrayList.class)
                 .getEntity();
 
         // Then
