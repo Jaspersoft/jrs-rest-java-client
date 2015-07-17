@@ -43,6 +43,7 @@ public abstract class OperationResult<T> {
             }
             return entity;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
