@@ -9,6 +9,7 @@ import java.util.List;
  */
 @XmlRootElement(name = "user")
 public class UserListWrapper {
+
     @XmlElementWrapper
     private List<User> user;
 

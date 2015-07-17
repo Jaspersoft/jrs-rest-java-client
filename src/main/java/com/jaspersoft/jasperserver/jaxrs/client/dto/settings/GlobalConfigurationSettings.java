@@ -1,5 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.settings;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +56,8 @@ public class GlobalConfigurationSettings {
     }
 
     public GlobalConfigurationSettings(GlobalConfigurationSettings other) {
-        this.messages = other.messages;
+        this.messages = new LinkedHashMap<String, String>();
+        messages.putAll(other.messages);
         this.paginatorItemsPerPage = other.paginatorItemsPerPage;
         this.paginatorPagesRange = other.paginatorPagesRange;
         this.reportLevelConfigurable = other.reportLevelConfigurable;
@@ -68,9 +71,9 @@ public class GlobalConfigurationSettings {
         this.userNameSeparator = other.userNameSeparator;
         this.defaultRole = other.defaultRole;
         this.passwordMask = other.passwordMask;
-        this.viewReportsFilterList = other.viewReportsFilterList;
-        this.outputFolderFilterList = other.outputFolderFilterList;
-        this.outputFolderFilterPatterns = other.outputFolderFilterPatterns;
+        this.viewReportsFilterList = new LinkedList<String>(other.viewReportsFilterList);
+        this.outputFolderFilterList = new LinkedList<String>(other.outputFolderFilterList);
+        this.outputFolderFilterPatterns = new LinkedList<String>(other.outputFolderFilterPatterns);
         this.tenantNameNotSupportedSymbols = other.tenantNameNotSupportedSymbols;
         this.tenantIdNotSupportedSymbols = other.tenantIdNotSupportedSymbols;
         this.resourceIdNotSupportedSymbols = other.resourceIdNotSupportedSymbols;
@@ -94,8 +97,9 @@ public class GlobalConfigurationSettings {
         this.forceDomainDependentsUseACL = other.forceDomainDependentsUseACL;
         this.defaultDomainDependentsBlockAndUpdate = other.defaultDomainDependentsBlockAndUpdate;
         this.defaultDontUpdateDomainDependents = other.defaultDontUpdateDomainDependents;
-        this.dataSourceTypes = other.dataSourceTypes;
-        this.allFileResourceTypes = other.allFileResourceTypes;
+        this.dataSourceTypes = new LinkedList<DataSourceType>(other.dataSourceTypes);
+        this.allFileResourceTypes = new LinkedHashMap<String, String>();
+        allFileResourceTypes.putAll(other.allFileResourceTypes);
     }
 
     public Map<String, String> getMessages() {
