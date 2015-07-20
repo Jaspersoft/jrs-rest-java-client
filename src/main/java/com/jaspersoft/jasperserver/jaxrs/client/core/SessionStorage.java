@@ -21,9 +21,13 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.jackson.JacksonFeature;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -89,9 +93,14 @@ public class SessionStorage {
             client.property(ClientProperties.READ_TIMEOUT, readTimeout);
         }
 
+        JacksonJsonProvider provider = new JacksonJaxbJsonProvider().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         login();
         rootTarget.register(new SessionOutputFilter(sessionId));
+        rootTarget.register(JacksonFeature.class);
+        rootTarget.register(provider);
+
     }
 
     private void login() {
