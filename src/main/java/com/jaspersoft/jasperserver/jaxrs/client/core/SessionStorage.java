@@ -93,7 +93,8 @@ public class SessionStorage {
             client.property(ClientProperties.READ_TIMEOUT, readTimeout);
         }
 
-        JacksonJsonProvider provider = new JacksonJaxbJsonProvider().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        JacksonJsonProvider provider = new JacksonJaxbJsonProvider()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         login();
