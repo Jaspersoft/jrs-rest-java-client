@@ -2,11 +2,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.*;
-import com.owlike.genson.GenericType;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.ws.rs.core.GenericType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +134,8 @@ public class DtoSettingsServiceIT {
         final  List<UserTimeZone> settings = session
                 .settingsService()
                 .settings()
-                .group(USER_TIME_ZONES, new GenericType<List<UserTimeZone>>() {})
+                .group(USER_TIME_ZONES, new GenericType<List<UserTimeZone>>() {
+                })
                 .getEntity();
 
         // Then

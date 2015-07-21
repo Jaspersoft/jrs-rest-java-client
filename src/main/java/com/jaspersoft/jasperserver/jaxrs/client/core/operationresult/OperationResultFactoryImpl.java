@@ -40,6 +40,15 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
         return getAppropriateOperationResultInstance(response, responseClass);
     }
 
+    @Override
+    public <T> OperationResult<T> getOperationResult(Response response, GenericType<T> genericType) {
+
+        return getAppropriateOperationResultInstance(response, genericType);
+    }
+
+
+
+
     /**
      * This method is to be changed in the next release when real ResourceThumbnailListWrapper class will be added.
      */
@@ -60,6 +69,19 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
             }
         return result;
     }
+
+    private <T> OperationResult<T> getAppropriateOperationResultInstance(Response response, GenericType<T> genericType) {
+        OperationResult<T> result;
+
+            if (response.hasEntity()) {
+                result = new WithEntityOperationResult<T>(response, genericType);
+            } else {
+                result = new NullEntityOperationResult(response, genericType);
+            }
+        return result;
+    }
+
+
 
     private boolean isClientResource(Class<?> clazz) {
         return clazz != Object.class && clazz.isAssignableFrom(ClientResource.class);
