@@ -7,6 +7,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.AwsSettings;
 
+import javax.ws.rs.core.GenericType;
 import java.util.Map;
 
 /**
@@ -37,6 +38,11 @@ public class SingleSettingsAdapter extends AbstractAdapter {
         return request(resultClass).get();
     }
 
+    public <T> OperationResult<T> group(ServerSettingsGroup group, GenericType<T> genericType) {
+        this.groupKey = group.getGroup();
+        return request(genericType).get();
+    }
+
     private JerseyRequest<Map> request() {
         return JerseyRequest.buildRequest(
                 sessionStorage,
@@ -49,6 +55,14 @@ public class SingleSettingsAdapter extends AbstractAdapter {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 resultClass,
+                new String[]{"/settings/" + groupKey},
+                new DefaultErrorHandler());
+    }
+
+    private  <T> JerseyRequest<T> request(GenericType<T> genericType) {
+        return JerseyRequest.buildRequest(
+                sessionStorage,
+                genericType,
                 new String[]{"/settings/" + groupKey},
                 new DefaultErrorHandler());
     }

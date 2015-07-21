@@ -34,10 +34,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +50,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
 
     private final OperationResultFactory operationResultFactory;
     private final Class<ResponseType> responseClass;
+    private final GenericType<ResponseType> responseGenericType;
     private ErrorHandler errorHandler;
     private MultivaluedMap<String, String> headers;
     private WebTarget usersWebTarget;
@@ -62,7 +60,23 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     protected JerseyRequest(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
         operationResultFactory = new OperationResultFactoryImpl();
         this.responseClass = responseClass;
+        this.responseGenericType = null;
+        RestClientConfiguration configuration = sessionStorage.getConfiguration();
 
+        contentType = configuration.getContentMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
+        acceptType = configuration.getAcceptMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
+        headers = new MultivaluedHashMap<String, String>();
+        usersWebTarget = sessionStorage.getRootTarget()
+                .path("/rest_v2")
+                .register(CustomRepresentationTypeProvider.class)
+                .register(JacksonFeature.class)
+                .register(MultiPartWriter.class);
+    }
+
+    protected JerseyRequest(SessionStorage sessionStorage, GenericType<ResponseType> genericType) {
+        operationResultFactory = new OperationResultFactoryImpl();
+        this.responseClass = (Class<ResponseType>) genericType.getRawType();
+        this.responseGenericType = genericType;
         RestClientConfiguration configuration = sessionStorage.getConfiguration();
 
         contentType = configuration.getContentMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
@@ -81,6 +95,15 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
 
     public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path, ErrorHandler errorHandler) {
         JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, responseClass);
+        request.errorHandler = errorHandler != null ? errorHandler : new DefaultErrorHandler();
+        for (String pathElem : path) {
+            request.setPath(pathElem);
+        }
+        return request;
+    }
+
+    public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, GenericType<T> genericType, String[] path, ErrorHandler errorHandler) {
+        JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, genericType);
         request.errorHandler = errorHandler != null ? errorHandler : new DefaultErrorHandler();
         for (String pathElem : path) {
             request.setPath(pathElem);
