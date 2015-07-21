@@ -120,7 +120,7 @@ public class DtoSettingsServiceIT {
         final InputControlsSetiings settings = session
                 .settingsService()
                 .settings()
-                .group(INPUT_CONTROL, InputControlsSetiings.class)
+                .group(INPUT_CONTROL, new GenericType<InputControlsSetiings>(){})
                 .getEntity();
 
         // Then
@@ -128,7 +128,7 @@ public class DtoSettingsServiceIT {
     }
 
     @Test
-    public void should_return_timeZonesSettings_object_by_class() {
+    public void should_return_timeZonesSettings_object_by_genericType() {
 
         // When
         final  List<UserTimeZone> settings = session
