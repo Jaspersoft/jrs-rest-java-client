@@ -1,6 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.settings;
 
-import com.sun.xml.txw2.annotation.XmlElement;
+
 
 /**
  * Created by tetiana.iefimenko on 7/15/2015.
