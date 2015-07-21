@@ -18,11 +18,16 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
+import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.attributes.OrganizationBatchAttributeAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.attributes.OrganizationSingleAttributeAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -31,17 +36,11 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.Organization;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.map.AnnotationIntrospector;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 
+import javax.ws.rs.core.MultivaluedHashMap;
 import java.io.IOException;
-import java.util.Collection;
 
 
 public class SingleOrganizationAdapter extends AbstractAdapter {
@@ -49,18 +48,20 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
     private static final Log log = LogFactory.getLog(SingleOrganizationAdapter.class);
 
     private final String organizationId;
+    private final MultivaluedHashMap<String, String> params;
 
     public SingleOrganizationAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
         this.organizationId = organizationId;
+        this.params = new MultivaluedHashMap<String, String>();
     }
 
-    public OperationResult<Organization> get() {
+    public OperationResult<ClientTenant> get() {
         return buildRequest().get();
     }
 
-    public <R> RequestExecution asyncGet(final Callback<OperationResult<Organization>, R> callback) {
-        final JerseyRequest<Organization> request = buildRequest();
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientTenant>, R> callback) {
+        final JerseyRequest<ClientTenant> request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -71,12 +72,10 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    private String prepareJsonForUpdate(Organization clientTenant) {
+    private String prepareJsonForUpdate(ClientTenant clientTenant) {
         ObjectMapper mapper = new ObjectMapper();
-        SerializationConfig serializationConfig = mapper.getSerializationConfig();
-        serializationConfig = serializationConfig.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-        AnnotationIntrospector introspector = new JaxbAnnotationIntrospector();
-        mapper.setSerializationConfig(serializationConfig);
+        AnnotationIntrospector introspector = new JaxbAnnotationIntrospector(TypeFactory.defaultInstance());
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.setAnnotationIntrospector(introspector);
 
         String json;
@@ -89,13 +88,14 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return json;
     }
 
-    public OperationResult<Organization> update(Organization clientTenant) {
+    public OperationResult<ClientTenant> createOrUpdate(ClientTenant clientTenant) {
         String json = prepareJsonForUpdate(clientTenant);
         return buildRequest().put(json);
     }
 
-    public <R> RequestExecution asyncUpdate(Organization clientTenant, final Callback<OperationResult<Organization>, R> callback) {
-        final JerseyRequest<Organization> request = buildRequest();
+    public <R> RequestExecution asyncCreateOrUpdate(final ClientTenant clientTenant,
+                                                    final Callback<OperationResult<ClientTenant>, R> callback) {
+        final JerseyRequest<ClientTenant> request = buildRequest();
         final String json = prepareJsonForUpdate(clientTenant);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -105,6 +105,37 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         });
         ThreadPoolUtil.runAsynchronously(task);
         return task;
+    }
+
+    /**
+     * Saves Organization. Use this method only if you want to create a new single Organization
+     * with or without passing OrganizationParameter.
+     *
+     * @param clientTenant instance of Organization
+     * @return persisted wrapped Organization
+     */
+    public OperationResult<ClientTenant> create(ClientTenant clientTenant) {
+        JerseyRequest<ClientTenant> request = request();
+        return params.size() != 0
+                ? request.addParams(params).post(clientTenant)
+                : request.post(clientTenant);
+    }
+
+    /**
+     * Adds parameter to the URI
+     *
+     * @param parameter URI parameter
+     * @param value     parameter value
+     * @return this
+     */
+    public SingleOrganizationAdapter parameter(OrganizationParameter parameter, boolean value) {
+        params.add(parameter.getParamName(), String.valueOf(value));
+        return this;
+    }
+
+    public SingleOrganizationAdapter parameter(OrganizationParameter parameter, String value) {
+        params.add(parameter.getParamName(), value);
+        return this;
     }
 
     public OperationResult delete() {
@@ -123,29 +154,21 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OrganizationSingleAttributeAdapter attribute(String attributeName) {
-        return new OrganizationSingleAttributeAdapter(sessionStorage, organizationId, attributeName);
-    }
-
-    public OrganizationSingleAttributeAdapter attribute() {
-        return new OrganizationSingleAttributeAdapter(sessionStorage, organizationId);
-    }
-
-    public OrganizationBatchAttributeAdapter attributes(Collection<String> attributesNames) {
-        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId, attributesNames);
-    }
-
-    public OrganizationBatchAttributeAdapter attributes(String... attributesNames) {
-        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId, attributesNames);
-    }
-
-    public OrganizationBatchAttributeAdapter attributes() {
-        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId);
-    }
-
-    private JerseyRequest<Organization> buildRequest() {
-        return JerseyRequest.buildRequest(sessionStorage, Organization.class,
+    private JerseyRequest<ClientTenant> buildRequest() {
+        return JerseyRequest.buildRequest(
+                sessionStorage,
+                ClientTenant.class,
                 new String[]{"/organizations", organizationId},
-                new DefaultErrorHandler());
+                new DefaultErrorHandler()
+        );
+    }
+
+    private JerseyRequest<ClientTenant> request() {
+        return JerseyRequest.buildRequest(
+                sessionStorage,
+                ClientTenant.class,
+                new String[]{"/organizations"},
+                new DefaultErrorHandler()
+        );
     }
 }

@@ -23,7 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.p
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.sun.jersey.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 import javax.ws.rs.core.MediaType;
 
