@@ -26,7 +26,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.users.UserListWrapper;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -53,8 +52,8 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
         return this;
     }
 
-    public OperationResult<UserListWrapper> get() {
-        JerseyRequest<UserListWrapper> request = buildRequest(sessionStorage, UserListWrapper.class,
+    public OperationResult<UsersListWrapper> get() {
+        JerseyRequest<UsersListWrapper> request = buildRequest(sessionStorage, UsersListWrapper.class,
                 new String[]{uri}, new DefaultErrorHandler());
         request.addParams(params);
         return request.get();
