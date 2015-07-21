@@ -21,10 +21,10 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.providers;
 
+import com.fasterxml.jackson.jaxrs.cfg.Annotations;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connection.ConnectionMediaType;
-import org.codehaus.jackson.jaxrs.Annotations;
-import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
