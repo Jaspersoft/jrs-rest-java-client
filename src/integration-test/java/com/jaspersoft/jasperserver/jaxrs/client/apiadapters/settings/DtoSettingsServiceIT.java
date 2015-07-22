@@ -56,6 +56,15 @@ public class DtoSettingsServiceIT {
         // Then
         assertNotNull(settings);
         assertEquals(settings.getMaxInactiveInterval().intValue(), 1200);
+// When
+        final RequestSettings RequestSettings = session
+                .settingsService()
+                .settings().getRequestSettings()
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertEquals(settings.getMaxInactiveInterval().intValue(), 1200);
     }
 
 
@@ -115,13 +124,30 @@ public class DtoSettingsServiceIT {
     }
 
     @Test
+    public void should_return_DateTimeSettings_object_by_class() {
+
+        // When
+        final DateTimeSettings settings = session
+                .settingsService()
+                .settings()
+                .group(DATE_TIME_SETTINGS, DateTimeSettings.class)
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertNotNull(settings.getDatePicker());
+        assertNotNull(settings.getTimePicker());
+    }
+
+    @Test
     public void should_return_inputControlSettings_object_by_class() {
 
         // When
-        final InputControlsSetiings settings = session
+        final InputControlsSettings settings = session
                 .settingsService()
                 .settings()
-                .group(INPUT_CONTROL, new GenericType<InputControlsSetiings>(){})
+                .group(INPUT_CONTROL, new GenericType<InputControlsSettings>() {
+                })
                 .getEntity();
 
         // Then
@@ -132,7 +158,7 @@ public class DtoSettingsServiceIT {
     public void should_return_timeZonesSettings_object_by_genericType() {
 
         // When
-        final  List<UserTimeZone> settings = session
+        final List<UserTimeZone> settings = session
                 .settingsService()
                 .settings()
                 .group(USER_TIME_ZONES, new GenericType<LinkedList<UserTimeZone>>() {

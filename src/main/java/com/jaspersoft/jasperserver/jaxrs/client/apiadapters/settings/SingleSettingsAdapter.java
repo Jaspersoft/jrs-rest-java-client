@@ -5,10 +5,13 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.AwsSettings;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.*;
 
 import javax.ws.rs.core.GenericType;
+import java.util.List;
 import java.util.Map;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter.ServerSettingsGroup.REQUEST;
 
 /**
  * @author Alex Krasnyanskiy
@@ -41,6 +44,42 @@ public class SingleSettingsAdapter extends AbstractAdapter {
     public <T> OperationResult<T> group(ServerSettingsGroup group, GenericType<T> genericType) {
         this.groupKey = group.getGroup();
         return request(genericType).get();
+    }
+// new shortCut methods
+
+    public OperationResult<RequestSettings> getRequestSettings() {
+        this.groupKey = "request";
+        return request(RequestSettings.class).get();
+    }
+
+    public OperationResult<DataSourcePatternsSettings> getDataSourcePatternsSettings() {
+        this.groupKey = "dataSourcePatterns";
+        return request(DataSourcePatternsSettings.class).get();
+    }
+
+    public OperationResult<List<UserTimeZone>> getUserTimeZonesSettings() {
+        this.groupKey = "userTimeZones";
+        return request(new GenericType<List<UserTimeZone>>(){}).get();
+    }
+
+    public OperationResult<AwsSettings> getAwsSettingsSettings() {
+        this.groupKey = "awsSettings";
+        return request(AwsSettings.class).get();
+    }
+
+    public OperationResult<DecimalFormatSymbolsSettings> getDecimalFormatSymbolsSettings() {
+        this.groupKey = "decimalFormatSymbols";
+        return request(DecimalFormatSymbolsSettings.class).get();
+    }
+
+    public OperationResult<DashboardSettings> getDashboardSettingsSettings() {
+        this.groupKey = "dashboardSettings";
+        return request(DashboardSettings.class).get();
+    }
+
+    public OperationResult<InputControlsSettings> getInputControlsSettings() {
+        this.groupKey = "inputControls";
+        return request(InputControlsSettings.class).get();
     }
 
     private JerseyRequest<Map> request() {
@@ -82,7 +121,6 @@ public class SingleSettingsAdapter extends AbstractAdapter {
         ADHOC_VIEW("adhocview");
 
         private String group;
-        private Class groupClass;
 
         ServerSettingsGroup(String group) {
             this.group = group;
