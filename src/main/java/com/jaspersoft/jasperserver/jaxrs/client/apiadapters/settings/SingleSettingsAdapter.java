@@ -47,37 +47,47 @@ public class SingleSettingsAdapter extends AbstractAdapter {
     }
 // new shortCut methods
 
-    public OperationResult<RequestSettings> getRequestSettings() {
+    public OperationResult<RequestSettings> ofRequestGroupSettings() {
         this.groupKey = "request";
         return request(RequestSettings.class).get();
     }
 
-    public OperationResult<DataSourcePatternsSettings> getDataSourcePatternsSettings() {
+    public OperationResult<DataSourcePatternsSettings> ofDataSourcePatternsGroupSettings() {
         this.groupKey = "dataSourcePatterns";
         return request(DataSourcePatternsSettings.class).get();
     }
 
-    public OperationResult<List<UserTimeZone>> getUserTimeZonesSettings() {
+    public OperationResult<List<UserTimeZone>> ofUserTimeZonesGroupSettings() {
         this.groupKey = "userTimeZones";
         return request(new GenericType<List<UserTimeZone>>(){}).get();
     }
 
-    public OperationResult<AwsSettings> getAwsSettingsSettings() {
+    public OperationResult<AwsSettings> ofAwsGroupSettings() {
         this.groupKey = "awsSettings";
         return request(AwsSettings.class).get();
     }
 
-    public OperationResult<DecimalFormatSymbolsSettings> getDecimalFormatSymbolsSettings() {
+    public OperationResult<DecimalFormatSymbolsSettings> ofDecimalFormatSymbolsGroupSettings() {
         this.groupKey = "decimalFormatSymbols";
         return request(DecimalFormatSymbolsSettings.class).get();
     }
 
-    public OperationResult<DashboardSettings> getDashboardSettingsSettings() {
+    public OperationResult<DashboardSettings> ofDashboardGroupSettings() {
         this.groupKey = "dashboardSettings";
         return request(DashboardSettings.class).get();
     }
 
-    public OperationResult<InputControlsSettings> getInputControlsSettings() {
+    public OperationResult<GlobalConfigurationSettings> ofGlobalConfigurationGroupSettings() {
+        this.groupKey = "globalConfiguration";
+        return request(GlobalConfigurationSettings.class).get();
+    }
+
+    public OperationResult<DateTimeSettings> ofDateTimeGroupSettings() {
+        this.groupKey = "dateTimeSettings";
+        return request(DateTimeSettings.class).get();
+    }
+
+    public OperationResult<InputControlsSettings> ofInputControlsGroupSettings() {
         this.groupKey = "inputControls";
         return request(InputControlsSettings.class).get();
     }
@@ -116,11 +126,14 @@ public class SingleSettingsAdapter extends AbstractAdapter {
         DECIMAL_FORMAT_SYMBOLS("decimalFormatSymbols"),
         DATE_TIME_SETTINGS("dateTimeSettings"),
         DASHBOARD_SETTINGS("dashboardSettings"),
-        INPUT_CONTROL("inputControls"),
-        METADATA("metadata"),
-        ADHOC_VIEW("adhocview");
+        INPUT_CONTROL("inputControls");
+//        proposal settings
+//        METADATA("metadata"),
+//        ADHOC_VIEW("adhocview");
 
         private String group;
+//        private Class<T> resultClass;
+//        private GenericType<T> resultGenericType;
 
         ServerSettingsGroup(String group) {
             this.group = group;
@@ -129,5 +142,6 @@ public class SingleSettingsAdapter extends AbstractAdapter {
         public String getGroup() {
             return group;
         }
+
     }
 }

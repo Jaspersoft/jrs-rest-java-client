@@ -116,10 +116,16 @@ public class AwsSettings {
 
     @Override
     public String toString() {
+        String awsRegions = "";
+        for (String awsRegiono : this.awsRegions) {
+            awsRegions += awsRegions + ", ";
+        }
+
         return "AwsSettings{" +
                 "productTypeIsEc2=" + productTypeIsEc2 +
                 ", isEc2Instance=" + isEc2Instance +
                 ", productTypeIsJrsAmi=" + productTypeIsJrsAmi +
+                ", awsRegions=" + awsRegions +
                 ", productTypeIsMpAmi=" + productTypeIsMpAmi +
                 ", suppressEc2CredentialsWarnings=" + suppressEc2CredentialsWarnings +
                 '}';
