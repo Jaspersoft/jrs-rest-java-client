@@ -1,7 +1,5 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.settings;
 
-import com.sun.xml.internal.txw2.annotation.XmlElement;
-
 import java.util.LinkedList;
 import java.util.List;
 

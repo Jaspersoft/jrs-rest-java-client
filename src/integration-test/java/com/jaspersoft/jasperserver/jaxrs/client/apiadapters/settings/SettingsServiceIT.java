@@ -10,10 +10,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.ws.rs.core.GenericType;
 import java.util.List;
 import java.util.Map;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter.ServerSettingsGroup.*;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
@@ -42,7 +42,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                     .settings()
-                        .group(REQUEST)
+                        .group("request", Map.class)
                             .getEntity();
 
         // Then
@@ -57,7 +57,7 @@ public class SettingsServiceIT {
         final RequestSettings settings = session
                 .settingsService()
                 .settings()
-                .ofRequestGroupSettings()
+                .ofRequestGroup()
                 .getEntity();
 
         // Then
@@ -73,7 +73,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(DATA_SOURCE_PATTERNS)
+                .group("dataSourcePatterns", Map.class)
                 .getEntity();
 
         // Then
@@ -88,7 +88,7 @@ public class SettingsServiceIT {
         final DataSourcePatternsSettings settings = session
                 .settingsService()
                 .settings()
-                .ofDataSourcePatternsGroupSettings()
+                .ofDataSourcePatternsGroup()
                 .getEntity();
 
         // Then
@@ -107,7 +107,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(AWS_SETTINGS)
+                .group("awsSettings", Map.class)
                 .getEntity();
 
         // Then
@@ -122,7 +122,7 @@ public class SettingsServiceIT {
         final AwsSettings settings = session
                 .settingsService()
                 .settings()
-                .ofAwsGroupSettings()
+                .ofAwsGroup()
                 .getEntity();
 
         // Then
@@ -137,7 +137,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(DECIMAL_FORMAT_SYMBOLS)
+                .group("decimalFormatSymbols", Map.class)
                 .getEntity();
 
         // Then
@@ -152,7 +152,7 @@ public class SettingsServiceIT {
         final DecimalFormatSymbolsSettings settings = session
                 .settingsService()
                 .settings()
-                .ofDecimalFormatSymbolsGroupSettings()
+                .ofDecimalFormatSymbolsGroup()
                 .getEntity();
 
         // Then
@@ -170,7 +170,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(DATE_TIME_SETTINGS)
+                .group("dateTimeSettings", Map.class)
                 .getEntity();
 
         // Then
@@ -185,7 +185,7 @@ public class SettingsServiceIT {
         final DateTimeSettings settings = session
                 .settingsService()
                 .settings()
-                .ofDateTimeGroupSettings()
+                .ofDateTimeGroup()
                 .getEntity();
 
         // Then
@@ -195,13 +195,43 @@ public class SettingsServiceIT {
     }
 
     @Test
+    public void should_return_settings_by_userTimeZone() {
+
+        // When
+        final List settings = session
+                .settingsService()
+                .settings()
+                .group("userTimeZones", List.class)
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertFalse(settings.isEmpty());
+    }
+
+    @Test
     public void should_return_list_of_userTimeZone_dto() {
 
         // When
         final List<UserTimeZone> settings = session
                 .settingsService()
                 .settings()
-                .ofUserTimeZonesGroupSettings()
+                .ofUserTimeZonesGroup()
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertTrue(settings.size() > 0);
+    }
+
+    @Test
+    public void should_return_list_of_userTimeZone_dto_by_genericType() {
+
+        // When
+        final List<UserTimeZone> settings = session
+                .settingsService()
+                .settings()
+                .group("userTimeZones", new GenericType<List<UserTimeZone>>(){})
                 .getEntity();
 
         // Then
@@ -216,7 +246,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(DASHBOARD_SETTINGS)
+                .group("dashboardSettings", Map.class)
                 .getEntity();
 
         // Then
@@ -231,7 +261,7 @@ public class SettingsServiceIT {
         final DashboardSettings settings = session
                 .settingsService()
                 .settings()
-                .ofDashboardGroupSettings()
+                .ofDashboardGroup()
                 .getEntity();
 
         // Then
@@ -247,7 +277,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(INPUT_CONTROL)
+                .group("inputControls", Map.class)
                 .getEntity();
 
         // Then
@@ -262,7 +292,7 @@ public class SettingsServiceIT {
         final InputControlsSettings settings = session
                 .settingsService()
                 .settings()
-                .ofInputControlsGroupSettings()
+                .ofInputControlsGroup()
                 .getEntity();
 
         // Then
@@ -281,7 +311,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                     .settings()
-                        .group(GLOBAL_CONFIGURATION)
+                        .group("globalConfiguration", Map.class)
                             .getEntity();
 
         // Then
@@ -310,7 +340,7 @@ public class SettingsServiceIT {
         final GlobalConfigurationSettings settings = session
                 .settingsService()
                 .settings()
-                .ofGlobalConfigurationGroupSettings()
+                .ofGlobalConfigurationGroup()
                 .getEntity();
 
         // Then
@@ -342,7 +372,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                     .settings()
-                        .group("dateTimeSettings")
+                        .group("dateTimeSettings", Map.class)
                             .getEntity();
 
         /**
