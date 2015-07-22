@@ -135,8 +135,8 @@ public class DtoSettingsServiceIT {
 
         // Then
         assertNotNull(settings);
-        assertNotNull(settings.getDatePicker());
-        assertNotNull(settings.getTimePicker());
+//        assertNotNull(settings.getDatepicker());
+//        assertNotNull(settings.getTimepicker());
     }
 
     @Test
