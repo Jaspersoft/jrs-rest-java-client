@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.core.GenericType;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -134,7 +135,7 @@ public class DtoSettingsServiceIT {
         final  List<UserTimeZone> settings = session
                 .settingsService()
                 .settings()
-                .group(USER_TIME_ZONES, new GenericType<List<UserTimeZone>>() {
+                .group(USER_TIME_ZONES, new GenericType<LinkedList<UserTimeZone>>() {
                 })
                 .getEntity();
 

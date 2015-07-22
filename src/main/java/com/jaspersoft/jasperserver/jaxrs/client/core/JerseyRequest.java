@@ -169,8 +169,8 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         if (response != null && response.getStatus() >= 400) {
             errorHandler.handleError(response);
         }
-        return (responseGenericType != null) ? operationResultFactory.getOperationResult(response, responseClass)
-                : operationResultFactory.getOperationResult(response, responseGenericType);
+        return (responseGenericType != null) ? operationResultFactory.getOperationResult(response, responseGenericType)
+                : operationResultFactory.getOperationResult(response, responseClass);
     }
 
     private void addHeaders(Invocation.Builder request) {
