@@ -7,7 +7,7 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>5.6.0b-SNAPSHOT</version>
+    <version>5.7.0-SNAPSHOT</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- JRS DTO -->
-        <jasperserver.dto.version>5.6.1</jasperserver.dto.version>
+        <jasperserver.dto.version>5.6.0</jasperserver.dto.version>
 
 
         <!-- Tools for testing -->
@@ -52,7 +52,7 @@
         <maven.resources.plugin.version>2.5</maven.resources.plugin.version>
         <maven.compiler.plugin.version>2.5.1</maven.compiler.plugin.version>
         <maven.failsafe.plugin.version>2.12</maven.failsafe.plugin.version>
-        <maven.surefire.version>2.12</maven.surefire.version>
+        <maven.surefire.version>2.13</maven.surefire.version>
         <maven.build.helper.version>1.7</maven.build.helper.version>
     </properties>
 
@@ -196,6 +196,11 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>${fasterxml.version}</version>
+        </dependency>
+        <dependency>
+        	<groupId>commons-logging</groupId>
+        	<artifactId>commons-logging</artifactId>
+        	<version>1.1.1</version>
         </dependency>
     </dependencies>
 

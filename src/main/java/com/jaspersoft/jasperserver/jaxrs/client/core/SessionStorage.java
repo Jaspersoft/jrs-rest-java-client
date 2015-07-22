@@ -21,8 +21,10 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.config.ServerMetaData;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.glassfish.jersey.client.ClientProperties;
@@ -37,6 +39,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.net.URLEncoder;
 import java.security.SecureRandom;
 
 public class SessionStorage {
@@ -99,16 +103,31 @@ public class SessionStorage {
     private void login() {
         Form form = new Form();
         form
-                .param("j_username", credentials.getUsername())
-                .param("j_password", credentials.getPassword());
-
-        WebTarget target = rootTarget.path("/rest/login");
-        Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
-
-        if (response.getStatus() == ResponseStatus.OK)
-            this.sessionId = response.getCookies().get("JSESSIONID").getValue();
-        else
-            new DefaultErrorHandler().handleError(response);
+        .param("j_username", credentials.getUsername())
+        .param("j_password", credentials.getPassword());
+        
+        WebTarget target;
+        Response response = null;
+        
+        if (configuration.getAuthenticationType().equals(ServerMetaData.AuthenticationType.REST)) {
+            target = rootTarget.path("/rest/login");
+            response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+            
+            if (response.getStatus() == ResponseStatus.OK)
+                this.sessionId = response.getCookies().get("JSESSIONID").getValue();
+            else
+                new DefaultErrorHandler().handleError(response);
+        } else if (configuration.getAuthenticationType().equals(ServerMetaData.AuthenticationType.SPRING)) {
+            target = rootTarget.path("/j_spring_security_check")
+            	.property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
+            response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+            if (response.getStatus() == ResponseStatus.FOUND
+            		&& response.getLocation().getPath().contains("jsessionid")) {
+            	this.sessionId = response.getLocation().getPath().substring(response.getLocation().getPath().indexOf("jsessionid=") + "jsessionid=".length());
+            }
+            else
+                new DefaultErrorHandler().handleError(response);
+        }
     }
 
     public RestClientConfiguration getConfiguration() {

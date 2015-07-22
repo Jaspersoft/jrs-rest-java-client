@@ -10,8 +10,17 @@ public class ServerMetaData {
     private JRSVersion version;
     private Headers headers;
     private Timeout timeout;
+    private String authenticationType;
 
-    public String getUrl() {
+    public String getAuthenticationType() {
+		return authenticationType;
+	}
+
+	public void setAuthenticationType(String authenticationType) {
+		this.authenticationType = authenticationType;
+	}
+
+	public String getUrl() {
         return url;
     }
 
@@ -45,5 +54,10 @@ public class ServerMetaData {
 
     JRSVersion convert(String version) {
         return JRSVersion.valueOf("v" + version.replace(".", "_"));
+    }
+    
+    public static class AuthenticationType {
+    	public static final String SPRING = "spring";
+    	public static final String REST = "rest";
     }
 }

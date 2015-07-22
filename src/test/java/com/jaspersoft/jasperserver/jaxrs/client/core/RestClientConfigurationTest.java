@@ -14,8 +14,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.config.ServerMetaData;
+
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -110,6 +113,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         assertNotNull(config.getTrustManagers());
         assertTrue(config.getTrustManagers().length > 0);
         assertNull(config.getJasperReportsServerUrl()); // URL must be null
+        assertEquals(config.getAuthenticationType(), ServerMetaData.AuthenticationType.REST);
     }
 
     @Test(testName = "loadConfiguration")
@@ -192,6 +196,16 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         Object retrieved = field.get(config);
         assertNotNull(retrieved);
         assertEquals(retrieved, JRSVersion.v5_0_0);
+    }
+    
+    @Test(testName = "setAuthenticationType")
+    public void should_set_authenticationType_field() throws IllegalArgumentException, IllegalAccessException {
+        RestClientConfiguration config = new RestClientConfiguration();
+        config.setAuthenticationType(ServerMetaData.AuthenticationType.SPRING);
+        Field field = field(RestClientConfiguration.class, "authenticationType");
+        Object retrieved = field.get(config);
+        assertNotNull(retrieved);
+        assertEquals(retrieved, ServerMetaData.AuthenticationType.SPRING);
     }
 
     @Test(testName = "setJrsVersion")

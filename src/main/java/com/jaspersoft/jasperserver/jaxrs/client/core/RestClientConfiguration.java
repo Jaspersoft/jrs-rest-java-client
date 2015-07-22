@@ -46,6 +46,7 @@ public class RestClientConfiguration {
     private MimeType contentMimeType = MimeType.JSON;
     private MimeType acceptMimeType = MimeType.JSON;
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
+    private String authenticationType;
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;
     private Integer readTimeout;
@@ -75,6 +76,7 @@ public class RestClientConfiguration {
         if (metaData.getHeaders() != null && metaData.getHeaders().getAccept() != null) acceptMimeType = metaData.getHeaders().getAccept();
         if (metaData.getTimeout() != null && metaData.getTimeout().getConnection() != null) connectionTimeout = metaData.getTimeout().getConnection();
         if (metaData.getTimeout() != null && metaData.getTimeout().getRead() != null) readTimeout = metaData.getTimeout().getRead();
+        if (metaData.getAuthenticationType() != null) authenticationType = metaData.getAuthenticationType();
     }
 
     public RestClientConfiguration(InputStream configFile, ConfigType type) {
@@ -91,9 +93,11 @@ public class RestClientConfiguration {
         if (metaData.getHeaders() != null && metaData.getHeaders().getAccept() != null) acceptMimeType = metaData.getHeaders().getAccept();
         if (metaData.getTimeout() != null && metaData.getTimeout().getConnection() != null) connectionTimeout = metaData.getTimeout().getConnection();
         if (metaData.getTimeout() != null && metaData.getTimeout().getRead() != null) readTimeout = metaData.getTimeout().getRead();
+        if (metaData.getAuthenticationType() != null) authenticationType = metaData.getAuthenticationType();
     }
 
     public RestClientConfiguration() {
+    	authenticationType = ServerMetaData.AuthenticationType.REST;
         trustManagers = new TrustManager[]{
                 new X509TrustManager() {
                     @Override
@@ -122,7 +126,15 @@ public class RestClientConfiguration {
         this.jasperReportsServerUrl = jasperReportsServerUrl;
     }
 
-    public MimeType getContentMimeType() {
+    public String getAuthenticationType() {
+		return authenticationType;
+	}
+
+	public void setAuthenticationType(String authenticationType) {
+		this.authenticationType = authenticationType;
+	}
+
+	public MimeType getContentMimeType() {
         return contentMimeType;
     }
 
