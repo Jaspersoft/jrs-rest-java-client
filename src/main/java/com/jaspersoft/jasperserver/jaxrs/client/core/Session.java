@@ -45,14 +45,21 @@ public class Session extends AnonymousSession{
     protected Session() {
     }
 
-    public Session(SessionStorage storage) {
-        super(storage);
+    public Session(SessionStorage sessionStorage) {
+        super(sessionStorage);
+    }
+
+    public void logout() {
+        WebTarget target = storage.getRootTarget().path("/exituser.html");
+        Response response = target.request().get();
+        if (response.getStatus() >= 400) {
+            new DefaultErrorHandler().handleError(response);
+        }
     }
 
     public OrganizationsService organizationsService() {
         return getService(OrganizationsService.class);
     }
-
 
     public UsersService usersService() {
         return getService(UsersService.class);
@@ -101,4 +108,5 @@ public class Session extends AnonymousSession{
     public ServerAttributesService serverAttributesService() {
         return getService(ServerAttributesService.class);
     }
+
 }

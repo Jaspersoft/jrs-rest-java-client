@@ -9,9 +9,13 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SettingsSer
  */
 public class AnonymousSession {
 
-    private SessionStorage storage;
+    protected SessionStorage storage;
 
     protected AnonymousSession() {
+    }
+
+    public SessionStorage getStorage() {
+        return storage;
     }
 
     public AnonymousSession(SessionStorage storage) {
