@@ -32,7 +32,7 @@ public class ServerAttributesServiceIT {
         config.setContentMimeType(MimeType.JSON);
         config.setJrsVersion(JRSVersion.v6_0_1);
         client = new JasperserverRestClient(config);
-        session = client.authenticate("superuser", "superuser");
+        session = client.getAuthenticatedSession("superuser", "superuser");
     }
 
     @Test
