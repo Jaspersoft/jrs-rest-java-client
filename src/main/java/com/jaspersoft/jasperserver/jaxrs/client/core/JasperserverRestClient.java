@@ -29,17 +29,22 @@ public class JasperserverRestClient {
         }
         this.configuration = configuration;
     }
-
+    @Deprecated
     public Session authenticate(String username, String password) {
         AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
         SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
         return new Session(sessionStorage);
     }
 
-    public Session authenticate(String username, String password) {
+    public AnonymousSession getAnonymousSession() {
+        //TODO new sessionStorage(config)
+        return new AnonymousSession(new SessionStorage(configuration, null));
+    }
+
+    public AuthenticatedSession getAuthenticatedSession(String username, String password) {
         AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
         SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
-        return new Session(sessionStorage);
+        return new AuthenticatedSession(sessionStorage);
     }
 
 
