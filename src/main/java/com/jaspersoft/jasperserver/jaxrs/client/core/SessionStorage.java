@@ -97,8 +97,10 @@ public class SessionStorage {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
-        login();
-        rootTarget.register(new SessionOutputFilter(sessionId));
+        if (credentials != null) {
+            login();
+            rootTarget.register(new SessionOutputFilter(sessionId));
+        }
         rootTarget.register(JacksonFeature.class);
         rootTarget.register(provider);
 

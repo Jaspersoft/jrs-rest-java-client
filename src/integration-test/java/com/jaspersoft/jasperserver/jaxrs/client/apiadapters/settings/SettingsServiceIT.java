@@ -1,10 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.JRSVersion;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -23,7 +19,7 @@ public class SettingsServiceIT {
 
     private RestClientConfiguration config;
     private JasperserverRestClient client;
-    private Session session;
+    private AnonymousSession session;
 
     @BeforeMethod
     public void before() {
@@ -32,7 +28,7 @@ public class SettingsServiceIT {
         config.setContentMimeType(MimeType.JSON);
         config.setJrsVersion(JRSVersion.v6_0_0);
         client = new JasperserverRestClient(config);
-        session = client.authenticate("superuser", "superuser");
+        session = client.getAnonymousSession();
     }
 
     @Test
@@ -231,7 +227,8 @@ public class SettingsServiceIT {
         final List<UserTimeZone> settings = session
                 .settingsService()
                 .settings()
-                .group("userTimeZones", new GenericType<List<UserTimeZone>>(){})
+                .group("userTimeZones", new GenericType<List<UserTimeZone>>() {
+                })
                 .getEntity();
 
         // Then
