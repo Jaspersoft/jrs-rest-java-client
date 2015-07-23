@@ -14,12 +14,12 @@ public class AnonymousSession {
     protected AnonymousSession() {
     }
 
-    public SessionStorage getStorage() {
-        return storage;
-    }
-
     public AnonymousSession(SessionStorage storage) {
         this.storage = storage;
+    }
+
+    public SessionStorage getStorage() {
+        return storage;
     }
 
     protected  <ServiceType extends AbstractAdapter> ServiceType getService(Class<ServiceType> serviceClass) {
