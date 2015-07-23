@@ -40,42 +40,19 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-@Deprecated
-public class Session {
+public class Session extends AnonymousSession{
 
-    private SessionStorage storage;
-
-    public Session(SessionStorage sessionStorage) {
-        this.storage = sessionStorage;
+    protected Session() {
     }
 
-    public SessionStorage getStorage() {
-        return storage;
-    }
-
-    public void logout() {
-        WebTarget target = storage.getRootTarget().path("/exituser.html");
-        Response response = target.request().get();
-        if (response.getStatus() >= 400) {
-            new DefaultErrorHandler().handleError(response);
-        }
-    }
-
-    public <ServiceType extends AbstractAdapter> ServiceType getService(Class<ServiceType> serviceClass) {
-        try {
-            return serviceClass.getConstructor(SessionStorage.class).newInstance(storage);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public Session(SessionStorage storage) {
+        super(storage);
     }
 
     public OrganizationsService organizationsService() {
         return getService(OrganizationsService.class);
     }
 
-    public ServerInfoService serverInfoService() {
-        return getService(ServerInfoService.class);
-    }
 
     public UsersService usersService() {
         return getService(UsersService.class);
@@ -123,9 +100,5 @@ public class Session {
 
     public ServerAttributesService serverAttributesService() {
         return getService(ServerAttributesService.class);
-    }
-
-    public SettingsService settingsService() {
-        return getService(SettingsService.class);
     }
 }

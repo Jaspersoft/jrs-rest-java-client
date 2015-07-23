@@ -41,10 +41,10 @@ public class JasperserverRestClient {
         return new AnonymousSession(new SessionStorage(configuration, null));
     }
 
-    public AuthenticatedSession getAuthenticatedSession(String username, String password) {
+    public Session getAuthenticatedSession(String username, String password) {
         AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
         SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
-        return new AuthenticatedSession(sessionStorage);
+        return new Session(sessionStorage);
     }
 
 
