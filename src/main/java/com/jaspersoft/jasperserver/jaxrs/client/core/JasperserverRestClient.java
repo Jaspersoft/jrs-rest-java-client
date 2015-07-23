@@ -35,4 +35,12 @@ public class JasperserverRestClient {
         SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
         return new Session(sessionStorage);
     }
+
+    public Session authenticate(String username, String password) {
+        AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
+        SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
+        return new Session(sessionStorage);
+    }
+
+
 }
