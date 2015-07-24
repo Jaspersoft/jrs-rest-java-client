@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.settings;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class AwsSettings {
         this.productTypeIsEc2 = other.productTypeIsEc2;
         this.isEc2Instance = other.isEc2Instance;
         this.productTypeIsJrsAmi = other.productTypeIsJrsAmi;
-        this.awsRegions = other.awsRegions;
+        this.awsRegions = new LinkedList<String>(other.awsRegions);
         this.productTypeIsMpAmi = other.productTypeIsMpAmi;
         this.suppressEc2CredentialsWarnings = other.suppressEc2CredentialsWarnings;
     }
@@ -115,10 +116,16 @@ public class AwsSettings {
 
     @Override
     public String toString() {
+        String awsRegions = "";
+        for (String awsRegiono : this.awsRegions) {
+            awsRegions += awsRegions + ", ";
+        }
+
         return "AwsSettings{" +
                 "productTypeIsEc2=" + productTypeIsEc2 +
                 ", isEc2Instance=" + isEc2Instance +
                 ", productTypeIsJrsAmi=" + productTypeIsJrsAmi +
+                ", awsRegions=" + awsRegions +
                 ", productTypeIsMpAmi=" + productTypeIsMpAmi +
                 ", suppressEc2CredentialsWarnings=" + suppressEc2CredentialsWarnings +
                 '}';

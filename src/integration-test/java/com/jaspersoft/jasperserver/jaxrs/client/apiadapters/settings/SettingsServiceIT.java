@@ -5,14 +5,15 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.AwsSettings;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.ws.rs.core.GenericType;
+import java.util.List;
 import java.util.Map;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter.ServerSettingsGroup.*;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
@@ -41,12 +42,28 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                     .settings()
-                        .group(REQUEST)
+                        .group("request", Map.class)
                             .getEntity();
 
         // Then
         assertNotNull(settings);
         assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_requestSettings_dto() {
+
+        // When
+        final RequestSettings settings = session
+                .settingsService()
+                .settings()
+                .ofRequestGroup()
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertNotNull(settings.getContextPath());
+        assertNotNull(settings.getMaxInactiveInterval());
     }
 
     @Test
@@ -56,12 +73,31 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(DATA_SOURCE_PATTERNS)
+                .group("dataSourcePatterns", Map.class)
                 .getEntity();
 
         // Then
         assertNotNull(settings);
         assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_dataSourcePatternsSettings_dto() {
+
+        // When
+        final DataSourcePatternsSettings settings = session
+                .settingsService()
+                .settings()
+                .ofDataSourcePatternsGroup()
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertNotNull(settings.getAttributePlaceholderPattern());
+        assertNotNull(settings.getDynamicUrlPartPattern());
+        assertNotNull(settings.getDbHost());
+        assertNotNull(settings.getDbName());
+        assertNotNull(settings.getDbPort());
     }
 
     @Test
@@ -71,12 +107,27 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(AWS_SETTINGS)
+                .group("awsSettings", Map.class)
                 .getEntity();
 
         // Then
         assertNotNull(settings);
         assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_awsSettings_dto() {
+
+        // When
+        final AwsSettings settings = session
+                .settingsService()
+                .settings()
+                .ofAwsGroup()
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertNotNull(settings.getAwsRegions());
     }
 
     @Test
@@ -86,12 +137,30 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(DECIMAL_FORMAT_SYMBOLS)
+                .group("decimalFormatSymbols", Map.class)
                 .getEntity();
 
         // Then
         assertNotNull(settings);
         assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_decimalFormatSymbolsSettings_dto() {
+
+        // When
+        final DecimalFormatSymbolsSettings settings = session
+                .settingsService()
+                .settings()
+                .ofDecimalFormatSymbolsGroup()
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertNotNull(settings.getDecimalSeparator());
+        assertNotNull(settings.getCurrency());
+        assertNotNull(settings.getMinusSign());
+        assertNotNull(settings.getInfinity());
     }
 
     @Test
@@ -101,7 +170,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(DATE_TIME_SETTINGS)
+                .group("dateTimeSettings", Map.class)
                 .getEntity();
 
         // Then
@@ -110,18 +179,64 @@ public class SettingsServiceIT {
     }
 
     @Test
-    public void should_return_settings_by_timeZones() {
+    public void should_return_list_of_dateTimeSettings_dto() {
 
         // When
-        final Map settings = session
+        final DateTimeSettings settings = session
                 .settingsService()
                 .settings()
-                .group(USER_TIME_ZONES)
+                .ofDateTimeGroup()
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertNotNull(settings.getDatepicker());
+        assertNotNull(settings.getTimepicker());
+    }
+
+    @Test
+    public void should_return_settings_by_userTimeZone() {
+
+        // When
+        final List settings = session
+                .settingsService()
+                .settings()
+                .group("userTimeZones", List.class)
                 .getEntity();
 
         // Then
         assertNotNull(settings);
         assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_list_of_userTimeZone_dto() {
+
+        // When
+        final List<UserTimeZone> settings = session
+                .settingsService()
+                .settings()
+                .ofUserTimeZonesGroup()
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertTrue(settings.size() > 0);
+    }
+
+    @Test
+    public void should_return_list_of_userTimeZone_dto_by_genericType() {
+
+        // When
+        final List<UserTimeZone> settings = session
+                .settingsService()
+                .settings()
+                .group("userTimeZones", new GenericType<List<UserTimeZone>>(){})
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertTrue(settings.size() > 0);
     }
 
     @Test
@@ -131,12 +246,28 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(DASHBOARD_SETTINGS)
+                .group("dashboardSettings", Map.class)
                 .getEntity();
 
         // Then
         assertNotNull(settings);
         assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_list_of_dashboardSettings_dto() {
+
+        // When
+        final DashboardSettings settings = session
+                .settingsService()
+                .settings()
+                .ofDashboardGroup()
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertNotNull(settings.getNewItemsRegistry());
+        assertTrue(settings.getNewItemsRegistry().size() > 0);
     }
 
     @Test
@@ -146,12 +277,27 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                 .settings()
-                .group(INPUT_CONTROL)
+                .group("inputControls", Map.class)
                 .getEntity();
 
         // Then
         assertNotNull(settings);
         assertFalse(settings.isEmpty());
+    }
+
+    @Test
+    public void should_return_list_of_inputControlsSettings_dto() {
+
+        // When
+        final InputControlsSettings settings = session
+                .settingsService()
+                .settings()
+                .ofInputControlsGroup()
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertNotNull(settings.getUseUrlParametersOnReset());
     }
 
     @Test
@@ -165,7 +311,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                     .settings()
-                        .group(GLOBAL_CONFIGURATION)
+                        .group("globalConfiguration", Map.class)
                             .getEntity();
 
         // Then
@@ -188,6 +334,36 @@ public class SettingsServiceIT {
     }
 
     @Test
+    public void should_return_list_of_globalConfigurationSettings_dto() {
+
+        // When
+        final GlobalConfigurationSettings settings = session
+                .settingsService()
+                .settings()
+                .ofGlobalConfigurationGroup()
+                .getEntity();
+
+        // Then
+        assertNotNull(settings);
+        assertNotNull(settings.getAllFileResourceTypes());
+        assertNotNull(settings.getCalendarInputJsp());
+        assertNotNull(settings.getCurrentYearDateFormat());
+        assertNotNull(settings.getDateFormat());
+        assertNotNull(settings.getDefaultDomainDependentsBlockAndUpdate());
+        assertNotNull(settings.getDefaultDomainDependentsUseACL());
+        assertNotNull(settings.getDefaultRole());
+        assertNotNull(settings.getDefaultDontUpdateDomainDependents());
+        assertNotNull(settings.getEntitiesPerPage());
+        assertNotNull(settings.getEmailRegExpPattern());
+        assertNotNull(settings.getAllFileResourceTypes());
+        assertNotNull(settings.getViewReportsFilterList());
+        assertNotNull(settings.getOutputFolderFilterPatterns());
+        assertNotNull(settings.getOutputFolderFilterList());
+        assertNotNull(settings.getMessages());
+        assertNotNull(settings.getDataSourceTypes());
+    }
+
+    @Test
     public void should_return_settings_by_user_specified_string_key_of_group() {
 
         /**
@@ -196,7 +372,7 @@ public class SettingsServiceIT {
         final Map settings = session
                 .settingsService()
                     .settings()
-                        .group("dateTimeSettings")
+                        .group("dateTimeSettings", Map.class)
                             .getEntity();
 
         /**
