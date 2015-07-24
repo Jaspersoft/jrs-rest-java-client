@@ -66,22 +66,17 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         operationResultFactory = new OperationResultFactoryImpl();
         this.responseClass = responseClass;
         this.responseGenericType = null;
-        RestClientConfiguration configuration = sessionStorage.getConfiguration();
+        init(sessionStorage);
 
-        contentType = configuration.getContentMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
-        acceptType = configuration.getAcceptMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
-        headers = new MultivaluedHashMap<String, String>();
-        usersWebTarget = sessionStorage.getRootTarget()
-                .path("/rest_v2")
-                .register(CustomRepresentationTypeProvider.class)
-                .register(JacksonFeature.class)
-                .register(MultiPartWriter.class);
     }
 
     protected JerseyRequest(SessionStorage sessionStorage, GenericType<ResponseType> genericType) {
         operationResultFactory = new OperationResultFactoryImpl();
         this.responseClass = (Class<ResponseType>) genericType.getRawType();
         this.responseGenericType = genericType;
+        init(sessionStorage);
+    }
+    private void init(SessionStorage sessionStorage) {
         RestClientConfiguration configuration = sessionStorage.getConfiguration();
 
         contentType = configuration.getContentMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
@@ -90,7 +85,6 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         usersWebTarget = sessionStorage.getRootTarget()
                 .path("/rest_v2")
                 .register(CustomRepresentationTypeProvider.class)
-                .register(JacksonFeature.class)
                 .register(MultiPartWriter.class);
     }
 

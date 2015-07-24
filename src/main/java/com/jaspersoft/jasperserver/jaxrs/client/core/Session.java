@@ -40,17 +40,10 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-
-public class Session {
-
-    private SessionStorage storage;
+public class Session extends AnonymousSession{
 
     public Session(SessionStorage sessionStorage) {
-        this.storage = sessionStorage;
-    }
-
-    public SessionStorage getStorage() {
-        return storage;
+        super(sessionStorage);
     }
 
     public void logout() {
@@ -61,20 +54,8 @@ public class Session {
         }
     }
 
-    public <ServiceType extends AbstractAdapter> ServiceType getService(Class<ServiceType> serviceClass) {
-        try {
-            return serviceClass.getConstructor(SessionStorage.class).newInstance(storage);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public OrganizationsService organizationsService() {
         return getService(OrganizationsService.class);
-    }
-
-    public ServerInfoService serverInfoService() {
-        return getService(ServerInfoService.class);
     }
 
     public UsersService usersService() {
@@ -125,7 +106,4 @@ public class Session {
         return getService(ServerAttributesService.class);
     }
 
-    public SettingsService settingsService() {
-        return getService(SettingsService.class);
-    }
 }
