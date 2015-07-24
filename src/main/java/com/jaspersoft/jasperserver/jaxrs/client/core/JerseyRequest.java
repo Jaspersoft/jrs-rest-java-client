@@ -76,7 +76,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         this.responseGenericType = genericType;
         init(sessionStorage);
     }
-    protected  final void init(SessionStorage sessionStorage) {
+    private void init(SessionStorage sessionStorage) {
         RestClientConfiguration configuration = sessionStorage.getConfiguration();
 
         contentType = configuration.getContentMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
@@ -85,7 +85,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         usersWebTarget = sessionStorage.getRootTarget()
                 .path("/rest_v2")
                 .register(CustomRepresentationTypeProvider.class)
-                .register(JacksonFeature.class)
+//                .register(JacksonFeature.class)
                 .register(MultiPartWriter.class);
     }
 

@@ -124,7 +124,7 @@ public class SessionStorage {
         return configuration;
     }
 
-    public AuthenticationCredentials getCredentials() {
+    protected AuthenticationCredentials getCredentials() {
         return credentials;
     }
 

@@ -11,9 +11,6 @@ public class AnonymousSession {
 
     protected SessionStorage storage;
 
-    protected AnonymousSession() {
-    }
-
     public AnonymousSession(SessionStorage storage) {
         this.storage = storage;
     }

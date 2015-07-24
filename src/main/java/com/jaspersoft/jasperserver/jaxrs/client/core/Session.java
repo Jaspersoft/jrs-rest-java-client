@@ -42,9 +42,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 public class Session extends AnonymousSession{
 
-    protected Session() {
-    }
-
     public Session(SessionStorage sessionStorage) {
         super(sessionStorage);
     }

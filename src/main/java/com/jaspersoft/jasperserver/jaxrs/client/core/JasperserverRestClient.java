@@ -33,6 +33,7 @@ public class JasperserverRestClient {
     public Session authenticate(String username, String password) {
         AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
         SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
+        //TODO session.login();
         return new Session(sessionStorage);
     }
 
@@ -41,11 +42,11 @@ public class JasperserverRestClient {
         return new AnonymousSession(new SessionStorage(configuration, null));
     }
 
-    public Session getAuthenticatedSession(String username, String password) {
-        AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
-        SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
-        return new Session(sessionStorage);
-    }
+//    public Session getAuthenticatedSession(String username, String password) {
+//        AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
+//        SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
+//        return new Session(sessionStorage);
+//    }
 
 
 }
