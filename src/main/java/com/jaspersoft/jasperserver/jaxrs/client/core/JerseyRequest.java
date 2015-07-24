@@ -85,7 +85,6 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         usersWebTarget = sessionStorage.getRootTarget()
                 .path("/rest_v2")
                 .register(CustomRepresentationTypeProvider.class)
-//                .register(JacksonFeature.class)
                 .register(MultiPartWriter.class);
     }
 

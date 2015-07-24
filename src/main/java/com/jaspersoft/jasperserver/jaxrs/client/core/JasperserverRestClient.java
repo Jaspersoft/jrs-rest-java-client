@@ -20,6 +20,15 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 public class JasperserverRestClient {
     private final RestClientConfiguration configuration;
 
@@ -29,24 +38,34 @@ public class JasperserverRestClient {
         }
         this.configuration = configuration;
     }
-    @Deprecated
     public Session authenticate(String username, String password) {
         AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
         SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
-        //TODO session.login();
-        return new Session(sessionStorage);
+        login(sessionStorage);
+        return  new Session(sessionStorage);
     }
 
     public AnonymousSession getAnonymousSession() {
-        //TODO new sessionStorage(config)
         return new AnonymousSession(new SessionStorage(configuration, null));
     }
 
-//    public Session getAuthenticatedSession(String username, String password) {
-//        AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
-//        SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
-//        return new Session(sessionStorage);
-//    }
+    protected void login(SessionStorage storage) {
 
+        AuthenticationCredentials credentials = storage.getCredentials();
+        WebTarget rootTarget = storage.getRootTarget();
+        Form form = new Form();
+        form.param("j_username", credentials.getUsername()).param("j_password", credentials.getPassword());
+
+        WebTarget target = rootTarget.path("/rest/login");
+        Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+        String sessionId = null;
+        if (response.getStatus() == ResponseStatus.OK) {
+            sessionId = response.getCookies().get("JSESSIONID").getValue();
+            storage.setSessionId(sessionId);
+        } else {
+            new DefaultErrorHandler().handleError(response);
+        }
+        rootTarget.register(new SessionOutputFilter(sessionId));
+    }
 
 }

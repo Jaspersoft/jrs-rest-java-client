@@ -97,39 +97,26 @@ public class SessionStorage {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
-        if (credentials != null) {
-            login();
-            rootTarget.register(new SessionOutputFilter(sessionId));
-        }
         rootTarget.register(JacksonFeature.class);
         rootTarget.register(provider);
 
     }
 
-    private void login() {
-        Form form = new Form();
-        form.param("j_username", credentials.getUsername()).param("j_password", credentials.getPassword());
-
-        WebTarget target = rootTarget.path("/rest/login");
-        Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
-
-        if (response.getStatus() == ResponseStatus.OK) {
-            sessionId = response.getCookies().get("JSESSIONID").getValue();
-        } else {
-            new DefaultErrorHandler().handleError(response);
-        }
-    }
 
     public RestClientConfiguration getConfiguration() {
         return configuration;
     }
 
-    protected AuthenticationCredentials getCredentials() {
+    public AuthenticationCredentials getCredentials() {
         return credentials;
     }
 
     public String getSessionId() {
         return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public WebTarget getRootTarget() {

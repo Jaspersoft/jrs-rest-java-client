@@ -25,7 +25,7 @@ public class UsersServiceIT {
         config.setContentMimeType(MimeType.JSON);
         config.setJrsVersion(JRSVersion.v6_0_1);
         client = new JasperserverRestClient(config);
-        session = client.getAuthenticatedSession("superuser", "superuser");
+        session = client.authenticate("superuser", "superuser");
     }
 
     @Test
