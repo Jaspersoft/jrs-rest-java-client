@@ -49,7 +49,7 @@ public class JasperserverRestClient {
         return new AnonymousSession(new SessionStorage(configuration, null));
     }
 
-    protected void login(SessionStorage storage) {
+    private void login(SessionStorage storage) {
 
         AuthenticationCredentials credentials = storage.getCredentials();
         WebTarget rootTarget = storage.getRootTarget();
