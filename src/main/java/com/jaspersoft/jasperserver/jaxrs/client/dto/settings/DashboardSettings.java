@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by tetiana.iefimenko on 7/15/2015.
+ *  @author Tetiana Iefimenko
  */
 public class DashboardSettings {
 

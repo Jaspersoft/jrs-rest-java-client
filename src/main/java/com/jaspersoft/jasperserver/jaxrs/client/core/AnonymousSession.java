@@ -5,7 +5,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo.ServerInf
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SettingsService;
 
 /**
- * Created by tetiana.iefimenko on 7/23/2015.
+ * @author Tetiana Iefimenko
  */
 public class AnonymousSession {
 

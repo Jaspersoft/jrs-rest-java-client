@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by tetiana.iefimenko on 7/15/2015.
+ *  @author Tetiana Iefimenko
  */
 public class GlobalConfigurationSettings {
     private Map<String, String> messages;

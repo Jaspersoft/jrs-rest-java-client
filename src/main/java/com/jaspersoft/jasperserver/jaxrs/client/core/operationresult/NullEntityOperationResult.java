@@ -24,6 +24,10 @@ package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+/**
+ * @author
+ * @author Tetiana Iefimenko
+ * */
 
 public class NullEntityOperationResult<T> extends OperationResult<T> {
 

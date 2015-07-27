@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * @author Alex Krasnyanskiy
+ * @author Tetiana Iefimenko
  * @since 6.0.3-ALPHA
  */
 public class SingleSettingsAdapter extends AbstractAdapter {

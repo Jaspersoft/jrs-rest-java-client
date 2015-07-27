@@ -24,6 +24,10 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebExcep
 
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+/**
+ * @author
+ * @author Tetiana Iefimenko
+ * */
 
 public interface OperationResultFactory {
     public <T> OperationResult<T> getOperationResult(Response response, Class<T> responseClass) throws JSClientWebException;

@@ -39,6 +39,10 @@ import java.util.regex.Pattern;
 
 import static java.util.regex.Pattern.compile;
 
+/**
+ * @author
+ * @author Tetiana Iefimenko
+ * */
 public class RunReportAdapter extends AbstractAdapter {
 
     private final MultivaluedMap<String, String> params;
