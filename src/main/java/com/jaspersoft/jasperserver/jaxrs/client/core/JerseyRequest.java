@@ -28,7 +28,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
-import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
 
 import javax.ws.rs.client.Entity;
@@ -60,6 +59,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     private final OperationResultFactory operationResultFactory;
     private final Class<ResponseType> responseClass;
     private final GenericType<ResponseType> responseGenericType;
+    private final Boolean restrictedHttpMethods;
     private ErrorHandler errorHandler;
     private MultivaluedMap<String, String> headers;
     private WebTarget usersWebTarget;
@@ -70,6 +70,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         operationResultFactory = new OperationResultFactoryImpl();
         this.responseClass = responseClass;
         this.responseGenericType = null;
+        restrictedHttpMethods = sessionStorage.getConfiguration().getRestrictedHttpMethods();
         init(sessionStorage);
 
     }
@@ -78,6 +79,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         operationResultFactory = new OperationResultFactoryImpl();
         this.responseClass = (Class<ResponseType>) genericType.getRawType();
         this.responseGenericType = genericType;
+        restrictedHttpMethods = sessionStorage.getConfiguration().getRestrictedHttpMethods();
         init(sessionStorage);
     }
     private void init(SessionStorage sessionStorage) {
@@ -98,15 +100,14 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
 
     public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path, ErrorHandler errorHandler) {
         JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, responseClass);
-        request.errorHandler = errorHandler != null ? errorHandler : new DefaultErrorHandler();
-        for (String pathElem : path) {
-            request.setPath(pathElem);
-        }
-        return request;
+        return configRequest(request, path, errorHandler);
     }
 
     public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, GenericType<T> genericType, String[] path, ErrorHandler errorHandler) {
         JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, genericType);
+        return configRequest(request, path, errorHandler);
+    }
+    private static <T> JerseyRequest<T> configRequest(JerseyRequest<T> request, String[] path, ErrorHandler errorHandler){
         request.errorHandler = errorHandler != null ? errorHandler : new DefaultErrorHandler();
         for (String pathElem : path) {
             request.setPath(pathElem);
@@ -158,12 +159,31 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
 
     private OperationResult<ResponseType> executeRequest(int httpMethod, Invocation.Builder request, Object entity) {
         Response response = null;
-        switch (httpMethod) {
-            case GET: response = request.get(); break;
-            case DELETE: response = request.delete(); break;
-            case POST: response = request.post(Entity.entity(entity, contentType)); break;
-            case PUT: response = request.put(Entity.entity(entity, contentType)); break;
+        if (restrictedHttpMethods && (httpMethod != POST || httpMethod != GET) ) {
+            request.header("X-HTTP-Method-Override", httpMethod);
+            response = request.post(Entity.entity(entity, contentType));
+        } else {
+            switch (httpMethod) {
+                case GET:
+                    response = request.get();
+                    break;
+                case DELETE:
+                    response = request.delete();
+                    break;
+                case POST:
+                    response = request.post(Entity.entity(entity, contentType));
+                    break;
+                case PUT:
+                    response = request.put(Entity.entity(entity, contentType));
+                    break;
+            }
+
+            if (response != null && response.getStatus() == 411 && (httpMethod != POST || httpMethod != GET)) {
+                request.header("X-HTTP-Method-Override", httpMethod);
+                executeRequest(POST, request, entity);
+            }
         }
+
         if (response != null && response.getStatus() >= 400) {
             errorHandler.handleError(response);
         }
@@ -234,31 +254,31 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     /**
      * getters/setters block
      */
-    public OperationResultFactory getOperationResultFactory() {
+    protected OperationResultFactory getOperationResultFactory() {
         return operationResultFactory;
     }
 
-    public Class<ResponseType> getResponseClass() {
+    protected Class<ResponseType> getResponseClass() {
         return responseClass;
     }
 
-    public ErrorHandler getErrorHandler() {
+    protected ErrorHandler getErrorHandler() {
         return errorHandler;
     }
 
-    public MultivaluedMap<String, String> getHeaders() {
+    protected MultivaluedMap<String, String> getHeaders() {
         return headers;
     }
 
-    public WebTarget getUsersWebTarget() {
+    protected WebTarget getUsersWebTarget() {
         return usersWebTarget;
     }
 
-    public String getContentType() {
+    protected String getContentType() {
         return contentType;
     }
 
-    public String getAcceptType() {
+    protected String getAcceptType() {
         return acceptType;
     }
 }

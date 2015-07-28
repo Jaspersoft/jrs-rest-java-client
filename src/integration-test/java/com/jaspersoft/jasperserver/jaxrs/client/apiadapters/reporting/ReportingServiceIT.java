@@ -31,7 +31,8 @@ public class ReportingServiceIT {
                 .reportingService()
                 .report("/organizations/organization_1/adhoc/topics/Cascading_multi_select_topic")
                 .prepareForRun(ReportOutputFormat.PDF, 1)
-                .parameter("Cascading_state_multi_select", "CA", "OR", "WA")
+                .parameter("Cascading_state_multi_select", "CA")
+                .parameter("Cascading_state_multi_select", "OR", "WA")
                 .parameter("Cascading_name_single_select", "Adams-Steen Transportation Holdings")
                 .parameter("Country_multi_select", "USA")
                 .run();
@@ -40,7 +41,6 @@ public class ReportingServiceIT {
         /** Then **/
         Assert.assertNotNull(entity);
 
-        /*
         OutputStream output = null;
         try {
             output = new FileOutputStream("file.pdf");
@@ -61,7 +61,7 @@ public class ReportingServiceIT {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
 
     }
 

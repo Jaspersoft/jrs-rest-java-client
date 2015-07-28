@@ -21,6 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -45,6 +46,7 @@ public class RestClientConfiguration {
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;
     private Integer readTimeout;
+    private Boolean restrictedHttpMethods = false;
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
@@ -128,6 +130,14 @@ public class RestClientConfiguration {
         this.readTimeout = readTimeout;
     }
 
+    public Boolean getRestrictedHttpMethods() {
+        return restrictedHttpMethods;
+    }
+
+    public void setRestrictedHttpMethods(Boolean restrictedHttpMethods) {
+        this.restrictedHttpMethods = restrictedHttpMethods;
+    }
+
     public static RestClientConfiguration loadConfiguration(String path) {
         Properties properties = loadProperties(path);
 
@@ -167,5 +177,6 @@ public class RestClientConfiguration {
         }
         return properties;
     }
+
 
 }
