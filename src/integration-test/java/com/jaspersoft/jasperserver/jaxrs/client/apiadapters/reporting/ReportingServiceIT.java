@@ -41,27 +41,27 @@ public class ReportingServiceIT {
         /** Then **/
         Assert.assertNotNull(entity);
 
-        OutputStream output = null;
-        try {
-            output = new FileOutputStream("file.pdf");
-            int i = 0;
-            while (i != -1) {
-                i = entity.read();
-                output.write(i);
-                output.flush();
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-
-            try {
-                entity.close();
-                output.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        OutputStream output = null;
+//        try {
+//            output = new FileOutputStream("file.pdf");
+//            int i = 0;
+//            while (i != -1) {
+//                i = entity.read();
+//                output.write(i);
+//                output.flush();
+//
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//
+//            try {
+//                entity.close();
+//                output.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
     }
 
