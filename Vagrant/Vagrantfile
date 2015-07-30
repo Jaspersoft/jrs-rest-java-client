@@ -1,0 +1,19 @@
+Vagrant.configure(2) do |config|
+
+  	config.vm.box = "ubuntu/trusty64"
+	config.vm.box_check_update = false
+
+	config.vm.network "forwarded_port", guest: 8080, host: 8090
+	config.vm.network "forwarded_port", guest: 5432, host: 5430
+
+	config.vm.provider "virtualbox" do |vb|
+		vb.gui = true
+		vb.memory = "2048"
+	end
+
+	config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+
+	config.vm.provision :shell do |sh|
+    	sh.path = "bootstrap.sh"
+	end
+end
