@@ -20,10 +20,13 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import java.util.TimeZone;
+
 public class AuthenticationCredentials {
 
     private String username;
     private String password;
+    private TimeZone timeZone;
 
     public AuthenticationCredentials(String username, String password) {
         this.username = username;
@@ -45,4 +48,13 @@ public class AuthenticationCredentials {
     public void setPassword(String password) {
         this.password = password;
     }
+
+	public String getTimeZone() {
+		if (timeZone == null) return null;
+		return timeZone.getID();
+	}
+	
+	public void setTimeZone(TimeZone tz) {
+		this.timeZone = tz;
+	}
 }

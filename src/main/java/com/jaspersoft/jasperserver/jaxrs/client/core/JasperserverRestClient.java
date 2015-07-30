@@ -20,6 +20,8 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import java.util.TimeZone;
+
 public class JasperserverRestClient {
     private final RestClientConfiguration configuration;
 
@@ -29,9 +31,14 @@ public class JasperserverRestClient {
         }
         this.configuration = configuration;
     }
-
+    
     public Session authenticate(String username, String password) {
+    	return authenticate(username,password,null);
+    }
+
+    public Session authenticate(String username, String password, TimeZone userTimezone) {
         AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
+        credentials.setTimeZone(userTimezone);
         SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
         return new Session(sessionStorage);
     }

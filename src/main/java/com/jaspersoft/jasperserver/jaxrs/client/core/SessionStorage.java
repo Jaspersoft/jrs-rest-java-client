@@ -105,6 +105,8 @@ public class SessionStorage {
         form
         .param("j_username", credentials.getUsername())
         .param("j_password", credentials.getPassword());
+        if (credentials.getTimeZone() != null)
+        	form.param("userTimezone", credentials.getTimeZone());
         
         WebTarget target;
         Response response = null;
