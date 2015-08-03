@@ -9,13 +9,14 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
 
-import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.powermock.api.support.membermodification.MemberMatcher.field;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * Unit tests for {@link JasperserverRestClient}
@@ -31,6 +32,11 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     private SessionStorage sessionStorageMock;
     @Mock
     private Session sessionMock;
+    @Mock
+    AnonymousSession anonymousSessionMock;
+
+    final String USER_NAME = "John";
+    final String PASSWORD = "John's_super_secret_password";
 
     @BeforeMethod
     public void before() {
@@ -56,14 +62,13 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     public void should_throw_an_exception_when_pass_null_param_to_the_constructor() {
         new JasperserverRestClient(null);
     }
-
     @Test
     public void should_return_proper_Session_object() throws Exception {
 
         // Given
         final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
-        final String USER_NAME = "John";
-        final String PASSWORD = "John's_super_secret_password";
+        final JasperserverRestClient spyClient = spy(client);
+
 
         whenNew(AuthenticationCredentials.class)
                 .withArguments(USER_NAME, PASSWORD)
@@ -76,12 +81,33 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         whenNew(Session.class)
                 .withArguments(sessionStorageMock)
                 .thenReturn(sessionMock);
+        doNothing().when(spyClient).login(sessionStorageMock);
 
         // When
-        Session retrieved = client.authenticate(USER_NAME, PASSWORD);
+        Session retrieved = spyClient.authenticate(USER_NAME, PASSWORD);
 
         // Then
         assertEquals(retrieved, sessionMock);
+    }
+
+    @Test
+    public void should_return_proper_anonymousSession_object() throws Exception {
+
+        // Given
+        final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
+
+        whenNew(SessionStorage.class)
+                .withAnyArguments()
+                .thenReturn(sessionStorageMock);
+        whenNew(AnonymousSession.class)
+                .withArguments(sessionStorageMock)
+                .thenReturn(anonymousSessionMock);
+
+        // When
+        AnonymousSession retrieved = client.getAnonymousSession();
+
+        // Then
+        assertEquals(retrieved, anonymousSessionMock);
     }
 
     @AfterMethod
