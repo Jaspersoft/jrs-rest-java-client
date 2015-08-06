@@ -1,6 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.bundles.BundlesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo.ServerInfoService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SettingsService;
 
@@ -34,4 +35,6 @@ public class AnonymousSession {
     public SettingsService settingsService() {
         return getService(SettingsService.class);
     }
+
+    public BundlesService bundlesService() {return  getService(BundlesService.class);}
 }

@@ -18,9 +18,12 @@ import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
@@ -32,6 +35,9 @@ public class SettingsServiceTest extends PowerMockTestCase {
 
     @Mock
     private SessionStorage sessionStorageMock;
+    @Mock
+    private SingleSettingsAdapter settingsAdapterMock;
+
     private SettingsService service;
 
     @BeforeMethod
@@ -43,6 +49,17 @@ public class SettingsServiceTest extends PowerMockTestCase {
     @Test
     public void should_return_proper_settings_adapter() throws Exception {
         //when
+        SingleSettingsAdapter retrieved = service.settings();
+        //then
+        assertNotNull(retrieved);
+
+    }
+
+    @Test
+    public void should_invoke_settings_method() throws Exception {
+        //when
+        service = spy(new SettingsService(sessionStorageMock));
+        doReturn(settingsAdapterMock).when(service).settings();
         SingleSettingsAdapter retrieved = service.settings();
         //then
         assertNotNull(retrieved);
