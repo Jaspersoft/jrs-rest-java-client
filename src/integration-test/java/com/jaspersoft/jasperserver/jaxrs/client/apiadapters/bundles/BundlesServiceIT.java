@@ -22,7 +22,7 @@ public class BundlesServiceIT {
         config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
         config.setAcceptMimeType(MimeType.JSON);
         config.setContentMimeType(MimeType.JSON);
-        config.setJrsVersion(JRSVersion.v6_1);
+        config.setJrsVersion(JRSVersion.v6_1_0);
         client = new JasperserverRestClient(config);
         session = client.getAnonymousSession();
     }
