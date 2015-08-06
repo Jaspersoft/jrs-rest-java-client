@@ -107,13 +107,14 @@ Table of Contents
 12. [Thumbnail Search Service](#thumbnail-search-service).
 13. [Query executor service](#queryexecutor-service).
 14. [REST Server Information](#rest-server-information).
-15. [Exception handling](#exception-handling).
-16. [Asynchronous API](#asynchronous-api).
-17. [Getting serialized content from response](#getting-serialized-content-from-response).
-18. [Switching between JSON and XML](#switching-between-json-and-xml).
-19. [Possible issues](#possible-issues).
-20. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-21. [License](#license).
+15. [Internalization](#internalization).
+16. [Exception handling](#exception-handling).
+17. [Asynchronous API](#asynchronous-api).
+18. [Getting serialized content from response](#getting-serialized-content-from-response).
+19. [Switching between JSON and XML](#switching-between-json-and-xml).
+20. [Possible issues](#possible-issues).
+21. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+22. [License](#license).
 
 Introduction
 -------------
@@ -1472,7 +1473,24 @@ OperationResult<String> result = client
 
 String edition = result.getEntity();
 ```
-
+###Internalization
+Use bundles service to get bundles of properties for internalization for particular or default user’s locale as JSON. To get all bundles for particular locale use the code below:
+```java
+final JSONObject bundles = session
+        .bundlesService()
+        .forLocale("de")
+        .bundles()
+        .getEntity();
+```
+If you pass `null` in `.forLocale()` method, you will get bundles for your default locale.
+To get bundle by name you should specified locale in `.forLocale()` method and name of the bundle in `.bundles()` method:
+```java
+final JSONObject bundle = session
+        .bundlesService()
+        .forLocale("en_US")
+        .bundles("jasperserver_messages")
+        .getEntity();
+```
 ###Exception handling
 You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method.
 
