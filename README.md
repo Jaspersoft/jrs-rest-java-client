@@ -1474,7 +1474,7 @@ OperationResult<String> result = client
 String edition = result.getEntity();
 ```
 ###Internalization
-Use bundles service to get bundles of properties for internalization for particular or default user’s locale as JSON. To get all bundles for particular locale use the code below:
+Use bundles service to get bundles of internalization properties for particular or default user’s locale as JSON. To get all bundles for particular locale(foe example, "de") use the code below:
 ```java
 final JSONObject bundles = session
         .bundlesService()
