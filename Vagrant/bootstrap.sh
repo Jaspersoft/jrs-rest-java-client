@@ -21,5 +21,7 @@ then
     echo "Ansible installed"
 fi
 
+sudo apt-get install unzip
+
 echo "Running Ansible"
 bash -c "ansible-playbook /vagrant/playbook.yml --connection=local"
