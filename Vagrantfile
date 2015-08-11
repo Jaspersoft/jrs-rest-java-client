@@ -22,12 +22,12 @@
 Vagrant.configure(2) do |config|
 
 	config.vm.box = "JasperSoft/JasperServer6.1.0"
-	config.vm.box_check_update = false
+	config.vm.box_check_update = true
 	config.ssh.pty = true
 
 	config.vm.network "forwarded_port", guest: 8080, host: 8090
 	config.vm.network "forwarded_port", guest: 5432, host: 5430
 
-	config.vm.provision "shell", inline: "su vagrant -l -c '/bin/sh /home/vagrant/jasperreports-server-cp-6.1.0/ctlscript.sh start'"
+	config.vm.provision "shell", inline: "/bin/sh /home/vagrant/jrs/ctlscript.sh start"
 
 end
