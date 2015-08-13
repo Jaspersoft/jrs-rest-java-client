@@ -22,6 +22,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
+import org.glassfish.jersey.client.ClientProperties;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -55,17 +56,33 @@ public class JasperserverRestClient {
         WebTarget rootTarget = storage.getRootTarget();
         Form form = new Form();
         form.param("j_username", credentials.getUsername()).param("j_password", credentials.getPassword());
-
-        WebTarget target = rootTarget.path("/rest/login");
+        WebTarget target;
+        if (configuration.getAuthenticationType() == AuthenticationType.SPRING) {
+            target = rootTarget.path("/j_spring_security_check")
+                    .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
+        } else  {
+            target = rootTarget.path("/rest/login");
+        }
         Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
         String sessionId = null;
-        if (response.getStatus() == ResponseStatus.OK) {
+        if (isResponseSuccessful(response)) {
             sessionId = response.getCookies().get("JSESSIONID").getValue();
             storage.setSessionId(sessionId);
         } else {
             new DefaultErrorHandler().handleError(response);
         }
         rootTarget.register(new SessionOutputFilter(sessionId));
+    }
+    private boolean isResponseSuccessful(Response response) {
+        if (configuration.getAuthenticationType() == AuthenticationType.SPRING
+                && response.getStatus() == ResponseStatus.FOUND) {
+            return true;
+        }
+        if (configuration.getAuthenticationType() == AuthenticationType.REST
+                && response.getStatus() == ResponseStatus.OK) {
+            return true;
+        }
+        return false;
     }
 
 }

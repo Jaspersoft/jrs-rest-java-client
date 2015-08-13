@@ -21,7 +21,6 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -43,11 +42,20 @@ public class RestClientConfiguration {
     private MimeType contentMimeType = MimeType.JSON;
     private MimeType acceptMimeType = MimeType.JSON;
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
+
+    public AuthenticationType getAuthenticationType() {
+        return authenticationType;
+    }
+
+    public void setAuthenticationType(AuthenticationType authenticationType) {
+        this.authenticationType = authenticationType;
+    }
+
+    private AuthenticationType authenticationType = AuthenticationType.REST;
+    private Boolean restrictedHttpMethods = false;
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;
     private Integer readTimeout;
-    private Boolean restrictedHttpMethods = false;
-
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
         setJasperReportsServerUrl(jasperReportsServerUrl);
@@ -106,7 +114,7 @@ public class RestClientConfiguration {
         this.jrsVersion = jrsVersion;
     }
 
-    public TrustManager[] getTrustManagers() {
+     public TrustManager[] getTrustManagers() {
         return trustManagers;
     }
 
