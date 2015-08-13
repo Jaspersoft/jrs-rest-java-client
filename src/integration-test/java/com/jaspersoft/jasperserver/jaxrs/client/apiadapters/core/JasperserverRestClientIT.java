@@ -23,12 +23,12 @@ public class JasperserverRestClientIT {
         config.setAcceptMimeType(MimeType.JSON);
         config.setContentMimeType(MimeType.JSON);
         config.setJrsVersion(JRSVersion.v6_0_0);
-        config.setAuthenticationType(AuthenticationType.SPRING);
         client = new JasperserverRestClient(config);
     }
 
     @Test
     public void should_return_session_via_j_sucurity_check() {
+        config.setAuthenticationType(AuthenticationType.SPRING);
         session = client.authenticate("superuser", "superuser");
         assertNotNull(session);
         assertNotNull(session.getStorage().getSessionId());
@@ -36,7 +36,6 @@ public class JasperserverRestClientIT {
 
     @Test
     public void should_return_session_via_rest_login() {
-        config.setAuthenticationType(AuthenticationType.REST);
         session = client.authenticate("superuser", "superuser");
         assertNotNull(session);
         assertNotNull(session.getStorage().getSessionId());
