@@ -42,20 +42,13 @@ public class RestClientConfiguration {
     private MimeType contentMimeType = MimeType.JSON;
     private MimeType acceptMimeType = MimeType.JSON;
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
-
-    public AuthenticationType getAuthenticationType() {
-        return authenticationType;
-    }
-
-    public void setAuthenticationType(AuthenticationType authenticationType) {
-        this.authenticationType = authenticationType;
-    }
-
     private AuthenticationType authenticationType = AuthenticationType.REST;
     private Boolean restrictedHttpMethods = false;
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;
+
     private Integer readTimeout;
+
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
         setJasperReportsServerUrl(jasperReportsServerUrl);
@@ -88,6 +81,13 @@ public class RestClientConfiguration {
         if (!matcher.matches())
             throw new IllegalArgumentException("Given parameter is not a URL");
         this.jasperReportsServerUrl = jasperReportsServerUrl;
+    }
+    public AuthenticationType getAuthenticationType() {
+        return authenticationType;
+    }
+
+    public void setAuthenticationType(AuthenticationType authenticationType) {
+        this.authenticationType = authenticationType;
     }
 
     public MimeType getContentMimeType() {

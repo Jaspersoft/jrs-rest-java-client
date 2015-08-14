@@ -41,8 +41,8 @@ import javax.ws.rs.core.Response;
 /**
  * @author
  * @author Tetiana Iefimenko
- * */
-public class Session extends AnonymousSession{
+ */
+public class Session extends AnonymousSession {
 
     public Session(SessionStorage sessionStorage) {
         super(sessionStorage);
@@ -53,6 +53,10 @@ public class Session extends AnonymousSession{
         Response response = target.request().get();
         if (response.getStatus() >= 400) {
             new DefaultErrorHandler().handleError(response);
+        }
+        if (storage.getConfiguration().getAuthenticationType() == AuthenticationType.BASIC) {
+            storage.getCredentials().setUsername(null);
+            storage.getCredentials().setPassword(null);
         }
     }
 

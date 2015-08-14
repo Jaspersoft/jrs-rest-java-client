@@ -21,6 +21,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import org.glassfish.jersey.client.ClientProperties;
 
@@ -39,11 +40,15 @@ public class JasperserverRestClient {
         }
         this.configuration = configuration;
     }
+
     public Session authenticate(String username, String password) {
-        AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
-        SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
-        login(sessionStorage);
-        return  new Session(sessionStorage);
+        if (username != null && username.length() > 0 && password != null && password.length() > 0) {
+            AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
+            SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
+            login(sessionStorage);
+            return new Session(sessionStorage);
+        }
+        return null;
     }
 
     public AnonymousSession getAnonymousSession() {
@@ -54,13 +59,18 @@ public class JasperserverRestClient {
 
         AuthenticationCredentials credentials = storage.getCredentials();
         WebTarget rootTarget = storage.getRootTarget();
+        if (configuration.getAuthenticationType() == AuthenticationType.BASIC) {
+            //TODO registeer ehcoding filter
+            rootTarget.register(new BasicAuthenticationFilter(credentials));
+            return;
+        }
         Form form = new Form();
         form.param("j_username", credentials.getUsername()).param("j_password", credentials.getPassword());
         WebTarget target;
         if (configuration.getAuthenticationType() == AuthenticationType.SPRING) {
             target = rootTarget.path("/j_spring_security_check")
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
-        } else  {
+        } else {
             target = rootTarget.path("/rest/login");
         }
         Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
@@ -73,12 +83,11 @@ public class JasperserverRestClient {
         }
         rootTarget.register(new SessionOutputFilter(sessionId));
     }
+
     private boolean isResponseSuccessful(Response response) {
         if (configuration.getAuthenticationType() == AuthenticationType.SPRING
-                && response.getStatus() == ResponseStatus.FOUND) {
-            return true;
-        }
-        if (configuration.getAuthenticationType() == AuthenticationType.REST
+                && response.getStatus() == ResponseStatus.FOUND
+                || configuration.getAuthenticationType() == AuthenticationType.REST
                 && response.getStatus() == ResponseStatus.OK) {
             return true;
         }

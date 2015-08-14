@@ -41,6 +41,13 @@ public class JasperserverRestClientIT {
         assertNotNull(session.getStorage().getSessionId());
     }
 
+    @Test
+    public void should_return_session_via_basic_login() {
+        config.setAuthenticationType(AuthenticationType.BASIC);
+        session = client.authenticate("jasperadmin", "jasperadmin");
+        assertNotNull(session);
+    }
+
     @AfterMethod
     public  void  after() {
         session.logout();
