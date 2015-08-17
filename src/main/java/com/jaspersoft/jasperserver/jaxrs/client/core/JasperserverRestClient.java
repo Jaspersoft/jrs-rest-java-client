@@ -85,10 +85,10 @@ public class JasperserverRestClient {
     }
 
     private boolean isResponseSuccessful(Response response) {
-        if (configuration.getAuthenticationType() == AuthenticationType.SPRING
-                && response.getStatus() == ResponseStatus.FOUND
-                || configuration.getAuthenticationType() == AuthenticationType.REST
-                && response.getStatus() == ResponseStatus.OK) {
+        if ((configuration.getAuthenticationType() == AuthenticationType.SPRING
+                || configuration.getAuthenticationType() == AuthenticationType.REST)
+                && (response.getStatus() == ResponseStatus.FOUND
+                || response.getStatus() == ResponseStatus.OK)) {
             return true;
         }
         return false;
