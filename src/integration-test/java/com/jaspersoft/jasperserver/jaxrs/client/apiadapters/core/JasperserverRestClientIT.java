@@ -54,7 +54,3 @@ public class JasperserverRestClientIT {
     }
 }
 
-/*
-* WebTarget target = storage.getRootTarget().path("/exituser.html");
-        Response response = target.request().get();
-* */
