@@ -49,14 +49,15 @@ public class Session extends AnonymousSession {
     }
 
     public void logout() {
-        WebTarget target = storage.getRootTarget().path("/exituser.html");
-        Response response = target.request().get();
-        if (response.getStatus() >= 400) {
-            new DefaultErrorHandler().handleError(response);
-        }
         if (storage.getConfiguration().getAuthenticationType() == AuthenticationType.BASIC) {
             storage.getCredentials().setUsername(null);
             storage.getCredentials().setPassword(null);
+        } else {
+            WebTarget target = storage.getRootTarget().path("/exituser.html");
+            Response response = target.request().get();
+            if (response.getStatus() >= 400) {
+                new DefaultErrorHandler().handleError(response);
+            }
         }
     }
 
