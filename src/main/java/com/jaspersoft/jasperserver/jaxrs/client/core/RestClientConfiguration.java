@@ -44,9 +44,13 @@ public class RestClientConfiguration {
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
     private AuthenticationType authenticationType = AuthenticationType.REST;
     private Boolean restrictedHttpMethods = false;
+
+    private Boolean isJerseyRequestLogged = false;
+
+    private Boolean isJSonEntitieLogged = false;
+
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;
-
     private Integer readTimeout;
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
@@ -82,10 +86,10 @@ public class RestClientConfiguration {
             throw new IllegalArgumentException("Given parameter is not a URL");
         this.jasperReportsServerUrl = jasperReportsServerUrl;
     }
+
     public AuthenticationType getAuthenticationType() {
         return authenticationType;
     }
-
     public void setAuthenticationType(AuthenticationType authenticationType) {
         this.authenticationType = authenticationType;
     }
@@ -144,6 +148,22 @@ public class RestClientConfiguration {
 
     public void setRestrictedHttpMethods(Boolean restrictedHttpMethods) {
         this.restrictedHttpMethods = restrictedHttpMethods;
+    }
+
+    public Boolean getIsJerseyRequestLogged() {
+        return isJerseyRequestLogged;
+    }
+
+    public void setIsJerseyRequestLogged(Boolean isJerseyRequestLogged) {
+        this.isJerseyRequestLogged = isJerseyRequestLogged;
+    }
+
+    public Boolean getIsJSonEntitieLogged() {
+        return isJSonEntitieLogged;
+    }
+
+    public void setIsJSonEntitieLogged(Boolean isJSonEntitieLogged) {
+        this.isJSonEntitieLogged = isJSonEntitieLogged;
     }
 
     public static RestClientConfiguration loadConfiguration(String path) {
