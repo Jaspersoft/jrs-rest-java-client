@@ -107,7 +107,7 @@ public class SessionStorage {
         SLF4JBridgeHandler.install();
 
         return new LoggingFilter(logger,
-                configuration.getIsJSonEntitieLogged());
+                configuration.getIsJSonEntityLogged());
     }
 
 
