@@ -134,8 +134,8 @@ RestClientConfiguration configuration = RestClientConfiguration.loadConfiguratio
 Here is example of configuration file:
 ```java
 url=http://localhost:4444/jasperserver-pro
-connectionTimeout=10000
-readTimeout=10000
+connectionTimeout=100
+readTimeout=20
 jasperserverVersion=v6_0_0
 authenticationType=REST
 logHttp=true
