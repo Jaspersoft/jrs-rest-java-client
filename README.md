@@ -131,10 +131,29 @@ To do this you should create instance of `RestClientConfiguration`. It can be do
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
 ```
-File should contain only URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}`.
+Here is example of configuration file:
+```java
+url=http://localhost:4444/jasperserver-pro
+connectionTimeout=10000
+readTimeout=10000
+jasperserverVersion=v6_0_0
+authenticationType=REST
+logHttp=true
+logHttpEntity=false
+restrictedHttpMethods=false
+contentMimeType=JSON
+acceptMimeType=JSON
+```
+File must contain at least URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}`.
 ####Creation of manual configuration
+To configure `JasperserverRestClient` manually, use the constructor of `RestClientConfiguration` and properties:
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
+configuration.setAcceptMimeType(MimeType.JSON);
+configuration.setContentMimeType(MimeType.JSON);
+configuration.setJrsVersion(JRSVersion.v6_0_0);
+configuration.setLogHttp(true);
+configuration.setLogHttpEntity(true);
 ```
 ####HTTPS configuration
 <strong>To use HTTPS you need:</strong>

@@ -31,8 +31,8 @@ public class SettingsServiceIT {
         config.setAcceptMimeType(MimeType.JSON);
         config.setContentMimeType(MimeType.JSON);
         config.setJrsVersion(JRSVersion.v6_0_0);
-        config.setIsJerseyRequestLogged(true);
-        config.setIsJSonEntitieLogged(true);
+        config.setLogHttp(true);
+        config.setLogHttpEntity(true);
         client = new JasperserverRestClient(config);
         session = client.getAnonymousSession();
     }

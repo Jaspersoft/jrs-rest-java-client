@@ -37,17 +37,17 @@ public class RestClientConfiguration {
 
     private static final Log log = LogFactory.getLog(RestClientConfiguration.class);
     private static final Pattern URL_PATTERN = Pattern.compile("\\b(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+    private static final Pattern VERSION_PATTERN = Pattern.compile("^[v]\\d[_]\\d[_]\\d$");
 
     private String jasperReportsServerUrl;
     private MimeType contentMimeType = MimeType.JSON;
     private MimeType acceptMimeType = MimeType.JSON;
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
+
     private AuthenticationType authenticationType = AuthenticationType.REST;
     private Boolean restrictedHttpMethods = false;
-
-    private Boolean isJerseyRequestLogged = false;
-
-    private Boolean isJSonEntitieLogged = false;
+    private Boolean logHttpEntity = false;
+    private Boolean logHttp = false;
 
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;
@@ -90,8 +90,33 @@ public class RestClientConfiguration {
     public AuthenticationType getAuthenticationType() {
         return authenticationType;
     }
+
     public void setAuthenticationType(AuthenticationType authenticationType) {
         this.authenticationType = authenticationType;
+    }
+
+    public Boolean getRestrictedHttpMethods() {
+        return restrictedHttpMethods;
+    }
+
+    public void setRestrictedHttpMethods(Boolean restrictedHttpMethods) {
+        this.restrictedHttpMethods = restrictedHttpMethods;
+    }
+
+    public Boolean getLogHttp() {
+        return logHttp;
+    }
+
+    public void setLogHttp(Boolean logHttp) {
+        this.logHttp = logHttp;
+    }
+
+    public Boolean getLogHttpEntity() {
+        return logHttpEntity;
+    }
+
+    public void setLogHttpEntity(Boolean logHttpEntity) {
+        this.logHttpEntity = logHttpEntity;
     }
 
     public MimeType getContentMimeType() {
@@ -118,7 +143,7 @@ public class RestClientConfiguration {
         this.jrsVersion = jrsVersion;
     }
 
-     public TrustManager[] getTrustManagers() {
+    public TrustManager[] getTrustManagers() {
         return trustManagers;
     }
 
@@ -142,43 +167,63 @@ public class RestClientConfiguration {
         this.readTimeout = readTimeout;
     }
 
-    public Boolean getRestrictedHttpMethods() {
-        return restrictedHttpMethods;
-    }
-
-    public void setRestrictedHttpMethods(Boolean restrictedHttpMethods) {
-        this.restrictedHttpMethods = restrictedHttpMethods;
-    }
-
-    public Boolean getIsJerseyRequestLogged() {
-        return isJerseyRequestLogged;
-    }
-
-    public void setIsJerseyRequestLogged(Boolean isJerseyRequestLogged) {
-        this.isJerseyRequestLogged = isJerseyRequestLogged;
-    }
-
-    public Boolean getIsJSonEntitieLogged() {
-        return isJSonEntitieLogged;
-    }
-
-    public void setIsJSonEntitieLogged(Boolean isJSonEntitieLogged) {
-        this.isJSonEntitieLogged = isJSonEntitieLogged;
-    }
-
     public static RestClientConfiguration loadConfiguration(String path) {
-        Properties properties = loadProperties(path);
+        Properties properties = null;
+        if (path != null) {
+            properties = loadProperties(path);
+        }
+        if (properties == null) {
+            log.info("The properties file was not loaded");
+            return null;
+        }
 
         RestClientConfiguration configuration = new RestClientConfiguration();
-        configuration.setJasperReportsServerUrl(properties.getProperty("url"));
+        String url = properties.getProperty("url");
+        if (url != null && !url.equals("") && URL_PATTERN.matcher(url).matches()) {
+            configuration.setJasperReportsServerUrl(url);
+        }
 
         String connectionTimeout = properties.getProperty("connectionTimeout");
-        if (connectionTimeout != null && !connectionTimeout.equals(""))
+        if (connectionTimeout != null && !connectionTimeout.equals("")) {
             configuration.setConnectionTimeout(Integer.valueOf(connectionTimeout));
+        }
 
         String readTimeout = properties.getProperty("readTimeout");
-        if (readTimeout != null && !readTimeout.equals(""))
-            configuration.setConnectionTimeout(Integer.valueOf(readTimeout));
+        if (readTimeout != null && !readTimeout.equals("")) {
+            configuration.setReadTimeout(Integer.valueOf(readTimeout));
+        }
+        String jrsVersion = properties.getProperty("jasperserverVersion");
+        if (jrsVersion != null && !jrsVersion.equals("") && VERSION_PATTERN.matcher(jrsVersion).matches()) {
+            try {
+                configuration.setJrsVersion(JRSVersion.valueOf(jrsVersion));
+            } catch (Exception e) {
+                log.info("There is no version for JasperReportsServer or it isn't supported.", e);
+            }
+        }
+
+        String authenticationType = properties.getProperty("authenticationType");
+        if (authenticationType != null && !authenticationType.equals("")) {
+            try {
+                configuration.setAuthenticationType(AuthenticationType.valueOf(authenticationType.toUpperCase()));
+            } catch (Exception e) {
+                log.info("There is no authentication type or it isn't supported.", e);
+            }
+        }
+
+        String logHttp = properties.getProperty("logHttp");
+        if (logHttp != null && !logHttp.equals("")) {
+            configuration.setLogHttp(Boolean.valueOf(logHttp));
+        }
+
+        String logHttpEntity = properties.getProperty("logHttpEntity");
+        if (logHttpEntity != null && !logHttpEntity.equals("")) {
+            configuration.setLogHttpEntity(Boolean.valueOf(logHttpEntity));
+        }
+
+        String restrictedHttpMethods = properties.getProperty("restrictedHttpMethods");
+        if (restrictedHttpMethods != null && !restrictedHttpMethods.equals("")) {
+            configuration.setRestrictedHttpMethods(Boolean.valueOf(restrictedHttpMethods));
+        }
 
         try {
             configuration.setContentMimeType(MimeType.valueOf(properties.getProperty("contentMimeType")));
@@ -202,9 +247,8 @@ public class RestClientConfiguration {
             properties.load(is);
         } catch (Exception e) {
             log.info("Error when loading properties file", e);
+            return null;
         }
         return properties;
     }
-
-
 }
