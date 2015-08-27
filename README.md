@@ -112,9 +112,10 @@ Table of Contents
 17. [Asynchronous API](#asynchronous-api).
 18. [Getting serialized content from response](#getting-serialized-content-from-response).
 19. [Switching between JSON and XML](#switching-between-json-and-xml).
-20. [Possible issues](#possible-issues).
-21. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-22. [License](#license).
+20. [Logging](#logging).
+21. [Possible issues](#possible-issues).
+22. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+23. [License](#license).
 
 Introduction
 -------------
@@ -183,6 +184,16 @@ Session session = client.authenticate("jasperadmin", "jasperadmin");
 //authentication with multitenancy enabled
 Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
 ```
+`JasperserverRestClient` supports three authentication types: REST, SPRING and BASIC. 
+`REST` type of authentication means that your credentials are sent through `/rest/login`, and in the `SPRING` mode – through `/j_security_check directly/`. Using these types you obtain JSESSIONID cookie of authenticated session after sending credentials.
+In the `BASIC` mode `JasperserverRestClient` uses basic authentication (sends encrypted credentials with each request).
+Client uses `REST` authentication by default but you can change the mode using follow code:
+```java
+config.setAuthenticationType(AuthenticationType.SPRING);
+```
+Or specify authentication type in RestClientConfiguration instance (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration).
+Please notice, the basic authentication is not stateless and it is valid till method logout() is called or the application is restarted.
+
 ####Invalidating session
 Not to store session on server you can invalidate it with `logout()` method.
 ```java
@@ -832,7 +843,7 @@ Response response = operationResult.getResponse();
 ```
 ####Setting Role Membership
 To assign role membership to a user, set the roles property on the user account with the PUT method of the rest_
-v2/users service. For details, see section [creating a user](https://github.com/boryskolesnykov/jasperserver-rest-client/edit/master/README.md#creating-a-user).
+v2/users service. For details, see section [creating a user](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#creating-a-user).
 ####Deleting a Role
 To delete a role, send the DELETE method and specify the role ID (name) in the URL.
 When this method is successful, the role is permanently deleted.
@@ -924,7 +935,7 @@ There are two operations on file resources:
 * Viewing the file resource details to determine the file format
 * Downloading the binary file contents
 
-To view the file resource details, specify the URL of the file in `resource()` method and use the code form [Viewing Resource Details](https://github.com/boryskolesnykov/jasperserver-rest-client/edit/master/README.md#viewing-resource-details) section.
+To view the file resource details, specify the URL of the file in `resource()` method and use the code form [Viewing Resource Details](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#viewing-resource-details) section.
 To download file binary content, specify the URL of the file in `resource()` method and use the code below
 ```java
 OperationResult<InputStream> result = client
@@ -1563,6 +1574,16 @@ acceptMimeType=JSON
 ```
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("jrs-client-config.properties");
+```
+
+###Logging
+It is possible to log outgoing requests and incoming responses using `logHttp` property of `RestCleintConfiguration`:
+```java
+config.setLogHttp(true);
+```
+Also, you are able to log entities using `logHttpEntity` option:
+```java
+config.setLogHttpEntity(true).
 ```
 
 ###Possible issues
