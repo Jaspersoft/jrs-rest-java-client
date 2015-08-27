@@ -38,6 +38,8 @@ public class RestClientConfiguration {
     private static final Log log = LogFactory.getLog(RestClientConfiguration.class);
     private static final Pattern URL_PATTERN = Pattern.compile("\\b(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
     private static final Pattern VERSION_PATTERN = Pattern.compile("^[v]\\d[_]\\d[_]\\d$");
+    private static final Pattern BOOLEAN_PATTERN = Pattern.compile("^[true|false]$");
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("^\\d+$");
 
     private String jasperReportsServerUrl;
     private MimeType contentMimeType = MimeType.JSON;
@@ -179,21 +181,21 @@ public class RestClientConfiguration {
 
         RestClientConfiguration configuration = new RestClientConfiguration();
         String url = properties.getProperty("url");
-        if (url != null && !url.equals("") && URL_PATTERN.matcher(url).matches()) {
+        if (isStringValid(url) && URL_PATTERN.matcher(url).matches()) {
             configuration.setJasperReportsServerUrl(url);
         }
 
         String connectionTimeout = properties.getProperty("connectionTimeout");
-        if (connectionTimeout != null && !connectionTimeout.equals("")) {
+        if (isStringValid(connectionTimeout) && NUMBER_PATTERN.matcher(connectionTimeout).matches()) {
             configuration.setConnectionTimeout(Integer.valueOf(connectionTimeout));
         }
 
         String readTimeout = properties.getProperty("readTimeout");
-        if (readTimeout != null && !readTimeout.equals("")) {
+        if (isStringValid(readTimeout) && NUMBER_PATTERN.matcher(readTimeout).matches()) {
             configuration.setReadTimeout(Integer.valueOf(readTimeout));
         }
         String jrsVersion = properties.getProperty("jasperserverVersion");
-        if (jrsVersion != null && !jrsVersion.equals("") && VERSION_PATTERN.matcher(jrsVersion).matches()) {
+        if (isStringValid(jrsVersion) && VERSION_PATTERN.matcher(jrsVersion).matches()) {
             try {
                 configuration.setJrsVersion(JRSVersion.valueOf(jrsVersion));
             } catch (Exception e) {
@@ -202,7 +204,7 @@ public class RestClientConfiguration {
         }
 
         String authenticationType = properties.getProperty("authenticationType");
-        if (authenticationType != null && !authenticationType.equals("")) {
+        if (isStringValid(authenticationType)) {
             try {
                 configuration.setAuthenticationType(AuthenticationType.valueOf(authenticationType.toUpperCase()));
             } catch (Exception e) {
@@ -211,32 +213,37 @@ public class RestClientConfiguration {
         }
 
         String logHttp = properties.getProperty("logHttp");
-        if (logHttp != null && !logHttp.equals("")) {
+        if (isStringValid(logHttp)) {
             configuration.setLogHttp(Boolean.valueOf(logHttp));
         }
 
         String logHttpEntity = properties.getProperty("logHttpEntity");
-        if (logHttpEntity != null && !logHttpEntity.equals("")) {
+        if (isStringValid(logHttpEntity)) {
             configuration.setLogHttpEntity(Boolean.valueOf(logHttpEntity));
         }
 
         String restrictedHttpMethods = properties.getProperty("restrictedHttpMethods");
-        if (restrictedHttpMethods != null && !restrictedHttpMethods.equals("")) {
+        if (isStringValid(restrictedHttpMethods)) {
             configuration.setRestrictedHttpMethods(Boolean.valueOf(restrictedHttpMethods));
         }
 
-        try {
-            configuration.setContentMimeType(MimeType.valueOf(properties.getProperty("contentMimeType")));
-        } catch (Exception e) {
-            log.info("There is no mime type for content type or it isn't supported.", e);
+        String contentMimeType = properties.getProperty("contentMimeType");
+        if (isStringValid(contentMimeType)) {
+            try {
+                configuration.setContentMimeType(MimeType.valueOf(contentMimeType));
+            } catch (Exception e) {
+                log.info("There is no mime type for content type or it isn't supported.", e);
+            }
         }
 
-        try {
-            configuration.setAcceptMimeType(MimeType.valueOf(properties.getProperty("acceptMimeType")));
-        } catch (Exception e) {
-            log.info("There is no mime type for accept type or it isn't supported.", e);
+        String acceptMimeType = properties.getProperty("acceptMimeType");
+        if (isStringValid(acceptMimeType)) {
+            try {
+                configuration.setAcceptMimeType(MimeType.valueOf(acceptMimeType));
+            } catch (Exception e) {
+                log.info("There is no mime type for accept type or it isn't supported.", e);
+            }
         }
-
         return configuration;
     }
 
@@ -250,5 +257,9 @@ public class RestClientConfiguration {
             return null;
         }
         return properties;
+    }
+
+    private static Boolean isStringValid (String string) {
+        return (string != null && !string.equals(null)) ? true : false;
     }
 }
