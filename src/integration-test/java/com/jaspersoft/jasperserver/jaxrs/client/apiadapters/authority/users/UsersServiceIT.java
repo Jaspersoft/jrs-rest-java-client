@@ -1,4 +1,4 @@
-package jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
@@ -20,24 +20,24 @@ public class UsersServiceIT {
 
     @BeforeMethod
     public void before() {
-        RestClientConfiguration cfg = new RestClientConfiguration("http://localhost:8085");
+        RestClientConfiguration cfg = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
         JasperserverRestClient client = new JasperserverRestClient(cfg);
-        session = client.authenticate("jasperadmin", "jasperadmin");
+        session = client.authenticate("superuser", "superuser");
     }
 
     @Test
     public void shouldReturnAllUsers() {
 
-        // When
-//        List<ClientUser> users = session
-//                .usersService()
-//                .allUsers()
-//                .get()
-//                .getEntity()
-//                .getUserList();
+//         When
+        List<ClientUser> users = session
+                .usersService()
+                .allUsers()
+                .get()
+                .getEntity()
+                .getUserList();
 
-        // Then
-//        Assert.assertTrue(users.size() > 3);
+//         Then
+        Assert.assertTrue(users.size() > 3);
     }
 
     @AfterMethod

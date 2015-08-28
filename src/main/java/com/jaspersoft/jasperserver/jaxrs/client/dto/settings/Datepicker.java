@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by tetiana.iefimenko on 7/22/2015.
+ * @author Tetiana Iefimenko
  */
 public class Datepicker {
     private String closeText;
@@ -32,11 +32,11 @@ public class Datepicker {
         this.prevText = other.prevText;
         this.nextText = other.nextText;
         this.currentText = other.currentText;
-        this.monthNames = new LinkedList<String>(other.monthNames);
-        this.monthNamesShort = new LinkedList<String>(other.monthNamesShort);
-        this.dayNames = new LinkedList<String>(other.dayNames);
-        this.dayNamesShort = new LinkedList<String>(other.dayNamesShort);
-        this.dayNamesMin = new LinkedList<String>(other.dayNamesMin);
+        this.monthNames = (other.monthNames != null) ? new LinkedList<String>(other.monthNames) : null;
+        this.monthNamesShort = (other.monthNamesShort != null) ? new LinkedList<String>(other.monthNamesShort) : null;
+        this.dayNames = (other.dayNames != null) ? new LinkedList<String>(other.dayNames) : null;
+        this.dayNamesShort = (other.dayNamesShort != null) ? new LinkedList<String>(other.dayNamesShort) : null;
+        this.dayNamesMin = (other.dayNamesMin != null) ? new LinkedList<String>(other.dayNamesMin) : null;
         this.weekHeader = other.weekHeader;
         this.dateFormat = other.dateFormat;
         this.firstDay = other.firstDay;
@@ -240,30 +240,7 @@ public class Datepicker {
 
     @Override
     public String toString() {
-
-        String monthNames = "";
-        String monthNamesShort = "";
-        String dayNames = "";
-        String dayNamesShort = "";
-        String dayNamesMin = "";
-
-        for (String monthName : this.monthNames) {
-            monthNames += monthName + ", ";
-        }
-
-        for (String monthNameShort : this.monthNamesShort) {
-            monthNamesShort += monthNameShort + ", ";
-        }
-
-        for (String dayName : this.dayNames) {
-            dayNames += dayName + ", ";
-        }
-
-        for (String dayNameMin : this.dayNamesMin) {
-            dayNamesMin += dayNameMin + ", ";
-        }
-
-        return "DatePicker{" +
+        return "Datepicker{" +
                 "closeText='" + closeText + '\'' +
                 ", prevText='" + prevText + '\'' +
                 ", nextText='" + nextText + '\'' +

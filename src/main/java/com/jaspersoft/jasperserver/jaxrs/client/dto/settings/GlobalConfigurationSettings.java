@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by tetiana.iefimenko on 7/15/2015.
+ * @author
+ * @author Tetiana Iefimenko
  */
 public class GlobalConfigurationSettings {
     private Map<String, String> messages;
@@ -56,8 +57,12 @@ public class GlobalConfigurationSettings {
     }
 
     public GlobalConfigurationSettings(GlobalConfigurationSettings other) {
-        this.messages = new LinkedHashMap<String, String>();
-        messages.putAll(other.messages);
+        if (other.messages != null) {
+            this.messages = new LinkedHashMap<String, String>();
+            messages.putAll(other.messages);
+        } else {
+            this.messages = null;
+        }
         this.paginatorItemsPerPage = other.paginatorItemsPerPage;
         this.paginatorPagesRange = other.paginatorPagesRange;
         this.reportLevelConfigurable = other.reportLevelConfigurable;
@@ -71,9 +76,9 @@ public class GlobalConfigurationSettings {
         this.userNameSeparator = other.userNameSeparator;
         this.defaultRole = other.defaultRole;
         this.passwordMask = other.passwordMask;
-        this.viewReportsFilterList = new LinkedList<String>(other.viewReportsFilterList);
-        this.outputFolderFilterList = new LinkedList<String>(other.outputFolderFilterList);
-        this.outputFolderFilterPatterns = new LinkedList<String>(other.outputFolderFilterPatterns);
+        this.viewReportsFilterList = (other.viewReportsFilterList != null) ? new LinkedList<String>(other.viewReportsFilterList) : null;
+        this.outputFolderFilterList = (other.outputFolderFilterList != null) ? new LinkedList<String>(other.outputFolderFilterList) : null;
+        this.outputFolderFilterPatterns = (other.outputFolderFilterPatterns != null) ? new LinkedList<String>(other.outputFolderFilterPatterns) : null;
         this.tenantNameNotSupportedSymbols = other.tenantNameNotSupportedSymbols;
         this.tenantIdNotSupportedSymbols = other.tenantIdNotSupportedSymbols;
         this.resourceIdNotSupportedSymbols = other.resourceIdNotSupportedSymbols;
@@ -97,9 +102,13 @@ public class GlobalConfigurationSettings {
         this.forceDomainDependentsUseACL = other.forceDomainDependentsUseACL;
         this.defaultDomainDependentsBlockAndUpdate = other.defaultDomainDependentsBlockAndUpdate;
         this.defaultDontUpdateDomainDependents = other.defaultDontUpdateDomainDependents;
-        this.dataSourceTypes = new LinkedList<DataSourceType>(other.dataSourceTypes);
-        this.allFileResourceTypes = new LinkedHashMap<String, String>();
-        allFileResourceTypes.putAll(other.allFileResourceTypes);
+        this.dataSourceTypes = (other.dataSourceTypes != null) ? new LinkedList<DataSourceType>(other.dataSourceTypes) : null;
+        if (other.allFileResourceTypes != null) {
+            this.allFileResourceTypes = new LinkedHashMap<String, String>();
+            allFileResourceTypes.putAll(other.allFileResourceTypes);
+        } else {
+            this.allFileResourceTypes = null;
+        }
     }
 
     public Map<String, String> getMessages() {
