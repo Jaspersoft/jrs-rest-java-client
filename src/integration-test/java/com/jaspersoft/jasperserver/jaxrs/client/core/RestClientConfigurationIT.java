@@ -29,14 +29,24 @@ public class RestClientConfigurationIT {
         assertNotNull(config.getAcceptMimeType());
         assertNotNull(config.getContentMimeType());
         assertTrue(config.getLogHttp());
-        assertFalse(config.getLogHttpEntity());
-        assertFalse(config.getLogHttpEntity());
+        assertTrue(config.getLogHttpEntity());
         assertFalse(config.getRestrictedHttpMethods());
         assertEquals(config.getJrsVersion(), JRSVersion.v6_0_0);
         assertEquals(config.getAuthenticationType(), AuthenticationType.REST);
     }
 
-    @AfterMethod
+
+    @Test
+    public void should_throw_nullPointerException() {
+        try {
+            config = RestClientConfiguration.loadConfiguration("wrong_path");
+        } catch (NullPointerException ex) {
+            assertNotNull(ex);
+            assertSame(ex, new NullPointerException());
+        }
+    }
+
+   @AfterMethod
     public void afterTest() {
         config = null;
     }

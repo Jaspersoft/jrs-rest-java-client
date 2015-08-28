@@ -30,7 +30,6 @@ import java.io.InputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RestClientConfiguration {
@@ -38,7 +37,7 @@ public class RestClientConfiguration {
     private static final Log log = LogFactory.getLog(RestClientConfiguration.class);
     private static final Pattern URL_PATTERN = Pattern.compile("\\b(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
     private static final Pattern VERSION_PATTERN = Pattern.compile("^[v]\\d[_]\\d[_]\\d$");
-    private static final Pattern BOOLEAN_PATTERN = Pattern.compile("^[true|false]$");
+    private static final Pattern BOOLEAN_PATTERN = Pattern.compile("^(true|false)$", Pattern.CASE_INSENSITIVE);
     private static final Pattern NUMBER_PATTERN = Pattern.compile("^\\d+$");
 
     private String jasperReportsServerUrl;
@@ -57,7 +56,7 @@ public class RestClientConfiguration {
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
-        setJasperReportsServerUrl(jasperReportsServerUrl);
+            setJasperReportsServerUrl(jasperReportsServerUrl);
     }
 
     public RestClientConfiguration() {
@@ -83,8 +82,7 @@ public class RestClientConfiguration {
     }
 
     public void setJasperReportsServerUrl(String jasperReportsServerUrl) {
-        Matcher matcher = URL_PATTERN.matcher(jasperReportsServerUrl);
-        if (!matcher.matches())
+        if (!isStringValid(jasperReportsServerUrl) || !URL_PATTERN.matcher(jasperReportsServerUrl).matches())
             throw new IllegalArgumentException("Given parameter is not a URL");
         this.jasperReportsServerUrl = jasperReportsServerUrl;
     }
@@ -176,7 +174,7 @@ public class RestClientConfiguration {
         }
         if (properties == null) {
             log.info("The properties file was not loaded");
-            return null;
+            return new RestClientConfiguration();
         }
 
         RestClientConfiguration configuration = new RestClientConfiguration();
@@ -213,17 +211,17 @@ public class RestClientConfiguration {
         }
 
         String logHttp = properties.getProperty("logHttp");
-        if (isStringValid(logHttp)) {
+        if (isStringValid(logHttp) && BOOLEAN_PATTERN.matcher(logHttp).matches()) {
             configuration.setLogHttp(Boolean.valueOf(logHttp));
         }
 
         String logHttpEntity = properties.getProperty("logHttpEntity");
-        if (isStringValid(logHttpEntity)) {
+        if (isStringValid(logHttpEntity) && BOOLEAN_PATTERN.matcher(logHttpEntity).matches()) {
             configuration.setLogHttpEntity(Boolean.valueOf(logHttpEntity));
         }
 
         String restrictedHttpMethods = properties.getProperty("restrictedHttpMethods");
-        if (isStringValid(restrictedHttpMethods)) {
+        if (isStringValid(restrictedHttpMethods) && BOOLEAN_PATTERN.matcher(restrictedHttpMethods).matches()) {
             configuration.setRestrictedHttpMethods(Boolean.valueOf(restrictedHttpMethods));
         }
 
