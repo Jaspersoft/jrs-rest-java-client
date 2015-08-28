@@ -42,7 +42,11 @@ import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
 import static com.jaspersoft.jasperserver.jaxrs.client.core.MimeType.JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
-
+/**
+ * @author
+ * @author Tetiana Iefimenko
+ *
+ * */
 public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType> {
     private static final int GET = 0;
     private static final int DELETE = 1;
@@ -90,15 +94,14 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
 
     public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path, ErrorHandler errorHandler) {
         JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, responseClass);
-        request.errorHandler = errorHandler != null ? errorHandler : new DefaultErrorHandler();
-        for (String pathElem : path) {
-            request.setPath(pathElem);
-        }
-        return request;
+        return configRequest(request, path, errorHandler);
     }
 
     public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, GenericType<T> genericType, String[] path, ErrorHandler errorHandler) {
         JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, genericType);
+        return configRequest(request, path, errorHandler);
+    }
+    private static <T> JerseyRequest<T> configRequest(JerseyRequest<T> request, String[] path, ErrorHandler errorHandler){
         request.errorHandler = errorHandler != null ? errorHandler : new DefaultErrorHandler();
         for (String pathElem : path) {
             request.setPath(pathElem);
