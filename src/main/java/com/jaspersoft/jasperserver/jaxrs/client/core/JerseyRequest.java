@@ -28,22 +28,25 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
-import org.glassfish.jersey.jackson.JacksonFeature;
-import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
-
+import java.util.List;
+import java.util.Map;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import java.util.List;
-import java.util.Map;
+import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.MimeType.JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
-
+/**
+ * @author
+ * @author Tetiana Iefimenko
+ *
+ * */
 public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType> {
     private static final int GET = 0;
     private static final int DELETE = 1;
@@ -52,6 +55,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
 
     private final OperationResultFactory operationResultFactory;
     private final Class<ResponseType> responseClass;
+    private final GenericType<ResponseType> responseGenericType;
     private ErrorHandler errorHandler;
     private MultivaluedMap<String, String> headers;
     private WebTarget usersWebTarget;
@@ -61,7 +65,18 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     protected JerseyRequest(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
         operationResultFactory = new OperationResultFactoryImpl();
         this.responseClass = responseClass;
+        this.responseGenericType = null;
+        init(sessionStorage);
 
+    }
+
+    protected JerseyRequest(SessionStorage sessionStorage, GenericType<ResponseType> genericType) {
+        operationResultFactory = new OperationResultFactoryImpl();
+        this.responseClass = (Class<ResponseType>) genericType.getRawType();
+        this.responseGenericType = genericType;
+        init(sessionStorage);
+    }
+    private void init(SessionStorage sessionStorage) {
         RestClientConfiguration configuration = sessionStorage.getConfiguration();
 
         contentType = configuration.getContentMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
@@ -70,7 +85,6 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         usersWebTarget = sessionStorage.getRootTarget()
                 .path("/rest_v2")
                 .register(CustomRepresentationTypeProvider.class)
-                .register(JacksonFeature.class)
                 .register(MultiPartWriter.class);
     }
 
@@ -80,6 +94,14 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
 
     public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path, ErrorHandler errorHandler) {
         JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, responseClass);
+        return configRequest(request, path, errorHandler);
+    }
+
+    public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, GenericType<T> genericType, String[] path, ErrorHandler errorHandler) {
+        JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, genericType);
+        return configRequest(request, path, errorHandler);
+    }
+    private static <T> JerseyRequest<T> configRequest(JerseyRequest<T> request, String[] path, ErrorHandler errorHandler){
         request.errorHandler = errorHandler != null ? errorHandler : new DefaultErrorHandler();
         for (String pathElem : path) {
             request.setPath(pathElem);
@@ -140,7 +162,8 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         if (response != null && response.getStatus() >= 400) {
             errorHandler.handleError(response);
         }
-        return operationResultFactory.getOperationResult(response, responseClass);
+        return (responseGenericType != null) ? operationResultFactory.getOperationResult(response, responseGenericType)
+                : operationResultFactory.getOperationResult(response, responseClass);
     }
 
     private void addHeaders(Invocation.Builder request) {

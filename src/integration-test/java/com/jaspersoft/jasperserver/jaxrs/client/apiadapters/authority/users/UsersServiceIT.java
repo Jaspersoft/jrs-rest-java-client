@@ -20,15 +20,15 @@ public class UsersServiceIT {
 
     @BeforeMethod
     public void before() {
-        RestClientConfiguration cfg = new RestClientConfiguration("http://localhost:8085");
+        RestClientConfiguration cfg = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
         JasperserverRestClient client = new JasperserverRestClient(cfg);
-        session = client.authenticate("jasperadmin", "jasperadmin");
+        session = client.authenticate("superuser", "superuser");
     }
 
     @Test
     public void shouldReturnAllUsers() {
 
-        // When
+//         When
         List<ClientUser> users = session
                 .usersService()
                 .allUsers()
@@ -36,7 +36,7 @@ public class UsersServiceIT {
                 .getEntity()
                 .getUserList();
 
-        // Then
+//         Then
         Assert.assertTrue(users.size() > 3);
     }
 

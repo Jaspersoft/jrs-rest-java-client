@@ -5,8 +5,10 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.*;
 
-import java.util.Map;
+import javax.ws.rs.core.GenericType;
+import java.util.List;
 
 /**
  * @author Alex Krasnyanskiy
@@ -20,46 +22,74 @@ public class SingleSettingsAdapter extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    public OperationResult<Map> group(String groupKey) {
-        this.groupKey = groupKey;
-        return request().get();
+    public <T> OperationResult<T> group(String group, Class<T> resultClass) {
+        this.groupKey = group;
+        return request(resultClass).get();
     }
 
-    public OperationResult<Map> group(ServerSettingsGroup group) {
-        this.groupKey = group.getGroup();
-        return request().get();
+    public <T> OperationResult<T> group(String group, GenericType<T> genericType) {
+        this.groupKey = group;
+        return request(genericType).get();
     }
 
-    private JerseyRequest<Map> request() {
+    public OperationResult<RequestSettings> ofRequestGroup() {
+        this.groupKey = "request";
+        return request(RequestSettings.class).get();
+    }
+
+    public OperationResult<DataSourcePatternsSettings> ofDataSourcePatternsGroup() {
+        this.groupKey = "dataSourcePatterns";
+        return request(DataSourcePatternsSettings.class).get();
+    }
+
+    public OperationResult<List<UserTimeZone>> ofUserTimeZonesGroup() {
+        this.groupKey = "userTimeZones";
+        return request(new GenericType<List<UserTimeZone>>(){}).get();
+    }
+
+    public OperationResult<AwsSettings> ofAwsGroup() {
+        this.groupKey = "awsSettings";
+        return request(AwsSettings.class).get();
+    }
+
+    public OperationResult<DecimalFormatSymbolsSettings> ofDecimalFormatSymbolsGroup() {
+        this.groupKey = "decimalFormatSymbols";
+        return request(DecimalFormatSymbolsSettings.class).get();
+    }
+
+    public OperationResult<DashboardSettings> ofDashboardGroup() {
+        this.groupKey = "dashboardSettings";
+        return request(DashboardSettings.class).get();
+    }
+
+    public OperationResult<GlobalConfigurationSettings> ofGlobalConfigurationGroup() {
+        this.groupKey = "globalConfiguration";
+        return request(GlobalConfigurationSettings.class).get();
+    }
+
+    public OperationResult<DateTimeSettings> ofDateTimeGroup() {
+        this.groupKey = "dateTimeSettings";
+        return request(DateTimeSettings.class).get();
+    }
+
+    public OperationResult<InputControlsSettings> ofInputControlsGroup() {
+        this.groupKey = "inputControls";
+        return request(InputControlsSettings.class).get();
+    }
+
+    private  <T> JerseyRequest<T> request(Class<T> resultClass) {
         return JerseyRequest.buildRequest(
                 sessionStorage,
-                Map.class,
+                resultClass,
                 new String[]{"/settings/" + groupKey},
                 new DefaultErrorHandler());
     }
 
-    public enum ServerSettingsGroup {
-
-        REQUEST("request"),
-        DATA_SOURCE_PATTERNS("dataSourcePatterns"),
-        USER_TIME_ZONES("userTimeZones"),
-        GLOBAL_CONFIGURATION("globalConfiguration"),
-        AWS_SETTINGS("awsSettings"),
-        DECIMAL_FORMAT_SYMBOLS("decimalFormatSymbols"),
-        DATE_TIME_SETTINGS("dateTimeSettings"),
-        DASHBOARD_SETTINGS("dashboardSettings"),
-        INPUT_CONTROL("inputControls"),
-        METADATA("metadata"),
-        ADHOC_VIEW("adhocview");
-
-        private String group;
-
-        ServerSettingsGroup(String group) {
-            this.group = group;
-        }
-
-        public String getGroup() {
-            return group;
-        }
+    private  <T> JerseyRequest<T> request(GenericType<T> genericType) {
+        return JerseyRequest.buildRequest(
+                sessionStorage,
+                genericType,
+                new String[]{"/settings/" + groupKey},
+                new DefaultErrorHandler());
     }
 }

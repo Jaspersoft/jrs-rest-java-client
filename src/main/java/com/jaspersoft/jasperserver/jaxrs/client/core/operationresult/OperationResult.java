@@ -21,6 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 public abstract class OperationResult<T> {
@@ -28,6 +29,7 @@ public abstract class OperationResult<T> {
     protected Response response;
     protected Class<? extends T> entityClass;
     protected T entity;
+    protected GenericType<T> genericEntity;
     protected String serializedContent;
 
     public OperationResult(Response response, Class<? extends T> entityClass) {
@@ -36,10 +38,21 @@ public abstract class OperationResult<T> {
         this.entityClass = entityClass;
     }
 
+    public OperationResult(Response response, GenericType<T> genericEntity) {
+        this.response = response;
+        response.bufferEntity();
+        this.entityClass = (Class<? extends T>) genericEntity.getRawType();
+        this.genericEntity = genericEntity;
+    }
+
     public T getEntity() {
         try {
             if (entity == null) {
-                entity = response.readEntity(entityClass);
+                if (genericEntity != null) {
+                    entity = response.readEntity(genericEntity);
+                } else {
+                    entity = response.readEntity(entityClass);
+                }
             }
             return entity;
         } catch (Exception e) {
