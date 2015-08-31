@@ -32,11 +32,17 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.util.regex.Pattern.compile;
 
+/**
+ * @author
+ * @author Tetiana Iefimenko
+ * */
 public class RunReportAdapter extends AbstractAdapter {
 
     private final MultivaluedMap<String, String> params;
@@ -63,9 +69,17 @@ public class RunReportAdapter extends AbstractAdapter {
         this.pages = new String[]{range.getRange()};
     }
 
-    public RunReportAdapter parameter(String name, String value) {
-        params.add(name, value);
+    public RunReportAdapter parameter(String name, String... value) {
+
+        params.addAll(name, Arrays.asList(value));
         return this;
+    }
+
+    public RunReportAdapter parameter(String name, List<String> values) {
+
+        params.addAll(name, values);
+        return this;
+
     }
 
     public OperationResult<InputStream> run() {

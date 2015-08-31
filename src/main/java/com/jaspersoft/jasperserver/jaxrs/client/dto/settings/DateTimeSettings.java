@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.settings;
 
 /**
- * @author Tetiana Iefimenko
+ *  @author Tetiana Iefimenko
  */
 public class DateTimeSettings {
 

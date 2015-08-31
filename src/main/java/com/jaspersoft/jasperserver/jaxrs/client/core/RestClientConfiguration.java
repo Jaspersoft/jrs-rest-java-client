@@ -21,17 +21,16 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import java.io.InputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class RestClientConfiguration {
 
@@ -45,6 +44,7 @@ public class RestClientConfiguration {
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;
     private Integer readTimeout;
+    private Boolean restrictedHttpMethods = false;
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
@@ -128,6 +128,14 @@ public class RestClientConfiguration {
         this.readTimeout = readTimeout;
     }
 
+    public Boolean getRestrictedHttpMethods() {
+        return restrictedHttpMethods;
+    }
+
+    public void setRestrictedHttpMethods(Boolean restrictedHttpMethods) {
+        this.restrictedHttpMethods = restrictedHttpMethods;
+    }
+
     public static RestClientConfiguration loadConfiguration(String path) {
         Properties properties = loadProperties(path);
 
@@ -167,5 +175,6 @@ public class RestClientConfiguration {
         }
         return properties;
     }
+
 
 }

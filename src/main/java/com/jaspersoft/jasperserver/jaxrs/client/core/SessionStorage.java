@@ -24,22 +24,15 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.jackson.JacksonFeature;
-
+import java.security.SecureRandom;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.security.SecureRandom;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.jackson.JacksonFeature;
 
 public class SessionStorage {
 
@@ -97,26 +90,11 @@ public class SessionStorage {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
-        login();
-        rootTarget.register(new SessionOutputFilter(sessionId));
         rootTarget.register(JacksonFeature.class);
         rootTarget.register(provider);
 
     }
 
-    private void login() {
-        Form form = new Form();
-        form.param("j_username", credentials.getUsername()).param("j_password", credentials.getPassword());
-
-        WebTarget target = rootTarget.path("/rest/login");
-        Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
-
-        if (response.getStatus() == ResponseStatus.OK) {
-            sessionId = response.getCookies().get("JSESSIONID").getValue();
-        } else {
-            new DefaultErrorHandler().handleError(response);
-        }
-    }
 
     public RestClientConfiguration getConfiguration() {
         return configuration;
@@ -128,6 +106,10 @@ public class SessionStorage {
 
     public String getSessionId() {
         return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public WebTarget getRootTarget() {

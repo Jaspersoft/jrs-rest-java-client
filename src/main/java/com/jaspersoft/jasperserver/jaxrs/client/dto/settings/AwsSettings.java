@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * @author Tetiana Iefimenko
+ *
  */
 public class AwsSettings {
 

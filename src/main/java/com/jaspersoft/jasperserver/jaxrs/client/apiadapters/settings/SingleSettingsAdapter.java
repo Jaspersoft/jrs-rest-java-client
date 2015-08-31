@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * @author Alex Krasnyanskiy
+ * @author Tetiana Iefimenko
  * @since 6.0.3-ALPHA
  */
 public class SingleSettingsAdapter extends AbstractAdapter {
@@ -77,7 +78,7 @@ public class SingleSettingsAdapter extends AbstractAdapter {
         return request(InputControlsSettings.class).get();
     }
 
-    private  <T> JerseyRequest<T> request(Class<T> resultClass) {
+    private <T> JerseyRequest<T> request(Class<T> resultClass) {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 resultClass,
@@ -85,7 +86,7 @@ public class SingleSettingsAdapter extends AbstractAdapter {
                 new DefaultErrorHandler());
     }
 
-    private  <T> JerseyRequest<T> request(GenericType<T> genericType) {
+    private <T> JerseyRequest<T> request(GenericType<T> genericType) {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 genericType,

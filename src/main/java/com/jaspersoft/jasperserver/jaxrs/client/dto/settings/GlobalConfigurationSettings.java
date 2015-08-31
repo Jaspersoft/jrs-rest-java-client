@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author
  * @author Tetiana Iefimenko
  */
 public class GlobalConfigurationSettings {

@@ -1,42 +1,36 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
-import com.jaspersoft.jasperserver.dto.resources.ClientFolder;
-import com.jaspersoft.jasperserver.dto.resources.ClientResource;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JRSVersion;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import java.io.ByteArrayInputStream;
+import java.util.concurrent.TimeUnit;
+import javax.ws.rs.core.Response;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.Response;
-import java.io.ByteArrayInputStream;
-import java.util.concurrent.TimeUnit;
-
 /**
  * @author Alexander Krasnyanskiy
+ * @author tetiana Iefimenko
  */
 public class ResourcesServiceIT {
 
+    private RestClientConfiguration config;
+    private JasperserverRestClient client;
     private Session session;
 
     @BeforeMethod
     public void before() {
-        RestClientConfiguration cfg = new RestClientConfiguration("http://localhost:8085");
-        JasperserverRestClient client = new JasperserverRestClient(cfg);
-        session = client.authenticate("jasperadmin", "jasperadmin");
-
-        ClientFolder folder = new ClientFolder()
-                .setUri("/reports/testFolder")
-                .setLabel("Test Folder")
-                .setDescription("Test folder description");
-
-        ClientResource result = session.resourcesService()
-                .resource("/reports/testFolder")
-                .createNew(folder)
-                .getEntity();
-
+        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
+        config.setAcceptMimeType(MimeType.JSON);
+        config.setContentMimeType(MimeType.JSON);
+        config.setJrsVersion(JRSVersion.v6_0_1);
+        client = new JasperserverRestClient(config);
+        session = client.authenticate("superuser", "superuser");
     }
 
 

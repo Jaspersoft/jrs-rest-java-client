@@ -20,7 +20,6 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.ServerAttributesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
@@ -33,24 +32,19 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.Permissi
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo.ServerInfoService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SettingsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails.ThumbnailsService;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-public class Session {
-
-    private SessionStorage storage;
+/**
+ * @author
+ * @author Tetiana Iefimenko
+ * */
+public class Session extends AnonymousSession{
 
     public Session(SessionStorage sessionStorage) {
-        this.storage = sessionStorage;
-    }
-
-    public SessionStorage getStorage() {
-        return storage;
+        super(sessionStorage);
     }
 
     public void logout() {
@@ -61,20 +55,8 @@ public class Session {
         }
     }
 
-    public <ServiceType extends AbstractAdapter> ServiceType getService(Class<ServiceType> serviceClass) {
-        try {
-            return serviceClass.getConstructor(SessionStorage.class).newInstance(storage);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public OrganizationsService organizationsService() {
         return getService(OrganizationsService.class);
-    }
-
-    public ServerInfoService serverInfoService() {
-        return getService(ServerInfoService.class);
     }
 
     public UsersService usersService() {
@@ -125,7 +107,4 @@ public class Session {
         return getService(ServerAttributesService.class);
     }
 
-    public SettingsService settingsService() {
-        return getService(SettingsService.class);
-    }
 }

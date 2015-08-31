@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author Tetiana Iefimenko
+ *  @author Tetiana Iefimenko
  */
 public class Timepicker {
     private  String timeOnlyTitle;

@@ -1,29 +1,40 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.AnonymousSession;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JRSVersion;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.*;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.AwsSettings;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.DashboardSettings;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.DataSourcePatternsSettings;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.DateTimeSettings;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.DecimalFormatSymbolsSettings;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.GlobalConfigurationSettings;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.InputControlsSettings;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.RequestSettings;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.UserTimeZone;
+import java.util.List;
+import java.util.Map;
+import javax.ws.rs.core.GenericType;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.core.GenericType;
-import java.util.List;
-import java.util.Map;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 
+/**
+ * @author
+ * @author Tetiana Iefimenko
+ * */
 public class SettingsServiceIT {
 
     private RestClientConfiguration config;
     private JasperserverRestClient client;
-    private Session session;
+    private AnonymousSession session;
 
     @BeforeMethod
     public void before() {
@@ -32,7 +43,7 @@ public class SettingsServiceIT {
         config.setContentMimeType(MimeType.JSON);
         config.setJrsVersion(JRSVersion.v6_0_0);
         client = new JasperserverRestClient(config);
-        session = client.authenticate("superuser", "superuser");
+        session = client.getAnonymousSession();
     }
 
     @Test
@@ -231,7 +242,8 @@ public class SettingsServiceIT {
         final List<UserTimeZone> settings = session
                 .settingsService()
                 .settings()
-                .group("userTimeZones", new GenericType<List<UserTimeZone>>(){})
+                .group("userTimeZones", new GenericType<List<UserTimeZone>>() {
+                })
                 .getEntity();
 
         // Then
