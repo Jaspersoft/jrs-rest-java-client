@@ -3,14 +3,18 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import junit.framework.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import sun.org.mozilla.javascript.internal.ast.WhileLoop;
-
-import java.io.*;
-
+/**
+ * @author
+ * @author tetiana Iefimenko
+ */
 public class ReportingServiceIT {
 
     private RestClientConfiguration configuration;
