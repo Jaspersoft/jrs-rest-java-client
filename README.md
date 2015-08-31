@@ -858,7 +858,7 @@ Settings Service
 It provides method that allow you to get server specific settings, required by UI to work with the server in sync. There can be formats and patterns, modes for some modules etc.
 
 ####Getting server specific settings
-To get settings, use the getEntity() method and specify the group of settings in the group() method and class of entity. The method getEntity() returns instance of specified class:
+To get settings, use the `getEntity()` method and specify the group of settings in the `group()` method and class of entity as shown below. The method `getEntity()` returns instance of specified class:
 ```java 
 final Map settings = session
                 .settingsService()
@@ -875,7 +875,7 @@ final List settings = session
         .group("userTimeZones", List.class)
         .getEntity();
 ```
-Supported groups are: 
+Supported groups of settings are: 
 
 1.	“request”. Settings related to current AJAX request configuration. Returned settings are: maxInactiveInterval, contextPath;
 

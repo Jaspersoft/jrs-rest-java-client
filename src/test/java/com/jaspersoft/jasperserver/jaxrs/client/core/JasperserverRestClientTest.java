@@ -57,7 +57,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         new JasperserverRestClient(null);
     }
 
-    @Test
+    @Test(enabled = false)
     public void should_return_proper_Session_object() throws Exception {
 
         // Given
