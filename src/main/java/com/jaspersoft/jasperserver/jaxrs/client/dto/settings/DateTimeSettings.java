@@ -1,7 +1,5 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.settings;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  *  @author Tetiana Iefimenko
  */
@@ -14,8 +12,8 @@ public class DateTimeSettings {
     }
 
     public DateTimeSettings(DateTimeSettings other) {
-        this.datepicker = other.datepicker;
-        this.timepicker = other.timepicker;
+        this.datepicker = (other.datepicker != null) ? new Datepicker(other.datepicker) : null;
+        this.timepicker = (other.timepicker != null) ? new Timepicker(other.timepicker) : null;
     }
 
     public Datepicker getDatepicker() {

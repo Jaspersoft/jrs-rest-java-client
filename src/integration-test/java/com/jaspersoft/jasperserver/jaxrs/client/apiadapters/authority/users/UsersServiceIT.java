@@ -20,18 +20,19 @@ public class UsersServiceIT {
 
     @BeforeMethod
     public void before() {
-        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        config.setAcceptMimeType(MimeType.JSON);
-        config.setContentMimeType(MimeType.JSON);
-        config.setJrsVersion(JRSVersion.v6_0_1);
-        client = new JasperserverRestClient(config);
+
+        RestClientConfiguration cfg = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
+        JasperserverRestClient client = new JasperserverRestClient(cfg);
+
         session = client.authenticate("superuser", "superuser");
     }
 
     @Test
     public void shouldReturnAllUsers() {
 
+
          //When
+
         List<ClientUser> users = session
                 .usersService()
                 .allUsers()
@@ -55,6 +56,7 @@ public class UsersServiceIT {
                 .getUserList();
 
         //Then
+
         Assert.assertTrue(users.size() > 3);
     }
 

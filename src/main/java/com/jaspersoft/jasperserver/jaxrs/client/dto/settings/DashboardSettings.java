@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *  @author Tetiana Iefimenko
+ * @author Tetiana Iefimenko
  */
 public class DashboardSettings {
 
@@ -14,7 +14,7 @@ public class DashboardSettings {
     }
 
     public DashboardSettings(DashboardSettings other) {
-        this.newItemsRegistry = new LinkedList<ItemRegistry>(other.newItemsRegistry);
+        this.newItemsRegistry = (other.newItemsRegistry != null) ? new LinkedList<ItemRegistry>(other.newItemsRegistry) : null;
     }
 
     public List<ItemRegistry> getNewItemsRegistry() {
@@ -44,11 +44,8 @@ public class DashboardSettings {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("DashBoard settings{ New item registry : ");
-        for (ItemRegistry item : this.newItemsRegistry) {
-            result.append(item.toString()).append(" / ");
-        }
-        return result.append("}").toString();
+        return "DashboardSettings{" +
+                "newItemsRegistry=" + newItemsRegistry +
+                '}';
     }
 }
