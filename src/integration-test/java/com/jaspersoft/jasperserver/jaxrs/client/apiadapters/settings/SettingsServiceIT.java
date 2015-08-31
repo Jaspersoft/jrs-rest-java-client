@@ -16,7 +16,6 @@ import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * @author
  * @author Tetiana Iefimenko
  * */
 public class SettingsServiceIT {

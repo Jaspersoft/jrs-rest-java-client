@@ -39,7 +39,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 /**
- * @author
  * @author Tetiana Iefimenko
  * */
 public class Session extends AnonymousSession{
