@@ -3,17 +3,21 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+<<<<<<< HEAD
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+=======
+import java.io.InputStream;
+>>>>>>> develop
 import junit.framework.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 /**
- * @author
- * @author tetiana Iefimenko
+ * @author Alex Krasnyanskiy
+ * @author Tetiana Iefimenko
  */
 public class ReportingServiceIT {
 
@@ -44,28 +48,6 @@ public class ReportingServiceIT {
         InputStream entity = result.getEntity();
         /** Then **/
         Assert.assertNotNull(entity);
-
-        OutputStream output = null;
-        try {
-            output = new FileOutputStream("file.pdf");
-            int i = 0;
-            while (i != -1) {
-                i = entity.read();
-                output.write(i);
-                output.flush();
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-
-            try {
-                entity.close();
-                output.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
     }
 
