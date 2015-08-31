@@ -62,6 +62,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     public void should_throw_an_exception_when_pass_null_param_to_the_constructor() {
         new JasperserverRestClient(null);
     }
+
     @Test
     public void should_return_proper_Session_object() throws Exception {
 

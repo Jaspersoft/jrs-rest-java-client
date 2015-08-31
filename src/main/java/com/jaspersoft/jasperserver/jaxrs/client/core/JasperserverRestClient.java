@@ -42,7 +42,7 @@ public class JasperserverRestClient {
         AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
         SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
         login(sessionStorage);
-        return  new Session(sessionStorage);
+        return new Session(sessionStorage);
     }
 
     public AnonymousSession getAnonymousSession() {
