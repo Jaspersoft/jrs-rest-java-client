@@ -246,35 +246,4 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         return this;
     }
 
-
-    /**
-     * getters/setters block
-     */
-    protected OperationResultFactory getOperationResultFactory() {
-        return operationResultFactory;
-    }
-
-    protected Class<ResponseType> getResponseClass() {
-        return responseClass;
-    }
-
-    protected ErrorHandler getErrorHandler() {
-        return errorHandler;
-    }
-
-    protected MultivaluedMap<String, String> getHeaders() {
-        return headers;
-    }
-
-    protected WebTarget getUsersWebTarget() {
-        return usersWebTarget;
-    }
-
-    protected String getContentType() {
-        return contentType;
-    }
-
-    protected String getAcceptType() {
-        return acceptType;
-    }
 }
