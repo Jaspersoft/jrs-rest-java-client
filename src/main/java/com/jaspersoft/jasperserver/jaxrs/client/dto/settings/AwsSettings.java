@@ -24,7 +24,7 @@ public class AwsSettings {
         this.productTypeIsEc2 = other.productTypeIsEc2;
         this.isEc2Instance = other.isEc2Instance;
         this.productTypeIsJrsAmi = other.productTypeIsJrsAmi;
-        this.awsRegions = new LinkedList<String>(other.awsRegions);
+        this.awsRegions = (other.awsRegions != null) ? new LinkedList<String>(other.awsRegions) : null;
         this.productTypeIsMpAmi = other.productTypeIsMpAmi;
         this.suppressEc2CredentialsWarnings = other.suppressEc2CredentialsWarnings;
     }
@@ -35,7 +35,7 @@ public class AwsSettings {
 
     public AwsSettings setProductTypeIsEc2(Boolean productTypeIsEc2) {
         this.productTypeIsEc2 = productTypeIsEc2;
-        return  this;
+        return this;
     }
 
     public Boolean isEc2Instance() {
@@ -44,7 +44,7 @@ public class AwsSettings {
 
     public AwsSettings setIsEc2Instance(Boolean isEc2Instance) {
         this.isEc2Instance = isEc2Instance;
-        return  this;
+        return this;
     }
 
     public Boolean isProductTypeIsJrsAmi() {
@@ -53,7 +53,7 @@ public class AwsSettings {
 
     public AwsSettings setProductTypeIsJrsAmi(Boolean productTypeIsJrsAmi) {
         this.productTypeIsJrsAmi = productTypeIsJrsAmi;
-        return  this;
+        return this;
     }
 
     public List<String> getAwsRegions() {
@@ -62,7 +62,7 @@ public class AwsSettings {
 
     public AwsSettings setAwsRegions(List<String> awsRegions) {
         this.awsRegions = awsRegions;
-        return  this;
+        return this;
     }
 
     public Boolean isProductTypeIsMpAmi() {
@@ -71,7 +71,7 @@ public class AwsSettings {
 
     public AwsSettings setProductTypeIsMpAmi(Boolean productTypeIsMpAmi) {
         this.productTypeIsMpAmi = productTypeIsMpAmi;
-        return  this;
+        return this;
     }
 
     public Boolean isSuppressEc2CredentialsWarnings() {
@@ -80,7 +80,7 @@ public class AwsSettings {
 
     public AwsSettings setSuppressEc2CredentialsWarnings(Boolean suppressEc2CredentialsWarnings) {
         this.suppressEc2CredentialsWarnings = suppressEc2CredentialsWarnings;
-        return  this;
+        return this;
     }
 
     @Override
@@ -117,11 +117,6 @@ public class AwsSettings {
 
     @Override
     public String toString() {
-        String awsRegions = "";
-        for (String awsRegiono : this.awsRegions) {
-            awsRegions += awsRegions + ", ";
-        }
-
         return "AwsSettings{" +
                 "productTypeIsEc2=" + productTypeIsEc2 +
                 ", isEc2Instance=" + isEc2Instance +
