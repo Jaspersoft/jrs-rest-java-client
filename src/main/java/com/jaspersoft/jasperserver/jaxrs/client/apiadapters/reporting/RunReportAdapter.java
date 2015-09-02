@@ -39,10 +39,6 @@ import java.util.regex.Pattern;
 
 import static java.util.regex.Pattern.compile;
 
-/**
- * @author
- * @author Tetiana Iefimenko
- * */
 public class RunReportAdapter extends AbstractAdapter {
 
     private final MultivaluedMap<String, String> params;
@@ -50,7 +46,7 @@ public class RunReportAdapter extends AbstractAdapter {
     private final ReportOutputFormat format;
     private String[] pages;
 
-    private RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, ReportOutputFormat format) {
+    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, ReportOutputFormat format) {
         super(sessionStorage);
         this.params = new MultivaluedHashMap<String, String>();
         this.reportUnitUri = reportUnitUri;

@@ -58,4 +58,8 @@ public class ReportsAdapter extends AbstractAdapter {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format, range);
     }
 
+    public RunReportAdapter prepareForRun(ReportOutputFormat format){
+        return new RunReportAdapter(sessionStorage, reportUnitUri, format);
+    }
+
 }

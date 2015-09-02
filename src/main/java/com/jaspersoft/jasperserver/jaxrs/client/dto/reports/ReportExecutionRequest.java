@@ -119,8 +119,8 @@ public class ReportExecutionRequest {
         return outputFormat;
     }
 
-    public ReportExecutionRequest setOutputFormat(String outputFormat) {
-        this.outputFormat = outputFormat;
+    public ReportExecutionRequest setOutputFormat(ReportOutputFormat outputFormat) {
+        this.outputFormat = outputFormat.toString().toLowerCase();
         return this;
     }
 
@@ -315,7 +315,7 @@ public class ReportExecutionRequest {
          * <b>Required</b>
          */
         public Builder setOutputFormat(ReportOutputFormat outputFormat) {
-            request.setOutputFormat(outputFormat.name());
+            request.setOutputFormat(outputFormat);
             return this;
         }
 
