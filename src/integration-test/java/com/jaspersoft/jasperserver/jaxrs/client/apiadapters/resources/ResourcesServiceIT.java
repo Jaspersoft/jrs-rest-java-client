@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 
 /**
  * @author Alexander Krasnyanskiy
+ * @author tetiana Iefimenko
  */
 public class ResourcesServiceIT {
 
