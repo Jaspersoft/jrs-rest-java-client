@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  remote_user: vagrant
+  tasks:
+  - name: download Jasper Server
+    get_url: 
+      url=http://sourceforge.net/projects/jasperserver/files/JasperServer/JasperReports%20Server%20Community%20Edition%206.1.0/jasperreports-server-cp-6.1.0-linux-x64-installer.run 
+      dest=/home/vagrant/jasperreports-server-cp-6.1.0-linux-x64-installer.run 
+      mode=755
+  - name: setup Jasper Server
+    shell: printf '\n\n\n\ny\n\n/home/vagrant/jrs/\n\nn\nn\n' | ./jasperreports-server-cp-6.1.0-linux-x64-installer.run 
+    args:
+      chdir: /home/vagrant/
+      creates: /home/vagrant/jrs/
+  - name: run Jasper Server
+    command: sh /home/vagrant/jrs/ctlscript.sh start
+    sudo: yes
+  - name: download jrsh
+    get_url: 
+      url=http://github.com/Jaspersoft/jrsh/archive/master.zip 
+      dest=/home/vagrant/master.zip 
+      mode=755
+  - name: setup jrsh
+    unarchive: 
+      src=/home/vagrant/master.zip 
+      dest=/home/vagrant/ 
+      copy=no
