@@ -34,7 +34,7 @@ public class BundlesServiceIT {
         final JSONObject bundles = session
                 .bundlesService()
                 .forLocale(null)
-                .bundle()
+                .AllBundles()
                 .getEntity();
 
         // Then
@@ -49,7 +49,7 @@ public class BundlesServiceIT {
         final JSONObject bundles = session
                 .bundlesService()
                 .forLocale("de")
-                .bundle()
+                .AllBundles()
                 .getEntity();
 
         // Then
