@@ -1549,7 +1549,7 @@ Use bundles service to get bundles of internalization properties for particular 
 final JSONObject bundles = session
         .bundlesService()
         .forLocale("de")
-        .AllBundles()
+        .allBundles()
         .getEntity();
 ```
 If you pass `null` in `.forLocale()` method, you will get bundles for your default locale.

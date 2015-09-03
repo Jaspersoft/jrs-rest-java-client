@@ -47,7 +47,7 @@ public class BundlesService extends AbstractAdapter {
         return this;
     }
 
-    public OperationResult<JSONObject> AllBundles() {
+    public OperationResult<JSONObject> allBundles() {
         return buildBundleRequest("/bundles").addParam("expanded", "true").get();
     }
 
