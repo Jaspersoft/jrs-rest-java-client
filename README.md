@@ -109,7 +109,7 @@ Table of Contents
 12. [Thumbnail Search Service](#thumbnail-search-service).
 13. [Query executor service](#queryexecutor-service).
 14. [REST Server Information](#rest-server-information).
-15. [Internalization](#internalization).
+15. [Bundles service](#bundles-service).
 16. [Exception handling](#exception-handling).
 17. [Asynchronous API](#asynchronous-api).
 18. [Getting serialized content from response](#getting-serialized-content-from-response).
@@ -1543,7 +1543,7 @@ OperationResult<String> result = client
 
 String edition = result.getEntity();
 ```
-###Internalization
+###Bundles service
 Use bundles service to get bundles of internalization properties for particular or default user’s locale as JSON. To get all bundles for particular locale(foe example, "de") use the code below:
 ```java
 final JSONObject bundles = session
