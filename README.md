@@ -1549,7 +1549,7 @@ Use bundles service to get bundles of internalization properties for particular 
 final JSONObject bundles = session
         .bundlesService()
         .forLocale("de")
-        .bundles()
+        .AllBundles()
         .getEntity();
 ```
 If you pass `null` in `.forLocale()` method, you will get bundles for your default locale.
@@ -1558,7 +1558,7 @@ To get bundle by name you should specified locale in `.forLocale()` method and n
 final JSONObject bundle = session
         .bundlesService()
         .forLocale("en_US")
-        .bundles("jasperserver_messages")
+        .bundle("jasperserver_messages")
         .getEntity();
 ```
 ###Exception handling
