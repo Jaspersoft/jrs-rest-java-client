@@ -34,7 +34,7 @@ public class BundlesServiceIT {
         final JSONObject bundles = session
                 .bundlesService()
                 .forLocale(null)
-                .bundles()
+                .bundle()
                 .getEntity();
 
         // Then
@@ -49,7 +49,7 @@ public class BundlesServiceIT {
         final JSONObject bundles = session
                 .bundlesService()
                 .forLocale("de")
-                .bundles()
+                .bundle()
                 .getEntity();
 
         // Then
@@ -64,7 +64,7 @@ public class BundlesServiceIT {
         final JSONObject bundle = session
                 .bundlesService()
                 .forLocale("de")
-                .bundles("jasperserver_messages")
+                .bundle("jasperserver_messages")
                 .getEntity();
 
         // Then
@@ -79,7 +79,7 @@ public class BundlesServiceIT {
         final JSONObject bundle = session
                 .bundlesService()
                 .forLocale(null)
-                .bundles("jasperserver_messages")
+                .bundle("jasperserver_messages")
                 .getEntity();
 
         // Then
