@@ -43,10 +43,6 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.MimeType.JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
-/**
- * @author
- * @author Tetiana Iefimenko
- * */
 public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType> {
     private static final int GET = 0;
     private static final int DELETE = 1;
@@ -247,35 +243,4 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         return this;
     }
 
-
-    /**
-     * getters/setters block
-     */
-    protected OperationResultFactory getOperationResultFactory() {
-        return operationResultFactory;
-    }
-
-    protected Class<ResponseType> getResponseClass() {
-        return responseClass;
-    }
-
-    protected ErrorHandler getErrorHandler() {
-        return errorHandler;
-    }
-
-    protected MultivaluedMap<String, String> getHeaders() {
-        return headers;
-    }
-
-    protected WebTarget getUsersWebTarget() {
-        return usersWebTarget;
-    }
-
-    protected String getContentType() {
-        return contentType;
-    }
-
-    protected String getAcceptType() {
-        return acceptType;
-    }
 }

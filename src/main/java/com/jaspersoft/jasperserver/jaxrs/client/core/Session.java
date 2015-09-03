@@ -37,10 +37,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-/**
- * @author
- * @author Tetiana Iefimenko
- * */
+
 public class Session extends AnonymousSession{
 
     public Session(SessionStorage sessionStorage) {
