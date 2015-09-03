@@ -4,7 +4,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.testng.Assert.assertNotNull;
 
 /**
