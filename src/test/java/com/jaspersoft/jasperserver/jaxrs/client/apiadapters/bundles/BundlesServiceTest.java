@@ -62,7 +62,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         doReturn(requestMock).when(requestMock).setAccept(anyString());
         doReturn(operationResultMock).when(requestMock).get();
         //when
-        OperationResult<JSONObject> bundles = service.forLocale(null).bundle();
+        OperationResult<JSONObject> bundles = service.forLocale(null).AllBundles();
         //then
         assertSame(bundles, operationResultMock);
         verify(requestMock).setAccept(MediaType.APPLICATION_JSON);
@@ -86,7 +86,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         doReturn(requestMock).when(requestMock).setAccept(anyString());
         doReturn(operationResultMock).when(requestMock).get();
         //when
-        OperationResult<JSONObject> bundles = service.forLocale("de").bundle();
+        OperationResult<JSONObject> bundles = service.forLocale("de").AllBundles();
         //then
         assertSame(bundles, operationResultMock);
         verify(requestMock).setAccept(MediaType.APPLICATION_JSON);
