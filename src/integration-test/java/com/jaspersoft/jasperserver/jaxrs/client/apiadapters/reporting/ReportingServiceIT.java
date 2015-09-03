@@ -70,7 +70,7 @@ public class ReportingServiceIT {
     }
 
     @Test
-    public void should_return_proper_entity_in_asunc_mode() {
+    public void should_return_proper_entity_in_async_mode() {
 
         /** When **/
         ReportExecutionRequest request = new ReportExecutionRequest();
