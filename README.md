@@ -225,7 +225,7 @@ ReportExecutionRequest request = new ReportExecutionRequest();
 request.setReportUnitUri("/reports/samples/StandardChartsReport");
 request
         .setAsync(true)                         //this means that report will be run on server asynchronously
-        .setOutputFormat("html");               //report can be requested in different formats e.g. html, pdf, etc.
+        .setOutputFormat(ReportOutputFormat.HTML);;               //report can be requested in different formats e.g. html, pdf, etc.
 
 OperationResult<ReportExecutionDescriptor> operationResult =
         session                                 //pay attention to this, all requests are in the same session!!!
@@ -293,7 +293,7 @@ for(AttachmentDescriptor attDescriptor : htmlExportDescriptor.getAttachments()){
 After running a report and downloading its content in a given format, you can request the same report in other formats. As with exporting report formats through the user interface, the report does not run again because the export process is independent of the report.
 ```java
 ExportExecutionOptions exportExecutionOptions = new ExportExecutionOptions()
-        .setOutputFormat("pdf")
+        .setOutputFormat(ReportOutputFormat.PDF)
         .setPages("3");
 
 OperationResult<ExportExecutionDescriptor> operationResult =
