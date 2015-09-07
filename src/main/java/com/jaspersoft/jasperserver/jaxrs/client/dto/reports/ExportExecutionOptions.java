@@ -66,6 +66,11 @@ public class ExportExecutionOptions {
         return this;
     }
 
+    public ExportExecutionOptions setOutputFormat(String outputFormat) {
+        this.outputFormat = outputFormat.toLowerCase();
+        return this;
+    }
+
     public String getBaseUrl() {
         return baseUrl;
     }

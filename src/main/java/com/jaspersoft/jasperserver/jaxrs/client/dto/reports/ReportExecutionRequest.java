@@ -117,6 +117,10 @@ public class ReportExecutionRequest {
         this.outputFormat = outputFormat.toString().toLowerCase();
         return this;
     }
+    public ReportExecutionRequest setOutputFormat(String outputFormat) {
+        this.outputFormat = outputFormat.toLowerCase();
+        return this;
+    }
 
     public String getAttachmentsPrefix() {
         return attachmentsPrefix;

@@ -35,31 +35,43 @@ public class ReportsAdapter extends AbstractAdapter {
 
     private final String reportUnitUri;
 
-    public ReportsAdapter(SessionStorage sessionStorage, String reportUnitUri){
+    public ReportsAdapter(SessionStorage sessionStorage, String reportUnitUri) {
         super(sessionStorage);
         this.reportUnitUri = reportUnitUri;
     }
 
-    public ReorderingReportParametersAdapter reportParameters(){
+    public ReorderingReportParametersAdapter reportParameters() {
         return new ReorderingReportParametersAdapter(sessionStorage, reportUnitUri);
     }
 
-    public ReportParametersAdapter reportParameters(String mandatoryId, String... otherIds){
+    public ReportParametersAdapter reportParameters(String mandatoryId, String... otherIds) {
         List<String> ids = new ArrayList<String>(Arrays.asList(otherIds));
         ids.add(0, mandatoryId);
         return new ReportParametersAdapter(sessionStorage, reportUnitUri, ReportParametersUtils.toPathSegment(ids));
     }
 
-    public RunReportAdapter prepareForRun(ReportOutputFormat format, Integer... pages){
+    public RunReportAdapter prepareForRun(ReportOutputFormat format, Integer... pages) {
+        return new RunReportAdapter(sessionStorage, reportUnitUri, format.toString().toLowerCase(), pages);
+    }
+
+    public RunReportAdapter prepareForRun(ReportOutputFormat format, PageRange range) {
+        return new RunReportAdapter(sessionStorage, reportUnitUri, format.toString().toLowerCase(), range);
+    }
+
+    public RunReportAdapter prepareForRun(ReportOutputFormat format) {
+        return new RunReportAdapter(sessionStorage, reportUnitUri, format.toString().toLowerCase());
+    }
+    public RunReportAdapter prepareForRun(String format, Integer... pages) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format, pages);
     }
 
-    public RunReportAdapter prepareForRun(ReportOutputFormat format, PageRange range){
+    public RunReportAdapter prepareForRun(String format, PageRange range) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format, range);
     }
 
-    public RunReportAdapter prepareForRun(ReportOutputFormat format){
+    public RunReportAdapter prepareForRun(String format) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format);
     }
+
 
 }

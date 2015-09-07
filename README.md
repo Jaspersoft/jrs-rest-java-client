@@ -217,6 +217,7 @@ OperationResult<InputStream> result = client
         .parameter("Country_multi_select", "USA")
         .run();
 ```
+Please notice, if you pass zero as number of page, you  will get all  pages of report.
 In this mode you don't need to work in one session. In the above code we specified report URI, format in which we want to get a report and some report parameters. As we a result we got `InputStream` instance. In synchronous mode as a response you get a report itself while in asynchronous you get just a descriptor with report ID which you can use to download report afer it will be ready.
 
 In order to run a report in asynchronous mode, you need firstly build `ReportExecutionRequest` instance and specify all the parameters needed to launch a report. The response from the server is the `ReportExecutionDescriptor` instance which contains the request ID needed to track the execution until completion and others report parameters. Here's the code to run a report:

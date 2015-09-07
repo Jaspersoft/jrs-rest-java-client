@@ -28,14 +28,15 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 
 import static java.util.regex.Pattern.compile;
 
@@ -43,23 +44,37 @@ public class RunReportAdapter extends AbstractAdapter {
 
     private final MultivaluedMap<String, String> params;
     private final String reportUnitUri;
-    private final ReportOutputFormat format;
-    private String[] pages;
+    private final String format;
+    private String[] pages = new String[0];
 
-    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, ReportOutputFormat format) {
+    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, String format) {
         super(sessionStorage);
         this.params = new MultivaluedHashMap<String, String>();
         this.reportUnitUri = reportUnitUri;
-        this.format = format;
+        this.format = format.toLowerCase();
     }
 
-    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, ReportOutputFormat format, 
+    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, String format,
                             Integer[] pages) {
         this(sessionStorage, reportUnitUri, format);
-        this.pages = toStringArray(pages);
+        if (pages != null && !(pages.length == 1 && pages[0] == 0)) {
+            this.pages = toStringArray(validArray(pages));
+        }
     }
 
-    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, ReportOutputFormat format,
+    private Integer[] validArray (Integer[] pages) {
+        List<Integer> list = new LinkedList<Integer>(Arrays.asList(pages));
+        Iterator<Integer> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            Integer next =  iterator.next();
+            if (next <= 0) {
+                iterator.remove();
+            }
+        }
+        return list.toArray(new Integer[list.size()]);
+    }
+
+    public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, String format,
                             PageRange range) {
         this(sessionStorage, reportUnitUri, format);
         this.pages = new String[]{range.getRange()};
@@ -102,12 +117,12 @@ public class RunReportAdapter extends AbstractAdapter {
         JerseyRequest<InputStream> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 InputStream.class,
-                new String[]{"/reports", reportUnitUri + "." + format.toString().toLowerCase()},
+                new String[]{"/reports", reportUnitUri + "." + format},
                 new RunReportErrorHandler());
 
         request.addParams(params);
 
-        if (pages != null && pages.length > 0) {
+        if (pages.length > 0) {
             if (pages.length == 1) {
                 Pattern pattern = compile("^(\\d+)-(\\d+)$");
                 Matcher matcher = pattern.matcher(pages[0]);
