@@ -21,12 +21,30 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import com.google.common.annotations.VisibleForTesting;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobSource;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.OutputFormat;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.SimpleTrigger;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.CalendarNameListWrapper;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
@@ -113,4 +131,90 @@ public class JobsService extends AbstractAdapter {
         }
         return new SingleCalendarOperationsAdapter(sessionStorage, calendarName);
     }
+
+    //START: palash: changes to get report scheduling working
+    public long scheduleReportWithHack(Job report) {
+        JerseyRequest<String> request = buildRequest(sessionStorage, String.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
+        request.setContentType("application/job+json");
+        request.setAccept("application/job+json");
+
+        String inputJson = getJobAsJsonString(report);
+
+        System.err.println("inputJson:\n" + inputJson);
+
+        OperationResult<String> result = request.put(inputJson);
+        String jsonResult = result.getEntity();
+
+        System.err.println("Result:\n" + jsonResult);
+
+        JsonNode jsonNode;
+        try {
+            jsonNode = new ObjectMapper().readTree(jsonResult);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return jsonNode.findValue("id").asLong();
+    }
+
+    @VisibleForTesting
+    String getJobAsJsonString(Job job) {
+
+        String jsonStringTemplate = "{\"label\":\"%s\",\"description\":\"%s\","
+                + "\"trigger\":{\"simpleTrigger\":{\"startType\":%d,\"misfireInstruction\":%d,\"occurrenceCount\":%d,\"recurrenceInterval\":%d,\"recurrenceIntervalUnit\":\"%s\"}},"
+                + "\"source\":{\"reportUnitURI\":\"%s\",\"parameters\":{\"parameterValues\":%s}},\"baseOutputFilename\":\"%s\","
+                + "\"repositoryDestination\":{\"folderURI\":\"%s\",\"sequentialFilenames\":false,\"overwriteFiles\":true,\"saveToRepository\":true,"
+                + "\"usingDefaultReportOutputFolderURI\":false},\"outputFormats\":{\"outputFormat\":%s}}";
+
+        SimpleTrigger simpleTrigger = (SimpleTrigger) job.getTrigger();
+        JobSource jobSource = job.getSource();
+
+        String jsonString = String.format(jsonStringTemplate, job.getLabel(), job.getDescription(),
+                simpleTrigger.getStartType(), simpleTrigger.getMisfireInstruction(), simpleTrigger.getOccurrenceCount(),
+                simpleTrigger.getRecurrenceInterval(), simpleTrigger.getRecurrenceIntervalUnit().name(),
+                jobSource.getReportUnitURI(), getReportParamsAsJsonString(jobSource.getParameters()), job.getBaseOutputFilename(),
+                job.getRepositoryDestination().getFolderURI(),
+                getOutputFormatsAsJsonString(job.getOutputFormats()));
+        return jsonString;
+    }
+
+    private String getReportParamsAsJsonString(Map<String, Object> reportParams) {
+        StringBuilder sb = new StringBuilder(100);
+        sb.append("{");
+
+        for (Entry<String, Object> paramKeyValue : reportParams.entrySet()) {
+            //key
+            sb.append('"').append(paramKeyValue.getKey()).append('"');
+            sb.append(":");
+            //value
+            sb.append("[\"").append(paramKeyValue.getValue()).append("\"]");
+            sb.append(",");
+        }
+
+        //remove the xtra ,
+        sb.setLength(sb.length() - 1);
+
+        sb.append("}");
+        return sb.toString();
+    }
+
+    private String getOutputFormatsAsJsonString(Set<OutputFormat> outputFormats) {
+        StringBuilder sb = new StringBuilder(60);
+
+        sb.append("[");
+
+        for (OutputFormat outputFormat : outputFormats) {
+            sb.append('"').append(outputFormat.name()).append('"').append(",");
+        }
+
+        //remove the xtra ,
+        sb.setLength(sb.length() - 1);
+
+        sb.append("]");
+
+        return sb.toString();
+    }
+
+    //END: palash: changes to get report scheduling working
+
 }
