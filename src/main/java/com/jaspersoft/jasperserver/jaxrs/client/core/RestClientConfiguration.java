@@ -21,6 +21,9 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -44,7 +47,7 @@ public class RestClientConfiguration {
     private MimeType contentMimeType = MimeType.JSON;
     private MimeType acceptMimeType = MimeType.JSON;
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
-    private AuthenticationType authenticationType = AuthenticationType.REST;
+    private AuthenticationType authenticationType = AuthenticationType.SPRING;
     private Boolean restrictedHttpMethods = false;
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;

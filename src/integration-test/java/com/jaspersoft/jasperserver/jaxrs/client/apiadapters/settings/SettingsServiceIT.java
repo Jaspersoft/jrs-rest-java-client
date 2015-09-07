@@ -1,9 +1,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.AnonymousSession;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.AwsSettings;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.DashboardSettings;

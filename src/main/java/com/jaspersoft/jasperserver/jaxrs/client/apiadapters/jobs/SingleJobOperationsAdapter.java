@@ -23,6 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobState;

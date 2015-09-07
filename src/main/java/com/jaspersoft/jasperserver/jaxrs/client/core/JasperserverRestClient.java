@@ -20,6 +20,8 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
@@ -66,16 +68,11 @@ public class JasperserverRestClient {
         }
         Form form = new Form();
         form.param("j_username", credentials.getUsername()).param("j_password", credentials.getPassword());
-        WebTarget target;
-        if (configuration.getAuthenticationType() == AuthenticationType.SPRING) {
-            target = rootTarget.path("/j_spring_security_check")
+        WebTarget target = rootTarget.path("/j_spring_security_check")
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
-        } else {
-            target = rootTarget.path("/rest/login");
-        }
         Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
         String sessionId = null;
-        if (isResponseSuccessful(response)) {
+        if (response.getStatus() == ResponseStatus.FOUND) {
             sessionId = response.getCookies().get("JSESSIONID").getValue();
             storage.setSessionId(sessionId);
         } else {
@@ -84,14 +81,5 @@ public class JasperserverRestClient {
         rootTarget.register(new SessionOutputFilter(sessionId));
     }
 
-    private boolean isResponseSuccessful(Response response) {
-        if ((configuration.getAuthenticationType() == AuthenticationType.SPRING
-                || configuration.getAuthenticationType() == AuthenticationType.REST)
-                && (response.getStatus() == ResponseStatus.FOUND
-                || response.getStatus() == ResponseStatus.OK)) {
-            return true;
-        }
-        return false;
-    }
 
 }

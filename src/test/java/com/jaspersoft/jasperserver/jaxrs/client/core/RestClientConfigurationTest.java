@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
