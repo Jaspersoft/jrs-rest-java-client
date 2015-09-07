@@ -60,7 +60,6 @@ public class JasperserverRestClient {
         AuthenticationCredentials credentials = storage.getCredentials();
         WebTarget rootTarget = storage.getRootTarget();
         if (configuration.getAuthenticationType() == AuthenticationType.BASIC) {
-            //TODO registeer ehcoding filter
             rootTarget.register(new BasicAuthenticationFilter(credentials));
             return;
         }
