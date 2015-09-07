@@ -145,6 +145,25 @@ public class ReportingServiceIT {
     }
 
     @Test
+    public void should_return_proper_entity_with_page_range() {
+
+        /** When **/
+        OperationResult<InputStream> result = session
+                .reportingService()
+                .report("/organizations/organization_1/adhoc/topics/Cascading_multi_select_topic")
+                .prepareForRun(ReportOutputFormat.PDF)
+                .parameter("Cascading_state_multi_select", "CA")
+                .parameter("Cascading_name_single_select", "Adams-Steen Transportation Holdings")
+                .parameter("Country_multi_select", "USA")
+                .run();
+
+        InputStream entity = result.getEntity();
+        /** Then **/
+        Assert.assertNotNull(entity);
+
+    }
+
+    @Test
     public void should_return_proper_entity_in_async_mode() {
 
         /** When **/

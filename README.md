@@ -237,7 +237,7 @@ ReportExecutionRequest request = new ReportExecutionRequest();
 request.setReportUnitUri("/reports/samples/StandardChartsReport");
 request
         .setAsync(true)                         //this means that report will be run on server asynchronously
-        .setOutputFormat(ReportOutputFormat.HTML);;               //report can be requested in different formats e.g. html, pdf, etc.
+        .setOutputFormat(ReportOutputFormat.HTML);               //report can be requested in different formats e.g. html, pdf, etc.
 
 OperationResult<ReportExecutionDescriptor> operationResult =
         session                                 //pay attention to this, all requests are in the same session!!!
@@ -247,6 +247,14 @@ OperationResult<ReportExecutionDescriptor> operationResult =
 reportExecutionDescriptor = operationResult.getEntity();
 ```
 In the above code we've created `ReportExecutionRequest` instance and sent it to JR server through the `newReportExecutionRequest` method. As a response we've got `OperationResult` instance which contains HTTP response wrapper and instance of `ReportExecutionDescriptor` which we can get with `operationResult.getEntity()`.
+Also you can set output format as String:
+```java
+ReportExecutionRequest request = new ReportExecutionRequest();
+request.setReportUnitUri("/reports/samples/StandardChartsReport");
+request
+        .setAsync(true)                         
+        .setOutputFormat("html");               
+```
 ####Requesting report execution status:
 After you've got `ReportExecutionDescriptor` you can request for the report execution status:
 ```java
