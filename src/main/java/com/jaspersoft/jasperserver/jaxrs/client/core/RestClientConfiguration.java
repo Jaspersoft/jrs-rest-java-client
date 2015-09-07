@@ -21,16 +21,19 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import java.io.InputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 
 public class RestClientConfiguration {
 
@@ -41,10 +44,12 @@ public class RestClientConfiguration {
     private MimeType contentMimeType = MimeType.JSON;
     private MimeType acceptMimeType = MimeType.JSON;
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
+    private AuthenticationType authenticationType = AuthenticationType.REST;
+    private Boolean restrictedHttpMethods = false;
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;
+
     private Integer readTimeout;
-    private Boolean restrictedHttpMethods = false;
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
@@ -79,6 +84,13 @@ public class RestClientConfiguration {
             throw new IllegalArgumentException("Given parameter is not a URL");
         this.jasperReportsServerUrl = jasperReportsServerUrl;
     }
+    public AuthenticationType getAuthenticationType() {
+        return authenticationType;
+    }
+
+    public void setAuthenticationType(AuthenticationType authenticationType) {
+        this.authenticationType = authenticationType;
+    }
 
     public MimeType getContentMimeType() {
         return contentMimeType;
@@ -104,7 +116,7 @@ public class RestClientConfiguration {
         this.jrsVersion = jrsVersion;
     }
 
-    public TrustManager[] getTrustManagers() {
+     public TrustManager[] getTrustManagers() {
         return trustManagers;
     }
 
