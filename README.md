@@ -204,6 +204,16 @@ OperationResult<InputStream> result = client
         .run();
 InputStream report = result.getEntity();
 ```
+You can set format of report as String as well(name of format is case insensitive):
+```java
+OperationResult<InputStream> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .reportingService()
+        .report("/reports/samples/Cascading_multi_select_report")
+        .prepareForRun("HTML", 1)
+        .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
+        .run();
+```
 Also you can use this method to run report with several values for the same parameter. In this case new values of the parameter are added to the previous ones (new values do not replace previous values of the parameter): 
 ```java
 OperationResult<InputStream> result = client
