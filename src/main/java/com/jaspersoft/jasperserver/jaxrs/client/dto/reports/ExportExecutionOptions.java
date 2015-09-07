@@ -21,6 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -60,8 +61,13 @@ public class ExportExecutionOptions {
         return outputFormat;
     }
 
+    public ExportExecutionOptions setOutputFormat(ReportOutputFormat outputFormat) {
+        this.outputFormat = outputFormat.toString().toLowerCase();
+        return this;
+    }
+
     public ExportExecutionOptions setOutputFormat(String outputFormat) {
-        this.outputFormat = outputFormat;
+        this.outputFormat = outputFormat.toLowerCase();
         return this;
     }
 
