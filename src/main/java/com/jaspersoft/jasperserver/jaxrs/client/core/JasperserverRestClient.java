@@ -25,13 +25,12 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
-import org.glassfish.jersey.client.ClientProperties;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.glassfish.jersey.client.ClientProperties;
 
 public class JasperserverRestClient {
     private final RestClientConfiguration configuration;
@@ -72,7 +71,9 @@ public class JasperserverRestClient {
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
         Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
         String sessionId = null;
-        if (response.getStatus() == ResponseStatus.FOUND) {
+        String location = response.getLocation().toString();
+
+        if (response.getStatus() == ResponseStatus.FOUND && !location.matches("^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*?error=1$")) {
             sessionId = response.getCookies().get("JSESSIONID").getValue();
             storage.setSessionId(sessionId);
         } else {
