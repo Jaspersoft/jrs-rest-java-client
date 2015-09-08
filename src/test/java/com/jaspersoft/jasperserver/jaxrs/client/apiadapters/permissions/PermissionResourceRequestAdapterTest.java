@@ -3,7 +3,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.MimeType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;

@@ -42,7 +42,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientXmlaConnection;
-import com.jaspersoft.jasperserver.jaxrs.client.core.ResourceMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.resources.ClientDashboard;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.resources.ClientDomainTopic;
 

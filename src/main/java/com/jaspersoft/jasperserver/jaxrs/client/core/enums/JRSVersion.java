@@ -19,26 +19,18 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.core;
+package com.jaspersoft.jasperserver.jaxrs.client.core.enums;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
+public enum JRSVersion implements Comparable<JRSVersion> {
 
-public class MimeTypeUtil {
-
-    private static final String JSON_SUFFIX = "json";
-    private static final String XML_SUFFIX = "xml";
-
-    public static String toCorrectContentMime(RestClientConfiguration configuration, String srcMime) {
-        if (srcMime.endsWith("+{mime}")) {
-            return srcMime.replace("{mime}", configuration.getContentMimeType() == MimeType.JSON ? JSON_SUFFIX : XML_SUFFIX);
-        }
-        return srcMime;
-    }
-
-    public static String toCorrectAcceptMime(RestClientConfiguration configuration, String srcMime) {
-        if (srcMime.endsWith("+{mime}")) {
-            return srcMime.replace("{mime}", configuration.getAcceptMimeType() == MimeType.JSON ? JSON_SUFFIX : XML_SUFFIX);
-        }
-        return srcMime;
-    }
+    //!!!order is important!!! the latest version must be in the end
+    v4_7_0,
+    v5_0_0,
+    v5_1_0,
+    v5_2_0,
+    v5_5_0,
+    v5_6_1,
+    v6_0_0,
+    v6_0_1,
+    v6_1_0;
 }

@@ -33,22 +33,30 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorS
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails.ThumbnailsService;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 
+
 public class Session extends AnonymousSession{
+
 
     public Session(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
     public void logout() {
-        WebTarget target = storage.getRootTarget().path("/exituser.html");
-        Response response = target.request().get();
-        if (response.getStatus() >= 400) {
-            new DefaultErrorHandler().handleError(response);
+        if (storage.getConfiguration().getAuthenticationType() == AuthenticationType.BASIC) {
+            storage.getCredentials().setUsername(null);
+            storage.getCredentials().setPassword(null);
+        } else {
+            WebTarget target = storage.getRootTarget().path("/exituser.html");
+            Response response = target.request().get();
+            if (response.getStatus() >= 400) {
+                new DefaultErrorHandler().handleError(response);
+            }
         }
     }
 

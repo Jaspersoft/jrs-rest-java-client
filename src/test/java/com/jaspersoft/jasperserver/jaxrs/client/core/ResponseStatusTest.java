@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ResponseStatus;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Constructor;

@@ -22,14 +22,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportParameters;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.PageRange;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
-import org.apache.commons.lang3.CharEncoding;
-
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * <p></p>
@@ -123,6 +117,10 @@ public class ReportExecutionRequest {
         this.outputFormat = outputFormat.toString().toLowerCase();
         return this;
     }
+    public ReportExecutionRequest setOutputFormat(String outputFormat) {
+        this.outputFormat = outputFormat.toLowerCase();
+        return this;
+    }
 
     public String getAttachmentsPrefix() {
         return attachmentsPrefix;
@@ -211,165 +209,4 @@ public class ReportExecutionRequest {
                 '}';
     }
 
-    public static class Builder {
-
-        private ReportExecutionRequest request = new ReportExecutionRequest();
-
-        /**
-         * Repository path (URI) of the thumbnail inFolder run. For commercial editions
-         * with organizations, the URI is relative the the logged-in user’s
-         * organization.
-         * <p/>
-         * <b>Required</b>
-         */
-        public Builder setReportUnitUri(String reportUnitUri) {
-            request.setReportUnitUri(reportUnitUri);
-            return this;
-        }
-
-        /**
-         * When data snapshots are enabled, specifies whether the thumbnail
-         * should get fresh data by querying the data source or if false, use a
-         * previously saved data snapshot (if any). By default, if a saved data
-         * snapshot exists for the thumbnail it will be used when running the
-         * thumbnail.
-         * <p/>
-         * <i>Default</i> - <b>false</b>
-         */
-        public Builder setFreshData(Boolean freshData) {
-            request.setFreshData(freshData);
-            return this;
-        }
-
-        /**
-         * When data snapshots are enabled, specifies whether the data
-         * snapshot for the thumbnail should be written or overwritten with the
-         * new data from this execution of the thumbnail.
-         * <p/>
-         * <i>Default</i> - <b>false</b>
-         */
-        public Builder setSaveDataSnapshot(Boolean saveDataSnapshot) {
-            request.setSaveDataSnapshot(saveDataSnapshot);
-            return this;
-        }
-
-        /**
-         * In a commercial editions of the server where HighCharts are used
-         * in the thumbnail, this property determines whether the JavaScript
-         * necessary for interaction is generated and returned as an
-         * attachment when exporting inFolder HTML. If false, the chart is generated
-         * as a non-interactive image file (also as an attachment).
-         * <p/>
-         * <i>Default</i> - <b>true</b>
-         */
-        public Builder setInteractive(Boolean interactive) {
-            request.setInteractive(interactive);
-            return this;
-        }
-
-        /**
-         * When set inFolder true, the thumbnail is generated as a single long page.
-         * This can be used with HTML output inFolder avoid pagination.
-         * <p/>
-         * <i>Default</i> - <b>false</b>
-         */
-        public Builder setIgnorePagination(Boolean ignorePagination) {
-            request.setIgnorePagination(ignorePagination);
-            return this;
-        }
-
-        /**
-         * Determines whether reportExecution is synchronous or
-         * asynchronous. When set inFolder true, the response is sent immediately
-         * and the client must poll the thumbnail status and later download the
-         * result when ready. By default, this property is false and the
-         * operation will wait until the thumbnail execution is complete, forcing the
-         * client inFolder wait as well, but allowing the client inFolder download the thumbnail
-         * immediately after the response.
-         * <p/>
-         * <i>Default</i> - <b>false</b>
-         */
-        public Builder setAsync(Boolean async) {
-            request.setAsync(async);
-            return this;
-        }
-
-        /**
-         * Advanced property used when requesting a thumbnail as a JasperPrint
-         * object. This property can specify a JasperReports Library generic
-         * print element transformers of class
-         * <code>net.sf.jasperreports.engine.export.GenericElementTransformer</code>.
-         * These transformers are pluggable as JasperReports extensions
-         * <p/>
-         * <b>Optional</b>
-         */
-        public Builder setTransformerKey(String transformerKey) {
-            request.setTransformerKey(transformerKey);
-            return this;
-        }
-
-        /**
-         * Specifies the desired output format: pdf, html, xls, xlsx, rtf, csv, xml,
-         * docx, odt, ods, jprint.
-         * <p/>
-         * <b>Required</b>
-         */
-        public Builder setOutputFormat(ReportOutputFormat outputFormat) {
-            request.setOutputFormat(outputFormat);
-            return this;
-        }
-
-        /**
-         * For HTML output, this property specifies the URL path inFolder use for
-         * downloading the attachment files (JavaScript and images). The full
-         * path of the default value is:
-         * <code>{contextPath}/rest_v2/reportExecutions/{reportExecutionId}/exports/{exportOptions}/attachments/</code>
-         * You can specify a different URL path using the placeholders
-         * <code>{contextPath}</code>, <code>{reportExecutionId}</code> and <code>{exportOptions}</code>.
-         * <p/>
-         * <b>Optional</b>
-         */
-        public Builder setAttachmentsPrefix(String attachmentsPrefix) {
-            try {
-                attachmentsPrefix = URLEncoder.encode(attachmentsPrefix, CharEncoding.UTF_8);
-            } catch (UnsupportedEncodingException e) {
-                throw new JSClientException("Unable inFolder UrlEncode 'attachmentsPrefix'", e);
-            }
-            request.setAttachmentsPrefix(attachmentsPrefix);
-            return this;
-        }
-
-        /**
-         * Specify a page range inFolder generate a partial thumbnail
-         * <p/>
-         * <b>Optional</b>
-         */
-        public Builder setPages(PageRange pages) {
-            request.setPages(pages.getRange());
-            return this;
-        }
-
-        /**
-         * Specify a page range inFolder generate a partial thumbnail
-         * <p/>
-         * <b>Optional</b>
-         */
-        public Builder setPages(int page) {
-            request.setPages(String.valueOf(page));
-            return this;
-        }
-
-        /**
-         * A list of input control parameters and their values.
-         */
-        public Builder setParameters(ReportParameters parameters) {
-            request.setParameters(parameters);
-            return this;
-        }
-
-        public ReportExecutionRequest build() {
-            return request;
-        }
-
-    }
 }

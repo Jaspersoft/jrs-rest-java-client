@@ -19,18 +19,9 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.core;
+package com.jaspersoft.jasperserver.jaxrs.client.core.enums;
 
-public enum JRSVersion implements Comparable<JRSVersion> {
-
-    //!!!order is important!!! the latest version must be in the end
-    v4_7_0,
-    v5_0_0,
-    v5_1_0,
-    v5_2_0,
-    v5_5_0,
-    v5_6_1,
-    v6_0_0,
-    v6_0_1,
-    v6_1_0;
+public enum AuthenticationType {
+    SPRING,
+    BASIC;
 }

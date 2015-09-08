@@ -172,6 +172,15 @@ Session session = client.authenticate("jasperadmin", "jasperadmin");
 //authentication with multitenancy enabled
 Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
 ```
+`JasperserverRestClient` supports two authentication types: SPRING and BASIC. 
+`SPRING` type of authentication means that your credentials are sent as a form  to `/j_security_check directly/` uri. Using these types you obtain JSESSIONID cookie of authenticated session after sending credentials.
+In the `BASIC` mode `JasperserverRestClient` uses basic authentication (sends encrypted credentials with each request).
+Client uses `SPRING` authentication by default but you can specify authentication type in RestClientConfiguration instance:
+```java
+config.setAuthenticationType(AuthenticationType.SPRING);
+```
+Or set authentication type in configuration file (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration)).
+Please notice, the basic authentication is not stateless and it is valid till method logout() is called or the application is restarted and you can not use this authentication type for Report Service authentication (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#report-services)).
 ###Anonymous session
 For some Jasperserver services authentication is not required (for example, settings service and server info service), so you can use anonymous session:
  ```java
@@ -204,6 +213,16 @@ OperationResult<InputStream> result = client
         .run();
 InputStream report = result.getEntity();
 ```
+You can set format of report as String as well(name of format is case insensitive):
+```java
+OperationResult<InputStream> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .reportingService()
+        .report("/reports/samples/Cascading_multi_select_report")
+        .prepareForRun("HTML", 1)
+        .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
+        .run();
+```
 Also you can use this method to run report with several values for the same parameter. In this case new values of the parameter are added to the previous ones (new values do not replace previous values of the parameter): 
 ```java
 OperationResult<InputStream> result = client
@@ -217,6 +236,7 @@ OperationResult<InputStream> result = client
         .parameter("Country_multi_select", "USA")
         .run();
 ```
+Please notice, if you pass zero as number of page, you  will get all  pages of report.
 In this mode you don't need to work in one session. In the above code we specified report URI, format in which we want to get a report and some report parameters. As we a result we got `InputStream` instance. In synchronous mode as a response you get a report itself while in asynchronous you get just a descriptor with report ID which you can use to download report afer it will be ready.
 
 In order to run a report in asynchronous mode, you need firstly build `ReportExecutionRequest` instance and specify all the parameters needed to launch a report. The response from the server is the `ReportExecutionDescriptor` instance which contains the request ID needed to track the execution until completion and others report parameters. Here's the code to run a report:
@@ -226,7 +246,7 @@ ReportExecutionRequest request = new ReportExecutionRequest();
 request.setReportUnitUri("/reports/samples/StandardChartsReport");
 request
         .setAsync(true)                         //this means that report will be run on server asynchronously
-        .setOutputFormat("html");               //report can be requested in different formats e.g. html, pdf, etc.
+        .setOutputFormat(ReportOutputFormat.HTML);               //report can be requested in different formats e.g. html, pdf, etc.
 
 OperationResult<ReportExecutionDescriptor> operationResult =
         session                                 //pay attention to this, all requests are in the same session!!!
@@ -236,6 +256,14 @@ OperationResult<ReportExecutionDescriptor> operationResult =
 reportExecutionDescriptor = operationResult.getEntity();
 ```
 In the above code we've created `ReportExecutionRequest` instance and sent it to JR server through the `newReportExecutionRequest` method. As a response we've got `OperationResult` instance which contains HTTP response wrapper and instance of `ReportExecutionDescriptor` which we can get with `operationResult.getEntity()`.
+Also you can set output format as String:
+```java
+ReportExecutionRequest request = new ReportExecutionRequest();
+request.setReportUnitUri("/reports/samples/StandardChartsReport");
+request
+        .setAsync(true)                         
+        .setOutputFormat("html");               
+```
 ####Requesting report execution status:
 After you've got `ReportExecutionDescriptor` you can request for the report execution status:
 ```java
@@ -294,7 +322,7 @@ for(AttachmentDescriptor attDescriptor : htmlExportDescriptor.getAttachments()){
 After running a report and downloading its content in a given format, you can request the same report in other formats. As with exporting report formats through the user interface, the report does not run again because the export process is independent of the report.
 ```java
 ExportExecutionOptions exportExecutionOptions = new ExportExecutionOptions()
-        .setOutputFormat("pdf")
+        .setOutputFormat(ReportOutputFormat.PDF)
         .setPages("3");
 
 OperationResult<ExportExecutionDescriptor> operationResult =

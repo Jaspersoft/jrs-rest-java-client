@@ -96,6 +96,20 @@ public class ReportsAdapterTest extends PowerMockTestCase {
         assertEquals(Whitebox.getInternalState(retrieved, "reportUnitUri"), "reportUnitUri");
         assertEquals(Whitebox.getInternalState(retrieved, "pages"), new String[]{"1", "2", "3"});
     }
+    @Test
+    public void should_convert_params_into_the_adapter_with_format() throws Exception {
+
+        /* Given */
+        ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, "reportUnitUri");
+
+        /* When */
+        RunReportAdapter retrieved = adapterSpy.prepareForRun(ReportOutputFormat.PDF);
+
+        /* Then */
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(Whitebox.getInternalState(retrieved, "reportUnitUri"), "reportUnitUri");
+        assertEquals(Whitebox.getInternalState(retrieved, "format"), new String("pdf"));
+    }
 
     @Test
     public void should_convert_params_into_the_adapter_without_pages() throws Exception {
@@ -110,6 +124,69 @@ public class ReportsAdapterTest extends PowerMockTestCase {
         assertSame(retrieved.getSessionStorage(), sessionStorageMock);
         assertEquals(Whitebox.getInternalState(retrieved, "reportUnitUri"), "reportUnitUri");
         assertEquals(Whitebox.getInternalState(retrieved, "pages"), new String[]{"1-10"});
+
+    }
+
+    @Test
+    public void should_convert_params_into_the_adapter_with_pages_and_format_as_string() throws Exception {
+
+        /* Given */
+        ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, "reportUnitUri");
+
+        /* When */
+        RunReportAdapter retrieved = adapterSpy.prepareForRun("PDF", 1, 2, 3);
+
+        /* Then */
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(Whitebox.getInternalState(retrieved, "reportUnitUri"), "reportUnitUri");
+        assertEquals(Whitebox.getInternalState(retrieved, "pages"), new String[]{"1", "2", "3"});
+        assertEquals(Whitebox.getInternalState(retrieved, "format"), "pdf");
+    }
+    @Test
+    public void should_convert_params_into_the_adapter_with_format_as_string_in_uppercase() throws Exception {
+
+        /* Given */
+        ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, "reportUnitUri");
+
+        /* When */
+        RunReportAdapter retrieved = adapterSpy.prepareForRun("HTML");
+
+        /* Then */
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(Whitebox.getInternalState(retrieved, "reportUnitUri"), "reportUnitUri");
+        assertEquals(Whitebox.getInternalState(retrieved, "format"), "html");
+
+    }
+    @Test
+    public void should_convert_params_into_the_adapter_with_format_as_string() throws Exception {
+
+        /* Given */
+        ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, "reportUnitUri");
+
+        /* When */
+        RunReportAdapter retrieved = adapterSpy.prepareForRun("pdf");
+
+        /* Then */
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(Whitebox.getInternalState(retrieved, "reportUnitUri"), "reportUnitUri");
+        assertEquals(Whitebox.getInternalState(retrieved, "format"), "pdf");
+
+    }
+
+    @Test
+    public void should_convert_params_into_the_adapter_without_pages_as_string() throws Exception {
+
+        /* Given */
+        ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, "reportUnitUri");
+
+        /* When */
+        RunReportAdapter retrieved = adapterSpy.prepareForRun("pdf", new PageRange(1, 10));
+
+        /* Then */
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(Whitebox.getInternalState(retrieved, "reportUnitUri"), "reportUnitUri");
+        assertEquals(Whitebox.getInternalState(retrieved, "pages"), new String[]{"1-10"});
+        assertEquals(Whitebox.getInternalState(retrieved, "format"), "pdf");
     }
 
     @AfterMethod

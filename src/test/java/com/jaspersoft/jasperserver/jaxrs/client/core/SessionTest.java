@@ -15,6 +15,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingS
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo.ServerInfoService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails.ThumbnailsService;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.RequestedRepresentationNotAvailableForResourceException;
 import junit.framework.Assert;
 import org.mockito.Mockito;
@@ -28,6 +29,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.StatusType;
 
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
@@ -39,6 +41,8 @@ import static org.testng.Assert.assertSame;
 public class SessionTest {
 
     public SessionStorage storageMock;
+    public RestClientConfiguration configurationMock;
+    public AuthenticationCredentials credentialsMock;
     public WebTarget targetMock;
     public Builder builderMock;
     public Response responseMock;
@@ -47,6 +51,8 @@ public class SessionTest {
     @BeforeMethod
     public void before() {
         storageMock = Mockito.mock(SessionStorage.class);
+        configurationMock = Mockito.mock(RestClientConfiguration.class);
+        credentialsMock = Mockito.mock(AuthenticationCredentials.class);
         targetMock = Mockito.mock(WebTarget.class);
         builderMock = Mockito.mock(Builder.class);
         responseMock = Mockito.mock(Response.class);
@@ -54,7 +60,9 @@ public class SessionTest {
     }
 
     @Test
-    public void should_logout() {
+    public void should_logout_in_rest_authentication_mode() {
+
+        Mockito.doReturn(configurationMock).when(storageMock).getConfiguration();
         Mockito.doReturn(targetMock).when(storageMock).getRootTarget();
         Mockito.doReturn(targetMock).when(targetMock).path(anyString());
         Mockito.doReturn(builderMock).when(targetMock).request();
@@ -64,6 +72,7 @@ public class SessionTest {
         Session session = new Session(storageMock);
         session.logout();
 
+        Mockito.verify(storageMock).getConfiguration();
         Mockito.verify(storageMock).getRootTarget();
         Mockito.verify(targetMock).path(anyString());
         Mockito.verify(targetMock).request();
@@ -71,8 +80,53 @@ public class SessionTest {
         Mockito.verify(responseMock).getStatus();
     }
 
+    @Test
+    public void should_logout_in_spring_authentication_mode() {
+
+        Mockito.doReturn(configurationMock).when(storageMock).getConfiguration();
+        Mockito.doReturn(AuthenticationType.SPRING).when(configurationMock).getAuthenticationType();
+        Mockito.doReturn(targetMock).when(storageMock).getRootTarget();
+        Mockito.doReturn(targetMock).when(targetMock).path(anyString());
+        Mockito.doReturn(builderMock).when(targetMock).request();
+        Mockito.doReturn(responseMock).when(builderMock).get();
+        Mockito.doReturn(200).when(responseMock).getStatus();
+
+        Session session = new Session(storageMock);
+        session.logout();
+
+        Mockito.verify(storageMock).getConfiguration();
+        Mockito.verify(storageMock).getRootTarget();
+        Mockito.verify(targetMock).path(anyString());
+        Mockito.verify(targetMock).request();
+        Mockito.verify(builderMock).get();
+        Mockito.verify(responseMock).getStatus();
+    }
+
+    @Test
+    public void should_logout_in_basic_authentication_mode() {
+
+        Mockito.doReturn(configurationMock).when(storageMock).getConfiguration();
+        Mockito.doReturn(AuthenticationType.BASIC).when(configurationMock).getAuthenticationType();
+        Mockito.doReturn(credentialsMock).when(storageMock).getCredentials();
+        Session session = new Session(storageMock);
+        session.logout();
+
+        Mockito.verify(storageMock).getConfiguration();
+        Mockito.verify(configurationMock).getAuthenticationType();
+        Mockito.verify(storageMock, times(2)).getCredentials();
+        Mockito.verify(credentialsMock).setPassword(null);
+        Mockito.verify(credentialsMock).setUsername(null);
+
+        Mockito.verify(storageMock, never()).getRootTarget();
+        Mockito.verify(targetMock, never()).path(anyString());
+        Mockito.verify(targetMock, never()).request();
+        Mockito.verify(builderMock, never()).get();
+        Mockito.verify(responseMock, never()).getStatus();
+    }
+
     @Test(expectedExceptions = RequestedRepresentationNotAvailableForResourceException.class)
     public void should_throw_exception_when_response_status_is_greater_Then_400() {
+        Mockito.doReturn(configurationMock).when(storageMock).getConfiguration();
         Mockito.doReturn(targetMock).when(storageMock).getRootTarget();
         Mockito.doReturn(targetMock).when(targetMock).path(anyString());
         Mockito.doReturn(builderMock).when(targetMock).request();
