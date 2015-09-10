@@ -1,6 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
@@ -134,18 +136,23 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
 
     @Test(testName = "setJrsVersion")
     public void should_set_setJrsVersion_field() throws IllegalAccessException {
+        // Given
         RestClientConfiguration config = new RestClientConfiguration();
         config.setJrsVersion(JRSVersion.v5_0_0);
         Field field = field(RestClientConfiguration.class, "jrsVersion");
+        // When
         Object retrieved = field.get(config);
+        //Then
         assertNotNull(retrieved);
         assertEquals(retrieved, JRSVersion.v5_0_0);
     }
 
     @Test(testName = "setJrsVersion")
     public void should_get_not_null_setJrsVersion_field() throws IllegalAccessException {
+        // Given
         RestClientConfiguration config = new RestClientConfiguration();
         Field field = field(RestClientConfiguration.class, "jrsVersion");
+        // When
         field.set(config, JRSVersion.v4_7_0);
         assertEquals(config.getJrsVersion(), JRSVersion.v4_7_0);
     }
@@ -179,9 +186,9 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         assertEquals(expected, config.getTrustManagers()[0]);
     }
 
-    @Test
+    @Test(testName = "loadConfiguration")
     public void should_invoke_private_method() throws Exception {
-
+        // Given
         Properties propertiesSpy = PowerMockito.spy(new Properties());
 
         propertiesSpy.setProperty("url", "http://localhost:8080/jasperserver-pro/");
@@ -193,22 +200,24 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesSpy);
         PowerMockito.doNothing().when(propertiesSpy).load(any(InputStream.class));
         PowerMockito.suppress(method(Properties.class, "load", InputStream.class));
-
+        // When
         RestClientConfiguration retrieved = RestClientConfiguration.loadConfiguration("path");
-
+        //Then
         AssertJUnit.assertNotNull(retrieved);
         Mockito.verify(propertiesSpy, times(1)).load(any(InputStream.class));
     }
 
-    @Test(expectedExceptions = NullPointerException.class, enabled = false)
+    @Test(testName = "ExceptionWhileLoadingProperties", expectedExceptions = NullPointerException.class, enabled = false)
     public void should_throw_an_exception_while_loading_props() throws Exception {
+        // When
         RestClientConfiguration.loadConfiguration("path");
     }
 
-    @Test
+    @Test(testName = "getTrustManagers")
     public void should_return_trusted_manager() throws Exception {
-
+        // Given
         RestClientConfiguration config = Mockito.spy(new RestClientConfiguration());
+        // When
         TrustManager[] managers = config.getTrustManagers();
 
         assertNotNull(managers);
@@ -216,7 +225,112 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
 
         ((X509TrustManager) managers[0]).checkClientTrusted(null, "abc");
         X509Certificate[] retrieved = ((X509TrustManager) managers[0]).getAcceptedIssuers();
-
+        //Then
         Assert.assertNull(retrieved);
     }
+
+    @Test(testName = "getAuthenticationType")
+    public void should_return_not_null_value_of_authenticationType_field() throws Exception {
+        // Given
+        RestClientConfiguration config = new RestClientConfiguration();
+        Field field = field(RestClientConfiguration.class, "authenticationType");
+        // When
+        Object retrieved = field.get(config);
+        //Then
+        assertNotNull(retrieved);
+        assertEquals(retrieved, AuthenticationType.SPRING);
+
+    }
+
+    @Test(testName = "setAuthenticationType")
+    public void should_set_authenticationType_field() throws IllegalAccessException {
+        // Given
+        RestClientConfiguration config = new RestClientConfiguration();
+        config.setAuthenticationType(AuthenticationType.BASIC);
+        Field field = field(RestClientConfiguration.class, "authenticationType");
+        // When
+        Object retrieved = field.get(config);
+        //Then
+        assertNotNull(retrieved);
+        assertEquals(retrieved, AuthenticationType.BASIC);
+    }
+
+    @Test(testName = "getRestrictedHttpMethods")
+    public void should_return_not_null_value_of_restrictedHttpMethods_field() throws Exception {
+        // Given
+        RestClientConfiguration config = new RestClientConfiguration();
+        Field field = field(RestClientConfiguration.class, "restrictedHttpMethods");
+        // When
+        Object retrieved = field.get(config);
+        //Then
+        assertNotNull(retrieved);
+        assertEquals(retrieved, false);
+
+    }
+
+    @Test(testName = "setRestrictedHttpMethods")
+    public void should_set_restrictedHttpMethods_field() throws IllegalAccessException {
+        // Given
+        RestClientConfiguration config = new RestClientConfiguration();
+        config.setRestrictedHttpMethods(true);
+        Field field = field(RestClientConfiguration.class, "restrictedHttpMethods");
+        // When
+        Object retrieved = field.get(config);
+        //Then
+        assertNotNull(retrieved);
+        assertEquals(retrieved, true);
+    }
+
+    @Test(testName = "setContentMimeType")
+    public void should_set_contentMimeType_field() throws IllegalAccessException {
+        // Given
+        RestClientConfiguration config = new RestClientConfiguration();
+        config.setContentMimeType(MimeType.XML);
+        Field field = field(RestClientConfiguration.class, "contentMimeType");
+        // When
+        Object retrieved = field.get(config);
+        //Then
+        assertNotNull(retrieved);
+        assertEquals(retrieved, MimeType.XML);
+
+    }
+
+    @Test(testName = "getContentMimeType")
+    public void should_get_not_null_contentMimeType_field() throws IllegalAccessException {
+        // Given
+        RestClientConfiguration config = new RestClientConfiguration();
+        Field field = field(RestClientConfiguration.class, "contentMimeType");
+        // When
+        Object retrieved = field.get(config);
+        //Then
+        assertNotNull(retrieved);
+        assertEquals(retrieved, MimeType.JSON);
+    }
+
+    @Test(testName = "geAcceptMimeType")
+    public void should_set_acceptMimeType_field() throws IllegalAccessException {
+        // Given
+        RestClientConfiguration config = new RestClientConfiguration();
+        config.setAcceptMimeType(MimeType.XML);
+        Field field = field(RestClientConfiguration.class, "acceptMimeType");
+        // When
+        Object retrieved = field.get(config);
+        //Then
+        assertNotNull(retrieved);
+        assertEquals(retrieved, MimeType.XML);
+
+    }
+
+    @Test(testName = "setAcceptMimeType")
+    public void should_get_not_null_acceptMimeType_field() throws IllegalAccessException {
+        // Given
+        RestClientConfiguration config = new RestClientConfiguration();
+        Field field = field(RestClientConfiguration.class, "acceptMimeType");
+        // When
+        Object retrieved = field.get(config);
+        //Then
+        assertNotNull(retrieved);
+        assertEquals(retrieved, MimeType.JSON);
+    }
+
 }
