@@ -6,6 +6,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.io.InputStream;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -17,14 +20,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.MultivaluedHashMap;
-import java.io.InputStream;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -66,7 +66,7 @@ public class RunReportAdapterTest extends PowerMockTestCase {
         final AtomicInteger newThreadId = new AtomicInteger();
         int currentThreadId = (int) Thread.currentThread().getId();
 
-        RunReportAdapter adapterSpy = spy(new RunReportAdapter(sessionStorageMock, "fakeReportUnitUri", ReportOutputFormat.PDF, new PageRange(1L, 100L)));
+        RunReportAdapter adapterSpy = spy(new RunReportAdapter(sessionStorageMock, "fakeReportUnitUri", ReportOutputFormat.PDF.toString().toLowerCase(), new PageRange(1L, 100L)));
 
         Callback<OperationResult<InputStream>, Void> callbackSpy =
                 spy(new Callback<OperationResult<InputStream>, Void>() {
@@ -113,7 +113,7 @@ public class RunReportAdapterTest extends PowerMockTestCase {
         Mockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
         Mockito.doReturn(resultMock).when(requestMock).get();
 
-        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", ReportOutputFormat.CSV, new PageRange(1, 10));
+        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", ReportOutputFormat.CSV.toString().toLowerCase(), new PageRange(1, 10));
         adapter.parameter("key", "val");
         OperationResult<InputStream> retrieved = adapter.run();
 
@@ -137,13 +137,60 @@ public class RunReportAdapterTest extends PowerMockTestCase {
         Mockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
         Mockito.doReturn(resultMock).when(requestMock).get();
 
-        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", ReportOutputFormat.CSV, new Integer[]{1, 5, 6, 9, 100});
+        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", "csv", new Integer[]{1, 5, 6, 9, 100});
         OperationResult<InputStream> retrieved = adapter.run();
 
         assertSame(retrieved, resultMock);
         verify(requestMock).get();
         verify(requestMock).addParams(any(MultivaluedHashMap.class));
         verify(requestMock).addParam("pages", "1", "5", "6", "9", "100");
+        verifyNoMoreInteractions(requestMock);
+    }
+
+
+    @Test
+    /**
+     * for {@link RunReportAdapter#run()}
+     */
+    @SuppressWarnings("unchecked")
+    public void should_return_report_as_IS_if_passed_wrong_numbers_of_pages() {
+
+        /** Given **/
+        mockStatic(JerseyRequest.class);
+        Mockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
+        Mockito.doReturn(resultMock).when(requestMock).get();
+
+        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", "csv", new Integer[]{0, -1, 1});
+        OperationResult<InputStream> retrieved = adapter.run();
+
+        assertSame(retrieved, resultMock);
+        verify(requestMock).get();
+        verify(requestMock).addParams(any(MultivaluedHashMap.class));
+        verify(requestMock).addParam("page", "1");
+        verify(requestMock, never()).addParam("pages", "0", "-1", "1");
+        verifyNoMoreInteractions(requestMock);
+    }
+
+    @Test
+    /**
+     * for {@link RunReportAdapter#run()}
+     */
+    @SuppressWarnings("unchecked")
+    public void should_return_report_as_IS_if_passed_all_wrong_numbers_of_pages() {
+
+        /** Given **/
+        mockStatic(JerseyRequest.class);
+        Mockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
+        Mockito.doReturn(resultMock).when(requestMock).get();
+
+        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", "csv", new Integer[]{0, -1});
+        OperationResult<InputStream> retrieved = adapter.run();
+
+        assertSame(retrieved, resultMock);
+        verify(requestMock).get();
+        verify(requestMock).addParams(any(MultivaluedHashMap.class));
+        verify(requestMock, never()).addParam("pages", "0", "-1", "1");
+        verify(requestMock, never()).addParam(eq("page"), anyString());
         verifyNoMoreInteractions(requestMock);
     }
 
@@ -159,13 +206,34 @@ public class RunReportAdapterTest extends PowerMockTestCase {
         Mockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
         Mockito.doReturn(resultMock).when(requestMock).get();
 
-        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", ReportOutputFormat.CSV, new Integer[]{5});
+        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", "CSV", new Integer[]{5});
         OperationResult<InputStream> retrieved = adapter.run();
 
         assertSame(retrieved, resultMock);
         verify(requestMock).get();
         verify(requestMock).addParams(any(MultivaluedHashMap.class));
         verify(requestMock).addParam("page", "5");
+        verifyNoMoreInteractions(requestMock);
+    }
+   @Test
+    /**
+     * for {@link RunReportAdapter#run()}
+     */
+    @SuppressWarnings("unchecked")
+    public void should_return_report_as_IS_if_number_of_page_is_zero() {
+
+        /** Given **/
+        mockStatic(JerseyRequest.class);
+        Mockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
+        Mockito.doReturn(resultMock).when(requestMock).get();
+
+        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", "CSV", new Integer[]{0});
+        OperationResult<InputStream> retrieved = adapter.run();
+
+        assertSame(retrieved, resultMock);
+        verify(requestMock).get();
+        verify(requestMock).addParams(any(MultivaluedHashMap.class));
+        verify(requestMock,never()).addParam("page", "0");
         verifyNoMoreInteractions(requestMock);
     }
 

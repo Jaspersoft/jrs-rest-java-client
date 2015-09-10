@@ -10,8 +10,10 @@ Table of Contents
   * [Loading configuration from file](#loading-configuration-from-file).
   * [Creation of manual configuration](#creation-of-manual-configuration).
   * [HTTPS configuration](#https-configuration).
+  * [X-HTTP-Method override](#x-http-method-override).
   * [Client instantiation](#client-instantiation).
 3. [Authentication](#authentication).
+  * [Anonymous session](#anonymous-session).
   * [Invalidating session](#invalidating-session).
 4. [Report services](#report-services).
   * [Running a report](#running-a-report).
@@ -58,7 +60,7 @@ Table of Contents
     * [Setting Role Membership](#setting-role-membership).
     * [Deleting a Role](#deleting-a-role).
   5. [The Settings Service](#settings-service).
-    * [Getting server specific settings](#getting-settings).
+    * [Getting server specific settings](#getting-server-specific-settings).
 7. [Repository Services](#repository-services).
   1. [Resources Service](#resources-service).
     * [Searching the Repository](#searching-the-repository).
@@ -107,7 +109,7 @@ Table of Contents
 12. [Thumbnail Search Service](#thumbnail-search-service).
 13. [Query executor service](#queryexecutor-service).
 14. [REST Server Information](#rest-server-information).
-15. [Internalization](#internalization).
+15. [Bundles service](#bundles-service).
 16. [Exception handling](#exception-handling).
 17. [Asynchronous API](#asynchronous-api).
 18. [Getting serialized content from response](#getting-serialized-content-from-response).
@@ -151,6 +153,12 @@ TrustManager[] trustManagers = new TrustManager[1];
 trustManagers[0] = x509TrustManager;
 configuration.setTrustManagers(trustManagers);
 ```
+####X-HTTP-Method override
+To avoid situation, when your proxies or web services do not support arbitrary HTTP methods or newer HTTP methods, you can use “restricted mode”. In this mode `JaperserverRestClient` sends requests through POST method and set the `X-HTTP-Method-Override` header with value of intended HTTP method. To use this mode you should set flag `RestrictedHttpMethods`:
+```java
+session.getStorage().getConfiguration().setRestrictedHttpMethods(true);
+```
+If you do not use the "restricted mode", POST or GET methods and server returns  the response with 411 error code, `JaperserverRestClient` resend this request through POST method with the X-HTTP-Method-Override header automatically.
 ####Client instantiation:
 Here everything is easy, you need just to pass `configuration` to `JasperserverRestClient` constructor.
 ```java
@@ -165,16 +173,20 @@ Session session = client.authenticate("jasperadmin", "jasperadmin");
 //authentication with multitenancy enabled
 Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
 ```
-`JasperserverRestClient` supports three authentication types: REST, SPRING and BASIC. 
-`REST` type of authentication means that your credentials are sent through `/rest/login`, and in the `SPRING` mode – through `/j_security_check directly/`. Using these types you obtain JSESSIONID cookie of authenticated session after sending credentials.
+`JasperserverRestClient` supports two authentication types: SPRING and BASIC. 
+`SPRING` type of authentication means that your credentials are sent as a form  to `/j_security_check directly/` uri. Using these types you obtain JSESSIONID cookie of authenticated session after sending credentials.
 In the `BASIC` mode `JasperserverRestClient` uses basic authentication (sends encrypted credentials with each request).
-Client uses `REST` authentication by default but you can change the mode using follow code:
+Client uses `SPRING` authentication by default but you can specify authentication type in RestClientConfiguration instance:
 ```java
 config.setAuthenticationType(AuthenticationType.SPRING);
 ```
-Or specify authentication type in RestClientConfiguration instance (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration).
-Please notice, the basic authentication is not stateless and it is valid till method logout() is called or the application is restarted.
-
+Or set authentication type in configuration file (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration)).
+Please notice, the basic authentication is not stateless and it is valid till method logout() is called or the application is restarted and you can not use this authentication type for Report Service authentication (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#report-services)).
+###Anonymous session
+For some Jasperserver services authentication is not required (for example, settings service and server info service), so you can use anonymous session:
+ ```java
+AnonymousSession session = client.getAnonymousSession();
+```
 ####Invalidating session
 Not to store session on server you can invalidate it with `logout()` method.
 ```java
@@ -202,6 +214,30 @@ OperationResult<InputStream> result = client
         .run();
 InputStream report = result.getEntity();
 ```
+You can set format of report as String as well(name of format is case insensitive):
+```java
+OperationResult<InputStream> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .reportingService()
+        .report("/reports/samples/Cascading_multi_select_report")
+        .prepareForRun("HTML", 1)
+        .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
+        .run();
+```
+Also you can use this method to run report with several values for the same parameter. In this case new values of the parameter are added to the previous ones (new values do not replace previous values of the parameter): 
+```java
+OperationResult<InputStream> result = client
+        .authenticate("superuser", "superuser")
+        .reportingService()
+        .report("/reports/samples/Cascading_multi_select_report")
+        .prepareForRun(ReportOutputFormat.PDF, 1)
+        .parameter("Cascading_state_multi_select", "CA")
+        .parameter("Cascading_state_multi_select",  "OR", "WA")
+        .parameter("Cascading_name_single_select", "Adams-Steen Transportation Holdings")
+        .parameter("Country_multi_select", "USA")
+        .run();
+```
+Please notice, if you pass zero as number of page, you  will get all  pages of report.
 In this mode you don't need to work in one session. In the above code we specified report URI, format in which we want to get a report and some report parameters. As we a result we got `InputStream` instance. In synchronous mode as a response you get a report itself while in asynchronous you get just a descriptor with report ID which you can use to download report afer it will be ready.
 
 In order to run a report in asynchronous mode, you need firstly build `ReportExecutionRequest` instance and specify all the parameters needed to launch a report. The response from the server is the `ReportExecutionDescriptor` instance which contains the request ID needed to track the execution until completion and others report parameters. Here's the code to run a report:
@@ -211,7 +247,7 @@ ReportExecutionRequest request = new ReportExecutionRequest();
 request.setReportUnitUri("/reports/samples/StandardChartsReport");
 request
         .setAsync(true)                         //this means that report will be run on server asynchronously
-        .setOutputFormat("html");               //report can be requested in different formats e.g. html, pdf, etc.
+        .setOutputFormat(ReportOutputFormat.HTML);               //report can be requested in different formats e.g. html, pdf, etc.
 
 OperationResult<ReportExecutionDescriptor> operationResult =
         session                                 //pay attention to this, all requests are in the same session!!!
@@ -221,6 +257,14 @@ OperationResult<ReportExecutionDescriptor> operationResult =
 reportExecutionDescriptor = operationResult.getEntity();
 ```
 In the above code we've created `ReportExecutionRequest` instance and sent it to JR server through the `newReportExecutionRequest` method. As a response we've got `OperationResult` instance which contains HTTP response wrapper and instance of `ReportExecutionDescriptor` which we can get with `operationResult.getEntity()`.
+Also you can set output format as String:
+```java
+ReportExecutionRequest request = new ReportExecutionRequest();
+request.setReportUnitUri("/reports/samples/StandardChartsReport");
+request
+        .setAsync(true)                         
+        .setOutputFormat("html");               
+```
 ####Requesting report execution status:
 After you've got `ReportExecutionDescriptor` you can request for the report execution status:
 ```java
@@ -279,7 +323,7 @@ for(AttachmentDescriptor attDescriptor : htmlExportDescriptor.getAttachments()){
 After running a report and downloading its content in a given format, you can request the same report in other formats. As with exporting report formats through the user interface, the report does not run again because the export process is independent of the report.
 ```java
 ExportExecutionOptions exportExecutionOptions = new ExportExecutionOptions()
-        .setOutputFormat("pdf")
+        .setOutputFormat(ReportOutputFormat.PDF)
         .setPages("3");
 
 OperationResult<ExportExecutionDescriptor> operationResult =
@@ -402,7 +446,8 @@ To create an organization, put all information in an organization descriptor, an
 ```java
 Organization organization = new Organization();
 organization.setAlias("myOrg1");
-
+```
+``java
 OperationResult<Organization> result = session
         .organizationsService()
         .organizations()
@@ -842,18 +887,25 @@ Settings Service
 
 It provides method that allow you to get server specific settings, required by UI to work with the server in sync. There can be formats and patterns, modes for some modules etc.
 
-####Getting settings
-To get settings, use the `getEntity()` method  and specify the group of settings in the `group()` method. The method `getEntity()` returns map of settings where the keys in the map are names of the settings and values can be any objects.
-
+####Getting server specific settings
+To get settings, use the `getEntity()` method and specify the group of settings in the `group()` method and class of entity as shown below. The method `getEntity()` returns instance of specified class:
 ```java 
 final Map settings = session
                 .settingsService()
                     .settings()
-                        .group(group)
+                        .group(group, Map.class)
                             .getEntity();
 
 ``` 
-Supported groups are: 
+Please notice, you can get settings of user’s time zones  in this way as List only:
+```java
+final List settings = session
+        .settingsService()
+        .settings()
+        .group("userTimeZones", List.class)
+        .getEntity();
+```
+Supported groups of settings are: 
 
 1.	“request”. Settings related to current AJAX request configuration. Returned settings are: maxInactiveInterval, contextPath;
 
@@ -877,6 +929,42 @@ Supported groups are:
 
 11.	“adhocview”.  Different configuration dictionary values and lists for ad hoc. Configuration of settings depends on configuration of Jaspersoft server.
 
+There is another way to get settings using specified methods for groups of settings that return specific object of settings:
+ ```java
+ Final RequestSettings settings = session
+               .settingsService()
+                .settings()
+                .ofRequestGroup()
+                .getEntity();
+```
+Pleace notice, you should use List interface to get user’s time zones setting in this way:
+```java
+final List<UserTimeZone> settings = session
+        .settingsService()
+        .settings()
+        .ofUserTimeZonesGroup()
+        .getEntity();
+```
+Or you can get List of specified DTO for user’s time zones using GenericType class:
+```java
+final List<UserTimeZone> settings = session
+        .settingsService()
+        .settings()
+        .group("userTimeZones", new GenericType<List<UserTimeZone>>() {})
+        .getEntity();
+```
+Supported specified methods are:
+```java
+OperationResult<RequestSettings> ofRequestGroup();
+OperationResult<DataSourcePatternsSettings> ofDataSourcePatternsGroup();
+OperationResult<List<UserTimeZone>> ofUserTimeZonesGroup();
+OperationResult<AwsSettings> ofAwsGroup();
+OperationResult<DecimalFormatSymbolsSettings> ofDecimalFormatSymbolsGroup();
+OperationResult<DashboardSettings> ofDashboardGroup();
+OperationResult<GlobalConfigurationSettings> ofGlobalConfigurationGroup();
+OperationResult<DateTimeSettings> ofDateTimeGroup();
+OperationResult<InputControlsSettings> ofInputControlsGroup();
+```
 
 Repository Services
 =====================
@@ -1484,13 +1572,13 @@ OperationResult<String> result = client
 
 String edition = result.getEntity();
 ```
-###Internalization
+###Bundles service
 Use bundles service to get bundles of internalization properties for particular or default user’s locale as JSON. To get all bundles for particular locale(foe example, "de") use the code below:
 ```java
 final JSONObject bundles = session
         .bundlesService()
         .forLocale("de")
-        .bundles()
+        .allBundles()
         .getEntity();
 ```
 If you pass `null` in `.forLocale()` method, you will get bundles for your default locale.
@@ -1499,7 +1587,7 @@ To get bundle by name you should specified locale in `.forLocale()` method and n
 final JSONObject bundle = session
         .bundlesService()
         .forLocale("en_US")
-        .bundles("jasperserver_messages")
+        .bundle("jasperserver_messages")
         .getEntity();
 ```
 ###Exception handling

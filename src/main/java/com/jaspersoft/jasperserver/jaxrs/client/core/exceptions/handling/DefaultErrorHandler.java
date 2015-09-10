@@ -21,7 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.ResponseStatus;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AccessDeniedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.BadRequestException;

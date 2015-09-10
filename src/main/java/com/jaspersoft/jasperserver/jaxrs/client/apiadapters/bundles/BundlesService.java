@@ -22,15 +22,13 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.bundles;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings.SingleSettingsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import org.codehaus.jettison.json.JSONObject;
-
-import javax.ws.rs.core.MediaType;
 import java.util.Locale;
+import javax.ws.rs.core.MediaType;
+import org.codehaus.jettison.json.JSONObject;
 
 
 public class BundlesService extends AbstractAdapter {
@@ -49,11 +47,11 @@ public class BundlesService extends AbstractAdapter {
         return this;
     }
 
-    public OperationResult<JSONObject> bundles() {
+    public OperationResult<JSONObject> allBundles() {
         return buildBundleRequest("/bundles").addParam("expanded", "true").get();
     }
 
-    public OperationResult<JSONObject> bundles(String name) {
+    public OperationResult<JSONObject> bundle(String name) {
         return buildBundleRequest("/bundles", name).get();
     }
 

@@ -1,6 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.bundles;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -34,7 +36,7 @@ public class BundlesServiceIT {
         final JSONObject bundles = session
                 .bundlesService()
                 .forLocale(null)
-                .bundles()
+                .allBundles()
                 .getEntity();
 
         // Then
@@ -49,7 +51,7 @@ public class BundlesServiceIT {
         final JSONObject bundles = session
                 .bundlesService()
                 .forLocale("de")
-                .bundles()
+                .allBundles()
                 .getEntity();
 
         // Then
@@ -64,7 +66,7 @@ public class BundlesServiceIT {
         final JSONObject bundle = session
                 .bundlesService()
                 .forLocale("de")
-                .bundles("jasperserver_messages")
+                .bundle("jasperserver_messages")
                 .getEntity();
 
         // Then
@@ -79,7 +81,7 @@ public class BundlesServiceIT {
         final JSONObject bundle = session
                 .bundlesService()
                 .forLocale(null)
-                .bundles("jasperserver_messages")
+                .bundle("jasperserver_messages")
                 .getEntity();
 
         // Then

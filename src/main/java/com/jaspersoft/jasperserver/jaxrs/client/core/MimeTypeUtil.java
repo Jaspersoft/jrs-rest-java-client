@@ -21,6 +21,8 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
+
 public class MimeTypeUtil {
 
     private static final String JSON_SUFFIX = "json";
