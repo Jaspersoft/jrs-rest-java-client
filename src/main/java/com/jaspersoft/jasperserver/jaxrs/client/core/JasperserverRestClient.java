@@ -73,7 +73,7 @@ public class JasperserverRestClient {
         String sessionId = null;
         String location = response.getLocation().toString();
 
-        if (response.getStatus() == ResponseStatus.FOUND && !location.matches("^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*?error=1$")) {
+        if (response.getStatus() == ResponseStatus.FOUND && !location.matches("[^?]+\\?([^&]*&)*error=1(&[^&]*)*$")) {
             sessionId = response.getCookies().get("JSESSIONID").getValue();
             storage.setSessionId(sessionId);
         } else {
