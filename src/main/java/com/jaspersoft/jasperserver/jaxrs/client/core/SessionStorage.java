@@ -100,7 +100,7 @@ public class SessionStorage {
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         rootTarget.register(JacksonFeature.class);
         rootTarget.register(provider);
-        if (configuration.getIsJerseyRequestLogged()) {
+        if (configuration.getLogHttp()) {
             rootTarget.register(initLoggingFilter());
         }
     }
@@ -111,7 +111,7 @@ public class SessionStorage {
         SLF4JBridgeHandler.install();
 
         return new LoggingFilter(logger,
-                configuration.getIsJSonEntityLogged());
+                configuration.getLogHttpEntity());
     }
 
 

@@ -219,4 +219,11 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
 
         Assert.assertNull(retrieved);
     }
+
+    @Test
+    public void should_return_defaul_value_of_() throws Exception {
+
+
+
+    }
 }

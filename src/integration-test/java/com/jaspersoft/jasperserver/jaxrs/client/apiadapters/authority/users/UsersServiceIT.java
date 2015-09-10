@@ -4,7 +4,6 @@ import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import java.util.List;
@@ -28,7 +27,7 @@ public class UsersServiceIT {
         config.setAcceptMimeType(MimeType.JSON);
         config.setContentMimeType(MimeType.JSON);
         config.setJrsVersion(JRSVersion.v6_0_1);
-        config.setIsJerseyRequestLogged(true);
+        config.setLogHttp(true);
 //        config.setIsJSonEntitieLogged(true);
         client = new JasperserverRestClient(config);
 

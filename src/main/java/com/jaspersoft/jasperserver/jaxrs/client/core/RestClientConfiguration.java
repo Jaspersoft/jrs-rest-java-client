@@ -49,11 +49,8 @@ public class RestClientConfiguration {
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
     private AuthenticationType authenticationType = AuthenticationType.SPRING;
     private Boolean restrictedHttpMethods = false;
-
-    private Boolean isJerseyRequestLogged = false;
-
-    private Boolean isJSonEntitieLogged = false;
-
+    private Boolean logHttp = false;
+    private Boolean logHttpEntity = false;
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;
     private Integer readTimeout;
@@ -155,20 +152,20 @@ public class RestClientConfiguration {
         this.restrictedHttpMethods = restrictedHttpMethods;
     }
 
-    public Boolean getIsJerseyRequestLogged() {
-        return isJerseyRequestLogged;
+    public Boolean getLogHttp() {
+        return logHttp;
     }
 
-    public void setIsJerseyRequestLogged(Boolean isJerseyRequestLogged) {
-        this.isJerseyRequestLogged = isJerseyRequestLogged;
+    public void setLogHttp(Boolean logHttp) {
+        this.logHttp = logHttp;
     }
 
-    public Boolean getIsJSonEntitieLogged() {
-        return isJSonEntitieLogged;
+    public Boolean getLogHttpEntity() {
+        return logHttpEntity;
     }
 
-    public void setIsJSonEntitieLogged(Boolean isJSonEntitieLogged) {
-        this.isJSonEntitieLogged = isJSonEntitieLogged;
+    public void setLogHttpEntity(Boolean logHttpEntity) {
+        this.logHttpEntity = logHttpEntity;
     }
 
     public static RestClientConfiguration loadConfiguration(String path) {
