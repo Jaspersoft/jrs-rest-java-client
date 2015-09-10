@@ -70,7 +70,6 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
         final JasperserverRestClient spyClient = spy(client);
 
-
         whenNew(AuthenticationCredentials.class)
                 .withArguments(USER_NAME, PASSWORD)
                 .thenReturn(credentialsMock);
