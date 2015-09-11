@@ -4,6 +4,8 @@ import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -21,9 +23,12 @@ public class UsersServiceIT {
 
     @BeforeMethod
     public void before() {
-
-        RestClientConfiguration cfg = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        JasperserverRestClient client = new JasperserverRestClient(cfg);
+        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
+        config.setAcceptMimeType(MimeType.JSON);
+        config.setContentMimeType(MimeType.JSON);
+        config.setJrsVersion(JRSVersion.v6_0_1);
+        config.setLogHttp(true);
+        client = new JasperserverRestClient(config);
 
         session = client.authenticate("superuser", "superuser");
     }

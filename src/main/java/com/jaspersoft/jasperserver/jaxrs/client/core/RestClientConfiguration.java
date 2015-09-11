@@ -49,9 +49,10 @@ public class RestClientConfiguration {
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
     private AuthenticationType authenticationType = AuthenticationType.SPRING;
     private Boolean restrictedHttpMethods = false;
+    private Boolean logHttp = false;
+    private Boolean logHttpEntity = false;
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;
-
     private Integer readTimeout;
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
@@ -87,10 +88,10 @@ public class RestClientConfiguration {
             throw new IllegalArgumentException("Given parameter is not a URL");
         this.jasperReportsServerUrl = jasperReportsServerUrl;
     }
+
     public AuthenticationType getAuthenticationType() {
         return authenticationType;
     }
-
     public void setAuthenticationType(AuthenticationType authenticationType) {
         this.authenticationType = authenticationType;
     }
@@ -149,6 +150,22 @@ public class RestClientConfiguration {
 
     public void setRestrictedHttpMethods(Boolean restrictedHttpMethods) {
         this.restrictedHttpMethods = restrictedHttpMethods;
+    }
+
+    public Boolean getLogHttp() {
+        return logHttp;
+    }
+
+    public void setLogHttp(Boolean logHttp) {
+        this.logHttp = logHttp;
+    }
+
+    public Boolean getLogHttpEntity() {
+        return logHttpEntity;
+    }
+
+    public void setLogHttpEntity(Boolean logHttpEntity) {
+        this.logHttpEntity = logHttpEntity;
     }
 
     public static RestClientConfiguration loadConfiguration(String path) {

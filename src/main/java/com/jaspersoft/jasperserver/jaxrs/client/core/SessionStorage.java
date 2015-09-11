@@ -26,7 +26,9 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 
 import javax.net.ssl.HostnameVerifier;
@@ -37,6 +39,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import java.security.SecureRandom;
+import java.util.logging.Logger;
 
 
 public class SessionStorage {
@@ -97,7 +100,18 @@ public class SessionStorage {
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         rootTarget.register(JacksonFeature.class);
         rootTarget.register(provider);
+        if (configuration.getLogHttp()) {
+            rootTarget.register(initLoggingFilter());
+        }
+    }
 
+    private LoggingFilter initLoggingFilter() {
+        Logger logger = Logger.getLogger(this.getClass().getName());
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+
+        return new LoggingFilter(logger,
+                configuration.getLogHttpEntity());
     }
 
 
