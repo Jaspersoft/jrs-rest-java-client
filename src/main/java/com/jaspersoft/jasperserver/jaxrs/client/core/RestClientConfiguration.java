@@ -163,7 +163,7 @@ public class RestClientConfiguration {
 
         String readTimeout = properties.getProperty("readTimeout");
         if (readTimeout != null && !readTimeout.equals(""))
-            configuration.setConnectionTimeout(Integer.valueOf(readTimeout));
+            configuration.setReadTimeout(Integer.valueOf(readTimeout));
 
         try {
             configuration.setContentMimeType(MimeType.valueOf(properties.getProperty("contentMimeType")));
