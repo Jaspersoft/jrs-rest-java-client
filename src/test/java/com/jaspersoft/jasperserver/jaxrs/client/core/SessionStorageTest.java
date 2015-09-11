@@ -21,6 +21,7 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
@@ -29,7 +30,7 @@ import static org.testng.Assert.assertNotNull;
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage}
  */
-@PrepareForTest({SessionStorage.class, SSLContext.class, EncryptionUtils.class, ClientBuilder.class})
+@PrepareForTest({SSLContext.class, EncryptionUtils.class, ClientBuilder.class})
 public class SessionStorageTest extends PowerMockTestCase {
 
     @Mock
@@ -59,6 +60,7 @@ public class SessionStorageTest extends PowerMockTestCase {
 
         // Given
         PowerMockito.suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
         // When
         SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
         // Then
@@ -106,6 +108,7 @@ public class SessionStorageTest extends PowerMockTestCase {
 
         // Given
         PowerMockito.suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
         SessionStorage sessionStorageSpy = PowerMockito.spy(new SessionStorage(configurationMock, credentialsMock));
         // When
         Whitebox.setInternalState(sessionStorageSpy, "rootTarget", targetMock);
