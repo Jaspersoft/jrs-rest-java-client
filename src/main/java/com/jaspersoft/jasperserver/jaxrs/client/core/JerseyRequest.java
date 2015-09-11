@@ -39,7 +39,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.MimeType.JSON;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType.JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 

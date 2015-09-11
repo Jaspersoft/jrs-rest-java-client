@@ -151,7 +151,6 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
         PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "/since");
         assertSame(retrieved, operationResultMock);
     }
-
     @Test
     public void should_return_proper_server_details() {
 

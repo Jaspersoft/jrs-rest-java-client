@@ -13,22 +13,26 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.Permissi
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.serverInfo.ServerInfoService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails.ThumbnailsService;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.RequestedRepresentationNotAvailableForResourceException;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.StatusType;
 import junit.framework.Assert;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.client.Invocation.Builder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.StatusType;
-
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
@@ -37,49 +41,80 @@ import static org.testng.Assert.assertSame;
  * Unit tests for {@link Session}
  */
 public class SessionTest {
-
+    @Mock
     public SessionStorage storageMock;
+    @Mock
+    public RestClientConfiguration configurationMock;
+    @Mock
+    public AuthenticationCredentials credentialsMock;
+    @Mock
     public WebTarget targetMock;
+    @Mock
     public Builder builderMock;
+    @Mock
     public Response responseMock;
+    @Mock
     public StatusType statusTypeMock;
 
     @BeforeMethod
     public void before() {
-        storageMock = Mockito.mock(SessionStorage.class);
-        targetMock = Mockito.mock(WebTarget.class);
-        builderMock = Mockito.mock(Builder.class);
-        responseMock = Mockito.mock(Response.class);
-        statusTypeMock = Mockito.mock(StatusType.class);
+        initMocks(this);
     }
 
     @Test
-    public void should_logout() {
-        Mockito.doReturn(targetMock).when(storageMock).getRootTarget();
-        Mockito.doReturn(targetMock).when(targetMock).path(anyString());
-        Mockito.doReturn(builderMock).when(targetMock).request();
-        Mockito.doReturn(responseMock).when(builderMock).get();
-        Mockito.doReturn(200).when(responseMock).getStatus();
+    public void should_logout_in_spring_authentication_mode() {
+
+        doReturn(configurationMock).when(storageMock).getConfiguration();
+        doReturn(AuthenticationType.SPRING).when(configurationMock).getAuthenticationType();
+        doReturn(targetMock).when(storageMock).getRootTarget();
+        doReturn(targetMock).when(targetMock).path(anyString());
+        doReturn(builderMock).when(targetMock).request();
+        doReturn(responseMock).when(builderMock).get();
+        doReturn(200).when(responseMock).getStatus();
 
         Session session = new Session(storageMock);
         session.logout();
 
-        Mockito.verify(storageMock).getRootTarget();
-        Mockito.verify(targetMock).path(anyString());
-        Mockito.verify(targetMock).request();
-        Mockito.verify(builderMock).get();
-        Mockito.verify(responseMock).getStatus();
+        verify(storageMock).getConfiguration();
+        verify(storageMock).getRootTarget();
+        verify(targetMock).path(anyString());
+        verify(targetMock).request();
+        verify(builderMock).get();
+        verify(responseMock).getStatus();
+    }
+
+    @Test
+    public void should_logout_in_basic_authentication_mode() {
+
+        doReturn(configurationMock).when(storageMock).getConfiguration();
+        doReturn(AuthenticationType.BASIC).when(configurationMock).getAuthenticationType();
+        doReturn(credentialsMock).when(storageMock).getCredentials();
+        Session session = new Session(storageMock);
+        session.logout();
+
+        verify(storageMock).getConfiguration();
+        verify(configurationMock).getAuthenticationType();
+        verify(storageMock, times(2)).getCredentials();
+        verify(credentialsMock).setPassword(null);
+        verify(credentialsMock).setUsername(null);
+
+        verify(storageMock, never()).getRootTarget();
+        verify(targetMock, never()).path(anyString());
+        verify(targetMock, never()).request();
+        verify(builderMock, never()).get();
+        verify(responseMock, never()).getStatus();
     }
 
     @Test(expectedExceptions = RequestedRepresentationNotAvailableForResourceException.class)
-    public void should_throw_exception_when_response_status_is_greater_Then_400() {
-        Mockito.doReturn(targetMock).when(storageMock).getRootTarget();
-        Mockito.doReturn(targetMock).when(targetMock).path(anyString());
-        Mockito.doReturn(builderMock).when(targetMock).request();
-        Mockito.doReturn(responseMock).when(builderMock).get();
-        Mockito.doReturn(statusTypeMock).when(responseMock).getStatusInfo();
-        Mockito.doReturn("phrase_").when(statusTypeMock).getReasonPhrase();
-        Mockito.doReturn(406).when(responseMock).getStatus();
+    public void should_throw_exception_when_response_status_is_greater_then_400() {
+        doReturn(configurationMock).when(storageMock).getConfiguration();
+        doReturn(targetMock).when(storageMock).getRootTarget();
+        doReturn(targetMock).when(targetMock).path(anyString());
+        doReturn(builderMock).when(targetMock).request();
+        doReturn(responseMock).when(builderMock).get();
+        doReturn(statusTypeMock).when(responseMock).getStatusInfo();
+        doReturn("phrase_").when(statusTypeMock).getReasonPhrase();
+        doReturn(406).when(responseMock).getStatus();
 
         Session session = new Session(storageMock);
         session.logout();
@@ -97,13 +132,6 @@ public class SessionTest {
     }
 
     @Test
-    public void should_return_not_null_JobsService() {
-        Session session = new Session(storageMock);
-        JobsService retrieved = session.jobsService();
-        assertNotNull(retrieved);
-    }
-
-    @Test
     public void should_return_proper_storage() {
         Session session = new Session(storageMock);
         assertSame(session.getStorage(), storageMock);
@@ -113,13 +141,6 @@ public class SessionTest {
     public void should_return_not_null_OrganizationsService() {
         Session session = new Session(storageMock);
         OrganizationsService retrieved = session.organizationsService();
-        assertNotNull(retrieved);
-    }
-
-    @Test
-    public void should_return_not_null_ServerInfoService() {
-        Session session = new Session(storageMock);
-        ServerInfoService retrieved = session.serverInfoService();
         assertNotNull(retrieved);
     }
 
@@ -173,6 +194,13 @@ public class SessionTest {
     }
 
     @Test
+    public void should_return_not_null_JobsService() {
+        Session session = new Session(storageMock);
+        JobsService retrieved = session.jobsService();
+        assertNotNull(retrieved);
+    }
+
+    @Test
     public void should_return_not_null_DomainMetadataService() {
         Session session = new Session(storageMock);
         DomainMetadataService retrieved = session.domainService();
@@ -191,7 +219,7 @@ public class SessionTest {
         Session sessionSpy = Mockito.spy(new Session(storageMock));
         ThumbnailsService service = sessionSpy.thumbnailsService();
         Assert.assertNotNull(service);
-        Mockito.verify(sessionSpy, times(1)).getService(ThumbnailsService.class);
+        verify(sessionSpy, times(1)).getService(ThumbnailsService.class);
     }
 
     @Test
@@ -199,7 +227,7 @@ public class SessionTest {
         Session sessionSpy = Mockito.spy(new Session(storageMock));
         ServerAttributesService service = sessionSpy.serverAttributesService();
         Assert.assertNotNull(service);
-        Mockito.verify(sessionSpy, times(1)).getService(ServerAttributesService.class);
+        verify(sessionSpy, times(1)).getService(ServerAttributesService.class);
     }
 
     @AfterMethod

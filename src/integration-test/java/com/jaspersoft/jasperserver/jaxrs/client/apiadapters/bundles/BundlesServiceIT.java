@@ -1,6 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.bundles;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

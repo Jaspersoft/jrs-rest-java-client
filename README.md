@@ -172,6 +172,15 @@ Session session = client.authenticate("jasperadmin", "jasperadmin");
 //authentication with multitenancy enabled
 Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
 ```
+`JasperserverRestClient` supports two authentication types: SPRING and BASIC. 
+`SPRING` type of authentication means that your credentials are sent as a form  to `/j_security_check directly/` uri. Using these types you obtain JSESSIONID cookie of authenticated session after sending credentials.
+In the `BASIC` mode `JasperserverRestClient` uses basic authentication (sends encrypted credentials with each request).
+Client uses `SPRING` authentication by default but you can specify authentication type in RestClientConfiguration instance:
+```java
+config.setAuthenticationType(AuthenticationType.SPRING);
+```
+Or set authentication type in configuration file (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration)).
+Please notice, the basic authentication is not stateless and it is valid till method logout() is called or the application is restarted and you can not use this authentication type for Report Service, because all operations must be executed in the same session (for details, read section [Report services](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#report-services)).
 ###Anonymous session
 For some Jasperserver services authentication is not required (for example, settings service and server info service), so you can use anonymous session:
  ```java

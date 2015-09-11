@@ -63,13 +63,51 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         new JasperserverRestClient(null);
     }
 
+    @Test(testName = "JasperserverRestClient_authenticate")
+    public void should_return_null_when_username_is_null() {
+        // Given
+        JasperserverRestClient jasperserverRestClient = new JasperserverRestClient(configurationMock);
+        // When
+        Session session = jasperserverRestClient.authenticate(null, PASSWORD);
+        // Then
+        assertEquals(session, null);
+    }
+    @Test(testName = "JasperserverRestClient_authenticate")
+    public void should_return_null_when_username_is_empty() {
+        // Given
+        JasperserverRestClient jasperserverRestClient = new JasperserverRestClient(configurationMock);
+        // When
+        Session session = jasperserverRestClient.authenticate("", PASSWORD);
+        // Then
+        assertEquals(session, null);
+    }
+
+    @Test(testName = "JasperserverRestClient_authenticate")
+    public void should_return_null_when_password_is_null() {
+        // Given
+        JasperserverRestClient jasperserverRestClient = new JasperserverRestClient(configurationMock);
+        // When
+        Session session = jasperserverRestClient.authenticate(USER_NAME, null);
+        // Then
+        assertEquals(session, null);
+    }
+    @Test(testName = "JasperserverRestClient_authenticate")
+    public void should_return_null_when_password_is_empty() {
+        // Given
+        JasperserverRestClient jasperserverRestClient = new JasperserverRestClient(configurationMock);
+        // When
+        Session session = jasperserverRestClient.authenticate(USER_NAME, "");
+        // Then
+        assertEquals(session, null);
+    }
+
+
     @Test
     public void should_return_proper_Session_object() throws Exception {
 
         // Given
         final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
         final JasperserverRestClient spyClient = spy(client);
-
 
         whenNew(AuthenticationCredentials.class)
                 .withArguments(USER_NAME, PASSWORD)

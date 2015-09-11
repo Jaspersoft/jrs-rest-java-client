@@ -20,14 +20,17 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ResponseStatus;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.glassfish.jersey.client.ClientProperties;
 
 public class JasperserverRestClient {
     private final RestClientConfiguration configuration;
@@ -38,11 +41,16 @@ public class JasperserverRestClient {
         }
         this.configuration = configuration;
     }
+
     public Session authenticate(String username, String password) {
-        AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
-        SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
-        login(sessionStorage);
-        return new Session(sessionStorage);
+
+        if (username != null && username.length() > 0 && password != null && password.length() > 0) {
+            AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
+            SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
+            login(sessionStorage);
+            return new Session(sessionStorage);
+        }
+        return null;
     }
 
     public AnonymousSession getAnonymousSession() {
@@ -53,13 +61,19 @@ public class JasperserverRestClient {
 
         AuthenticationCredentials credentials = storage.getCredentials();
         WebTarget rootTarget = storage.getRootTarget();
+        if (configuration.getAuthenticationType() == AuthenticationType.BASIC) {
+            rootTarget.register(new BasicAuthenticationFilter(credentials));
+            return;
+        }
         Form form = new Form();
         form.param("j_username", credentials.getUsername()).param("j_password", credentials.getPassword());
-
-        WebTarget target = rootTarget.path("/rest/login");
+        WebTarget target = rootTarget.path("/j_spring_security_check")
+                    .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
         Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
         String sessionId = null;
-        if (response.getStatus() == ResponseStatus.OK) {
+        String location = response.getLocation().toString();
+
+        if (response.getStatus() == ResponseStatus.FOUND && !location.matches("[^?]+\\?([^&]*&)*error=1(&[^&]*)*$")) {
             sessionId = response.getCookies().get("JSESSIONID").getValue();
             storage.setSessionId(sessionId);
         } else {
@@ -67,5 +81,6 @@ public class JasperserverRestClient {
         }
         rootTarget.register(new SessionOutputFilter(sessionId));
     }
+
 
 }
