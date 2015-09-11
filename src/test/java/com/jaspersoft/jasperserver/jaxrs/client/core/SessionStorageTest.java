@@ -34,25 +34,18 @@ public class SessionStorageTest extends PowerMockTestCase {
 
     @Mock
     private ClientBuilder builderMock;
-
     @Mock
     private RestClientConfiguration configurationMock;
-
     @Mock
     private AuthenticationCredentials credentialsMock;
-
     @Mock
     private SSLContext ctxMock;
-
     @Mock
     private Client clientMock;
-
     @Mock
     private WebTarget targetMock;
-
     @Mock
     private Invocation.Builder invocationBuilderMock;
-
     @Mock
     private Response responseMock;
 
@@ -61,23 +54,21 @@ public class SessionStorageTest extends PowerMockTestCase {
         initMocks(this);
     }
 
-    @Test(enabled = false)
+    @Test
     public void should_create_new_instance_session_storage() throws Exception {
 
-        /* Given */
+        // Given
         PowerMockito.suppress(method(SessionStorage.class, "init"));
-
-        RestClientConfiguration configurationMock = PowerMockito.mock(RestClientConfiguration.class);
-        AuthenticationCredentials credentialsMock = PowerMockito.mock(AuthenticationCredentials.class);
-        SessionStorage sessionStorageSpy = PowerMockito.spy(new SessionStorage(configurationMock, credentialsMock));
-
-        assertNotNull(sessionStorageSpy);
+        // When
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        // Then
+        assertNotNull(sessionStorage);
     }
 
     @Test(expectedExceptions = RuntimeException.class)
     public void should_throw_an_exception_when_unable_to_init_SSL_context() throws Exception {
 
-        /* Given */
+        // Given
         TrustManager[] managers = new TrustManager[]{
                 new X509TrustManager() {
                     @Override
@@ -104,22 +95,22 @@ public class SessionStorageTest extends PowerMockTestCase {
         PowerMockito.doReturn(managers).when(configurationMock).getTrustManagers();
         PowerMockito.doReturn(100L).when(configurationMock).getReadTimeout();
 
-        /* When */
-        SessionStorage sessionStorageSpy = PowerMockito.spy(new SessionStorage(configurationMock, credentialsMock));
+        // When
+        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock);
 
-        /* Then throw an exception */
+        // Then throw an exception
     }
 
-    @Test(enabled = false)
+    @Test
     public void should_set_and_get_state_for_object() {
 
-        /* Given */
+        // Given
         PowerMockito.suppress(method(SessionStorage.class, "init"));
         SessionStorage sessionStorageSpy = PowerMockito.spy(new SessionStorage(configurationMock, credentialsMock));
+        // When
         Whitebox.setInternalState(sessionStorageSpy, "rootTarget", targetMock);
         Whitebox.setInternalState(sessionStorageSpy, "sessionId", "sessionId");
-
-        /* Verify */
+        // Then
         assertNotNull(sessionStorageSpy.getConfiguration());
         assertNotNull(sessionStorageSpy.getCredentials());
         assertNotNull(sessionStorageSpy.getRootTarget());
