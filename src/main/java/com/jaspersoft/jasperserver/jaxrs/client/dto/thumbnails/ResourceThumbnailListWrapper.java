@@ -7,21 +7,21 @@ import java.util.List;
  */
 @Deprecated
 public class ResourceThumbnailListWrapper {
-    private List<ResourceThumbnail> thumbnails;
+
+    private List<ResourceThumbnail> thumbnail;
 
     public ResourceThumbnailListWrapper() {
     }
 
-    public ResourceThumbnailListWrapper(List<ResourceThumbnail> thumbnails) {
-        this.thumbnails = thumbnails;
+    public ResourceThumbnailListWrapper(List<ResourceThumbnail> thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
-    public List<ResourceThumbnail> getThumbnails() {
-        return thumbnails;
+    public List<ResourceThumbnail> getThumbnail() {
+        return thumbnail;
     }
-
-    public void setThumbnails(List<ResourceThumbnail> thumbnails) {
-        this.thumbnails = thumbnails;
+    public void setThumbnail(List<ResourceThumbnail> thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     @Override
@@ -29,22 +29,22 @@ public class ResourceThumbnailListWrapper {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ResourceThumbnailListWrapper that = (ResourceThumbnailListWrapper) o;
-        return !(thumbnails != null
-                ? !thumbnails.equals(that.thumbnails)
-                : that.thumbnails != null);
+        return !(thumbnail != null
+                ? !thumbnail.equals(that.thumbnail)
+                : that.thumbnail != null);
     }
 
     @Override
     public int hashCode() {
-        return thumbnails != null
-                ? thumbnails.hashCode()
+        return thumbnail != null
+                ? thumbnail.hashCode()
                 : 0;
     }
 
     @Override
     public String toString() {
         return "ResourceThumbnailListWrapper{" +
-                "thumbnails=" + thumbnails +
+                "thumbnails=" + thumbnail +
                 '}';
     }
 }
