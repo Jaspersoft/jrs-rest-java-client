@@ -1,4 +1,5 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails;
+import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
 
 import java.util.List;
 
