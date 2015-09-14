@@ -47,7 +47,7 @@ public class ThumbnailsServiceIT {
                 .parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true)
                 .get()
                 .getEntity()
-                .getThumbnail();
+                .getThumbnails();
         Assert.assertNotNull(entity);
         Assert.assertTrue(entity.size() == 2);
     }

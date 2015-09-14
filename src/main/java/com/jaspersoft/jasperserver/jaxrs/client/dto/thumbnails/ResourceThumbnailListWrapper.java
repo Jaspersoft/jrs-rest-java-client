@@ -2,27 +2,32 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails;
 import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
 
 import java.util.List;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Fake wrapper class for ResourceThumbnail collection.
  */
 @Deprecated
+@XmlRootElement(name = "thumbnails")
 public class ResourceThumbnailListWrapper {
 
-    private List<ResourceThumbnail> thumbnail;
+    private List<ResourceThumbnail> thumbnails;
 
     public ResourceThumbnailListWrapper() {
     }
 
     public ResourceThumbnailListWrapper(List<ResourceThumbnail> thumbnail) {
-        this.thumbnail = thumbnail;
+        this.thumbnails = thumbnail;
     }
 
-    public List<ResourceThumbnail> getThumbnail() {
-        return thumbnail;
+    public List<ResourceThumbnail> getThumbnails() {
+        return thumbnails;
     }
-    public void setThumbnail(List<ResourceThumbnail> thumbnail) {
-        this.thumbnail = thumbnail;
+
+    @XmlElement(name = "thumbnail")
+    public void setThumbnails(List<ResourceThumbnail> thumbnails) {
+        this.thumbnails = thumbnails;
     }
 
     @Override
@@ -30,22 +35,22 @@ public class ResourceThumbnailListWrapper {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ResourceThumbnailListWrapper that = (ResourceThumbnailListWrapper) o;
-        return !(thumbnail != null
-                ? !thumbnail.equals(that.thumbnail)
-                : that.thumbnail != null);
+        return !(thumbnails != null
+                ? !thumbnails.equals(that.thumbnails)
+                : that.thumbnails != null);
     }
 
     @Override
     public int hashCode() {
-        return thumbnail != null
-                ? thumbnail.hashCode()
+        return thumbnails != null
+                ? thumbnails.hashCode()
                 : 0;
     }
 
     @Override
     public String toString() {
         return "ResourceThumbnailListWrapper{" +
-                "thumbnails=" + thumbnail +
+                "thumbnails=" + thumbnails +
                 '}';
     }
 }
