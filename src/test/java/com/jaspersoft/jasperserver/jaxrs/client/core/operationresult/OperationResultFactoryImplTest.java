@@ -130,7 +130,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
         /** Then **/
         Assert.assertNotNull(operationResult);
         Mockito.verify(responseMock, times(1)).hasEntity();
-        Assert.assertTrue(operationResult.getEntity().getThumbnail().size() == 1);
+        Assert.assertTrue(operationResult.getEntity().getThumbnails().size() == 1);
     }
 
     @Test
