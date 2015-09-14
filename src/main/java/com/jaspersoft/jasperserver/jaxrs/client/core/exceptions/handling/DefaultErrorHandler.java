@@ -21,7 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ResponseStatus;
+import javax.ws.rs.core.Response.Status;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AccessDeniedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.BadRequestException;
@@ -46,17 +46,17 @@ public class DefaultErrorHandler implements ErrorHandler {
 
 //    private static final Log log = LogFactory.getLog(DefaultErrorHandler.class);
 
-    protected static final Map<Integer, Class<? extends JSClientWebException>> httpErrorCodeToTypeMap =
-            new HashMap<Integer, Class<? extends JSClientWebException>>() {{
-                put(ResponseStatus.BAD_REQUEST, BadRequestException.class);
-                put(ResponseStatus.FORBIDDEN, AccessDeniedException.class);
-                put(ResponseStatus.NOT_ALLOWED, HttpMethodNotAllowedException.class);
-                put(ResponseStatus.SERVER_ERROR, InternalServerErrorException.class);
-                put(ResponseStatus.NOT_ACCEPTABLE, RequestedRepresentationNotAvailableForResourceException.class);
-                put(ResponseStatus.NOT_FOUND, ResourceNotFoundException.class);
-                put(ResponseStatus.UNAUTHORIZED, AuthenticationFailedException.class);
-                put(ResponseStatus.CONFLICT, ConflictException.class);
-                put(ResponseStatus.UNSUPPORTED_TYPE, RepresentationalTypeNotSupportedForResourceException.class);
+    protected static final Map<Response.Status, Class<? extends JSClientWebException>> httpErrorCodeToTypeMap =
+            new HashMap<Response.Status, Class<? extends JSClientWebException>>() {{
+                put(Status.BAD_REQUEST, BadRequestException.class);
+                put(Status.FORBIDDEN, AccessDeniedException.class);
+                put(Status.NOT_ACCEPTABLE, HttpMethodNotAllowedException.class);
+                put(Status.INTERNAL_SERVER_ERROR, InternalServerErrorException.class);
+                put(Status.NOT_ACCEPTABLE, RequestedRepresentationNotAvailableForResourceException.class);
+                put(Status.NOT_FOUND, ResourceNotFoundException.class);
+                put(Status.UNAUTHORIZED, AuthenticationFailedException.class);
+                put(Status.CONFLICT, ConflictException.class);
+                put(Status.UNSUPPORTED_MEDIA_TYPE, RepresentationalTypeNotSupportedForResourceException.class);
             }};
 
     @Override
@@ -104,7 +104,7 @@ public class DefaultErrorHandler implements ErrorHandler {
     }
 
     protected void handleStatusCodeError(Response response, String overridingMessage) {
-        Class<? extends JSClientWebException> exceptionType = httpErrorCodeToTypeMap.get(response.getStatus());
+        Class<? extends JSClientWebException> exceptionType = httpErrorCodeToTypeMap.get(Response.Status.fromStatusCode(response.getStatus()));
         String reasonPhrase = response.getStatusInfo().getReasonPhrase();
         JSClientWebException exception = new JSClientWebException(overridingMessage != null ? overridingMessage : reasonPhrase);
         try {
