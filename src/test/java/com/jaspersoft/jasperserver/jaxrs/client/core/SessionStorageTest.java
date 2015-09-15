@@ -1,6 +1,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;//package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import java.util.HashMap;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.NewCookie;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -21,6 +26,9 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -49,6 +57,12 @@ public class SessionStorageTest extends PowerMockTestCase {
     private Invocation.Builder invocationBuilderMock;
     @Mock
     private Response responseMock;
+    @Mock
+    public Response.StatusType statusTypeMock;
+
+    @Mock
+    public SSLContext sslContextMock;
+
 
     @BeforeMethod
     public void before() {
@@ -65,6 +79,58 @@ public class SessionStorageTest extends PowerMockTestCase {
         SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
         // Then
         assertNotNull(sessionStorage);
+    }
+
+    @Test(enabled = true)
+    public void should_init_ssl() {
+
+        /** - mock for static method **/
+        PowerMockito.mockStatic(ClientBuilder.class);
+        Mockito.when(ClientBuilder.newBuilder()).thenReturn(builderMock);
+
+        /** - mocks for {@link SessionStorage#init()} method (no SSL) **/
+        Mockito.doReturn("https://54.83.98.156/jasperserver-pro").when(configurationMock).getJasperReportsServerUrl();
+        Mockito.doReturn(10000).when(configurationMock).getConnectionTimeout();
+        Mockito.doReturn(8000).when(configurationMock).getReadTimeout();
+        Mockito.doReturn(clientMock).when(builderMock).build();
+        Mockito.doReturn(targetMock).when(clientMock).target("http://54.83.98.156/jasperserver-pro");
+
+        /** - mocks for {@link SessionStorage#getSecurityAttributes()} method (no SSL) **/
+        Mockito.doReturn("Alex").when(credentialsMock).getUsername();
+        Mockito.doReturn("oh, yeah!").when(credentialsMock).getPassword();
+
+        PowerMockito.mockStatic(EncryptionUtils.class);
+        PowerMockito.when(EncryptionUtils.parseEncryptionParams(responseMock)).thenReturn(null);
+        PowerMockito.when(EncryptionUtils.encryptPassword("oh, yeah!", "n_", "e_")).thenReturn("encryptPassword");
+
+        Mockito.doReturn(targetMock).when(targetMock).path(anyString());
+        Mockito.doReturn(invocationBuilderMock).when(targetMock).request();
+        Mockito.doReturn(responseMock).when(invocationBuilderMock).get();
+        Mockito.doReturn(new HashMap<String, NewCookie>() {{
+            put("JSESSIONID", new NewCookie(new Cookie("JSESSIONID", "AC0C233ED7E9BE5DD0D4A286E6C8BBAE")));
+        }}).when(responseMock).getCookies();
+
+        /** - mocks for {@link SessionStorage#login()} method **/
+        Mockito.doReturn(targetMock).when(targetMock).path(anyString());
+        Mockito.doReturn(targetMock).when(targetMock).property(anyString(), eq(Boolean.FALSE));
+        Mockito.doReturn(invocationBuilderMock).when(targetMock).request();
+        Mockito.doReturn(invocationBuilderMock).when(invocationBuilderMock)
+                .cookie("JSESSIONID", "AC0C233ED7E9BE5DD0D4A286E6C8BBAE");
+        Mockito.doReturn(responseMock).when(invocationBuilderMock).post(any(Entity.class));
+
+        /** - mocks for {@link SessionStorage#parseSessionId()} method **/
+        Mockito.doReturn("JSESSIONID=AC0C233ED7E9BE5DD0D4A286E6C8BBAE;")
+                .when(responseMock)
+                .getHeaderString("Set-Cookie");
+        Mockito.doReturn(302).when(responseMock).getStatus();
+
+
+        try {
+            new SessionStorage(configurationMock, credentialsMock);
+        } catch (Exception e) {
+            //Mockito.verify(logMock, times(1)).error(anyString(), any(NoSuchAlgorithmException.class));
+            assertNotNull(e);
+        }
     }
 
     @Test(expectedExceptions = RuntimeException.class)
