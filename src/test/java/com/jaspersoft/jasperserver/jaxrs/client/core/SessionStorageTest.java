@@ -30,14 +30,17 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage}
  */
-@PrepareForTest({SSLContext.class, EncryptionUtils.class, ClientBuilder.class})
+
+@PrepareForTest({SessionStorage.class, SSLContext.class, EncryptionUtils.class, ClientBuilder.class})
 public class SessionStorageTest extends PowerMockTestCase {
 
     @Mock
@@ -73,14 +76,17 @@ public class SessionStorageTest extends PowerMockTestCase {
 
         // Given
         PowerMockito.suppress(method(SessionStorage.class, "init"));
-        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
         // When
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorageSpy = spy(new SessionStorage(configurationMock, credentialsMock));
         // Then
-        assertNotNull(sessionStorage);
+        assertNotNull(sessionStorageSpy);
+        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "configuration"));
+        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
+        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "rootTarget"), null);
+        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
     }
 
-    @Test(enabled = true)
+    @Test
     public void should_init_ssl() {
 
         /** - mock for static method **/
