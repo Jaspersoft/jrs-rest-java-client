@@ -42,10 +42,9 @@ import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientXmlaConnection;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ResourceMediaType;
+import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.resources.ClientDashboard;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.resources.ClientDomainTopic;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,38 +52,47 @@ public class ResourcesTypeResolverUtil {
 
     private static final Map<Class<? extends ClientResource>, String> classToMimeMap;
     private static final Map<String, Class<? extends ClientResource>> mimeToClassMap;
+    public static final String RESOURCE_MEDIA_TYPE_PREFIX = "application/repository.";
+    public static final String RESOURCE_MIME_TYPE = "+{mime}";
 
     static {
         classToMimeMap = new HashMap<Class<? extends ClientResource>, String>() {{
-            put(ClientAdhocDataView.class, ResourceMediaType.ADHOC_DATA_VIEW_MIME);
-            put(ClientAwsDataSource.class, ResourceMediaType.AWS_DATA_SOURCE_MIME);
-            put(ClientBeanDataSource.class, ResourceMediaType.BEAN_DATA_SOURCE_MIME);
-            put(ClientCustomDataSource.class, ResourceMediaType.CUSTOM_DATA_SOURCE_MIME);
-            put(ClientDataType.class, ResourceMediaType.DATA_TYPE_MIME);
-            put(ClientFile.class, ResourceMediaType.FILE_MIME);
-            put(ClientFolder.class, ResourceMediaType.FOLDER_MIME);
-            put(ClientInputControl.class, ResourceMediaType.INPUT_CONTROL_MIME);
-            put(ClientJdbcDataSource.class, ResourceMediaType.JDBC_DATA_SOURCE_MIME);
-            put(ClientJndiJdbcDataSource.class, ResourceMediaType.JNDI_JDBC_DATA_SOURCE_MIME);
-            put(ClientListOfValues.class, ResourceMediaType.LIST_OF_VALUES_MIME);
-            put(ClientMondrianConnection.class, ResourceMediaType.MONDRIAN_CONNECTION_MIME);
-            put(ClientMondrianXmlaDefinition.class, ResourceMediaType.MONDRIAN_XMLA_DEFINITION_MIME);
-            put(ClientOlapUnit.class, ResourceMediaType.OLAP_UNIT_MIME);
-            put(ClientQuery.class, ResourceMediaType.QUERY_MIME);
-            put(ClientReportUnit.class, ResourceMediaType.REPORT_UNIT_MIME);
-            put(ClientSecureMondrianConnection.class, ResourceMediaType.SECURE_MONDRIAN_CONNECTION_MIME);
-            put(ClientSemanticLayerDataSource.class, ResourceMediaType.SEMANTIC_LAYER_DATA_SOURCE_MIME);
-            put(ClientVirtualDataSource.class, ResourceMediaType.VIRTUAL_DATA_SOURCE_MIME);
-            put(ClientXmlaConnection.class, ResourceMediaType.XMLA_CONNECTION_MIME);
-            put(ClientResourceLookup.class, ResourceMediaType.RESOURCE_LOOKUP_MIME);
-            put(ClientDashboard.class, ResourceMediaType.DASHBOARD_MIME);
-            put(ClientDomainTopic.class, ResourceMediaType.DOMAIN_TOPIC_MIME);
+            put(ClientAdhocDataView.class, ResourceMediaType.ADHOC_DATA_VIEW_CLIENT_TYPE);
+            put(ClientAwsDataSource.class, ResourceMediaType.AWS_DATA_SOURCE_CLIENT_TYPE);
+            put(ClientBeanDataSource.class, ResourceMediaType.BEAN_DATA_SOURCE_CLIENT_TYPE);
+            put(ClientCustomDataSource.class, ResourceMediaType.CUSTOM_DATA_SOURCE_CLIENT_TYPE);
+            put(ClientDataType.class, ResourceMediaType.DATA_TYPE_CLIENT_TYPE);
+            put(ClientFile.class, ResourceMediaType.FILE_CLIENT_TYPE);
+            put(ClientFolder.class, ResourceMediaType.FOLDER_CLIENT_TYPE);
+            put(ClientInputControl.class, ResourceMediaType.INPUT_CONTROL_CLIENT_TYPE);
+            put(ClientJdbcDataSource.class, ResourceMediaType.JDBC_DATA_SOURCE_CLIENT_TYPE);
+            put(ClientJndiJdbcDataSource.class, ResourceMediaType.JNDI_JDBC_DATA_SOURCE_CLIENT_TYPE);
+            put(ClientListOfValues.class, ResourceMediaType.LIST_OF_VALUES_CLIENT_TYPE);
+            put(ClientMondrianConnection.class, ResourceMediaType.MONDRIAN_CONNECTION_CLIENT_TYPE);
+            put(ClientMondrianXmlaDefinition.class, ResourceMediaType.MONDRIAN_XMLA_DEFINITION_CLIENT_TYPE);
+            put(ClientOlapUnit.class, ResourceMediaType.OLAP_UNIT_CLIENT_TYPE);
+            put(ClientQuery.class, ResourceMediaType.QUERY_CLIENT_TYPE);
+            put(ClientReportUnit.class, ResourceMediaType.REPORT_UNIT_CLIENT_TYPE);
+            put(ClientSecureMondrianConnection.class, ResourceMediaType.SECURE_MONDRIAN_CONNECTION_CLIENT_TYPE);
+            put(ClientSemanticLayerDataSource.class, ResourceMediaType.SEMANTIC_LAYER_DATA_SOURCE_CLIENT_TYPE);
+            put(ClientVirtualDataSource.class, ResourceMediaType.VIRTUAL_DATA_SOURCE_CLIENT_TYPE);
+            put(ClientXmlaConnection.class, ResourceMediaType.XMLA_CONNECTION_CLIENT_TYPE);
+            put(ClientResourceLookup.class, ResourceMediaType.RESOURCE_LOOKUP_CLIENT_TYPE);
+            put(ClientDashboard.class, ResourceMediaType.DASHBOARD_CLIENT_TYPE);
+            put(ClientDomainTopic.class, ResourceMediaType.DOMAIN_TOPIC_CLIENT_TYPE);
         }};
+
+        for (Map.Entry<Class<? extends ClientResource>, String> entry : classToMimeMap.entrySet()) {
+            entry.setValue(typeToMime(entry.getValue()));
+        }
 
         mimeToClassMap = new HashMap<String, Class<? extends ClientResource>>();
         for (Map.Entry<Class<? extends ClientResource>, String> entry : classToMimeMap.entrySet()) {
             mimeToClassMap.put(entry.getValue(), entry.getKey());
         }
+    }
+    private static String typeToMime(String type) {
+        return RESOURCE_MEDIA_TYPE_PREFIX + type + RESOURCE_MIME_TYPE;
     }
 
     public static String getMimeType(Class<? extends ClientResource> clazz) {

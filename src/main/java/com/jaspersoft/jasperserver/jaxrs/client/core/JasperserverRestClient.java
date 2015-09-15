@@ -21,7 +21,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ResponseStatus;
+import javax.ws.rs.core.Response.Status;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
@@ -73,7 +73,7 @@ public class JasperserverRestClient {
         String sessionId = null;
         String location = response.getLocation().toString();
 
-        if (response.getStatus() == ResponseStatus.FOUND && !location.matches("[^?]+\\?([^&]*&)*error=1(&[^&]*)*$")) {
+        if (response.getStatus() == Status.FOUND.getStatusCode() && !location.matches("[^?]+\\?([^&]*&)*error=1(&[^&]*)*$")) {
             sessionId = response.getCookies().get("JSESSIONID").getValue();
             storage.setSessionId(sessionId);
         } else {
