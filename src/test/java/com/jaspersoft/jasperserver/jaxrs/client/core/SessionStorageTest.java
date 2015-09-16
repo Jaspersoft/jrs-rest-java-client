@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.core;//package com.jaspersoft.jasperserver.jaxrs.client.core;
+package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import java.security.SecureRandom;
@@ -160,6 +160,7 @@ public class SessionStorageTest extends PowerMockTestCase {
 
         // Given
         suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
 
         // When
         SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock);
@@ -168,7 +169,6 @@ public class SessionStorageTest extends PowerMockTestCase {
         assertNotNull(sessionStorageSpy);
         assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "configuration"));
         assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
-        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "rootTarget"), null);
         assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
     }
 
