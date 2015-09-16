@@ -1,6 +1,5 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;//package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -20,22 +19,21 @@ import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 import static org.testng.Assert.assertEquals;
@@ -65,9 +63,6 @@ public class SessionStorageTest extends PowerMockTestCase {
     private Response responseMock;
     @Mock
     public SSLContext sslContextMock;
-
-    @Mock
-    private JacksonJaxbJsonProvider providerMock;
     @Mock
     public Response.StatusType statusTypeMock;
 
@@ -108,9 +103,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(null).when(configurationMock).getReadTimeout();
         doReturn(targetMock).when(clientMock).target(anyString());
         doReturn(targetMock).when(targetMock).register(JacksonFeature.class);
-        whenNew(JacksonJaxbJsonProvider.class).withNoArguments().thenReturn(providerMock);
-        PowerMockito.doReturn(providerMock).when(providerMock).configure(eq(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES), anyBoolean());
-        doReturn(targetMock).when(targetMock).register(providerMock);
+        doReturn(targetMock).when(targetMock).register(any(JacksonJaxbJsonProvider.class));
         doReturn(false).when(configurationMock).getLogHttp();
         //when
         SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
@@ -123,7 +116,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         verify(configurationMock).getReadTimeout();
         verify(clientMock).target("http://54.83.98.156/jasperserver-pro");
         verify(targetMock).register(JacksonFeature.class);
-        verify(targetMock).register(providerMock);
+        verify(targetMock).register(isA(JacksonJaxbJsonProvider.class));
         verify(configurationMock).getLogHttp();
         verify(targetMock, never()).register(LoggingFilter.class);
     }
@@ -141,9 +134,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(clientMock).when(clientMock).property("jersey.config.client.readTimeout", 200);
         doReturn(targetMock).when(clientMock).target(anyString());
         doReturn(targetMock).when(targetMock).register(JacksonFeature.class);
-        whenNew(JacksonJaxbJsonProvider.class).withNoArguments().thenReturn(providerMock);
-        PowerMockito.doReturn(providerMock).when(providerMock).configure(eq(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES), anyBoolean());
-        doReturn(targetMock).when(targetMock).register(providerMock);
+        doReturn(targetMock).when(targetMock).register(any(JacksonJaxbJsonProvider.class));
         doReturn(true).when(configurationMock).getLogHttp();
         doReturn(targetMock).when(targetMock).register(any(LoggingFilter.class));
         //when
@@ -159,7 +150,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         verify(clientMock).property("jersey.config.client.readTimeout", 200);
         verify(clientMock).target("http://54.83.98.156/jasperserver-pro");
         verify(targetMock).register(JacksonFeature.class);
-        verify(targetMock).register(providerMock);
+        verify(targetMock).register(isA(JacksonJaxbJsonProvider.class));
         verify(configurationMock).getLogHttp();
         verify(targetMock).register(isA(LoggingFilter.class));
     }
@@ -212,7 +203,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(100L).when(configurationMock).getReadTimeout();
 
         // When
-        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock);
+        new SessionStorage(configurationMock, credentialsMock);
 
         // Then throw an exception
     }
@@ -236,9 +227,9 @@ public class SessionStorageTest extends PowerMockTestCase {
         assertNotNull(sessionStorage.getSessionId());
     }
 
-//    @AfterMethod
-//    public void after() {
-//        reset(builderMock, configurationMock, credentialsMock, invocationBuilderMock, responseMock, ctxMock, clientMock, targetMock);
-
+    @AfterMethod
+    public void after() {
+        reset(builderMock, configurationMock, credentialsMock, invocationBuilderMock, responseMock, ctxMock, clientMock, targetMock);
+    }
 
 }
