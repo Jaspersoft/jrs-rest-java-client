@@ -21,6 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.enums;
 
+@Deprecated
 public final class ResponseStatus {
 
     /**

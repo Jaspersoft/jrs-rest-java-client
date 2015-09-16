@@ -429,5 +429,6 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         Object retrieved = field.get(config);
         assertNotNull(retrieved);
         assertEquals(retrieved, 100);
+
     }
 }

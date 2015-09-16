@@ -25,6 +25,8 @@ public class ReportingServiceIT {
     @BeforeMethod
     public void before() {
         configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
+        configuration.setLogHttp(true);
+        configuration.setLogHttpEntity(true);
         client = new JasperserverRestClient(configuration);
         session = client.authenticate("superuser", "superuser");
     }
