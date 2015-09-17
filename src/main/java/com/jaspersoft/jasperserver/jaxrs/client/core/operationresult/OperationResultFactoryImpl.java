@@ -42,13 +42,6 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
         return getAppropriateOperationResultInstance(response, genericType);
     }
 
-
-
-
-    /**
-     * This method is to be changed in the next release when real ResourceThumbnailListWrapper class will be added.
-     */
-    @Deprecated
     private <T> OperationResult<T> getAppropriateOperationResultInstance(Response response, Class<T> responseClass) {
         OperationResult<T> result;
 

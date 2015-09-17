@@ -1,13 +1,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails;
 import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
 
+import java.util.LinkedList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * Fake wrapper class for ResourceThumbnail collection.
- */
 @Deprecated
 @XmlRootElement(name = "thumbnails")
 public class ResourceThumbnailListWrapper {
@@ -18,7 +16,7 @@ public class ResourceThumbnailListWrapper {
     }
 
     public ResourceThumbnailListWrapper(List<ResourceThumbnail> thumbnail) {
-        this.thumbnails = thumbnail;
+        this.thumbnails = new LinkedList<ResourceThumbnail>(thumbnail);
     }
 
     public List<ResourceThumbnail> getThumbnails() {
