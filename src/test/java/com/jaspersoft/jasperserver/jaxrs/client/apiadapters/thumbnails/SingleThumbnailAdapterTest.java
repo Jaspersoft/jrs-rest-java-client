@@ -82,7 +82,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link SingleThumbnailAdapter#parameter(ThumbnailsParameter, Boolean)}
+     * for {@link SingleThumbnailAdapter#defaultAllowed(Boolean)}
      */
     public void should_set_thumbnails_parameter() {
 
@@ -90,7 +90,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
 
         /** When **/
-        SingleThumbnailAdapter retrieved = thumbnailAdapter.parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true);
+        SingleThumbnailAdapter retrieved = thumbnailAdapter.defaultAllowed(true);
 
         /** Then **/
         MultivaluedHashMap<String, String> params =

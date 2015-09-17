@@ -86,7 +86,7 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link BatchThumbnailAdapter#parameter(ThumbnailsParameter, Boolean)}
+     * for {@link BatchThumbnailAdapter#defaultAllowed(Boolean)}
      */
     public void should_set_thumbnails_parameter() {
 
@@ -94,7 +94,7 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
         BatchThumbnailAdapter thumbnailAdapter = new BatchThumbnailAdapter(sessionStorageMock);
 
         /** When **/
-        BatchThumbnailAdapter retrieved = thumbnailAdapter.parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true);
+        BatchThumbnailAdapter retrieved = thumbnailAdapter.defaultAllowed(true);
 
         /** Then **/
         MultivaluedHashMap<String, String> params =
