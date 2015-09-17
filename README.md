@@ -1515,7 +1515,7 @@ This service is used for requesting a thumbnail image of an existing resource. Y
 InputStream entity = session.thumbnailsService()
         .thumbnail()
         .report("/public/Samples/Reports/08g.UnitSalesDetailReport")
-        .parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true)
+        .defaultAllowed(true)
         .get()
         .getEntity();
 ```
@@ -1525,11 +1525,23 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
         .thumbnails()
         .reports(asList("/public/Samples/Reports/08g.UnitSalesDetailReport", 
                         "/public/Samples/Reports/11g.SalesByMonthReport"))
-        .parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true)
+        .defaultAllowed(true)
         .get()
         .getEntity()
         .getThumbnails();
 ```
+By default you obtain multiple resources using POST HTTP method, but you can switch to GET method using `requestMethod(RequestMethod.GET)` method:
+```java
+List<ResourceThumbnail> entity = session.thumbnailsService()
+                .thumbnails()
+                .reports(asList("/public/Samples/Reports/08g.UnitSalesDetailReport",
+                        "/public/Samples/Reports/11g.SalesByMonthReport"))
+                .defaultAllowed(true)
+                .requestMethod(RequestMethod.GET)
+                .get()
+                .getEntity()
+                .getThumbnails();
+                ```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
 ####QueryExecutor Service
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
