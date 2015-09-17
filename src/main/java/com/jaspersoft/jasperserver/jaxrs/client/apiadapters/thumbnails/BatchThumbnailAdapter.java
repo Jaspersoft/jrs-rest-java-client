@@ -38,8 +38,7 @@ public class BatchThumbnailAdapter extends AbstractAdapter {
         return this;
     }
 
-    public BatchThumbnailAdapter
-    reports(Collection<String> uris) {
+    public BatchThumbnailAdapter reports(Collection<String> uris) {
         for (String uri : uris) {
             params.add("uri", uri);
         }
