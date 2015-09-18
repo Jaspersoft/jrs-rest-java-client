@@ -64,7 +64,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         doReturn(requestMock).when(requestMock).setAccept(anyString());
         doReturn(operationResultMock).when(requestMock).get();
         //when
-        OperationResult<Map<String, Map<String, String>>> bundles = service.forLocale(null).allBundles();
+        OperationResult<Map<String, Map<String, String>>> bundles = service.allBundles();
         //then
         assertSame(bundles, operationResultMock);
         verify(requestMock).setAccept(MediaType.APPLICATION_JSON);
@@ -80,7 +80,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
 
 
     @Test
-    public void should_return_proper_bundles_for_locale() throws Exception {
+    public void should_return_proper_bundles_for_string_locale() throws Exception {
         //given
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock),any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
@@ -103,8 +103,33 @@ public class BundlesServiceTest extends PowerMockTestCase {
         assertEquals(locale.toString(), "de");
     }
 
+
     @Test
-    public void should_return_proper_bundles_by_name_for_locale() throws Exception {
+    public void should_return_proper_bundles_for_locale() throws Exception {
+        //given
+        mockStatic(JerseyRequest.class);
+        when(JerseyRequest.buildRequest(eq(sessionStorageMock),any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        doReturn(requestMock).when(requestMock).addParam(anyString(), anyString());
+        doReturn(requestMock).when(requestMock).addHeader(anyString(), anyString());
+        doReturn(requestMock).when(requestMock).setAccept(anyString());
+        doReturn(operationResultMock).when(requestMock).get();
+        //when
+        OperationResult<Map<String, Map<String, String>>> bundles = service.forLocale(Locale.GERMAN).allBundles();
+        //then
+        assertSame(bundles, operationResultMock);
+        verify(requestMock).setAccept(MediaType.APPLICATION_JSON);
+        verify(requestMock).addParam("expanded", "true");
+        verify(requestMock).addHeader("Accept-Language", "de");
+        verify(requestMock).get();
+        verifyStatic(times(1));
+        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, Map<String, String>>>() {
+        }), eq(new String[]{"/bundles"}), any(DefaultErrorHandler.class));
+        Locale locale = (Locale) Whitebox.getInternalState(service, "locale");
+        assertEquals(locale.toString(), "de");
+    }
+
+    @Test
+    public void should_return_proper_bundles_by_name_for_string_locale() throws Exception {
         //given
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock), any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
@@ -125,6 +150,27 @@ public class BundlesServiceTest extends PowerMockTestCase {
     }
 
     @Test
+    public void should_return_proper_bundles_by_name_for_locale() throws Exception {
+        //given
+        mockStatic(JerseyRequest.class);
+        when(JerseyRequest.buildRequest(eq(sessionStorageMock), any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        doReturn(requestMock).when(requestMock).addHeader(anyString(), anyString());
+        doReturn(requestMock).when(requestMock).setAccept(anyString());
+        doReturn(operationResultMock).when(requestMock).get();
+        //when
+        OperationResult<Map<String, String>> bundle = service.forLocale(Locale.US).bundle("jasperserver_messages");
+        //then
+        assertSame(bundle, operationResultMock);
+        verify(requestMock).setAccept(MediaType.APPLICATION_JSON);
+        verify(requestMock,never()).addParam("expanded", "true");
+        verify(requestMock).addHeader("Accept-Language", "en-US");
+        verify(requestMock).get();
+        verifyStatic(times(1));
+        JerseyRequest.buildRequest(eq(sessionStorageMock),  eq(new GenericType<Map<String, String>>() {
+        }), eq(new String[]{"/bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
+    }
+
+    @Test
     public void should_return_proper_bundles_by_name_for_default_locale() throws Exception {
         //given
         mockStatic(JerseyRequest.class);
@@ -133,7 +179,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         doReturn(requestMock).when(requestMock).setAccept(anyString());
         doReturn(operationResultMock).when(requestMock).get();
         //when
-        OperationResult<Map<String, String>> bundle = service.forLocale(null).bundle("jasperserver_messages");
+        OperationResult<Map<String, String>> bundle = service.bundle("jasperserver_messages");
         //then
         assertSame(bundle, operationResultMock);
         verify(requestMock).setAccept(MediaType.APPLICATION_JSON);
