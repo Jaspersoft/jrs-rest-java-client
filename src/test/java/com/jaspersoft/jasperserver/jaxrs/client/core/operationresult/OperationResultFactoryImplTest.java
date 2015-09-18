@@ -1,12 +1,12 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
-import com.jaspersoft.jasperserver.dto.resources.AbstractClientMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientDashboard;
 import com.jaspersoft.jasperserver.dto.resources.ClientQuery;
 import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
+import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesTypeResolverUtil;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnail;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnailListWrapper;
+import javax.ws.rs.core.Response;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -16,12 +16,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
-
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.testng.Assert.assertNotNull;
@@ -92,12 +88,12 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
         Assert.assertNotNull(retrievedOperationResult);
         Assert.assertSame(retrievedOperationResult, withEntityOperationResultMock);
 
-        Mockito.verify(responseMock, times(2)).hasEntity();
+        Mockito.verify(responseMock, times(1)).hasEntity();
         PowerMockito.verifyNew(WithEntityOperationResult.class, times(1)).withArguments(responseMock, ClientQuery.class);
     }
 
 
-    @Test(enabled = false)
+    @Test
     public void should_invoke_private_method_getSpecificResourceType() throws Exception {
 
         /* When */
@@ -125,7 +121,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
         /** Given **/
         Mockito.when(responseMock.hasEntity()).thenReturn(true);
-        Mockito.when(responseMock.readEntity(any(GenericType.class))).thenReturn(asList(new ResourceThumbnail()));
+        Mockito.when(responseMock.readEntity(ResourceThumbnailListWrapper.class)).thenReturn(new ResourceThumbnailListWrapper(asList(new ResourceThumbnail())));
         OperationResultFactoryImpl factory = new OperationResultFactoryImpl();
 
         /** When **/
@@ -133,6 +129,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
         /** Then **/
         Assert.assertNotNull(operationResult);
+        Mockito.verify(responseMock, times(1)).hasEntity();
         Assert.assertTrue(operationResult.getEntity().getThumbnails().size() == 1);
     }
 
@@ -143,7 +140,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
         Assert.assertNull(operationResult.getEntity());
     }
 
-    @Test(enabled = false)
+    @Test
     public void should_return_operation_result_with_proper_class() {
 
         /** Given **/
@@ -153,7 +150,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
         /** When **/
         OperationResultFactoryImpl factory = new OperationResultFactoryImpl();
-        OperationResult<AbstractClientMondrianConnection> operationResult = factory.getOperationResult(responseMock, AbstractClientMondrianConnection.class);
+        OperationResult<ClientSecureMondrianConnection> operationResult = factory.getOperationResult(responseMock, ClientSecureMondrianConnection.class);
 
         /** Then **/
         Assert.assertNotNull(operationResult);
