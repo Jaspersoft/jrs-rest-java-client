@@ -27,8 +27,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.util.Locale;
+import java.util.Map;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import org.codehaus.jettison.json.JSONObject;
 
 
 public class BundlesService extends AbstractAdapter {
@@ -47,21 +48,28 @@ public class BundlesService extends AbstractAdapter {
         return this;
     }
 
-    public OperationResult<JSONObject> allBundles() {
-        return buildBundleRequest("/bundles").addParam("expanded", "true").get();
+    public OperationResult<Map<String, Map<String, String>>> allBundles() {
+        return buildBundlesRequest().addParam("expanded", "true").get();
     }
 
-    public OperationResult<JSONObject> bundle(String name) {
-        return buildBundleRequest("/bundles", name).get();
+    public OperationResult<Map<String, String>> bundle(String name) {
+        return buildBundleRequest(name).get();
     }
 
-    private JerseyRequest<JSONObject> buildBundleRequest(String... path) {
-        JerseyRequest<JSONObject> request =
-                JerseyRequest.buildRequest(sessionStorage, JSONObject.class, path, new DefaultErrorHandler());
+    private JerseyRequest<Map<String, String>> buildBundleRequest(String bundleName) {
+        JerseyRequest<Map<String, String>> request =
+                JerseyRequest.buildRequest(sessionStorage, new GenericType<Map<String, String>>() {
+                }, new String[]{"/bundles", bundleName}, new DefaultErrorHandler());
         request.setAccept(MediaType.APPLICATION_JSON).addHeader("Accept-Language", locale.toString().replace('_', '-'));
         return request;
     }
 
-
+    private JerseyRequest<Map<String, Map<String, String>>> buildBundlesRequest() {
+        JerseyRequest<Map<String, Map<String, String>>> request =
+                JerseyRequest.buildRequest(sessionStorage, new GenericType<Map<String, Map<String, String>>>() {
+                }, new String[]{"/bundles"}, new DefaultErrorHandler());
+        request.setAccept(MediaType.APPLICATION_JSON).addHeader("Accept-Language", locale.toString().replace('_', '-'));
+        return request;
+    }
 
 }
