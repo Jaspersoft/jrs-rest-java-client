@@ -42,9 +42,12 @@ public class BundlesService extends AbstractAdapter {
     }
 
     public BundlesService forLocale(String locale) {
-        if (locale != null) {
             this.locale = new Locale(locale);
-        }
+        return this;
+    }
+
+    public BundlesService forLocale(Locale locale) {
+            this.locale = locale;
         return this;
     }
 
