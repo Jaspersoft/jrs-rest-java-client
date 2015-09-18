@@ -11,6 +11,7 @@ import java.io.InputStream;
 
 /**
  * @author Alex Krasnyanskiy
+ * @author Tetiana Iefimenko
  * @since 6.0.1-ALPHA
  */
 public class SingleThumbnailAdapter extends AbstractAdapter {
@@ -26,8 +27,8 @@ public class SingleThumbnailAdapter extends AbstractAdapter {
         return this;
     }
 
-    public SingleThumbnailAdapter parameter(ThumbnailsParameter param, Boolean value) {
-        params.add(param.toString().toLowerCase(), value.toString());
+    public SingleThumbnailAdapter defaultAllowed(Boolean value) {
+        params.add("defaultAllowed", value.toString());
         return this;
     }
 

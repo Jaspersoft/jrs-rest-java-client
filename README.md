@@ -1515,7 +1515,7 @@ This service is used for requesting a thumbnail image of an existing resource. Y
 InputStream entity = session.thumbnailsService()
         .thumbnail()
         .report("/public/Samples/Reports/08g.UnitSalesDetailReport")
-        .parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true)
+        .defaultAllowed(true)
         .get()
         .getEntity();
 ```
@@ -1525,11 +1525,23 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
         .thumbnails()
         .reports(asList("/public/Samples/Reports/08g.UnitSalesDetailReport", 
                         "/public/Samples/Reports/11g.SalesByMonthReport"))
-        .parameter(ThumbnailsParameter.DEFAULT_ALLOWED, true)
+        .defaultAllowed(true)
         .get()
         .getEntity()
         .getThumbnails();
 ```
+By default you obtain multiple resources using POST HTTP method, but you can switch to GET method using `requestMethod(RequestMethod.GET)` method:
+```java
+List<ResourceThumbnail> entity = session.thumbnailsService()
+                .thumbnails()
+                .reports(asList("/public/Samples/Reports/08g.UnitSalesDetailReport",
+                        "/public/Samples/Reports/11g.SalesByMonthReport"))
+                .defaultAllowed(true)
+                .requestMethod(RequestMethod.GET)
+                .get()
+                .getEntity()
+                .getThumbnails();
+                ```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
 ####QueryExecutor Service
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
@@ -1575,16 +1587,36 @@ String edition = result.getEntity();
 ###Bundles service
 Use bundles service to get bundles of internalization properties for particular or default user’s locale as JSON. To get all bundles for particular locale(foe example, "de") use the code below:
 ```java
-final JSONObject bundles = session
+final Map<String, Map<String, String>> bundles = session
         .bundlesService()
         .forLocale("de")
         .allBundles()
         .getEntity();
 ```
-If you pass `null` in `.forLocale()` method, you will get bundles for your default locale.
+or specify locale as instance of `java.util.Locale.class` or as constant of this class:
+```java
+final Map<String, Map<String, String>> bundles = session
+        .bundlesService()
+        .forLocale(Locale.US)
+        .allBundles()
+        .getEntity();
+        
+final Map<String, Map<String, String>> bundles = session
+                .bundlesService()
+                .forLocale(new Locale("en_US"))
+                .allBundles()
+                .getEntity();
+```
+If you do not call`.forLocale()` method, you will get bundles for your default locale:
+```java
+final Map<String, Map<String, String>> bundles = session
+        .bundlesService()
+        .allBundles()
+        .getEntity();
+```
 To get bundle by name you should specified locale in `.forLocale()` method and name of the bundle in `.bundles()` method:
 ```java
-final JSONObject bundle = session
+final Map<String, String> bundle = session
         .bundlesService()
         .forLocale("en_US")
         .bundle("jasperserver_messages")
