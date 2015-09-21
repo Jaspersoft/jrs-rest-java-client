@@ -134,7 +134,7 @@ To do this you should create instance of `RestClientConfiguration`. It can be do
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
 ```
-Here is example of configuration file:
+Here is example of `configuration.properties` file:
 ```java
 url=http://localhost:4444/jasperserver-pro
 connectionTimeout=100
