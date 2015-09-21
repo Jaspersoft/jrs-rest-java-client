@@ -1,7 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
@@ -21,16 +20,12 @@ import static org.testng.AssertJUnit.assertNotNull;
  * @author Alex Krasnyanskiy
  * @author Tetiana Iefimenko
  */
-public class ReportingServiceIT {
+public class ReportingServiceIT extends RestClientUnitTest {
 
-    private RestClientConfiguration configuration;
-    private JasperserverRestClient client;
     private Session session;
 
     @BeforeClass
     public void before() {
-        configuration = RestClientConfiguration.loadConfiguration("test_config.properties");
-        client = new JasperserverRestClient(configuration);
         session = client.authenticate("superuser", "superuser");
     }
 
@@ -223,8 +218,7 @@ public class ReportingServiceIT {
 
     @AfterClass
     public void after() {
-        client = null;
-        configuration = null;
+        session.logout();
     }
 
     private void reportToPdf(InputStream entity) {

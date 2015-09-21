@@ -1,8 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings;
 
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.AnonymousSession;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.AwsSettings;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.DashboardSettings;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.DataSourcePatternsSettings;
@@ -15,7 +14,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.UserTimeZone;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.GenericType;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -27,16 +25,12 @@ import static junit.framework.Assert.assertTrue;
 /**
  * @author Tetiana Iefimenko
  * */
-public class SettingsServiceIT {
+public class SettingsServiceIT extends RestClientUnitTest {
 
-    private RestClientConfiguration config;
-    private JasperserverRestClient client;
     private AnonymousSession session;
 
     @BeforeClass
     public void before() {
-        config = RestClientConfiguration.loadConfiguration("test_config.properties");
-        client = new JasperserverRestClient(config);
         session = client.getAnonymousSession();
     }
 
@@ -390,11 +384,5 @@ public class SettingsServiceIT {
 
         assertTrue(datePicker.containsKey("nextText"));
         assertTrue(datePicker.containsKey("yearSuffix"));
-    }
-
-    @AfterClass
-    public void after() {
-        config = null;
-        client = null;
     }
 }

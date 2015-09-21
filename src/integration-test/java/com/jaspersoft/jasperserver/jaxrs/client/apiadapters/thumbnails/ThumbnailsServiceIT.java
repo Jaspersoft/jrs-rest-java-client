@@ -1,8 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails;
 
 import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.RequestMethod;
 import java.io.IOException;
@@ -18,16 +17,12 @@ import static java.util.Arrays.asList;
 /**
 * Integration tests for {@link ThumbnailsService}
 */
-public class ThumbnailsServiceIT {
+public class ThumbnailsServiceIT extends RestClientUnitTest {
 
-    private RestClientConfiguration config;
-    private JasperserverRestClient client;
     private Session session;
 
     @BeforeClass
     public void before() {
-        config = RestClientConfiguration.loadConfiguration("test_config.properties");
-        client = new JasperserverRestClient(config);
         session = client.authenticate("superuser", "superuser");
     }
 
@@ -82,8 +77,6 @@ public class ThumbnailsServiceIT {
     @AfterClass
     public void after() {
         session.logout();
-        client = null;
-        config = null;
         session = null;
     }
 }
