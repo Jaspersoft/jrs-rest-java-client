@@ -4,15 +4,13 @@ import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.RequestMethod;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static java.util.Arrays.asList;
@@ -26,14 +24,9 @@ public class ThumbnailsServiceIT {
     private JasperserverRestClient client;
     private Session session;
 
-    @BeforeMethod
+    @BeforeClass
     public void before() {
-        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        config.setAcceptMimeType(MimeType.JSON);
-        config.setContentMimeType(MimeType.JSON);
-        config.setJrsVersion(JRSVersion.v6_0_0);
-        config.setLogHttp(true);
-
+        config = RestClientConfiguration.loadConfiguration("test_config.properties");
         client = new JasperserverRestClient(config);
         session = client.authenticate("superuser", "superuser");
     }
@@ -86,7 +79,7 @@ public class ThumbnailsServiceIT {
         Assert.assertNotNull(entity);
     }
 
-    @AfterMethod
+    @AfterClass
     public void after() {
         session.logout();
         client = null;

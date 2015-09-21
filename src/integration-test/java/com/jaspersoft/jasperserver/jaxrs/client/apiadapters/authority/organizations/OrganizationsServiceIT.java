@@ -3,14 +3,12 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizat
 import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ClientTenantAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.TenantAttributesListWrapper;
 import java.util.Arrays;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.testng.AssertJUnit.assertNotNull;
@@ -25,16 +23,10 @@ public class OrganizationsServiceIT {
     private JasperserverRestClient client;
     private Session session;
 
-    @BeforeMethod
+    @BeforeClass
     public void before() {
-        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        config.setAcceptMimeType(MimeType.JSON);
-        config.setContentMimeType(MimeType.JSON);
-        config.setJrsVersion(JRSVersion.v6_0_1);
-        config.setLogHttp(true);
-        config.setLogHttpEntity(true);
+        config = RestClientConfiguration.loadConfiguration("test_config.properties");
         client = new JasperserverRestClient(config);
-
         session = client.authenticate("superuser", "superuser");
     }
 
@@ -74,7 +66,7 @@ public class OrganizationsServiceIT {
 
     }
 
-    @AfterMethod
+    @AfterClass
     public void after() {
         session.logout();
     }

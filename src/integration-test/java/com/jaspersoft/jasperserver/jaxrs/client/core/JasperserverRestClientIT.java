@@ -2,8 +2,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -23,10 +21,7 @@ public class JasperserverRestClientIT {
 
     @BeforeMethod
     public void before() {
-        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        config.setAcceptMimeType(MimeType.JSON);
-        config.setContentMimeType(MimeType.JSON);
-        config.setJrsVersion(JRSVersion.v6_0_0);
+        config = RestClientConfiguration.loadConfiguration("test_config.properties");
         client = new JasperserverRestClient(config);
     }
 

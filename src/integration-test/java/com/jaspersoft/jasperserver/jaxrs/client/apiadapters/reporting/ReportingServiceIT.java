@@ -10,10 +10,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import junit.framework.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import static org.testng.AssertJUnit.assertNotNull;
 
 
 /**
@@ -26,11 +27,9 @@ public class ReportingServiceIT {
     private JasperserverRestClient client;
     private Session session;
 
-    @BeforeMethod
+    @BeforeClass
     public void before() {
-        configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        configuration.setLogHttp(true);
-        configuration.setLogHttpEntity(true);
+        configuration = RestClientConfiguration.loadConfiguration("test_config.properties");
         client = new JasperserverRestClient(configuration);
         session = client.authenticate("superuser", "superuser");
     }
@@ -51,7 +50,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
     }
 
     @Test
@@ -68,7 +67,7 @@ public class ReportingServiceIT {
                 .run();
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
     }
 
     @Test
@@ -87,7 +86,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
 
     }
     @Test
@@ -105,7 +104,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
 
     }
 
@@ -124,7 +123,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
 
     }
 
@@ -143,7 +142,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
 
     }
 
@@ -162,7 +161,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
     }
 
     @Test
@@ -180,7 +179,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
 
     }
 
@@ -200,7 +199,7 @@ public class ReportingServiceIT {
 
         ReportExecutionDescriptor reportExecutionDescriptor = operationResult.getEntity();
         /** Then **/
-        Assert.assertNotNull(reportExecutionDescriptor);
+        assertNotNull(reportExecutionDescriptor);
     }
 
     @Test
@@ -219,10 +218,10 @@ public class ReportingServiceIT {
 
         ReportExecutionDescriptor reportExecutionDescriptor = operationResult.getEntity();
         /** Then **/
-        Assert.assertNotNull(reportExecutionDescriptor);
+        assertNotNull(reportExecutionDescriptor);
     }
 
-    @AfterMethod
+    @AfterClass
     public void after() {
         client = null;
         configuration = null;

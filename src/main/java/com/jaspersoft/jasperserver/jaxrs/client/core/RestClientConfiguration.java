@@ -41,7 +41,7 @@ public class RestClientConfiguration {
 
     private static final Log log = LogFactory.getLog(RestClientConfiguration.class);
     private static final Pattern URL_PATTERN = Pattern.compile("\\b(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
-    private static final Pattern VERSION_PATTERN = Pattern.compile("^[v]\\d[_]\\d[_]\\d$");
+    private static final Pattern VERSION_PATTERN = Pattern.compile("^v(\\d_){2}\\d$");
     private static final Pattern BOOLEAN_PATTERN = Pattern.compile("^(true|false)$", Pattern.CASE_INSENSITIVE);
     private static final Pattern NUMBER_PATTERN = Pattern.compile("^\\d+$");
 
@@ -62,7 +62,7 @@ public class RestClientConfiguration {
             setJasperReportsServerUrl(jasperReportsServerUrl);
     }
 
-    public RestClientConfiguration() {
+    protected RestClientConfiguration() {
         trustManagers = new TrustManager[]{
                 new X509TrustManager() {
                     @Override
@@ -240,6 +240,7 @@ public class RestClientConfiguration {
         }
 
         String acceptMimeType = properties.getProperty("acceptMimeType");
+
         if (isStringValid(acceptMimeType)) {
             try {
                 configuration.setAcceptMimeType(MimeType.valueOf(acceptMimeType));
@@ -263,6 +264,6 @@ public class RestClientConfiguration {
     }
 
     private static Boolean isStringValid (String string) {
-        return (string != null && !string.equals(null)) ? true : false;
+        return (string != null && string.length()>0) ? true : false;
     }
 }

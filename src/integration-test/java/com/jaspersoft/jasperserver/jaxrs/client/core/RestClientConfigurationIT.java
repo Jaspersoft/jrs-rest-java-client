@@ -1,9 +1,15 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * @author Tetiana Iefimenko
@@ -17,7 +23,7 @@ public class RestClientConfigurationIT {
 
         // When
 
-        config = RestClientConfiguration.loadConfiguration("config.properties");
+        config = RestClientConfiguration.loadConfiguration("test_config.properties");
         // Then
         assertNotNull(config);
         assertNotNull(config.getJasperReportsServerUrl());
@@ -31,8 +37,11 @@ public class RestClientConfigurationIT {
         assertTrue(config.getLogHttp());
         assertTrue(config.getLogHttpEntity());
         assertFalse(config.getRestrictedHttpMethods());
-        assertEquals(config.getJrsVersion(), JRSVersion.v6_0_0);
-        assertEquals(config.getAuthenticationType(), AuthenticationType.REST);
+        assertFalse(config.getRestrictedHttpMethods());
+        assertFalse(config.getRestrictedHttpMethods());
+        assertEquals(config.getJasperReportsServerUrl(), "http://localhost:4444/jasperserver-pro");
+        assertEquals(config.getJrsVersion(), JRSVersion.v6_1_0);
+        assertEquals(config.getAuthenticationType(), AuthenticationType.SPRING);
     }
 
 

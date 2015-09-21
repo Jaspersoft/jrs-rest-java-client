@@ -46,7 +46,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         setProperty("acceptMimeType", "JSON");
         setProperty("connectionTimeout", "");
         setProperty("readTimeout", "");
-        setProperty("authenticationType", "REST");
+        setProperty("authenticationType", "SPRING");
         setProperty("restrictedHttpMethods", "false");
         setProperty("logHttpEntity", "false");
         setProperty("logHttp", "false");
@@ -132,7 +132,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
             setProperty("acceptMimeType", "JSON");
             setProperty("connectionTimeout", "100");
             setProperty("readTimeout", "20");
-            setProperty("authenticationType", "REST");
+            setProperty("authenticationType", "SPRING");
             setProperty("restrictedHttpMethods", "false");
             setProperty("logHttpEntity", "false");
             setProperty("logHttp", "false");
