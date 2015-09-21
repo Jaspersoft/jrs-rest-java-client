@@ -1,8 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails;
 
 import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
-import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.RequestMethod;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,13 +16,12 @@ import static java.util.Arrays.asList;
 /**
 * Integration tests for {@link ThumbnailsService}
 */
-public class ThumbnailsServiceIT extends RestClientUnitTest {
-
-    private Session session;
+public class ThumbnailsServiceIT extends RestClientTestUtil {
 
     @BeforeClass
     public void before() {
-        session = client.authenticate("superuser", "superuser");
+        initClient();
+        initSession();
     }
 
     @Test

@@ -1,6 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.bundles;
 
-import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.AnonymousSession;
 import java.util.Locale;
 import java.util.Map;
@@ -15,13 +15,19 @@ import static org.junit.Assert.assertTrue;
  * @author Tetiana Iefimenko
  */
 
-public class BundlesServiceIT extends RestClientUnitTest {
+public class BundlesServiceIT extends RestClientTestUtil {
 
     private AnonymousSession session;
 
+    @Override
+    public void initSession() {
+        session = client.getAnonymousSession();
+    }
+
     @BeforeClass
     public void before() {
-        session = client.getAnonymousSession();
+        initClient();
+        initSession();
     }
 
      @Test

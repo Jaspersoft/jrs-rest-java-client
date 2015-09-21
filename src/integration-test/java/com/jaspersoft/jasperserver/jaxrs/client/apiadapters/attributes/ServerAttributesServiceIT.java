@@ -1,7 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
-import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityOperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttribute;
@@ -15,13 +14,13 @@ import org.testng.annotations.Test;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
-public class ServerAttributesServiceIT extends RestClientUnitTest{
+public class ServerAttributesServiceIT extends RestClientTestUtil {
 
-    private Session session;
 
     @BeforeClass
     public void before() {
-        session = client.authenticate("superuser", "superuser");
+        initClient();
+        initSession();
     }
 
     @Test

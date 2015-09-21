@@ -1,10 +1,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 
-import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.testng.AssertJUnit.assertNotNull;
@@ -12,8 +13,12 @@ import static org.testng.AssertJUnit.assertNotNull;
 /**
  * @author Tetiana Iefimenko
  */
-public class JasperserverRestClientIT extends RestClientUnitTest {
-    private  Session session;
+public class JasperserverRestClientIT extends RestClientTestUtil {
+
+    @BeforeClass
+    public void before() {
+        initClient();
+    }
 
     @Test
     public void should_return_session_via_j_sucurity_check() {

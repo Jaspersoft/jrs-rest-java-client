@@ -1,7 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
-import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ClientTenantAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.TenantAttributesListWrapper;
@@ -15,13 +14,13 @@ import static org.testng.AssertJUnit.assertNotNull;
 /**
  * @author Tetiana Iefimenko
  */
-public class OrganizationsServiceIT extends RestClientUnitTest{
+public class OrganizationsServiceIT extends RestClientTestUtil {
 
-    private Session session;
 
     @BeforeClass
     public void before() {
-        session = client.authenticate("superuser", "superuser");
+        initClient();
+        initSession();
     }
 
 

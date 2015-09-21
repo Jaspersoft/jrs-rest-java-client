@@ -1,6 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings;
 
-import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.AnonymousSession;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.AwsSettings;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.DashboardSettings;
@@ -25,13 +25,19 @@ import static junit.framework.Assert.assertTrue;
 /**
  * @author Tetiana Iefimenko
  * */
-public class SettingsServiceIT extends RestClientUnitTest {
+public class SettingsServiceIT extends RestClientTestUtil {
 
     private AnonymousSession session;
 
+    @Override
+    public void initSession() {
+        session = client.getAnonymousSession();
+    }
+
     @BeforeClass
     public void before() {
-        session = client.getAnonymousSession();
+        initClient();
+        initSession();
     }
 
     @Test

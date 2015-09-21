@@ -1,8 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
-import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -12,13 +11,13 @@ import org.testng.annotations.Test;
 /**
  * @author Alexander Krasnyanskiy
  */
-public class UsersServiceIT extends RestClientUnitTest{
+public class UsersServiceIT extends RestClientTestUtil {
 
-    private Session session;
 
     @BeforeClass
     public void before() {
-        session = client.authenticate("superuser", "superuser");
+        initClient();
+        initSession();
     }
 
     @Test

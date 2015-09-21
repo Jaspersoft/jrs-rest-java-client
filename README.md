@@ -202,7 +202,7 @@ config.setAuthenticationType(AuthenticationType.SPRING);
 Or set authentication type in configuration file (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration)).
 Please notice, the basic authentication is not stateless and it is valid till method logout() is called or the application is restarted and you can not use this authentication type for Report Service, because all operations must be executed in the same session (for details, read section [Report services](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#report-services)).
 ###Anonymous session
-For some Jasperserver services authentication is not required (for example, settings service and server info service), so you can use anonymous session:
+For some Jasperserver services authentication is not required (for example, settings service, bundles service or server info service), so you can use anonymous session:
  ```java
 AnonymousSession session = client.getAnonymousSession();
 ```

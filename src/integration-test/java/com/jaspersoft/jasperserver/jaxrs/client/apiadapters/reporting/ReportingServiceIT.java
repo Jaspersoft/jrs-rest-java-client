@@ -1,7 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
-import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
@@ -20,13 +19,13 @@ import static org.testng.AssertJUnit.assertNotNull;
  * @author Alex Krasnyanskiy
  * @author Tetiana Iefimenko
  */
-public class ReportingServiceIT extends RestClientUnitTest {
+public class ReportingServiceIT extends RestClientTestUtil {
 
-    private Session session;
 
     @BeforeClass
     public void before() {
-        session = client.authenticate("superuser", "superuser");
+        initClient();
+        initSession();
     }
 
     @Test

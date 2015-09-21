@@ -1,7 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
-import com.jaspersoft.jasperserver.jaxrs.client.RestClientUnitTest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
@@ -14,13 +13,12 @@ import org.testng.annotations.Test;
  * @author Alexander Krasnyanskiy
  * @author tetiana Iefimenko
  */
-public class ResourcesServiceIT extends RestClientUnitTest {
-
-    private Session session;
+public class ResourcesServiceIT extends RestClientTestUtil {
 
     @BeforeClass
     public void before() {
-        session = client.authenticate("superuser", "superuser");
+        initClient();
+        initSession();
     }
 
 
