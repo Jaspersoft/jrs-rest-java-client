@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -46,13 +45,11 @@ public class RestClientConfigurationIT {
 
 
     @Test
-    public void should_throw_nullPointerException() {
-        try {
+    public void should_return_empty_configuration() {
+        // When
             config = RestClientConfiguration.loadConfiguration("wrong_path");
-        } catch (NullPointerException ex) {
-            assertNotNull(ex);
-            assertSame(ex, new NullPointerException());
-        }
+        //Then
+        assertEquals(config.getJasperReportsServerUrl(), null);
     }
 
    @AfterMethod

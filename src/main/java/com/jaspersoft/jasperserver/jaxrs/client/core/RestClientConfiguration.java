@@ -59,7 +59,7 @@ public class RestClientConfiguration {
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
-            setJasperReportsServerUrl(jasperReportsServerUrl);
+        setJasperReportsServerUrl(jasperReportsServerUrl);
     }
 
     protected RestClientConfiguration() {
@@ -263,7 +263,7 @@ public class RestClientConfiguration {
         return properties;
     }
 
-    private static Boolean isStringValid (String string) {
-        return (string != null && string.length()>0) ? true : false;
+    private static Boolean isStringValid(String string) {
+        return (string != null && string.length() > 0) ? true : false;
     }
 }
