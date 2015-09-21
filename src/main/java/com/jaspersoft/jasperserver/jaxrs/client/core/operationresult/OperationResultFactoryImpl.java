@@ -22,12 +22,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesTypeResolverUtil;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnail;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnailListWrapper;
-
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class OperationResultFactoryImpl implements OperationResultFactory {
@@ -46,21 +42,8 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
         return getAppropriateOperationResultInstance(response, genericType);
     }
 
-
-
-
-    /**
-     * This method is to be changed in the next release when real ResourceThumbnailListWrapper class will be added.
-     */
-    @Deprecated
     private <T> OperationResult<T> getAppropriateOperationResultInstance(Response response, Class<T> responseClass) {
         OperationResult<T> result;
-
-        // => code to be removed
-        if (response.hasEntity() && responseClass.equals(ResourceThumbnailListWrapper.class)) {
-            result = (OperationResult<T>) new ThumbnailsOperationResult(response, (Class<? extends ResourceThumbnailListWrapper>) responseClass);
-        } else
-        // <=
 
             if (response.hasEntity()) {
                 result = new WithEntityOperationResult<T>(response, responseClass);
@@ -89,27 +72,5 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
 
     private Class<? extends ClientResource> getSpecificResourceType(Response response) {
         return ResourcesTypeResolverUtil.getClassForMime(response.getHeaderString("Content-Type"));
-    }
-
-    /**
-     * This is a temporary class for managing thumbnails operation result.
-     * It will be removed as soon as the proper ResourceThumbnailListWrapper will be written.
-     */
-    @Deprecated
-    protected class ThumbnailsOperationResult extends WithEntityOperationResult<ResourceThumbnailListWrapper> {
-
-        public ThumbnailsOperationResult(Response response, Class<? extends ResourceThumbnailListWrapper> entityClass) {
-            super(response, entityClass);
-        }
-
-        @Override
-        public ResourceThumbnailListWrapper getEntity() {
-            try {
-                return new ResourceThumbnailListWrapper(response.readEntity(new GenericType<List<ResourceThumbnail>>() {
-                }));
-            } catch (Exception e) {
-                return null;
-            }
-        }
     }
 }

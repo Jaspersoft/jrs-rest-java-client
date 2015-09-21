@@ -1,13 +1,16 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
+import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 /**
  * @author Alexander Krasnyanskiy
@@ -24,15 +27,19 @@ public class UsersServiceIT {
         config.setAcceptMimeType(MimeType.JSON);
         config.setContentMimeType(MimeType.JSON);
         config.setJrsVersion(JRSVersion.v6_0_1);
-        config.setAuthenticationType(AuthenticationType.REST);
+        config.setLogHttp(true);
+
         client = new JasperserverRestClient(config);
+
         session = client.authenticate("superuser", "superuser");
     }
 
     @Test
     public void shouldReturnAllUsers() {
 
+
          //When
+
         List<ClientUser> users = session
                 .usersService()
                 .allUsers()
@@ -56,6 +63,7 @@ public class UsersServiceIT {
                 .getUserList();
 
         //Then
+
         Assert.assertTrue(users.size() > 3);
     }
 

@@ -21,16 +21,21 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
 import java.io.InputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
 import java.util.regex.Pattern;
+
 
 public class RestClientConfiguration {
 
@@ -44,12 +49,10 @@ public class RestClientConfiguration {
     private MimeType contentMimeType = MimeType.JSON;
     private MimeType acceptMimeType = MimeType.JSON;
     private JRSVersion jrsVersion = JRSVersion.v5_5_0;
-
-    private AuthenticationType authenticationType = AuthenticationType.REST;
+    private AuthenticationType authenticationType = AuthenticationType.SPRING;
     private Boolean restrictedHttpMethods = false;
-    private Boolean logHttpEntity = false;
     private Boolean logHttp = false;
-
+    private Boolean logHttpEntity = false;
     private TrustManager[] trustManagers;
     private Integer connectionTimeout;
     private Integer readTimeout;
@@ -189,6 +192,7 @@ public class RestClientConfiguration {
         }
 
         String readTimeout = properties.getProperty("readTimeout");
+
         if (isStringValid(readTimeout) && NUMBER_PATTERN.matcher(readTimeout).matches()) {
             configuration.setReadTimeout(Integer.valueOf(readTimeout));
         }
@@ -200,6 +204,7 @@ public class RestClientConfiguration {
                 log.info("There is no version for JasperReportsServer or it isn't supported.", e);
             }
         }
+
 
         String authenticationType = properties.getProperty("authenticationType");
         if (isStringValid(authenticationType)) {

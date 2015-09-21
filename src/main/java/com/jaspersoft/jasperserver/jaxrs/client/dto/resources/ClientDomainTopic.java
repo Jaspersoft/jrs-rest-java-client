@@ -21,7 +21,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.resources;
 
 import com.jaspersoft.jasperserver.dto.resources.AbstractClientReportUnit;
-import com.jaspersoft.jasperserver.jaxrs.client.core.ResourceMediaType;
+import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

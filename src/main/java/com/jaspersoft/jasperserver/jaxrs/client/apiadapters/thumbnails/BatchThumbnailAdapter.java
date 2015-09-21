@@ -3,6 +3,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.RequestMethod;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnailListWrapper;
@@ -12,14 +13,17 @@ import java.util.Collection;
 
 /**
  * @author Alex Krasnyanskiy
+ * @author Tetiana Iefimenko
  * @since 6.0.1-ALPHA
  */
 public class BatchThumbnailAdapter extends AbstractAdapter {
 
     private final MultivaluedHashMap<String, String> params = new MultivaluedHashMap<String, String>();
+    private RequestMethod requestMethod;
 
     public BatchThumbnailAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
+        requestMethod = RequestMethod.POST;
     }
 
     public BatchThumbnailAdapter report(String uri) {
@@ -41,17 +45,23 @@ public class BatchThumbnailAdapter extends AbstractAdapter {
         return this;
     }
 
-    public BatchThumbnailAdapter parameter(ThumbnailsParameter param, Boolean value) {
-        params.add(param.toString().toLowerCase(), value.toString());
+    public BatchThumbnailAdapter defaultAllowed(Boolean value) {
+        params.add("defaultAllowed", value.toString());
         return this;
     }
 
+    public BatchThumbnailAdapter requestMethod(RequestMethod requestMethod){
+        this.requestMethod = requestMethod;
+        return  this;
+    }
+
     public OperationResult<ResourceThumbnailListWrapper> get() {
-        return request().setContentType("application/x-www-form-urlencoded").post(params);
+        return (requestMethod == RequestMethod.POST) ? request().setContentType("application/x-www-form-urlencoded").post(params) : request().addParams(params).get();
     }
 
     private JerseyRequest<ResourceThumbnailListWrapper> request() {
         return JerseyRequest.buildRequest(sessionStorage, ResourceThumbnailListWrapper.class,
                 new String[]{"/thumbnails"}, new DefaultErrorHandler());
     }
+
 }

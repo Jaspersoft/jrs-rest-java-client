@@ -1,25 +1,29 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails;
+import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
 
+import java.util.LinkedList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * Fake wrapper class for ResourceThumbnail collection.
- */
 @Deprecated
+@XmlRootElement(name = "thumbnails")
 public class ResourceThumbnailListWrapper {
+
     private List<ResourceThumbnail> thumbnails;
 
     public ResourceThumbnailListWrapper() {
     }
 
-    public ResourceThumbnailListWrapper(List<ResourceThumbnail> thumbnails) {
-        this.thumbnails = thumbnails;
+    public ResourceThumbnailListWrapper(List<ResourceThumbnail> thumbnail) {
+        this.thumbnails = new LinkedList<ResourceThumbnail>(thumbnail);
     }
 
     public List<ResourceThumbnail> getThumbnails() {
         return thumbnails;
     }
 
+    @XmlElement(name = "thumbnail")
     public void setThumbnails(List<ResourceThumbnail> thumbnails) {
         this.thumbnails = thumbnails;
     }

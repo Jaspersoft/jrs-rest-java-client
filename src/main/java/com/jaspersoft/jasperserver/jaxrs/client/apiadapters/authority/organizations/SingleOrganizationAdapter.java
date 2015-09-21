@@ -28,6 +28,8 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.attributes.OrganizationBatchAttributeAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.attributes.OrganizationSingleAttributeAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -36,11 +38,11 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.io.IOException;
+import java.util.Collection;
+import javax.ws.rs.core.MultivaluedHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import javax.ws.rs.core.MultivaluedHashMap;
-import java.io.IOException;
 
 
 public class SingleOrganizationAdapter extends AbstractAdapter {
@@ -152,6 +154,22 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         });
         ThreadPoolUtil.runAsynchronously(task);
         return task;
+    }
+
+    public OrganizationSingleAttributeAdapter attribute() {
+        return new OrganizationSingleAttributeAdapter(sessionStorage, organizationId);
+    }
+
+    public OrganizationBatchAttributeAdapter attributes(Collection<String> attributesNames) {
+        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId, attributesNames);
+    }
+
+    public OrganizationBatchAttributeAdapter attributes(String... attributesNames) {
+        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId, attributesNames);
+    }
+
+    public OrganizationBatchAttributeAdapter attributes() {
+        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId);
     }
 
     private JerseyRequest<ClientTenant> buildRequest() {

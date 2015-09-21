@@ -21,21 +21,23 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
+
 public class MimeTypeUtil {
 
-    private static final String JSON_SUFFIX = "json";
-    private static final String XML_SUFFIX = "xml";
 
     public static String toCorrectContentMime(RestClientConfiguration configuration, String srcMime) {
-        if (srcMime.endsWith("+{mime}")) {
-            return srcMime.replace("{mime}", configuration.getContentMimeType() == MimeType.JSON ? JSON_SUFFIX : XML_SUFFIX);
-        }
-        return srcMime;
+        return replaceMime(configuration.getContentMimeType(), srcMime);
     }
 
     public static String toCorrectAcceptMime(RestClientConfiguration configuration, String srcMime) {
+        return replaceMime(configuration.getAcceptMimeType(), srcMime);
+    }
+
+    private static String replaceMime(MimeType configMimeType, String srcMime) {
         if (srcMime.endsWith("+{mime}")) {
-            return srcMime.replace("{mime}", configuration.getAcceptMimeType() == MimeType.JSON ? JSON_SUFFIX : XML_SUFFIX);
+            return srcMime.replace("+{mime}", configMimeType == MimeType.JSON ? ResourceMediaType.RESOURCE_JSON_TYPE : ResourceMediaType.RESOURCE_XML_TYPE);
         }
         return srcMime;
     }

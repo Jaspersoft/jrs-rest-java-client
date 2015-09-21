@@ -23,6 +23,9 @@ public class BasicAuthenticationFilter implements ClientRequestFilter {
     @Override
     public void filter(ClientRequestContext clientRequestContext) throws IOException {
         MultivaluedMap<String, Object> headers = clientRequestContext.getHeaders();
+        if (credentials.getUsername() == null && credentials.getPassword() == null) {
+            return;
+        }
         final String basicAuthentication = getBasicAuthentication();
         headers.add("Authorization", basicAuthentication);
 

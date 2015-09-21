@@ -19,12 +19,12 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.core;
+package com.jaspersoft.jasperserver.jaxrs.client.core.enums;
 
 import java.util.Arrays;
 import java.util.List;
 
-
+@Deprecated
 public interface ResourceMediaType {
     public static final String RESOURCE_MEDIA_TYPE_PREFIX = "application/repository.";
     public static final String RESOURCE_MIME_TYPE = "+{mime}";

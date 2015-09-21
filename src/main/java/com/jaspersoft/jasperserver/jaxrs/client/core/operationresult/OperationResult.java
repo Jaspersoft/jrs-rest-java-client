@@ -23,10 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-/**
- * @author
- * @author Tetiana Iefimenko
- * */
+
 public abstract class OperationResult<T> {
 
     protected Response response;
