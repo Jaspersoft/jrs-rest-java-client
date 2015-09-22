@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
+import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +24,7 @@ public class ResourcesServiceIT extends RestClientTestUtil {
 
 
     @Test
-    public void shouldDeleteAFolder() throws InterruptedException {
+    public void should_delete_folder() throws InterruptedException {
 
         // Given
         TimeUnit.SECONDS.sleep(1);
@@ -39,6 +40,21 @@ public class ResourcesServiceIT extends RestClientTestUtil {
 
         Assert.assertEquals(resp.getStatus(), 204);
         Assert.assertNotNull(is);
+    }
+
+    @Test
+    public void should_return_resource_details() throws InterruptedException {
+
+        // Given
+        TimeUnit.SECONDS.sleep(1);
+
+        // When
+        ClientResource clientResource = session.resourcesService()
+                .resource("/organizations/organization_1/Domains/supermartDomain")
+                .details()
+                .getEntity();
+
+        Assert.assertNotNull(clientResource);
     }
 
     @AfterClass
