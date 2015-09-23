@@ -1,38 +1,26 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityOperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttributesListWrapper;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import java.util.List;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
-public class ServerAttributesServiceIT {
+public class ServerAttributesServiceIT extends RestClientTestUtil {
 
-    private RestClientConfiguration config;
-    private JasperserverRestClient client;
-    private Session session;
 
-    @BeforeMethod
+    @BeforeClass
     public void before() {
-        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        config.setAcceptMimeType(MimeType.JSON);
-        config.setContentMimeType(MimeType.JSON);
-        config.setJrsVersion(JRSVersion.v6_0_1);
-        client = new JasperserverRestClient(config);
-        session = client.authenticate("superuser", "superuser");
+        initClient();
+        initSession();
     }
 
     @Test
@@ -128,11 +116,9 @@ public class ServerAttributesServiceIT {
         Assert.assertTrue(instanceOf(NullEntityOperationResult.class).matches(entity));
     }
 
-    @AfterMethod
+    @AfterClass
     public void after() {
         session.logout();
-        client = null;
-        config = null;
         session = null;
     }
 }

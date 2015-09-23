@@ -1,13 +1,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.bundles;
 
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.AnonymousSession;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import java.util.Locale;
 import java.util.Map;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static junit.framework.Assert.assertFalse;
@@ -18,22 +15,19 @@ import static org.junit.Assert.assertTrue;
  * @author Tetiana Iefimenko
  */
 
-public class BundlesServiceIT {
+public class BundlesServiceIT extends RestClientTestUtil {
 
-    private RestClientConfiguration config;
-    private JasperserverRestClient client;
     private AnonymousSession session;
 
-    @BeforeMethod
-    public void before() {
-        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        config.setAcceptMimeType(MimeType.JSON);
-        config.setContentMimeType(MimeType.JSON);
-        config.setJrsVersion(JRSVersion.v6_1_0);
-        config.setLogHttp(true);
-        config.setLogHttpEntity(true);
-        client = new JasperserverRestClient(config);
+    @Override
+    public void initSession() {
         session = client.getAnonymousSession();
+    }
+
+    @BeforeClass
+    public void before() {
+        initClient();
+        initSession();
     }
 
      @Test

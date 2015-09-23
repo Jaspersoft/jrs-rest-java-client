@@ -134,10 +134,29 @@ To do this you should create instance of `RestClientConfiguration`. It can be do
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
 ```
-File should contain only URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}`.
+Here is example of `configuration.properties` file:
+```java
+url=http://localhost:4444/jasperserver-pro
+connectionTimeout=100
+readTimeout=20
+jasperserverVersion=v6_0_0
+authenticationType=REST
+logHttp=true
+logHttpEntity=false
+restrictedHttpMethods=false
+contentMimeType=JSON
+acceptMimeType=JSON
+```
+File must contain at least URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}`.
 ####Creation of manual configuration
+To configure `JasperserverRestClient` manually, use the constructor of `RestClientConfiguration` and properties:
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
+configuration.setAcceptMimeType(MimeType.JSON);
+configuration.setContentMimeType(MimeType.JSON);
+configuration.setJrsVersion(JRSVersion.v6_0_0);
+configuration.setLogHttp(true);
+configuration.setLogHttpEntity(true);
 ```
 ####HTTPS configuration
 <strong>To use HTTPS you need:</strong>
@@ -183,7 +202,7 @@ config.setAuthenticationType(AuthenticationType.SPRING);
 Or set authentication type in configuration file (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration)).
 Please notice, the basic authentication is not stateless and it is valid till method logout() is called or the application is restarted and you can not use this authentication type for Report Service, because all operations must be executed in the same session (for details, read section [Report services](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#report-services)).
 ###Anonymous session
-For some Jasperserver services authentication is not required (for example, settings service and server info service), so you can use anonymous session:
+For some Jasperserver services authentication is not required (for example, settings service, bundles service or server info service), so you can use anonymous session:
  ```java
 AnonymousSession session = client.getAnonymousSession();
 ```

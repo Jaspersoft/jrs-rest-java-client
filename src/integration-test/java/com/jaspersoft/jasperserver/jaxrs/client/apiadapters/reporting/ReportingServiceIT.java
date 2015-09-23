@@ -1,34 +1,31 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import junit.framework.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import java.io.OutputStream;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import static org.testng.AssertJUnit.assertNotNull;
+
 
 /**
  * @author Alex Krasnyanskiy
  * @author Tetiana Iefimenko
  */
-public class ReportingServiceIT {
+public class ReportingServiceIT extends RestClientTestUtil {
 
-    private RestClientConfiguration configuration;
-    private JasperserverRestClient client;
-    private Session session;
 
-    @BeforeMethod
+    @BeforeClass
     public void before() {
-        configuration = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        configuration.setLogHttp(true);
-        configuration.setLogHttpEntity(true);
-        client = new JasperserverRestClient(configuration);
-        session = client.authenticate("superuser", "superuser");
+        initClient();
+        initSession();
     }
 
     @Test
@@ -47,8 +44,24 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
+    }
 
+    @Test
+    public void should_return_proper_entity_() {
+
+        /** When **/
+        OperationResult<InputStream> result = client
+                .authenticate("superuser", "superuser")
+                .reportingService()
+                .report("/organizations/organization_1/adhoc/topics/Cascading_multi_select_topic")
+                .prepareForRun(ReportOutputFormat.PDF, 1)
+                .parameter("Cascading_state_multi_select", "CA")
+                .parameter("Cascading_state_multi_select", "OR", "WA")
+                .run();
+        InputStream entity = result.getEntity();
+        /** Then **/
+        assertNotNull(entity);
     }
 
     @Test
@@ -67,7 +80,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
 
     }
     @Test
@@ -85,7 +98,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
 
     }
 
@@ -104,7 +117,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
 
     }
 
@@ -123,7 +136,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
 
     }
 
@@ -142,8 +155,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
-
+        assertNotNull(entity);
     }
 
     @Test
@@ -161,7 +173,7 @@ public class ReportingServiceIT {
 
         InputStream entity = result.getEntity();
         /** Then **/
-        Assert.assertNotNull(entity);
+        assertNotNull(entity);
 
     }
 
@@ -181,7 +193,7 @@ public class ReportingServiceIT {
 
         ReportExecutionDescriptor reportExecutionDescriptor = operationResult.getEntity();
         /** Then **/
-        Assert.assertNotNull(reportExecutionDescriptor);
+        assertNotNull(reportExecutionDescriptor);
     }
 
     @Test
@@ -200,12 +212,35 @@ public class ReportingServiceIT {
 
         ReportExecutionDescriptor reportExecutionDescriptor = operationResult.getEntity();
         /** Then **/
-        Assert.assertNotNull(reportExecutionDescriptor);
+        assertNotNull(reportExecutionDescriptor);
     }
 
-    @AfterMethod
+    @AfterClass
     public void after() {
-        client = null;
-        configuration = null;
+        session.logout();
+    }
+
+    private void reportToPdf(InputStream entity) {
+        OutputStream output = null;
+        try {
+            output = new FileOutputStream("file.pdf");
+            int i = 0;
+            while (i != -1) {
+                i = entity.read();
+                output.write(i);
+                output.flush();
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                entity.close();
+                output.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

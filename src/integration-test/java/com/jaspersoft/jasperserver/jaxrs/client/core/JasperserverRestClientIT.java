@@ -1,14 +1,11 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.core;
+package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.testng.AssertJUnit.assertNotNull;
@@ -16,20 +13,11 @@ import static org.testng.AssertJUnit.assertNotNull;
 /**
  * @author Tetiana Iefimenko
  */
-public class JasperserverRestClientIT {
+public class JasperserverRestClientIT extends RestClientTestUtil {
 
-
-    private RestClientConfiguration config;
-    private JasperserverRestClient client;
-    Session session;
-
-    @BeforeMethod
+    @BeforeClass
     public void before() {
-        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        config.setAcceptMimeType(MimeType.JSON);
-        config.setContentMimeType(MimeType.JSON);
-        config.setJrsVersion(JRSVersion.v6_0_0);
-        client = new JasperserverRestClient(config);
+        initClient();
     }
 
     @Test
@@ -47,7 +35,7 @@ public class JasperserverRestClientIT {
 
     @Test
     public void should_return_session_via_basic_login() {
-        config.setAuthenticationType(AuthenticationType.BASIC);
+        configuration.setAuthenticationType(AuthenticationType.BASIC);
         session = client.authenticate("jasperadmin", "jasperadmin");
         assertNotNull(session);
     }

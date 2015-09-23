@@ -1,10 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.settings;
 
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.AnonymousSession;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.AwsSettings;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.DashboardSettings;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.DataSourcePatternsSettings;
@@ -17,8 +14,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.UserTimeZone;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.GenericType;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static junit.framework.Assert.assertFalse;
@@ -29,22 +25,19 @@ import static junit.framework.Assert.assertTrue;
 /**
  * @author Tetiana Iefimenko
  * */
-public class SettingsServiceIT {
+public class SettingsServiceIT extends RestClientTestUtil {
 
-    private RestClientConfiguration config;
-    private JasperserverRestClient client;
     private AnonymousSession session;
 
-    @BeforeMethod
-    public void before() {
-        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        config.setAcceptMimeType(MimeType.JSON);
-        config.setContentMimeType(MimeType.JSON);
-        config.setJrsVersion(JRSVersion.v6_0_0);
-        config.setLogHttp(true);
-        config.setLogHttpEntity(true);
-        client = new JasperserverRestClient(config);
+    @Override
+    public void initSession() {
         session = client.getAnonymousSession();
+    }
+
+    @BeforeClass
+    public void before() {
+        initClient();
+        initSession();
     }
 
     @Test
@@ -397,11 +390,5 @@ public class SettingsServiceIT {
 
         assertTrue(datePicker.containsKey("nextText"));
         assertTrue(datePicker.containsKey("yearSuffix"));
-    }
-
-    @AfterMethod
-    public void after() {
-        config = null;
-        client = null;
     }
 }

@@ -1,36 +1,24 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JasperserverRestClient;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
-import com.jaspersoft.jasperserver.jaxrs.client.core.Session;
+import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
  * @author Alexander Krasnyanskiy
  * @author tetiana Iefimenko
  */
-public class ResourcesServiceIT {
+public class ResourcesServiceIT extends RestClientTestUtil {
 
-    private RestClientConfiguration config;
-    private JasperserverRestClient client;
-    private Session session;
-
-    @BeforeMethod
+    @BeforeClass
     public void before() {
-        config = new RestClientConfiguration("http://localhost:4444/jasperserver-pro");
-        config.setAcceptMimeType(MimeType.JSON);
-        config.setContentMimeType(MimeType.JSON);
-        config.setJrsVersion(JRSVersion.v6_0_1);
-        client = new JasperserverRestClient(config);
-        session = client.authenticate("superuser", "superuser");
+        initClient();
+        initSession();
     }
 
 
@@ -53,7 +41,7 @@ public class ResourcesServiceIT {
         Assert.assertNotNull(is);
     }
 
-    @AfterMethod
+    @AfterClass
     public void after() {
         session.logout();
         session = null;
