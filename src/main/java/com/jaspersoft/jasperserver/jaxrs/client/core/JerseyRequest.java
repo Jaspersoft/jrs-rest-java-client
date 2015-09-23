@@ -27,7 +27,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHa
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
-import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.client.Entity;
@@ -37,7 +36,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType.JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -81,10 +79,9 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         contentType = configuration.getContentMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
         acceptType = configuration.getAcceptMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
         headers = new MultivaluedHashMap<String, String>();
+
         usersWebTarget = sessionStorage.getRootTarget()
-                .path("/rest_v2")
-                .register(CustomRepresentationTypeProvider.class)
-                .register(MultiPartWriter.class);
+                .path("/rest_v2");
     }
 
     public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path) {

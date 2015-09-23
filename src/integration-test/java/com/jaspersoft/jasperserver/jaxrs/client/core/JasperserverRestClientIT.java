@@ -5,7 +5,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.testng.AssertJUnit.assertNotNull;
@@ -15,7 +15,7 @@ import static org.testng.AssertJUnit.assertNotNull;
  */
 public class JasperserverRestClientIT extends RestClientTestUtil {
 
-    @BeforeClass
+    @BeforeMethod
     public void before() {
         initClient();
     }

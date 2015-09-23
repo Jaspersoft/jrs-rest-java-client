@@ -25,9 +25,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
+import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 
@@ -96,10 +98,13 @@ public class SessionStorage {
 
         JacksonJsonProvider provider = new JacksonJaxbJsonProvider()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
+        JacksonJsonProvider customRepresentationTypeProvider = new CustomRepresentationTypeProvider()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
-        rootTarget.register(JacksonFeature.class);
-        rootTarget.register(provider);
+        rootTarget.register(JacksonFeature.class)
+                    .register(provider)
+                    .register(customRepresentationTypeProvider)
+                    .register(MultiPartWriter.class);
         if (configuration.getLogHttp()) {
             rootTarget.register(initLoggingFilter());
         }
