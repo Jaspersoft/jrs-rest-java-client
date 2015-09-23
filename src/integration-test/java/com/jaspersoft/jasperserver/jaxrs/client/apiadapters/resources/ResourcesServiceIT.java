@@ -3,7 +3,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import java.io.ByteArrayInputStream;
-import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -26,9 +25,6 @@ public class ResourcesServiceIT extends RestClientTestUtil {
     @Test
     public void should_delete_folder() throws InterruptedException {
 
-        // Given
-        TimeUnit.SECONDS.sleep(1);
-
         // When
         Response resp = session.resourcesService()
                 .resource("/reports/testFolder")
@@ -44,9 +40,6 @@ public class ResourcesServiceIT extends RestClientTestUtil {
 
     @Test
     public void should_return_resource_details() throws InterruptedException {
-
-        // Given
-        TimeUnit.SECONDS.sleep(1);
 
         // When
         ClientResource clientResource = session.resourcesService()
