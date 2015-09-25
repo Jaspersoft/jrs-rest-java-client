@@ -36,8 +36,8 @@ public class JasperserverRestClient {
     private final RestClientConfiguration configuration;
 
     public JasperserverRestClient(RestClientConfiguration configuration) {
-        if (configuration == null) {
-            throw new IllegalArgumentException("You must define the configuration");
+        if (configuration == null || configuration.getJasperReportsServerUrl() == null) {
+            throw new IllegalArgumentException("You must define the configuration (at least Jasperserver URL)");
         }
         this.configuration = configuration;
     }

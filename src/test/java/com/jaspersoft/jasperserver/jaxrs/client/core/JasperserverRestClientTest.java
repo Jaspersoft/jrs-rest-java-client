@@ -78,6 +78,8 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     @Test(testName = "JasperserverRestClient_constructor")
     public void should_create_an_instance_of_JasperserverRestClient_with_proper_fields()
             throws IllegalAccessException {
+        // Given
+        doReturn("url").when(configurationMock).getJasperReportsServerUrl();
         // When
         final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
 
@@ -94,9 +96,16 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         new JasperserverRestClient(null);
     }
 
+    @Test(testName = "JasperserverRestClient_constructor",
+          expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_pass_empty_configuration_to_the_constructor() {
+        new JasperserverRestClient(new RestClientConfiguration());
+    }
+
     @Test(testName = "JasperserverRestClient_authenticate")
     public void should_return_null_when_username_is_null() {
         // Given
+        doReturn("url").when(configurationMock).getJasperReportsServerUrl();
         JasperserverRestClient jasperserverRestClient = new JasperserverRestClient(configurationMock);
         // When
         Session session = jasperserverRestClient.authenticate(null, PASSWORD);
@@ -106,6 +115,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     @Test(testName = "JasperserverRestClient_authenticate")
     public void should_return_null_when_username_is_empty() {
         // Given
+        doReturn("url").when(configurationMock).getJasperReportsServerUrl();
         JasperserverRestClient jasperserverRestClient = new JasperserverRestClient(configurationMock);
         // When
         Session session = jasperserverRestClient.authenticate("", PASSWORD);
@@ -116,6 +126,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     @Test(testName = "JasperserverRestClient_authenticate")
     public void should_return_null_when_password_is_null() {
         // Given
+        doReturn("url").when(configurationMock).getJasperReportsServerUrl();
         JasperserverRestClient jasperserverRestClient = new JasperserverRestClient(configurationMock);
         // When
         Session session = jasperserverRestClient.authenticate(USER_NAME, null);
@@ -125,6 +136,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     @Test(testName = "JasperserverRestClient_authenticate")
     public void should_return_null_when_password_is_empty() {
         // Given
+        doReturn("url").when(configurationMock).getJasperReportsServerUrl();
         JasperserverRestClient jasperserverRestClient = new JasperserverRestClient(configurationMock);
         // When
         Session session = jasperserverRestClient.authenticate(USER_NAME, "");
@@ -137,6 +149,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     public void should_return_proper_Session_object() throws Exception {
 
         // Given
+        doReturn("url").when(configurationMock).getJasperReportsServerUrl();
         final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
         final JasperserverRestClient spyClient = spy(client);
 
@@ -164,6 +177,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     public void should_involve_login_method_and_return_proper_session_object() throws Exception {
         // Given
         final URI location = new URI("location");
+        doReturn("url").when(configurationMock).getJasperReportsServerUrl();
         final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
 
         whenNew(AuthenticationCredentials.class)
@@ -212,6 +226,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     @Test
     public void should_involve_login_method_and_return_proper_session_object_within_basic_authorization() throws Exception {
         // Given
+        doReturn("url").when(configurationMock).getJasperReportsServerUrl();
         final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
 
         whenNew(AuthenticationCredentials.class)
@@ -249,14 +264,14 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     public void should_return_proper_anonymousSession_object() throws Exception {
 
         // Given
-        final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
-
+        doReturn("url").when(configurationMock).getJasperReportsServerUrl();
         whenNew(SessionStorage.class)
                 .withAnyArguments()
                 .thenReturn(sessionStorageMock);
         whenNew(AnonymousSession.class)
                 .withArguments(sessionStorageMock)
                 .thenReturn(anonymousSessionMock);
+        final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
 
         // When
         AnonymousSession retrieved = client.getAnonymousSession();
