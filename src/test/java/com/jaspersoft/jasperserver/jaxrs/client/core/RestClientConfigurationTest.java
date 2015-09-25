@@ -24,6 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.powermock.api.easymock.PowerMock.expectPrivate;
 import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
 import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.support.membermodification.MemberMatcher.field;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.testng.Assert.assertSame;
@@ -123,7 +124,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
     }
 
     @Test(testName = "loadConfiguration")
-    public void should_load_configuration_from_property_file_with_all_kind_of_setted_values() throws Exception {
+      public void should_load_configuration_by_path_with_all_kind_of_setted_values() throws Exception {
         // Given
         // fake properties with not empty connection timeout and read timeout
         Properties fakeProps = new Properties() {{
@@ -185,6 +186,43 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         assertNull(configuration.getConnectionTimeout());
         assertNull(configuration.getReadTimeout());
         assertNotNull(configuration.getTrustManagers());
+    }
+
+    @Test(testName = "loadProperties")
+    public void should_load_configuration_from_property_with_all_kind_of_setted_values() throws Exception {
+        // Given
+        Properties properties = new Properties() {{
+            setProperty("url", "http://localhost:8080/jasperserver-pro/");
+            setProperty("contentMimeType", "JSON");
+            setProperty("acceptMimeType", "JSON");
+            setProperty("connectionTimeout", "100");
+            setProperty("readTimeout", "20");
+            setProperty("authenticationType", "SPRING");
+            setProperty("restrictedHttpMethods", "false");
+            setProperty("logHttpEntity", "false");
+            setProperty("logHttp", "false");
+        }};
+
+        // When
+        RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration(properties);
+
+        // Then
+        assertEquals(configuration.getJasperReportsServerUrl(), properties.getProperty("url"));
+        assertEquals(configuration.getContentMimeType().toString(), properties.getProperty("contentMimeType"));
+        assertEquals(configuration.getAcceptMimeType().toString(), properties.getProperty("acceptMimeType"));
+        assertSame(configuration.getConnectionTimeout(), Integer.valueOf(properties.getProperty("connectionTimeout")));
+        assertSame(configuration.getReadTimeout(), Integer.valueOf(properties.getProperty("readTimeout")));
+
+        assertEquals(configuration.getAuthenticationType().toString(), properties.getProperty("authenticationType"));
+        assertEquals(configuration.getRestrictedHttpMethods().toString(), properties.getProperty("restrictedHttpMethods"));
+        assertEquals(configuration.getLogHttp().toString(), properties.getProperty("logHttp"));
+        assertEquals(configuration.getLogHttpEntity().toString(), properties.getProperty("logHttpEntity"));
+
+        assertNotNull(configuration.getTrustManagers());
+        assertEquals(configuration.getAuthenticationType(), AuthenticationType.SPRING);
+        assertFalse(configuration.getRestrictedHttpMethods());
+        assertFalse(configuration.getLogHttp());
+        assertFalse(configuration.getLogHttpEntity());
     }
 
     @Test(testName = "loadConfiguration")
@@ -264,7 +302,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
     @Test(testName = "loadConfiguration")
     public void should_invoke_private_method() throws Exception {
         // Given
-        Properties propertiesSpy = PowerMockito.spy(new Properties());
+        Properties propertiesSpy = spy(new Properties());
         propertiesSpy.setProperty("url", "http://localhost:8080/jasperserver-pro/");
         propertiesSpy.setProperty("contentMimeType", "JSON");
         propertiesSpy.setProperty("acceptMimeType", "JSON");
@@ -290,7 +328,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
     @Test(testName = "getTrustManagers")
     public void should_return_trusted_manager() throws Exception {
         // Given
-        RestClientConfiguration config = Mockito.spy(new RestClientConfiguration());
+        RestClientConfiguration config = new RestClientConfiguration();
         // When
 
         TrustManager[] managers = config.getTrustManagers();
@@ -353,7 +391,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_throw_an_exception_with_wrong_jrs_version() throws Exception {
+    public void should_not_throw_an_exception_with_wrong_jrs_version() throws Exception {
         // Given
         Properties fakePropsWithUnproperJrsVersion = new Properties() {{
             setProperty("url", "http://localhost:8080/jasperserver-pro/");
@@ -372,16 +410,16 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_throw_an_exception_with_wrong_authintication_type() throws Exception {
+    public void should_not_throw_an_exception_with_wrong_authintication_type() throws Exception {
         // Given
-        Properties fakePropsWithUnproperJrsVersion = new Properties() {{
+        Properties fakePropsWithUnproperAuthorizationType = new Properties() {{
             setProperty("url", "http://localhost:8080/jasperserver-pro/");
             setProperty("authenticationType", "authenticationType");
         }};
         mockStaticPartial(RestClientConfiguration.class, "loadProperties");
         Method[] methods = MemberMatcher.methods(RestClientConfiguration.class, "loadProperties");
 
-        expectPrivate(RestClientConfiguration.class, methods[0], "superCoolPath").andReturn(fakePropsWithUnproperJrsVersion);
+        expectPrivate(RestClientConfiguration.class, methods[0], "superCoolPath").andReturn(fakePropsWithUnproperAuthorizationType);
         replay(RestClientConfiguration.class);
 
         // When
@@ -457,9 +495,9 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         RestClientConfiguration config = new RestClientConfiguration();
         //Then
         Field field = field(RestClientConfiguration.class, "restrictedHttpMethods");
-        Object retrieved = field.get(config);
+        Boolean retrieved = (Boolean) field.get(config);
         assertNotNull(retrieved);
-        assertEquals(retrieved, false);
+        assertEquals(retrieved, Boolean.FALSE);
 
     }
 
@@ -483,9 +521,9 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         config.setRestrictedHttpMethods(true);
         //Then
         Field field = field(RestClientConfiguration.class, "restrictedHttpMethods");
-        Object retrieved = field.get(config);
+        Boolean retrieved = (Boolean) field.get(config);
         assertNotNull(retrieved);
-        assertEquals(retrieved, true);
+        assertEquals(retrieved, Boolean.TRUE);
     }
 
     @Test(testName = "setContentMimeType")
@@ -546,9 +584,9 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         config.setConnectionTimeout(100);
         //Then
         Field field = field(RestClientConfiguration.class, "connectionTimeout");
-        Object retrieved = field.get(config);
+        Integer retrieved = (Integer)field.get(config);
         assertNotNull(retrieved);
-        assertEquals(retrieved, 100);
+        assertEquals(retrieved, Integer.valueOf(100));
 
     }
 
@@ -560,10 +598,11 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         config.setReadTimeout(100);
         //Then
         Field field = field(RestClientConfiguration.class, "readTimeout");
-        Object retrieved = field.get(config);
+        Integer retrieved = (Integer) field.get(config);
         assertNotNull(retrieved);
-        assertEquals(retrieved, 100);
+        assertEquals(retrieved, Integer.valueOf(100));
 
 
     }
+
 }
