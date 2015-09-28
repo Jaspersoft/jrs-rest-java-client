@@ -14,9 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-   <!--     <jersey.version>2.13</jersey.version>
-        <fasterxml.version>2.3.2</fasterxml.version> -->
-    </properties>
+     </properties>
 
     <scm>
         <connection>scm:git:http://github.com/Jaspersoft/jrs-rest-java-client</connection>

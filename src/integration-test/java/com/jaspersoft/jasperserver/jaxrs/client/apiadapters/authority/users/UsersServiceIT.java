@@ -66,6 +66,7 @@ public class UsersServiceIT extends RestClientTestUtil {
         ClientUser user = operationResult.getEntity();
 
         assertNotNull(user);
+        assertNotNull(user.getUsername());
     }
 
 
