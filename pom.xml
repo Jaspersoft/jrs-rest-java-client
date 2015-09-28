@@ -14,8 +14,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <jersey.version>2.13</jersey.version>
-        <fasterxml.version>2.3.2</fasterxml.version>
+   <!--     <jersey.version>2.13</jersey.version>
+        <fasterxml.version>2.3.2</fasterxml.version> -->
     </properties>
 
     <scm>
@@ -48,7 +48,7 @@
             <version>6.0.1</version>
         </dependency>
 
-        <!-- Jersey -->
+        <!-- Jersey
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
@@ -68,9 +68,30 @@
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-multipart</artifactId>
             <version>${jersey.version}</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
+            <version>1.18</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-multipart</artifactId>
+            <version>1.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>2.5.1</version>
         </dependency>
 
-        <!-- Jackson -->
+        <!-- Jackson
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
@@ -80,7 +101,7 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>${fasterxml.version}</version>
-        </dependency>
+        </dependency>-->
 
         <!-- TestNG -->
         <dependency>
