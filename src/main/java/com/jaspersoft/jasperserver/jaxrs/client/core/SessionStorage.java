@@ -33,6 +33,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -92,15 +93,16 @@ public class SessionStorage {
             client.property(ClientProperties.READ_TIMEOUT, readTimeout);
         }
 
-        JacksonJsonProvider provider = new JacksonJaxbJsonProvider();
-//                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        JacksonJsonProvider customRepresentationTypeProvider = new CustomRepresentationTypeProvider();
-//                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        JacksonJsonProvider provider = new JacksonJaxbJsonProvider()
+                .configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        JacksonJsonProvider customRepresentationTypeProvider = new CustomRepresentationTypeProvider()
+                .configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
-        rootTarget.register(JacksonFeature.class)
-                    .register(provider)
-                    .register(customRepresentationTypeProvider)
-                    .register(MultiPartWriter.class);
+        rootTarget
+                .register(provider)
+                .register(customRepresentationTypeProvider)
+                .register(JacksonFeature.class)
+                .register(MultiPartWriter.class);
         if (configuration.getLogHttp()) {
             rootTarget.register(initLoggingFilter());
         }
