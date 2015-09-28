@@ -21,10 +21,8 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
+import com.sun.jersey.multipart.impl.MultiPartWriter;
 import java.security.SecureRandom;
 import java.util.logging.Logger;
 import javax.net.ssl.HostnameVerifier;
@@ -33,10 +31,11 @@ import javax.net.ssl.SSLSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 
@@ -80,6 +79,7 @@ public class SessionStorage {
         }
 
         Client client = clientBuilder.build();
+
         Integer connectionTimeout = configuration.getConnectionTimeout();
 
         if (connectionTimeout != null) {
@@ -92,10 +92,10 @@ public class SessionStorage {
             client.property(ClientProperties.READ_TIMEOUT, readTimeout);
         }
 
-        JacksonJsonProvider provider = new JacksonJaxbJsonProvider()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        JacksonJsonProvider customRepresentationTypeProvider = new CustomRepresentationTypeProvider()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        JacksonJsonProvider provider = new JacksonJaxbJsonProvider();
+//                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        JacksonJsonProvider customRepresentationTypeProvider = new CustomRepresentationTypeProvider();
+//                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         rootTarget.register(JacksonFeature.class)
                     .register(provider)

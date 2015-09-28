@@ -48,6 +48,7 @@ public class ResourcesServiceIT extends RestClientTestUtil {
                 .getEntity();
 
         Assert.assertNotNull(clientResource);
+        Assert.assertNotNull(clientResource.getCreationDate());
     }
 
     @AfterClass
