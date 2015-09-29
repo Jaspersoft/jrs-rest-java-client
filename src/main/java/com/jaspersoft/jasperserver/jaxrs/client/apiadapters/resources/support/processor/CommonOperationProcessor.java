@@ -21,8 +21,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.processor;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-
+import com.sun.jersey.multipart.FormDataMultiPart;
 import javax.ws.rs.core.MediaType;
 
 /**
