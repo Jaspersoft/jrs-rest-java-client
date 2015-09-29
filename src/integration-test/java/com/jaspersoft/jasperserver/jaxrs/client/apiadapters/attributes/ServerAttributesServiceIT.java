@@ -1,9 +1,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityOperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttributesListWrapper;
 import java.util.List;
 import org.testng.Assert;
@@ -13,6 +13,8 @@ import org.testng.annotations.Test;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
 
 public class ServerAttributesServiceIT extends RestClientTestUtil {
 
@@ -27,20 +29,21 @@ public class ServerAttributesServiceIT extends RestClientTestUtil {
     public void should_create_attributes() {
         ServerAttributesListWrapper serverAttributes = new ServerAttributesListWrapper();
         serverAttributes.setAttributes(asList(
-                new ServerAttribute("max_threads", "512"),
-                new ServerAttribute("admin_cell_phone", "03")));
+                new ClientUserAttribute().setName("max_threads").setValue("512"),
+                new ClientUserAttribute().setName("admin_cell_phone").setValue("03")));
 
         OperationResult<ServerAttributesListWrapper> attributes = session
                 .serverAttributesService()
                 .attributes()
                 .createOrUpdate(serverAttributes);
 
-        Assert.assertTrue(instanceOf(NullEntityOperationResult.class).matches(attributes));
+        assertNotNull(attributes);
+
     }
 
     @Test(dependsOnMethods = "should_create_attributes")
     public void should_return_server_attributes() {
-        List<ServerAttribute> attributes = session
+        List<ClientUserAttribute> attributes = session
                 .serverAttributesService()
                 .attributes()
                 .get()
@@ -52,7 +55,7 @@ public class ServerAttributesServiceIT extends RestClientTestUtil {
 
     @Test(dependsOnMethods = "should_return_server_attributes")
     public void should_return_specified_server_attributes() {
-        List<ServerAttribute> attributes = session
+        List<ClientUserAttribute> attributes = session
                 .serverAttributesService()
                 .attributes(asList("max_threads", "admin_cell_phone"))
                 .get()
@@ -80,40 +83,41 @@ public class ServerAttributesServiceIT extends RestClientTestUtil {
                 .delete()
                 .getEntity();
 
-        Assert.assertNull(null);
+        Assert.assertNull(entity);
     }
 
     @Test(dependsOnMethods = "should_delete_server_attributes")
     public void should_create_single_attribute() {
-        ServerAttribute attribute = new ServerAttribute();
+        ClientUserAttribute attribute = new ClientUserAttribute();
         attribute.setName("latency");
         attribute.setValue("5700");
 
-        ServerAttribute entity = session
+        ClientUserAttribute entity = session
                 .serverAttributesService()
                 .attribute()
                 .createOrUpdate(attribute)
                 .getEntity();
-        Assert.assertNull(entity);
+        assertNotNull(entity);
     }
 
     @Test(dependsOnMethods = "should_create_single_attribute")
     public void should_return_attribute() {
-        ServerAttribute entity = session
+        ClientUserAttribute entity = session
                 .serverAttributesService()
                 .attribute("latency")
                 .get()
                 .getEntity();
-        Assert.assertEquals(entity.getValue(), "5700");
+        assertEquals(entity.getValue(), "5700");
     }
 
     @Test(dependsOnMethods = "should_return_attribute")
     public void should_delete_attribute() {
-        OperationResult<ServerAttribute> entity = session
+        OperationResult<ClientUserAttribute> entity = session
                 .serverAttributesService()
                 .attribute("latency")
                 .delete();
-        Assert.assertTrue(instanceOf(NullEntityOperationResult.class).matches(entity));
+
+        assertNotNull(entity);
     }
 
     @AfterClass

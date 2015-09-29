@@ -1,11 +1,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.attributes;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ClientTenantAttribute;
 
 /**
  * @author Alex Krasnyanskiy
@@ -27,21 +27,21 @@ public class OrganizationSingleAttributeAdapter extends AbstractAdapter {
         this.attributeName = attributeName;
     }
 
-    public OperationResult<ClientTenantAttribute> get() {
+    public OperationResult<ClientUserAttribute> get() {
         return request().get();
     }
 
-    public OperationResult<ClientTenantAttribute> createOrUpdate(ClientTenantAttribute attribute) {
+    public OperationResult<ClientUserAttribute> createOrUpdate(ClientUserAttribute attribute) {
         attributeName = attribute.getName();
         return request().put(attribute);
     }
 
-    public OperationResult<ClientTenantAttribute> delete() {
+    public OperationResult<ClientUserAttribute> delete() {
         return request().delete();
     }
 
-    private JerseyRequest<ClientTenantAttribute> request() {
-        return JerseyRequest.buildRequest(sessionStorage, ClientTenantAttribute.class,
+    private JerseyRequest<ClientUserAttribute> request() {
+        return JerseyRequest.buildRequest(sessionStorage, ClientUserAttribute.class,
                 new String[]{"/organizations/" + organizationId + "/attributes/" + attributeName},
                 new DefaultErrorHandler());
     }

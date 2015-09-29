@@ -20,12 +20,12 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttribute;
 
 /**
  * @author Alex Krasnyanskiy
@@ -44,21 +44,21 @@ public class ServerSingleAttributeAdapter extends AbstractAdapter {
         this.attributeName = attributeName;
     }
 
-    public OperationResult<ServerAttribute> get() {
+    public OperationResult<ClientUserAttribute> get() {
         return request().get();
     }
 
-    public OperationResult<ServerAttribute> delete() {
+    public OperationResult<ClientUserAttribute> delete() {
         return request().delete();
     }
 
-    public OperationResult<ServerAttribute> createOrUpdate(ServerAttribute attribute) {
+    public OperationResult<ClientUserAttribute> createOrUpdate(ClientUserAttribute attribute) {
         attributeName = attribute.getName();
         return request().put(attribute);
     }
 
-    private JerseyRequest<ServerAttribute> request() {
-        return JerseyRequest.buildRequest(sessionStorage, ServerAttribute.class,
+    private JerseyRequest<ClientUserAttribute> request() {
+        return JerseyRequest.buildRequest(sessionStorage, ClientUserAttribute.class,
                 new String[]{"/attributes/" + attributeName}, new DefaultErrorHandler());
     }
 }
