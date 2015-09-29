@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.attributes;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
@@ -13,21 +14,21 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class ServerAttributesListWrapper {
 
-    private List<ServerAttribute> attributes;
+    private List<ClientUserAttribute> attributes;
 
     public ServerAttributesListWrapper() {
     }
 
-    public ServerAttributesListWrapper(List<ServerAttribute> attributes) {
+    public ServerAttributesListWrapper(List<ClientUserAttribute> attributes) {
         this.attributes = attributes;
     }
 
     @XmlElement(name = "attribute")
-    public List<ServerAttribute> getAttributes() {
+    public List<ClientUserAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(List<ServerAttribute> attributes) {
+    public void setAttributes(List<ClientUserAttribute> attributes) {
         this.attributes = attributes;
     }
 

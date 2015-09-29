@@ -1,12 +1,15 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttributesListWrapper;
+import java.util.List;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
@@ -16,10 +19,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import java.util.List;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static java.util.Arrays.asList;
@@ -58,8 +57,8 @@ public class ServerBatchAttributeAdapterTest extends PowerMockTestCase {
 
         ServerAttributesListWrapper attributes = new ServerAttributesListWrapper();
         attributes.setAttributes(asList(
-                new ServerAttribute("max_threads", "512"),
-                new ServerAttribute("admin_cell_phone", "03")));
+                new ClientUserAttribute().setName("max_threads").setValue("512"),
+                new ClientUserAttribute().setName("admin_cell_phone").setValue("03")));
 
         PowerMockito.mockStatic(JerseyRequest.class);
         Mockito.when(buildRequest(
