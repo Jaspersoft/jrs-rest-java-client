@@ -22,25 +22,24 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-
 import java.util.Collection;
 
 /**
  * @author Alex Krasnyanskiy
  * @since 6.0.1-ALPHA
  */
-public class ServerAttributesService extends AbstractAdapter {
+public class AttributesService extends AbstractAdapter {
 
-    public ServerAttributesService(SessionStorage sessionStorage) {
+    public AttributesService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
-    public ServerSingleAttributeAdapter attribute() {
-        return new ServerSingleAttributeAdapter(sessionStorage);
+    public SingleAttributeAdapter attribute() {
+        return new SingleAttributeAdapter(sessionStorage, "/");
     }
 
-    public ServerSingleAttributeAdapter attribute(String attributeName) {
-        return new ServerSingleAttributeAdapter(sessionStorage, attributeName);
+    public SingleAttributeAdapter attribute(String attributeName) {
+        return new SingleAttributeAdapter(sessionStorage, "/", attributeName);
     }
 
     public ServerBatchAttributeAdapter attributes() {

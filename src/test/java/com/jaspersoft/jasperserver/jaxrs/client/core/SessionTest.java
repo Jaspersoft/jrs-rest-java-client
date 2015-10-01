@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.ServerAttributesService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
@@ -225,9 +225,9 @@ public class SessionTest {
     @Test
     public void should_return_proper_ServerAttributesService_instance() {
         Session sessionSpy = Mockito.spy(new Session(storageMock));
-        ServerAttributesService service = sessionSpy.serverAttributesService();
+        AttributesService service = sessionSpy.serverAttributesService();
         Assert.assertNotNull(service);
-        verify(sessionSpy, times(1)).getService(ServerAttributesService.class);
+        verify(sessionSpy, times(1)).getService(AttributesService.class);
     }
 
     @AfterMethod

@@ -20,27 +20,29 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
+import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttributesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttributesListWrapper;
-
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
 import java.util.Collection;
 import java.util.Collections;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 
 import static java.util.Arrays.asList;
 
 /**
  * @author Alex Krasnyanskiy
+ * @author Tetiana Iefimenko
  * @since 6.0.1-ALPHA
  */
 public class ServerBatchAttributeAdapter extends AbstractAdapter {
 
     private MultivaluedMap<String, String> params;
+    private Boolean includePermissions = false;
 
     public ServerBatchAttributeAdapter(SessionStorage sessionStorage, Collection<String> attributesNames) {
         super(sessionStorage);
@@ -58,20 +60,31 @@ public class ServerBatchAttributeAdapter extends AbstractAdapter {
         this(sessionStorage, asList(attributesNames));
     }
 
-    public OperationResult<ServerAttributesListWrapper> get() {
+    public ServerBatchAttributeAdapter setIncludePermissions(Boolean includePermissions) {
+        this.includePermissions = includePermissions;
+        return this;
+    }
+
+    public OperationResult<HypermediaAttributesListWrapper> get() {
         return request().addParams(params).get();
     }
 
-    public OperationResult<ServerAttributesListWrapper> delete() {
+    public OperationResult<HypermediaAttributesListWrapper> delete() {
         return request().addParams(params).delete();
     }
 
-    public OperationResult<ServerAttributesListWrapper> createOrUpdate(ServerAttributesListWrapper attributesListWrapper) {
+    public OperationResult<HypermediaAttributesListWrapper> createOrUpdate(HypermediaAttributesListWrapper attributesListWrapper) {
         return request().put(attributesListWrapper);
     }
 
-    private JerseyRequest<ServerAttributesListWrapper> request() {
-        return JerseyRequest.buildRequest(sessionStorage, ServerAttributesListWrapper.class,
+    private JerseyRequest<HypermediaAttributesListWrapper> request() {
+        JerseyRequest request = JerseyRequest.buildRequest(
+                sessionStorage,
+                HypermediaAttributesListWrapper.class,
                 new String[]{"/attributes"}, new DefaultErrorHandler());
+        if (includePermissions) {
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/hal+{mime}")).addParam("_embedded", "permission");
+        }
+        return request;
     }
 }

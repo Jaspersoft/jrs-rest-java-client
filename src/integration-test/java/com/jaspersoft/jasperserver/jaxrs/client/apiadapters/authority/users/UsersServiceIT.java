@@ -39,22 +39,6 @@ public class UsersServiceIT extends RestClientTestUtil {
     }
 
     @Test
-    public void should_return_list_users_by_role() {
-
-        //When
-        List<ClientUser> users = session
-                .usersService()
-                .allUsers()
-                .get()
-                .getEntity()
-                .getUserList();
-
-        //Then
-
-        Assert.assertTrue(users.size() > 3);
-    }
-
-    @Test
     public void should_return_user_by_name() {
 
         OperationResult<ClientUser> operationResult =

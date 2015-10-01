@@ -34,26 +34,30 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
  * @since 6.0.1-ALPHA
  */
 
-@Deprecated
-public class ServerSingleAttributeAdapter extends AbstractAdapter {
+public class SingleAttributeAdapter extends AbstractAdapter {
 
     private String attributeName;
     private Boolean includePermissions = false;
-    private String holderUri = "/";
+    private String holderUri;
 
-    public ServerSingleAttributeAdapter(SessionStorage sessionStorage) {
-        super(sessionStorage);
+//    public SingleAttributeAdapter(SessionStorage sessionStorage) {
+//        super(sessionStorage);
+//    }
+
+    public SingleAttributeAdapter(SessionStorage sessionStorage, String holderUri) {
+       super(sessionStorage);
+        this.holderUri = holderUri;
     }
 
-    public ServerSingleAttributeAdapter(SessionStorage sessionStorage, String attributeName) {
-        super(sessionStorage);
+    public SingleAttributeAdapter(SessionStorage sessionStorage, String holderUri, String attributeName) {
+        this(sessionStorage,holderUri);
         if (sessionStorage == null || holderUri == null) {
             throw new IllegalArgumentException("URI cannot be null.");
         }
         this.attributeName = attributeName;
     }
 
-    public ServerSingleAttributeAdapter setIncludePermissions(Boolean includePermissions) {
+    public SingleAttributeAdapter setIncludePermissions(Boolean includePermissions) {
         this.includePermissions = includePermissions;
         return this;
     }

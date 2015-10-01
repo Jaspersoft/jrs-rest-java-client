@@ -1,10 +1,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
+import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttribute;
+import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttributesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityOperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.ServerAttributesListWrapper;
 import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -27,12 +28,12 @@ public class ServerAttributesServiceIT extends RestClientTestUtil {
 
     @Test
     public void should_create_attributes() {
-        ServerAttributesListWrapper serverAttributes = new ServerAttributesListWrapper();
-        serverAttributes.setAttributes(asList(
-                new ClientUserAttribute().setName("max_threads").setValue("512"),
-                new ClientUserAttribute().setName("admin_cell_phone").setValue("03")));
+        HypermediaAttributesListWrapper serverAttributes = new HypermediaAttributesListWrapper();
+        serverAttributes.setProfileAttributes(asList(
+                new HypermediaAttribute(new ClientUserAttribute().setName("max_threads").setValue("512")),
+                new HypermediaAttribute(new ClientUserAttribute().setName("admin_cell_phone").setValue("03"))));
 
-        OperationResult<ServerAttributesListWrapper> attributes = session
+        OperationResult<HypermediaAttributesListWrapper> attributes = session
                 .serverAttributesService()
                 .attributes()
                 .createOrUpdate(serverAttributes);
@@ -43,33 +44,35 @@ public class ServerAttributesServiceIT extends RestClientTestUtil {
 
     @Test(dependsOnMethods = "should_create_attributes")
     public void should_return_server_attributes() {
-        List<ClientUserAttribute> attributes = session
+        List<HypermediaAttribute> attributes = session
                 .serverAttributesService()
                 .attributes()
                 .get()
                 .getEntity()
-                .getAttributes();
+                .getProfileAttributes();
 
         Assert.assertTrue(attributes.size() >= 2);
     }
 
     @Test(dependsOnMethods = "should_return_server_attributes")
     public void should_return_specified_server_attributes() {
-        List<ClientUserAttribute> attributes = session
+        List<HypermediaAttribute> attributes = session
                 .serverAttributesService()
                 .attributes(asList("max_threads", "admin_cell_phone"))
+                .setIncludePermissions(true)                        // new
                 .get()
                 .getEntity()
-                .getAttributes();
+                .getProfileAttributes();
 
         Assert.assertTrue(attributes.size() >= 2);
+
     }
 
     @Test(dependsOnMethods = "should_return_specified_server_attributes")
     public void should_delete_specified_server_attributes() {
-        OperationResult<ServerAttributesListWrapper> entity = session
+        OperationResult<HypermediaAttributesListWrapper> entity = session
                 .serverAttributesService()
-                .attributes(asList("max_threads"))
+                .attributes("max_threads")
                 .delete();
 
         Assert.assertTrue(instanceOf(NullEntityOperationResult.class).matches(entity));
@@ -77,7 +80,7 @@ public class ServerAttributesServiceIT extends RestClientTestUtil {
 
     @Test(dependsOnMethods = "should_delete_specified_server_attributes")
     public void should_delete_server_attributes() {
-        ServerAttributesListWrapper entity = session
+        HypermediaAttributesListWrapper entity = session
                 .serverAttributesService()
                 .attributes()
                 .delete()
@@ -88,11 +91,11 @@ public class ServerAttributesServiceIT extends RestClientTestUtil {
 
     @Test(dependsOnMethods = "should_delete_server_attributes")
     public void should_create_single_attribute() {
-        ClientUserAttribute attribute = new ClientUserAttribute();
+        HypermediaAttribute attribute = new HypermediaAttribute();
         attribute.setName("latency");
         attribute.setValue("5700");
 
-        ClientUserAttribute entity = session
+        HypermediaAttribute entity = session
                 .serverAttributesService()
                 .attribute()
                 .createOrUpdate(attribute)
@@ -102,17 +105,19 @@ public class ServerAttributesServiceIT extends RestClientTestUtil {
 
     @Test(dependsOnMethods = "should_create_single_attribute")
     public void should_return_attribute() {
-        ClientUserAttribute entity = session
+        HypermediaAttribute entity = session
                 .serverAttributesService()
                 .attribute("latency")
+                .setIncludePermissions(true)
                 .get()
                 .getEntity();
+
         assertEquals(entity.getValue(), "5700");
     }
 
     @Test(dependsOnMethods = "should_return_attribute")
     public void should_delete_attribute() {
-        OperationResult<ClientUserAttribute> entity = session
+        OperationResult<HypermediaAttribute> entity = session
                 .serverAttributesService()
                 .attribute("latency")
                 .delete();

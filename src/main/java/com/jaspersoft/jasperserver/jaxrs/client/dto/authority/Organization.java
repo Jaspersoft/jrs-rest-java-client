@@ -22,7 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.authority;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
+@Deprecated
 @XmlRootElement(name = "organization")
 public class Organization {
 
