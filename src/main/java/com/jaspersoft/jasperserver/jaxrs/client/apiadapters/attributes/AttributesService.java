@@ -31,6 +31,7 @@ import java.util.Collection;
 public class AttributesService extends AbstractAdapter {
 
     public AttributesService(SessionStorage sessionStorage) {
+
         super(sessionStorage);
     }
 
@@ -42,15 +43,15 @@ public class AttributesService extends AbstractAdapter {
         return new SingleAttributeAdapter(sessionStorage, "/", attributeName);
     }
 
-    public ServerBatchAttributeAdapter attributes() {
-        return new ServerBatchAttributeAdapter(sessionStorage);
+    public BatchAttributeAdapter attributes() {
+        return new BatchAttributeAdapter(sessionStorage, "/");
     }
 
-    public ServerBatchAttributeAdapter attributes(Collection<String> attributesNames) {
-        return new ServerBatchAttributeAdapter(sessionStorage, attributesNames);
+    public BatchAttributeAdapter attributes(Collection<String> attributesNames) {
+        return new BatchAttributeAdapter(sessionStorage, "/", attributesNames);
     }
 
-    public ServerBatchAttributeAdapter attributes(String... attributesNames) {
-        return new ServerBatchAttributeAdapter(sessionStorage, attributesNames);
+    public BatchAttributeAdapter attributes(String... attributesNames) {
+        return new BatchAttributeAdapter(sessionStorage, "/", attributesNames);
     }
 }

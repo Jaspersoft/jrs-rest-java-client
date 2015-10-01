@@ -1,9 +1,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
+import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttribute;
+import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttributesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.attributes.TenantAttributesListWrapper;
 import java.util.Arrays;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -27,14 +28,14 @@ public class OrganizationsServiceIT extends RestClientTestUtil {
     @Test
     public void should_create_tenant_attributes() {
 
-        TenantAttributesListWrapper attributes = new TenantAttributesListWrapper();
-        attributes.setAttributes(Arrays.asList(
-                new ClientUserAttribute().setName("number_of_employees").setValue("1000+"),
-                new ClientUserAttribute().setName("number_of_units").setValue("29"),
-                new ClientUserAttribute().setName("country_code").setValue("FR")
-                ));
+        HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
+        attributes.setProfileAttributes(Arrays.asList(
+                        new HypermediaAttribute(new ClientUserAttribute().setName("number_of_employees").setValue("1000+")),
+                        new HypermediaAttribute(new ClientUserAttribute().setName("number_of_units").setValue("29")),
+                new HypermediaAttribute(new ClientUserAttribute().setName("country_code").setValue("FR"))
+        ));
 
-        OperationResult<TenantAttributesListWrapper> retrieved = session
+        OperationResult<HypermediaAttributesListWrapper> retrieved = session
                 .organizationsService()
                 .organization("myOrg1")
                 .attributes()
@@ -48,13 +49,13 @@ public class OrganizationsServiceIT extends RestClientTestUtil {
     public void should_return_tenant_attributes() {
 
 
-        OperationResult<TenantAttributesListWrapper> operationResult = session
+        OperationResult<HypermediaAttributesListWrapper> operationResult = session
                 .organizationsService()
                 .organization("myOrg1")
                 .attributes()
                 .get();
 
-        TenantAttributesListWrapper tenantAttributesListWrapper= operationResult.getEntity();
+        HypermediaAttributesListWrapper tenantAttributesListWrapper = operationResult.getEntity();
         assertNotNull(operationResult);
         assertNotNull(tenantAttributesListWrapper);
 

@@ -28,7 +28,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.util.Collection;
-import java.util.Collections;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -39,28 +38,29 @@ import static java.util.Arrays.asList;
  * @author Tetiana Iefimenko
  * @since 6.0.1-ALPHA
  */
-public class ServerBatchAttributeAdapter extends AbstractAdapter {
+public class BatchAttributeAdapter extends AbstractAdapter {
 
-    private MultivaluedMap<String, String> params;
+    private MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
     private Boolean includePermissions = false;
+    private String holderUri;
 
-    public ServerBatchAttributeAdapter(SessionStorage sessionStorage, Collection<String> attributesNames) {
+    public BatchAttributeAdapter(SessionStorage sessionStorage, String holderUri) {
         super(sessionStorage);
-        this.params = new MultivaluedHashMap<String, String>();
+        this.holderUri = holderUri;
+    }
+
+    public BatchAttributeAdapter(SessionStorage sessionStorage, String holderUri, String... attributesNames) {
+        this(sessionStorage, holderUri, asList(attributesNames));
+    }
+
+    public BatchAttributeAdapter(SessionStorage sessionStorage,  String holderUri, Collection<String> attributesNames) {
+        this(sessionStorage, holderUri);
         for (String attributeName : attributesNames) {
             params.add("name", attributeName);
         }
     }
 
-    public ServerBatchAttributeAdapter(SessionStorage sessionStorage) {
-        this(sessionStorage, Collections.<String>emptyList());
-    }
-
-    public ServerBatchAttributeAdapter(SessionStorage sessionStorage, String... attributesNames) {
-        this(sessionStorage, asList(attributesNames));
-    }
-
-    public ServerBatchAttributeAdapter setIncludePermissions(Boolean includePermissions) {
+    public BatchAttributeAdapter setIncludePermissions(Boolean includePermissions) {
         this.includePermissions = includePermissions;
         return this;
     }
@@ -81,7 +81,7 @@ public class ServerBatchAttributeAdapter extends AbstractAdapter {
         JerseyRequest request = JerseyRequest.buildRequest(
                 sessionStorage,
                 HypermediaAttributesListWrapper.class,
-                new String[]{"/attributes"}, new DefaultErrorHandler());
+                new String[]{holderUri, "/attributes"}, new DefaultErrorHandler());
         if (includePermissions) {
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/hal+{mime}")).addParam("_embedded", "permission");
         }

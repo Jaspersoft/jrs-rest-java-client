@@ -29,7 +29,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 /**
- * Unit tests for {@link ServerBatchAttributeAdapter}
+ * Unit tests for {@link BatchAttributeAdapter}
  */
 @SuppressWarnings({"unchecked", "deprecation"})
 @PrepareForTest({JerseyRequest.class})
@@ -72,7 +72,7 @@ public class ServerBatchAttributeAdapterTest extends PowerMockTestCase {
 
 
         /** When **/
-        ServerBatchAttributeAdapter adapter = new ServerBatchAttributeAdapter(sessionStorageMock);
+        BatchAttributeAdapter adapter = new BatchAttributeAdapter(sessionStorageMock, "/");
         OperationResult<HypermediaAttributesListWrapper> retrieved = adapter.createOrUpdate(attributes);
 
 
@@ -109,7 +109,7 @@ public class ServerBatchAttributeAdapterTest extends PowerMockTestCase {
 
 
         /** When **/
-        ServerBatchAttributeAdapter adapter = new ServerBatchAttributeAdapter(sessionStorageMock);
+        BatchAttributeAdapter adapter = new BatchAttributeAdapter(sessionStorageMock, "/");
         Whitebox.setInternalState(adapter, "params", map);
         OperationResult<HypermediaAttributesListWrapper> retrieved = adapter.delete();
 
@@ -150,7 +150,7 @@ public class ServerBatchAttributeAdapterTest extends PowerMockTestCase {
 
 
         /** When **/
-        ServerBatchAttributeAdapter adapter = new ServerBatchAttributeAdapter(sessionStorageMock);
+        BatchAttributeAdapter adapter = new BatchAttributeAdapter(sessionStorageMock, "/");
         Whitebox.setInternalState(adapter, "params", map);
         OperationResult<HypermediaAttributesListWrapper> retrieved = adapter.get();
 
@@ -171,7 +171,7 @@ public class ServerBatchAttributeAdapterTest extends PowerMockTestCase {
 
     @Test
     public void should_set_params() {
-        ServerBatchAttributeAdapter adapter = new ServerBatchAttributeAdapter(sessionStorageMock, "x", "y", "z");
+        BatchAttributeAdapter adapter = new BatchAttributeAdapter(sessionStorageMock, "/", "x", "y", "z");
         MultivaluedMap<String, String> params = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapter, "params");
         List<String> list = params.get("name");
         Assert.assertSame(list.size(), 3);

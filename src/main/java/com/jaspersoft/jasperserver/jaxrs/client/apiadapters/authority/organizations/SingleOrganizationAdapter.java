@@ -23,8 +23,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizat
 
 import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.attributes.OrganizationBatchAttributeAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.attributes.OrganizationSingleAttributeAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.BatchAttributeAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.SingleAttributeAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -51,6 +51,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
 
     private final String organizationId;
     private final MultivaluedHashMap<String, String> params;
+    private final String prefix = "/organizations/";
 
     public SingleOrganizationAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
@@ -158,20 +159,21 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OrganizationSingleAttributeAdapter attribute() {
-        return new OrganizationSingleAttributeAdapter(sessionStorage, organizationId);
+    //TODO chect the method
+    public SingleAttributeAdapter attribute() {
+        return new SingleAttributeAdapter(sessionStorage, prefix + organizationId + "/");
     }
 
-    public OrganizationBatchAttributeAdapter attributes(Collection<String> attributesNames) {
-        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId, attributesNames);
+    public BatchAttributeAdapter attributes(Collection<String> attributesNames) {
+        return new BatchAttributeAdapter(sessionStorage, prefix + organizationId + "/", attributesNames);
     }
 
-    public OrganizationBatchAttributeAdapter attributes(String... attributesNames) {
-        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId, attributesNames);
+    public BatchAttributeAdapter attributes(String... attributesNames) {
+        return new BatchAttributeAdapter(sessionStorage, prefix + organizationId + "/", attributesNames);
     }
 
-    public OrganizationBatchAttributeAdapter attributes() {
-        return new OrganizationBatchAttributeAdapter(sessionStorage, organizationId);
+    public BatchAttributeAdapter attributes() {
+        return new BatchAttributeAdapter(sessionStorage, prefix + organizationId + "/");
     }
 
     private JerseyRequest<ClientTenant> buildRequest() {

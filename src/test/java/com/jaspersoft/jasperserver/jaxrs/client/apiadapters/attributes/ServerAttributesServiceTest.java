@@ -23,14 +23,14 @@ import static org.testng.Assert.assertSame;
 public class ServerAttributesServiceTest extends PowerMockTestCase {
 
     private SessionStorage sessionStorageMock;
-    private ServerSingleAttributeAdapter singleAttributeAdapterMock;
-    private ServerBatchAttributeAdapter batchAttributeAdapterMock;
+    private SingleAttributeAdapter singleAttributeAdapterMock;
+    private BatchAttributeAdapter batchAttributeAdapterMock;
 
     @BeforeMethod
     public void before() {
         sessionStorageMock = mock(SessionStorage.class);
-        singleAttributeAdapterMock = mock(ServerSingleAttributeAdapter.class);
-        batchAttributeAdapterMock = mock(ServerBatchAttributeAdapter.class);
+        singleAttributeAdapterMock = mock(SingleAttributeAdapter.class);
+        batchAttributeAdapterMock = mock(BatchAttributeAdapter.class);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
     public void should_return_proper_ServerSingleAttributeAdapter_instance() throws Exception {
 
         /** Given **/
-        PowerMockito.whenNew(ServerSingleAttributeAdapter.class)
+        PowerMockito.whenNew(SingleAttributeAdapter.class)
                 .withArguments(sessionStorageMock)
                 .thenReturn(singleAttributeAdapterMock);
 
@@ -61,7 +61,7 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
 
         /** Then **/
         Assert.assertSame(retrieved, singleAttributeAdapterMock);
-        PowerMockito.verifyNew(ServerSingleAttributeAdapter.class, times(1))
+        PowerMockito.verifyNew(SingleAttributeAdapter.class, times(1))
                 .withArguments(sessionStorageMock);
     }
 
@@ -73,7 +73,7 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
     public void should_construct_an_object_with_proper_params() throws Exception {
 
         /** Given **/
-        PowerMockito.whenNew(ServerSingleAttributeAdapter.class)
+        PowerMockito.whenNew(SingleAttributeAdapter.class)
                 .withArguments(sessionStorageMock, "status")
                 .thenReturn(singleAttributeAdapterMock);
 
@@ -84,7 +84,7 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
 
         /** Then **/
         Assert.assertSame(retrieved, singleAttributeAdapterMock);
-        PowerMockito.verifyNew(ServerSingleAttributeAdapter.class, times(1))
+        PowerMockito.verifyNew(SingleAttributeAdapter.class, times(1))
                 .withArguments(sessionStorageMock, "status");
     }
 
@@ -95,18 +95,18 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
     public void should_return_proper_ServerBatchAttributeAdapter_instance() throws Exception {
 
         /** Given **/
-        PowerMockito.whenNew(ServerBatchAttributeAdapter.class)
+        PowerMockito.whenNew(BatchAttributeAdapter.class)
                 .withArguments(sessionStorageMock)
                 .thenReturn(batchAttributeAdapterMock);
 
         AttributesService attributesService = new AttributesService(sessionStorageMock);
 
         /** When **/
-        ServerBatchAttributeAdapter retrieved = attributesService.attributes();
+        BatchAttributeAdapter retrieved = attributesService.attributes();
 
         /** Then **/
         Assert.assertSame(retrieved, batchAttributeAdapterMock);
-        PowerMockito.verifyNew(ServerBatchAttributeAdapter.class, times(1))
+        PowerMockito.verifyNew(BatchAttributeAdapter.class, times(1))
                 .withArguments(sessionStorageMock);
     }
 
@@ -118,18 +118,18 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
 
         /** Given **/
         List<String> list = asList("attr1", "attr2", "attr3");
-        PowerMockito.whenNew(ServerBatchAttributeAdapter.class)
+        PowerMockito.whenNew(BatchAttributeAdapter.class)
                 .withArguments(sessionStorageMock, list)
                 .thenReturn(batchAttributeAdapterMock);
 
         AttributesService attributesService = new AttributesService(sessionStorageMock);
 
         /** When **/
-        ServerBatchAttributeAdapter retrieved = attributesService.attributes(list);
+        BatchAttributeAdapter retrieved = attributesService.attributes(list);
 
         /** Then **/
         Assert.assertSame(retrieved, batchAttributeAdapterMock);
-        PowerMockito.verifyNew(ServerBatchAttributeAdapter.class, times(1))
+        PowerMockito.verifyNew(BatchAttributeAdapter.class, times(1))
                 .withArguments(sessionStorageMock, list);
     }
 
@@ -140,18 +140,18 @@ public class ServerAttributesServiceTest extends PowerMockTestCase {
     public void should_instantiate_proper_ServerBatchAttributeAdapter_instance_when_pass_vararg() throws Exception {
 
         /** Given **/
-        PowerMockito.whenNew(ServerBatchAttributeAdapter.class)
+        PowerMockito.whenNew(BatchAttributeAdapter.class)
                 .withArguments(sessionStorageMock, new String[]{"attr1", "attr2", "attr3"})
                 .thenReturn(batchAttributeAdapterMock);
 
         AttributesService attributesService = new AttributesService(sessionStorageMock);
 
         /** When **/
-        ServerBatchAttributeAdapter retrieved = attributesService.attributes("attr1", "attr2", "attr3");
+        BatchAttributeAdapter retrieved = attributesService.attributes("attr1", "attr2", "attr3");
 
         /** Then **/
         Assert.assertSame(retrieved, batchAttributeAdapterMock);
-        PowerMockito.verifyNew(ServerBatchAttributeAdapter.class, times(1))
+        PowerMockito.verifyNew(BatchAttributeAdapter.class, times(1))
                 .withArguments(sessionStorageMock, new String[]{"attr1", "attr2", "attr3"});
     }
 

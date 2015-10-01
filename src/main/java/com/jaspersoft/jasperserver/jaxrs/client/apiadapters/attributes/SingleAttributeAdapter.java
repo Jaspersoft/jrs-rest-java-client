@@ -40,10 +40,6 @@ public class SingleAttributeAdapter extends AbstractAdapter {
     private Boolean includePermissions = false;
     private String holderUri;
 
-//    public SingleAttributeAdapter(SessionStorage sessionStorage) {
-//        super(sessionStorage);
-//    }
-
     public SingleAttributeAdapter(SessionStorage sessionStorage, String holderUri) {
        super(sessionStorage);
         this.holderUri = holderUri;
