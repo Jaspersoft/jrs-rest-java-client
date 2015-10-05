@@ -23,39 +23,29 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizat
 
 import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.BatchAttributeAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.SingleAttributeAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.io.IOException;
-import java.util.Collection;
 import javax.ws.rs.core.MultivaluedHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.map.AnnotationIntrospector;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 
 
 public class SingleOrganizationAdapter extends AbstractAdapter {
 
     private static final Log log = LogFactory.getLog(SingleOrganizationAdapter.class);
 
-    private final String organizationId;
+    private final ClientTenant clientTenant;
     private final MultivaluedHashMap<String, String> params;
     private final String prefix = "/organizations/";
 
-    public SingleOrganizationAdapter(SessionStorage sessionStorage, String organizationId) {
+    public SingleOrganizationAdapter(SessionStorage sessionStorage, ClientTenant clientTenant) {
         super(sessionStorage);
-        this.organizationId = organizationId;
+        this.clientTenant= clientTenant;
         this.params = new MultivaluedHashMap<String, String>();
     }
 
@@ -75,37 +65,17 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    private String prepareJsonForUpdate(ClientTenant clientTenant) {
-        ObjectMapper mapper = new ObjectMapper();
-        SerializationConfig serializationConfig = mapper.getSerializationConfig();
-        serializationConfig = serializationConfig.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-        AnnotationIntrospector introspector = new JaxbAnnotationIntrospector();
-        mapper.setSerializationConfig(serializationConfig);
-        mapper.setAnnotationIntrospector(introspector);
-
-        String json;
-        try {
-            json = mapper.writeValueAsString(clientTenant);
-        } catch (IOException e) {
-            log.error("Cannot marshal organization object.");
-            throw new JSClientException("Cannot marshal organization object.");
-        }
-        return json;
-    }
-
     public OperationResult<ClientTenant> createOrUpdate(ClientTenant clientTenant) {
-        String json = prepareJsonForUpdate(clientTenant);
-        return buildRequest().put(json);
+        return buildRequest().put(clientTenant);
     }
 
     public <R> RequestExecution asyncCreateOrUpdate(final ClientTenant clientTenant,
                                                     final Callback<OperationResult<ClientTenant>, R> callback) {
         final JerseyRequest<ClientTenant> request = buildRequest();
-        final String json = prepareJsonForUpdate(clientTenant);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(request.put(json));
+                callback.execute(request.put(clientTenant));
             }
         });
         ThreadPoolUtil.runAsynchronously(task);
@@ -116,10 +86,9 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
      * Saves Organization. Use this method only if you want to create a new single Organization
      * with or without passing OrganizationParameter.
      *
-     * @param clientTenant instance of Organization
      * @return persisted wrapped Organization
      */
-    public OperationResult<ClientTenant> create(ClientTenant clientTenant) {
+    public OperationResult<ClientTenant> create() {
         JerseyRequest<ClientTenant> request = request();
         return params.size() != 0
                 ? request.addParams(params).post(clientTenant)
@@ -143,7 +112,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return this;
     }
 
-    public OperationResult delete() {
+    public OperationResult<ClientTenant> delete() {
         return buildRequest().delete();
     }
 
@@ -159,28 +128,11 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return task;
     }
 
-    //TODO chect the method
-    public SingleAttributeAdapter attribute() {
-        return new SingleAttributeAdapter(sessionStorage, prefix + organizationId + "/");
-    }
-
-    public BatchAttributeAdapter attributes(Collection<String> attributesNames) {
-        return new BatchAttributeAdapter(sessionStorage, prefix + organizationId + "/", attributesNames);
-    }
-
-    public BatchAttributeAdapter attributes(String... attributesNames) {
-        return new BatchAttributeAdapter(sessionStorage, prefix + organizationId + "/", attributesNames);
-    }
-
-    public BatchAttributeAdapter attributes() {
-        return new BatchAttributeAdapter(sessionStorage, prefix + organizationId + "/");
-    }
-
     private JerseyRequest<ClientTenant> buildRequest() {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 ClientTenant.class,
-                new String[]{"/organizations", organizationId},
+                new String[]{"/organizations", clientTenant.getId()},
                 new DefaultErrorHandler()
         );
     }

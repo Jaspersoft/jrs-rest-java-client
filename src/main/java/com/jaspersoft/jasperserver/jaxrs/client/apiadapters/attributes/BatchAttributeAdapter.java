@@ -22,9 +22,12 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
 import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttributesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.util.Collection;
@@ -44,17 +47,17 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     private Boolean includePermissions = false;
     private String holderUri;
 
-    public BatchAttributeAdapter(SessionStorage sessionStorage, String holderUri) {
+    public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage) {
         super(sessionStorage);
         this.holderUri = holderUri;
     }
 
-    public BatchAttributeAdapter(SessionStorage sessionStorage, String holderUri, String... attributesNames) {
-        this(sessionStorage, holderUri, asList(attributesNames));
+    public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage, String... attributesNames) {
+        this(holderUri, sessionStorage, asList(attributesNames));
     }
 
-    public BatchAttributeAdapter(SessionStorage sessionStorage,  String holderUri, Collection<String> attributesNames) {
-        this(sessionStorage, holderUri);
+    public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage, Collection<String> attributesNames) {
+        this(holderUri, sessionStorage);
         for (String attributeName : attributesNames) {
             params.add("name", attributeName);
         }
@@ -65,19 +68,59 @@ public class BatchAttributeAdapter extends AbstractAdapter {
         return this;
     }
 
+
     public OperationResult<HypermediaAttributesListWrapper> get() {
-        return request().addParams(params).get();
+        return buildRequest().addParams(params).get();
+    }
+
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<HypermediaAttributesListWrapper>, R> callback) {
+        final JerseyRequest<HypermediaAttributesListWrapper> request = buildRequest();
+        request.addParams(params);
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.get());
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     public OperationResult<HypermediaAttributesListWrapper> delete() {
-        return request().addParams(params).delete();
+        return buildRequest().addParams(params).delete();
+    }
+
+    public <R> RequestExecution asyncDelete(final Callback<OperationResult<HypermediaAttributesListWrapper>, R> callback) {
+        final JerseyRequest<HypermediaAttributesListWrapper> request = buildRequest();
+        request.addParams(params);
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.delete());
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     public OperationResult<HypermediaAttributesListWrapper> createOrUpdate(HypermediaAttributesListWrapper attributesListWrapper) {
-        return request().put(attributesListWrapper);
+        return buildRequest().put(attributesListWrapper);
     }
 
-    private JerseyRequest<HypermediaAttributesListWrapper> request() {
+    public <R> RequestExecution asyncCreateOrUpdate(final HypermediaAttributesListWrapper attributesList,
+                                                    final Callback<OperationResult<HypermediaAttributesListWrapper>, R> callback) {
+        final JerseyRequest<HypermediaAttributesListWrapper> request = buildRequest();
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.put(attributesList));
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
+    private JerseyRequest<HypermediaAttributesListWrapper> buildRequest() {
         JerseyRequest request = JerseyRequest.buildRequest(
                 sessionStorage,
                 HypermediaAttributesListWrapper.class,

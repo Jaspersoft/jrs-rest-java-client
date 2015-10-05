@@ -23,8 +23,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
 import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
@@ -40,13 +43,13 @@ public class SingleAttributeAdapter extends AbstractAdapter {
     private Boolean includePermissions = false;
     private String holderUri;
 
-    public SingleAttributeAdapter(SessionStorage sessionStorage, String holderUri) {
+    public SingleAttributeAdapter(String holderUri, SessionStorage sessionStorage) {
        super(sessionStorage);
         this.holderUri = holderUri;
     }
 
-    public SingleAttributeAdapter(SessionStorage sessionStorage, String holderUri, String attributeName) {
-        this(sessionStorage,holderUri);
+    public SingleAttributeAdapter(String holderUri, SessionStorage sessionStorage, String attributeName) {
+        this(holderUri, sessionStorage);
         if (sessionStorage == null || holderUri == null) {
             throw new IllegalArgumentException("URI cannot be null.");
         }
@@ -59,17 +62,56 @@ public class SingleAttributeAdapter extends AbstractAdapter {
     }
 
     public OperationResult<HypermediaAttribute> get() {
-
         return buildRequest().get();
     }
+
+
+    public <R> RequestExecution asyncGet(final Callback<OperationResult<HypermediaAttribute>, R> callback) {
+               final JerseyRequest<HypermediaAttribute> request = buildRequest();
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.get());
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
 
     public OperationResult<HypermediaAttribute> delete() {
         return buildRequest().delete();
     }
 
+
+    public <R> RequestExecution asyncDelete(final Callback<OperationResult<HypermediaAttribute>, R> callback) {
+
+        final JerseyRequest<HypermediaAttribute> request = buildRequest();
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.delete());
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
     public OperationResult<HypermediaAttribute> createOrUpdate(ClientUserAttribute attribute) {
-        attributeName = attribute.getName();
         return buildRequest().put(attribute);
+    }
+
+    public <R> RequestExecution asyncCreateOrUpdate(final ClientUserAttribute userAttribute,
+                                                    final Callback<OperationResult<HypermediaAttribute>, R> callback) {
+        final JerseyRequest<HypermediaAttribute> request = buildRequest();
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.put(userAttribute));
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
     }
 
     private JerseyRequest<HypermediaAttribute> buildRequest() {

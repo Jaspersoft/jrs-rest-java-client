@@ -29,29 +29,35 @@ import java.util.Collection;
  * @since 6.0.1-ALPHA
  */
 public class AttributesService extends AbstractAdapter {
+    private  StringBuilder holderUri = new StringBuilder("/");
 
     public AttributesService(SessionStorage sessionStorage) {
-
         super(sessionStorage);
     }
 
-    public SingleAttributeAdapter attribute() {
-        return new SingleAttributeAdapter(sessionStorage, "/");
+    public AttributesService forOrganization(String organizationName) {
+        this.holderUri.append("organizations/").append(organizationName);
+        return this;
+    }
+
+    public AttributesService forUser(String userName) {
+        this.holderUri.append("/users/").append(userName);
+        return this;
     }
 
     public SingleAttributeAdapter attribute(String attributeName) {
-        return new SingleAttributeAdapter(sessionStorage, "/", attributeName);
+        return new SingleAttributeAdapter(holderUri.toString(), sessionStorage, attributeName);
     }
 
-    public BatchAttributeAdapter attributes() {
-        return new BatchAttributeAdapter(sessionStorage, "/");
+    public BatchAttributeAdapter allAttributes() {
+        return new BatchAttributeAdapter(holderUri.toString(), sessionStorage);
     }
 
     public BatchAttributeAdapter attributes(Collection<String> attributesNames) {
-        return new BatchAttributeAdapter(sessionStorage, "/", attributesNames);
+        return new BatchAttributeAdapter(holderUri.toString(), sessionStorage, attributesNames);
     }
 
     public BatchAttributeAdapter attributes(String... attributesNames) {
-        return new BatchAttributeAdapter(sessionStorage, "/", attributesNames);
+        return new BatchAttributeAdapter(holderUri.toString(), sessionStorage, attributesNames);
     }
 }

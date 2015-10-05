@@ -21,6 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
+import com.jaspersoft.jasperserver.dto.authority.OrganizationsListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
@@ -29,9 +30,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.Organization;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.authority.OrganizationsListWrapper;
-
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -69,27 +67,27 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
+//
+//    public OperationResult<ClientTenant> create(ClientTenant clientTenant) {
+//        JerseyRequest<ClientTenant> request = buildRequest(ClientTenant.class);
+//        request.addParams(params);
+//        return request.post(clientTenant);
+//    }
 
-    public OperationResult<Organization> create(Organization clientTenant) {
-        JerseyRequest<Organization> request = buildRequest(Organization.class);
-        request.addParams(params);
-        return request.post(clientTenant);
-    }
-
-    public <R> RequestExecution asyncCreate(final Organization clientTenant, final Callback<OperationResult<Organization>, R> callback){
-        final JerseyRequest<Organization> request = buildRequest(Organization.class);
-        request.addParams(params);
-
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.post(clientTenant));
-            }
-        });
-
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
+//    public <R> RequestExecution asyncCreate(final ClientTenant clientTenant, final Callback<OperationResult<ClientTenant>, R> callback){
+//        final JerseyRequest<ClientTenant> request = buildRequest(ClientTenant.class);
+//        request.addParams(params);
+//
+//        RequestExecution task = new RequestExecution(new Runnable() {
+//            @Override
+//            public void run() {
+//                callback.execute(request.post(clientTenant));
+//            }
+//        });
+//
+//        ThreadPoolUtil.runAsynchronously(task);
+//        return task;
+//    }
 
     private <T> JerseyRequest<T> buildRequest(Class<T> responseType) {
         return JerseyRequest.buildRequest(sessionStorage, responseType, 

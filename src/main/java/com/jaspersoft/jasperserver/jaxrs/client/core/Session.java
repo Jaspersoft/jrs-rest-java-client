@@ -108,7 +108,7 @@ public class Session extends AnonymousSession{
         return getService(ThumbnailsService.class);
     }
 
-    public AttributesService serverAttributesService() {
+    public AttributesService attributesService() {
         return getService(AttributesService.class);
     }
 

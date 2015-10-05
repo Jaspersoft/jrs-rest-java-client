@@ -20,6 +20,7 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
@@ -33,10 +34,7 @@ public class OrganizationsService extends AbstractAdapter {
         return new BatchOrganizationsAdapter(sessionStorage);
     }
 
-    public SingleOrganizationAdapter organization(String organizationId) {
-        if ("".equals(organizationId) || "/".equals(organizationId)) {
-            throw new IllegalArgumentException("'organizationId' mustn't be an empty string");
-        }
-        return new SingleOrganizationAdapter(sessionStorage, organizationId);
+    public SingleOrganizationAdapter organization(ClientTenant clientTenant) {
+        return new SingleOrganizationAdapter(sessionStorage, clientTenant);
     }
 }
