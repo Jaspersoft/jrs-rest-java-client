@@ -17,7 +17,6 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.Whitebox;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.AfterMethod;
@@ -32,11 +31,12 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberModifier.suppress;
+import static org.powermock.reflect.internal.WhiteboxImpl.setInternalState;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -76,16 +76,16 @@ public class SessionStorageTest extends PowerMockTestCase {
     @Test
     public void should_init_ssl() {
 
-        /** - mock for static method **/
+        // Given
         mockStatic(ClientBuilder.class);
         when(ClientBuilder.newBuilder()).thenReturn(builderMock);
-
-        /** - mocks for {@link SessionStorage#init()} method (no SSL) **/
         doReturn("https://54.83.98.156/jasperserver-pro").when(configurationMock).getJasperReportsServerUrl();
         doReturn(10000).when(configurationMock).getConnectionTimeout();
         doReturn(8000).when(configurationMock).getReadTimeout();
         doReturn(clientMock).when(builderMock).build();
         doReturn(targetMock).when(clientMock).target("http://54.83.98.156/jasperserver-pro");
+
+        // When
         try {
             new SessionStorage(configurationMock, credentialsMock);
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class SessionStorageTest extends PowerMockTestCase {
 
     @Test
     public void should_invoke_init_method_with_default_configuration() throws Exception {
-        //given
+        // Given
         mockStatic(ClientBuilder.class);
         when(ClientBuilder.newBuilder()).thenReturn(builderMock);
         doReturn("http://54.83.98.156/jasperserver-pro").when(configurationMock).getJasperReportsServerUrl();
@@ -107,9 +107,11 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(targetMock).when(targetMock).register(MultiPartWriter.class);
         doReturn(targetMock).when(targetMock).register(any(JacksonJsonProvider.class));
         doReturn(false).when(configurationMock).getLogHttp();
-        //when
+
+        // When
         SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
-        //then
+
+        // Then
         assertEquals(Whitebox.getInternalState(sessionStorage, "configuration"), configurationMock);
         assertEquals(Whitebox.getInternalState(sessionStorage, "credentials"), credentialsMock);
         verify(configurationMock, times(2)).getJasperReportsServerUrl();
@@ -126,7 +128,8 @@ public class SessionStorageTest extends PowerMockTestCase {
 
     @Test
     public void should_invoke_init_method_with_custom_configuration() throws Exception {
-        //given
+
+        //  Given
         mockStatic(ClientBuilder.class);
         when(ClientBuilder.newBuilder()).thenReturn(builderMock);
         doReturn("http://54.83.98.156/jasperserver-pro").when(configurationMock).getJasperReportsServerUrl();
@@ -141,9 +144,11 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(targetMock).when(targetMock).register(any(JacksonJsonProvider.class));
         doReturn(true).when(configurationMock).getLogHttp();
         doReturn(targetMock).when(targetMock).register(any(LoggingFilter.class));
-        //when
+
+        // When
         SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
-        //then
+
+        // Then
         assertEquals(Whitebox.getInternalState(sessionStorage, "configuration"), configurationMock);
         assertEquals(Whitebox.getInternalState(sessionStorage, "credentials"), credentialsMock);
         verify(configurationMock, times(2)).getJasperReportsServerUrl();
@@ -201,7 +206,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         when(ClientBuilder.newBuilder()).thenReturn(builderMock);
         when(SSLContext.getInstance("SSL")).thenReturn(ctxMock);
 
-        PowerMockito.when(ctxMock, "init", null, managers, new SecureRandom()).thenThrow(new RuntimeException());
+        when(ctxMock, "init", null, managers, new SecureRandom()).thenThrow(new RuntimeException());
 
         doReturn("https://abc").when(configurationMock).getJasperReportsServerUrl();
         doReturn(managers).when(configurationMock).getTrustManagers();
@@ -223,8 +228,8 @@ public class SessionStorageTest extends PowerMockTestCase {
         SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
 
         // When
-        Whitebox.setInternalState(sessionStorage, "rootTarget", targetMock);
-        Whitebox.setInternalState(sessionStorage, "sessionId", "sessionId");
+        setInternalState(sessionStorage, "rootTarget", targetMock);
+        setInternalState(sessionStorage, "sessionId", "sessionId");
         // Then
         assertNotNull(sessionStorage.getConfiguration());
         assertNotNull(sessionStorage.getCredentials());

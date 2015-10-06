@@ -60,7 +60,7 @@ public class SessionTest {
         initMocks(this);
     }
 
-    @Test(testName = "logout")
+    @Test
     public void should_logout_in_spring_authentication_mode() {
         // Given
         doReturn(configurationMock).when(storageMock).getConfiguration();
@@ -82,7 +82,7 @@ public class SessionTest {
         verify(responseMock).getStatus();
     }
 
-    @Test(testName = "logout")
+    @Test
     public void should_logout_in_basic_authentication_mode() {
         // Given
         doReturn(configurationMock).when(storageMock).getConfiguration();
@@ -104,7 +104,7 @@ public class SessionTest {
         verify(responseMock, never()).getStatus();
     }
 
-    @Test(testName = "server refuse login", expectedExceptions = RequestedRepresentationNotAvailableForResourceException.class)
+    @Test(expectedExceptions = RequestedRepresentationNotAvailableForResourceException.class)
     public void should_throw_exception_when_response_status_is_greater_then_400() {
         // Given
         doReturn(configurationMock).when(storageMock).getConfiguration();
@@ -123,7 +123,7 @@ public class SessionTest {
 
     }
 
-    @Test(testName = "Service class was not found",expectedExceptions = RuntimeException.class)
+    @Test(expectedExceptions = RuntimeException.class)
     public void should_throw_exception_when_cannot_instantiate_service_class() {
         // Given
         class CustomAdapter extends AbstractAdapter {
