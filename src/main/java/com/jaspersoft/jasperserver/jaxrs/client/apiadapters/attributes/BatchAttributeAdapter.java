@@ -121,12 +121,14 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<HypermediaAttributesListWrapper> buildRequest() {
-        JerseyRequest request = JerseyRequest.buildRequest(
+        JerseyRequest<HypermediaAttributesListWrapper> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 HypermediaAttributesListWrapper.class,
-                new String[]{holderUri, "/attributes"}, new DefaultErrorHandler());
+                new String[]{holderUri, "attributes"}, new DefaultErrorHandler());
         if (includePermissions) {
-            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/hal+{mime}")).addParam("_embedded", "permission");
+            request
+                    .setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(),"application/hal+{mime}"))
+                    .addParam("_embedded", "permission");
         }
         return request;
     }

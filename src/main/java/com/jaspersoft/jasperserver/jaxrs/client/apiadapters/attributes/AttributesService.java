@@ -20,6 +20,8 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
+import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import java.util.Collection;
@@ -36,12 +38,23 @@ public class AttributesService extends AbstractAdapter {
     }
 
     public AttributesService forOrganization(String organizationName) {
-        this.holderUri.append("organizations/").append(organizationName);
+        this.holderUri.append("organizations/").append(organizationName).append("/");
         return this;
     }
 
+    public AttributesService forOrganization(ClientTenant organization) {
+        this.holderUri.append("organizations/").append(organization.getId()).append("/");
+        return this;
+    }
+
+    public AttributesService forUser(ClientUser user) {
+        this.holderUri.append("users/").append(user.getUsername()).append("/");
+        return this;
+    }
+
+
     public AttributesService forUser(String userName) {
-        this.holderUri.append("/users/").append(userName);
+        this.holderUri.append("users/").append(userName).append("/");
         return this;
     }
 

@@ -25,6 +25,7 @@ import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
@@ -43,16 +44,12 @@ public class SingleAttributeAdapter extends AbstractAdapter {
     private Boolean includePermissions = false;
     private String holderUri;
 
-    public SingleAttributeAdapter(String holderUri, SessionStorage sessionStorage) {
-       super(sessionStorage);
-        this.holderUri = holderUri;
-    }
-
     public SingleAttributeAdapter(String holderUri, SessionStorage sessionStorage, String attributeName) {
-        this(holderUri, sessionStorage);
+        super(sessionStorage);
         if (sessionStorage == null || holderUri == null) {
             throw new IllegalArgumentException("URI cannot be null.");
         }
+        this.holderUri = holderUri;
         this.attributeName = attributeName;
     }
 
@@ -119,7 +116,9 @@ public class SingleAttributeAdapter extends AbstractAdapter {
         JerseyRequest<HypermediaAttribute> request = JerseyRequest.buildRequest(sessionStorage,HypermediaAttribute.class,
                 new String[]{holderUri,"attributes/",attributeName}, new DefaultErrorHandler());
         if (includePermissions) {
-            request.setAccept("application/hal+json").addParam("_embedded", "permission");
+            request
+                    .setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(),"application/hal+{mime}"))
+                    .addParam("_embedded", "permission");
         }
         return request;
     }
