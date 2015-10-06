@@ -67,27 +67,7 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
-//
-//    public OperationResult<ClientTenant> create(ClientTenant clientTenant) {
-//        JerseyRequest<ClientTenant> request = buildRequest(ClientTenant.class);
-//        request.addParams(params);
-//        return request.post(clientTenant);
-//    }
 
-//    public <R> RequestExecution asyncCreate(final ClientTenant clientTenant, final Callback<OperationResult<ClientTenant>, R> callback){
-//        final JerseyRequest<ClientTenant> request = buildRequest(ClientTenant.class);
-//        request.addParams(params);
-//
-//        RequestExecution task = new RequestExecution(new Runnable() {
-//            @Override
-//            public void run() {
-//                callback.execute(request.post(clientTenant));
-//            }
-//        });
-//
-//        ThreadPoolUtil.runAsynchronously(task);
-//        return task;
-//    }
 
     private <T> JerseyRequest<T> buildRequest(Class<T> responseType) {
         return JerseyRequest.buildRequest(sessionStorage, responseType, 

@@ -34,7 +34,11 @@ public class OrganizationsService extends AbstractAdapter {
         return new BatchOrganizationsAdapter(sessionStorage);
     }
 
-    public SingleOrganizationAdapter organization(ClientTenant clientTenant) {
-        return new SingleOrganizationAdapter(sessionStorage, clientTenant);
+    public SingleOrganizationAdapter organization(ClientTenant organization) {
+        return new SingleOrganizationAdapter(sessionStorage, organization);
+    }
+
+    public SingleOrganizationAdapter organization(String organizationId) {
+        return new SingleOrganizationAdapter(sessionStorage, new ClientTenant().setId(organizationId));
     }
 }

@@ -21,17 +21,20 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
+import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
 public class UsersService extends AbstractAdapter {
+
     private String organizationId;
 
     public UsersService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
-    public UsersService organization(String organizationId) {
+    public UsersService forOrganization(String organizationId) {
         if ("".equals(organizationId) || "/".equals(organizationId)) {
             throw new IllegalArgumentException("'organizationId' mustn't be an empty string");
         }
@@ -39,20 +42,19 @@ public class UsersService extends AbstractAdapter {
         return this;
     }
 
-    @Deprecated
-    public SingleUserRequestAdapter username(String username) {
-        if ("".equals(username) || "/".equals(username)) {
-            throw new IllegalArgumentException("'username' mustn't be an empty string");
-        }
-        return new SingleUserRequestAdapter(sessionStorage, organizationId, username);
+    public UsersService forOrganization(ClientTenant organization) {
+        return this.forOrganization(organization.getId());
     }
 
-    public SingleUserRequestAdapter user() {
-        return new SingleUserRequestAdapter(sessionStorage, organizationId);
+    public SingleUserRequestAdapter user(ClientUser user) {
+        if (organizationId != null && (user.getTenantId() == null || !user.getTenantId().equals(organizationId))) {
+            user.setTenantId(organizationId);
+        }
+        return new SingleUserRequestAdapter(sessionStorage, user);
     }
 
     public SingleUserRequestAdapter user(String userId) {
-        return new SingleUserRequestAdapter(userId, organizationId, sessionStorage);
+        return new SingleUserRequestAdapter(sessionStorage, new ClientUser().setUsername(userId).setTenantId(organizationId));
     }
 
     public BatchUsersRequestAdapter allUsers() {

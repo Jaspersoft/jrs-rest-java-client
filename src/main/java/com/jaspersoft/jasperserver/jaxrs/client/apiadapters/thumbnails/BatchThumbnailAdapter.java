@@ -6,7 +6,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.RequestMethod;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnailListWrapper;
+import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnailsListWrapper;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import java.util.Collection;
@@ -55,12 +55,12 @@ public class BatchThumbnailAdapter extends AbstractAdapter {
         return  this;
     }
 
-    public OperationResult<ResourceThumbnailListWrapper> get() {
+    public OperationResult<ResourceThumbnailsListWrapper> get() {
         return (requestMethod == RequestMethod.POST) ? request().setContentType("application/x-www-form-urlencoded").post(params) : request().addParams(params).get();
     }
 
-    private JerseyRequest<ResourceThumbnailListWrapper> request() {
-        return JerseyRequest.buildRequest(sessionStorage, ResourceThumbnailListWrapper.class,
+    private JerseyRequest<ResourceThumbnailsListWrapper> request() {
+        return JerseyRequest.buildRequest(sessionStorage, ResourceThumbnailsListWrapper.class,
                 new String[]{"/thumbnails"}, new DefaultErrorHandler());
     }
 
