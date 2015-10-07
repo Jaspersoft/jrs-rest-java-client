@@ -41,7 +41,6 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
 
     private final ClientTenant clientTenant;
     private final MultivaluedHashMap<String, String> params;
-    private final String prefix = "/organizations/";
 
     public SingleOrganizationAdapter(SessionStorage sessionStorage, ClientTenant clientTenant) {
         super(sessionStorage);
@@ -116,8 +115,8 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return buildRequest().delete();
     }
 
-    public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
-        final JerseyRequest request = buildRequest();
+    public <R> RequestExecution asyncDelete(final Callback<OperationResult<ClientTenant>, R> callback) {
+        final JerseyRequest<ClientTenant> request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {

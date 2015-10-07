@@ -47,6 +47,11 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
         return this;
     }
 
+    public BatchOrganizationsAdapter parameter(OrganizationParameter orgParam, Boolean value) {
+        params.add(orgParam.getParamName(), value.toString());
+        return this;
+    }
+
     public OperationResult<OrganizationsListWrapper> get() {
         JerseyRequest<OrganizationsListWrapper> request = buildRequest(OrganizationsListWrapper.class);
         request.addParams(params);

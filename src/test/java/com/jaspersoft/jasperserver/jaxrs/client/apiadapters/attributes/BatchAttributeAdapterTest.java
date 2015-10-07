@@ -47,7 +47,7 @@ import static org.testng.AssertJUnit.assertTrue;
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.BatchAttributeAdapter}
  */
-@SuppressWarnings({"unchecked", "deprecation"})
+
 @PrepareForTest({BatchAttributeAdapter.class, JerseyRequest.class})
 public class BatchAttributeAdapterTest extends PowerMockTestCase {
 
@@ -224,7 +224,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_set_params() {
+    public void should_set_params_as_vararg() {
         BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock, "x", "y", "z");
         MultivaluedMap<String, String> params = getInternalState(adapter, "params");
         List<String> list = params.get("name");
@@ -280,7 +280,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_delete_method_asynchronously() throws Exception {
+    public void should_delete_atributes_asynchronously() throws Exception {
 
         // Given
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -318,7 +318,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_createOrUpdate_method_asynchronously() throws Exception {
+    public void should_createOrUpdate_atributes_asynchronously() throws Exception {
 
         // Given
         HypermediaAttributesListWrapper listWrapperMock = mock(HypermediaAttributesListWrapper.class);
