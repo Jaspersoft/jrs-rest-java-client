@@ -47,14 +47,14 @@ public class UsersService extends AbstractAdapter {
     }
 
     public SingleUserRequestAdapter user(ClientUser user) {
-        if (organizationId != null && (user.getTenantId() == null || !user.getTenantId().equals(organizationId))) {
+        if (organizationId != null && user.getTenantId() == null) {
             user.setTenantId(organizationId);
         }
         return new SingleUserRequestAdapter(sessionStorage, user);
     }
 
     public SingleUserRequestAdapter user(String userId) {
-        return new SingleUserRequestAdapter(sessionStorage, new ClientUser().setUsername(userId).setTenantId(organizationId));
+        return this.user(new ClientUser().setUsername(userId));
     }
 
     public BatchUsersRequestAdapter allUsers() {
