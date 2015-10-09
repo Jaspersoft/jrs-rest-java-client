@@ -448,30 +448,44 @@ logged-in user’s organization or the specified base.
 ```java
 OperationResult<OrganizationsListWrapper> result = session
         .organizationsService()
-        .organizations()
+        .allOrganizations()
         .parameter(OrganizationParameter.INCLUDE_PARENTS, "true")
         .get();
 ```
 ####Viewing an Organization
 The `organization()` method with an organization ID retrieves a single descriptor containing the list of properties for the organization. When you specify an organization, use its unique ID, not its path.
 ```java
-OperationResult<Organization> result = session
+OperationResult<ClientTenant> result = session
         .organizationsService()
         .organization("myOrg1")
+        .get();
+```
+Also you may specify organization as object:
+```java
+ClientTenant organization = new ClientTenant();
+organization.setId("test_Id");
+
+OperationResult<ClientTenant> result = session
+        .organizationsService()
+        .organization(organization)
         .get();
 ```
 ####Creating an Organization
 To create an organization, put all information in an organization descriptor, and include it in a request to the `rest_v2/organizations` service, with no ID specified. The organization is created in the organization specified by the `parentId` value of the descriptor.
 ```java
-Organization organization = new Organization();
-organization.setAlias("myOrg1");
-```
-``java
 OperationResult<Organization> result = session
         .organizationsService()
-        .organizations()
-        .create(organization);
+        .organization(organization)
+        .create();
 ```
+The another way to create organization is to use `createOrUpdate()` method:
+```java
+OperationResult<Organization> result = session
+        .organizationsService()
+        .organization(organization)
+        .createOrUpdate(organization);
+```
+Be carefully using this method because you can damage existing organization if the `organizationId` of new organization is already used.
 The descriptor sent in the request should contain all the properties you want to set on the new organization. Specify the `parentId` value to set the parent of the organization, not the `tenantUri` or `tenantFolderUri` properties.
 However, all properties have defaults or can be determined based on the alias value. The minimal descriptor necessary to create an organization is simply the alias property. In this case, the organization is created as child of the logged-in user’s home organization.
 ####Modifying Organization Properties
@@ -483,7 +497,7 @@ organization.setAlias("lalalaOrg");
 OperationResult<Organization> result = session
         .organizationsService()
         .organization("myOrg1")
-        .update(organization);
+        .createOrUpdate(organization);
 ```
 ####Deleting an Organization
 To delete an organization, use the `delete()` method and specify the organization ID in the `organization()` method. When deleting an organization, all of its resources in the repository, all of its sub-organizations, all of its users, and all of its roles are permanently deleted.
@@ -493,23 +507,6 @@ OperationResult result = session
         .organization("myOrg1")
         .delete();
 ```
-
-
-######Each of administration services can work both with enabled and disabled multitenancy mode.
-```java
-//with multitenancy
-client
-        .authenticate("jasperadmin|organization_1", "jasperadmin")
-        .usersService()
-        .organization("myOrg1")
-        ....
-//without multitenancy
-client
-        .authenticate("jasperadmin", "jasperadmin")
-        .usersService()
-        ...
-```
-
 ###Users service
 It provides methods that allow you to list, view, create, modify, and delete user accounts, including setting role membership.
 Because the user ID is used in the URL, this service can operate only on users whose ID is less than 100 characters long and does not contain spaces or special symbols. As with resource IDs, the user ID is permanent and cannot be modified for the life of the user account.
@@ -517,8 +514,7 @@ Because the user ID is used in the URL, this service can operate only on users w
 You can search for users by name or by role. If no search is specified, service returns all users.
 ```java
 OperationResult<UsersListWrapper> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        session
                 .usersService()
                 .allUsers()
                 .param(UsersParameter.REQUIRED_ROLE, "ROLE_USER")
@@ -533,7 +529,25 @@ OperationResult<ClientUser> operationResult =
         client
                 .authenticate("jasperadmin", "jasperadmin")
                 .usersService()
-                .username("jasperadmin")
+                .user("jasperadmin")
+                .get();
+
+ClientUser user = operationResult.getEntity();
+```
+Also you may specify user as object:
+```java
+ClientUser userObject = new ClientUser()
+                .setUsername("test_user")
+                .setPassword("test_password")
+                .setEmailAddress("john.doe@email.net")
+                .setEnabled(true)
+                .setExternallyDefined(false)
+                .setFullName("John Doe");
+OperationResult<ClientUser> operationResult =
+        client
+                .authenticate("jasperadmin", "jasperadmin")
+                .usersService()
+                .user(userObject)
                 .get();
 
 ClientUser user = operationResult.getEntity();
@@ -554,7 +568,7 @@ ClientUser user = new ClientUser()
 client
     .authenticate("jasperadmin", "jasperadmin")
     .usersService()
-    .username(user.getUsername())
+    .user(user.getUsername())
     .createOrUpdate(user);
 
 //Granting new user with admin role
@@ -572,7 +586,7 @@ user.setRoleSet(roles);
 client
     .authenticate("jasperadmin", "jasperadmin")
     .usersService()
-    .username(user.getUsername())
+    .user(user.getUsername())
     .createOrUpdate(user);
 ```
 ####Modifying User Properties
@@ -589,7 +603,7 @@ ClientUser user = new ClientUser()
 client
     .authenticate("jasperadmin", "jasperadmin")
     .usersService()
-    .username(user.getUsername())
+    .user(user.getUsername())
     .createOrUpdate(user);
 ```
 ####Deleting a User
@@ -598,175 +612,229 @@ To delete a user, call the `delete()` method and specify the user ID in the `use
 client
     .authenticate("jasperadmin", "jasperadmin")
     .usersService()
-    .username(user.getUsername())
+    .user(user.getUsername())
     .delete();
 ```
 
 ###Attributes service
-Attributes, also called profile attributes, are name-value pairs associated with a user. Certain advanced features such as Domain security and OLAP access grants use profile attributes in addition to roles to grant certain permissions. Unlike roles, attributes are not pre-defined, and thus any attribute name can be assigned any value at any time.
-Attributes service provides methods for reading, writing, and deleting attributes on any given user account. All attribute operations apply to a single specific user; there are no operations for reading or searching attributes from multiple users.
-Because the user ID is used in the URL, this service can operate only on users whose ID is less than 100 characters long and does not contain spaces or special symbols. In addition, both attribute names and attribute values being written with this service are limited to 255 characters and may not be empty (null) or contain only whitespace characters.
+Attributes, also called profile attributes, are name-value pairs associated with a user, organization or server. Certain advanced features such as Domain security and OLAP access grants use profile attributes in addition to roles to grant certain permissions. Unlike roles, attributes are not pre-defined, and thus any attribute name can be assigned any value at any time.
+Attributes service provides methods for reading, writing, and deleting attributes on any given holder (server, organization or user account). All attribute operations apply to a single specific holder; there are no operations for reading or searching attributes from multiple holders.
+Because the holder id is used in the URL, this service can operate only on holders whose ID is less than 100 characters long and does not contain spaces or special symbols. In addition, both attribute names and attribute values being written with this service are limited to 255 characters and may not be empty (null) or not contain only whitespace characters.
 ####Viewing User Attributes
-The code below retrieves the list of attributes, if any, defined for the user.
+The code below retrieves single attribute defined for the user:
 ```java
-OperationResult<UserAttributesListWrapper> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .usersService()
-                .username("jasperadmin")
-                .attributes()
-                .get();
-
-UserAttributesListWrapper attributesListWrapper = operationResult.getEntity();
-```
-The list of attributes includes the name and value of each attribute. Each attribute may only have one value, however that value may contain a comma-separated list that is interpreted by the server as being multi-valued.
-
-An alternative syntax exists to read a single attribute by specifying its name in the `attribute()` method:
+   HypermediaAttribute userAttribute = session
+                   .attributesService()
+                   .forUser("jasperadmin")
+                   .attribute(attribute.getName())
+                   .get()
+                   .getEntity();
+   
+  ```
+ You may work work with user as object:
+    ```java
+    CleintUser userObject = new ClientUser();
+    userObject.setName("jasperadmin");
+    HypermediaAttribute userAttribute = session
+                       .attributesService()
+                       .forUser(userObject)
+                       .attribute(attribute.getName())
+                       .get()
+                       .getEntity();
+   ```
+ If user belong to organization you may specify it by name or as object:
+ ```java
+ HypermediaAttribute userAttribute = session
+                 .attributesService()
+                 .forOrganization("organization_1")
+                 .forUser("jasperadmin")
+                 .attribute(attribute.getName())
+                 .get()
+                 .getEntity();
+ 
+ ```
+  ```java
+  ClientTenant orgObject = new CleintTenant();
+  orgObject.setId("someId");
+ HypermediaAttribute userAttribute = session
+                 .attributesService()
+                 .forOrganization(orgObject)
+                 .forUser("jasperadmin")
+                 .attribute(attribute.getName())
+                 .get()
+                 .getEntity();
+ 
+ ```
+   The code below retrieves the list of attributes defined for the user.
 ```java
-OperationResult<ClientUserAttribute> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .usersService()
-                .username("jasperadmin")
-                .attribute("testAttribute")
-                .get();
-
-ClientUserAttribute attribute = operationResult.getEntity();
+   HypermediaAttribute userAttribute = session
+                   .attributesService()
+                   .forUser("jasperadmin")
+                   .attribute("attributeName")
+                   .get()
+                   .getEntity();
+   
+   ```
+ If user belong to organization you may specify organization:
+ ```java
+ HypermediaAttribute userAttribute = session
+                 .attributesService()
+                 .forOrganization("organization_1")
+                 .forUser("jasperadmin")
+                 .attribute(attribute.getName())
+                 .get()
+                 .getEntity();
+ 
+ ```
+You can get the list of attributes that includes the name and value of each attribute:
+ ```java
+ List<HypermediaAttribute> attributes = session
+                 .attributesService()
+                 .forOrganization("organization_1")
+                 .forUser("jasperadmin")
+                 .allAttributes()
+                 .get()
+                 .getEntity()
+                 .getProfileAttributes();
 ```
-The response is a single attribute name-value pair.
+ Each attribute may only have one value, however that value may contain a comma-separated list that is interpreted by the server as being multi-valued.
+
 ####Setting User Attributes
 The `createOrUpdate()` method of the attributes service adds or replaces attributes on the specified user. The list of attributes defines the name and value of each attribute. Each attribute may only have one value, however, that value may contain a comma separated list that is interpreted by the server as being multi-valued.
 There are two syntaxes, the following one is for adding or replacing all attributes
 ```java
-List<ClientUserAttribute> userAttributes = new ArrayList<ClientUserAttribute>();
-userAttributes.add(new ClientUserAttribute()
-        .setName("attr1")
-        .setValue("val1"));
-userAttributes.add(new ClientUserAttribute()
-        .setName("attr2")
-        .setValue("val2"));
-
-UserAttributesListWrapper listWrapper = new UserAttributesListWrapper(userAttributes);
-OperationResult<UserAttributesListWrapper> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .usersService()
-                .username("jasperadmin")
-                .attributes()
-                .createOrUpdate(listWrapper);
-
-Response response = operationResult.getResponse();
+HypermediaAttributesListWrapper serverAttributes = new HypermediaAttributesListWrapper();
+serverAttributes.setProfileAttributes(asList(new HypermediaAttribute(new ClientUserAttribute().setName("test_attribute_1").setValue("test_value_1")),
+                                             new HypermediaAttribute(new ClientUserAttribute().setName("test_attribute_2").setValue("test_value_2"))));
+       session
+                       .attributesService()
+                       .forOrganization("organization_1")
+                       .forUser("jasperadmin")
+                       .attributes("test_attribute_1","test_attribute_2")
+                       .createOrUpdate(serverAttributes);
 ```
-The second syntax of the attributes service is for adding or replacing individual attributes.
-```java
-        ClientUserAttribute attribute = new ClientUserAttribute()
-                        .setName("someAttribute")
-                        .setValue("hello");
+Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server:
+1. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute does not exist on the server it will be *created* on the server;
+2. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *updated* on the server;
+3. if requested attribute name in `attributes()` method does not  match with any attribute names of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *deleted* on the server;
+4. if requested attribute in `createOrUpdate()` method  method does not  match with any attribute names in `attributes()` it will be *ignored* and will not be sent to the server;
 
-        client
-            .authenticate("jasperadmin", "jasperadmin")
-            .usersService()
-            .username(user.getUsername())
-            .attribute(attribute.getName())
-            .createOrUpdate(attribute);
+The second way of using the attributes service is adding or replacing individual attribute:
+```java
+        HypermediaAttribute attribute = new HypermediaAttribute();
+                attribute.setName("test_attribute");
+                attribute.setValue("test_value");
+
+        session
+                        .attributesService()
+                        .forOrganization("organization_1")
+                        .forUser("jasperadmin")
+                        .attribute("test_attribute")
+                        .createOrUpdate(attribute)
+                        .getEntity();
 ```
 ####Deleting User Attributes
 The `delete()` method of the attributes service removes attributes from the specified user. When attributes are
 removed, both the name and the value of the attribute are removed, not only the value.
 There are two syntaxes, the following one is for deleting multiple attributes or all attributes at once.
 ```java
-OperationResult<UserAttributesListWrapper> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .usersService()
-                .username("jasperadmin")
-                .attributes()
+ session
+                .attributesService()
+                .forOrganization("organization_1")
+                .forUser("jasperadmin")
+                .attributes("test_attribute_1","test_attribute_2")
                 .delete();
 
-Response response = operationResult.getResponse();
-```
-The second syntax deletes a single attribute named in the `username()` from the specified user.
-```java
-OperationResult operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .usersService()
-                .username("jasperadmin")
-                .attribute(clientUserAttribute.getName())
-                .createOrUpdate(clientUserAttribute);
+// or
+ session
+                .attributesService()
+                .forOrganization("organization_1")
+                .forUser("jasperadmin")
+                .allAttributes()
+                .delete();
 
-Response response = operationResult.getResponse();
+
+```
+The second syntax deletes a single attribute for the specified user:
+```java
+session
+                .attributesService()
+                .forOrganization("organization_1")
+                .forUser("jasperadmin")
+                .attribute("attributeName")
+                .delete();
 ```
 ####Viewing Organization Attributes
 The code below retrieves the list of attributes, if any, defined for the organization.
 ```java
-List<ClientTenantAttribute> attributes = session
-        .organizationsService()
-        .organization("organization_1")
-        .attributes()
-        .get()
-        .getEntity()
-        .getAttributes();
+List<HypermediaAttribute> attributes = session
+                .attributesService()
+                .forOrganization("organization_1")
+                .allAttributes()
+                .get()
+                .getEntity()
+                .getProfileAttributes();
 ```
-You can retrieve any specified attributes. In this case all you need is to define required attributes. See code snippet below.
+You can retrieve any specified attributes. In this case all you need is to define required attributes. See code snippet below:
 ```java
-List<ClientTenantAttribute> attributes = session
-        .organizationsService()
-        .organization("organization_1")
-        .attributes(asList("number_of_employees", "number_of_units", "country_code"))
+List <HypermediaAttribute> attributes = session
+        .attributesService()
+        .forOrganization("organization_1")
+        .attributes("number_of_employees", "number_of_units", "country_code")
         .get()
         .getEntity()
         .getAttributes();
 ```
 Or to get a single organization attribute.
 ```java
-ClientTenantAttribute attributes = session
-        .organizationsService()
-        .organization("organization_1")
+HypermediaAttribute attributes = session
+        .attributesService()
+        .forOrganization("organization_1")
         .attribute("industry")
         .get()
         .getEntity();
 ```
 ####Setting Organization Attributes
-Service allows you to create new organization attributes. See code below.
+Service allows you to create new organization attributes. See code below:
 ```java
-TenantAttributesListWrapper attributes = new TenantAttributesListWrapper();
-        attributes.setAttributes(Arrays.asList(
-                new ClientTenantAttribute("number_of_employees", "1000+"),
-                new ClientTenantAttribute("number_of_units", "29"),
-                new ClientTenantAttribute("country_code", "FR")));
+HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
+attributes.setProfileAttributes(asList(
+        new HypermediaAttribute(new ClientUserAttribute().setName("test_attribute_1").setValue("test_value_1")),
+        new HypermediaAttribute(new ClientUserAttribute().setName("test_attribute_2").setValue("test_value_2"))));
                 
-OperationResult<TenantAttributesListWrapper> retrieved = session
-        .organizationsService()
-        .organization("organization_1")
-        .attributes()
-        .createOrUpdate(attributes);
+OperationResult<HypermediaAttributesListWrapper> attributes = session
+                .attributesService()
+                .forOrganization("organization_1")
+                .attributes(asList("test_attribute_1", "test_attribute_2")
+                .createOrUpdate(serverAttributes);
 ```
-Or to create a single organization attribute as well.
+Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server (see section [Setting User Attributes] (https://github.com/TanyaEf/jrs-rest-java-client#setting-user-attributes)).
+Or to create a single organization attribute code below:
 ```java
-ClientTenantAttribute attribute = new ClientTenantAttribute("industry", "IT");
-OperationResult<ClientTenantAttribute> retrieved = session
-        .organizationsService()
-        .organization("organization_1")
-        .attribute()
+HypermediaAttribute attribute = new HypermediaAttribute(new ClientTenantAttribute().setName("industry").setValue("IT"));
+OperationResult<HypermediaAttribute> retrieved = session
+        .attributesService()
+        .forOrganization("organization_1")
+        .attribute("industry")
         .createOrUpdate(attribute);
 ```
+Attribute name should not exist on the server and match with `name` field of `attribute` object, otherwise the attribute will be deleted. 
 ####Deleting Organization Attributes
 You can also delete a single organization attribute.
 ```java
-OperationResult<ClientTenantAttribute> attributes = session
-        .organizationsService()
-        .organization("organization_1")
-        .attribute("industry")
-        .delete();
+OperationResult<HypermediaAttribute> operationResult = session
+                .attributesService()
+                .forOrganization("organization_1")
+                .attribute("industry")
+                .delete();
 ```
-Or to delete specified attributes.
+Or to delete list of attributes:
 ```java
-OperationResult<TenantAttributesListWrapper> attributes = session
-        .organizationsService()
-        .organization("organization_1")
-        .attributes(asList("number_of_employees", "country_code"))
-        .delete();
+OperationResult<HypermediaAttributesListWrapper> operationResult = session
+                .attributesService()
+                .forOrganization(orgName)
+                .attributes("number_of_employees", "country_code")
+                .delete();
 ```
 ####Viewing Server Attributes
 We have also provided service to get server attributes. Code below return available server attributes. 
@@ -780,52 +848,59 @@ List<ServerAttribute> attributes = session
 ```
 Or you can specify any concrete attribute.
 ```java
-List<ServerAttribute> attributes = session
-        .serverAttributesService()
-        .attributes(asList("max_threads", "admin_phone_number"))
-        .get()
-        .getEntity()
-        .getAttributes();
+List<HypermediaAttribute> attributes = session
+                .attributesService()
+                .allAttributes()
+                .get()
+                .getEntity()
+                .getProfileAttributes();
 ```
 ####Setting Server Attributes
 It is possible to create new server attributes.
 ```java
-ServerAttributesListWrapper serverAttributes = new ServerAttributesListWrapper();
-        serverAttributes.setAttributes(asList(
-                new ServerAttribute("max_threads", "512"),
-                new ServerAttribute("admin_phone_number", "555 55 555")));
+HypermediaAttributesListWrapper serverAttributes = new HypermediaAttributesListWrapper();
+        serverAttributes.setProfileAttributes(asList(
+                new HypermediaAttribute(new ClientUserAttribute().setName("max_threads").setValue("512")),
+                new HypermediaAttribute(new ClientUserAttribute().setName("admin_cell_phone").setValue("03"))));
 
-OperationResult<ServerAttributesListWrapper> attributes = session
-        .serverAttributesService()
-        .attributes()
-        .createOrUpdate(serverAttributes);
+OperationResult<HypermediaAttributesListWrapper> attributes = session
+                .attributesService()
+                .attributes("max_threads", "admin_cell_phone")
+                .createOrUpdate(newServerAttributes);
 ```
-Or to create a single server attribute.
+Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server (see section [Setting User Attributes] (https://github.com/TanyaEf/jrs-rest-java-client#setting-user-attributes)).
+To create a single server attribute:
 ```java
-ServerAttribute attribute = new ServerAttribute();
-attribute.setName("latency");
-attribute.setValue("5700");
+HypermediaAttribute attribute = new HypermediaAttribute(new ClientUserAttribute().setName("latency").setValue("5700"));
 
-ServerAttribute entity = session
-        .serverAttributesService()
-        .attribute()
-        .createOrUpdate(attribute)
-        .getEntity();
+        session
+                .attributesService()
+                .attribute("latency")
+                .createOrUpdate(attribute);
 ```
+Attribute name should not exist on the server and match with `name` field of `attribute` object, otherwise the attribute will be deleted. 
 ####Deleting Server Attributes
+You can also delete all server attribute.
+```java
+        session
+                .attributesService()
+                .allAttributes()
+                .delete()
+                .getEntity();
+```
 You can also delete a single server attribute.
 ```java
-OperationResult<ServerAttribute> entity = session
-        .serverAttributesService()
-        .attribute("latency")
-        .delete();
+        session
+                .attributesService()
+                .attribute("latency")
+                .delete();
 ```
 Or any specified attributes.
 ```java
-OperationResult<ServerAttributesListWrapper> entity = session
-        .serverAttributesService()
-        .attributes(asList("max_threads", "admin_phone_number"))
-        .delete();
+session
+                .attributesService()
+                .attributes("max_threads", "admin_cell_phone")
+                .delete();
 ```
 ###The Roles Service
 It provides similar methods that allow you to list, view, create, modify, and delete roles. The new service provides improved search functionality, including user-based role searches. Because the role ID is used in the URL, this service can operate only on roles whose ID is less than 100 characters long and does not contain spaces or special symbols. Unlike resource IDs, the role ID is the role name and can be modified.

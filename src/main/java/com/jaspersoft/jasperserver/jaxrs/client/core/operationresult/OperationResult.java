@@ -56,6 +56,7 @@ public abstract class OperationResult<T> {
             }
             return entity;
         } catch (Exception e) {
+
             return null;
         }
     }

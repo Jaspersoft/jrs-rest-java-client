@@ -109,6 +109,23 @@ public class BundlesServiceIT extends RestClientTestUtil {
         assertTrue(bundle.containsKey("logCollectors.form.resourceUri.hint"));
     }
 
+
+    @Test
+    public void should_return__bundle_by_name_for_specified_pt_BR_locale() {
+
+        // When
+        final Map<String, String> bundle = session
+                .bundlesService()
+                .forLocale("pt_BR")
+                .bundle("jasperserver_messages")
+                .getEntity();
+
+        // Then
+        assertNotNull(bundle);
+        assertFalse(bundle.size() == 0);
+        assertTrue(bundle.containsKey("logCollectors.form.resourceUri.hint"));
+    }
+
     @Test
     public void should_return__bundle_by_name_for_specified_as_constant_locale() {
 
