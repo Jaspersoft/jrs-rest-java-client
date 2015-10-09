@@ -12,6 +12,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -65,9 +66,6 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    /**
-     * for {@link ServerBatchAttributeAdapter#put(ServerAttributesListWrapper)}
-     */
     public void should_return_proper_operation_result() {
 
         // Given
@@ -86,7 +84,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         when(jerseyRequestMock.put(attributes)).thenReturn(operationResultMock);
 
         // When
-        BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock);
+        BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock, attributes.getProfileAttributes().get(0).getName(), attributes.getProfileAttributes().get(1).getName());
         OperationResult<HypermediaAttributesListWrapper> retrieved = adapter.createOrUpdate(attributes);
 
         // Then
@@ -100,10 +98,76 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
                 any(DefaultErrorHandler.class));
     }
 
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void should_throw_an_exception_when_query_params_were_not_set() {
+        // Given
+        HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
+        attributes.setProfileAttributes(asList(
+                new HypermediaAttribute(new ClientUserAttribute().setName("max_threads").setValue("512")),
+                new HypermediaAttribute(new ClientUserAttribute().setName("admin_cell_phone").setValue("03"))));
+        // When
+        BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock);
+        adapter.createOrUpdate(attributes);
+        // Then
+        // should be thrown an exception
+    }
+
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_query_param_is_empty() {
+        // Given
+        HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
+        attributes.setProfileAttributes(asList(
+                new HypermediaAttribute(new ClientUserAttribute().setName("max_threads").setValue("512")),
+                new HypermediaAttribute(new ClientUserAttribute().setName("admin_cell_phone").setValue("03"))));
+        // When
+        BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock, new LinkedList<String>(asList("")));
+        adapter.createOrUpdate(attributes);
+        // Then
+        // should be thrown an exception
+    }
+
     @Test
-    /**
-     * for {@link ServerBatchAttributeAdapter#put(ServerAttributesListWrapper)}
-     */
+    public void should_discard_extra_parameters() {
+
+        // Given
+        HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
+        attributes.setProfileAttributes(asList(
+                new HypermediaAttribute(new ClientUserAttribute().setName("max_threads").setValue("512")),
+                new HypermediaAttribute(new ClientUserAttribute().setName("admin_cell_phone").setValue("03"))));
+
+        HypermediaAttributesListWrapper newServerAttributes = new HypermediaAttributesListWrapper(attributes);
+        newServerAttributes.getProfileAttributes().add((HypermediaAttribute) new HypermediaAttribute().setName("extra_attr_1").setValue("some_value_1"));
+        newServerAttributes.getProfileAttributes().add((HypermediaAttribute) new HypermediaAttribute().setName("extra_attr_2").setValue("some_value_2"));
+        newServerAttributes.getProfileAttributes().add((HypermediaAttribute) new HypermediaAttribute().setName("extra_attr_3").setValue("some_value_3"));
+
+
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(
+                eq(sessionStorageMock),
+                eq(HypermediaAttributesListWrapper.class),
+                eq(new String[]{"/", "attributes"}),
+                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+
+        when(jerseyRequestMock.put(attributes)).thenReturn(operationResultMock);
+
+        // When
+        BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock, attributes.getProfileAttributes().get(0).getName(), attributes.getProfileAttributes().get(1).getName());
+        OperationResult<HypermediaAttributesListWrapper> retrieved = adapter.createOrUpdate(newServerAttributes);
+
+        // Then
+        assertNotNull(retrieved);
+        assertSame(retrieved, operationResultMock);
+//        verify(jerseyRequestMock, times(1)).put(attributes);
+        verifyStatic(times(1));
+        buildRequest(
+                eq(sessionStorageMock),
+                eq(HypermediaAttributesListWrapper.class),
+                eq(new String[]{"/" , "attributes"}),
+                any(DefaultErrorHandler.class));
+    }
+
+    @Test
     public void should_delete_server_attributes() {
 
         // Given
@@ -140,9 +204,6 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    /**
-     * for {@link ServerBatchAttributeAdapter#get()}
-     */
     public void should_retrieve_server_attributes() {
 
         // Given
@@ -180,9 +241,6 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
 
 
     @Test
-    /**
-     * for {@link ServerBatchAttributeAdapter#get()}
-     */
     public void should_retrieve_server_attributes_with_permissions() {
 
         // Given
@@ -337,6 +395,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
             }
         });
 
+        doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest");
         doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest");
         doReturn(operationResultMock).when(jerseyRequestMock).put(listWrapperMock);
         doReturn(null).when(callback).execute(operationResultMock);

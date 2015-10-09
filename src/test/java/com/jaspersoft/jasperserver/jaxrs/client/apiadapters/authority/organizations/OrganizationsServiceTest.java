@@ -43,7 +43,7 @@ public class OrganizationsServiceTest extends PowerMockTestCase {
         OrganizationsService service = new OrganizationsService(sessionStorageMock);
 
         // When
-        BatchOrganizationsAdapter retrieved = service.organizations();
+        BatchOrganizationsAdapter retrieved = service.allOrganizations();
 
         // Then
         assertSame(retrieved, batchOrganizationsAdapter);
@@ -80,16 +80,35 @@ public class OrganizationsServiceTest extends PowerMockTestCase {
         // Then
         assertSame(retrieved, singleOrganizationAdapter);
     }
-//
-//    @Test(expectedExceptions = IllegalArgumentException.class)
-//    public void should_throw_exception() throws Exception {
-//
-//        // Given
-//        OrganizationsService service = new OrganizationsService(sessionStorageMock);
-//
-//        // When
-//        service.organization("");
-//    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_exception_when_organization_is_null() throws Exception {
+
+        // Given
+        OrganizationsService service = new OrganizationsService(sessionStorageMock);
+
+        // When
+        service.organization((ClientTenant) null);
+    }
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_exception_when_organization_id_is_null() throws Exception {
+
+        // Given
+        OrganizationsService service = new OrganizationsService(sessionStorageMock);
+
+        // When
+        service.organization((String) null);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_exception_when_organization_id_is_empty() throws Exception {
+
+        // Given
+        OrganizationsService service = new OrganizationsService(sessionStorageMock);
+
+        // When
+        service.organization("");
+    }
 
 
     @AfterMethod

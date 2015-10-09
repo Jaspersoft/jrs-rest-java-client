@@ -41,7 +41,8 @@ public class ServerBatchAttributesServiceIT extends RestClientTestUtil {
 
         OperationResult<HypermediaAttributesListWrapper> attributes = session
                 .attributesService()
-                .allAttributes()
+                .attributes(asList(serverAttributes.getProfileAttributes().get(0).getName(),
+                        serverAttributes.getProfileAttributes().get(1).getName()))
                 .createOrUpdate(serverAttributes);
 
         assertNotNull(attributes);
@@ -50,6 +51,26 @@ public class ServerBatchAttributesServiceIT extends RestClientTestUtil {
     }
 
     @Test(dependsOnMethods = "should_create_attributes")
+    public void should_update_attributes() {
+        HypermediaAttributesListWrapper newServerAttributes = new HypermediaAttributesListWrapper(serverAttributes);
+        newServerAttributes.getProfileAttributes().get(0).setValue("new_value");
+        newServerAttributes.getProfileAttributes().get(1).setValue("new_value");
+        newServerAttributes.getProfileAttributes().add((HypermediaAttribute) new HypermediaAttribute().setName("extra_attr_1").setValue("some_value_1"));
+        newServerAttributes.getProfileAttributes().add((HypermediaAttribute) new HypermediaAttribute().setName("extra_attr_2").setValue("some_value_2"));
+        newServerAttributes.getProfileAttributes().add((HypermediaAttribute) new HypermediaAttribute().setName("extra_attr_3").setValue("some_value_3"));
+        OperationResult<HypermediaAttributesListWrapper> attributes = session
+                .attributesService()
+                .attributes(asList(serverAttributes.getProfileAttributes().get(0).getName(),
+                        serverAttributes.getProfileAttributes().get(1).getName()))
+                .createOrUpdate(newServerAttributes);
+
+        assertNotNull(attributes);
+        assertEquals(Response.Status.OK.getStatusCode(), attributes.getResponse().getStatus());
+        assertTrue(attributes.getEntity().getProfileAttributes().size() == 2);
+
+    }
+
+    @Test(dependsOnMethods = "should_update_attributes")
     public void should_return_server_attributes() {
         List<HypermediaAttribute> attributes = session
                 .attributesService()
@@ -86,7 +107,7 @@ public class ServerBatchAttributesServiceIT extends RestClientTestUtil {
                 .getEntity()
                 .getProfileAttributes();
 
-        assertTrue(attributes.size() >= 2);
+        assertTrue(attributes.size() == 2);
 
     }
 

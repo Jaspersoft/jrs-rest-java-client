@@ -46,9 +46,6 @@ public class SingleAttributeAdapter extends AbstractAdapter {
 
     public SingleAttributeAdapter(String holderUri, SessionStorage sessionStorage, String attributeName) {
         super(sessionStorage);
-        if (sessionStorage == null || holderUri == null) {
-            throw new IllegalArgumentException("URI cannot be null.");
-        }
         this.holderUri = holderUri;
         this.attributeName = attributeName;
     }

@@ -144,6 +144,29 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         verify(userJerseyRequestMock, times(1)).delete();
     }
 
+
+    @Test
+    public void should_refuse_wrong_organization_and_get_user() {
+
+        // Given
+        SingleUserRequestAdapter adapter = spy(new SingleUserRequestAdapter(sessionStorageMock, new ClientUser().setTenantId("").setUsername("Simon")));
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientUser.class),
+                eq(new String[]{"users/", "Simon"}), any(DefaultErrorHandler.class)))
+                .thenReturn(userJerseyRequestMock);
+        doReturn(operationResultMock).when(userJerseyRequestMock).get();
+
+        // When
+        OperationResult<ClientUser> retrieved = adapter.get();
+
+        // Then
+        assertNotNull(retrieved);
+        verifyStatic(times(1));
+        buildRequest(eq(sessionStorageMock), eq(ClientUser.class),
+                eq(new String[]{"users/", "Simon"}), any(DefaultErrorHandler.class));
+        verify(userJerseyRequestMock, times(1)).get();
+    }
+
     @Test
     public void should_get_user_asynchronously() throws Exception {
 

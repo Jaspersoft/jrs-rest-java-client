@@ -35,29 +35,38 @@ public class UsersService extends AbstractAdapter {
     }
 
     public UsersService forOrganization(String organizationId) {
-        if ("".equals(organizationId) || "/".equals(organizationId)) {
-            throw new IllegalArgumentException("'organizationId' mustn't be an empty string");
+        if (organizationId == null || organizationId.equals("")) {
+            throw new IllegalArgumentException("Organization is not valid.");
         }
         this.organizationId = organizationId;
         return this;
     }
 
     public UsersService forOrganization(ClientTenant organization) {
+        if (organization == null) {
+            throw new IllegalArgumentException("Organization is not valid.");
+        }
         return this.forOrganization(organization.getId());
     }
 
     public SingleUserRequestAdapter user(ClientUser user) {
+        if (user == null || user.getUsername() == null || user.getUsername().equals("")) {
+            throw new IllegalArgumentException("User is not valid.");
+        }
         if (organizationId != null && user.getTenantId() == null) {
             user.setTenantId(organizationId);
         }
+
         return new SingleUserRequestAdapter(sessionStorage, user);
     }
 
-    public SingleUserRequestAdapter user(String userId) {
-        return this.user(new ClientUser().setUsername(userId));
+    public SingleUserRequestAdapter user(String userName)
+    {
+        return this.user(new ClientUser().setUsername(userName));
     }
 
     public BatchUsersRequestAdapter allUsers() {
+
         return new BatchUsersRequestAdapter(sessionStorage, organizationId);
     }
 }

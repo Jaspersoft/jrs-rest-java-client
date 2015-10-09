@@ -136,7 +136,7 @@ public class SinglePermissionRecipientRequestAdapterTest extends PowerMockTestCa
         assertSame(retrieved, resultMock);
     }
 
-    @Test(expectedExceptions = NullPointerException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_NPE_exception_when_session_is_null() throws Exception {
 
         // Given

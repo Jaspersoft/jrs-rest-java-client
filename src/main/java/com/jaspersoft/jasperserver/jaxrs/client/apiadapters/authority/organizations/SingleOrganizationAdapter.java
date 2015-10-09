@@ -44,7 +44,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
 
     public SingleOrganizationAdapter(SessionStorage sessionStorage, ClientTenant clientTenant) {
         super(sessionStorage);
-        this.clientTenant= clientTenant;
+        this.clientTenant = clientTenant;
         this.params = new MultivaluedHashMap<String, String>();
     }
 
@@ -131,7 +131,8 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 ClientTenant.class,
-                new String[]{"/organizations", clientTenant.getId()},
+                new String[]{"/organizations",
+                        (clientTenant.getId() == null) ? clientTenant.getAlias() : clientTenant.getId()},
                 new DefaultErrorHandler()
         );
     }

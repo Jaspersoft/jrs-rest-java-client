@@ -41,7 +41,7 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
     public BatchUsersRequestAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
         params = new MultivaluedHashMap<String, String>();
-        if (organizationId != null) {
+        if (organizationId != null && !organizationId.equals("")) {
             uri.append("organizations/").append(organizationId).append("/");
         }
         uri.append("users/");

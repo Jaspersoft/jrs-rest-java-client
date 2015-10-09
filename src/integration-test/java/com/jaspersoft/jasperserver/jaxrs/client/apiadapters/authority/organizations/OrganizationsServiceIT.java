@@ -34,10 +34,10 @@ public class OrganizationsServiceIT extends RestClientTestUtil {
     @Test
     public void should_create_organization() {
 
-        OperationResult<ClientTenant> operationResult = session.
-                organizationsService().
-                organization(organization).
-                create();
+        OperationResult<ClientTenant> operationResult = session
+                .organizationsService()
+                .organization(organization)
+                .create();
 
         ClientTenant entity = operationResult.getEntity();
 
@@ -64,7 +64,7 @@ public class OrganizationsServiceIT extends RestClientTestUtil {
 
         OperationResult<OrganizationsListWrapper> operationResult = session
                 .organizationsService()
-                .organizations()
+                .allOrganizations()
                 .get();
 
         OrganizationsListWrapper entity = operationResult.getEntity();

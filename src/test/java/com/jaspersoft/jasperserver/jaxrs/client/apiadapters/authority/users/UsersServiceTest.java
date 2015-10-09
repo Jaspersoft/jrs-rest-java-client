@@ -61,10 +61,34 @@ public class UsersServiceTest extends PowerMockTestCase {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exception_when_not_specified_ord_name() {
+    public void should_throw_exception_when_organization_name_is_empty() {
         // When
         UsersService service = new UsersService(sessionStorageMock);
         service.forOrganization("");
+        // Then
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_exception_when_organization_name_is_null() {
+        // When
+        UsersService service = new UsersService(sessionStorageMock);
+        service.forOrganization((String)null);
+        // Then
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_exception_when_users_organization_name_is_empty() {
+        // When
+        UsersService service = new UsersService(sessionStorageMock);
+        service.forOrganization(new ClientTenant().setId(""));
+        // Then
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_exception_when_organization_is_null() {
+        // When
+        UsersService service = new UsersService(sessionStorageMock);
+        service.forOrganization((ClientTenant)null);
         // Then
     }
 

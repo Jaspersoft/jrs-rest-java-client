@@ -36,19 +36,101 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService#ServerAttributesService(com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage)}
-     */
     public void should_pass_session_storage_to_parent_adapter() {
         AttributesService attributesService = new AttributesService(sessionStorageMock);
         SessionStorage retrieved = attributesService.getSessionStorage();
         assertSame(retrieved, sessionStorageMock);
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_sessionStorage_is_null() {
+        // When
+        new AttributesService(null);
+        // Then
+        // should be thrown an exception
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_organization_as_string_is_null() {
+        // When
+        new AttributesService(sessionStorageMock).forOrganization((String)null);
+        // Then
+        // should be thrown an exception
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_organization_as_object_is_null() {
+        // When
+        new AttributesService(sessionStorageMock).forOrganization((ClientTenant)null);
+        // Then
+        // should be thrown an exception
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_organization__id_is_null() {
+        // When
+        new AttributesService(sessionStorageMock).forOrganization(new ClientTenant().setId(null));
+        // Then
+        // should be thrown an exception
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_organization__id_is_empty() {
+        // When
+        new AttributesService(sessionStorageMock).forOrganization(new ClientTenant().setId(""));
+        // Then
+        // should be thrown an exception
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_organization__name_is_empty() {
+        // When
+        new AttributesService(sessionStorageMock).forOrganization("");
+        // Then
+        // should be thrown an exception
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_user_as_string_is_null() {
+        // When
+        new AttributesService(sessionStorageMock).forUser((String) null);
+        // Then
+        // should be thrown an exception
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_user_as_object_is_null() {
+        // When
+        new AttributesService(sessionStorageMock).forUser((ClientUser) null);
+        // Then
+        // should be thrown an exception
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_user_name_is_null() {
+        // When
+        new AttributesService(sessionStorageMock).forUser(new ClientUser().setUsername(null));
+        // Then
+        // should be thrown an exception
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_user_name_is_empty() {
+        // When
+        new AttributesService(sessionStorageMock).forUser(new ClientUser().setUsername(""));
+        // Then
+        // should be thrown an exception
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_user__name_is_empty() {
+        // When
+        new AttributesService(sessionStorageMock).forUser("");
+        // Then
+        // should be thrown an exception
+    }
+
     @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService#attribute()}
-     */
     public void should_return_proper_ServerSingleAttributeAdapter_instance() throws Exception {
 
         // Given
@@ -68,9 +150,6 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService#attribute()}
-     */
     public void should_return_proper_ServerSingleAttributeAdapter_instance_for_organization() throws Exception {
 
         // Given
@@ -90,9 +169,6 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService#attribute()}
-     */
     public void should_return_proper_ServerSingleAttributeAdapter_instance_for_organization_as_object() throws Exception {
 
         // Given
@@ -115,9 +191,6 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService#attribute()}
-     */
     public void should_return_proper_ServerSingleAttributeAdapter_instance_for_user() throws Exception {
 
         // Given
@@ -138,9 +211,6 @@ public class AttributesServiceTest extends PowerMockTestCase {
 
 
     @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService#attribute()}
-     */
     public void should_return_proper_ServerSingleAttributeAdapter_instance_for_user_as_object() throws Exception {
 
         // Given
@@ -163,9 +233,6 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService#attribute()}
-     */
     public void should_return_proper_ServerSingleAttributeAdapter_instance_for_organization_for_user() throws Exception {
 
         // Given
@@ -186,9 +253,6 @@ public class AttributesServiceTest extends PowerMockTestCase {
 
 
     @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService#attribute(String)}
-     */
     public void should_construct_an_object_with_proper_params() throws Exception {
 
         // Given /
@@ -208,9 +272,6 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService#attribute()}
-     */
     public void should_return_proper_BatchAttributeAdapter_instance() throws Exception {
 
         // Given
@@ -230,9 +291,6 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService#attributes(java.util.Collection)}
-     */
     public void should_instantiate_proper_BatchAttributeAdapter_instance() throws Exception {
 
         // Given
@@ -253,14 +311,11 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService#attributes(java.util.Collection)}
-     */
     public void should_instantiate_proper_BatchAttributeAdapter_instance_when_pass_vararg() throws Exception {
 
         // Given
         whenNew(BatchAttributeAdapter.class)
-                .withArguments("/", sessionStorageMock, "attr1", "attr2", "attr3")
+                .withArguments("/", sessionStorageMock, asList("attr1", "attr2", "attr3"))
                 .thenReturn(batchAttributeAdapterMock);
 
         AttributesService attributesService = new AttributesService(sessionStorageMock);
@@ -271,7 +326,7 @@ public class AttributesServiceTest extends PowerMockTestCase {
         // Then
         assertSame(retrieved, batchAttributeAdapterMock);
         verifyNew(BatchAttributeAdapter.class, times(1))
-                .withArguments("/", sessionStorageMock, "attr1", "attr2", "attr3");
+                .withArguments("/", sessionStorageMock, asList("attr1", "attr2", "attr3"));
     }
 
     @AfterMethod

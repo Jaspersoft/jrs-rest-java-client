@@ -26,6 +26,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import java.util.Collection;
 
+import static java.util.Arrays.asList;
+
 /**
  * @author Alex Krasnyanskiy
  * @since 6.0.1-ALPHA
@@ -38,27 +40,34 @@ public class AttributesService extends AbstractAdapter {
     }
 
     public AttributesService forOrganization(String organizationName) {
-        this.holderUri.append("organizations/").append(organizationName).append("/");
-        return this;
+        return this.forOrganization(new ClientTenant().setId(organizationName));
     }
 
     public AttributesService forOrganization(ClientTenant organization) {
+        if (organization == null || organization.getId() == null || organization.getId().equals("")) {
+            throw new IllegalArgumentException("Organization is not valid.");
+        }
         this.holderUri.append("organizations/").append(organization.getId()).append("/");
         return this;
     }
 
     public AttributesService forUser(ClientUser user) {
+        if (user == null || user.getUsername() == null|| user.getUsername().equals("")) {
+            throw new IllegalArgumentException("User is not valid.");
+        }
         this.holderUri.append("users/").append(user.getUsername()).append("/");
         return this;
     }
 
 
     public AttributesService forUser(String userName) {
-        this.holderUri.append("users/").append(userName).append("/");
-        return this;
+        return this.forUser(new ClientUser().setUsername(userName));
     }
 
     public SingleAttributeAdapter attribute(String attributeName) {
+        if (attributeName == null || attributeName.equals("")) {
+            throw new IllegalArgumentException("Attribute name is not valid.");
+        }
         return new SingleAttributeAdapter(holderUri.toString(), sessionStorage, attributeName);
     }
 
@@ -67,10 +76,13 @@ public class AttributesService extends AbstractAdapter {
     }
 
     public BatchAttributeAdapter attributes(Collection<String> attributesNames) {
+        if (attributesNames == null || attributesNames.size() == 0) {
+            throw new IllegalArgumentException("List of attributes is not valid.");
+        }
         return new BatchAttributeAdapter(holderUri.toString(), sessionStorage, attributesNames);
     }
 
     public BatchAttributeAdapter attributes(String... attributesNames) {
-        return new BatchAttributeAdapter(holderUri.toString(), sessionStorage, attributesNames);
+        return this.attributes(asList(attributesNames));
     }
 }

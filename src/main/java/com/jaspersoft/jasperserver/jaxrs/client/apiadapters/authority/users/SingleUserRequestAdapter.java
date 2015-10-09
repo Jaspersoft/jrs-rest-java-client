@@ -18,14 +18,12 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
 
     public SingleUserRequestAdapter(SessionStorage sessionStorage, ClientUser user) {
         super(sessionStorage);
-
         this.user = user;
-        if (user.getTenantId() != null) {
+        if (user.getTenantId() != null && !user.getTenantId().equals("")) {
             uri.append("organizations/").append(user.getTenantId()).append("/");
         }
         uri.append("users/");
     }
-
 
     public OperationResult<ClientUser> get() {
         return buildRequest().get();

@@ -48,8 +48,7 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
     }
 
     public BatchOrganizationsAdapter parameter(OrganizationParameter orgParam, Boolean value) {
-        params.add(orgParam.getParamName(), value.toString());
-        return this;
+        return this.parameter(orgParam, value.toString());
     }
 
     public OperationResult<OrganizationsListWrapper> get() {

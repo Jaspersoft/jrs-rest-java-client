@@ -31,14 +31,18 @@ public class OrganizationsService extends AbstractAdapter {
     }
 
     public SingleOrganizationAdapter organization(ClientTenant organization) {
+        if (organization == null || (organization.getId() == null || organization.getId().equals("")
+                && (organization.getAlias() == null || organization.getAlias().equals("")))) {
+            throw new IllegalArgumentException("Organization is not valid.");
+        }
         return new SingleOrganizationAdapter(sessionStorage, organization);
     }
 
     public SingleOrganizationAdapter organization(String organizationId) {
-        return new SingleOrganizationAdapter(sessionStorage, new ClientTenant().setId(organizationId));
+        return this.organization(new ClientTenant().setId(organizationId));
     }
 
-    public BatchOrganizationsAdapter organizations() {
+    public BatchOrganizationsAdapter allOrganizations() {
         return new BatchOrganizationsAdapter(sessionStorage);
     }
 }

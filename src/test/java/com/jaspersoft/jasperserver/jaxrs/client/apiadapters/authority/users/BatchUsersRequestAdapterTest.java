@@ -123,6 +123,22 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
         verify(requestMock, times(1)).get();
         verify(requestMock, times(1)).addParams(params);
     }
+    @Test
+    public void should_refuse_wrong_organization_and_get_resource() {
+        // Given
+        MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users/"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        doReturn(operationResultMock).when(requestMock).get();
+        doReturn(requestMock).when(requestMock).addParams(params);
+        BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, ""));
+        //When
+        OperationResult<UsersListWrapper> retrievedResult = adapterSpy.get();
+        // Then
+        assertSame(retrievedResult, operationResultMock);
+        verify(requestMock, times(1)).get();
+        verify(requestMock, times(1)).addParams(params);
+    }
 
     @Test
     public void should_get_resource_with_params() {

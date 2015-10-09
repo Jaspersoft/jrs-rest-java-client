@@ -62,6 +62,9 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage, Collection<String> attributesNames) {
         this(holderUri, sessionStorage);
         for (String attributeName : attributesNames) {
+            if (attributeName.equals("")) {
+                throw new IllegalArgumentException("Names of attributes are not valid.");
+            }
             params.add("name", attributeName);
         }
     }
@@ -107,7 +110,7 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     public OperationResult<HypermediaAttributesListWrapper> createOrUpdate(HypermediaAttributesListWrapper attributesListWrapper) {
-        if (params.size() == 0) {
+        if (params.get("name") == null || params.get("name").size() == 0) {
             throw new IllegalStateException("Names of attributes were not defined.");
         }
         LinkedList<HypermediaAttribute> list = new LinkedList<HypermediaAttribute>(attributesListWrapper.getProfileAttributes());
