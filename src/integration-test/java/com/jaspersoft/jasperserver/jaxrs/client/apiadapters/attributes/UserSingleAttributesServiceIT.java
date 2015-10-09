@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
+import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -74,7 +75,7 @@ public class UserSingleAttributesServiceIT extends RestClientTestUtil {
         OperationResult<HypermediaAttribute> operationResult = session
                 .attributesService()
                 .forOrganization(orgName)
-                .forUser(userName)
+                .forUser(new ClientUser().setUsername(userName))
                 .attribute(attribute.getName())
                 .delete();
 

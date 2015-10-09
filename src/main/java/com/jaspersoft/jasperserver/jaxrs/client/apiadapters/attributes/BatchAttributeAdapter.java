@@ -31,7 +31,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -108,6 +107,9 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     public OperationResult<HypermediaAttributesListWrapper> createOrUpdate(HypermediaAttributesListWrapper attributesListWrapper) {
+        if (params.size() == 0) {
+            throw new IllegalStateException("Names of attributes were not defined.");
+        }
         LinkedList<HypermediaAttribute> list = new LinkedList<HypermediaAttribute>(attributesListWrapper.getProfileAttributes());
         for (Iterator<HypermediaAttribute>  iterator = list.iterator();iterator.hasNext();) {
             HypermediaAttribute current = iterator.next();

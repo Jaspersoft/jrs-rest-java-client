@@ -40,7 +40,8 @@ public class OrganizationBatchAttributesServiceIT extends RestClientTestUtil {
         OperationResult<HypermediaAttributesListWrapper> attributes = session
                 .attributesService()
                 .forOrganization(orgName)
-                .allAttributes()
+                .attributes(asList(serverAttributes.getProfileAttributes().get(0).getName(),
+                        serverAttributes.getProfileAttributes().get(1).getName()))
                 .createOrUpdate(serverAttributes);
 
         assertNotNull(attributes);

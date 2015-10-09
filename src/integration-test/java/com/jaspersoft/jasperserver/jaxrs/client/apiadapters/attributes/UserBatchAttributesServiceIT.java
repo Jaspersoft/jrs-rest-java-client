@@ -44,7 +44,8 @@ public class UserBatchAttributesServiceIT extends RestClientTestUtil {
                 .attributesService()
                 .forOrganization(orgName)
                 .forUser(userName)
-                .allAttributes()
+                .attributes(asList(serverAttributes.getProfileAttributes().get(0).getName(),
+                        serverAttributes.getProfileAttributes().get(1).getName()))
                 .createOrUpdate(serverAttributes);
 
         assertNotNull(attributes);
