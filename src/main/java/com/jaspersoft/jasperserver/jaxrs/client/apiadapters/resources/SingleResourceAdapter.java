@@ -206,6 +206,11 @@ public class SingleResourceAdapter extends AbstractAdapter {
 
     public <T> OperationResult<T> get(Class<T> clazz){
         JerseyRequest<T> request = buildRequest(sessionStorage, clazz, new String[]{"/resources", resourceUri});
+        if (isRootFolder(resourceUri)) {
+            request.setAccept(ResourceMediaType.FOLDER_JSON);
+        } else {
+            request.setAccept(ResourceMediaType.FILE_JSON);
+        }
         return request.get();
     }
 
