@@ -96,6 +96,8 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/repository.domainTopic+xml",
         "application/repository.semanticlayerdatasource+json",
         "application/repository.semanticlayerdatasource+xml",
+        "application/hal+json",
+        "application/hal+xml",
         "text/json",
         "text/xml"})
 @Produces({
@@ -160,6 +162,8 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         ResourceMediaType.SEMANTIC_LAYER_DATA_SOURCE_JSON,
         ResourceMediaType.SEMANTIC_LAYER_DATA_SOURCE_XML,
         "application/xml",
+        "application/hal+json",
+        "application/hal+xml",
         "text/json",
         "text/xml"})
 public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {

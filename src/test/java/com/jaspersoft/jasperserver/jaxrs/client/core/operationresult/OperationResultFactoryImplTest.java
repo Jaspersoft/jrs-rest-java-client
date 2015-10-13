@@ -5,7 +5,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientQuery;
 import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
 import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesTypeResolverUtil;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.thumbnails.ResourceThumbnailListWrapper;
+import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnailsListWrapper;
 import javax.ws.rs.core.Response;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -121,11 +121,11 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
         /** Given **/
         Mockito.when(responseMock.hasEntity()).thenReturn(true);
-        Mockito.when(responseMock.readEntity(ResourceThumbnailListWrapper.class)).thenReturn(new ResourceThumbnailListWrapper(asList(new ResourceThumbnail())));
+        Mockito.when(responseMock.readEntity(ResourceThumbnailsListWrapper.class)).thenReturn(new ResourceThumbnailsListWrapper(asList(new ResourceThumbnail())));
         OperationResultFactoryImpl factory = new OperationResultFactoryImpl();
 
         /** When **/
-        OperationResult<ResourceThumbnailListWrapper> operationResult = factory.getOperationResult(responseMock, ResourceThumbnailListWrapper.class);
+        OperationResult<ResourceThumbnailsListWrapper> operationResult = factory.getOperationResult(responseMock, ResourceThumbnailsListWrapper.class);
 
         /** Then **/
         Assert.assertNotNull(operationResult);
@@ -136,7 +136,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
     @Test
     public void should_return_null_entity() {
         OperationResultFactoryImpl factory = new OperationResultFactoryImpl();
-        OperationResult<ResourceThumbnailListWrapper> operationResult = factory.getOperationResult(responseMock, ResourceThumbnailListWrapper.class);
+        OperationResult<ResourceThumbnailsListWrapper> operationResult = factory.getOperationResult(responseMock, ResourceThumbnailsListWrapper.class);
         Assert.assertNull(operationResult.getEntity());
     }
 

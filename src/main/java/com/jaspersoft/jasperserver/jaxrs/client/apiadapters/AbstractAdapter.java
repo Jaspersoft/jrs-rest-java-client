@@ -26,6 +26,9 @@ public abstract class AbstractAdapter {
     protected final SessionStorage sessionStorage;
 
     public AbstractAdapter(SessionStorage sessionStorage) {
+        if (sessionStorage == null ) {
+            throw new IllegalArgumentException("SessionStorage is null, adapter can not be initialized.");
+        }
         this.sessionStorage = sessionStorage;
     }
 

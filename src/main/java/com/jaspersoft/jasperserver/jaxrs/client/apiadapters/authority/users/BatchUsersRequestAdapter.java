@@ -23,28 +23,28 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users;
 
 import com.jaspersoft.jasperserver.dto.authority.UsersListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
-
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class BatchUsersRequestAdapter extends AbstractAdapter {
 
     private MultivaluedMap<String, String> params;
-    private final String uri;
+    private StringBuilder uri = new StringBuilder("");
 
     public BatchUsersRequestAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
         params = new MultivaluedHashMap<String, String>();
-        if (organizationId != null) {
-            uri = "/organizations/" + organizationId + "/users";
-        } else {
-            uri = "/users";
+        if (organizationId != null && !organizationId.equals("")) {
+            uri.append("organizations/").append(organizationId).append("/");
         }
+        uri.append("users/");
     }
 
     public BatchUsersRequestAdapter param(UsersParameter userParam, String value) {
@@ -53,15 +53,11 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<UsersListWrapper> get() {
-        JerseyRequest<UsersListWrapper> request = buildRequest(sessionStorage, UsersListWrapper.class,
-                new String[]{uri}, new DefaultErrorHandler());
-        request.addParams(params);
-        return request.get();
+        return buildRequest().get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<UsersListWrapper>, R> callback) {
-        final JerseyRequest<UsersListWrapper> request = buildRequest(sessionStorage, UsersListWrapper.class, new String[]{uri}, new DefaultErrorHandler());
-        request.addParams(params);
+        final JerseyRequest<UsersListWrapper> request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -71,4 +67,13 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
+
+    private JerseyRequest<UsersListWrapper> buildRequest() {
+        JerseyRequest<UsersListWrapper> request = JerseyRequest.buildRequest(sessionStorage, UsersListWrapper.class,
+                new String[]{uri.toString()}, new DefaultErrorHandler());
+        request.addParams(params);
+        return request;
+    }
+
+
 }

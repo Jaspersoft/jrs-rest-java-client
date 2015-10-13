@@ -9,43 +9,54 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.Whitebox;
+
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
+import org.testng.annotations.AfterMethod;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.internal.util.reflection.Whitebox.getInternalState;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.AssertJUnit.assertNotSame;
+import static org.testng.AssertJUnit.assertSame;
 
 /**
- * @author Tetiana Iefimenko
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.SingleOrganizationAdapter}
  */
-@PrepareForTest({OrganizationsService.class, JerseyRequest.class})
+@PrepareForTest({SingleOrganizationAdapter.class, JerseyRequest.class})
+
 public class SingleOrganizationAdapterTest extends PowerMockTestCase {
 
     @Mock
     private SessionStorage sessionStorageMock;
+
+
     @Mock
-    private SingleOrganizationAdapter singleOrganizationAdapterMock;
+    private JerseyRequest<ClientTenant> requestMock;
+
     @Mock
-    private JerseyRequest<ClientTenant> jerseyRequestMock;
+    private OperationResult<ClientTenant> resultMock;
+
     @Mock
-    private OperationResult<ClientTenant> operationResultMock;
+    private ClientTenant clientTenantMock;
 
     @BeforeMethod
     public void before() {
@@ -53,24 +64,114 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_instance_of_SingleOrganizationAdapter() throws Exception {
+    public void should_pass_proper_session_storage_to_parent_class_and_set_own_fields() {
 
         // When
-        SingleOrganizationAdapter adapter = new SingleOrganizationAdapter(sessionStorageMock, "orgId");
+        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, clientTenantMock));
+        ClientTenant clientTenant = (ClientTenant) getInternalState(adapter, "clientTenant");
 
         // Then
-        assertEquals(Whitebox.getInternalState(adapter, "sessionStorage"), sessionStorageMock);
-        assertEquals(Whitebox.getInternalState(adapter, "organizationId"), "orgId");
+        assertNotNull(adapter);
+        assertEquals(clientTenant, clientTenantMock);
     }
 
     @Test
-    public void should_run_get_method_asynchronously() throws Exception {
+    public void should_invoke_private_method_and_return_a_mock() throws Exception {
 
         // Given
+        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, clientTenantMock));
+        doReturn(requestMock).when(adapter, "buildRequest");
+        doReturn(resultMock).when(requestMock).get();
+
+        // When
+        adapter.get();
+
+        // Then
+        verifyPrivate(adapter, times(1)).invoke("buildRequest");
+        verify(requestMock, times(1)).get();
+        verifyNoMoreInteractions(requestMock);
+    }
+
+
+    @Test
+    public void should_invoke_private_method() {
+
+        // Given
+        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, clientTenantMock));
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"/organizations", "orgId"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).get();
-        SingleOrganizationAdapter adapterSpy = spy(new SingleOrganizationAdapter(sessionStorageMock, "orgId"));
+        when(buildRequest(eq(sessionStorageMock), eq(ClientTenant.class),
+                eq(new String[]{"/organizations", "myOrg"}), any(DefaultErrorHandler.class)))
+                .thenReturn(requestMock);
+        doReturn("myOrg").when(clientTenantMock).getId();
+        doReturn(resultMock).when(requestMock).put(clientTenantMock);
+
+        // When
+        OperationResult<ClientTenant> retrieved = adapter.createOrUpdate(clientTenantMock);
+
+        // Then
+        assertNotNull(retrieved);
+        verifyStatic(times(1));
+        buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"/organizations", "myOrg"}), any(DefaultErrorHandler.class));
+        verify(requestMock, times(1)).put(clientTenantMock);
+    }
+
+
+    @Test
+    public void should_delete_organization() throws Exception {
+
+        // Given
+        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, clientTenantMock));
+        doReturn(requestMock).when(adapter, "buildRequest");
+        doReturn(resultMock).when(requestMock).delete();
+
+        // When
+        OperationResult retrieved = adapter.delete();
+
+        // Then
+        assertSame(retrieved, resultMock);
+        verifyPrivate(adapter, times(1)).invoke("buildRequest");
+    }
+
+
+    @Test
+    public void should_create_or_update_attribute_for_user() throws Exception {
+
+        // Given
+        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, clientTenantMock));
+        doReturn(requestMock).when(adapter, "buildRequest");
+        doReturn(resultMock).when(requestMock).put(clientTenantMock);
+
+        // When
+        OperationResult retrieved = adapter.createOrUpdate(clientTenantMock);
+
+        // Then
+        assertSame(retrieved, resultMock);
+        verifyPrivate(adapter, times(1)).invoke("buildRequest");
+    }
+
+    @Test
+    public void should_create_attribute_for_user() throws Exception {
+
+        // Given
+        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, clientTenantMock));
+        doReturn(requestMock).when(adapter, "request");
+        doReturn(resultMock).when(requestMock).post(clientTenantMock);
+
+        // When
+        OperationResult retrieved = adapter.create();
+
+        // Then
+        assertSame(retrieved, resultMock);
+        verifyPrivate(adapter, times(1)).invoke("request");
+    }
+
+    @Test
+    public void should_return_organization_asynchronously() throws Exception {
+
+        // Given
+        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, clientTenantMock));
+        doReturn(requestMock).when(adapter, "buildRequest");
+        doReturn(resultMock).when(requestMock).get();
 
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
@@ -80,87 +181,131 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
             public Void execute(OperationResult<ClientTenant> data) {
                 newThreadId.set((int) Thread.currentThread().getId());
                 synchronized (this) {
-                    this.notifyAll();
-                }
+
+                    this.notify();
+
                 return null;
             }
-        });
+        }});
 
-        doReturn(null).when(callback).execute(operationResultMock);
+
+        doReturn(null).when(callback).execute(resultMock);
 
         // When
-        RequestExecution retrieved = adapterSpy.asyncGet(callback);
+        RequestExecution retrieved = adapter.asyncGet(callback);
+
 
         synchronized (callback) {
             callback.wait(1000);
         }
 
         // Then
-        verify(jerseyRequestMock).get();
-        verify(callback).execute(operationResultMock);
+
+        verify(requestMock).get();
+        verify(callback).execute(resultMock);
+
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
     }
 
     @Test
-    public void should_run_get_method_synchronously() throws Exception {
+
+    public void should_delete_organization_asynchronously() throws Exception {
 
         // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"/organizations", "orgId"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).get();
-        SingleOrganizationAdapter adapterSpy = spy(new SingleOrganizationAdapter(sessionStorageMock, "orgId"));
+        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, clientTenantMock));
+        doReturn(requestMock).when(adapter, "buildRequest");
+        doReturn(resultMock).when(requestMock).delete();
+
+        final AtomicInteger newThreadId = new AtomicInteger();
+        final int currentThreadId = (int) Thread.currentThread().getId();
+
+        final Callback<OperationResult<ClientTenant>, Void> callback = spy(new Callback<OperationResult<ClientTenant>, Void>() {
+            @Override
+            public Void execute(OperationResult<ClientTenant> data) {
+                newThreadId.set((int) Thread.currentThread().getId());
+                synchronized (this) {
+                    this.notify();
+                }
+                return null;
+            }
+        });
+
+        doReturn(null).when(callback).execute(resultMock);
+
         // When
-        OperationResult<ClientTenant> retrieved = adapterSpy.get();
+        RequestExecution retrieved = adapter.asyncDelete(callback);
+
+        synchronized (callback) {
+            callback.wait(1000);
+        }
 
         // Then
-        verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"/organizations", "orgId"}), any(DefaultErrorHandler.class));
-        verify(jerseyRequestMock).get();
-        verifyPrivate(adapterSpy).invoke("buildRequest");
+        verify(requestMock).delete();
+        verify(callback).execute(resultMock);
         assertNotNull(retrieved);
-
-    }
-
-
-    @Test
-    public void should_run_delete_method() throws Exception {
-
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"/organizations", "orgId"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).delete();
-        SingleOrganizationAdapter adapterSpy = spy(new SingleOrganizationAdapter(sessionStorageMock, "orgId"));
-        // When
-        OperationResult<ClientTenant> retrieved = adapterSpy.delete();
-
-        // Then
-        verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"/organizations", "orgId"}), any(DefaultErrorHandler.class));
-        verify(jerseyRequestMock).delete();
-        verifyPrivate(adapterSpy).invoke("buildRequest");
-        assertNotNull(retrieved);
-
+        assertNotSame(currentThreadId, newThreadId.get());
     }
 
     @Test
-    public void should_run_createOrUpdate_method() throws Exception {
+    public void should_create_or_update_attribute_for_user_asynchronously() throws Exception {
 
         // Given
-        ClientTenant clientTenantMock = new ClientTenant();
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"/organizations", "orgId"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).put(anyString());
-        SingleOrganizationAdapter adapterSpy = spy(new SingleOrganizationAdapter(sessionStorageMock, "orgId"));
+        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, clientTenantMock));
+        final AtomicInteger newThreadId = new AtomicInteger();
+        final int currentThreadId = (int) Thread.currentThread().getId();
+
+        final Callback<OperationResult<ClientTenant>, Void> callback = spy(new Callback<OperationResult<ClientTenant>, Void>() {
+            @Override
+            public Void execute(OperationResult<ClientTenant> data) {
+                newThreadId.set((int) Thread.currentThread().getId());
+                synchronized (this) {
+                    this.notify();
+                }
+                return null;
+            }
+        });
+
+        doReturn(requestMock).when(adapter, "buildRequest");
+        doReturn(resultMock).when(requestMock).put(clientTenantMock);
+        doReturn(null).when(callback).execute(resultMock);
+
         // When
-        OperationResult<ClientTenant> retrieved = adapterSpy.createOrUpdate(clientTenantMock);
+        RequestExecution retrieved = adapter.asyncCreateOrUpdate(clientTenantMock, callback);
+
+        synchronized (callback) {
+            callback.wait(1000);
+        }
 
         // Then
-        verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"/organizations", "orgId"}), any(DefaultErrorHandler.class));
-        verify(jerseyRequestMock).put(anyString());
-        verifyPrivate(adapterSpy).invoke("buildRequest");
+        verify(requestMock).put(clientTenantMock);
+        verify(callback).execute(resultMock);
         assertNotNull(retrieved);
+        assertNotSame(currentThreadId, newThreadId.get());
+    }
+
+    @Test
+    public void should_set_parameter_and_invoke_private_method() throws Exception {
+
+        // Given
+        SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, clientTenantMock));
+        doReturn(requestMock).when(adapter, "request");
+        doReturn(adapter).when(adapter).parameter(OrganizationParameter.CREATE_DEFAULT_USERS, true);
+        doReturn(resultMock).when(requestMock).post(clientTenantMock);
+
+        // When
+        OperationResult<ClientTenant> retrieved = adapter.parameter(OrganizationParameter.CREATE_DEFAULT_USERS,true).create();
+
+        // Then
+        assertNotNull(retrieved);
+        verify(requestMock, times(1)).post(clientTenantMock);
+        verify(adapter, times(1)).parameter(OrganizationParameter.CREATE_DEFAULT_USERS, true);
+
+    }
+
+    @AfterMethod
+    public void after() {
+        reset(sessionStorageMock, requestMock, resultMock);
 
     }
 }
