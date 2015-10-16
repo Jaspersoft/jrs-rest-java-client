@@ -75,5 +75,4 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
         return request;
     }
 
-
 }
