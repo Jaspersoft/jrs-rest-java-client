@@ -53,9 +53,10 @@ public class RestClientConfiguration {
     private Boolean restrictedHttpMethods = false;
     private Boolean logHttp = false;
     private Boolean logHttpEntity = false;
-    private TrustManager[] trustManagers;
+    private Boolean handleErrors = true;
     private Integer connectionTimeout;
     private Integer readTimeout;
+    private TrustManager[] trustManagers;
 
     public RestClientConfiguration(String jasperReportsServerUrl) {
         this();
@@ -79,32 +80,6 @@ public class RestClientConfiguration {
                     public void checkServerTrusted(X509Certificate[] certs, String authType) {
                     }
                 }};
-    }
-
-    public String getJasperReportsServerUrl() {
-        return jasperReportsServerUrl;
-    }
-
-    public void setJasperReportsServerUrl(String jasperReportsServerUrl) {
-        if (!isStringValid(jasperReportsServerUrl) || !URL_PATTERN.matcher(jasperReportsServerUrl).matches())
-            throw new IllegalArgumentException("Given parameter is not a URL");
-        this.jasperReportsServerUrl = jasperReportsServerUrl;
-    }
-
-    public AuthenticationType getAuthenticationType() {
-        return authenticationType;
-    }
-
-    public void setAuthenticationType(AuthenticationType authenticationType) {
-        this.authenticationType = authenticationType;
-    }
-
-    public Boolean getRestrictedHttpMethods() {
-        return restrictedHttpMethods;
-    }
-
-    public void setRestrictedHttpMethods(Boolean restrictedHttpMethods) {
-        this.restrictedHttpMethods = restrictedHttpMethods;
     }
 
     public static RestClientConfiguration loadConfiguration(String path) {
@@ -171,6 +146,11 @@ public class RestClientConfiguration {
             configuration.setRestrictedHttpMethods(Boolean.valueOf(restrictedHttpMethods));
         }
 
+        String handleErrors = properties.getProperty("handleErrors");
+        if (isStringValid(handleErrors) && BOOLEAN_PATTERN.matcher(handleErrors).matches()) {
+            configuration.setHandleErrors(Boolean.valueOf(handleErrors));
+        }
+
         String contentMimeType = properties.getProperty("contentMimeType");
         if (isStringValid(contentMimeType)) {
             try {
@@ -192,7 +172,6 @@ public class RestClientConfiguration {
         return configuration;
     }
 
-
     private static Properties loadProperties(String path) {
         Properties properties = new Properties();
         try {
@@ -205,6 +184,7 @@ public class RestClientConfiguration {
         return properties;
     }
 
+
     private static Boolean isStringValid(String string) {
         return (string != null && string.length() > 0);
     }
@@ -213,63 +193,109 @@ public class RestClientConfiguration {
         return logHttp;
     }
 
-    public void setLogHttp(Boolean logHttp) {
+    public String getJasperReportsServerUrl() {
+        return jasperReportsServerUrl;
+    }
+
+    public RestClientConfiguration setJasperReportsServerUrl(String jasperReportsServerUrl) {
+        if (!isStringValid(jasperReportsServerUrl) || !URL_PATTERN.matcher(jasperReportsServerUrl).matches())
+            throw new IllegalArgumentException("Given parameter is not a URL");
+        this.jasperReportsServerUrl = jasperReportsServerUrl;
+        return this;
+    }
+
+    public AuthenticationType getAuthenticationType() {
+        return authenticationType;
+    }
+
+    public RestClientConfiguration setAuthenticationType(AuthenticationType authenticationType) {
+        this.authenticationType = authenticationType;
+        return this;
+    }
+
+    public Boolean getRestrictedHttpMethods() {
+        return restrictedHttpMethods;
+    }
+
+    public RestClientConfiguration setRestrictedHttpMethods(Boolean restrictedHttpMethods) {
+        this.restrictedHttpMethods = restrictedHttpMethods;
+        return this;
+    }
+
+    public Boolean getHandleErrors() {
+        return handleErrors;
+    }
+
+    public RestClientConfiguration setHandleErrors(Boolean handleErrors) {
+        this.handleErrors = handleErrors;
+        return this;
+    }
+
+    public RestClientConfiguration setLogHttp(Boolean logHttp) {
         this.logHttp = logHttp;
+        return this;
     }
 
     public Boolean getLogHttpEntity() {
         return logHttpEntity;
     }
 
-    public void setLogHttpEntity(Boolean logHttpEntity) {
+    public RestClientConfiguration setLogHttpEntity(Boolean logHttpEntity) {
         this.logHttpEntity = logHttpEntity;
+        return this;
     }
 
     public MimeType getContentMimeType() {
         return contentMimeType;
     }
 
-    public void setContentMimeType(MimeType contentMimeType) {
+    public RestClientConfiguration setContentMimeType(MimeType contentMimeType) {
         this.contentMimeType = contentMimeType;
+        return this;
     }
 
     public MimeType getAcceptMimeType() {
         return acceptMimeType;
     }
 
-    public void setAcceptMimeType(MimeType acceptMimeType) {
+    public RestClientConfiguration setAcceptMimeType(MimeType acceptMimeType) {
         this.acceptMimeType = acceptMimeType;
+        return this;
     }
 
     public JRSVersion getJrsVersion() {
         return jrsVersion;
     }
 
-    public void setJrsVersion(JRSVersion jrsVersion) {
+    public RestClientConfiguration setJrsVersion(JRSVersion jrsVersion) {
         this.jrsVersion = jrsVersion;
+        return this;
     }
 
     public TrustManager[] getTrustManagers() {
         return trustManagers;
     }
 
-    public void setTrustManagers(TrustManager[] trustManagers) {
+    public RestClientConfiguration setTrustManagers(TrustManager[] trustManagers) {
         this.trustManagers = trustManagers;
+        return this;
     }
 
     public Integer getConnectionTimeout() {
         return connectionTimeout;
     }
 
-    public void setConnectionTimeout(Integer connectionTimeout) {
+    public RestClientConfiguration setConnectionTimeout(Integer connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
+        return this;
     }
 
     public Integer getReadTimeout() {
         return readTimeout;
     }
 
-    public void setReadTimeout(Integer readTimeout) {
+    public RestClientConfiguration setReadTimeout(Integer readTimeout) {
         this.readTimeout = readTimeout;
+        return this;
     }
 }
