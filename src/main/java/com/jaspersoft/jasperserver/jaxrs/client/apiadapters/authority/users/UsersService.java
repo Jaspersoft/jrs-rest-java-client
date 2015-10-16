@@ -69,4 +69,29 @@ public class UsersService extends AbstractAdapter {
 
         return new BatchUsersRequestAdapter(sessionStorage, organizationId);
     }
+    @Deprecated
+    public UsersService organization(String organizationId) {
+        if ("".equals(organizationId) || "/".equals(organizationId)) {
+            throw new IllegalArgumentException("'organizationId' mustn't be an empty string");
+        }
+        this.organizationId = organizationId;
+        return this;
+    }
+
+    // Deprecated method, use user(userName) method
+    @Deprecated
+    public SingleUserRequestAdapter username(String username) {
+        if ("".equals(username) || "/".equals(username)) {
+            throw new IllegalArgumentException("'username' mustn't be an empty string");
+        }
+        return new SingleUserRequestAdapter(sessionStorage, organizationId, username);
+    }
+    // Deprecated method, use user(userName) method
+    @Deprecated
+    public SingleUserRequestAdapter user() {
+        return new SingleUserRequestAdapter(sessionStorage, organizationId);
+    }
+
 }
+
+
