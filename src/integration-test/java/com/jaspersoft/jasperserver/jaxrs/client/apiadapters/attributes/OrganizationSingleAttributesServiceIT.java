@@ -86,17 +86,6 @@ public class OrganizationSingleAttributesServiceIT extends RestClientTestUtil {
     @Test
     public void should_create_attribute_with_permission() {
         HypermediaAttribute newAttribute = new HypermediaAttribute(attribute);
-        /*
-        *<bean id="pattrTenantAttribute" class="com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute">
-    <property name="name" value="OrganizationAttributeTest"/>
-    <property name="value" value="Organization attribute test value"/>
-    <property name="description" value="Organization attribute description"/>
-    <property name="permissionMask" value="32"/>
-    <property name="secure" value="false"/>
-    <property name="inherited" value="false"/>
-    <property name="holder" value="tenant:/organization_1"/>
-</bean>
-        * */
 
         newAttribute.setName("OrganizationAttributeTest");
         newAttribute.setValue("Organization attribute test value");
