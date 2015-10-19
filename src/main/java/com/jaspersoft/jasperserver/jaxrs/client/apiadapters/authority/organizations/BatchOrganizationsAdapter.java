@@ -79,66 +79,6 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
                 new DefaultErrorHandler());
     }
 }
-//
-//private final MultivaluedMap<String, String> params;
-//
-//    public BatchOrganizationsAdapter(SessionStorage sessionStorage) {
-//        super(sessionStorage);
-//        params = new MultivaluedHashMap<String, String>();
-//    }
-//
-//    public BatchOrganizationsAdapter parameter(OrganizationParameter orgParam, String value) {
-//        params.add(orgParam.getParamName(), value);
-//        return this;
-//    }
-//
-//    public OperationResult<OrganizationsListWrapper> get() {
-//        JerseyRequest<OrganizationsListWrapper> request = buildRequest(OrganizationsListWrapper.class);
-//        request.addParams(params);
-//        return request.get();
-//    }
-//
-//    public <R> RequestExecution asyncGet(final Callback<OperationResult<OrganizationsListWrapper>, R> callback) {
-//        final JerseyRequest<OrganizationsListWrapper> request = buildRequest(OrganizationsListWrapper.class);
-//        request.addParams(params);
-//
-//        RequestExecution task = new RequestExecution(new Runnable() {
-//            @Override
-//            public void run() {
-//                callback.execute(request.get());
-//            }
-//        });
-//
-//        ThreadPoolUtil.runAsynchronously(task);
-//        return task;
-//    }
-//
-//    public OperationResult<Organization> create(Organization clientTenant) {
-//        JerseyRequest<Organization> request = buildRequest(Organization.class);
-//        request.addParams(params);
-//        return request.post(clientTenant);
-//    }
-//
-//    public <R> RequestExecution asyncCreate(final Organization clientTenant, final Callback<OperationResult<Organization>, R> callback){
-//        final JerseyRequest<Organization> request = buildRequest(Organization.class);
-//        request.addParams(params);
-//
-//        RequestExecution task = new RequestExecution(new Runnable() {
-//            @Override
-//            public void run() {
-//                callback.execute(request.post(clientTenant));
-//            }
-//        });
-//
-//        ThreadPoolUtil.runAsynchronously(task);
-//        return task;
-//    }
-//
-//    private <T> JerseyRequest<T> buildRequest(Class<T> responseType) {
-//        return JerseyRequest.buildRequest(sessionStorage, responseType,
-//                new String[]{"/organizations"},
-//                new DefaultErrorHandler());
-//    }
 
 
 
