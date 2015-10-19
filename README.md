@@ -486,7 +486,7 @@ OperationResult<Organization> result = session
         .createOrUpdate(organization);
 ```
 Be carefully using this method because you can damage existing organization if the `organizationId` of new organization is already used.
-The descriptor sent in the request should contain all the properties you want to set on the new organization. Specify the `parentId` value to set the parent of the organization, not the `tenantUri` or `tenantFolderUri` properties.
+The descriptor is sent in the request should contain all the properties you want to set on the new organization. Specify the `parentId` value to set the parent of the organization, not the `tenantUri` or `tenantFolderUri` properties.
 However, all properties have defaults or can be determined based on the alias value. The minimal descriptor necessary to create an organization is simply the alias property. In this case, the organization is created as child of the logged-in user’s home organization.
 ####Modifying Organization Properties
 To modify the properties of an organization, use the `update` method and specify the organization ID in the URL. The request must include an organization descriptor with the values you want to change. You cannot change the ID of an organization, only its name (used for display) and its alias (used for logging in).
@@ -494,7 +494,7 @@ To modify the properties of an organization, use the `update` method and specify
 Organization organization = new Organization();
 organization.setAlias("lalalaOrg");
 
-OperationResult<Organization> result = session
+OperationResult<ClientTenant> result = session
         .organizationsService()
         .organization("myOrg1")
         .createOrUpdate(organization);
@@ -502,7 +502,7 @@ OperationResult<Organization> result = session
 ####Deleting an Organization
 To delete an organization, use the `delete()` method and specify the organization ID in the `organization()` method. When deleting an organization, all of its resources in the repository, all of its sub-organizations, all of its users, and all of its roles are permanently deleted.
 ```java
-OperationResult result = session
+OperationResult<ClientTenant> result = session
         .organizationsService()
         .organization("myOrg1")
         .delete();
@@ -603,7 +603,7 @@ ClientUser user = new ClientUser()
 client
     .authenticate("jasperadmin", "jasperadmin")
     .usersService()
-    .user(user.getUsername())
+    .user("john.doe")
     .createOrUpdate(user);
 ```
 ####Deleting a User
@@ -714,10 +714,10 @@ serverAttributes.setProfileAttributes(asList(new HypermediaAttribute(new ClientU
                        .createOrUpdate(serverAttributes);
 ```
 Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server:
-1. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute does not exist on the server it will be *created* on the server;
-2. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *updated* on the server;
-3. if requested attribute name in `attributes()` method does not  match with any attribute names of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *deleted* on the server;
-4. if requested attribute in `createOrUpdate()` method  method does not  match with any attribute names in `attributes()` it will be *ignored* and will not be sent to the server;
+ 1. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute does not exist on the server it will be *created* on the server;
+ 2. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *updated* on the server;
+ 3. if requested attribute name in `attributes()` method does not  match with any attribute names of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *deleted* on the server;
+ 4. if requested attribute in `createOrUpdate()` method  method does not  match with any attribute names in `attributes()` it will be *ignored* and will not be sent to the server;
 
 The second way of using the attributes service is adding or replacing individual attribute:
 ```java
@@ -839,21 +839,20 @@ OperationResult<HypermediaAttributesListWrapper> operationResult = session
 ####Viewing Server Attributes
 We have also provided service to get server attributes. Code below return available server attributes. 
 ```java
-List<ServerAttribute> attributes = session
-        .serverAttributesService()
-        .attributes()
+List<HypermediaAttribute> attributes = session
+        .attributesService()
+        .allAttributes()
         .get()
         .getEntity()
-        .getAttributes();
+        .getProfileAttributes();
 ```
 Or you can specify any concrete attribute.
 ```java
-List<HypermediaAttribute> attributes = session
+HypermediaAttribute entity = session
                 .attributesService()
-                .allAttributes()
+                .attribute("attribute_name")
                 .get()
-                .getEntity()
-                .getProfileAttributes();
+                .getEntity();
 ```
 ####Setting Server Attributes
 It is possible to create new server attributes.
@@ -968,7 +967,7 @@ v2/users service. For details, see section [creating a user](https://github.com/
 To delete a role, send the DELETE method and specify the role ID (name) in the URL.
 When this method is successful, the role is permanently deleted.
 ```java
-OperationResult operationResult =
+OperationResult<ClientRole> operationResult =
         client
                 .authenticate("jasperadmin", "jasperadmin")
                 .rolesService()
