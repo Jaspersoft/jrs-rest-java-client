@@ -48,6 +48,7 @@ public abstract class OperationResult<T> {
     public T getEntity() {
         try {
             if (entity == null) {
+
                 if (genericEntity != null) {
                     entity = response.readEntity(genericEntity);
                 } else {
@@ -78,5 +79,9 @@ public abstract class OperationResult<T> {
 
     public Class<? extends T> getEntityClass() {
         return entityClass;
+    }
+
+    public int getResponseStatus() {
+        return this.getResponse().getStatus();
     }
 }

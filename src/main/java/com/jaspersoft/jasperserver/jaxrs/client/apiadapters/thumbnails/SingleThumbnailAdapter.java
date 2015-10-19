@@ -37,7 +37,10 @@ public class SingleThumbnailAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<InputStream> request() {
+        if (params.size() == 0) {
+            throw new IllegalStateException("URI of report should be specified");
+        }
         return JerseyRequest.buildRequest(sessionStorage, InputStream.class,
-                new String[]{"/thumbnails" + params.get("uri").get(0)}, new DefaultErrorHandler());
+                new String[]{"/thumbnails",  params.get("uri").get(0)}, new DefaultErrorHandler());
     }
 }
