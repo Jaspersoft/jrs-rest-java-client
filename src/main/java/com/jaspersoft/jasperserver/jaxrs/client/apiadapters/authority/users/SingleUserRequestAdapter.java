@@ -17,8 +17,10 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     private StringBuilder uri = new StringBuilder("");
 
     private ClientUser user;
-    //the field should be deleted after deleting deprecated methods
-    @Deprecated
+    /**
+     * The field is used for deprecated methods of the class.
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#uri}.
+     */
     private String userUriPrefix;
 
 
@@ -91,7 +93,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
                 new DefaultErrorHandler());
     }
 
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#SingleUserRequestAdapter(SessionStorage, ClientUser)}.
+     */
     public SingleUserRequestAdapter(SessionStorage sessionStorage, String organizationId, String username) {
         super(sessionStorage);
         if (organizationId != null) {
@@ -104,7 +108,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         uri.append(userUriPrefix);
     }
 
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#SingleUserRequestAdapter(SessionStorage, ClientUser)}.
+     */
     public SingleUserRequestAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
         if (organizationId != null) {
@@ -114,7 +120,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         }
     }
 
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#SingleUserRequestAdapter(SessionStorage, ClientUser)}.
+     */
     public SingleUserRequestAdapter(String userId, String organizationId, SessionStorage sessionStorage) {
         super(sessionStorage);
         if (organizationId != null && !organizationId.equals("") && userId != null && !userId.equals("")) {
@@ -126,10 +134,11 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         }
     }
 
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#get()}.
+     */
     public OperationResult<ClientUser> get(String userId) {
 
-        /* checks if we already have setted userId */
         if (compile("^.*?users/([^/]+)$").matcher(uri.toString()).find()) {
             return request().get();
         }
@@ -138,12 +147,16 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return request().get();
     }
 
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#buildRequest()}.
+     */
     private JerseyRequest<ClientUser> request() {
         return JerseyRequest.buildRequest(sessionStorage, ClientUser.class, new String[]{uri.toString()}, new DefaultErrorHandler());
     }
 
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#asyncGet(Callback)}.
+     */
     public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientUser>, R> callback, String userId) {
         if (!compile("^.*?users/([^/]+)$").matcher(uri.toString()).find()) {
             uri.append(userId);
@@ -159,7 +172,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return task;
     }
 
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#createOrUpdate(ClientUser)}.
+     */
     public OperationResult<ClientUser> updateOrCreate(ClientUser user) {
         uri.append(user.getUsername());
         if (!uri.toString().contains("organizations") && user.getTenantId() != null) {
@@ -168,7 +183,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return request().put(user);
     }
 
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#asyncCreateOrUpdate(ClientUser, Callback)}.
+     */
     public <R> RequestExecution asyncCreateOrUpdate(final ClientUser user, final Callback<OperationResult<ClientUser>, R> callback, final String userId) {
         if (!compile("^.*?users/([^/]+)$").matcher(uri.toString()).find()) {
             uri.append(userId);
@@ -184,19 +201,25 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         return task;
     }
 
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#delete()}.
+     */
     public OperationResult delete(String userId) {
         uri.append(userId);
         return request().delete();
     }
 
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#delete()}.
+     */
     public OperationResult delete(ClientUser user) {
         uri.append(user.getUsername());
         return request().delete();
     }
 
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link SingleUserRequestAdapter#asyncDelete(Callback)}.
+     */
     public <R> RequestExecution asyncDelete(final Callback<OperationResult<ClientUser>, R> callback, String userId) {
         uri.append(userId);
         final JerseyRequest<ClientUser> request = request();

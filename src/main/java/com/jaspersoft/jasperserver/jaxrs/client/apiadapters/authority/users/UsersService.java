@@ -69,7 +69,10 @@ public class UsersService extends AbstractAdapter {
 
         return new BatchUsersRequestAdapter(sessionStorage, organizationId);
     }
-    @Deprecated
+
+    /**
+     * @deprecated Replaced by {@link UsersService#forOrganization(String)} or {@link UsersService#forOrganization(ClientTenant)}.
+     */
     public UsersService organization(String organizationId) {
         if ("".equals(organizationId) || "/".equals(organizationId)) {
             throw new IllegalArgumentException("'organizationId' mustn't be an empty string");
@@ -78,16 +81,19 @@ public class UsersService extends AbstractAdapter {
         return this;
     }
 
-    // Deprecated method, use user(userName) method
-    @Deprecated
+    /**
+     * @deprecated Replaced by {@link UsersService#user(String)} or {@link UsersService#user(ClientUser)}.
+     */
     public SingleUserRequestAdapter username(String username) {
         if ("".equals(username) || "/".equals(username)) {
             throw new IllegalArgumentException("'username' mustn't be an empty string");
         }
         return new SingleUserRequestAdapter(sessionStorage, organizationId, username);
     }
-    // Deprecated method, use user(userName) method
-    @Deprecated
+
+    /**
+     * @deprecated Replaced by {@link UsersService#user(String)} or {@link UsersService#user(ClientUser)}.
+     */
     public SingleUserRequestAdapter user() {
         return new SingleUserRequestAdapter(sessionStorage, organizationId);
     }

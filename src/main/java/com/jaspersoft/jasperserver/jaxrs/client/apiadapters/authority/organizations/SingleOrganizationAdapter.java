@@ -141,9 +141,12 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
                 new DefaultErrorHandler()
         );
     }
-    // Deprecated method, use organization(organizationID).create() methods
-@Deprecated
-        public OperationResult<ClientTenant> create(ClientTenant clientTenant) {
+
+    /**
+     * @deprecated Replaced by {@link SingleOrganizationAdapter#create()}.
+     */
+    @Deprecated
+    public OperationResult<ClientTenant> create(ClientTenant clientTenant) {
         JerseyRequest<ClientTenant> request = request();
         return params.size() != 0
                 ? request.addParams(params).post(clientTenant)

@@ -109,8 +109,11 @@ public class OrganizationsServiceTest extends PowerMockTestCase {
         // When
         service.organization("");
     }
-    //test should be deleted after deleting appropriate method
-@Deprecated
+
+    /**
+     * Test should be deleted after deleting appropriate method
+     * @deprecated Replaced by {@link OrganizationsServiceTest#should_return_proper_instance_of_BatchOrganizationsAdapter_deprecated}.
+     */
     @Test
     public void should_return_proper_instance_of_BatchOrganizationsAdapter_deprecated() throws Exception {
 

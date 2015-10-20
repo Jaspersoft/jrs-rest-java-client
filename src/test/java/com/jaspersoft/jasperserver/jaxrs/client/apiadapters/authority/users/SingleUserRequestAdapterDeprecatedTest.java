@@ -36,9 +36,9 @@ import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertSame;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.SingleUserRequestAdapter}
+ * Class should be deleted after deleting appropriate deprecated methods in SingleUserRequestAdapter class
+ * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsServiceTest}.
  */
-// Class should be deleted after deleting appropriate deprecated methods in SingleUserRequestAdapter class
 @Deprecated
 @PrepareForTest({
         SingleUserRequestAdapter.class,
