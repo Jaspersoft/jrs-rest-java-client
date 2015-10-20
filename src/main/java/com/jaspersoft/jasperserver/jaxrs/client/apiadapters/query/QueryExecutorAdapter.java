@@ -26,7 +26,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.query.QueryResult;
+import com.jaspersoft.jasperserver.dto.query.QueryResult;
 
 public class QueryExecutorAdapter extends AbstractAdapter {
     private final String resourceUri;

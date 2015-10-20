@@ -66,6 +66,8 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
 
     }
 
+
+    @SuppressWarnings("unchecked")
     protected JerseyRequest(SessionStorage sessionStorage, GenericType<ResponseType> genericType) {
         operationResultFactory = new OperationResultFactoryImpl();
         this.responseClass = (Class<ResponseType>) genericType.getRawType();
