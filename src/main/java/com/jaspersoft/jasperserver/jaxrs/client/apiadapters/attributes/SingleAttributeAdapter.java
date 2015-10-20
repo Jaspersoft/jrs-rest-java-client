@@ -92,7 +92,9 @@ public class SingleAttributeAdapter extends AbstractAdapter {
     }
 
     public OperationResult<HypermediaAttribute> createOrUpdate(ClientUserAttribute attribute) {
-        return buildRequest().put(attribute);
+        return buildRequest()
+                .setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/hal+{mime}"))
+                .put(attribute);
     }
 
     public <R> RequestExecution asyncCreateOrUpdate(final ClientUserAttribute userAttribute,
@@ -113,7 +115,7 @@ public class SingleAttributeAdapter extends AbstractAdapter {
         JerseyRequest<HypermediaAttribute> request = JerseyRequest.buildRequest(sessionStorage,HypermediaAttribute.class,
                 new String[]{holderUri,"attributes/",attributeName}, new DefaultErrorHandler());
         if (includePermissions) {
-            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(),"application/hal+{mime}"));
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/hal+{mime}"));
             request.addParam("_embedded", "permission");
         }
         return request;

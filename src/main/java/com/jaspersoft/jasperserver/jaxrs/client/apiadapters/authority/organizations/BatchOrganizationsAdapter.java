@@ -79,3 +79,8 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
                 new DefaultErrorHandler());
     }
 }
+
+
+
+
+

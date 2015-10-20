@@ -1,6 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
 import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttribute;
+import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttributeEmbeddedContainer;
+import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.jaxrs.client.RestClientTestUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import javax.ws.rs.core.Response;
@@ -8,6 +10,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static java.util.Arrays.asList;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
 import static org.testng.AssertJUnit.assertNull;
@@ -78,6 +81,40 @@ public class OrganizationSingleAttributesServiceIT extends RestClientTestUtil {
 
         assertNotNull(operationResult);
         assertEquals(Response.Status.NO_CONTENT.getStatusCode(), operationResult.getResponse().getStatus());
+    }
+
+    @Test
+    public void should_create_attribute_with_permission() {
+        HypermediaAttribute newAttribute = new HypermediaAttribute(attribute);
+
+        newAttribute.setName("OrganizationAttributeTest");
+        newAttribute.setValue("Organization attribute test value");
+        newAttribute.setDescription("Organization attribute description");
+        newAttribute.setPermissionMask(1);
+        newAttribute.setSecure(false);
+        newAttribute.setInherited(false);
+        newAttribute.setHolder("tenant:/organization_1");
+        RepositoryPermission permission = new RepositoryPermission().setUri("attr:/organizations/organization_1/attributes/OrganizationAttributeTest").setRecipient("role:/ROLE_ADMINISTRATOR").setMask(32);
+        HypermediaAttributeEmbeddedContainer container = new HypermediaAttributeEmbeddedContainer();
+        container.setRepositoryPermissions(asList(permission));
+        newAttribute.setEmbedded(container);
+
+        HypermediaAttribute entity = session
+                .attributesService()
+                .forOrganization("organization_1")
+                .attribute("OrganizationAttributeTest")
+                .setIncludePermissions(true)
+                .createOrUpdate(newAttribute)
+                .getEntity();
+
+        assertEquals(entity.getValue(), newAttribute.getValue());
+        assertNotNull(entity.getEmbedded());
+
+        OperationResult<HypermediaAttribute> operationResult = session
+                .attributesService()
+                .forOrganization("organization_1")
+                .attribute("OrganizationAttributeTest")
+                .delete();
     }
 
     @AfterClass
