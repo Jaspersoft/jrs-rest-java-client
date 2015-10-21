@@ -21,6 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.RequestMethod;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
@@ -155,7 +156,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     private OperationResult<ResponseType> executeRequest(int httpMethod, Invocation.Builder request, Object entity) {
         Response response = null;
         if (restrictedHttpMethods && (httpMethod != POST || httpMethod != GET) ) {
-            request.header("X-HTTP-Method-Override", httpMethod);
+            request.header("X-HTTP-Method-Override", RequestMethod.values()[httpMethod].toString());
             response = request.post(Entity.entity(entity, contentType));
         } else {
             switch (httpMethod) {
@@ -174,7 +175,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
             }
 
             if (response != null && response.getStatus() == 411 && (httpMethod != POST || httpMethod != GET)) {
-                request.header("X-HTTP-Method-Override", httpMethod);
+                request.header("X-HTTP-Method-Override", RequestMethod.values()[httpMethod].toString());
                 executeRequest(POST, request, entity);
             }
         }

@@ -29,17 +29,15 @@ import javax.ws.rs.core.Response;
 public class NullEntityOperationResult<T> extends OperationResult<T> {
     private ErrorHandler defaultErrorHandler;
 
-    public NullEntityOperationResult(Response response, Class entityClass) {
+    public NullEntityOperationResult(Response response, Class<T> entityClass) {
         super(response, entityClass);
-        this.defaultErrorHandler = defaultErrorHandler;
     }
 
     public NullEntityOperationResult(Response response, GenericType<T> genericType) {
         super(response, genericType);
-        this.defaultErrorHandler = defaultErrorHandler;
     }
 
-    public NullEntityOperationResult(Response response, Class entityClass, ErrorHandler defaultErrorHandler) {
+    public NullEntityOperationResult(Response response, Class<T> entityClass, ErrorHandler defaultErrorHandler) {
         super(response, entityClass);
         this.defaultErrorHandler = defaultErrorHandler;
     }

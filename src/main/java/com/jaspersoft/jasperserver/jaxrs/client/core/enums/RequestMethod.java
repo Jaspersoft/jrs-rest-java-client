@@ -5,5 +5,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.core.enums;
  */
 public enum RequestMethod {
     GET,
-    POST;
+    DELETE,
+    POST,
+    PUT;
 }

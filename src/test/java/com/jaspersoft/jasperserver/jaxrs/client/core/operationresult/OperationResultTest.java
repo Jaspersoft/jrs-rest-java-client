@@ -1,21 +1,23 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.core.Response;
 import org.mockito.Mockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Response;
-
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
 
 /**
  * Unit tests for {@link OperationResult}
  */
-@SuppressWarnings("unchecked")
-public class OperationResultTest {
+@PrepareForTest(Response.class)
+public class OperationResultTest extends PowerMockTestCase {
 
     private Response responseMock;
 
@@ -27,64 +29,87 @@ public class OperationResultTest {
     @Test
     public void should_return_string_serializedContent() {
 
-        /** Given **/
+        // Given
         Mockito.when(responseMock.readEntity(String.class)).thenReturn("serializedContent");
-        WithEntityOperationResult operationResult =
-                new WithEntityOperationResult(responseMock, String.class);
+        WithEntityOperationResult<String> operationResult =
+                new WithEntityOperationResult<String>(responseMock, String.class);
 
-        /** When **/
+        // When
         Object retrieved = operationResult.getSerializedContent();
 
-        /** Then **/
+        // Then
         Assert.assertTrue(instanceOf(String.class).matches(retrieved));
         Assert.assertEquals(retrieved, "serializedContent");
     }
 
 
     @Test
+    public void should_return_server_status_code() {
+
+        // Given
+        doReturn(200).when(responseMock).getStatus();
+
+        NullEntityOperationResult operationResult =
+                new NullEntityOperationResult(responseMock, String.class);
+
+        // When
+        int retrieved = operationResult.getResponseStatus();
+
+        // Then
+        Assert.assertEquals(retrieved, 200);
+    }
+
+
+    @Test
     public void should_return_null_entity_because_of_exception_while_reading_an_serializedContent() {
 
-        /** Given **/
+        // Given
         Mockito.when(responseMock.readEntity(String.class)).thenThrow(new ProcessingException("msg"));
-        WithEntityOperationResult operationResult =
-                new WithEntityOperationResult(responseMock, String.class);
+        WithEntityOperationResult<String> operationResult =
+                new WithEntityOperationResult<String>(responseMock, String.class);
 
-        /** When **/
+        // When
         Object retrieved = operationResult.getSerializedContent();
 
-        /** Then **/
+        // Then
         Assert.assertNull(retrieved);
     }
 
     @Test
     public void should_return_null_entity_when_fail_to_read_entity() {
 
-        /** Given **/
+        // Given
         Mockito.when(responseMock.readEntity(Void.class)).thenThrow(new RuntimeException());
-        OperationResult<Void> result = new OperationResult<Void>(responseMock, Void.class) {};
+        OperationResult<Void> result = new OperationResult<Void>(responseMock, Void.class) {
+        };
 
-        /** When **/
+        // When
         Void entity = result.getEntity();
 
-        /** Then **/
+        // Then
         Assert.assertNull(entity);
     }
 
     @Test
     public void should_return_passed_response_instance() {
-        OperationResult<Void> result = new OperationResult<Void>(responseMock, Void.class) {};
+// When
+        OperationResult<Void> result = new OperationResult<Void>(responseMock, Void.class) {
+        };
+        // Then
         Assert.assertSame(result.getResponse(), responseMock);
     }
 
     @Test
     public void should_return_passed_entity_class() {
-        OperationResult<Void> result = new OperationResult<Void>(responseMock, Void.class) {};
+// When
+        OperationResult<Void> result = new OperationResult<Void>(responseMock, Void.class) {
+        };
+        // Then
         Assert.assertEquals(result.getEntityClass(), Void.class);
     }
 
     @AfterMethod
     public void after() {
         responseMock = null;
-        //testableClientResource = null;
     }
 }

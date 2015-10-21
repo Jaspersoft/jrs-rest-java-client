@@ -98,6 +98,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
             setProperty("restrictedHttpMethods", "false");
             setProperty("logHttpEntity", "false");
             setProperty("logHttp", "false");
+            setProperty("handleErrors", "true");
         }};
         mockStaticPartial(RestClientConfiguration.class, "loadProperties");
         Method[] methods = MemberMatcher.methods(RestClientConfiguration.class, "loadProperties");
@@ -116,6 +117,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         assertEquals(configuration.getRestrictedHttpMethods().toString(), fakeProps.getProperty("restrictedHttpMethods"));
         assertEquals(configuration.getLogHttp().toString(), fakeProps.getProperty("logHttp"));
         assertEquals(configuration.getLogHttpEntity().toString(), fakeProps.getProperty("logHttpEntity"));
+        assertEquals(configuration.getHandleErrors().toString(), fakeProps.getProperty("handleErrors"));
 
         assertSame(configuration.getConnectionTimeout(), null);
         assertSame(configuration.getReadTimeout(), null);
@@ -124,7 +126,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
     }
 
     @Test(testName = "loadConfiguration")
-      public void should_load_configuration_by_path_with_all_kind_of_setted_values() throws Exception {
+      public void should_load_configuration_by_path_with_all_kind_of_set_values() throws Exception {
         // Given
         // fake properties with not empty connection timeout and read timeout
         Properties fakeProps = new Properties() {{
@@ -137,6 +139,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
             setProperty("restrictedHttpMethods", "false");
             setProperty("logHttpEntity", "false");
             setProperty("logHttp", "false");
+            setProperty("handleErrors", "false");
         }};
         mockStaticPartial(RestClientConfiguration.class, "loadProperties");
         Method[] methods = MemberMatcher.methods(RestClientConfiguration.class, "loadProperties");
@@ -158,6 +161,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         assertEquals(configuration.getRestrictedHttpMethods().toString(), fakeProps.getProperty("restrictedHttpMethods"));
         assertEquals(configuration.getLogHttp().toString(), fakeProps.getProperty("logHttp"));
         assertEquals(configuration.getLogHttpEntity().toString(), fakeProps.getProperty("logHttpEntity"));
+        assertEquals(configuration.getHandleErrors().toString(), fakeProps.getProperty("handleErrors"));
 
         assertNotNull(configuration.getTrustManagers());
         assertEquals(configuration.getAuthenticationType(), AuthenticationType.SPRING);
@@ -189,7 +193,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
     }
 
     @Test(testName = "loadProperties")
-    public void should_load_configuration_from_property_with_all_kind_of_setted_values() throws Exception {
+    public void should_load_configuration_from_property_with_all_kind_of_set_values() throws Exception {
         // Given
         Properties properties = new Properties() {{
             setProperty("url", "http://localhost:8080/jasperserver-pro/");
@@ -201,6 +205,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
             setProperty("restrictedHttpMethods", "false");
             setProperty("logHttpEntity", "false");
             setProperty("logHttp", "false");
+            setProperty("handleErrors", "false");
         }};
 
         // When
@@ -217,6 +222,7 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         assertEquals(configuration.getRestrictedHttpMethods().toString(), properties.getProperty("restrictedHttpMethods"));
         assertEquals(configuration.getLogHttp().toString(), properties.getProperty("logHttp"));
         assertEquals(configuration.getLogHttpEntity().toString(), properties.getProperty("logHttpEntity"));
+        assertEquals(configuration.getHandleErrors().toString(), properties.getProperty("handleErrors"));
 
         assertNotNull(configuration.getTrustManagers());
         assertEquals(configuration.getAuthenticationType(), AuthenticationType.SPRING);
@@ -501,6 +507,18 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
 
     }
 
+    @Test(testName = "getHandleErrorsMethods")
+    public void should_return_not_null_value_of_handleErrors_field() throws Exception {
+        // Given
+        RestClientConfiguration config = new RestClientConfiguration();
+        //Then
+        Field field = field(RestClientConfiguration.class, "handleErrors");
+        Boolean retrieved = (Boolean) field.get(config);
+        assertNotNull(retrieved);
+        assertEquals(retrieved, Boolean.TRUE);
+
+    }
+
     @Test(testName = "getRestrictedHttpMethods")
     public void should_return_not_null_default_value_of_restrictedHttpMethods_field() throws Exception {
         // Given
@@ -537,6 +555,20 @@ public class RestClientConfigurationTest extends PowerMockTestCase {
         Object retrieved = field.get(config);
         assertNotNull(retrieved);
         assertEquals(retrieved, MimeType.XML);
+
+    }
+
+    @Test(testName = "setHamdleErrors")
+    public void should_set_handkeErrors_field() throws IllegalAccessException {
+        // Given
+        RestClientConfiguration config = new RestClientConfiguration();
+        // When
+        config.setHandleErrors(false);
+        //Then
+        Field field = field(RestClientConfiguration.class, "handleErrors");
+        Object retrieved = field.get(config);
+        assertNotNull(retrieved);
+        assertEquals(retrieved, Boolean.FALSE);
 
     }
 
