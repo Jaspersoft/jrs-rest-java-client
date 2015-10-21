@@ -45,4 +45,13 @@ public class OrganizationsService extends AbstractAdapter {
     public BatchOrganizationsAdapter allOrganizations() {
         return new BatchOrganizationsAdapter(sessionStorage);
     }
+
+    /**
+     * @deprecated Replaced by {@link OrganizationsService#allOrganizations()}.
+     */
+@Deprecated
+    public BatchOrganizationsAdapter organizations() {
+        return new BatchOrganizationsAdapter(sessionStorage);
+    }
+
 }

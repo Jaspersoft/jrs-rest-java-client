@@ -31,13 +31,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import javax.ws.rs.core.MultivaluedHashMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 public class SingleOrganizationAdapter extends AbstractAdapter {
-
-    private static final Log log = LogFactory.getLog(SingleOrganizationAdapter.class);
 
     private final ClientTenant clientTenant;
     private final MultivaluedHashMap<String, String> params;
@@ -144,5 +140,16 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
                 new String[]{"/organizations"},
                 new DefaultErrorHandler()
         );
+    }
+
+    /**
+     * @deprecated Replaced by {@link SingleOrganizationAdapter#create()}.
+     */
+    @Deprecated
+    public OperationResult<ClientTenant> create(ClientTenant clientTenant) {
+        JerseyRequest<ClientTenant> request = request();
+        return params.size() != 0
+                ? request.addParams(params).post(clientTenant)
+                : request.post(clientTenant);
     }
 }

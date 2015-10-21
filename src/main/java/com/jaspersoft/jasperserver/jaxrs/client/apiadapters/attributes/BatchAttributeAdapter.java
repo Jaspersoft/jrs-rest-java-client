@@ -121,7 +121,9 @@ public class BatchAttributeAdapter extends AbstractAdapter {
             }
         }
         attributesListWrapper.setProfileAttributes(list);
-        return buildRequest().put(attributesListWrapper);
+        return buildRequest()
+                .setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),"application/hal+{mime}"))
+                .put(attributesListWrapper);
     }
 
     public <R> RequestExecution asyncCreateOrUpdate(final HypermediaAttributesListWrapper attributesList,
@@ -133,6 +135,7 @@ public class BatchAttributeAdapter extends AbstractAdapter {
                 callback.execute(request.put(attributesList));
             }
         });
+
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }

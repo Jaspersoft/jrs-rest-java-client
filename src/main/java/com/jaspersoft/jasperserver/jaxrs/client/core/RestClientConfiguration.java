@@ -53,7 +53,6 @@ public class RestClientConfiguration {
     private Boolean restrictedHttpMethods = false;
     private Boolean logHttp = false;
     private Boolean logHttpEntity = false;
-    private Boolean handleErrors = true;
     private Integer connectionTimeout;
     private Integer readTimeout;
     private TrustManager[] trustManagers;
@@ -146,11 +145,6 @@ public class RestClientConfiguration {
             configuration.setRestrictedHttpMethods(Boolean.valueOf(restrictedHttpMethods));
         }
 
-        String handleErrors = properties.getProperty("handleErrors");
-        if (isStringValid(handleErrors) && BOOLEAN_PATTERN.matcher(handleErrors).matches()) {
-            configuration.setHandleErrors(Boolean.valueOf(handleErrors));
-        }
-
         String contentMimeType = properties.getProperty("contentMimeType");
         if (isStringValid(contentMimeType)) {
             try {
@@ -219,15 +213,6 @@ public class RestClientConfiguration {
 
     public RestClientConfiguration setRestrictedHttpMethods(Boolean restrictedHttpMethods) {
         this.restrictedHttpMethods = restrictedHttpMethods;
-        return this;
-    }
-
-    public Boolean getHandleErrors() {
-        return handleErrors;
-    }
-
-    public RestClientConfiguration setHandleErrors(Boolean handleErrors) {
-        this.handleErrors = handleErrors;
         return this;
     }
 

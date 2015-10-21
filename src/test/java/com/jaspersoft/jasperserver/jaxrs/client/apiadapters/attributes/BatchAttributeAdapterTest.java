@@ -69,6 +69,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
     public void should_return_proper_operation_result() {
 
         // Given
+        RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
         attributes.setProfileAttributes(asList(
                 new HypermediaAttribute(new ClientUserAttribute().setName("max_threads").setValue("512")),
@@ -80,7 +81,9 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
                 eq(HypermediaAttributesListWrapper.class),
                 eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-
+        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
+        doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(jerseyRequestMock).when(jerseyRequestMock).setContentType(anyString());
         when(jerseyRequestMock.put(attributes)).thenReturn(operationResultMock);
 
         // When
@@ -131,6 +134,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
     public void should_discard_extra_parameters() {
 
         // Given
+        RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
         attributes.setProfileAttributes(asList(
                 new HypermediaAttribute(new ClientUserAttribute().setName("max_threads").setValue("512")),
@@ -148,7 +152,9 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
                 eq(HypermediaAttributesListWrapper.class),
                 eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-
+        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
+        doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(jerseyRequestMock).when(jerseyRequestMock).setContentType(anyString());
         when(jerseyRequestMock.put(attributes)).thenReturn(operationResultMock);
 
         // When
@@ -158,7 +164,6 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-//        verify(jerseyRequestMock, times(1)).put(attributes);
         verifyStatic(times(1));
         buildRequest(
                 eq(sessionStorageMock),

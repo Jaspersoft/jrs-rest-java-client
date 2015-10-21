@@ -211,11 +211,14 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         // Given
         final HypermediaAttribute userAttributeMock = mock(HypermediaAttribute.class);
         final SingleAttributeAdapter adapter = new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon/", sessionStorageMock, "State");
-
+        RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
                 eq(new String[]{"/organizations/MyCoolOrg/users/Simon/", "attributes/", "State"}), any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
+        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
+        doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(requestMock).when(requestMock).setContentType(anyString());
         doReturn(resultMock).when(requestMock).put(userAttributeMock);
 
         // When
@@ -301,14 +304,19 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         // Given
         final HypermediaAttribute userAttributeMock = mock(HypermediaAttribute.class);
+        RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon", sessionStorageMock, "State"));
         doReturn(requestMock).when(adapter, "buildRequest");
+        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
+        doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(requestMock).when(requestMock).setContentType(anyString());
         doReturn(resultMock).when(requestMock).put(userAttributeMock);
 
         // When
         OperationResult retrieved = adapter.createOrUpdate(userAttributeMock);
 
         // Then
+
         assertSame(retrieved, resultMock);
         verifyPrivate(adapter, times(1)).invoke("buildRequest");
     }
