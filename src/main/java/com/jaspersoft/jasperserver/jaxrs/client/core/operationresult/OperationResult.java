@@ -38,6 +38,8 @@ public abstract class OperationResult<T> {
         this.entityClass = entityClass;
     }
 
+
+    @SuppressWarnings("unchecked")
     public OperationResult(Response response, GenericType<T> genericEntity) {
         this.response = response;
         response.bufferEntity();
