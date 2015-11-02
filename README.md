@@ -629,10 +629,9 @@ The code below retrieves single attribute defined for the user:
                    .attribute(attribute.getName())
                    .get()
                    .getEntity();
-   
-  ```
+ ```
  You may work work with user as object:
-    ```java
+```java
     CleintUser userObject = new ClientUser();
     userObject.setName("jasperadmin");
     HypermediaAttribute userAttribute = session
@@ -641,9 +640,9 @@ The code below retrieves single attribute defined for the user:
                        .attribute(attribute.getName())
                        .get()
                        .getEntity();
-   ```
+```
  If user belong to organization you may specify it by name or as object:
- ```java
+```java
  HypermediaAttribute userAttribute = session
                  .attributesService()
                  .forOrganization("organization_1")
@@ -651,11 +650,10 @@ The code below retrieves single attribute defined for the user:
                  .attribute(attribute.getName())
                  .get()
                  .getEntity();
- 
- ```
-  ```java
+
   ClientTenant orgObject = new CleintTenant();
   orgObject.setId("someId");
+ 
  HypermediaAttribute userAttribute = session
                  .attributesService()
                  .forOrganization(orgObject)
@@ -663,9 +661,9 @@ The code below retrieves single attribute defined for the user:
                  .attribute(attribute.getName())
                  .get()
                  .getEntity();
- 
- ```
-   The code below retrieves the list of attributes defined for the user.
+```
+  
+The code below retrieves the list of attributes defined for the user.
 ```java
    HypermediaAttribute userAttribute = session
                    .attributesService()
@@ -673,10 +671,10 @@ The code below retrieves single attribute defined for the user:
                    .attribute("attributeName")
                    .get()
                    .getEntity();
-   
    ```
+
  If user belong to organization you may specify organization:
- ```java
+```java
  HypermediaAttribute userAttribute = session
                  .attributesService()
                  .forOrganization("organization_1")
@@ -684,7 +682,6 @@ The code below retrieves single attribute defined for the user:
                  .attribute(attribute.getName())
                  .get()
                  .getEntity();
- 
  ```
 You can get the list of attributes that includes the name and value of each attribute:
  ```java
@@ -713,6 +710,7 @@ serverAttributes.setProfileAttributes(asList(new HypermediaAttribute(new ClientU
                        .attributes("test_attribute_1","test_attribute_2")
                        .createOrUpdate(serverAttributes);
 ```
+
 Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server:
  1. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute does not exist on the server it will be *created* on the server;
  2. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *updated* on the server;
