@@ -91,13 +91,24 @@ public class SingleAttributeAdapter extends AbstractAdapter {
         return task;
     }
 
+    /**
+     * @deprecated Replaced by {@link SingleAttributeAdapter#createOrUpdate(HypermediaAttribute)}.
+     */
     public OperationResult<HypermediaAttribute> createOrUpdate(ClientUserAttribute attribute) {
-        return buildRequest()
-                .setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/hal+{mime}"))
-                .put(attribute);
+
+        return this.createOrUpdate(new HypermediaAttribute(attribute));
     }
 
-    public <R> RequestExecution asyncCreateOrUpdate(final ClientUserAttribute userAttribute,
+
+    public OperationResult<HypermediaAttribute> createOrUpdate(HypermediaAttribute attribute) {
+        JerseyRequest<HypermediaAttribute> request = buildRequest();
+        if (includePermissions) {
+            request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/hal+{mime}"));
+        }
+        return request.put(attribute);
+    }
+
+    public <R> RequestExecution asyncCreateOrUpdate(final HypermediaAttribute userAttribute,
                                                     final Callback<OperationResult<HypermediaAttribute>, R> callback) {
         final JerseyRequest<HypermediaAttribute> request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
