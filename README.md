@@ -52,6 +52,7 @@ Table of Contents
     * [Viewing Server Attributes](#viewing-server-attributes).
     * [Setting Server Attributes](#setting-server-attributes).
     * [Deleting Server Attributes](#deleting-server-attributes).
+    * [Getting attributes permissions](#getting-attributes-permissions).
   4. [The Roles Service](#the-roles-service).
     * [Searching for Roles](#searching-for-roles).
     * [Viewing a Role](#viewing-a-role).
@@ -899,8 +900,8 @@ session
                 .attributes("max_threads", "admin_cell_phone")
                 .delete();
 ```
-
-Please notice, since `6.1` version of `JaspersoftReportServer` you can obtain atributes with permissions, but you should use additional parameter `setIncludePermissions()`:
+###Getting attributes permissions
+Since `6.1` version of `JaspersoftReportServer` you can obtain atributes with permissions, but you should use additional parameter `setIncludePermissions()`:
 ```java
 
  HypermediaAttribute entity = session
@@ -911,6 +912,7 @@ Please notice, since `6.1` version of `JaspersoftReportServer` you can obtain at
                  .getEntity();
 ```
 Pay attention, the setting `setIncludePermission()` specify only the **server response format**, you can not set any permissions with this setting.
+
 ###The Roles Service
 It provides similar methods that allow you to list, view, create, modify, and delete roles. The new service provides improved search functionality, including user-based role searches. Because the role ID is used in the URL, this service can operate only on roles whose ID is less than 100 characters long and does not contain spaces or special symbols. Unlike resource IDs, the role ID is the role name and can be modified.
 ####Searching for Roles
