@@ -901,7 +901,7 @@ session
                 .delete();
 ```
 ###Getting attributes permissions
-Since `6.1` version of `JaspersoftReportServer` you can obtain atributes with permissions, but you should use additional parameter `setIncludePermissions()`:
+Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with permissions using additional parameter `setIncludePermissions()`:
 ```java
 
  HypermediaAttribute entity = session
