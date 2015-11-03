@@ -34,11 +34,11 @@ public class MandatoryParameterNotFoundException extends JSClientWebException {
     public final static String MANDATORY_PARAMETER_ERROR = "mandatory.parameter.error";
 
     public MandatoryParameterNotFoundException() {
-        super();    //To change body of overridden methods use File | Settings | File Templates.
+        super();
     }
 
     public MandatoryParameterNotFoundException(String message) {
-        super(message);    //To change body of overridden methods use File | Settings | File Templates.
+        super(message);
     }
 
     public MandatoryParameterNotFoundException(String message, List<ErrorDescriptor> errorDescriptors) {

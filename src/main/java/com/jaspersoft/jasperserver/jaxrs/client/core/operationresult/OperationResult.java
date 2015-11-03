@@ -38,7 +38,6 @@ public abstract class OperationResult<T> {
         this.entityClass = entityClass;
     }
 
-
     @SuppressWarnings("unchecked")
     public OperationResult(Response response, GenericType<T> genericEntity) {
         this.response = response;
@@ -50,6 +49,7 @@ public abstract class OperationResult<T> {
     public T getEntity() {
         try {
             if (entity == null) {
+
                 if (genericEntity != null) {
                     entity = response.readEntity(genericEntity);
                 } else {
@@ -80,5 +80,9 @@ public abstract class OperationResult<T> {
 
     public Class<? extends T> getEntityClass() {
         return entityClass;
+    }
+
+    public int getResponseStatus() {
+        return this.getResponse().getStatus();
     }
 }

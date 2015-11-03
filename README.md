@@ -52,6 +52,7 @@ Table of Contents
     * [Viewing Server Attributes](#viewing-server-attributes).
     * [Setting Server Attributes](#setting-server-attributes).
     * [Deleting Server Attributes](#deleting-server-attributes).
+    * [Getting attributes permissions](#getting-attributes-permissions).
   4. [The Roles Service](#the-roles-service).
     * [Searching for Roles](#searching-for-roles).
     * [Viewing a Role](#viewing-a-role).
@@ -629,10 +630,9 @@ The code below retrieves single attribute defined for the user:
                    .attribute(attribute.getName())
                    .get()
                    .getEntity();
-   
-  ```
+ ```
  You may work work with user as object:
-    ```java
+```java
     CleintUser userObject = new ClientUser();
     userObject.setName("jasperadmin");
     HypermediaAttribute userAttribute = session
@@ -641,9 +641,9 @@ The code below retrieves single attribute defined for the user:
                        .attribute(attribute.getName())
                        .get()
                        .getEntity();
-   ```
+```
  If user belong to organization you may specify it by name or as object:
- ```java
+```java
  HypermediaAttribute userAttribute = session
                  .attributesService()
                  .forOrganization("organization_1")
@@ -651,11 +651,10 @@ The code below retrieves single attribute defined for the user:
                  .attribute(attribute.getName())
                  .get()
                  .getEntity();
- 
- ```
-  ```java
+
   ClientTenant orgObject = new CleintTenant();
   orgObject.setId("someId");
+ 
  HypermediaAttribute userAttribute = session
                  .attributesService()
                  .forOrganization(orgObject)
@@ -663,9 +662,9 @@ The code below retrieves single attribute defined for the user:
                  .attribute(attribute.getName())
                  .get()
                  .getEntity();
- 
- ```
-   The code below retrieves the list of attributes defined for the user.
+```
+  
+The code below retrieves the list of attributes defined for the user.
 ```java
    HypermediaAttribute userAttribute = session
                    .attributesService()
@@ -673,10 +672,10 @@ The code below retrieves single attribute defined for the user:
                    .attribute("attributeName")
                    .get()
                    .getEntity();
-   
    ```
+
  If user belong to organization you may specify organization:
- ```java
+```java
  HypermediaAttribute userAttribute = session
                  .attributesService()
                  .forOrganization("organization_1")
@@ -684,7 +683,6 @@ The code below retrieves single attribute defined for the user:
                  .attribute(attribute.getName())
                  .get()
                  .getEntity();
- 
  ```
 You can get the list of attributes that includes the name and value of each attribute:
  ```java
@@ -713,6 +711,7 @@ serverAttributes.setProfileAttributes(asList(new HypermediaAttribute(new ClientU
                        .attributes("test_attribute_1","test_attribute_2")
                        .createOrUpdate(serverAttributes);
 ```
+
 Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server:
  1. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute does not exist on the server it will be *created* on the server;
  2. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *updated* on the server;
@@ -901,6 +900,19 @@ session
                 .attributes("max_threads", "admin_cell_phone")
                 .delete();
 ```
+###Getting attributes permissions
+Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with permissions using additional parameter `setIncludePermissions()`:
+```java
+
+ HypermediaAttribute entity = session
+                 .attributesService()
+                 .attribute("attribute_name")
+                 .setIncludePermissions(true)
+                 .get()
+                 .getEntity();
+```
+Pay attention, the setting `setIncludePermission()` specify only the **server response format**, you can not set any permissions with this setting.
+
 ###The Roles Service
 It provides similar methods that allow you to list, view, create, modify, and delete roles. The new service provides improved search functionality, including user-based role searches. Because the role ID is used in the URL, this service can operate only on roles whose ID is less than 100 characters long and does not contain spaces or special symbols. Unlike resource IDs, the role ID is the role name and can be modified.
 ####Searching for Roles
@@ -1716,6 +1728,23 @@ final Map<String, String> bundle = session
         .getEntity();
 ```
 ###Exception handling
+You can choose strategy of errors that are specified by status code of server response:
+1. handling of errors directly. This is allied by default.
+2. getting operation result in any case with null entity and handling error after calling `getEntity()` method:
+```java
+OperationResult<InputStream> result = session
+                .thumbnailsService()
+                .thumbnail()
+                .report("/")
+                .get(); // response status is 406, but exception won't be thrown
+result.getEntity();     // the error will be handled and an exception will be thrown
+```
+To apply the second strategy set `handleErrors` property of `RestCleintConfiguration` to `false`:
+```java
+configuration.setHandleErrors(false);
+```
+or specify this property in configuration file (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration)).
+
 You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method.
 
 JRS REST client exception handling system is based on `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` interface. Its `void handleError(Response response)` method is responsible for all error handling logic. You can use existed handlers, define your own handlers or extend existed handlers.

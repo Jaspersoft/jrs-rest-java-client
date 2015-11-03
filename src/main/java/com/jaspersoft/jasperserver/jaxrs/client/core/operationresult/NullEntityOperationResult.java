@@ -22,12 +22,14 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 public class NullEntityOperationResult<T> extends OperationResult<T> {
+    private ErrorHandler defaultErrorHandler;
 
-    public NullEntityOperationResult(Response response, Class entityClass) {
+    public NullEntityOperationResult(Response response, Class<T> entityClass) {
         super(response, entityClass);
     }
 
@@ -35,8 +37,21 @@ public class NullEntityOperationResult<T> extends OperationResult<T> {
         super(response, genericType);
     }
 
+    public NullEntityOperationResult(Response response, Class<T> entityClass, ErrorHandler defaultErrorHandler) {
+        super(response, entityClass);
+        this.defaultErrorHandler = defaultErrorHandler;
+    }
+
+    public NullEntityOperationResult(Response response, GenericType<T> genericType, ErrorHandler defaultErrorHandler) {
+        super(response, genericType);
+        this.defaultErrorHandler = defaultErrorHandler;
+    }
+
     @Override
     public T getEntity() {
+        if (defaultErrorHandler != null) {
+            defaultErrorHandler.handleError(response);
+        }
         return null;
     }
 }

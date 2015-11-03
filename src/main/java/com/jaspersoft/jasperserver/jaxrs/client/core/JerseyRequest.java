@@ -21,9 +21,11 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.RequestMethod;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityOperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
@@ -56,6 +58,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     private WebTarget usersWebTarget;
     private String contentType;
     private String acceptType;
+    private Boolean handleErrors;
 
     protected JerseyRequest(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
         operationResultFactory = new OperationResultFactoryImpl();
@@ -84,6 +87,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
 
         usersWebTarget = sessionStorage.getRootTarget()
                 .path("/rest_v2");
+        handleErrors = configuration.getHandleErrors();
     }
 
     public static <T> JerseyRequest<T> buildRequest(SessionStorage sessionStorage, Class<T> responseClass, String[] path) {
@@ -152,7 +156,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     private OperationResult<ResponseType> executeRequest(int httpMethod, Invocation.Builder request, Object entity) {
         Response response = null;
         if (restrictedHttpMethods && (httpMethod != POST || httpMethod != GET) ) {
-            request.header("X-HTTP-Method-Override", httpMethod);
+            request.header("X-HTTP-Method-Override", RequestMethod.values()[httpMethod].toString());
             response = request.post(Entity.entity(entity, contentType));
         } else {
             switch (httpMethod) {
@@ -171,14 +175,24 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
             }
 
             if (response != null && response.getStatus() == 411 && (httpMethod != POST || httpMethod != GET)) {
-                request.header("X-HTTP-Method-Override", httpMethod);
+                request.header("X-HTTP-Method-Override", RequestMethod.values()[httpMethod].toString());
                 executeRequest(POST, request, entity);
             }
         }
 
         if (response != null && response.getStatus() >= 400) {
-            errorHandler.handleError(response);
-        }
+            if (handleErrors) {
+                errorHandler.handleError(response);
+            } else {
+                return (responseGenericType != null) ? new NullEntityOperationResult<ResponseType>(response, responseGenericType, errorHandler)
+                        : new NullEntityOperationResult<ResponseType>(response, responseClass, errorHandler);
+            }
+                errorHandler.handleError(response);
+            } else {
+                return (responseGenericType != null) ? new NullEntityOperationResult<ResponseType>(response, responseGenericType, errorHandler)
+                        : new NullEntityOperationResult<ResponseType>(response, responseClass, errorHandler);
+            }
+
         return (responseGenericType != null) ? operationResultFactory.getOperationResult(response, responseGenericType)
                 : operationResultFactory.getOperationResult(response, responseClass);
     }
