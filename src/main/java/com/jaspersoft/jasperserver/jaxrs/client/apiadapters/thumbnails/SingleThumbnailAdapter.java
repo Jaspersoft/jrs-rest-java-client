@@ -3,6 +3,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
@@ -38,7 +39,7 @@ public class SingleThumbnailAdapter extends AbstractAdapter {
 
     private JerseyRequest<InputStream> request() {
         if (params.size() == 0) {
-            throw new IllegalStateException("URI of report should be specified");
+            throw new MandatoryParameterNotFoundException("URI of report should be specified");
         }
         return JerseyRequest.buildRequest(sessionStorage, InputStream.class,
                 new String[]{"/thumbnails",  params.get("uri").get(0)}, new DefaultErrorHandler());

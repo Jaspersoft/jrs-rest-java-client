@@ -899,6 +899,18 @@ session
                 .attributes("max_threads", "admin_cell_phone")
                 .delete();
 ```
+
+Please notice, since `6.1` version of `JaspersoftReportServer` you can obtain atributes with permissions, but you should use additional parameter `setIncludePermissions()`:
+```java
+
+ HypermediaAttribute entity = session
+                 .attributesService()
+                 .attribute("attribute_name")
+                 .setIncludePermissions(true)
+                 .get()
+                 .getEntity();
+```
+Pay attention, the setting `setIncludePermission()` specify only the **server response format**, you can not set any permissions with this setting.
 ###The Roles Service
 It provides similar methods that allow you to list, view, create, modify, and delete roles. The new service provides improved search functionality, including user-based role searches. Because the role ID is used in the URL, this service can operate only on roles whose ID is less than 100 characters long and does not contain spaces or special symbols. Unlike resource IDs, the role ID is the role name and can be modified.
 ####Searching for Roles
@@ -1714,6 +1726,23 @@ final Map<String, String> bundle = session
         .getEntity();
 ```
 ###Exception handling
+You can choose strategy of errors that are specified by status code of server response:
+1. handling of errors directly. This is allied by default.
+2. getting operation result in any case with null entity and handling error after calling `getEntity()` method:
+```java
+OperationResult<InputStream> result = session
+                .thumbnailsService()
+                .thumbnail()
+                .report("/")
+                .get(); // response status is 406, but exception won't be thrown
+result.getEntity();     // the error will be handled and an exception will be thrown
+```
+To apply the second strategy set `handleErrors` property of `RestCleintConfiguration` to `false`:
+```java
+configuration.setHandleErrors(false);
+```
+or specify this property in configuration file (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration)).
+
 You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method.
 
 JRS REST client exception handling system is based on `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` interface. Its `void handleError(Response response)` method is responsible for all error handling logic. You can use existed handlers, define your own handlers or extend existed handlers.
