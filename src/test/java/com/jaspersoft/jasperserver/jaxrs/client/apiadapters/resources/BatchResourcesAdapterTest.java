@@ -204,8 +204,6 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         assertNotNull(retrieved.getFuture());
-        assertTrue(retrieved.getFuture().isDone());
-
         Mockito.verify(callback, times(1)).execute(objectOperationResultMock);
         Mockito.verify(objectJerseyRequestMock, times(1)).delete();
     }

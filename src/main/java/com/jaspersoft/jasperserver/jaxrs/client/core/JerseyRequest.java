@@ -155,7 +155,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
 
     private OperationResult<ResponseType> executeRequest(int httpMethod, Invocation.Builder request, Object entity) {
         Response response = null;
-        if (restrictedHttpMethods && (httpMethod != POST || httpMethod != GET) ) {
+        if (restrictedHttpMethods && (httpMethod != POST || httpMethod != GET)) {
             request.header("X-HTTP-Method-Override", RequestMethod.values()[httpMethod].toString());
             response = request.post(Entity.entity(entity, contentType));
         } else {
@@ -181,17 +181,13 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         }
 
         if (response != null && response.getStatus() >= 400) {
-            if (handleErrors) {
-                errorHandler.handleError(response);
-            } else {
+            if (!handleErrors) {
                 return (responseGenericType != null) ? new NullEntityOperationResult<ResponseType>(response, responseGenericType, errorHandler)
                         : new NullEntityOperationResult<ResponseType>(response, responseClass, errorHandler);
+
             }
-                errorHandler.handleError(response);
-            } else {
-                return (responseGenericType != null) ? new NullEntityOperationResult<ResponseType>(response, responseGenericType, errorHandler)
-                        : new NullEntityOperationResult<ResponseType>(response, responseClass, errorHandler);
-            }
+            errorHandler.handleError(response);
+        }
 
         return (responseGenericType != null) ? operationResultFactory.getOperationResult(response, responseGenericType)
                 : operationResultFactory.getOperationResult(response, responseClass);
