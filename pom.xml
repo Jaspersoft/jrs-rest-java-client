@@ -43,30 +43,29 @@
         <dependency>
             <groupId>com.jaspersoft.jasperserver</groupId>
             <artifactId>jasperserver-dto</artifactId>
-            <version>6.1.0</version>
+            <version>6.1.1</version>
         </dependency>
 
         <!-- Jersey-->
-
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>2.5</version>
+            <version>2.22.1</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-json</artifactId>
-            <version>1.18</version>
+            <version>1.19</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey.contribs</groupId>
             <artifactId>jersey-multipart</artifactId>
-            <version>1.17</version>
+            <version>1.19</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
-            <version>2.5.1</version>
+            <version>2.22.1</version>
         </dependency>
 
         <!-- TestNG -->
@@ -177,8 +176,9 @@
                     <instrumentation>
                         <excludes>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/dto/**</exclude>
-                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/support/**
-                            </exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/support/**</exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/exceptions/**</exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/enums/**</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
