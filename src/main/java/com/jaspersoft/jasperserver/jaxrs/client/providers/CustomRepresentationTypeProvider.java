@@ -29,7 +29,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
-import org.codehaus.jackson.jaxrs.Annotations;
 import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
 
 
@@ -39,6 +38,7 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/collection+json",
         "application/collection+xml",
         "application/job+json",
+        "application/json",
         "application/job+xml",
         ConnectionMediaType.FTP_JSON,
         ConnectionMediaType.FTP_XML,
@@ -104,6 +104,7 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/collection+json",
         "application/collection+xml",
         "application/job+json",
+        "application/json",
         "application/job+xml",
         ConnectionMediaType.FTP_JSON,
         ConnectionMediaType.FTP_XML,
@@ -168,10 +169,6 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "text/xml"})
 public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
 
-    public CustomRepresentationTypeProvider() {
-        super(Annotations.JACKSON, Annotations.JAXB);
-    }
-
     @Override
     public boolean isReadable(Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType) {
         return super.isReadable(aClass, type, annotations, mediaType);
@@ -181,6 +178,5 @@ public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
     public boolean isWriteable(Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType) {
         return super.isWriteable(aClass, type, annotations, mediaType);
     }
-
 }
 

@@ -120,7 +120,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         verify(configurationMock).getReadTimeout();
         verify(clientMock).target("http://54.83.98.156/jasperserver-pro");
         verify(targetMock).register(JacksonFeature.class);
-        verify(targetMock, times(2)).register(isA(JacksonJsonProvider.class));
+        verify(targetMock, times(1)).register(isA(JacksonJsonProvider.class));
         verify(targetMock).register(MultiPartWriter.class);
         verify(configurationMock).getLogHttp();
         verify(targetMock, never()).register(LoggingFilter.class);
@@ -159,7 +159,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         verify(clientMock).property("jersey.config.client.readTimeout", 200);
         verify(clientMock).target("http://54.83.98.156/jasperserver-pro");
         verify(targetMock).register(JacksonFeature.class);
-        verify(targetMock, times(2)).register(isA(JacksonJsonProvider.class));
+        verify(targetMock, times(1)).register(isA(JacksonJsonProvider.class));
         verify(targetMock).register(MultiPartWriter.class);
         verify(configurationMock).getLogHttp();
         verify(targetMock).register(isA(LoggingFilter.class));

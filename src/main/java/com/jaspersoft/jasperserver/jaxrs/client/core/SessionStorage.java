@@ -99,7 +99,6 @@ public class SessionStorage {
                 .configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         rootTarget
-                .register(provider)
                 .register(customRepresentationTypeProvider)
                 .register(JacksonFeature.class)
                 .register(MultiPartWriter.class);
