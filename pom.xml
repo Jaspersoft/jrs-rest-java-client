@@ -176,8 +176,9 @@
                     <instrumentation>
                         <excludes>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/dto/**</exclude>
-                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/support/**
-                            </exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/support/**</exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/exceptions/**</exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/enums/**</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>

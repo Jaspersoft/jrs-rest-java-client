@@ -36,6 +36,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberModifier.suppress;
+import static org.powermock.reflect.internal.WhiteboxImpl.getInternalState;
 import static org.powermock.reflect.internal.WhiteboxImpl.setInternalState;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -235,6 +236,22 @@ public class SessionStorageTest extends PowerMockTestCase {
         assertNotNull(sessionStorage.getCredentials());
         assertNotNull(sessionStorage.getRootTarget());
         assertNotNull(sessionStorage.getSessionId());
+    }
+
+    @Test
+    public void should_set_session_id_for_object() {
+
+        // Given
+        suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
+
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        // When
+        String sessionId = "JSESSIONID";
+        sessionStorage.setSessionId(sessionId);
+        // Then
+
+        assertEquals(sessionId, getInternalState(sessionStorage, "sessionId"));
     }
 
     @AfterMethod
