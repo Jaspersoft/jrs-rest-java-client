@@ -136,6 +136,7 @@ To start working with the library you should firstly configure one ore more inst
 To do this you should create instance of `RestClientConfiguration`. It can be done in two ways:
 - loading configuration from file;
 - creation of manual configuration in java code.
+
 ####Loading configuration from file:
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("configuration.properties");
