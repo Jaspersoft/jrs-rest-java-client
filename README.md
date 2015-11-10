@@ -11,7 +11,10 @@ Table of Contents
   * [Creation of manual configuration](#creation-of-manual-configuration).
   * [HTTPS configuration](#https-configuration).
   * [X-HTTP-Method override](#x-http-method-override).
+  * [Switching authentication type](#switching-authentication-type).
   * [Exception handling](#exception-handling).
+  * [Logging](#logging).
+  * [Switching between JSON and XML](#switching-between-json-and-xml).
   * [Client instantiation](#client-instantiation).
 3. [Authentication](#authentication).
   * [Anonymous session](#anonymous-session).
@@ -114,8 +117,8 @@ Table of Contents
 15. [Bundles service](#bundles-service).
 16. [Asynchronous API](#asynchronous-api).
 17. [Getting serialized content from response](#getting-serialized-content-from-response).
-18. [Switching between JSON and XML](#switching-between-json-and-xml).
-19. [Logging](#logging).
+18. 
+19. 
 20. [Possible issues](#possible-issues).
 21. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
 22. [License](#license).
@@ -131,25 +134,30 @@ Configuration
 -------------
 To start working with the library you should firstly configure one ore more instances of `JasperserverRestClient`.
 To do this you should create instance of `RestClientConfiguration`. It can be done in two ways:
+- loading configuration from file;
+- creation of manual configuration in java code.
 ####Loading configuration from file:
 ```java
-RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("url.properties");
+RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("configuration.properties");
 ```
 Here is example of `configuration.properties` file:
 ```java
-url=http://localhost:4444/jasperserver-pro
-connectionTimeout=100
+// required content
+url=http://localhost:8080/jasperserver-pro
+// optional content
+connectionTimeout=20                        
 readTimeout=20
 jasperserverVersion=v6_0_0
-authenticationType=REST
+authenticationType=SPRING
 logHttp=true
-logHttpEntity=false
+logHttpEntity=true
 restrictedHttpMethods=false
 handleErrors=true
 contentMimeType=JSON
 acceptMimeType=JSON
 ```
 File must contain at least URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}`.
+Please notice, configuration settings may be changed after loading manually in java code.
 ####Creation of manual configuration
 To configure `JasperserverRestClient` manually, use the constructor of `RestClientConfiguration` and properties:
 ```java
@@ -157,11 +165,11 @@ RestClientConfiguration configuration = new RestClientConfiguration("http://loca
 configuration.setAcceptMimeType(MimeType.JSON).setContentMimeType(MimeType.JSON).setJrsVersion(JRSVersion.v6_0_0).setLogHttp(true);
 ```
 ####HTTPS configuration
-<strong>To use HTTPS you need:</strong>
-1. Configure your server to support HTTPS
-2. Download [InstallCert](http://miteff.com/files/InstallCert-bin.zip) util and follow  [InstallCert-Guide](http://www.mkyong.com/webservices/jax-ws/suncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target/) instructions.
-3. Set HTTPS as your protocol in server URL, e.g. `https://localhost:8443/jasperserver`
-4. Configure trusted certificates if needed
+**To use HTTPS you need:**
+ 1. Configure your server to support HTTPS
+ 2. Download [InstallCert](http://miteff.com/files/InstallCert-bin.zip) util and follow  [InstallCert-Guide](http://www.mkyong.com/webservices/jax-ws/suncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target/) instructions.
+ 3. Set HTTPS as your protocol in server URL, e.g. `https://localhost:8443/jasperserver`
+ 4. Configure trusted certificates if needed
 
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("https://localhost:8443/jasperserver");
@@ -173,13 +181,31 @@ configuration.setTrustManagers(trustManagers);
 ####X-HTTP-Method override
 To avoid situation, when your proxies or web services do not support arbitrary HTTP methods or newer HTTP methods, you can use “restricted mode”. In this mode `JaperserverRestClient` sends requests through POST method and set the `X-HTTP-Method-Override` header with value of intended HTTP method. To use this mode you should set flag `RestrictedHttpMethods`:
 ```java
-session.getStorage().getConfiguration().setRestrictedHttpMethods(true);
+configuration.setRestrictedHttpMethods(true);
 ```
+Or in configuration file:
+```java
+restrictedHttpMethods=false
+````
 If you do not use the "restricted mode", POST or GET methods and server returns  the response with 411 error code, `JaperserverRestClient` resend this request through POST method with the X-HTTP-Method-Override header automatically.
-
-###Exception handling
+####Switching authentication type
+`JasperserverRestClient` supports two authentication types: SPRING and BASIC. 
+`SPRING` type of authentication means that your credentials are sent as a form  to `/j_security_check directly/` uri. Using these types you obtain JSESSIONID cookie of authenticated session after sending credentials.
+In the `BASIC` mode `JasperserverRestClient` uses basic authentication (sends encrypted credentials with each request).
+Client uses `SPRING` authentication by default but you can specify authentication type in RestClientConfiguration instance:
+```java
+configuration.setAuthenticationType(AuthenticationType.SPRING);
+```
+Or set authentication type in configuration file:
+ ```java
+ authenticationType=SPRING
+ or
+ authenticationType=BASIC
+ ```
+Please notice, the basic authentication is not stateless and it is valid till method logout() is called or the application is restarted and you can not use this authentication type for Report Service, because all operations must be executed in the same session (for details, read section [Report services](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#report-services)).
+####Exception handling
 You can choose strategy of errors that are specified by status code of server response:
-1. handling of errors directly. This is allied by default.
+1. handling of errors directly. This mode is allowed by default.
 2. getting operation result in any case with null entity and handling error after calling `getEntity()` method:
 ```java
 OperationResult<InputStream> result = session
@@ -193,18 +219,50 @@ To apply the second strategy set `handleErrors` property of `RestCleintConfigura
 ```java
 configuration.setHandleErrors(false);
 ```
-or specify this property in configuration file (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration)).
-
+or specify this property in configuration file:
+```java
+handleErrors=true
+```
 You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method.
 
 JRS REST client exception handling system is based on `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` interface. Its `void handleError(Response response)` method is responsible for all error handling logic. You can use existed handlers, define your own handlers or extend existed handlers.
 
-1. Existed handlers:
-  * `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` - this implementation is suitable for most of the JRS errors, but sometimes you can meet some not standart errors and here such implementations as `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobValidationErrorHandler`, `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.RunReportErrorHandler`, etc. take responsibility.
-2. You can create your own handler by implementing `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler`.
-3. You can extend `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` or any other handler and override its methods `void handleBodyError(Response response)` and/or `void handleStatusCodeError(Response response, String overridingMessage)`.
+ 1. Existed handlers:
+   * `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` - this implementation is suitable for most of the JRS errors, but sometimes you can meet some not standart errors and here such implementations as `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobValidationErrorHandler`, `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.RunReportErrorHandler`, etc. take responsibility.
+ 2. You can create your own handler by implementing `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler`.
+ 3. You can extend `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` or any other handler and override its methods `void handleBodyError(Response response)` and/or `void handleStatusCodeError(Response response, String overridingMessage)`.
+
+####Logging
+It is possible to log outgoing requests and incoming responses using `logHttp` property of `RestCleintConfiguration`:
+```java
+config.setLogHttp(true);
+```
+Also, you are able to log entities using `logHttpEntity` option:
+```java
+config.setLogHttpEntity(true).
+```
+In configuration file:
+```java
+logHttp=true
+logHttpEntity=true
+
+####Switching between JSON and XML
+You can configure a client to make request either with JSON or XML content.
+```java
+RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver");
+configuration.setContentMimeType(MimeType.XML);
+configuration.setAcceptMimeType(MimeType.XML);
+```
+Or in configuration.properties:
+```
+contentMimeType=JSON
+acceptMimeType=JSON
+or 
+contentMimeType=XML
+acceptMimeType=XML
+```
 ####Client instantiation:
-Here everything is easy, you need just to pass `configuration` to `JasperserverRestClient` constructor.
+After configuration you need just to pass `configuration` instance to `JasperserverRestClient` constructor.
 ```java
 JasperserverRestClient client = new JasperserverRestClient(configuration);
 ```
@@ -217,15 +275,6 @@ Session session = client.authenticate("jasperadmin", "jasperadmin");
 //authentication with multitenancy enabled
 Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
 ```
-`JasperserverRestClient` supports two authentication types: SPRING and BASIC. 
-`SPRING` type of authentication means that your credentials are sent as a form  to `/j_security_check directly/` uri. Using these types you obtain JSESSIONID cookie of authenticated session after sending credentials.
-In the `BASIC` mode `JasperserverRestClient` uses basic authentication (sends encrypted credentials with each request).
-Client uses `SPRING` authentication by default but you can specify authentication type in RestClientConfiguration instance:
-```java
-config.setAuthenticationType(AuthenticationType.SPRING);
-```
-Or set authentication type in configuration file (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration)).
-Please notice, the basic authentication is not stateless and it is valid till method logout() is called or the application is restarted and you can not use this authentication type for Report Service, because all operations must be executed in the same session (for details, read section [Report services](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#report-services)).
 ###Anonymous session
 For some Jasperserver services authentication is not required (for example, settings service, bundles service or server info service), so you can use anonymous session:
  ```java
@@ -1776,35 +1825,6 @@ If you need to get a plain response body, either JSON, XML, HTML or plain text, 
 ```java
 OperationResult<UsersListWrapper> result = ...
 result.getSerializedContent();
-```
-
-###Switching between JSON and XML
-You can configure a client to make request either with JSON or XML content.
-```java
-RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver");
-configuration.setContentMimeType(MimeType.XML);
-configuration.setAcceptMimeType(MimeType.XML);
-```
-or you can externilize configuration
-```
-url=http://localhost:4444/jasperserver/
-contentMimeType=JSON
-acceptMimeType=JSON
-#contentMimeType=XML
-#acceptMimeType=XML
-```
-```java
-RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("jrs-client-config.properties");
-```
-
-###Logging
-It is possible to log outgoing requests and incoming responses using `logHttp` property of `RestCleintConfiguration`:
-```java
-config.setLogHttp(true);
-```
-Also, you are able to log entities using `logHttpEntity` option:
-```java
-config.setLogHttpEntity(true).
 ```
 
 ###Possible issues
