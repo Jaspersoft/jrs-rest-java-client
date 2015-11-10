@@ -25,7 +25,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.domain.DomainMetaData;
+import com.jaspersoft.jasperserver.dto.domain.DomainMetaData;
 
 public class DomainMetadataAdapter extends AbstractAdapter {
     private final String domainURI;
