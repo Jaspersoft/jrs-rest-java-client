@@ -222,7 +222,7 @@ configuration.setHandleErrors(false);
 ```
 or specify this property in configuration file:
 ```java
-handleErrors=true
+handleErrors=false
 ```
 You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method.
 
