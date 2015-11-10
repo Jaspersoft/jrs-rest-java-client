@@ -11,7 +11,7 @@ Table of Contents
   * [Creation of manual configuration](#creation-of-manual-configuration).
   * [HTTPS configuration](#https-configuration).
   * [X-HTTP-Method override](#x-http-method-override).
-  * [Switching authentication type](#switching-authentication-type).
+  * [Switching of authentication type](#switching-authentication-type).
   * [Exception handling](#exception-handling).
   * [Logging](#logging).
   * [Switching between JSON and XML](#switching-between-json-and-xml).
@@ -117,11 +117,9 @@ Table of Contents
 15. [Bundles service](#bundles-service).
 16. [Asynchronous API](#asynchronous-api).
 17. [Getting serialized content from response](#getting-serialized-content-from-response).
-18. 
-19. 
-20. [Possible issues](#possible-issues).
-21. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-22. [License](#license).
+18. [Possible issues](#possible-issues).
+19. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+20. [License](#license).
 
 Introduction
 -------------
@@ -136,6 +134,7 @@ To start working with the library you should firstly configure one ore more inst
 To do this you should create instance of `RestClientConfiguration`. It can be done in two ways:
 - loading configuration from file;
 - creation of manual configuration in java code.
+
 ####Loading configuration from file:
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("configuration.properties");
@@ -221,7 +220,7 @@ configuration.setHandleErrors(false);
 ```
 or specify this property in configuration file:
 ```java
-handleErrors=true
+handleErrors=false
 ```
 You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method.
 
@@ -245,7 +244,7 @@ In configuration file:
 ```java
 logHttp=true
 logHttpEntity=true
-
+```
 ####Switching between JSON and XML
 You can configure a client to make request either with JSON or XML content.
 ```java
@@ -253,7 +252,7 @@ RestClientConfiguration configuration = new RestClientConfiguration("http://loca
 configuration.setContentMimeType(MimeType.XML);
 configuration.setAcceptMimeType(MimeType.XML);
 ```
-Or in configuration.properties:
+Or in `configuration.properties`:
 ```
 contentMimeType=JSON
 acceptMimeType=JSON
