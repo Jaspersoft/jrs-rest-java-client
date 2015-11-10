@@ -30,41 +30,52 @@ public class Query {
 
     protected List<QueryField> queryFields;
 
+    public String getQueryFilterString() {
+        return queryFilterString;
+    }
+
+    public Query setQueryFilterString(String queryFilterString) {
+        this.queryFilterString = queryFilterString;
+        return this;
+    }
+
+    protected String queryFilterString;
+
     @XmlElementWrapper(name = "queryFields")
     @XmlElement(name = "queryField")
     public List<QueryField> getQueryFields() {
         return queryFields;
     }
 
-    public void setQueryFields(List<QueryField> queryFields) {
+    public Query setQueryFields(List<QueryField> queryFields) {
         this.queryFields = queryFields;
+        return this;
     }
 
     @Override
     public String toString() {
         return "Query{" +
                 "queryFields=" + queryFields +
+                ", queryFilterString='" + queryFilterString + '\'' +
                 '}';
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        Query query = (Query) obj;
-        return (!(queryFields != null
-                ? !queryFields.equals(query.queryFields)
-                : query.queryFields != null));
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Query)) return false;
+
+        Query query = (Query) o;
+
+        if (!getQueryFields().equals(query.getQueryFields())) return false;
+        return getQueryFilterString().equals(query.getQueryFilterString());
+
     }
 
     @Override
     public int hashCode() {
-        return queryFields != null
-                ? queryFields.hashCode()
-                : 0;
+        int result = getQueryFields().hashCode();
+        result = 31 * result + getQueryFilterString().hashCode();
+        return result;
     }
 }
