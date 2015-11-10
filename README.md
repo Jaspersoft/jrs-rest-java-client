@@ -11,6 +11,7 @@ Table of Contents
   * [Creation of manual configuration](#creation-of-manual-configuration).
   * [HTTPS configuration](#https-configuration).
   * [X-HTTP-Method override](#x-http-method-override).
+  * [Exception handling](#exception-handling).
   * [Client instantiation](#client-instantiation).
 3. [Authentication](#authentication).
   * [Anonymous session](#anonymous-session).
@@ -111,14 +112,13 @@ Table of Contents
 13. [Query executor service](#queryexecutor-service).
 14. [REST Server Information](#rest-server-information).
 15. [Bundles service](#bundles-service).
-16. [Exception handling](#exception-handling).
-17. [Asynchronous API](#asynchronous-api).
-18. [Getting serialized content from response](#getting-serialized-content-from-response).
-19. [Switching between JSON and XML](#switching-between-json-and-xml).
-20. [Logging](#logging).
-21. [Possible issues](#possible-issues).
-22. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-23. [License](#license).
+16. [Asynchronous API](#asynchronous-api).
+17. [Getting serialized content from response](#getting-serialized-content-from-response).
+18. [Switching between JSON and XML](#switching-between-json-and-xml).
+19. [Logging](#logging).
+20. [Possible issues](#possible-issues).
+21. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+22. [License](#license).
 
 Introduction
 -------------
@@ -145,6 +145,7 @@ authenticationType=REST
 logHttp=true
 logHttpEntity=false
 restrictedHttpMethods=false
+handleErrors=true
 contentMimeType=JSON
 acceptMimeType=JSON
 ```
@@ -153,11 +154,7 @@ File must contain at least URL which is entry point to your server's REST servic
 To configure `JasperserverRestClient` manually, use the constructor of `RestClientConfiguration` and properties:
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
-configuration.setAcceptMimeType(MimeType.JSON);
-configuration.setContentMimeType(MimeType.JSON);
-configuration.setJrsVersion(JRSVersion.v6_0_0);
-configuration.setLogHttp(true);
-configuration.setLogHttpEntity(true);
+configuration.setAcceptMimeType(MimeType.JSON).setContentMimeType(MimeType.JSON).setJrsVersion(JRSVersion.v6_0_0).setLogHttp(true);
 ```
 ####HTTPS configuration
 <strong>To use HTTPS you need:</strong>
@@ -179,6 +176,33 @@ To avoid situation, when your proxies or web services do not support arbitrary H
 session.getStorage().getConfiguration().setRestrictedHttpMethods(true);
 ```
 If you do not use the "restricted mode", POST or GET methods and server returns  the response with 411 error code, `JaperserverRestClient` resend this request through POST method with the X-HTTP-Method-Override header automatically.
+
+###Exception handling
+You can choose strategy of errors that are specified by status code of server response:
+1. handling of errors directly. This is allied by default.
+2. getting operation result in any case with null entity and handling error after calling `getEntity()` method:
+```java
+OperationResult<InputStream> result = session
+                .thumbnailsService()
+                .thumbnail()
+                .report("/")
+                .get(); // response status is 406, but exception won't be thrown
+result.getEntity();     // the error will be handled and an exception will be thrown
+```
+To apply the second strategy set `handleErrors` property of `RestCleintConfiguration` to `false`:
+```java
+configuration.setHandleErrors(false);
+```
+or specify this property in configuration file (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration)).
+
+You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method.
+
+JRS REST client exception handling system is based on `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` interface. Its `void handleError(Response response)` method is responsible for all error handling logic. You can use existed handlers, define your own handlers or extend existed handlers.
+
+1. Existed handlers:
+  * `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` - this implementation is suitable for most of the JRS errors, but sometimes you can meet some not standart errors and here such implementations as `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobValidationErrorHandler`, `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.RunReportErrorHandler`, etc. take responsibility.
+2. You can create your own handler by implementing `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler`.
+3. You can extend `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` or any other handler and override its methods `void handleBodyError(Response response)` and/or `void handleStatusCodeError(Response response, String overridingMessage)`.
 ####Client instantiation:
 Here everything is easy, you need just to pass `configuration` to `JasperserverRestClient` constructor.
 ```java
@@ -1727,32 +1751,6 @@ final Map<String, String> bundle = session
         .bundle("jasperserver_messages")
         .getEntity();
 ```
-###Exception handling
-You can choose strategy of errors that are specified by status code of server response:
-1. handling of errors directly. This is allied by default.
-2. getting operation result in any case with null entity and handling error after calling `getEntity()` method:
-```java
-OperationResult<InputStream> result = session
-                .thumbnailsService()
-                .thumbnail()
-                .report("/")
-                .get(); // response status is 406, but exception won't be thrown
-result.getEntity();     // the error will be handled and an exception will be thrown
-```
-To apply the second strategy set `handleErrors` property of `RestCleintConfiguration` to `false`:
-```java
-configuration.setHandleErrors(false);
-```
-or specify this property in configuration file (for details, read section [Configuration](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#configuration)).
-
-You can customize exception handling for each endpoint. To do this you need to pass `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` implementation to `JerseyRequestBuilder.buildRequest()` factory method.
-
-JRS REST client exception handling system is based on `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler` interface. Its `void handleError(Response response)` method is responsible for all error handling logic. You can use existed handlers, define your own handlers or extend existed handlers.
-
-1. Existed handlers:
-  * `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` - this implementation is suitable for most of the JRS errors, but sometimes you can meet some not standart errors and here such implementations as `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobValidationErrorHandler`, `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.RunReportErrorHandler`, etc. take responsibility.
-2. You can create your own handler by implementing `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler`.
-3. You can extend `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` or any other handler and override its methods `void handleBodyError(Response response)` and/or `void handleStatusCodeError(Response response, String overridingMessage)`.
 
 ###Asynchronous API
 Each operation which requests server has its asynchronous brother which has same name with `async` prefix, e. g. `get() -> asyncGet()`. Each of these operations take a `com.jaspersoft.jasperserver.jaxrs.client.core.Callback` implementation with `execute()` method implemented. `execute()` takes an `OperationResult` instance as a parameter. The `execute` method is called when the response from server came.
