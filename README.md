@@ -11,7 +11,7 @@ Table of Contents
   * [Creation of manual configuration](#creation-of-manual-configuration).
   * [HTTPS configuration](#https-configuration).
   * [X-HTTP-Method override](#x-http-method-override).
-  * [Switching authentication type](#switching-authentication-type).
+  * [Switching of authentication type](#switching-authentication-type).
   * [Exception handling](#exception-handling).
   * [Logging](#logging).
   * [Switching between JSON and XML](#switching-between-json-and-xml).
