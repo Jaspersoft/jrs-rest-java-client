@@ -117,11 +117,9 @@ Table of Contents
 15. [Bundles service](#bundles-service).
 16. [Asynchronous API](#asynchronous-api).
 17. [Getting serialized content from response](#getting-serialized-content-from-response).
-18. 
-19. 
-20. [Possible issues](#possible-issues).
-21. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-22. [License](#license).
+18. [Possible issues](#possible-issues).
+19. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+20. [License](#license).
 
 Introduction
 -------------
@@ -246,7 +244,7 @@ In configuration file:
 ```java
 logHttp=true
 logHttpEntity=true
-
+```
 ####Switching between JSON and XML
 You can configure a client to make request either with JSON or XML content.
 ```java
@@ -254,7 +252,7 @@ RestClientConfiguration configuration = new RestClientConfiguration("http://loca
 configuration.setContentMimeType(MimeType.XML);
 configuration.setAcceptMimeType(MimeType.XML);
 ```
-Or in configuration.properties:
+Or in `configuration.properties`:
 ```
 contentMimeType=JSON
 acceptMimeType=JSON
