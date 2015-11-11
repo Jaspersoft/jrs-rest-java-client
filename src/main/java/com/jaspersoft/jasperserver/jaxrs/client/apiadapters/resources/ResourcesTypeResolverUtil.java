@@ -43,8 +43,8 @@ import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientXmlaConnection;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.resources.ClientDashboard;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.resources.ClientDomainTopic;
+import com.jaspersoft.jasperserver.dto.resources.ClientDashboard;
+import com.jaspersoft.jasperserver.dto.resources.ClientDomainTopic;
 import java.util.HashMap;
 import java.util.Map;
 
