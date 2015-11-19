@@ -29,10 +29,11 @@ Table of Contents
   * [Polling Export Execution](#polling-export-execution).
   * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
   * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
-5. [Report Parameters services](#report-parameters-services).
-  * [Listing Report Parameters Structure](#listing-report-parameters-structure).
-  * [Listing Report Parameter Values](#listing-report-parameter-values).
-  * [Setting Report Parameter Values](#setting-report-parameter-values).
+5. [Input controls service](#input-controls-service).
+  * [Listing input controls structure](#listing-input-controls-structure).
+  * [Reordering input controls structure](#reordering-input-controls-structure).
+  * [Listing input controls values](#listing-input-controls-values).
+  * [Setting input controls values](#setting-input-controls-values).
 6. [Administration services](#administration-services).
   1. [Organizations service](#organizations-service).
     * [Searching for Organizations](#searching-for-organizations).
@@ -464,50 +465,94 @@ OperationResult<ReportExecutionStatusEntity> operationResult1 =
 
 ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
 ```
-###Report Parameters services:
-The reports service includes methods for reading and setting report parameters.
+
+###Input controls service:
+The reports service includes methods for reading and setting input controls of any input controls container, i.e. reportUnit, reportOptions, dashboard, adhocDataView
 ####Listing Report Parameters Structure
-The following code returns a description of the structure of the report parameters for a given report.
+The following code returns a description of the structure of the input controls for a given container.
 ```java
-ReportInputControlsListWrapper inputControls =
-        client.authenticate("jasperadmin", "jasperadmin")
-                .reportingService()
-                .report("/reports/samples/Cascading_multi_select_report")
-                .reportParameters()
-                .get()
-                .getEntity();
+ OperationResult<ReportInputControlsListWrapper> operationResult = session
+                .inputControlsService()
+                .inputControls()
+                .container("/reports/samples/Cascading_multi_select_report")
+                .get();
+ ReportInputControlsListWrapper result = operationResult.getEntity();
 ```
-The response contains the structure of the report parameters for the report. It contains the information needed by your application to display the report parameters to your users and allow them to make a selection. In particular, this includes any cascading structure as a set of dependencies between report parameters. Each report parameter also has a type that indicates how the user should be allowed to make a choice: bool, singleSelect, singleSelectRadio, multiSelectCheckbox, multiSelect, singleValue, singleValueText, singleValueNumber, singleValueDate, singleValueDatetime, singleValueTime.
-The structure includes a set of validation rules for each report parameter. These rules indicate what type of validation your client should perform on report parameter values it receives from your users, and if the validation fails, the message to display. Depending on the type of the report parameter, the following validations are possible:
+The response contains the structure of the input controls for the container. It contains the information needed by your application to display the report parameters to your users and allow them to make a selection. In particular, this includes any cascading structure as a set of dependencies between container parameters. Each input control also has a type that indicates how the user should be allowed to make a choice: `bool, singleSelect, singleSelectRadio, multiSelectCheckbox, multiSelect, singleValue, singleValueText, singleValueNumber, singleValueDate, singleValueDatetime, singleValueTime`.
+The structure includes a set of validation rules for each report parameter. These rules indicate what type of validation your client should perform on input control values it receives from your users, and if the validation fails, the message to display. Depending on the type of the report parameter, the following validations are possible:
 * mandatoryValidationRule – This input is required and your client should ensure the user enters a value.
 * dateTimeFormatValidation – This input must have a data time format and your client should ensure the user enters a valid date and time.
-
-####Listing Report Parameter Values
+To skip input controls state generation use `excludeState(true)` setting:
+```java
+OperationResult<ReportInputControlsListWrapper> operationResult = session
+                .inputControlsService()
+                .inputControls()
+                .container("/reports/samples/Cascading_multi_select_report")
+                .excludeState(true)
+                .get();
+ReportInputControlsListWrapper result = operationResult.getEntity();
+```
+####Reordering input controls structure
+You can change structure of input controls according to client demands using the next code:
+```java
+OperationResult<ReportInputControlsListWrapper> reorderedOperationResult = session
+                .inputControlsService()
+                .inputControls()
+                .container("/reports/samples/Cascading_multi_select_report")
+                .reorder(inputParameters);
+```
+It is impossible to change input controls except change of theirs order. Sent to server structure MUST be the same as it received
+from there, except order.
+You cannot modify some values, add or remove control, etc.
+####Listing input controls values
 The following code returns a description of the possible values of all report parameters for the report. Among these choices, it shows which ones are selected.
 ```java
-InputControlStateListWrapper inputControlsValues =
-        client.authenticate("jasperadmin", "jasperadmin")
-                .reportingService()
-                .report("/reports/samples/Cascading_multi_select_report")
-                .reportParameters()
+OperationResult<InputControlStateListWrapper> operationResult = session
+                .inputControlsService()
+                .inputControls()
+                .container("/reports/samples/Cascading_multi_select_report")
                 .values()
-                .get()
-                .getEntity();
+                .get();
+ InputControlStateListWrapper result = operationResult.getEntity();
 ```
 The response contains the structure of the report parameters for the report.
-If a selection-type report parameter has a null value, it is given as `~NULL~`. If no selection is made, its value is given as `~NOTHING~`.
-####Setting Report Parameter Values
-The following code updates the state of current report parameter values, so they are set for the next run of the report.
+If a selection-type report parameter has a null value, it is given as `NULL`. If no selection is made, its value is given as `NOTHING`.
+Use setting `useCashedData(false)` to avoid getting cashed data:
 ```java
-InputControlStateListWrapper inputControlsValues =
-        client.authenticate("jasperadmin", "jasperadmin")
-                .reportingService()
-                .report("/reports/samples/Cascading_multi_select_report")
-                .reportParameters()
+ OperationResult<InputControlStateListWrapper> operationResult = session
+                .inputControlsService()
+                .inputControls()
+                .container("/reports/samples/Cascading_multi_select_report")
                 .values()
-                .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
-                .update()
-                .getEntity();
+                .useCashedData(false)
+                .get();
+InputControlStateListWrapper result = operationResult.getEntity();
+```
+####Setting input controls values
+The following code updates the state of specified input controls values, so they are set for the next run of the report.
+```java
+OperationResult<InputControlStateListWrapper> operationResult = session
+                .inputControlsService()
+                .inputControls()
+                .container("/reports/samples/Cascading_multi_select_report")
+                .values()
+                .parameter("Country_multi_select", "Mexico")
+                .parameter("Cascading_state_multi_select", "Guerrero", "Sinaloa")
+                .run();
+InputControlStateListWrapper result = operationResult.getEntity();
+```
+In response you get updated values for specified input controls. If you want to get updated values with full structure of input controls, you should use `includeFullStructure(true)` setting:
+```java
+OperationResult<InputControlStateListWrapper> operationResult = session
+                .inputControlsService()
+                .inputControls()
+                .container("/reports/samples/Cascading_multi_select_report")
+                .values()
+                .parameter("Country_multi_select", "USA")
+                .parameter("Cascading_state_multi_select", "CA", "OR", "WA")
+                .includeFullStructure(true)
+                .run();
+InputControlStateListWrapper result = operationResult.getEntity();
 ```
 Administration services:
 ========================

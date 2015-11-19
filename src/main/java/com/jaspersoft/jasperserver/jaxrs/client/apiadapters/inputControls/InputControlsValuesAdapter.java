@@ -21,6 +21,7 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
 
     private String containerUri;
     private Boolean useFreshData = false;
+    private Boolean includeFullStructure = false;
     private MultivaluedHashMap<String, String> inputControlsValues = new MultivaluedHashMap<String, String>();
     private StringBuilder ids = new StringBuilder("");
 
@@ -31,6 +32,11 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
 
     public InputControlsValuesAdapter useCashedData(Boolean value) {
         useFreshData = !value;
+        return this;
+    }
+
+    public InputControlsValuesAdapter includeFullStructure(Boolean value) {
+        includeFullStructure = value;
         return this;
     }
 
@@ -48,10 +54,12 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
         if (inputControlsValues.size() == 0) {
             throw new MandatoryParameterNotFoundException();
         }
-        ids.append("/");
-        Set<String> keySet = inputControlsValues.keySet();
-        String[] idsArray = keySet.toArray(new String[keySet.size()]);
-        ids.append(StringUtils.join(idsArray, ";"));
+        if (!includeFullStructure) {
+            ids.append("/");
+            Set<String> keySet = inputControlsValues.keySet();
+            String[] idsArray = keySet.toArray(new String[keySet.size()]);
+            ids.append(StringUtils.join(idsArray, ";"));
+        }
         return buildRequest().post(valuesToArrays());
     }
 
