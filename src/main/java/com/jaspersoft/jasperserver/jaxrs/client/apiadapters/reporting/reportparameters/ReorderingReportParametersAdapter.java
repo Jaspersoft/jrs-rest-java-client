@@ -29,7 +29,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import java.util.List;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-
+/**
+ * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsAdapter}.
+ */
 public class ReorderingReportParametersAdapter extends ReportParametersAdapter {
 
     public ReorderingReportParametersAdapter(SessionStorage sessionStorage, String reportUnitUri) {

@@ -22,7 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.providers;
 
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connection.ConnectionMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import javax.ws.rs.Consumes;

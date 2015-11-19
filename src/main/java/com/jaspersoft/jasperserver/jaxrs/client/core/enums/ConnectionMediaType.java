@@ -19,7 +19,7 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connection;
+package com.jaspersoft.jasperserver.jaxrs.client.core.enums;
 
 public final class ConnectionMediaType {
 

@@ -27,6 +27,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.User
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorService;
@@ -111,5 +112,7 @@ public class Session extends AnonymousSession{
     public AttributesService attributesService() {
         return getService(AttributesService.class);
     }
+
+    public InputControlsService inputControlsService() {return getService(InputControlsService.class);}
 
 }
