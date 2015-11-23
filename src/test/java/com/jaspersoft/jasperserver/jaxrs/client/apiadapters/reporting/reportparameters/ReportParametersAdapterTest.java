@@ -40,6 +40,9 @@ import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
+/**
+ * @deprecated should be deleted after deleted deprecated {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersAdapter}.
+ */
 @PrepareForTest({JerseyRequest.class})
 public class ReportParametersAdapterTest extends PowerMockTestCase {
 

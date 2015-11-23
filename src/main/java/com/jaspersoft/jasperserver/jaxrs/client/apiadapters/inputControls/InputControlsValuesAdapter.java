@@ -27,6 +27,9 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
 
     public InputControlsValuesAdapter(SessionStorage sessionStorage, String containerUri) {
         super(sessionStorage);
+        if (containerUri == null) {
+            throw new MandatoryParameterNotFoundException("Uri of container should be specified");
+        }
         this.containerUri = containerUri;
     }
 

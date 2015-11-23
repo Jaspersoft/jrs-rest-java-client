@@ -5,6 +5,7 @@ import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControls
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.util.List;
@@ -19,6 +20,9 @@ public class InputControlsAdapter extends AbstractAdapter{
 
     public InputControlsAdapter container(String uri) {
         this.containerUri = uri;
+        if (containerUri == null) {
+            throw new MandatoryParameterNotFoundException("Uri of container should be specified");
+        }
         return  this;
     }
 
