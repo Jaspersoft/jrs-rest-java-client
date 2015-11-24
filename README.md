@@ -931,7 +931,15 @@ OperationResult<HypermediaAttributesListWrapper> attributes = session
                 .attributes(asList("test_attribute_1", "test_attribute_2")
                 .createOrUpdate(serverAttributes);
 ```
-Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server (see section [Setting User Attributes] (https://github.com/TanyaEf/jrs-rest-java-client#setting-user-attributes)).
+If you want to replace all existing attributes with new ones:
+```java
+OperationResult<HypermediaAttributesListWrapper> attributes = session
+                .attributesService()
+                .forOrganization("organization_1")
+                .allAttributes()
+                .createOrUpdate(serverAttributes);
+```
+Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server (see section [Setting User Attributes] (https://github.com/Jaspersoft/jrs-rest-java-client#setting-user-attributes)).
 Or to create a single organization attribute code below:
 ```java
 HypermediaAttribute attribute = new HypermediaAttribute(new ClientTenantAttribute().setName("industry").setValue("IT"));
@@ -989,6 +997,13 @@ OperationResult<HypermediaAttributesListWrapper> attributes = session
                 .attributesService()
                 .attributes("max_threads", "admin_cell_phone")
                 .createOrUpdate(newServerAttributes);
+```
+If you want to replace all existing attributes with new ones:
+```java
+OperationResult<HypermediaAttributesListWrapper> attributes = session
+                .attributesService()
+                .allAttributes()
+                .createOrUpdate(serverAttributes);
 ```
 Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server (see section [Setting User Attributes] (https://github.com/TanyaEf/jrs-rest-java-client#setting-user-attributes)).
 To create a single server attribute:
