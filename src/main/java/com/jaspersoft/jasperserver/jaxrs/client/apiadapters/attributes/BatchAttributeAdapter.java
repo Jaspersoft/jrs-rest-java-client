@@ -29,6 +29,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.util.Collection;
@@ -76,7 +77,7 @@ public class BatchAttributeAdapter extends AbstractAdapter {
 
 
     public OperationResult<HypermediaAttributesListWrapper> get() {
-        return buildRequest().addParams(params).get();
+        return buildRequest().get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<HypermediaAttributesListWrapper>, R> callback) {
@@ -93,7 +94,7 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     public OperationResult<HypermediaAttributesListWrapper> delete() {
-        return buildRequest().addParams(params).delete();
+        return buildRequest().delete();
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult<HypermediaAttributesListWrapper>, R> callback) {
@@ -110,19 +111,21 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     public OperationResult<HypermediaAttributesListWrapper> createOrUpdate(HypermediaAttributesListWrapper attributesListWrapper) {
-        if (params.get("name") == null || params.get("name").size() == 0) {
-            throw new IllegalStateException("Names of attributes were not defined.");
+        if (attributesListWrapper == null) {
+            throw new MandatoryParameterNotFoundException("Attributes are required");
         }
-        LinkedList<HypermediaAttribute> list = new LinkedList<HypermediaAttribute>(attributesListWrapper.getProfileAttributes());
-        for (Iterator<HypermediaAttribute>  iterator = list.iterator();iterator.hasNext();) {
-            HypermediaAttribute current = iterator.next();
-            if (!params.get("name").contains(current.getName())) {
-                iterator.remove();
+        if (params.get("name") != null && params.get("name").size() != 0) {
+            LinkedList<HypermediaAttribute> list = new LinkedList<HypermediaAttribute>(attributesListWrapper.getProfileAttributes());
+            for (Iterator<HypermediaAttribute> iterator = list.iterator(); iterator.hasNext(); ) {
+                HypermediaAttribute current = iterator.next();
+                if (!params.get("name").contains(current.getName())) {
+                    iterator.remove();
+                }
             }
+            attributesListWrapper.setProfileAttributes(list);
         }
-        attributesListWrapper.setProfileAttributes(list);
         return buildRequest()
-                .setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),"application/hal+{mime}"))
+                .setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/hal+{mime}"))
                 .put(attributesListWrapper);
     }
 
@@ -146,9 +149,10 @@ public class BatchAttributeAdapter extends AbstractAdapter {
                 HypermediaAttributesListWrapper.class,
                 new String[]{holderUri, "attributes"}, new DefaultErrorHandler());
         if (includePermissions) {
-            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(),"application/hal+{mime}"));
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/hal+{mime}"));
             request.addParam("_embedded", "permission");
         }
+        request.addParams(params);
         return request;
     }
 }
