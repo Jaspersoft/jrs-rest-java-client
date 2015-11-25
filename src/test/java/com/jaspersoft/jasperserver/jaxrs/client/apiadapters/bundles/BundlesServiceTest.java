@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -23,6 +24,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -145,7 +147,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock).addHeader("Accept-Language", "de");
         verify(requestMock).get();
         verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),  eq(new GenericType<Map<String, String>>() {
+        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, String>>() {
         }), eq(new String[]{"/bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
     }
 
@@ -189,5 +191,51 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, String>>() {
         }), eq(new String[]{"/bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
+    }
+
+    @Test
+    public void should_not_invoke_adding_language_by_empty_locale() throws Exception {
+        //given
+        mockStatic(JerseyRequest.class);
+        when(JerseyRequest.buildRequest(eq(sessionStorageMock),  any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        doReturn(requestMock).when(requestMock).addHeader(anyString(), anyString());
+        doReturn(requestMock).when(requestMock).setAccept(anyString());
+        doReturn(operationResultMock).when(requestMock).get();
+        //when
+        OperationResult<Map<String, String>> bundle = service.forLocale(new Locale("")).bundle("jasperserver_messages");
+        //then
+        assertSame(bundle, operationResultMock);
+        verify(requestMock).setAccept(MediaType.APPLICATION_JSON);
+        verify(requestMock,never()).addParam("expanded", "true");
+        verify(requestMock, never()).addHeader("Accept-Language", Locale.getDefault().toString().replace('_', '-'));
+        verify(requestMock).get();
+        verifyStatic(times(1));
+        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, String>>() {
+        }), eq(new String[]{"/bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
+    }
+
+    @Test
+    public void should_set_default_locale_if_string_locale_is_null() throws Exception {
+        //given
+        Locale defaultLocale = Locale.getDefault();
+        //when
+        service.forLocale((String) null);
+        //then
+        assertEquals(defaultLocale, Whitebox.getInternalState(service, "locale"));
+    }
+
+    @Test
+    public void should_set_default_locale_if_instance_locale_is_null() throws Exception {
+        //given
+        Locale defaultLocale = Locale.getDefault();
+        //when
+        service.forLocale((Locale)null);
+        //then
+        assertEquals(defaultLocale, Whitebox.getInternalState(service, "locale"));
+    }
+
+    @AfterMethod
+    public void afetr() {
+        reset(sessionStorageMock, requestMock, operationResultMock);
     }
 }

@@ -33,7 +33,9 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-
+/**
+ * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsAdapter}.
+ */
 public class ReportParametersAdapter extends AbstractAdapter {
 
     protected final String reportUnitUri;

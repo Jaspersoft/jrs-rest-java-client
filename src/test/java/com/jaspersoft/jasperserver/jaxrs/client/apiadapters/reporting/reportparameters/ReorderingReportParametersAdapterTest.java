@@ -38,6 +38,9 @@ import static org.testng.Assert.assertSame;
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReorderingReportParametersAdapter}
  *
  * @author Alexander Krasnyanskiy
+ *
+ *
+ * @deprecated should be deleted after deleted deprecated {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReorderingReportParametersAdapter}.
  */
 @PrepareForTest({JerseyRequest.class, ReorderingReportParametersAdapter.class, ReportInputControlsListWrapper.class})
 public class ReorderingReportParametersAdapterTest extends PowerMockTestCase {

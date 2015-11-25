@@ -18,6 +18,8 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersConverter}
+ *
+ * @deprecated should be deleted after deleted deprecated {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersConverter
  */
 @PrepareForTest({ReportParametersConverter.class})
 public class ReportParametersConverterTest extends PowerMockTestCase {

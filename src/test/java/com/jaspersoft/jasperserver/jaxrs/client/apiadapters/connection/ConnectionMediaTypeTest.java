@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connection;
 
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Constructor;
@@ -10,7 +11,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 
 /**
- * Unit test for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connection.ConnectionMediaType}
+ * Unit test for {@link com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType}
  */
 public class ConnectionMediaTypeTest {
 

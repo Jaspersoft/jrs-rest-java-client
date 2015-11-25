@@ -28,6 +28,9 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsValuesAdapter}.
+ */
 public class ReportParametersUtils {
 
     public static ReportParameters toReportParameters(MultivaluedMap<String, String> params){

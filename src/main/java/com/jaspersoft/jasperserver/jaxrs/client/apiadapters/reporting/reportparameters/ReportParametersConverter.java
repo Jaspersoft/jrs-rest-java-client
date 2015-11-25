@@ -28,6 +28,9 @@ import com.jaspersoft.jasperserver.dto.reports.inputcontrols.InputControlState;
 
 import java.util.*;
 
+/**
+ * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsValuesAdapter}.
+ */
 public class ReportParametersConverter {
 
     public static Map<String, Object> getValueMapFromInputControlStates(List<InputControlState> states) {
