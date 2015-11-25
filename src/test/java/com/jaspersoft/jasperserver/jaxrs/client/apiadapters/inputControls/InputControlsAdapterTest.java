@@ -59,7 +59,7 @@ public class InputControlsAdapterTest extends PowerMockTestCase {
     @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
     public void should_throw_an_exception_when_uri_is_null() {
         // When
-        new InputControlsAdapter(sessionStorageMock).container(null);
+        new InputControlsAdapter(sessionStorageMock).container(null).get();
         // Then
         // should be thrown an exception
     }

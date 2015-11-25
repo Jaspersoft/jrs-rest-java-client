@@ -214,13 +214,22 @@ public class BundlesServiceTest extends PowerMockTestCase {
         }), eq(new String[]{"/bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
     }
 
-
     @Test
-    public void should_set_default_locale() throws Exception {
+    public void should_set_default_locale_if_string_locale_is_null() throws Exception {
         //given
         Locale defaultLocale = Locale.getDefault();
         //when
-        service.forLocale((String)null);
+        service.forLocale((String) null);
+        //then
+        assertEquals(defaultLocale, Whitebox.getInternalState(service, "locale"));
+    }
+
+    @Test
+    public void should_set_default_locale_if_instance_locale_is_null() throws Exception {
+        //given
+        Locale defaultLocale = Locale.getDefault();
+        //when
+        service.forLocale((Locale)null);
         //then
         assertEquals(defaultLocale, Whitebox.getInternalState(service, "locale"));
     }

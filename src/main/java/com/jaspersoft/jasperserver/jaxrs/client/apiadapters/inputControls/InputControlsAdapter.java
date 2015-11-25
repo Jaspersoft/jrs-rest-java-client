@@ -20,9 +20,6 @@ public class InputControlsAdapter extends AbstractAdapter{
 
     public InputControlsAdapter container(String uri) {
         this.containerUri = uri;
-        if (containerUri == null) {
-            throw new MandatoryParameterNotFoundException("Uri of container should be specified");
-        }
         return  this;
     }
 
@@ -49,6 +46,9 @@ public class InputControlsAdapter extends AbstractAdapter{
     }
 
     private JerseyRequest<ReportInputControlsListWrapper> buildRequest(){
+        if (containerUri == null) {
+            throw new MandatoryParameterNotFoundException("Uri of container should be specified");
+        }
         JerseyRequest<ReportInputControlsListWrapper> request = JerseyRequest.buildRequest(sessionStorage,
                 ReportInputControlsListWrapper.class,
                 new String[]{"/reports", containerUri, "/inputControls"},

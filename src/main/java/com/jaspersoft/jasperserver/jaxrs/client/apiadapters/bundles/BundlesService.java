@@ -49,7 +49,9 @@ public class BundlesService extends AbstractAdapter {
     }
 
     public BundlesService forLocale(Locale locale) {
-        this.locale = locale;
+        if (locale != null) {
+            this.locale = locale;
+        }
         return this;
     }
 
@@ -65,7 +67,10 @@ public class BundlesService extends AbstractAdapter {
         JerseyRequest<Map<String, String>> request =
                 JerseyRequest.buildRequest(sessionStorage, new GenericType<Map<String, String>>() {
                 }, new String[]{"/bundles", bundleName}, new DefaultErrorHandler());
-        request.setAccept(MediaType.APPLICATION_JSON).addHeader("Accept-Language", locale.toString().replace('_', '-'));
+        request.setAccept(MediaType.APPLICATION_JSON);
+        if (!"".equals(this.locale.getLanguage())) {
+            request.addHeader("Accept-Language", locale.toString().replace('_', '-'));
+        }
         return request;
     }
 
@@ -80,5 +85,4 @@ public class BundlesService extends AbstractAdapter {
         }
         return request;
     }
-
 }
