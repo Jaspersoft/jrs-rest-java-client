@@ -114,7 +114,7 @@ Table of Contents
 11. [Domain metadata service](#domainmetadata-service).
 12. [Thumbnail Search Service](#thumbnail-search-service).
 13. [Query executor service](#queryexecutor-service).
-14. [REST Server Information](#rest-server-information).
+14. [Server Information Service](#server-information-service).
 15. [Bundles service](#bundles-service).
 16. [Asynchronous API](#asynchronous-api).
 17. [Getting serialized content from response](#getting-serialized-content-from-response).
@@ -1787,7 +1787,8 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
                 .getThumbnails();
                 ```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
-####QueryExecutor Service
+
+###QueryExecutor Service
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
 For now the only resource that supports queries is a Domain.
 
@@ -1799,7 +1800,7 @@ QueryResult queryResult = session.queryExecutorService()
         .getEntity();
 ```
 
-REST Server Information
+Server Information Service
 ========================
 Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
 ```java
@@ -1930,7 +1931,7 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
         <dependency>
             <groupId>com.jaspersoft</groupId>
             <artifactId>jrs-rest-java-client</artifactId>
-            <version>5.5.0.2-ALPHA-SNAPSHOT</version>
+            <version>6.1.4T</version>
         </dependency>
     </dependencies>
 
