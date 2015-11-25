@@ -737,9 +737,9 @@ client
 ###Attributes service
 Attributes, also called profile attributes, are name-value pairs associated with a user, organization or server. Certain advanced features such as Domain security and OLAP access grants use profile attributes in addition to roles to grant certain permissions. Unlike roles, attributes are not pre-defined, and thus any attribute name can be assigned any value at any time.
 Attributes service provides methods for reading, writing, and deleting attributes on any given holder (server, organization or user account). All attribute operations apply to a single specific holder; there are no operations for reading or searching attributes from multiple holders.
-Because the holder id is used in the URL, this service can operate only on holders whose ID is less than 100 characters long and does not contain spaces or special symbols. In addition, both attribute names and attribute values being written with this service are limited to 255 characters and may not be empty (null) or not contain only whitespace characters.
+As the holder's id is used in the URL, this service can operate only on holders whose ID is less than 100 characters long and does not contain spaces or special symbols. In addition, both attribute names and attribute values being written with this service are limited to 255 characters and may not be empty (null) or not contain only whitespace characters.
 ####Viewing User Attributes
-The code below retrieves single attribute defined for the user:
+The code below allow you to retrieve single attribute defined for the user:
 ```java
    HypermediaAttribute userAttribute = session
                    .attributesService()
@@ -786,22 +786,21 @@ The code below retrieves the list of attributes defined for the user.
    HypermediaAttribute userAttribute = session
                    .attributesService()
                    .forUser("jasperadmin")
-                   .attribute("attributeName")
+                   .attribute("attributeName", "attributeName1", "attributeName2")
                    .get()
                    .getEntity();
    ```
-
  If user belong to organization you may specify organization:
 ```java
  HypermediaAttribute userAttribute = session
                  .attributesService()
                  .forOrganization("organization_1")
                  .forUser("jasperadmin")
-                 .attribute(attribute.getName())
+                 .allAttributes()
                  .get()
                  .getEntity();
  ```
-You can get the list of attributes that includes the name and value of each attribute:
+You can get the list of all attributes that includes the name and value of each attribute:
  ```java
  List<HypermediaAttribute> attributes = session
                  .attributesService()
@@ -830,11 +829,19 @@ serverAttributes.setProfileAttributes(asList(new HypermediaAttribute(new ClientU
 ```
 
 Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server:
- 1. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute does not exist on the server it will be *created* on the server;
- 2. if requested attribute name in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *updated* on the server;
- 3. if requested attribute name in `attributes()` method does not  match with any attribute names of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *deleted* on the server;
+ 1. if requested attributes' names in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute does not exist on the server it will be *created* on the server;
+ 2. if requested attributes' names in `attributes()` method matches with attribute name of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *updated* on the server;
+ 3. if requested attributes' names in `attributes()` method does not  match with any attribute names of object defined in `createOrUpdate()` method and the attribute exists on the server it will be *deleted* on the server;
  4. if requested attribute in `createOrUpdate()` method  method does not  match with any attribute names in `attributes()` it will be *ignored* and will not be sent to the server;
-
+ 5. if requested list of attributes' names  in `attributes()` method is empty or you use `allAttributes()` method and pass attributes in `createOrUpdate()` method  -  the existing attributes on the server it will be complitely *replaced* with passed ones:
+ ```java
+  session
+                       .attributesService()
+                       .forOrganization("organization_1")
+                       .forUser("jasperadmin")
+                       .allAttributes()
+                       .createOrUpdate(serverAttributes);
+ ```
 The second way of using the attributes service is adding or replacing individual attribute:
 ```java
         HypermediaAttribute attribute = new HypermediaAttribute();
@@ -924,7 +931,15 @@ OperationResult<HypermediaAttributesListWrapper> attributes = session
                 .attributes(asList("test_attribute_1", "test_attribute_2")
                 .createOrUpdate(serverAttributes);
 ```
-Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server (see section [Setting User Attributes] (https://github.com/TanyaEf/jrs-rest-java-client#setting-user-attributes)).
+If you want to replace all existing attributes with new ones:
+```java
+OperationResult<HypermediaAttributesListWrapper> attributes = session
+                .attributesService()
+                .forOrganization("organization_1")
+                .allAttributes()
+                .createOrUpdate(serverAttributes);
+```
+Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server (see section [Setting User Attributes] (https://github.com/Jaspersoft/jrs-rest-java-client#setting-user-attributes)).
 Or to create a single organization attribute code below:
 ```java
 HypermediaAttribute attribute = new HypermediaAttribute(new ClientTenantAttribute().setName("industry").setValue("IT"));
@@ -982,6 +997,13 @@ OperationResult<HypermediaAttributesListWrapper> attributes = session
                 .attributesService()
                 .attributes("max_threads", "admin_cell_phone")
                 .createOrUpdate(newServerAttributes);
+```
+If you want to replace all existing attributes with new ones:
+```java
+OperationResult<HypermediaAttributesListWrapper> attributes = session
+                .attributesService()
+                .allAttributes()
+                .createOrUpdate(serverAttributes);
 ```
 Be careful with definition of attribute names because the server uses different strategies for creating or updating attributes depending on list of attribute names, list of attributes and existing attributes on the server (see section [Setting User Attributes] (https://github.com/TanyaEf/jrs-rest-java-client#setting-user-attributes)).
 To create a single server attribute:
