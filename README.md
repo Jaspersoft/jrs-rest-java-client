@@ -113,7 +113,7 @@ Table of Contents
     * [Checking the Import State](#checking-the-import-state).
 11. [Domain metadata service](#domainmetadata-service).
 12. [Thumbnail Search Service](#thumbnail-search-service).
-13. [Query executor service](#query-executor-service).
+13. [Query Executor Service](#query-executor-service).
 14. [Server Information Service](#server-information-service).
 15. [Bundles service](#bundles-service).
 16. [Asynchronous API](#asynchronous-api).
@@ -1788,7 +1788,7 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
                 ```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
 
-###Query executor Service
+####Query Executor Service
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
 For now the only resource that supports queries is a Domain.
 
