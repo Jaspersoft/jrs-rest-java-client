@@ -20,7 +20,7 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
-import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
+import com.jaspersoft.jasperserver.dto.authority.ClientAttribute;
 import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttribute;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
@@ -94,7 +94,7 @@ public class SingleAttributeAdapter extends AbstractAdapter {
     /**
      * @deprecated Replaced by {@link SingleAttributeAdapter#createOrUpdate(HypermediaAttribute)}.
      */
-    public OperationResult<HypermediaAttribute> createOrUpdate(ClientUserAttribute attribute) {
+    public OperationResult<HypermediaAttribute> createOrUpdate(ClientAttribute attribute) {
 
         return this.createOrUpdate(new HypermediaAttribute(attribute));
     }

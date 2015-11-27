@@ -43,7 +43,7 @@
         <dependency>
             <groupId>com.jaspersoft.jasperserver</groupId>
             <artifactId>jasperserver-dto</artifactId>
-            <version>6.1.1</version>
+            <version>6.2.0</version>
         </dependency>
 
         <!-- Jersey-->

@@ -1,6 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 
-import com.jaspersoft.jasperserver.dto.authority.ClientUserAttribute;
+import com.jaspersoft.jasperserver.dto.authority.ClientAttribute;
 import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttribute;
 import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttributesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
@@ -69,8 +69,8 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
         attributes.setProfileAttributes(asList(
-                new HypermediaAttribute(new ClientUserAttribute().setName("max_threads").setValue("512")),
-                new HypermediaAttribute(new ClientUserAttribute().setName("admin_cell_phone").setValue("03"))));
+                new HypermediaAttribute(new ClientAttribute().setName("max_threads").setValue("512")),
+                new HypermediaAttribute(new ClientAttribute().setName("admin_cell_phone").setValue("03"))));
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(
@@ -98,8 +98,13 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
                 any(DefaultErrorHandler.class));
     }
 
-    @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
-    public void should_throw_an_exception_when_attributes_is_null() {
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void should_throw_an_exception_when_query_params_were_not_set() {
+        // Given
+        HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
+        attributes.setProfileAttributes(asList(
+                new HypermediaAttribute(new ClientAttribute().setName("max_threads").setValue("512")),
+                new HypermediaAttribute(new ClientAttribute().setName("admin_cell_phone").setValue("03"))));
         // When
         BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock);
         adapter.createOrUpdate(null);
@@ -113,8 +118,8 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Given
         HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
         attributes.setProfileAttributes(asList(
-                new HypermediaAttribute(new ClientUserAttribute().setName("max_threads").setValue("512")),
-                new HypermediaAttribute(new ClientUserAttribute().setName("admin_cell_phone").setValue("03"))));
+                new HypermediaAttribute(new ClientAttribute().setName("max_threads").setValue("512")),
+                new HypermediaAttribute(new ClientAttribute().setName("admin_cell_phone").setValue("03"))));
         // When
         BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock, new LinkedList<String>(asList("")));
         adapter.createOrUpdate(attributes);
@@ -129,8 +134,8 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
         attributes.setProfileAttributes(asList(
-                new HypermediaAttribute(new ClientUserAttribute().setName("max_threads").setValue("512")),
-                new HypermediaAttribute(new ClientUserAttribute().setName("admin_cell_phone").setValue("03"))));
+                new HypermediaAttribute(new ClientAttribute().setName("max_threads").setValue("512")),
+                new HypermediaAttribute(new ClientAttribute().setName("admin_cell_phone").setValue("03"))));
 
         HypermediaAttributesListWrapper newServerAttributes = new HypermediaAttributesListWrapper(attributes);
         newServerAttributes.getProfileAttributes().add((HypermediaAttribute) new HypermediaAttribute().setName("extra_attr_1").setValue("some_value_1"));
