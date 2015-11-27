@@ -21,7 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.importexport;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

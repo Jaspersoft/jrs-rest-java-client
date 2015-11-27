@@ -21,7 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions;
 
-import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 
 import java.util.List;
 

@@ -32,7 +32,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebExcep
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.RepresentationalTypeNotSupportedForResourceException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.RequestedRepresentationNotAvailableForResourceException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 
 import javax.ws.rs.ProcessingException;
