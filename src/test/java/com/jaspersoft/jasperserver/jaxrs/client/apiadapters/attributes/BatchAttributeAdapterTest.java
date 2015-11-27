@@ -98,7 +98,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
                 any(DefaultErrorHandler.class));
     }
 
-    @Test(expectedExceptions = IllegalStateException.class)
+    @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
     public void should_throw_an_exception_when_query_params_were_not_set() {
         // Given
         HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
