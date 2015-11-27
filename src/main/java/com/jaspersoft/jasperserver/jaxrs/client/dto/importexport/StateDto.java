@@ -28,6 +28,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author: Zakhar.Tomchenco
+ *
+ * @deprecated should be replaced with com.jaspersoft.jasperserver.dto.importexport.ExportTask when it is fixed
  */
 @XmlRootElement(name = "state")
 public class StateDto {

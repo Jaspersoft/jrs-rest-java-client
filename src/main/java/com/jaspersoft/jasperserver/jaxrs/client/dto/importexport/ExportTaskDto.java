@@ -30,6 +30,8 @@ import java.util.List;
 
 /**
  * @author Zakhar Tomchenko
+ *
+ * @deprecated should be replaced with com.jaspersoft.jasperserver.dto.importexport.ExportTask when it is fixed
  */
 @XmlRootElement(name = "export")
 public class ExportTaskDto {
