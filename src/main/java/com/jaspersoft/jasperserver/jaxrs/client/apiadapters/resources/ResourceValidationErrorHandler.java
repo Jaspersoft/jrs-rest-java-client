@@ -23,7 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ValidationException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ErrorDescriptor;
+import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 
 import javax.ws.rs.core.Response;
 import java.util.Arrays;

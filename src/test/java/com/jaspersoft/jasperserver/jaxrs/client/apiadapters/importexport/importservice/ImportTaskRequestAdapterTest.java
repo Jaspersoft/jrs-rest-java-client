@@ -38,6 +38,7 @@ import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.powermock.api.support.membermodification.MemberMatcher.field;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
@@ -76,7 +77,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_add_param_to_private_field() throws IllegalAccessException {
+    public void should_add_boolean_param_to_private_field() throws IllegalAccessException {
 
         // When
         ImportTaskRequestAdapter expected = spy(new ImportTaskRequestAdapter(sessionStorageMock));
@@ -93,6 +94,50 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         Boolean val = Boolean.valueOf(booleanValue.get(0));
 
         assertTrue(val);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void should_add_string_param_to_private_field() throws IllegalAccessException {
+
+        // When
+        ImportTaskRequestAdapter expected = spy(new ImportTaskRequestAdapter(sessionStorageMock));
+        ImportTaskRequestAdapter retrieved = expected.parameter(ImportParameter.ORGANIZATION, "org_1");
+
+        Field field = field(ImportTaskRequestAdapter.class, "params");
+        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.get(retrieved);
+
+        // Then
+        verify(expected, times(1)).parameter(ImportParameter.ORGANIZATION, "org_1");
+        assertSame(retrieved, expected);
+        assertNotNull(retrievedParams);
+
+        List<String> stringValues = retrievedParams.get(ImportParameter.ORGANIZATION.getParamName());
+        String val = stringValues.get(0);
+        assertEquals(val, "org_1");
+
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void should_add_enum_param_to_private_field() throws IllegalAccessException {
+
+        // When
+        ImportTaskRequestAdapter expected = spy(new ImportTaskRequestAdapter(sessionStorageMock));
+        ImportTaskRequestAdapter retrieved = expected.parameter(ImportParameter.BROKEN_DEPENDENCIES, BrokenDependenciesParameter.INCLUDE);
+
+        Field field = field(ImportTaskRequestAdapter.class, "params");
+        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) field.get(retrieved);
+
+        // Then
+        verify(expected, times(1)).parameter(ImportParameter.BROKEN_DEPENDENCIES, BrokenDependenciesParameter.INCLUDE);
+        assertSame(retrieved, expected);
+
+        List<String> enumValue = retrievedParams.get(ImportParameter.BROKEN_DEPENDENCIES.getParamName());
+        List<String> stringValues = retrievedParams.get(ImportParameter.BROKEN_DEPENDENCIES.getParamName());
+        String val = stringValues.get(0);
+        assertEquals(val, "include");
+
     }
 
     @Test(testName = "create_with_File_param")

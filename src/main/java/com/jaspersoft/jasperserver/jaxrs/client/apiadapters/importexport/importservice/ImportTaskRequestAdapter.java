@@ -52,6 +52,16 @@ public class ImportTaskRequestAdapter extends AbstractAdapter {
         return this;
     }
 
+    public ImportTaskRequestAdapter parameter(ImportParameter parameter, String value) {
+        params.add(parameter.getParamName(), value);
+        return this;
+    }
+
+    public ImportTaskRequestAdapter parameter(ImportParameter parameter, BrokenDependenciesParameter value) {
+        params.add(parameter.getParamName(), value.getValueName());
+        return this;
+    }
+
      public OperationResult<StateDto> create(File zipArchive) {
         return createImport(zipArchive);
      }

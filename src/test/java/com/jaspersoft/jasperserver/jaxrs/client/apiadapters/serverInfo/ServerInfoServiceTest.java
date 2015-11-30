@@ -4,7 +4,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ServerInfo;
+import com.jaspersoft.jasperserver.dto.serverinfo.ServerInfo;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -143,12 +143,12 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     public void should_return_proper_server_version() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
-        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/since");
+        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/version");
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 
         OperationResult<String> retrieved = service.version();
 
-        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "/since");
+        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "/version");
         assertSame(retrieved, operationResultMock);
     }
     @Test
