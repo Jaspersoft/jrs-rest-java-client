@@ -23,6 +23,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.importexport;
 
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 
+import com.jaspersoft.jasperserver.dto.common.WarningDescriptor;
+import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -38,6 +40,7 @@ public class StateDto {
     private String message;
     private String phase;
     private ErrorDescriptor errorDescriptor;
+    private List<WarningDescriptor> warnings;
 
 
     public StateDto() {
@@ -72,12 +75,22 @@ public class StateDto {
         this.message = message;
     }
 
+    @XmlElement(name = "error")
     public ErrorDescriptor getErrorDescriptor() {
         return errorDescriptor;
     }
 
     public void setErrorDescriptor(ErrorDescriptor errorDescriptor) {
         this.errorDescriptor = errorDescriptor;
+    }
+
+    @XmlElement(name = "warnings")
+    public List<WarningDescriptor> getWarnings() {
+        return this.warnings != null && this.warnings.size() > 0?this.warnings:null;
+    }
+
+    public void setWarnings(List<WarningDescriptor> warnings) {
+        this.warnings = warnings;
     }
 
     @Override
@@ -87,31 +100,35 @@ public class StateDto {
 
         StateDto stateDto = (StateDto) o;
 
-        if (errorDescriptor != null ? !errorDescriptor.equals(stateDto.errorDescriptor) : stateDto.errorDescriptor != null)
+        if (getId() != null ? !getId().equals(stateDto.getId()) : stateDto.getId() != null) return false;
+        if (getMessage() != null ? !getMessage().equals(stateDto.getMessage()) : stateDto.getMessage() != null)
             return false;
-        if (id != null ? !id.equals(stateDto.id) : stateDto.id != null) return false;
-        if (message != null ? !message.equals(stateDto.message) : stateDto.message != null) return false;
-        if (phase != null ? !phase.equals(stateDto.phase) : stateDto.phase != null) return false;
+        if (getPhase() != null ? !getPhase().equals(stateDto.getPhase()) : stateDto.getPhase() != null) return false;
+        if (getErrorDescriptor() != null ? !getErrorDescriptor().equals(stateDto.getErrorDescriptor()) : stateDto.getErrorDescriptor() != null)
+            return false;
+        return !(getWarnings() != null ? !getWarnings().equals(stateDto.getWarnings()) : stateDto.getWarnings() != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        result = 31 * result + (phase != null ? phase.hashCode() : 0);
-        result = 31 * result + (errorDescriptor != null ? errorDescriptor.hashCode() : 0);
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getMessage() != null ? getMessage().hashCode() : 0);
+        result = 31 * result + (getPhase() != null ? getPhase().hashCode() : 0);
+        result = 31 * result + (getErrorDescriptor() != null ? getErrorDescriptor().hashCode() : 0);
+        result = 31 * result + (getWarnings() != null ? getWarnings().hashCode() : 0);
         return result;
     }
 
     @Override
-    public String toString() {
+    public String
+    toString() {
         return "StateDto{" +
                 "id='" + id + '\'' +
                 ", message='" + message + '\'' +
                 ", phase='" + phase + '\'' +
                 ", errorDescriptor=" + errorDescriptor +
+                ", warnings=" + warnings +
                 '}';
     }
 }

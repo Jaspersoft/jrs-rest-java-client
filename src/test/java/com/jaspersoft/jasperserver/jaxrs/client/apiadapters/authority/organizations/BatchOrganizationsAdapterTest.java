@@ -124,7 +124,7 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
 //        /** Then **/
 //        assertSame(retrieved, adapterSpy);
 //        Assert.assertTrue(params.size() == 1);
-//        Assert.assertEquals(params.getFirst(OrganizationParameter.CREATE_DEFAULT_USERS.getParamName()), "true");
+//        Assert.assertEquals(params.getFirst(OrganizationParameter.CREATE_DEFAULT_USERS.getValueName()), "true");
 //    }
 
 

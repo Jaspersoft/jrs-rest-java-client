@@ -54,7 +54,27 @@ public enum ImportParameter {
     /**
      *  Include server settings
      */
-    INCLUDE_SERVER_SETTINGS("includeServerSettings");
+    INCLUDE_SERVER_SETTINGS("includeServerSettings"),
+
+    /**
+     *  Allows merging of exported organization/resource into organization with different identifier.
+     */
+    MERGE_ORGANIZATION("mergeOrganization"),
+
+    /**
+     * Skips custom (not default themes) to be exported
+     */
+    SKIP_THEMES("skipThemes"),
+
+    /**
+     * Organization identifier we import into
+     */
+    ORGANIZATION("organization"),
+
+    /**
+     * Defines strategy with broken dependencies
+     */
+    BROKEN_DEPENDENCIES("brokenDependencies");
 
     private String paramName;
 

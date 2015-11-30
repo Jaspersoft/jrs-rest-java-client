@@ -55,6 +55,13 @@ public class ExportTaskDto {
     @XmlElement(name = "user")
     private List<String> usersToExport;
 
+    @XmlElementWrapper(name = "resourceTypes")
+    @XmlElement(name = "resourceType")
+    private List<String> resourceTypes;
+
+    @XmlElement(name = "organization")
+    private String organization;
+
     public ExportTaskDto() {
     }
 
@@ -64,6 +71,9 @@ public class ExportTaskDto {
         this.urisOfScheduledJobs = new ArrayList<String>(other.urisOfScheduledJobs);
         this.rolesToExport = new ArrayList<String>(other.rolesToExport);
         this.usersToExport = new ArrayList<String>(other.usersToExport);
+        this.resourceTypes = new ArrayList<String>(other.resourceTypes);
+        this.organization = other.organization;
+
     }
 
 
@@ -112,24 +122,42 @@ public class ExportTaskDto {
         return this;
     }
 
+    public List<String> getResourceTypes() {
+        return resourceTypes;
+    }
+
+    public void setResourceTypes(List<String> resourceTypes) {
+        this.resourceTypes = resourceTypes;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ExportTaskDto)) return false;
 
         ExportTaskDto that = (ExportTaskDto) o;
 
         if (exportParams != null ? !exportParams.equals(that.exportParams) : that.exportParams != null) return false;
-        if (rolesToExport != null ? !rolesToExport.equals(that.rolesToExport) : that.rolesToExport != null)
-            return false;
         if (urisOfResources != null ? !urisOfResources.equals(that.urisOfResources) : that.urisOfResources != null)
             return false;
         if (urisOfScheduledJobs != null ? !urisOfScheduledJobs.equals(that.urisOfScheduledJobs) : that.urisOfScheduledJobs != null)
             return false;
+        if (rolesToExport != null ? !rolesToExport.equals(that.rolesToExport) : that.rolesToExport != null)
+            return false;
         if (usersToExport != null ? !usersToExport.equals(that.usersToExport) : that.usersToExport != null)
             return false;
+        if (getResourceTypes() != null ? !getResourceTypes().equals(that.getResourceTypes()) : that.getResourceTypes() != null)
+            return false;
+        return !(getOrganization() != null ? !getOrganization().equals(that.getOrganization()) : that.getOrganization() != null);
 
-        return true;
     }
 
     @Override
@@ -139,6 +167,8 @@ public class ExportTaskDto {
         result = 31 * result + (urisOfScheduledJobs != null ? urisOfScheduledJobs.hashCode() : 0);
         result = 31 * result + (rolesToExport != null ? rolesToExport.hashCode() : 0);
         result = 31 * result + (usersToExport != null ? usersToExport.hashCode() : 0);
+        result = 31 * result + (getResourceTypes() != null ? getResourceTypes().hashCode() : 0);
+        result = 31 * result + (getOrganization() != null ? getOrganization().hashCode() : 0);
         return result;
     }
 
@@ -150,6 +180,8 @@ public class ExportTaskDto {
                 ", urisOfScheduledJobs=" + urisOfScheduledJobs +
                 ", rolesToExport=" + rolesToExport +
                 ", usersToExport=" + usersToExport +
+                ", resourceTypes=" + resourceTypes +
+                ", organization='" + organization + '\'' +
                 '}';
     }
 }
