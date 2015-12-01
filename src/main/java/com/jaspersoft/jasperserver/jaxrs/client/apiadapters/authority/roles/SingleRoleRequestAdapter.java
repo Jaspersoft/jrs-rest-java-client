@@ -22,9 +22,12 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
-import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
@@ -42,11 +45,11 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<ClientRole> get() {
-        return buildRequest(ClientRole.class).get();
+        return buildRequest().get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientRole>, R> callback) {
-        final JerseyRequest<ClientRole> request = buildRequest(ClientRole.class);
+        final JerseyRequest<ClientRole> request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -57,12 +60,12 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult<RolesListWrapper> createOrUpdate(ClientRole user) {
-        return buildRequest(RolesListWrapper.class).put(user);
+    public OperationResult<ClientRole> createOrUpdate(ClientRole user) {
+        return buildRequest().put(user);
     }
 
-    public <R> RequestExecution asyncCreateOrUpdate(final ClientRole user, final Callback<OperationResult<RolesListWrapper>, R> callback) {
-        final JerseyRequest<RolesListWrapper> request = buildRequest(RolesListWrapper.class);
+    public <R> RequestExecution asyncCreateOrUpdate(final ClientRole user, final Callback<OperationResult<ClientRole>, R> callback) {
+        final JerseyRequest<ClientRole> request = buildRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -73,12 +76,12 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult delete() {
-        return buildRequest(ClientRole.class).delete();
+    public OperationResult<ClientRole> delete() {
+        return buildRequest().delete();
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult<ClientRole>, R> callback) {
-        final JerseyRequest<ClientRole> request = buildRequest(ClientRole.class);
+        final JerseyRequest<ClientRole> request = buildRequest();
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -90,7 +93,7 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
         return task;
     }
 
-    private <T> JerseyRequest<T> buildRequest(Class<T> returnType) {
-        return JerseyRequest.buildRequest(sessionStorage, returnType, new String[]{roleUriPrefix}, new DefaultErrorHandler());
+    private JerseyRequest<ClientRole> buildRequest() {
+        return JerseyRequest.buildRequest(sessionStorage, ClientRole.class, new String[]{roleUriPrefix}, new DefaultErrorHandler());
     }
 }
