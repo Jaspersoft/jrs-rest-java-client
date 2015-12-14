@@ -23,6 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttribute;
 import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttributesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
@@ -68,6 +69,21 @@ public class BatchAttributeAdapter extends AbstractAdapter {
             }
             params.add("name", attributeName);
         }
+    }
+
+    public BatchAttributeAdapter parameter(OrganizationParameter parameter, boolean value) {
+        params.add(parameter.getParamName(), String.valueOf(value));
+        return this;
+    }
+
+    public BatchAttributeAdapter parameter(OrganizationParameter parameter, String value) {
+        params.add(parameter.getParamName(), value);
+        return this;
+    }
+
+    public BatchAttributeAdapter parameter(OrganizationParameter parameter, Integer value) {
+        params.add(parameter.getParamName(), value.toString());
+        return this;
     }
 
     public BatchAttributeAdapter setIncludePermissions(Boolean includePermissions) {
