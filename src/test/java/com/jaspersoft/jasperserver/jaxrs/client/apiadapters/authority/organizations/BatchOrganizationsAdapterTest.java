@@ -13,6 +13,7 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
+import org.powermock.reflect.Whitebox;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -108,24 +109,24 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
         assertNotSame(currentThreadId, newThreadId.get());
     }
 
-//    @Test
-//    /**
-//     * for {@link BatchOrganizationsAdapter#parameter(OrganizationParameter, String)}
-//     */
-//    public void should_add_parameter_to_map() throws Exception {
-//
-//        /** Given **/
-//        BatchOrganizationsAdapter adapterSpy = /*Power*/spy(new BatchOrganizationsAdapter(sessionStorageMock));
-//
-//        /** When **/
-//        BatchOrganizationsAdapter retrieved = adapterSpy.parameter(OrganizationParameter.CREATE_DEFAULT_USERS, "true");
-//        MultivaluedHashMap<String, String> params = (MultivaluedHashMap<String, String>) Whitebox.getInternalState(adapterSpy, "params");
-//
-//        /** Then **/
-//        assertSame(retrieved, adapterSpy);
-//        Assert.assertTrue(params.size() == 1);
-//        Assert.assertEquals(params.getFirst(OrganizationParameter.CREATE_DEFAULT_USERS.getValueName()), "true");
-//    }
+    @Test
+    /**
+     * for {@link BatchOrganizationsAdapter#parameter(OrganizationParameter, String)}
+     */
+    public void should_add_parameter_to_map() throws Exception {
+
+        // Given
+        BatchOrganizationsAdapter adapter = new BatchOrganizationsAdapter(sessionStorageMock);
+
+        // When
+        BatchOrganizationsAdapter retrieved = adapter.parameter(OrganizationParameter.CREATE_DEFAULT_USERS, "true");
+        MultivaluedHashMap<String, String> params = Whitebox.getInternalState(adapter, "params");
+
+        // Then
+        assertSame(retrieved, adapter);
+        Assert.assertTrue(params.size() == 1);
+        Assert.assertEquals(params.getFirst(OrganizationParameter.CREATE_DEFAULT_USERS.getParamName()), "true");
+    }
 
 
     @Test
