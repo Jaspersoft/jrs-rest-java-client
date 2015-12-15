@@ -23,7 +23,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttribute;
 import com.jaspersoft.jasperserver.dto.authority.hypermedia.HypermediaAttributesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
@@ -71,18 +70,23 @@ public class BatchAttributeAdapter extends AbstractAdapter {
         }
     }
 
-    public BatchAttributeAdapter parameter(OrganizationParameter parameter, boolean value) {
-        params.add(parameter.getParamName(), String.valueOf(value));
+    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, boolean value) {
+        params.add(parameter.getName(), String.valueOf(value));
         return this;
     }
 
-    public BatchAttributeAdapter parameter(OrganizationParameter parameter, String value) {
-        params.add(parameter.getParamName(), value);
+    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, String value) {
+        params.add(parameter.getName(), value);
         return this;
     }
 
-    public BatchAttributeAdapter parameter(OrganizationParameter parameter, Integer value) {
-        params.add(parameter.getParamName(), value.toString());
+    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, Integer value) {
+        params.add(parameter.getName(), value.toString());
+        return this;
+    }
+
+    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, AttributesGroupParameter value) {
+        params.add(parameter.getName(), value.getName());
         return this;
     }
 
@@ -94,6 +98,10 @@ public class BatchAttributeAdapter extends AbstractAdapter {
 
     public OperationResult<HypermediaAttributesListWrapper> get() {
         return buildRequest().get();
+    }
+
+    public OperationResult<HypermediaAttributesListWrapper> search() {
+        return this.get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<HypermediaAttributesListWrapper>, R> callback) {

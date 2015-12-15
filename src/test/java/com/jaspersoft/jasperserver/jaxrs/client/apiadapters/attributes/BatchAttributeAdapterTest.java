@@ -19,6 +19,7 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
+import org.powermock.reflect.Whitebox;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -35,10 +36,11 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.reflect.internal.WhiteboxImpl.getInternalState;
-import static org.powermock.reflect.internal.WhiteboxImpl.setInternalState;
+import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
 import static org.testng.AssertJUnit.assertNotSame;
 import static org.testng.AssertJUnit.assertSame;
@@ -173,9 +175,6 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
     public void should_delete_server_attributes() {
 
         // Given
-        MultivaluedHashMap<String, String> map = new MultivaluedHashMap<String, String>();
-        map.add("key", "value");
-
         mockStatic(JerseyRequest.class);
         when(buildRequest(
                 eq(sessionStorageMock),
@@ -187,7 +186,6 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
 
         // When
         BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock);
-        setInternalState(adapter, "params", map);
         OperationResult<HypermediaAttributesListWrapper> retrieved = adapter.delete();
 
         // Then
@@ -199,18 +197,13 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
                 eq(HypermediaAttributesListWrapper.class),
                 eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class));
-        verify(jerseyRequestMock, times(1)).addParams(map);
         verify(jerseyRequestMock, times(1)).delete();
-//        verifyNoMoreInteractions(jerseyRequestMock, builderMock);
     }
 
     @Test
     public void should_retrieve_server_attributes() {
 
         // Given
-        MultivaluedHashMap<String, String> map = new MultivaluedHashMap<String, String>();
-        map.add("key", "value");
-
         mockStatic(JerseyRequest.class);
         when(buildRequest(
                 eq(sessionStorageMock),
@@ -218,12 +211,10 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
                 eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
 
-        when(jerseyRequestMock.addParams(map)).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.get()).thenReturn(operationResultMock);
 
         // When
         BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock);
-        setInternalState(adapter, "params", map);
         OperationResult<HypermediaAttributesListWrapper> retrieved = adapter.get();
 
         // Then
@@ -235,9 +226,9 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
                 eq(HypermediaAttributesListWrapper.class),
                 eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class));
-        verify(jerseyRequestMock, times(1)).addParams(map);
         verify(jerseyRequestMock, times(1)).get();
-//        verifyNoMoreInteractions(jerseyRequestMock, builderMock);
+        verify(jerseyRequestMock, times(1)).addParams(any(MultivaluedHashMap.class));
+        verifyNoMoreInteractions(jerseyRequestMock);
     }
 
 
@@ -245,9 +236,6 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
     public void should_retrieve_server_attributes_with_permissions() {
 
         // Given
-        MultivaluedHashMap<String, String> map = new MultivaluedHashMap<String, String>();
-        map.add("key", "value");
-
         mockStatic(JerseyRequest.class);
         when(buildRequest(
                 eq(sessionStorageMock),
@@ -258,13 +246,98 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
         when(configurationMock.getAcceptMimeType()).thenReturn(MimeType.JSON);
         when(jerseyRequestMock.addParam(anyString(), anyString())).thenReturn(jerseyRequestMock);
-        when(jerseyRequestMock.addParams(map)).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.get()).thenReturn(operationResultMock);
 
         // When
         BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock);
-        setInternalState(adapter, "params", map);
         OperationResult<HypermediaAttributesListWrapper> retrieved = adapter.setIncludePermissions(true).get();
+
+        // Then
+        assertNotNull(retrieved);
+        assertSame(retrieved, operationResultMock);
+        verifyStatic(times(1));
+        buildRequest(
+                eq(sessionStorageMock),
+                eq(HypermediaAttributesListWrapper.class),
+                eq(new String[]{"/", "attributes"}),
+                any(DefaultErrorHandler.class));
+        verify(jerseyRequestMock, times(1)).addParams(any(MultivaluedHashMap.class));
+        verify(jerseyRequestMock, times(1)).get();
+        verify(jerseyRequestMock, times(1)).setAccept("application/hal+json");
+        verify(jerseyRequestMock, times(1)).addParam("_embedded", "permission");
+    }
+
+    @Test
+    public void should_set_internal_state_with_parameters() {
+
+            // Given
+            BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock, "attrName1", "attrName2", "attrName3");
+
+            // When
+            BatchAttributeAdapter retrieved = adapter
+                    .parameter(AttributesSearchParameter.GROUP, AttributesGroupParameter.CUSTOM)
+                    .parameter(AttributesSearchParameter.HOLDER, "/")
+                    .parameter(AttributesSearchParameter.RECURSIVE, Boolean.TRUE)
+                    .parameter(AttributesSearchParameter.INCLUDE_INHERITED, Boolean.TRUE)
+                    .parameter(AttributesSearchParameter.OFFSET, 10)
+                    .parameter(AttributesSearchParameter.LIMIT, 20);
+            MultivaluedHashMap<String, String> params = Whitebox.getInternalState(adapter, "params");
+
+            // Then
+            assertSame(retrieved, adapter);
+            assertTrue(params.size() == 7);
+            assertTrue(params.get("name").size() == 3);
+            assertEquals(params.get("holder").get(0), "/");
+            assertEquals(params.get("group").get(0), "custom");
+            assertEquals(params.get("recursive").get(0), "true");
+
+            assertEquals(params.get("includeInherited").get(0), "true");
+            assertEquals(params.get("offset").get(0), "10");
+            assertEquals(params.get("limit").get(0), "20");
+        }
+
+   @Test
+    public void should_search_server_attributes_with_parameters() {
+
+        // Given
+        MultivaluedHashMap<String, String> map = new MultivaluedHashMap<String, String>();
+        map.add("name", "attrName1");
+        map.add("name", "attrName2");
+        map.add("name", "attrName3");
+        map.add("holder", "/");
+        map.add("group", "custom");
+        map.add("recursive", "true");
+        map.add("includeInherited", "true");
+        map.add("offset", "10");
+        map.add("limit", "20");
+
+       mockStatic(JerseyRequest.class);
+       when(buildRequest(
+               eq(sessionStorageMock),
+               eq(HypermediaAttributesListWrapper.class),
+               eq(new String[]{"/", "attributes"}),
+               any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
+        when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+        when(configurationMock.getAcceptMimeType()).thenReturn(MimeType.JSON);
+
+        when(jerseyRequestMock.addParam(anyString(), anyString())).thenReturn(jerseyRequestMock);
+
+        when(jerseyRequestMock.addParams(map)).thenReturn(jerseyRequestMock);
+        when(jerseyRequestMock.get()).thenReturn(operationResultMock);
+
+        // When
+       BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock, "attrName1", "attrName2", "attrName3");
+
+        OperationResult<HypermediaAttributesListWrapper> retrieved = adapter
+               .parameter(AttributesSearchParameter.GROUP, AttributesGroupParameter.CUSTOM)
+               .parameter(AttributesSearchParameter.HOLDER, "/")
+               .parameter(AttributesSearchParameter.RECURSIVE, Boolean.TRUE)
+               .parameter(AttributesSearchParameter.INCLUDE_INHERITED, Boolean.TRUE)
+               .parameter(AttributesSearchParameter.OFFSET, 10)
+               .parameter(AttributesSearchParameter.LIMIT, 20)
+                .setIncludePermissions(true)
+               .search();
 
         // Then
         assertNotNull(retrieved);
@@ -279,7 +352,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verify(jerseyRequestMock, times(1)).get();
         verify(jerseyRequestMock, times(1)).setAccept("application/hal+json");
         verify(jerseyRequestMock, times(1)).addParam("_embedded", "permission");
-//        verifyNoMoreInteractions(jerseyRequestMock, builderMock);
+       verifyNoMoreInteractions(jerseyRequestMock);
     }
 
     @Test

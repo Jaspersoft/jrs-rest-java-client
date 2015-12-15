@@ -8,7 +8,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
  * @version $Id$
  * @see
  */
-public enum SearchAttributeParameter {
+public enum AttributesSearchParameter {
     /**
      * Represent the target holder, attributes should be fetched from.
      */
@@ -38,7 +38,7 @@ public enum SearchAttributeParameter {
     RECURSIVE("recursive"),
 
     /**
-     * Flag indicates if search should include also higher level attributes, relatively to target holder/
+     * Flag indicates if search should include also higher level attributes, relatively to target holder.
      */
     INCLUDE_INHERITED("includeInherited"),
 
@@ -54,7 +54,7 @@ public enum SearchAttributeParameter {
 
     private String name;
 
-    SearchAttributeParameter(String name) {
+    AttributesSearchParameter(String name) {
         this.name = name;
     }
 
