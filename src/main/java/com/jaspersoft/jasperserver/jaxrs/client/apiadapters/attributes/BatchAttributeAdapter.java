@@ -70,24 +70,21 @@ public class BatchAttributeAdapter extends AbstractAdapter {
         }
     }
 
-    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, boolean value) {
-        params.add(parameter.getName(), String.valueOf(value));
+    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, String value) {
+       params.add(parameter.getName(), value);
         return this;
     }
 
-    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, String value) {
-        params.add(parameter.getName(), value);
-        return this;
+    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, boolean value) {
+        return this.parameter(parameter, String.valueOf(value));
     }
 
     public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, Integer value) {
-        params.add(parameter.getName(), value.toString());
-        return this;
+        return this.parameter(parameter, value.toString());
     }
 
     public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, AttributesGroupParameter value) {
-        params.add(parameter.getName(), value.getName());
-        return this;
+        return this.parameter(parameter, value.getName());
     }
 
     public BatchAttributeAdapter setIncludePermissions(Boolean includePermissions) {
@@ -101,7 +98,10 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     public OperationResult<HypermediaAttributesListWrapper> search() {
-        return this.get();
+
+        JerseyRequest<HypermediaAttributesListWrapper> jerseyRequest = buildRequest();
+        jerseyRequest.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/attributes.collection+{mime}"));
+        return jerseyRequest.get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<HypermediaAttributesListWrapper>, R> callback) {

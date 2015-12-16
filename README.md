@@ -58,6 +58,7 @@ Table of Contents
     * [Setting Server Attributes](#setting-server-attributes).
     * [Deleting Server Attributes](#deleting-server-attributes).
     * [Getting attributes permissions](#getting-attributes-permissions).
+    * [Searching attributes ](#searching-attributes).
   4. [The Roles Service](#the-roles-service).
     * [Searching for Roles](#searching-for-roles).
     * [Viewing a Role](#viewing-a-role).
@@ -1039,6 +1040,61 @@ session
                 .attributes("max_threads", "admin_cell_phone")
                 .delete();
 ```
+###Getting attributes permissions
+Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with permissions using additional parameter `setIncludePermissions()`:
+```java
+
+ HypermediaAttribute entity = session
+                 .attributesService()
+                 .attribute("attribute_name")
+                 .setIncludePermissions(true)
+                 .get()
+                 .getEntity();
+```
+Pay attention, the setting `setIncludePermission()` specify only the **server response format**, you can not set any permissions with this setting.
+####Seasching Attributes
+To get full list of attributes with specified parameters use the next code:
+```java
+        session
+            .attributesService()
+            .allAttributes()
+            .parameter(AttributesSearchParameter.HOLDER, "tenant:/")
+            .parameter(AttributesSearchParameter.GROUP, AttributesGroupParameter.AWS)
+            .parameter(AttributesSearchParameter.OFFSET, 20)
+            .parameter(AttributesSearchParameter.INCLUDE_INHERITED, Boolean.TRUE)
+            .search();
+    HypermediaAttributesListWrapper attributes = operationResult.getEntity();
+```
+Supported parameters are:
+**holder** - represent the target holder, attributes should be fetched from;
+**group** - attribute group;
+**custom** - custom attributes(doesn't affect on server);
+**log4j** - logger specific attributes;
+**mondrian** - server attributes that make affect on Mondrian engine;
+**aws** - aws specific server attributes;
+**jdbc** - jdbc drivers specific attributes;
+**adhoc** - adhoc specific attributes;
+**ji** - profiling attributes;
+**customServerSettings** - updated server settings(changed log4j, mondrian, aws, jdbc, adhoc, ji server setting).
+**recursive** - flag indicates if attributes will be fetched also from lower level;
+**includeInherited** - flag indicates if search should include also higher level attributes, relatively to target holder;
+**offset** - pagination, start index for requested pate;
+**limit** - pagination, resources count per page.
+
+You can also specified names of attributes:
+
+```java
+        session
+            .attributesService()
+            .attributes("attrName1", "attrName2")
+            .parameter(AttributesSearchParameter.HOLDER, "tenant:/")
+            .parameter(AttributesSearchParameter.GROUP, AttributesGroupParameter.CUSTOM)
+            .parameter(AttributesSearchParameter.OFFSET, 20)
+            .parameter(AttributesSearchParameter.INCLUDE_INHERITED, Boolean.TRUE)
+            .search();
+    HypermediaAttributesListWrapper attributes = operationResult.getEntity();
+```
+Notice, for root 'HOLDER` is `tenant:/`, for organization - `tenant:/organizationId`, for user ib organization - 'user:/organizationId/userName'.
 ###Getting attributes permissions
 Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with permissions using additional parameter `setIncludePermissions()`:
 ```java

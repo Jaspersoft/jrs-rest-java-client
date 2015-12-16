@@ -268,7 +268,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_set_internal_state_with_parameters() {
+    public void should_set_internal_state_with_parameters_without_holder() {
 
             // Given
             BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock, "attrName1", "attrName2", "attrName3");
@@ -291,6 +291,34 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
             assertEquals(params.get("group").get(0), "custom");
             assertEquals(params.get("recursive").get(0), "true");
 
+            assertEquals(params.get("includeInherited").get(0), "true");
+            assertEquals(params.get("offset").get(0), "10");
+            assertEquals(params.get("limit").get(0), "20");
+        }
+
+    @Test
+    public void should_set_internal_state_with_parameters_with_holder() {
+
+            // Given
+            BatchAttributeAdapter adapter = new BatchAttributeAdapter("/", sessionStorageMock, "attrName1", "attrName2", "attrName3");
+
+            // When
+            BatchAttributeAdapter retrieved = adapter
+                    .parameter(AttributesSearchParameter.GROUP, AttributesGroupParameter.CUSTOM)
+                    .parameter(AttributesSearchParameter.HOLDER, "myOrg")
+                    .parameter(AttributesSearchParameter.RECURSIVE, Boolean.TRUE)
+                    .parameter(AttributesSearchParameter.INCLUDE_INHERITED, Boolean.TRUE)
+                    .parameter(AttributesSearchParameter.OFFSET, 10)
+                    .parameter(AttributesSearchParameter.LIMIT, 20);
+            MultivaluedHashMap<String, String> params = Whitebox.getInternalState(adapter, "params");
+
+            // Then
+            assertSame(retrieved, adapter);
+            assertTrue(params.size() == 7);
+            assertTrue(params.get("name").size() == 3);
+            assertEquals(params.get("holder").get(0), "myOrg");
+            assertEquals(params.get("group").get(0), "custom");
+            assertEquals(params.get("recursive").get(0), "true");
             assertEquals(params.get("includeInherited").get(0), "true");
             assertEquals(params.get("offset").get(0), "10");
             assertEquals(params.get("limit").get(0), "20");
@@ -352,6 +380,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verify(jerseyRequestMock, times(1)).get();
         verify(jerseyRequestMock, times(1)).setAccept("application/hal+json");
         verify(jerseyRequestMock, times(1)).addParam("_embedded", "permission");
+       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection+json");
        verifyNoMoreInteractions(jerseyRequestMock);
     }
 
