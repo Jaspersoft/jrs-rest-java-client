@@ -1058,7 +1058,7 @@ To get full list of attributes with specified parameters use the next code:
         session
             .attributesService()
             .allAttributes()
-            .parameter(AttributesSearchParameter.HOLDER, "tenant:/")
+            .parameter(AttributesSearchParameter.HOLDER, "/")
             .parameter(AttributesSearchParameter.GROUP, AttributesGroupParameter.AWS)
             .parameter(AttributesSearchParameter.OFFSET, 20)
             .parameter(AttributesSearchParameter.INCLUDE_INHERITED, Boolean.TRUE)
@@ -1087,14 +1087,14 @@ You can also specified names of attributes:
         session
             .attributesService()
             .attributes("attrName1", "attrName2")
-            .parameter(AttributesSearchParameter.HOLDER, "tenant:/")
+            .parameter(AttributesSearchParameter.HOLDER, "/")
             .parameter(AttributesSearchParameter.GROUP, AttributesGroupParameter.CUSTOM)
             .parameter(AttributesSearchParameter.OFFSET, 20)
             .parameter(AttributesSearchParameter.INCLUDE_INHERITED, Boolean.TRUE)
             .search();
     HypermediaAttributesListWrapper attributes = operationResult.getEntity();
 ```
-Notice, for root 'HOLDER` is `tenant:/`, for organization - `tenant:/organizationId`, for user ib organization - 'user:/organizationId/userName'.
+Notice, for root 'HOLDER` is `/`, for organization - `organizationId`, for user in organization - 'organizationId/userName'.
 ###Getting attributes permissions
 Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with permissions using additional parameter `setIncludePermissions()`:
 ```java

@@ -35,6 +35,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -49,17 +50,28 @@ public class BatchAttributeAdapter extends AbstractAdapter {
 
     private MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
     private Boolean includePermissions = false;
-    private String holderUri;
+    private List<String> holder = new LinkedList<String>();
 
+    /**
+     * @deprecated
+     * */
+    private String holderUri;
+/**
+ * @deprecated
+ * */
     public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage) {
         super(sessionStorage);
         this.holderUri = holderUri;
     }
-
+    /**
+     * @deprecated
+     * */
     public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage, String... attributesNames) {
         this(holderUri, sessionStorage, asList(attributesNames));
     }
-
+    /**
+     * @deprecated
+     * */
     public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage, Collection<String> attributesNames) {
         this(holderUri, sessionStorage);
         for (String attributeName : attributesNames) {
@@ -70,7 +82,39 @@ public class BatchAttributeAdapter extends AbstractAdapter {
         }
     }
 
+    public BatchAttributeAdapter(List<String> holder, SessionStorage sessionStorage) {
+        super(sessionStorage);
+        this.holder = holder;
+    }
+
+    public BatchAttributeAdapter(List<String> holder, SessionStorage sessionStorage, String... attributesNames) {
+        this(holder, sessionStorage, asList(attributesNames));
+    }
+
+    public BatchAttributeAdapter(List<String> holder, SessionStorage sessionStorage, Collection<String> attributesNames) {
+        this(holder, sessionStorage);
+        for (String attributeName : attributesNames) {
+            if (attributeName.equals("")) {
+                throw new IllegalArgumentException("Names of attributes are not valid.");
+            }
+            params.add("name", attributeName);
+        }
+    }
+
     public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, String value) {
+        if (parameter.equals(AttributesSearchParameter.HOLDER)) {
+            String prefix;
+          if (value.contains("/")) {
+              if (value.length() == 1) {
+                  prefix = "tenant:";
+              } else {
+                  prefix = "user:/";
+              }
+          } else {
+              prefix = "tenant:/";
+          }
+            value = prefix + value;
+        }
        params.add(parameter.getName(), value);
         return this;
     }
@@ -98,9 +142,8 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     public OperationResult<HypermediaAttributesListWrapper> search() {
-
-        JerseyRequest<HypermediaAttributesListWrapper> jerseyRequest = buildRequest();
-        jerseyRequest.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/attributes.collection+{mime}"));
+        // TODO check HOLDER parameter
+        JerseyRequest<HypermediaAttributesListWrapper> jerseyRequest = buildSearchRequest();
         return jerseyRequest.get();
     }
 
@@ -176,6 +219,19 @@ public class BatchAttributeAdapter extends AbstractAdapter {
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/hal+{mime}"));
             request.addParam("_embedded", "permission");
         }
+        request.addParams(params);
+        return request;
+    }
+
+    private JerseyRequest<HypermediaAttributesListWrapper> buildSearchRequest() {
+        JerseyRequest<HypermediaAttributesListWrapper> request = JerseyRequest.buildRequest(
+                sessionStorage,
+                HypermediaAttributesListWrapper.class,
+                new String[]{"attributes"}, new DefaultErrorHandler());
+        if (includePermissions) {
+            request.addParam("_embedded", "permission");
+        }
+        request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/attributes.collection+{mime}"));
         request.addParams(params);
         return request;
     }

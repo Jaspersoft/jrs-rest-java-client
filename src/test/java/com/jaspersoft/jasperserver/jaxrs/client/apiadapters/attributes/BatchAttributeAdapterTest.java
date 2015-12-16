@@ -287,7 +287,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
             assertSame(retrieved, adapter);
             assertTrue(params.size() == 7);
             assertTrue(params.get("name").size() == 3);
-            assertEquals(params.get("holder").get(0), "/");
+            assertEquals(params.get("holder").get(0), "tenant:/");
             assertEquals(params.get("group").get(0), "custom");
             assertEquals(params.get("recursive").get(0), "true");
 
@@ -316,7 +316,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
             assertSame(retrieved, adapter);
             assertTrue(params.size() == 7);
             assertTrue(params.get("name").size() == 3);
-            assertEquals(params.get("holder").get(0), "myOrg");
+            assertEquals(params.get("holder").get(0), "tenant:/myOrg");
             assertEquals(params.get("group").get(0), "custom");
             assertEquals(params.get("recursive").get(0), "true");
             assertEquals(params.get("includeInherited").get(0), "true");
@@ -332,7 +332,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         map.add("name", "attrName1");
         map.add("name", "attrName2");
         map.add("name", "attrName3");
-        map.add("holder", "/");
+        map.add("holder", "tenant:/");
         map.add("group", "custom");
         map.add("recursive", "true");
         map.add("includeInherited", "true");
@@ -343,7 +343,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
        when(buildRequest(
                eq(sessionStorageMock),
                eq(HypermediaAttributesListWrapper.class),
-               eq(new String[]{"/", "attributes"}),
+               eq(new String[]{"attributes"}),
                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
@@ -374,11 +374,10 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
-                eq(new String[]{"/", "attributes"}),
+                eq(new String[]{"attributes"}),
                 any(DefaultErrorHandler.class));
         verify(jerseyRequestMock, times(1)).addParams(map);
         verify(jerseyRequestMock, times(1)).get();
-        verify(jerseyRequestMock, times(1)).setAccept("application/hal+json");
         verify(jerseyRequestMock, times(1)).addParam("_embedded", "permission");
        verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection+json");
        verifyNoMoreInteractions(jerseyRequestMock);
