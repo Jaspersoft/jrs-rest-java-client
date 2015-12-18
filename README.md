@@ -1095,6 +1095,19 @@ You can also specified names of attributes:
     HypermediaAttributesListWrapper attributes = operationResult.getEntity();
 ```
 Notice, for root 'HOLDER` is `/`, for organization - `organizationId`, for user in organization - 'organizationId/userName'.
+To specify the holder you can use the existing API:
+```java
+        session
+            .attributesService()
+            .forOrganization("/")
+            .forUser("jasperadmin")
+            .attributes("attrName1", "attrName2")
+            .parameter(AttributesSearchParameter.GROUP, AttributesGroupParameter.CUSTOM)
+            .parameter(AttributesSearchParameter.OFFSET, 20)
+            .parameter(AttributesSearchParameter.INCLUDE_INHERITED, Boolean.TRUE)
+            .search();
+    HypermediaAttributesListWrapper attributes = operationResult.getEntity();
+```
 ###Getting attributes permissions
 Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with permissions using additional parameter `setIncludePermissions()`:
 ```java
