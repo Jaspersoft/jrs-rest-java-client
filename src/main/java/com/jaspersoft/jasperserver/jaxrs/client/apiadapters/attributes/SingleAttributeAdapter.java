@@ -44,9 +44,19 @@ public class SingleAttributeAdapter extends AbstractAdapter {
     private Boolean includePermissions = false;
     private String holderUri;
 
-    public SingleAttributeAdapter(String holderUri, SessionStorage sessionStorage, String attributeName) {
+    public SingleAttributeAdapter(String organizationId, String userName, SessionStorage sessionStorage, String attributeName) {
         super(sessionStorage);
-        this.holderUri = holderUri;
+        StringBuilder builder = new StringBuilder("/");
+        if (!"/".equals(organizationId) && organizationId != null) {
+            builder.append("organizations/");
+            builder.append(organizationId);
+            builder.append("/");
+        }
+        if (userName != null) {
+            builder.append("users/");
+            builder.append(userName);
+        }
+        this.holderUri = builder.toString();
         this.attributeName = attributeName;
     }
 
@@ -124,7 +134,7 @@ public class SingleAttributeAdapter extends AbstractAdapter {
     private JerseyRequest<HypermediaAttribute> buildRequest() {
 
         JerseyRequest<HypermediaAttribute> request = JerseyRequest.buildRequest(sessionStorage,HypermediaAttribute.class,
-                new String[]{holderUri,"attributes/",attributeName}, new DefaultErrorHandler());
+                new String[]{holderUri,"/attributes/",attributeName}, new DefaultErrorHandler());
         if (includePermissions) {
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/hal+{mime}"));
             request.addParam("_embedded", "permission");

@@ -50,24 +50,70 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     private MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
     private Boolean includePermissions = false;
     private String holderUri;
+    private String userName;
+    private String organizationId;
+    private final String SEPARATOR = "/";
 
-    public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage) {
+    public BatchAttributeAdapter(String organizationId, String userName, SessionStorage sessionStorage) {
         super(sessionStorage);
-        this.holderUri = holderUri;
+        StringBuilder builder = new StringBuilder(SEPARATOR);
+        if (!"/" .equals(organizationId) && organizationId != null) {
+            builder.append("organizations/");
+            builder.append(organizationId);
+            builder.append(SEPARATOR);
+        }
+        if (userName != null) {
+            builder.append("users/");
+            builder.append(userName);
+            builder.append(SEPARATOR);
+        }
+        this.holderUri = builder.toString();
+        this.organizationId = organizationId;
+        this.userName = userName;
     }
 
-    public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage, String... attributesNames) {
-        this(holderUri, sessionStorage, asList(attributesNames));
+    public BatchAttributeAdapter(String organizationId, String userName, SessionStorage sessionStorage, String... attributesNames) {
+        this(organizationId, userName, sessionStorage, asList(attributesNames));
     }
 
-    public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage, Collection<String> attributesNames) {
-        this(holderUri, sessionStorage);
+    public BatchAttributeAdapter(String organizationId, String userName, SessionStorage sessionStorage, Collection<String> attributesNames) {
+        this(organizationId, userName, sessionStorage);
         for (String attributeName : attributesNames) {
             if (attributeName.equals("")) {
                 throw new IllegalArgumentException("Names of attributes are not valid.");
             }
             params.add("name", attributeName);
         }
+    }
+
+    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, String value) {
+        if (parameter.equals(AttributesSearchParameter.HOLDER)) {
+            String prefix;
+            if (value.contains(SEPARATOR)) {
+                if (value.equals(SEPARATOR)) {
+                    prefix = "tenant:";
+                } else {
+                    prefix = "user:/";
+                }
+            } else {
+                prefix = "tenant:/";
+            }
+            value = prefix + value;
+        }
+        params.add(parameter.getName(), value);
+        return this;
+    }
+
+    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, boolean value) {
+        return this.parameter(parameter, String.valueOf(value));
+    }
+
+    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, Integer value) {
+        return this.parameter(parameter, value.toString());
+    }
+
+    public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, AttributesGroupParameter value) {
+        return this.parameter(parameter, value.getName());
     }
 
     public BatchAttributeAdapter setIncludePermissions(Boolean includePermissions) {
@@ -78,6 +124,11 @@ public class BatchAttributeAdapter extends AbstractAdapter {
 
     public OperationResult<HypermediaAttributesListWrapper> get() {
         return buildRequest().get();
+    }
+
+    public OperationResult<HypermediaAttributesListWrapper> search() {
+        JerseyRequest<HypermediaAttributesListWrapper> jerseyRequest = buildSearchRequest();
+        return jerseyRequest.get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<HypermediaAttributesListWrapper>, R> callback) {
@@ -153,6 +204,35 @@ public class BatchAttributeAdapter extends AbstractAdapter {
             request.addParam("_embedded", "permission");
         }
         request.addParams(params);
+        return request;
+    }
+
+    private JerseyRequest<HypermediaAttributesListWrapper> buildSearchRequest() {
+        JerseyRequest<HypermediaAttributesListWrapper> request = JerseyRequest.buildRequest(
+                sessionStorage,
+                HypermediaAttributesListWrapper.class,
+                new String[]{"attributes"}, new DefaultErrorHandler());
+        if (includePermissions) {
+            request.addParam("_embedded", "permission");
+        }
+        request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/attributes.collection+{mime}"));
+        request.addParams(params);
+
+        // if user did not specified holder make it form organizationId and userName variables
+
+        if (!params.containsKey("holder") && (organizationId != null || userName != null)) {
+            StringBuilder holderId = new StringBuilder();
+            holderId.append((userName == null) ? "tenant:" : "user:");
+            if (organizationId != null) {
+                holderId.append(SEPARATOR);
+                if (!SEPARATOR.equals(organizationId)) holderId.append(organizationId);
+            }
+            if (userName != null) {
+                holderId.append(SEPARATOR);
+                holderId.append(userName);
+            };
+            request.addParam("holder", holderId.toString());
+        }
         return request;
     }
 }

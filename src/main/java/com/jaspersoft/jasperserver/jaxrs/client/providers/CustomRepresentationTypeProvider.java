@@ -99,7 +99,9 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/hal+json",
         "application/hal+xml",
         "text/json",
-        "text/xml"})
+        "text/xml",
+        "application/attributes.collection+json",
+        "application/attributes.collection+xml"})
 @Produces({
         "application/collection+json",
         "application/collection+xml",
@@ -166,7 +168,9 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/hal+json",
         "application/hal+xml",
         "text/json",
-        "text/xml"})
+        "text/xml",
+        "application/attributes.collection+json",
+        "application/attributes.collection+xml"})
 public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
 
     @Override
