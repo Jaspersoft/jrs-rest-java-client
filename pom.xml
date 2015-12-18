@@ -29,11 +29,6 @@
             <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-releases/</url>
         </repository>
         <repository>
-            <id>jrs-ce-snapshots</id>
-            <name>JasperReports Server CE snapshots repository</name>
-            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-snapshots/</url>
-        </repository>
-        <repository>
             <id>opencast-public</id>
             <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
         </repository>
