@@ -25,9 +25,6 @@ import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 
 import static java.util.Arrays.asList;
 
@@ -36,54 +33,61 @@ import static java.util.Arrays.asList;
  * @since 6.0.1-ALPHA
  */
 public class AttributesService extends AbstractAdapter {
-    private List<String> holderUri = new LinkedList<String>();
+
+    private String userName;
+    private String organizationId;
 
     public AttributesService(SessionStorage sessionStorage) {
         super(sessionStorage);
-        holderUri.add("/");
     }
 
     public AttributesService forOrganization(String organizationName) {
-        return this.forOrganization(new ClientTenant().setId(organizationName));
+        if (organizationName == null || organizationName.equals("")) {
+            throw new IllegalArgumentException("Organization is not valid.");
+        }
+        this.organizationId = organizationName;
+        return this;
     }
 
     public AttributesService forOrganization(ClientTenant organization) {
-        if (organization == null || organization.getId() == null || organization.getId().equals("")) {
+        if (organization == null || organization.getId() == null) {
             throw new IllegalArgumentException("Organization is not valid.");
         }
-        this.holderUri.addAll(asList("organizations/", organization.getId(), "/"));
-        return this;
+        return this.forOrganization(organization.getId());
     }
 
     public AttributesService forUser(ClientUser user) {
-        if (user == null || user.getUsername() == null|| user.getUsername().equals("")) {
+        if (user == null || user.getUsername() == null) {
             throw new IllegalArgumentException("User is not valid.");
         }
-        this.holderUri.addAll(asList("users/", user.getUsername(), "/"));
-        return this;
+        return this.forUser(user.getUsername());
     }
 
 
     public AttributesService forUser(String userName) {
-        return this.forUser(new ClientUser().setUsername(userName));
+        if (userName == null || userName.equals("")) {
+            throw new IllegalArgumentException("User is not valid.");
+        }
+        this.userName = userName;
+        return this;
     }
 
     public SingleAttributeAdapter attribute(String attributeName) {
         if (attributeName == null || attributeName.equals("")) {
             throw new IllegalArgumentException("Attribute name is not valid.");
         }
-        return new SingleAttributeAdapter(StringUtils.join(holderUri, null), sessionStorage, attributeName);
+        return new SingleAttributeAdapter(organizationId, userName, sessionStorage, attributeName);
     }
 
     public BatchAttributeAdapter allAttributes() {
-        return new BatchAttributeAdapter(StringUtils.join(holderUri, null), sessionStorage);
+        return new BatchAttributeAdapter(organizationId, userName, sessionStorage);
     }
 
     public BatchAttributeAdapter attributes(Collection<String> attributesNames) {
         if (attributesNames == null || attributesNames.size() == 0) {
             throw new IllegalArgumentException("List of attributes is not valid.");
         }
-        return new BatchAttributeAdapter(StringUtils.join(holderUri, null), sessionStorage, attributesNames);
+        return new BatchAttributeAdapter(organizationId, userName, sessionStorage, attributesNames);
     }
 
     public BatchAttributeAdapter attributes(String... attributesNames) {

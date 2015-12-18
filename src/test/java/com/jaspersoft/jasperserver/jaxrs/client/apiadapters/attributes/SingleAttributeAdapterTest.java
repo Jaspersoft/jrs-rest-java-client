@@ -16,6 +16,7 @@ import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.w3c.dom.Attr;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.mockito.Matchers.any;
@@ -63,7 +64,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
     public void should_pass_proper_session_storage_to_parent_class_and_set_own_fields() {
 
         // When
-        SingleAttributeAdapter adapter = new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon", sessionStorageMock, "State");
+        SingleAttributeAdapter adapter = new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State");
         String uri = (String) getInternalState(adapter, "holderUri");
         String attributeName = (String) getInternalState(adapter, "attributeName");
 
@@ -78,7 +79,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
     public void should_invoke_private_method_and_return_a_mock() throws Exception {
 
         // Given
-        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon", sessionStorageMock, "State"));
+        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
         doReturn(requestMock).when(adapter, "buildRequest");
         doReturn(resultMock).when(requestMock).get();
 
@@ -95,7 +96,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
     public void should_return_attribute_asynchronously() throws Exception {
 
         // Given
-        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon", sessionStorageMock, "State"));
+        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
         doReturn(requestMock).when(adapter, "buildRequest");
         doReturn(resultMock).when(requestMock).get();
 
@@ -133,7 +134,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
     public void should_delete_attribute_asynchronously() throws Exception {
 
         // Given
-        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon", sessionStorageMock, "State"));
+        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
         doReturn(requestMock).when(adapter, "buildRequest");
         doReturn(resultMock).when(requestMock).delete();
 
@@ -171,7 +172,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
     public void should_create_or_update_attribute_for_user_asynchronously() throws Exception {
 
         // Given
-        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon", sessionStorageMock, "State"));
+        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
         final HypermediaAttribute userAttributeMock = mock(HypermediaAttribute.class);
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
@@ -210,11 +211,11 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         // Given
         final HypermediaAttribute userAttributeMock = mock(HypermediaAttribute.class);
-        final SingleAttributeAdapter adapter = new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon/", sessionStorageMock, "State");
+        final SingleAttributeAdapter adapter = new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State");
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon/", "attributes/", "State"}), any(DefaultErrorHandler.class)))
+                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}), any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
@@ -227,18 +228,21 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class), eq(new String[]{"/organizations/MyCoolOrg/users/Simon/", "attributes/", "State"}), any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock),
+                eq(HypermediaAttribute.class),
+                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}),
+                any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).put(userAttributeMock);
     }
     @Test
     public void should_set_headers_and_invoke_private_method() {
 
         // Given
-        final SingleAttributeAdapter adapter = new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon/", sessionStorageMock, "State");
+        final SingleAttributeAdapter adapter = new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State");
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon/", "attributes/", "State"}), any(DefaultErrorHandler.class)))
+                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}), any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).setAccept(anyString());
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
@@ -253,7 +257,79 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class), eq(new String[]{"/organizations/MyCoolOrg/users/Simon/", "attributes/", "State"}), any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock),
+                eq(HypermediaAttribute.class),
+                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}),
+                any(DefaultErrorHandler.class));
+        verify(requestMock, times(1)).get();
+        verify(requestMock, times(1)).setAccept("application/hal+json");
+        verify(requestMock, times(1)).addParam("_embedded", "permission");
+
+    }
+
+    @Test
+    public void should_set_headers_and_invoke_private_method_for_user_in_root_by_default() {
+
+        // Given
+        final SingleAttributeAdapter adapter = new SingleAttributeAdapter(null, "Simon", sessionStorageMock, "State");
+
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
+                eq(new String[]{"/users/Simon", "/attributes/", "State"}), any(DefaultErrorHandler.class)))
+                .thenReturn(requestMock);
+        doReturn(requestMock).when(requestMock).setAccept(anyString());
+        RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
+        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
+        doReturn(requestMock).when(requestMock).addParam(anyString(), anyString());
+        doReturn(resultMock).when(requestMock).get();
+
+        // When
+        OperationResult<HypermediaAttribute> retrieved = adapter.setIncludePermissions(true).get();
+
+        // Then
+        assertNotNull(retrieved);
+        verifyStatic(times(1));
+        buildRequest(eq(sessionStorageMock),
+                eq(HypermediaAttribute.class),
+                eq(new String[]{"/users/Simon", "/attributes/", "State"}),
+                any(DefaultErrorHandler.class));
+        verify(requestMock, times(1)).get();
+        verify(requestMock, times(1)).setAccept("application/hal+json");
+        verify(requestMock, times(1)).addParam("_embedded", "permission");
+
+    }
+
+    @Test
+    public void should_set_headers_and_invoke_private_method_for_user_in_root() {
+
+        // Given
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
+                eq(new String[]{"/users/Simon", "/attributes/", "State"}), any(DefaultErrorHandler.class)))
+                .thenReturn(requestMock);
+        doReturn(requestMock).when(requestMock).setAccept(anyString());
+        RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
+        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
+        doReturn(requestMock).when(requestMock).addParam(anyString(), anyString());
+        doReturn(resultMock).when(requestMock).get();
+
+        // When
+        AttributesService service = new AttributesService(sessionStorageMock);
+        OperationResult<HypermediaAttribute> retrieved = service
+                .forOrganization("/")
+                .forUser("Simon")
+                .attribute("State")
+                .setIncludePermissions(true).get();
+
+        // Then
+        assertNotNull(retrieved);
+        verifyStatic(times(1));
+        buildRequest(eq(sessionStorageMock),
+                eq(HypermediaAttribute.class),
+                eq(new String[]{"/users/Simon", "/attributes/", "State"}),
+                any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).get();
         verify(requestMock, times(1)).setAccept("application/hal+json");
         verify(requestMock, times(1)).addParam("_embedded", "permission");
@@ -264,11 +340,12 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
     public void should_invoke_private_method_for_delete_method() {
 
         // Given
-        final SingleAttributeAdapter adapter = new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon/", sessionStorageMock, "State");
+        final SingleAttributeAdapter adapter = new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State");
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon/", "attributes/", "State"}), any(DefaultErrorHandler.class)))
+                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}),
+                any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         doReturn(resultMock).when(requestMock).delete();
 
@@ -278,7 +355,10 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class), eq(new String[]{"/organizations/MyCoolOrg/users/Simon/", "attributes/", "State"}), any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock),
+                eq(HypermediaAttribute.class),
+                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}),
+                any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).delete();
     }
 
@@ -286,7 +366,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
     public void should_delete_user_attribute() throws Exception {
 
         // Given
-        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon", sessionStorageMock, "State"));
+        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
         doReturn(requestMock).when(adapter, "buildRequest");
         doReturn(resultMock).when(requestMock).delete();
 
@@ -305,7 +385,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         // Given
         final HypermediaAttribute userAttributeMock = mock(HypermediaAttribute.class);
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
-        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("/organizations/MyCoolOrg/users/Simon", sessionStorageMock, "State"));
+        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
         doReturn(requestMock).when(adapter, "buildRequest");
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();

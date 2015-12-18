@@ -35,7 +35,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -50,49 +49,35 @@ public class BatchAttributeAdapter extends AbstractAdapter {
 
     private MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
     private Boolean includePermissions = false;
-    private List<String> holder = new LinkedList<String>();
-
-    /**
-     * @deprecated
-     * */
     private String holderUri;
-/**
- * @deprecated
- * */
-    public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage) {
+    private String userName;
+    private String organizationId;
+    private final String SEPARATOR = "/";
+
+    public BatchAttributeAdapter(String organizationId, String userName, SessionStorage sessionStorage) {
         super(sessionStorage);
-        this.holderUri = holderUri;
-    }
-    /**
-     * @deprecated
-     * */
-    public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage, String... attributesNames) {
-        this(holderUri, sessionStorage, asList(attributesNames));
-    }
-    /**
-     * @deprecated
-     * */
-    public BatchAttributeAdapter(String holderUri, SessionStorage sessionStorage, Collection<String> attributesNames) {
-        this(holderUri, sessionStorage);
-        for (String attributeName : attributesNames) {
-            if (attributeName.equals("")) {
-                throw new IllegalArgumentException("Names of attributes are not valid.");
-            }
-            params.add("name", attributeName);
+        StringBuilder builder = new StringBuilder(SEPARATOR);
+        if (!"/" .equals(organizationId) && organizationId != null) {
+            builder.append("organizations/");
+            builder.append(organizationId);
+            builder.append(SEPARATOR);
         }
+        if (userName != null) {
+            builder.append("users/");
+            builder.append(userName);
+            builder.append(SEPARATOR);
+        }
+        this.holderUri = builder.toString();
+        this.organizationId = organizationId;
+        this.userName = userName;
     }
 
-    public BatchAttributeAdapter(List<String> holder, SessionStorage sessionStorage) {
-        super(sessionStorage);
-        this.holder = holder;
+    public BatchAttributeAdapter(String organizationId, String userName, SessionStorage sessionStorage, String... attributesNames) {
+        this(organizationId, userName, sessionStorage, asList(attributesNames));
     }
 
-    public BatchAttributeAdapter(List<String> holder, SessionStorage sessionStorage, String... attributesNames) {
-        this(holder, sessionStorage, asList(attributesNames));
-    }
-
-    public BatchAttributeAdapter(List<String> holder, SessionStorage sessionStorage, Collection<String> attributesNames) {
-        this(holder, sessionStorage);
+    public BatchAttributeAdapter(String organizationId, String userName, SessionStorage sessionStorage, Collection<String> attributesNames) {
+        this(organizationId, userName, sessionStorage);
         for (String attributeName : attributesNames) {
             if (attributeName.equals("")) {
                 throw new IllegalArgumentException("Names of attributes are not valid.");
@@ -104,18 +89,18 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     public BatchAttributeAdapter parameter(AttributesSearchParameter parameter, String value) {
         if (parameter.equals(AttributesSearchParameter.HOLDER)) {
             String prefix;
-          if (value.contains("/")) {
-              if (value.length() == 1) {
-                  prefix = "tenant:";
-              } else {
-                  prefix = "user:/";
-              }
-          } else {
-              prefix = "tenant:/";
-          }
+            if (value.contains(SEPARATOR)) {
+                if (value.equals(SEPARATOR)) {
+                    prefix = "tenant:";
+                } else {
+                    prefix = "user:/";
+                }
+            } else {
+                prefix = "tenant:/";
+            }
             value = prefix + value;
         }
-       params.add(parameter.getName(), value);
+        params.add(parameter.getName(), value);
         return this;
     }
 
@@ -142,7 +127,6 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     public OperationResult<HypermediaAttributesListWrapper> search() {
-        // TODO check HOLDER parameter
         JerseyRequest<HypermediaAttributesListWrapper> jerseyRequest = buildSearchRequest();
         return jerseyRequest.get();
     }
@@ -233,6 +217,22 @@ public class BatchAttributeAdapter extends AbstractAdapter {
         }
         request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/attributes.collection+{mime}"));
         request.addParams(params);
+
+        // if user did not specified holder make it form organizationId and userName variables
+
+        if (!params.containsKey("holder") && (organizationId != null || userName != null)) {
+            StringBuilder holderId = new StringBuilder();
+            holderId.append((userName == null) ? "tenant:" : "user:");
+            if (organizationId != null) {
+                holderId.append(SEPARATOR);
+                if (!SEPARATOR.equals(organizationId)) holderId.append(organizationId);
+            }
+            if (userName != null) {
+                holderId.append(SEPARATOR);
+                holderId.append(userName);
+            };
+            request.addParam("holder", holderId.toString());
+        }
         return request;
     }
 }
