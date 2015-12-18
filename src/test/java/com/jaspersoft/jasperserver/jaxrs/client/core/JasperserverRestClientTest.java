@@ -6,6 +6,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.TimeZone;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
@@ -25,6 +26,7 @@ import org.testng.annotations.Test;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -65,6 +67,8 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     @Mock
     private Response responseMock;
 
+    @Mock
+    TimeZone timeZoneMock;
 
     final String USER_NAME = "John";
     final String PASSWORD = "John's_super_secret_password";
@@ -164,7 +168,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         whenNew(Session.class)
                 .withArguments(sessionStorageMock)
                 .thenReturn(sessionMock);
-        doNothing().when(spyClient).login(sessionStorageMock);
+        doNothing().when(spyClient).login(eq(sessionStorageMock), any(TimeZone.class));
 
         // When
         Session retrieved = spyClient.authenticate(USER_NAME, PASSWORD);

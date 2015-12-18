@@ -21,6 +21,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
+import java.util.TimeZone;
 import javax.ws.rs.core.Response.Status;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
@@ -43,11 +44,20 @@ public class JasperserverRestClient {
     }
 
     public Session authenticate(String username, String password) {
+        return this.authenticate(username, password, TimeZone.getDefault());
+    }
+
+    public Session authenticate(String username, String password, String userTimeZone) {
+        TimeZone timeZone = TimeZone.getTimeZone(userTimeZone);
+        return this.authenticate(username, password, timeZone);
+    }
+
+    public Session authenticate(String username, String password, TimeZone timeZone) {
 
         if (username != null && username.length() > 0 && password != null && password.length() > 0) {
             AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
             SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
-            login(sessionStorage);
+            login(sessionStorage, timeZone);
             return new Session(sessionStorage);
         }
         return null;
@@ -57,7 +67,7 @@ public class JasperserverRestClient {
         return new AnonymousSession(new SessionStorage(configuration, null));
     }
 
-    protected void login(SessionStorage storage) {
+    protected void login(SessionStorage storage, TimeZone timeZone) {
 
         AuthenticationCredentials credentials = storage.getCredentials();
         WebTarget rootTarget = storage.getRootTarget();
@@ -67,6 +77,7 @@ public class JasperserverRestClient {
         }
         Form form = new Form();
         form.param("j_username", credentials.getUsername()).param("j_password", credentials.getPassword());
+        form.param("userTimezone", timeZone.getID());
         WebTarget target = rootTarget.path("/j_spring_security_check")
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
         Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
