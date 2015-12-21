@@ -53,7 +53,7 @@ public class Session extends AnonymousSession{
             storage.getCredentials().setUsername(null);
             storage.getCredentials().setPassword(null);
         } else {
-            WebTarget target = storage.getRootTarget().path("/exituser.html");
+            WebTarget target = storage.getRootTarget().path("/logout.html");
             Response response = target.request().get();
             if (response.getStatus() >= 400) {
                 new DefaultErrorHandler().handleError(response);
