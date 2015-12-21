@@ -240,5 +240,14 @@
             </roles>
             <timezone>+3</timezone>
         </developer>
+        <developer>
+            <id>tetiana.iefimenko</id>
+            <name>Tetiana Iefiemenko</name>
+            <email>efimenkot@gmail.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+3</timezone>
+        </developer>
     </developers>
 </project>
