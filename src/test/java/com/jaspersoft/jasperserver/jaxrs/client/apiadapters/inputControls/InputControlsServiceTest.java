@@ -8,6 +8,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.reset;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.spy;
@@ -62,7 +63,6 @@ public class InputControlsServiceTest extends PowerMockTestCase {
 
     @AfterMethod
     public void after() {
-        sessionStorageMock = null;
-        adapterMock = null;
+        reset(sessionStorageMock, adapterMock);
     }
 }

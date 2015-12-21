@@ -4,6 +4,7 @@ import com.sun.jersey.multipart.impl.MultiPartWriter;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.TimeZone;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -181,6 +182,36 @@ public class SessionStorageTest extends PowerMockTestCase {
         assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "configuration"));
         assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
         assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
+    }
+
+    @Test
+    public void should_set_proper_internal_state_user_time_zone() throws Exception {
+
+        // Given
+        suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
+
+        // When
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        sessionStorage.setUserTimeZone(TimeZone.getTimeZone("Canada/Central"));
+
+        // Then
+        assertEquals(Whitebox.getInternalState(sessionStorage, "userTimeZone"), TimeZone.getTimeZone("Canada/Central"));
+    }
+
+    @Test
+    public void should_return_proper_internal_state_user_time_zone() throws Exception {
+
+        // Given
+        suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
+
+        // When
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        Whitebox.setInternalState(sessionStorage, "userTimeZone", TimeZone.getTimeZone("Canada/Central"));
+
+        // Then
+        assertEquals(Whitebox.getInternalState(sessionStorage, "userTimeZone"), TimeZone.getTimeZone("Canada/Central"));
     }
 
     @Test(expectedExceptions = RuntimeException.class)

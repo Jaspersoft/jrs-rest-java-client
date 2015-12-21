@@ -23,6 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportParameters;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
+import java.util.TimeZone;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -45,6 +46,17 @@ public class ReportExecutionRequest {
     private String attachmentsPrefix;
     private String pages;
     private ReportParameters parameters;
+
+    public TimeZone getTimeZone() {
+        return timeZone;
+    }
+
+    public ReportExecutionRequest setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
+        return this;
+    }
+
+    private TimeZone timeZone;
 
     public String getReportUnitUri() {
         return reportUnitUri;
@@ -152,43 +164,48 @@ public class ReportExecutionRequest {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ReportExecutionRequest)) return false;
 
         ReportExecutionRequest that = (ReportExecutionRequest) o;
 
-        if (async != null ? !async.equals(that.async) : that.async != null) return false;
-        if (attachmentsPrefix != null ? !attachmentsPrefix.equals(that.attachmentsPrefix) : that.attachmentsPrefix != null)
+        if (getReportUnitUri() != null ? !getReportUnitUri().equals(that.getReportUnitUri()) : that.getReportUnitUri() != null)
             return false;
-        if (freshData != null ? !freshData.equals(that.freshData) : that.freshData != null) return false;
-        if (ignorePagination != null ? !ignorePagination.equals(that.ignorePagination) : that.ignorePagination != null)
+        if (getFreshData() != null ? !getFreshData().equals(that.getFreshData()) : that.getFreshData() != null)
             return false;
-        if (interactive != null ? !interactive.equals(that.interactive) : that.interactive != null) return false;
-        if (outputFormat != null ? !outputFormat.equals(that.outputFormat) : that.outputFormat != null) return false;
-        if (pages != null ? !pages.equals(that.pages) : that.pages != null) return false;
-        if (parameters != null ? !parameters.equals(that.parameters) : that.parameters != null) return false;
-        if (reportUnitUri != null ? !reportUnitUri.equals(that.reportUnitUri) : that.reportUnitUri != null)
+        if (getSaveDataSnapshot() != null ? !getSaveDataSnapshot().equals(that.getSaveDataSnapshot()) : that.getSaveDataSnapshot() != null)
             return false;
-        if (saveDataSnapshot != null ? !saveDataSnapshot.equals(that.saveDataSnapshot) : that.saveDataSnapshot != null)
+        if (getInteractive() != null ? !getInteractive().equals(that.getInteractive()) : that.getInteractive() != null)
             return false;
-        if (transformerKey != null ? !transformerKey.equals(that.transformerKey) : that.transformerKey != null)
+        if (getIgnorePagination() != null ? !getIgnorePagination().equals(that.getIgnorePagination()) : that.getIgnorePagination() != null)
             return false;
+        if (getAsync() != null ? !getAsync().equals(that.getAsync()) : that.getAsync() != null) return false;
+        if (getTransformerKey() != null ? !getTransformerKey().equals(that.getTransformerKey()) : that.getTransformerKey() != null)
+            return false;
+        if (getOutputFormat() != null ? !getOutputFormat().equals(that.getOutputFormat()) : that.getOutputFormat() != null)
+            return false;
+        if (getAttachmentsPrefix() != null ? !getAttachmentsPrefix().equals(that.getAttachmentsPrefix()) : that.getAttachmentsPrefix() != null)
+            return false;
+        if (getPages() != null ? !getPages().equals(that.getPages()) : that.getPages() != null) return false;
+        if (getParameters() != null ? !getParameters().equals(that.getParameters()) : that.getParameters() != null)
+            return false;
+        return !(getTimeZone() != null ? !getTimeZone().equals(that.getTimeZone()) : that.getTimeZone() != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = reportUnitUri != null ? reportUnitUri.hashCode() : 0;
-        result = 31 * result + (freshData != null ? freshData.hashCode() : 0);
-        result = 31 * result + (saveDataSnapshot != null ? saveDataSnapshot.hashCode() : 0);
-        result = 31 * result + (interactive != null ? interactive.hashCode() : 0);
-        result = 31 * result + (ignorePagination != null ? ignorePagination.hashCode() : 0);
-        result = 31 * result + (async != null ? async.hashCode() : 0);
-        result = 31 * result + (transformerKey != null ? transformerKey.hashCode() : 0);
-        result = 31 * result + (outputFormat != null ? outputFormat.hashCode() : 0);
-        result = 31 * result + (attachmentsPrefix != null ? attachmentsPrefix.hashCode() : 0);
-        result = 31 * result + (pages != null ? pages.hashCode() : 0);
-        result = 31 * result + (parameters != null ? parameters.hashCode() : 0);
+        int result = getReportUnitUri() != null ? getReportUnitUri().hashCode() : 0;
+        result = 31 * result + (getFreshData() != null ? getFreshData().hashCode() : 0);
+        result = 31 * result + (getSaveDataSnapshot() != null ? getSaveDataSnapshot().hashCode() : 0);
+        result = 31 * result + (getInteractive() != null ? getInteractive().hashCode() : 0);
+        result = 31 * result + (getIgnorePagination() != null ? getIgnorePagination().hashCode() : 0);
+        result = 31 * result + (getAsync() != null ? getAsync().hashCode() : 0);
+        result = 31 * result + (getTransformerKey() != null ? getTransformerKey().hashCode() : 0);
+        result = 31 * result + (getOutputFormat() != null ? getOutputFormat().hashCode() : 0);
+        result = 31 * result + (getAttachmentsPrefix() != null ? getAttachmentsPrefix().hashCode() : 0);
+        result = 31 * result + (getPages() != null ? getPages().hashCode() : 0);
+        result = 31 * result + (getParameters() != null ? getParameters().hashCode() : 0);
+        result = 31 * result + (getTimeZone() != null ? getTimeZone().hashCode() : 0);
         return result;
     }
 
@@ -206,7 +223,7 @@ public class ReportExecutionRequest {
                 ", attachmentsPrefix='" + attachmentsPrefix + '\'' +
                 ", pages='" + pages + '\'' +
                 ", parameters=" + parameters +
+                ", timeZone=" + timeZone +
                 '}';
     }
-
 }

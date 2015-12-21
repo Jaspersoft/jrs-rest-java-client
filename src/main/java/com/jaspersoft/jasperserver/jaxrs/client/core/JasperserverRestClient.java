@@ -56,8 +56,8 @@ public class JasperserverRestClient {
 
         if (username != null && username.length() > 0 && password != null && password.length() > 0) {
             AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
-            SessionStorage sessionStorage = new SessionStorage(configuration, credentials);
-            login(sessionStorage, timeZone);
+            SessionStorage sessionStorage = new SessionStorage(configuration, credentials, timeZone);
+            login(sessionStorage);
             return new Session(sessionStorage);
         }
         return null;
@@ -67,7 +67,7 @@ public class JasperserverRestClient {
         return new AnonymousSession(new SessionStorage(configuration, null));
     }
 
-    protected void login(SessionStorage storage, TimeZone timeZone) {
+    protected void login(SessionStorage storage) {
 
         AuthenticationCredentials credentials = storage.getCredentials();
         WebTarget rootTarget = storage.getRootTarget();
@@ -77,7 +77,7 @@ public class JasperserverRestClient {
         }
         Form form = new Form();
         form.param("j_username", credentials.getUsername()).param("j_password", credentials.getPassword());
-        form.param("userTimezone", timeZone.getID());
+        form.param("userTimezone", storage.getUserTimeZone().getID());
         WebTarget target = rootTarget.path("/j_spring_security_check")
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
         Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));

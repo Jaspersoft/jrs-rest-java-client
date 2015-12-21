@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -45,6 +46,7 @@ public class RunReportAdapter extends AbstractAdapter {
     private final MultivaluedMap<String, String> params;
     private final String reportUnitUri;
     private final String format;
+    private  TimeZone timeZone;
     private String[] pages = new String[0];
 
     public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, String format) {
@@ -78,6 +80,13 @@ public class RunReportAdapter extends AbstractAdapter {
                             PageRange range) {
         this(sessionStorage, reportUnitUri, format);
         this.pages = new String[]{range.getRange()};
+    }
+
+    public RunReportAdapter forTimeZone(TimeZone timeZone) {
+        if (timeZone != null) {
+            this.timeZone = timeZone;
+        }
+        return this;
     }
 
     public RunReportAdapter parameter(String name, String... value) {
@@ -131,6 +140,9 @@ public class RunReportAdapter extends AbstractAdapter {
             if (pages.length > 1) {
                 request.addParam("pages", pages);
             }
+        }
+        if (timeZone != null) {
+            request.addHeader("Accept-Timezone", timeZone.getID());
         }
         return request;
     }
