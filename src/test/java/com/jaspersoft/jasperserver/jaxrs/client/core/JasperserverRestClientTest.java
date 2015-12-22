@@ -1,6 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import java.lang.reflect.Field;
@@ -67,6 +68,8 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     private Invocation.Builder invocationBuilderMock;
     @Mock
     private Response responseMock;
+    @Mock
+    private DefaultErrorHandler errorHandlerMock;
 
 
     final String USER_NAME = "John";
@@ -339,6 +342,65 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         verify(responseMock).getCookies();
         verify(sessionStorageMock).setSessionId("AC0C233ED7E9BE5DD0D4A286E6C8BBAE");
         verify(rootTargetMock).register(isA(SessionOutputFilter.class));
+    }
+
+
+    @Test
+    public void should_involve_login_method_and_handle_error() throws Exception {
+        // Given
+        final URI location = new URI("location");
+        doReturn("url").when(configurationMock).getJasperReportsServerUrl();
+        final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
+        Form formSpy = spy(new Form());
+        whenNew(AuthenticationCredentials.class)
+                .withArguments(USER_NAME, PASSWORD)
+                .thenReturn(credentialsMock);
+
+        whenNew(SessionStorage.class)
+                .withArguments(eq(configurationMock), eq(credentialsMock), any(TimeZone.class))
+                .thenReturn(sessionStorageMock);
+        whenNew(Form.class)
+                .withNoArguments()
+                .thenReturn(formSpy);
+
+        whenNew(DefaultErrorHandler.class)
+                .withNoArguments()
+                .thenReturn(errorHandlerMock);
+        doNothing().when(errorHandlerMock).handleError(responseMock);
+        doReturn(credentialsMock).when(sessionStorageMock).getCredentials();
+        doReturn(rootTargetMock).when(sessionStorageMock).getRootTarget();
+        doReturn(AuthenticationType.SPRING).when(configurationMock).getAuthenticationType();
+        doReturn(USER_NAME).when(credentialsMock).getUsername();
+        doReturn(PASSWORD).when(credentialsMock).getPassword();
+        doReturn(TimeZone.getTimeZone(TIME_ZONE)).when(sessionStorageMock).getUserTimeZone();
+        doReturn(webTargetMock).when(rootTargetMock).path(anyString());
+        doReturn(webTargetMock).when(webTargetMock).property(anyString(), anyBoolean());
+        doReturn(invocationBuilderMock).when(webTargetMock).request();
+        doReturn(responseMock).when(invocationBuilderMock).post(any(Entity.class));
+        doReturn(location).when(responseMock).getLocation();
+        doReturn(400).when(responseMock).getStatus();
+        doReturn(new HashMap<String, NewCookie>() {{
+            put("JSESSIONID", new NewCookie(new Cookie("JSESSIONID", "AC0C233ED7E9BE5DD0D4A286E6C8BBAE")));
+        }}).when(responseMock).getCookies();
+
+        // When
+        Session session = client.authenticate(USER_NAME, PASSWORD);
+
+        // Then
+        assertNotNull(session);
+        verify(sessionStorageMock).getCredentials();
+        verify(sessionStorageMock).getRootTarget();
+        verify(configurationMock).getAuthenticationType();
+        verify(sessionStorageMock).getCredentials();
+        verify(rootTargetMock, never()).register(isA(BasicAuthenticationFilter.class));
+        verify(rootTargetMock).path("/j_spring_security_check");
+        verify(webTargetMock).property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
+        verify(webTargetMock).request();
+        verify(formSpy).param("j_username", USER_NAME);
+        verify(formSpy).param("j_password", PASSWORD);
+        verify(formSpy).param("userTimezone", TIME_ZONE);
+        verify(invocationBuilderMock).post(Entity.entity(formSpy, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+        verify(errorHandlerMock).handleError(responseMock);
     }
 
     @Test

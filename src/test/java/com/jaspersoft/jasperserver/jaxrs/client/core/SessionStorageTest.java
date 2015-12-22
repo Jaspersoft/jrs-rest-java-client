@@ -69,6 +69,7 @@ public class SessionStorageTest extends PowerMockTestCase {
     @Mock
     public Response.StatusType statusTypeMock;
 
+    private String timeZoneId = "America/Los_Angeles";
 
     @BeforeMethod
     public void before() {
@@ -183,6 +184,24 @@ public class SessionStorageTest extends PowerMockTestCase {
         assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
         assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
     }
+    @Test
+    public void should_create_new_instance_session_storage_with_timezone() throws Exception {
+
+        // Given
+        TimeZone timeZone = TimeZone.getTimeZone(timeZoneId);
+        suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
+
+        // When
+        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock, timeZone);
+
+        // Then
+        assertNotNull(sessionStorageSpy);
+        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "configuration"));
+        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
+        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
+        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "userTimeZone"), timeZone);
+    }
 
     @Test
     public void should_set_proper_internal_state_user_time_zone() throws Exception {
@@ -193,10 +212,10 @@ public class SessionStorageTest extends PowerMockTestCase {
 
         // When
         SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
-        sessionStorage.setUserTimeZone(TimeZone.getTimeZone("Canada/Central"));
+        sessionStorage.setUserTimeZone(TimeZone.getTimeZone(timeZoneId));
 
         // Then
-        assertEquals(Whitebox.getInternalState(sessionStorage, "userTimeZone"), TimeZone.getTimeZone("Canada/Central"));
+        assertEquals(Whitebox.getInternalState(sessionStorage, "userTimeZone"), TimeZone.getTimeZone(timeZoneId));
     }
 
     @Test
@@ -205,13 +224,12 @@ public class SessionStorageTest extends PowerMockTestCase {
         // Given
         suppress(method(SessionStorage.class, "init"));
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
-
-        // When
         SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
-        Whitebox.setInternalState(sessionStorage, "userTimeZone", TimeZone.getTimeZone("Canada/Central"));
-
+        Whitebox.setInternalState(sessionStorage, "userTimeZone", TimeZone.getTimeZone(timeZoneId));
+        // When
+        TimeZone timeZone = sessionStorage.getUserTimeZone();
         // Then
-        assertEquals(Whitebox.getInternalState(sessionStorage, "userTimeZone"), TimeZone.getTimeZone("Canada/Central"));
+        assertEquals(timeZone, TimeZone.getTimeZone(timeZoneId));
     }
 
     @Test(expectedExceptions = RuntimeException.class)
@@ -254,10 +272,11 @@ public class SessionStorageTest extends PowerMockTestCase {
     public void should_set_and_get_state_for_object() {
 
         // Given
+
         suppress(method(SessionStorage.class, "init"));
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
 
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, TimeZone.getTimeZone(timeZoneId));
 
         // When
         setInternalState(sessionStorage, "rootTarget", targetMock);
@@ -265,6 +284,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         // Then
         assertNotNull(sessionStorage.getConfiguration());
         assertNotNull(sessionStorage.getCredentials());
+        assertNotNull(sessionStorage.getUserTimeZone());
         assertNotNull(sessionStorage.getRootTarget());
         assertNotNull(sessionStorage.getSessionId());
     }
