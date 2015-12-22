@@ -8,6 +8,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.User
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorService;
@@ -29,6 +30,7 @@ import org.testng.annotations.Test;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -147,106 +149,117 @@ public class SessionTest {
     }
 
     @Test
-    public void should_return_not_null_OrganizationsService() {
+    public void should_return_not_null_OrganizationsService_instance() {
         // When
-        Session session = new Session(storageMock);
-        OrganizationsService retrieved = session.organizationsService();
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        OrganizationsService retrieved = sessionSpy.organizationsService();
         // Then
         assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(OrganizationsService.class);
     }
 
     @Test
-    public void should_return_not_null_UsersService() {
+    public void should_return_not_null_UsersService_instance() {
         // When
-        Session session = new Session(storageMock);
-        UsersService retrieved = session.usersService();
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        UsersService retrieved = sessionSpy.usersService();
         // Then
         assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(UsersService.class);
     }
 
     @Test
-    public void should_return_not_null_RolesService() {
+    public void should_return_not_null_RolesService_instance() {
         // When
-        Session session = new Session(storageMock);
-        RolesService retrieved = session.rolesService();
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        RolesService retrieved = sessionSpy.rolesService();
         // Then
         assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(RolesService.class);
     }
 
     @Test
-    public void should_return_not_null_PermissionsService() {
+    public void should_return_not_null_PermissionsService_instance() {
         // When
-        Session session = new Session(storageMock);
-        PermissionsService retrieved = session.permissionsService();
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        PermissionsService retrieved = sessionSpy.permissionsService();
         // Then
         assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(PermissionsService.class);
     }
 
     @Test
-    public void should_return_not_null_ExportService() {
+    public void should_return_not_null_ExportService_instance() {
         // When
-        Session session = new Session(storageMock);
-        ExportService retrieved = session.exportService();
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        ExportService retrieved = sessionSpy.exportService();
         // Then
         assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(ExportService.class);
     }
 
     @Test
-    public void should_return_not_null_ImportService() {
+    public void should_return_not_null_ImportService_instance() {
         // When
-        Session session = new Session(storageMock);
-        ImportService retrieved = session.importService();
+        Session sessionSpy = Mockito.spy(new Session(storageMock));;
+        ImportService retrieved = sessionSpy.importService();
         // Then
         assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(ImportService.class);
     }
 
     @Test
-    public void should_return_not_null_ReportingService() {
+    public void should_return_not_null_ReportingService_instance() {
         // When
-        Session session = new Session(storageMock);
-        ReportingService retrieved = session.reportingService();
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        ReportingService retrieved = sessionSpy.reportingService();
         // Then
         assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(ReportingService.class);
     }
 
     @Test
     public void should_return_not_null_ResourcesService() {
         // When
-        Session session = new Session(storageMock);
-        ResourcesService retrieved = session.resourcesService();
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        ResourcesService retrieved = sessionSpy.resourcesService();
         // Then
         assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(ResourcesService.class);
     }
 
     @Test
-    public void should_return_not_null_JobsService() {
+    public void should_return_not_null_JobsService_instance() {
         // When
-        Session session = new Session(storageMock);
-        JobsService retrieved = session.jobsService();
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        JobsService retrieved = sessionSpy.jobsService();
         // Then
         assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(JobsService.class);
     }
 
     @Test
-    public void should_return_not_null_DomainMetadataService() {
+    public void should_return_not_null_DomainMetadataService_instance() {
         // When
-        Session session = new Session(storageMock);
-        DomainMetadataService retrieved = session.domainService();
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        DomainMetadataService retrieved = sessionSpy.domainService();
         // Then
         assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(DomainMetadataService.class);
     }
 
     @Test
-    public void should_return_not_null_QueryExecutorService() {
+    public void should_return_not_null_QueryExecutorService_instance() {
         // When
-        Session session = new Session(storageMock);
-        QueryExecutorService retrieved = session.queryExecutorService();
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        QueryExecutorService retrieved = sessionSpy.queryExecutorService();
         // Then
         assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(QueryExecutorService.class);
     }
 
     @Test
-    public void should_return_proper_ThumbnailsService_instance() {
+    public void should_return_not_null_ThumbnailsService_instance() {
         // When
         Session sessionSpy = Mockito.spy(new Session(storageMock));
         ThumbnailsService service = sessionSpy.thumbnailsService();
@@ -256,7 +269,7 @@ public class SessionTest {
     }
 
     @Test
-    public void should_return_proper_ServerAttributesService_instance() {
+    public void should_return_not_null_ServerAttributesService_instance() {
         // When
         Session sessionSpy = Mockito.spy(new Session(storageMock));
         AttributesService service = sessionSpy.attributesService();
@@ -265,12 +278,18 @@ public class SessionTest {
         verify(sessionSpy, times(1)).getService(AttributesService.class);
     }
 
+    @Test
+    public void should_return_not_null_InputControlsService_instance() {
+        // When
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        InputControlsService service = sessionSpy.inputControlsService();
+        // Then
+        assertNotNull(service);
+        verify(sessionSpy, times(1)).getService(InputControlsService.class);
+    }
+
     @AfterMethod
     public void after() {
-        storageMock = null;
-        targetMock = null;
-        builderMock = null;
-        responseMock = null;
-        statusTypeMock = null;
+        reset(storageMock, targetMock, builderMock, responseMock, statusTypeMock);
     }
 }

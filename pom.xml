@@ -29,11 +29,6 @@
             <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-releases/</url>
         </repository>
         <repository>
-            <id>jrs-ce-snapshots</id>
-            <name>JasperReports Server CE snapshots repository</name>
-            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-snapshots/</url>
-        </repository>
-        <repository>
             <id>opencast-public</id>
             <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
         </repository>
@@ -240,6 +235,15 @@
             <id>Krasnyanskiy</id>
             <name>Alexander Krasnyanskiy</name>
             <email>krasnyanskiy.alex@gmail.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+3</timezone>
+        </developer>
+        <developer>
+            <id>tetiana.iefimenko</id>
+            <name>Tetiana Iefiemenko</name>
+            <email>efimenkot@gmail.com</email>
             <roles>
                 <role>developer</role>
             </roles>

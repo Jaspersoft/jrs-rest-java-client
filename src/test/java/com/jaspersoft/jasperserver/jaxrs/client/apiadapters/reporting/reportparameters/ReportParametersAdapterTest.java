@@ -120,7 +120,7 @@ public class ReportParametersAdapterTest extends PowerMockTestCase {
         verify(callbackSpy, times(1)).execute(operationResultMock);
     }
 
-    @Test
+    @Test(enabled = false)
     public void should_return_ReportInputControlsListWrapper() {
 
         /** Given **/

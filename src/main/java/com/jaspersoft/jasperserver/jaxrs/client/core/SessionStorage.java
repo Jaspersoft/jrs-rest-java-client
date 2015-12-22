@@ -24,6 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
 import com.sun.jersey.multipart.impl.MultiPartWriter;
 import java.security.SecureRandom;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -31,7 +32,6 @@ import javax.net.ssl.SSLSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.glassfish.jersey.client.ClientProperties;
@@ -44,12 +44,21 @@ public class SessionStorage {
 
     private RestClientConfiguration configuration;
     private AuthenticationCredentials credentials;
+
+    private TimeZone userTimeZone;
     private WebTarget rootTarget;
     private String sessionId;
 
     public SessionStorage(RestClientConfiguration configuration, AuthenticationCredentials credentials) {
         this.configuration = configuration;
         this.credentials = credentials;
+        init();
+    }
+
+    public SessionStorage(RestClientConfiguration configuration, AuthenticationCredentials credentials, TimeZone userTimeZone) {
+        this.configuration = configuration;
+        this.credentials = credentials;
+        this.userTimeZone = userTimeZone;
         init();
     }
 
@@ -93,8 +102,6 @@ public class SessionStorage {
             client.property(ClientProperties.READ_TIMEOUT, readTimeout);
         }
 
-        JacksonJsonProvider provider = new JacksonJaxbJsonProvider()
-                .configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JacksonJsonProvider customRepresentationTypeProvider = new CustomRepresentationTypeProvider()
                 .configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
@@ -136,4 +143,13 @@ public class SessionStorage {
     public WebTarget getRootTarget() {
         return rootTarget;
     }
+
+    public TimeZone getUserTimeZone() {
+        return userTimeZone;
+    }
+
+    public void setUserTimeZone(TimeZone userTimeZone) {
+        this.userTimeZone = userTimeZone;
+    }
+
 }
