@@ -89,6 +89,11 @@ public class RunReportAdapter extends AbstractAdapter {
         return this;
     }
 
+
+    public RunReportAdapter forTimeZone(String timeZoneId) {
+        return this.forTimeZone(TimeZone.getTimeZone(timeZoneId));
+    }
+
     public RunReportAdapter parameter(String name, String... value) {
 
         params.addAll(name, Arrays.asList(value));

@@ -7,6 +7,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
+import java.util.TimeZone;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -65,7 +66,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
      */
     public void should_return_wrapped_ReportExecutionDescriptor() throws InterruptedException {
 
-        /* Given */
+        // Given
         final AtomicInteger newThreadId = new AtomicInteger();
         int currentThreadId = (int) Thread.currentThread().getId();
 
@@ -87,15 +88,15 @@ public class ReportingServiceTest extends PowerMockTestCase {
         doReturn(resultMock).when(requestMock).post(executionRequestMock);
         doReturn(null).when(callback).execute(resultMock);
 
-        /* When */
+        // When
         RequestExecution retrieved = serviceSpy.asyncNewReportExecutionRequest(executionRequestMock, callback);
 
-        /* Wait */
+        // Wait
         synchronized (callback) {
             callback.wait(1000);
         }
 
-        /* Then */
+        // Then
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(resultMock);
@@ -108,7 +109,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
      */
     public void should_return_operation_result_with_proper_object() {
 
-        /* Given */
+        // Given
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class),
                 eq(new String[]{"/reportExecutions"}))).thenReturn(requestMock);
@@ -116,10 +117,10 @@ public class ReportingServiceTest extends PowerMockTestCase {
         doReturn(resultMock).when(requestMock).post(executionRequestMock);
         ReportingService serviceSpy = PowerMockito.spy(new ReportingService(sessionStorageMock));
 
-        /* When */
+        // When
         OperationResult<ReportExecutionDescriptor> retrieved = serviceSpy.newReportExecutionRequest(executionRequestMock);
 
-        /* Then */
+        // Then
         assertNotNull(retrieved);
         assertSame(retrieved, resultMock);
 
@@ -129,19 +130,47 @@ public class ReportingServiceTest extends PowerMockTestCase {
 
     @Test
     /**
+     * for {@link ReportingService#newReportExecutionRequest(ReportExecutionRequest)}
+     */
+    public void should_set_time_zone_and_return_operation_result_with_proper_object() {
+
+        // Given
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class),
+                eq(new String[]{"/reportExecutions"}))).thenReturn(requestMock);
+
+        doReturn(TimeZone.getTimeZone("America/Los_Angeles")).when(executionRequestMock).getTimeZone();
+        doReturn(requestMock).when(requestMock).addHeader("Accept-Timezone", "America/Los_Angeles");
+        doReturn(resultMock).when(requestMock).post(executionRequestMock);
+        ReportingService serviceSpy = PowerMockito.spy(new ReportingService(sessionStorageMock));
+
+        // When
+        OperationResult<ReportExecutionDescriptor> retrieved = serviceSpy.newReportExecutionRequest(executionRequestMock);
+
+        // Then
+        assertNotNull(retrieved);
+        assertSame(retrieved, resultMock);
+
+        verifyStatic(times(1));
+        buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"/reportExecutions"}));
+        verify(requestMock).addHeader("Accept-Timezone", "America/Los_Angeles");
+    }
+
+    @Test
+    /**
      * for {@link ReportingService#reportExecutionRequest(String)}
      */
     public void should_return_proper_builder_instance() throws Exception {
 
-        /* Given */
+        // Given
         ReportExecutionRequestBuilder builderMock = mock(ReportExecutionRequestBuilder.class);
         whenNew(ReportExecutionRequestBuilder.class).withArguments(sessionStorageMock, "id").thenReturn(builderMock);
         ReportingService serviceSpy = PowerMockito.spy(new ReportingService(sessionStorageMock));
 
-        /* When */
+        // When
         ReportExecutionRequestBuilder retrieved = serviceSpy.reportExecutionRequest("id");
 
-        /* Then */
+        // Then
         assertNotNull(retrieved);
         assertSame(retrieved, builderMock);
         verifyNew(ReportExecutionRequestBuilder.class).withArguments(sessionStorageMock, "id");
@@ -153,15 +182,15 @@ public class ReportingServiceTest extends PowerMockTestCase {
      */
     public void should_return_proper_ReportsAndJobsSearch_instance() throws Exception {
 
-        /* Given */
+        // Given
         ReportsAndJobsSearchAdapter adapterMock = mock(ReportsAndJobsSearchAdapter.class);
         whenNew(ReportsAndJobsSearchAdapter.class).withArguments(sessionStorageMock).thenReturn(adapterMock);
         ReportingService serviceSpy = PowerMockito.spy(new ReportingService(sessionStorageMock));
 
-        /* When */
+        // When
         ReportsAndJobsSearchAdapter retrieved = serviceSpy.runningReportsAndJobs();
 
-        /* Then */
+        // Then
         assertNotNull(retrieved);
         assertSame(retrieved, adapterMock);
         verifyNew(ReportsAndJobsSearchAdapter.class).withArguments(sessionStorageMock);
@@ -173,15 +202,15 @@ public class ReportingServiceTest extends PowerMockTestCase {
      */
     public void should_return_proper_ReportsAdapter_instance() throws Exception {
 
-        /* Given */
+        // Given
         ReportsAdapter adapterMock = mock(ReportsAdapter.class);
         whenNew(ReportsAdapter.class).withArguments(sessionStorageMock, "reportUnitUri").thenReturn(adapterMock);
         ReportingService serviceSpy = PowerMockito.spy(new ReportingService(sessionStorageMock));
 
-        /* When */
+        // When
         ReportsAdapter retrieved = serviceSpy.report("reportUnitUri");
 
-        /* Then */
+        // Then
         assertNotNull(retrieved);
         assertSame(retrieved, adapterMock);
         verifyNew(ReportsAdapter.class).withArguments(sessionStorageMock, "reportUnitUri");
