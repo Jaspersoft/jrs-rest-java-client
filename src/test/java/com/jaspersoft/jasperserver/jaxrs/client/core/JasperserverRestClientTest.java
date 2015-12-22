@@ -288,7 +288,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_involve_login_method_and_return_proper_session_object_() throws Exception {
+    public void should_involve_login_method_and_return_proper_session_object_with_time_zone() throws Exception {
         // Given
         final URI location = new URI("location");
         doReturn("url").when(configurationMock).getJasperReportsServerUrl();
