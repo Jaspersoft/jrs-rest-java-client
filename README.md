@@ -276,6 +276,12 @@ Session session = client.authenticate("jasperadmin", "jasperadmin");
 //authentication with multitenancy enabled
 Session session = client.authenticate("jasperadmin|organization_1", "jasperadmin");
 ```
+If you need to set user time zone different from default system timezone (for example, for running reports) use the code below:
+```java
+Session session = client.authenticate("jasperadmin", "jasperadmin", TimeZone.getTimeZone("America/Los_Angeles"));
+// or
+Session session = client.authenticate("jasperadmin", "jasperadmin", "America/Los_Angeles");
+```
 ###Anonymous session
 For some Jasperserver services authentication is not required (for example, settings service, bundles service or server info service), so you can use anonymous session:
  ```java
@@ -333,7 +339,25 @@ OperationResult<InputStream> result = client
 ```
 Please notice, if you pass zero as number of page, you  will get all  pages of report.
 In this mode you don't need to work in one session. In the above code we specified report URI, format in which we want to get a report and some report parameters. As we a result we got `InputStream` instance. In synchronous mode as a response you get a report itself while in asynchronous you get just a descriptor with report ID which you can use to download report afer it will be ready.
+If you need run report in another time zone specify it using `forTimeZone()` method:
+```java
+OperationResult<InputStream> result = session
+                .reportingService()
+                .report("/public/Samples/Reports/12g.PromotionDetailsReport")
+                .prepareForRun(ReportOutputFormat.PDF, 1)
+                .forTimeZone(TimeZone.getTimeZone("America/Los_Angeles"))
+                .run();
+InputStream report = result.getEntity();
 
+ // or set time zones as string
+
+OperationResult<InputStream> result = session
+                .reportingService()
+                .report("/public/Samples/Reports/12g.PromotionDetailsReport")
+                .prepareForRun(ReportOutputFormat.PDF, 1)
+                .forTimeZone("America/Los_Angeles")
+                .run();
+```
 In order to run a report in asynchronous mode, you need firstly build `ReportExecutionRequest` instance and specify all the parameters needed to launch a report. The response from the server is the `ReportExecutionDescriptor` instance which contains the request ID needed to track the execution until completion and others report parameters. Here's the code to run a report:
 ```java
 //instantiating request and specifying report parameters
@@ -358,6 +382,16 @@ request.setReportUnitUri("/reports/samples/StandardChartsReport");
 request
         .setAsync(true)                         
         .setOutputFormat("html");               
+```
+As in sync mode you can set report time zone:
+```java
+ReportExecutionRequest request = new ReportExecutionRequest();
+request
+                .setOutputFormat(ReportOutputFormat.PDF)
+                .setPages("1")
+                .setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"))
+                .setReportUnitUri("/public/Samples/Reports/12g.PromotionDetailsReport")
+                .setAsync(true);            
 ```
 ####Requesting report execution status:
 After you've got `ReportExecutionDescriptor` you can request for the report execution status:
