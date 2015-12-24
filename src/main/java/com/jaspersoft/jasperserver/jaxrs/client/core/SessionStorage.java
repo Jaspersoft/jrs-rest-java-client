@@ -24,6 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
 import com.sun.jersey.multipart.impl.MultiPartWriter;
 import java.security.SecureRandom;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 import javax.net.ssl.HostnameVerifier;
@@ -46,19 +47,33 @@ public class SessionStorage {
     private AuthenticationCredentials credentials;
 
     private TimeZone userTimeZone;
+    private Locale userLocale;
     private WebTarget rootTarget;
     private String sessionId;
 
+    /**
+     * @deprecated */
     public SessionStorage(RestClientConfiguration configuration, AuthenticationCredentials credentials) {
         this.configuration = configuration;
         this.credentials = credentials;
         init();
     }
 
+    /**
+     * @deprecated */
     public SessionStorage(RestClientConfiguration configuration, AuthenticationCredentials credentials, TimeZone userTimeZone) {
         this.configuration = configuration;
         this.credentials = credentials;
         this.userTimeZone = userTimeZone;
+        init();
+    }
+
+
+    public SessionStorage(RestClientConfiguration configuration, AuthenticationCredentials credentials, Locale userLocale, TimeZone userTimeZone) {
+        this.configuration = configuration;
+        this.credentials = credentials;
+        this.userTimeZone = userTimeZone;
+        this.userLocale = userLocale;
         init();
     }
 
@@ -152,4 +167,11 @@ public class SessionStorage {
         this.userTimeZone = userTimeZone;
     }
 
+    public Locale getUserLocale() {
+        return userLocale;
+    }
+
+    public void setUserLocale(Locale userLocale) {
+        this.userLocale = userLocale;
+    }
 }
