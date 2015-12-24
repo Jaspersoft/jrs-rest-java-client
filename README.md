@@ -282,6 +282,12 @@ Session session = client.authenticate("jasperadmin", "jasperadmin", TimeZone.get
 // or
 Session session = client.authenticate("jasperadmin", "jasperadmin", "America/Los_Angeles");
 ```
+Also you can set user locale at authentication:
+```java
+Session session = client.authenticate("jasperadmin", "jasperadmin", new Locale("de"), TimeZone.getTimeZone("America/Los_Angeles"));
+// or
+Session session = client.authenticate("jasperadmin", "jasperadmin", "de", America/Los_Angeles");
+```
 ###Anonymous session
 For some Jasperserver services authentication is not required (for example, settings service, bundles service or server info service), so you can use anonymous session:
  ```java
@@ -1933,7 +1939,10 @@ OperationResult<String> result = client
 String edition = result.getEntity();
 ```
 ###Bundles service
-Use bundles service to get bundles of internalization properties for particular or default user’s locale as JSON. To get all bundles for particular locale(foe example, "de") use the code below:
+Use bundles service to get bundles of internalization properties for particular or default user’s locale as JSON. 
+By default service use default system locale where the application was stared.
+If user specified locale at authentication, the service will use it as default locale.
+ To get all bundles for particular locale(foe example, "de") different from default locale and locale specified at authentication use the code below:
 ```java
 final Map<String, Map<String, String>> bundles = session
         .bundlesService()
@@ -1955,6 +1964,7 @@ final Map<String, Map<String, String>> bundles = session
                 .allBundles()
                 .getEntity();
 ```
+Please notice, locale specified in `.forLocale()` method has the highest priority for the service.
 If you do not call`.forLocale()` method, you will get bundles for your default locale:
 ```java
 final Map<String, Map<String, String>> bundles = session

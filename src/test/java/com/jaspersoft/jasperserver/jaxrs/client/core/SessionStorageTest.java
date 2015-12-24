@@ -69,7 +69,6 @@ public class SessionStorageTest extends PowerMockTestCase {
     @Mock
     public Response.StatusType statusTypeMock;
 
-    private String timeZoneId = "America/Los_Angeles";
 
     @BeforeMethod
     public void before() {
@@ -90,7 +89,7 @@ public class SessionStorageTest extends PowerMockTestCase {
 
         // When
         try {
-            new SessionStorage(configurationMock, credentialsMock);
+            new SessionStorage(configurationMock, credentialsMock, null, null);
         } catch (Exception e) {
             assertNotNull(e);
         }
@@ -112,7 +111,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(false).when(configurationMock).getLogHttp();
 
         // When
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
 
         // Then
         assertEquals(Whitebox.getInternalState(sessionStorage, "configuration"), configurationMock);
@@ -149,7 +148,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(targetMock).when(targetMock).register(any(LoggingFilter.class));
 
         // When
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
 
         // Then
         assertEquals(Whitebox.getInternalState(sessionStorage, "configuration"), configurationMock);
@@ -176,31 +175,13 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
 
         // When
-        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock, null, null);
 
         // Then
         assertNotNull(sessionStorageSpy);
         assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "configuration"));
         assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
         assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
-    }
-    @Test
-    public void should_create_new_instance_session_storage_with_timezone() throws Exception {
-
-        // Given
-        TimeZone timeZone = TimeZone.getTimeZone(timeZoneId);
-        suppress(method(SessionStorage.class, "init"));
-        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
-
-        // When
-        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock, timeZone);
-
-        // Then
-        assertNotNull(sessionStorageSpy);
-        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "configuration"));
-        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
-        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
-        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "userTimeZone"), timeZone);
     }
 
     @Test
@@ -211,11 +192,11 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
 
         // When
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
-        sessionStorage.setUserTimeZone(TimeZone.getTimeZone(timeZoneId));
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
+        sessionStorage.setUserTimeZone(TimeZone.getTimeZone("Canada/Central"));
 
         // Then
-        assertEquals(Whitebox.getInternalState(sessionStorage, "userTimeZone"), TimeZone.getTimeZone(timeZoneId));
+        assertEquals(Whitebox.getInternalState(sessionStorage, "userTimeZone"), TimeZone.getTimeZone("Canada/Central"));
     }
 
     @Test
@@ -224,12 +205,13 @@ public class SessionStorageTest extends PowerMockTestCase {
         // Given
         suppress(method(SessionStorage.class, "init"));
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
-        Whitebox.setInternalState(sessionStorage, "userTimeZone", TimeZone.getTimeZone(timeZoneId));
+
         // When
-        TimeZone timeZone = sessionStorage.getUserTimeZone();
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
+        Whitebox.setInternalState(sessionStorage, "userTimeZone", TimeZone.getTimeZone("Canada/Central"));
+
         // Then
-        assertEquals(timeZone, TimeZone.getTimeZone(timeZoneId));
+        assertEquals(Whitebox.getInternalState(sessionStorage, "userTimeZone"), TimeZone.getTimeZone("Canada/Central"));
     }
 
     @Test(expectedExceptions = RuntimeException.class)
@@ -263,7 +245,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(100L).when(configurationMock).getReadTimeout();
 
         // When
-        new SessionStorage(configurationMock, credentialsMock);
+        new SessionStorage(configurationMock, credentialsMock, null, null);
 
         // Then throw an exception
     }
@@ -272,11 +254,10 @@ public class SessionStorageTest extends PowerMockTestCase {
     public void should_set_and_get_state_for_object() {
 
         // Given
-
         suppress(method(SessionStorage.class, "init"));
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
 
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, TimeZone.getTimeZone(timeZoneId));
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
 
         // When
         setInternalState(sessionStorage, "rootTarget", targetMock);
@@ -284,7 +265,6 @@ public class SessionStorageTest extends PowerMockTestCase {
         // Then
         assertNotNull(sessionStorage.getConfiguration());
         assertNotNull(sessionStorage.getCredentials());
-        assertNotNull(sessionStorage.getUserTimeZone());
         assertNotNull(sessionStorage.getRootTarget());
         assertNotNull(sessionStorage.getSessionId());
     }
@@ -296,7 +276,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         suppress(method(SessionStorage.class, "init"));
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
 
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
         // When
         String sessionId = "JSESSIONID";
         sessionStorage.setSessionId(sessionId);
