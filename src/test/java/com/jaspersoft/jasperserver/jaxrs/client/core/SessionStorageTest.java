@@ -4,6 +4,7 @@ import com.sun.jersey.multipart.impl.MultiPartWriter;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Locale;
 import java.util.TimeZone;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -184,6 +185,45 @@ public class SessionStorageTest extends PowerMockTestCase {
         assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
     }
 
+    /**
+     * @deprecated  test for derprecared constructor*/
+    @Test
+    public void should_create_new_instance_session_storage_by_user_name_password() throws Exception {
+
+        // Given
+        suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
+
+        // When
+        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock);
+
+        // Then
+        assertNotNull(sessionStorageSpy);
+        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "configuration"));
+        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
+        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
+    }
+
+    /**
+     * @deprecated  test for derprecared constructor*/
+    @Test
+    public void should_create_new_instance_session_storage_by_user_name_password_time_zone() throws Exception {
+
+        // Given
+        suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
+
+        // When
+        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock, TimeZone.getTimeZone("America/Los_Angeles"));
+
+        // Then
+        assertNotNull(sessionStorageSpy);
+        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "configuration"));
+        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
+        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
+        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "userTimeZone"), TimeZone.getTimeZone("America/Los_Angeles"));
+    }
+
     @Test
     public void should_set_proper_internal_state_user_time_zone() throws Exception {
 
@@ -199,6 +239,23 @@ public class SessionStorageTest extends PowerMockTestCase {
         assertEquals(Whitebox.getInternalState(sessionStorage, "userTimeZone"), TimeZone.getTimeZone("Canada/Central"));
     }
 
+
+    @Test
+    public void should_set_proper_internal_state_user_locale() throws Exception {
+
+        // Given
+        suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
+
+        // When
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
+        Locale locale = new Locale("de");
+        sessionStorage.setUserLocale(locale);
+
+        // Then
+        assertEquals(Whitebox.getInternalState(sessionStorage, "userLocale"), locale);
+    }
+
     @Test
     public void should_return_proper_internal_state_user_time_zone() throws Exception {
 
@@ -211,7 +268,23 @@ public class SessionStorageTest extends PowerMockTestCase {
         Whitebox.setInternalState(sessionStorage, "userTimeZone", TimeZone.getTimeZone("Canada/Central"));
 
         // Then
-        assertEquals(Whitebox.getInternalState(sessionStorage, "userTimeZone"), TimeZone.getTimeZone("Canada/Central"));
+        assertEquals(sessionStorage.getUserTimeZone(), TimeZone.getTimeZone("Canada/Central"));
+    }
+
+    @Test
+    public void should_return_proper_internal_state_user_locale() throws Exception {
+
+        // Given
+        suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
+
+        // When
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
+        Locale locale = new Locale("de");
+        Whitebox.setInternalState(sessionStorage, "userLocale", locale);
+
+        // Then
+        assertEquals(sessionStorage.getUserLocale(), locale);
     }
 
     @Test(expectedExceptions = RuntimeException.class)
