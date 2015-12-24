@@ -89,7 +89,7 @@ public class SessionStorageTest extends PowerMockTestCase {
 
         // When
         try {
-            new SessionStorage(configurationMock, credentialsMock);
+            new SessionStorage(configurationMock, credentialsMock, null, null);
         } catch (Exception e) {
             assertNotNull(e);
         }
@@ -111,7 +111,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(false).when(configurationMock).getLogHttp();
 
         // When
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
 
         // Then
         assertEquals(Whitebox.getInternalState(sessionStorage, "configuration"), configurationMock);
@@ -148,7 +148,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(targetMock).when(targetMock).register(any(LoggingFilter.class));
 
         // When
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
 
         // Then
         assertEquals(Whitebox.getInternalState(sessionStorage, "configuration"), configurationMock);
@@ -175,7 +175,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
 
         // When
-        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock, null, null);
 
         // Then
         assertNotNull(sessionStorageSpy);
@@ -192,7 +192,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
 
         // When
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
         sessionStorage.setUserTimeZone(TimeZone.getTimeZone("Canada/Central"));
 
         // Then
@@ -207,7 +207,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
 
         // When
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
         Whitebox.setInternalState(sessionStorage, "userTimeZone", TimeZone.getTimeZone("Canada/Central"));
 
         // Then
@@ -245,7 +245,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(100L).when(configurationMock).getReadTimeout();
 
         // When
-        new SessionStorage(configurationMock, credentialsMock);
+        new SessionStorage(configurationMock, credentialsMock, null, null);
 
         // Then throw an exception
     }
@@ -257,7 +257,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         suppress(method(SessionStorage.class, "init"));
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
 
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
 
         // When
         setInternalState(sessionStorage, "rootTarget", targetMock);
@@ -276,7 +276,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         suppress(method(SessionStorage.class, "init"));
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
 
-        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock);
+        SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
         // When
         String sessionId = "JSESSIONID";
         sessionStorage.setSessionId(sessionId);

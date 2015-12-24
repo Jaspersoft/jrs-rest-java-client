@@ -47,12 +47,10 @@ public class BundlesServiceTest extends PowerMockTestCase {
     @Mock
     private OperationResult<JSONObject> operationResultMock;
 
-    private BundlesService service;
-
     @BeforeMethod
     public void before() {
         initMocks(this);
-        service = new BundlesService(sessionStorageMock);
+
     }
 
     @Test
@@ -61,11 +59,13 @@ public class BundlesServiceTest extends PowerMockTestCase {
         String defaultLocale = Locale.getDefault().toString();
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock), any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        doReturn(Locale.getDefault()).when(sessionStorageMock).getUserLocale();
         doReturn(requestMock).when(requestMock).addParam(anyString(), anyString());
         doReturn(requestMock).when(requestMock).addHeader(anyString(), anyString());
         doReturn(requestMock).when(requestMock).setAccept(anyString());
         doReturn(operationResultMock).when(requestMock).get();
         //when
+        BundlesService service = new BundlesService(sessionStorageMock);
         OperationResult<Map<String, Map<String, String>>> bundles = service.allBundles();
         //then
         assertSame(bundles, operationResultMock);
@@ -84,8 +84,9 @@ public class BundlesServiceTest extends PowerMockTestCase {
     @Test
     public void should_return_proper_bundles_for_string_locale() throws Exception {
         //given
+        BundlesService service = new BundlesService(sessionStorageMock);
         mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock),any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(JerseyRequest.buildRequest(eq(sessionStorageMock), any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).addParam(anyString(), anyString());
         doReturn(requestMock).when(requestMock).addHeader(anyString(), anyString());
         doReturn(requestMock).when(requestMock).setAccept(anyString());
@@ -109,6 +110,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
     @Test
     public void should_return_proper_bundles_for_locale() throws Exception {
         //given
+        BundlesService service = new BundlesService(sessionStorageMock);
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock),any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).addParam(anyString(), anyString());
@@ -133,6 +135,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
     @Test
     public void should_return_proper_bundles_by_name_for_string_locale() throws Exception {
         //given
+        BundlesService service = new BundlesService(sessionStorageMock);
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock), any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).addHeader(anyString(), anyString());
@@ -154,6 +157,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
     @Test
     public void should_return_proper_bundles_by_name_for_locale() throws Exception {
         //given
+        BundlesService service = new BundlesService(sessionStorageMock);
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock), any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).addHeader(anyString(), anyString());
@@ -175,12 +179,15 @@ public class BundlesServiceTest extends PowerMockTestCase {
     @Test
     public void should_return_proper_bundles_by_name_for_default_locale() throws Exception {
         //given
+
+        doReturn(Locale.getDefault()).when(sessionStorageMock).getUserLocale();
         mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock),  any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(JerseyRequest.buildRequest(eq(sessionStorageMock), any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).addHeader(anyString(), anyString());
         doReturn(requestMock).when(requestMock).setAccept(anyString());
         doReturn(operationResultMock).when(requestMock).get();
         //when
+         BundlesService service = new BundlesService(sessionStorageMock);
         OperationResult<Map<String, String>> bundle = service.bundle("jasperserver_messages");
         //then
         assertSame(bundle, operationResultMock);
@@ -196,6 +203,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
     @Test
     public void should_not_invoke_adding_language_by_empty_locale() throws Exception {
         //given
+        BundlesService service = new BundlesService(sessionStorageMock);
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock),  any(GenericType.class), isA(String[].class), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).addHeader(anyString(), anyString());
@@ -217,21 +225,38 @@ public class BundlesServiceTest extends PowerMockTestCase {
     @Test
     public void should_set_default_locale_if_string_locale_is_null() throws Exception {
         //given
+        doReturn(Locale.getDefault()).when(sessionStorageMock).getUserLocale();
+        BundlesService service = new BundlesService(sessionStorageMock);
         Locale defaultLocale = Locale.getDefault();
         //when
         service.forLocale((String) null);
         //then
-        assertEquals(defaultLocale, Whitebox.getInternalState(service, "locale"));
+        assertEquals(Whitebox.getInternalState(service, "locale"), defaultLocale);
     }
 
     @Test
     public void should_set_default_locale_if_instance_locale_is_null() throws Exception {
         //given
+        doReturn(Locale.getDefault()).when(sessionStorageMock).getUserLocale();
+        BundlesService service = new BundlesService(sessionStorageMock);
         Locale defaultLocale = Locale.getDefault();
         //when
         service.forLocale((Locale)null);
         //then
-        assertEquals(defaultLocale, Whitebox.getInternalState(service, "locale"));
+        assertEquals(Whitebox.getInternalState(service, "locale"), defaultLocale);
+    }
+
+
+    @Test
+    public void should_locale_if_authentication_locale_is_different() throws Exception {
+        //given
+        doReturn(Locale.getDefault()).when(sessionStorageMock).getUserLocale();
+        BundlesService service = new BundlesService(sessionStorageMock);
+        Locale locale = new Locale("de");
+        //when
+        service.forLocale(locale);
+        //then
+        assertEquals(Whitebox.getInternalState(service, "locale"), locale);
     }
 
     @AfterMethod

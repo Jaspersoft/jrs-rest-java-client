@@ -38,7 +38,7 @@ public class BundlesService extends AbstractAdapter {
 
     public BundlesService(SessionStorage sessionStorage) {
         super(sessionStorage);
-        this.locale = Locale.getDefault();
+        this.locale = sessionStorage.getUserLocale();
     }
 
     public BundlesService forLocale(String locale) {

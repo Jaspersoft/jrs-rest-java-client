@@ -21,16 +21,17 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
-import java.util.TimeZone;
-import javax.ws.rs.core.Response.Status;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
+import java.util.Locale;
+import java.util.TimeZone;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.client.ClientProperties;
 
 public class JasperserverRestClient {
@@ -44,19 +45,32 @@ public class JasperserverRestClient {
     }
 
     public Session authenticate(String username, String password) {
-        return this.authenticate(username, password, TimeZone.getDefault());
+        return this.authenticate(username, password, Locale.getDefault(), TimeZone.getDefault());
     }
 
     public Session authenticate(String username, String password, String userTimeZone) {
-        TimeZone timeZone = TimeZone.getTimeZone(userTimeZone);
-        return this.authenticate(username, password, timeZone);
+        return this.authenticate(username, password, Locale.getDefault(), TimeZone.getTimeZone(userTimeZone));
     }
 
-    public Session authenticate(String username, String password, TimeZone timeZone) {
+    public Session authenticate(String username, String password, TimeZone userTimeZone) {
+        return this.authenticate(username, password, Locale.getDefault(), userTimeZone);
+    }
+    public Session authenticate(String username, String password, String userLocale, String userTimeZone) {
+        return this.authenticate(username,
+                password,
+                (userLocale == null) ? Locale.getDefault(): new Locale(userLocale),
+                (userTimeZone == null) ? TimeZone.getDefault(): TimeZone.getTimeZone(userTimeZone));
+    }
+
+    public Session authenticate(String username, String password, Locale userLocale, TimeZone userTimeZone) {
 
         if (username != null && username.length() > 0 && password != null && password.length() > 0) {
             AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
-            SessionStorage sessionStorage = new SessionStorage(configuration, credentials, timeZone);
+            SessionStorage sessionStorage =
+                    new SessionStorage(configuration,
+                            credentials,
+                            (userLocale == null) ? Locale.getDefault() : userLocale,
+                            (userTimeZone == null) ? TimeZone.getDefault() : userTimeZone);
             login(sessionStorage);
             return new Session(sessionStorage);
         }
@@ -64,7 +78,7 @@ public class JasperserverRestClient {
     }
 
     public AnonymousSession getAnonymousSession() {
-        return new AnonymousSession(new SessionStorage(configuration, null));
+        return new AnonymousSession(new SessionStorage(configuration, null, Locale.getDefault(), TimeZone.getDefault()));
     }
 
     protected void login(SessionStorage storage) {
@@ -78,6 +92,7 @@ public class JasperserverRestClient {
         Form form = new Form();
         form.param("j_username", credentials.getUsername()).param("j_password", credentials.getPassword());
         form.param("userTimezone", storage.getUserTimeZone().getID());
+        form.param("userLocale", storage.getUserLocale().toString());
         WebTarget target = rootTarget.path("/j_spring_security_check")
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
         Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
