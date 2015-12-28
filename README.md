@@ -1942,7 +1942,7 @@ String edition = result.getEntity();
 Use bundles service to get bundles of internalization properties for particular or default user’s locale as JSON. 
 By default service use default system locale where the application was stared.
 If user specified locale at authentication, the service will use it as default locale.
- To get all bundles for particular locale(foe example, "de") different from default locale and locale specified at authentication use the code below:
+To get all bundles for particular locale(foe example, "de") different from default locale and locale specified at authentication use the code below:
 ```java
 final Map<String, Map<String, String>> bundles = session
         .bundlesService()
@@ -1965,7 +1965,7 @@ final Map<String, Map<String, String>> bundles = session
                 .getEntity();
 ```
 Please notice, locale specified in `.forLocale()` method has the highest priority for the service.
-If you do not call`.forLocale()` method, you will get bundles for your default locale:
+If you do not call`.forLocale()` method, you will get bundles for your default locale (locale specified at authentication or locale of system where the client was stared if the others were not specified):
 ```java
 final Map<String, Map<String, String>> bundles = session
         .bundlesService()

@@ -408,7 +408,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_involve_login_method_and_return_proper_session_object() throws Exception {
+    public void should_invoke_login_method_and_return_proper_session_object() throws Exception {
         // Given
         final URI location = new URI("location");
         doReturn("url").when(configurationMock).getJasperReportsServerUrl();
@@ -460,7 +460,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_involve_login_method_and_return_proper_session_object_with_time_zone() throws Exception {
+    public void should_invoke_login_method_and_return_proper_session_object_with_time_zone() throws Exception {
         // Given
         final URI location = new URI("location");
         doReturn("url").when(configurationMock).getJasperReportsServerUrl();
@@ -518,7 +518,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_involve_login_method_and_return_proper_session_object_with_time_zone_and_locale() throws Exception {
+    public void should_invoke_login_method_and_return_proper_session_object_with_time_zone_and_locale() throws Exception {
         // Given
         final URI location = new URI("location");
         doReturn("url").when(configurationMock).getJasperReportsServerUrl();
@@ -578,7 +578,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_involve_login_method_and_handle_error() throws Exception {
+    public void should_invoke_login_method_and_handle_error() throws Exception {
         // Given
         final URI location = new URI("location");
         doReturn("url").when(configurationMock).getJasperReportsServerUrl();
@@ -636,7 +636,7 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_involve_login_method_and_return_proper_session_object_within_basic_authorization() throws Exception {
+    public void should_invoke_login_method_and_return_proper_session_object_within_basic_authorization() throws Exception {
         // Given
         doReturn("url").when(configurationMock).getJasperReportsServerUrl();
         final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
