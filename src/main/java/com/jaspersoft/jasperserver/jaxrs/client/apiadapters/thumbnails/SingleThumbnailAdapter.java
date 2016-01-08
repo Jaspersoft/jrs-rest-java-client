@@ -18,13 +18,16 @@ import java.io.InputStream;
 public class SingleThumbnailAdapter extends AbstractAdapter {
 
     private final MultivaluedHashMap<String, String> params = new MultivaluedHashMap<String, String>();
+    private String reportName;
 
     public SingleThumbnailAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
     public SingleThumbnailAdapter report(String uri) {
-        params.add("uri", uri);
+        if (uri != null && !uri.equals("")) {
+            reportName = uri;
+        }
         return this;
     }
 
@@ -34,14 +37,17 @@ public class SingleThumbnailAdapter extends AbstractAdapter {
     }
 
     public OperationResult<InputStream> get() {
-        return request().setAccept("image/jpeg").get();
+        return request().get();
     }
 
     private JerseyRequest<InputStream> request() {
-        if (params.size() == 0) {
+        if (reportName == null) {
             throw new MandatoryParameterNotFoundException("URI of report should be specified");
         }
-        return JerseyRequest.buildRequest(sessionStorage, InputStream.class,
-                new String[]{"/thumbnails",  params.get("uri").get(0)}, new DefaultErrorHandler());
+        JerseyRequest<InputStream> request = JerseyRequest.buildRequest(sessionStorage, InputStream.class,
+                new String[]{"/thumbnails", reportName}, new DefaultErrorHandler());
+        request.setAccept("image/jpeg");
+        request.addParams(params);
+        return request;
     }
 }

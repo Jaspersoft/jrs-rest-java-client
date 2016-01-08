@@ -75,11 +75,27 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         SingleThumbnailAdapter retrieved = thumbnailAdapter.report("/public/Samples/Reports/07g.RevenueDetailReport");
 
         // Then
+        String reportName = (String) Whitebox.getInternalState(retrieved, "reportName");
+        assertEquals(reportName, "/public/Samples/Reports/07g.RevenueDetailReport");
+    }
+
+    @Test
+    /**
+     * for {@link SingleThumbnailAdapter#report(String)}
+     */
+    public void should_set_report_uri_with_default_allowed() {
+        // Given
+        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+
+        // When
+        SingleThumbnailAdapter retrieved = thumbnailAdapter.defaultAllowed(true).report("/public/Samples/Reports/07g.RevenueDetailReport");
+
+        // Then
         MultivaluedHashMap<String, String> params =
-                (MultivaluedHashMap<String, String>) Whitebox.getInternalState(thumbnailAdapter, "params");
-        List<String> list = params.get("uri");
+                (MultivaluedHashMap<String, String>) Whitebox.getInternalState(retrieved, "params");
+        List<String> list = params.get("defaultAllowed");
         assertSame(retrieved, thumbnailAdapter);
-        assertEquals(list.get(0), "/public/Samples/Reports/07g.RevenueDetailReport");
+        assertEquals(list.get(0), "true");
     }
 
     @Test
@@ -115,8 +131,8 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
                 eq(InputStream.class),
                 eq(new String[]{"/thumbnails", "/public/Samples/Reports/07g.RevenueDetailReport"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        when(jerseyRequestMock.setAccept("image/jpeg")).thenReturn(requestBuilderMock);
-        when(requestBuilderMock.get()).thenReturn(operationResultMock);
+        when(jerseyRequestMock.setAccept("image/jpeg")).thenReturn(jerseyRequestMock);
+        when(jerseyRequestMock.get()).thenReturn(operationResultMock);
         SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
         thumbnailAdapter.report("/public/Samples/Reports/07g.RevenueDetailReport");
 
@@ -128,7 +144,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
         verify(jerseyRequestMock).setAccept(eq("image/jpeg"));
-        verify(requestBuilderMock).get();
+        verify(jerseyRequestMock).get();
         verifyStatic(times(1));
         buildRequest(
                 eq(sessionStorageMock),
