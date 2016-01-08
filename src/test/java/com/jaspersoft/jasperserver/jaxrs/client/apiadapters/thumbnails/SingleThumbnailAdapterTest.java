@@ -3,6 +3,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.io.InputStream;
@@ -17,6 +18,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.reset;
@@ -77,6 +79,34 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         // Then
         String reportName = (String) Whitebox.getInternalState(retrieved, "reportName");
         assertEquals(reportName, "/public/Samples/Reports/07g.RevenueDetailReport");
+    }    @Test
+    /**
+     * for {@link SingleThumbnailAdapter#report(String)}
+     */
+    public void should_not_set_null_report_uri() {
+        // Given
+        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+
+        // When
+        SingleThumbnailAdapter retrieved = thumbnailAdapter.report(null);
+
+        // Then
+        assertNull(Whitebox.getInternalState(retrieved, "reportName"));
+    }
+
+    @Test
+    /**
+     * for {@link SingleThumbnailAdapter#report(String)}
+     */
+    public void should_not_set_empty_report_uri() {
+        // Given
+        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+
+        // When
+        SingleThumbnailAdapter retrieved = thumbnailAdapter.report("");
+
+        // Then
+        assertNull(Whitebox.getInternalState(retrieved, "reportName"));
     }
 
     @Test
@@ -136,11 +166,11 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
         thumbnailAdapter.report("/public/Samples/Reports/07g.RevenueDetailReport");
 
-        // When /
+        // When
         OperationResult<InputStream> retrieved = thumbnailAdapter.get();
 
 
-        // Then /
+        // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
         verify(jerseyRequestMock).setAccept(eq("image/jpeg"));
@@ -151,6 +181,27 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
                 eq(InputStream.class),
                 eq(new String[]{"/thumbnails", "/public/Samples/Reports/07g.RevenueDetailReport"}),
                 any(DefaultErrorHandler.class));
+
+    }
+
+
+    @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
+    /**
+     * for {@link SingleThumbnailAdapter#get()}
+     */
+    public void should_throw_exception() {
+
+        // Given
+        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+        thumbnailAdapter.report(null);
+
+        // When
+        OperationResult<InputStream> retrieved = thumbnailAdapter.get();
+
+
+        // Then
+        //An exception should be thrown
+
 
     }
 
