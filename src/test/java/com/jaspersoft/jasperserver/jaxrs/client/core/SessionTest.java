@@ -5,7 +5,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.Attribute
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.metadata.DomainMetadataService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsService;
