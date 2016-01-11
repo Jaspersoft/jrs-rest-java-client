@@ -22,12 +22,9 @@ public class BatchDiagnosticCollectorsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<CollectorSettingsList> collectorsMetadata() {
-        return JerseyRequest.buildRequest(sessionStorage,
-                CollectorSettingsList.class,
-                new String[]{"/collectors"},
-                new DefaultErrorHandler())
-                .get();
+        return buildRequest().get();
     }
+
 
     public OperationResult<InputStream> collectorsContent() {
         JerseyRequest<InputStream> request = JerseyRequest.buildRequest(sessionStorage,
@@ -36,5 +33,17 @@ public class BatchDiagnosticCollectorsAdapter extends AbstractAdapter {
                 new DefaultErrorHandler());
         request.setAccept("application/zip");
         return request.get();
+    }
+
+    public OperationResult<CollectorSettingsList> delete() {
+
+        return buildRequest().delete();
+    }
+
+    protected JerseyRequest<CollectorSettingsList> buildRequest() {
+        return JerseyRequest.buildRequest(sessionStorage,
+                CollectorSettingsList.class,
+                new String[]{"/collectors"},
+                new DefaultErrorHandler());
     }
 }
