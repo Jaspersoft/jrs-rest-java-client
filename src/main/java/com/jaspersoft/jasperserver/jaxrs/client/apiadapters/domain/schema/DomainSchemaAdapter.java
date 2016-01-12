@@ -20,6 +20,7 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.schema;
 
+import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.domain.Schema;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
@@ -42,17 +43,8 @@ public class DomainSchemaAdapter extends AbstractAdapter {
 
 
 
-    public OperationResult<Schema> update(Schema schema) {
+    public OperationResult<Schema> update(ClientFile schema) {
         return buildRequest().put(schema);
-    }
-
-    public OperationResult<Schema> getSchemaAsResource() {
-        return JerseyRequest.buildRequest(
-                sessionStorage,
-                Schema.class,
-                new String[]{"/resources/", domainSchemaUri},
-                new DefaultErrorHandler()
-        ).get();
     }
 
 
