@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.diagnostic;
 
+import com.jaspersoft.jasperserver.dto.common.PatchDescriptor;
 import com.jaspersoft.jasperserver.dto.logcapture.CollectorSettingsList;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
@@ -39,6 +40,13 @@ public class BatchDiagnosticCollectorsAdapter extends AbstractAdapter {
 
         return buildRequest().delete();
     }
+
+    public OperationResult<CollectorSettingsList> updateCollectorSettings(PatchDescriptor newData) {
+        return buildRequest()
+                .addHeader("X-HTTP-Method-Override", "PATCH")
+                .post(newData);
+    }
+
 
     protected JerseyRequest<CollectorSettingsList> buildRequest() {
         return JerseyRequest.buildRequest(sessionStorage,
