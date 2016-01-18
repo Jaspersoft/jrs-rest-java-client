@@ -21,13 +21,16 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.schema;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
-import com.jaspersoft.jasperserver.dto.resources.domain.Schema;
+import com.jaspersoft.jasperserver.dto.resources.domain.ClientSchema;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.sun.jersey.multipart.FormDataMultiPart;
+import java.io.File;
+import javax.ws.rs.core.MediaType;
 
 public class DomainSchemaAdapter extends AbstractAdapter {
     private final String domainSchemaUri;
@@ -37,26 +40,63 @@ public class DomainSchemaAdapter extends AbstractAdapter {
         this.domainSchemaUri = domainURI;
     }
 
-    public OperationResult<Schema> retrieve() {
-        return buildRequest().get();
+    public OperationResult<ClientSchema> get() {
+        JerseyRequest<ClientSchema> request = buildRequest();
+        request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/repository.domainSchema+{mime}"));
+        return request.get();
     }
 
 
-
-    public OperationResult<Schema> update(ClientFile schema) {
-        return buildRequest().put(schema);
+    public OperationResult<ClientSchema> update(ClientSchema schema) {
+        JerseyRequest<ClientSchema> request = buildRequest();
+        request.setContentType(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/repository.domainSchema+{mime}"));
+        return request.put(schema);
     }
 
 
-    protected JerseyRequest<Schema> buildRequest() {
-        JerseyRequest<Schema> jerseyRequest = JerseyRequest.buildRequest(
+    public OperationResult<ClientFile> upload(String path) {
+        File file = new File(path);
+        return uploadFile(file, ClientFile.FileType.xml, "schema.xml", "Domain schema");
+    }
+
+
+    protected JerseyRequest<ClientSchema> buildRequest() {
+        JerseyRequest<ClientSchema> jerseyRequest = JerseyRequest.buildRequest(
                 sessionStorage,
-                Schema.class,
+                ClientSchema.class,
                 new String[]{"/resources/", domainSchemaUri},
                 new DefaultErrorHandler()
         );
-        jerseyRequest.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/repository.domainSchema+{mime}"));
         return jerseyRequest;
+    }
+
+    private OperationResult<ClientFile> uploadFile(File fileContent,
+                                                  ClientFile.FileType fileType,
+                                                  String label,
+                                                  String description) {
+        FormDataMultiPart form = prepareUploadForm(fileContent, fileType, label, description);
+        JerseyRequest<ClientFile> request = prepareUploadFileRequest();
+        return request.post(form);
+    }
+
+    private FormDataMultiPart prepareUploadForm(File fileContent,
+                                                ClientFile.FileType fileType,
+                                                String label,
+                                                String description) {
+        FormDataMultiPart form = new FormDataMultiPart();
+        form
+                .field("data", fileContent, MediaType.WILDCARD_TYPE)
+                .field("label", label)
+                .field("description", description)
+                .field("type", fileType.name());
+        return form;
+    }
+
+
+    private JerseyRequest<ClientFile> prepareUploadFileRequest() {
+        JerseyRequest<ClientFile> request = JerseyRequest.buildRequest(sessionStorage, ClientFile.class, new String[]{"/resources", domainSchemaUri});
+        request.setContentType(MediaType.MULTIPART_FORM_DATA);
+        return request;
     }
 
 }

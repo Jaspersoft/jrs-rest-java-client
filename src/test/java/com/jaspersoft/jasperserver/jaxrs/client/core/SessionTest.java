@@ -5,7 +5,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.Attribute
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.metadata.DomainMetadataService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsService;
@@ -242,10 +242,10 @@ public class SessionTest {
     public void should_return_not_null_DomainMetadataService_instance() {
         // When
         Session sessionSpy = Mockito.spy(new Session(storageMock));
-        DomainMetadataService retrieved = sessionSpy.domainService();
+        DomainService retrieved = sessionSpy.domainService();
         // Then
         assertNotNull(retrieved);
-        verify(sessionSpy, times(1)).getService(DomainMetadataService.class);
+        verify(sessionSpy, times(1)).getService(DomainService.class);
     }
 
     @Test
