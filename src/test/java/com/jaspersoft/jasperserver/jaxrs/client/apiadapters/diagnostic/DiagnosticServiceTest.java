@@ -28,7 +28,7 @@ import static org.testng.AssertJUnit.assertNotNull;
  * @see
  */
 @PrepareForTest({DiagnosticService.class, SingleDiagnosticCollectorAdapter.class, BatchDiagnosticCollectorsAdapter.class})
-public class DiagnosticServiceTest extends PowerMockTestCase{
+public class DiagnosticServiceTest extends PowerMockTestCase {
 
     @Mock
     private SessionStorage sessionStorageMock;
@@ -38,14 +38,14 @@ public class DiagnosticServiceTest extends PowerMockTestCase{
     private SingleDiagnosticCollectorAdapter singleAdapterMock;
 
     @BeforeMethod
-    public  void before() {
+    public void before() {
         initMocks(this);
     }
 
     @Test
     public void should_pass_session_storage_to_parent_adapter() {
         // When
-        DiagnosticService service= new DiagnosticService(sessionStorageMock);
+        DiagnosticService service = new DiagnosticService(sessionStorageMock);
         SessionStorage retrieved = service.getSessionStorage();
         //Then
         assertSame(retrieved, sessionStorageMock);

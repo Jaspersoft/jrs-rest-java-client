@@ -12,7 +12,8 @@ import java.io.InputStream;
 /**
  * <p/>
  * <p/>
- *``
+ * ``
+ *
  * @author tetiana.iefimenko
  * @version $Id$
  * @see
@@ -27,7 +28,10 @@ public class SingleDiagnosticCollectorAdapter extends AbstractAdapter {
     }
 
     public OperationResult<CollectorSettings> create() {
-        return buildCollectorRequest().post(collector);
+        return JerseyRequest.buildRequest(sessionStorage,
+                CollectorSettings.class,
+                new String[]{"/diagnostic/collectors"},
+                new DefaultErrorHandler()).post(collector);
     }
 
     public OperationResult<CollectorSettings> delete() {
@@ -40,6 +44,12 @@ public class SingleDiagnosticCollectorAdapter extends AbstractAdapter {
         return buildCollectorRequest().get();
     }
 
+    /**
+     * This method can be used to stop the
+     * collector by setting "status" to "STOPPED" in the request.
+     * Stopping the collector will turn off logging and begin resource export
+     * (if "includeDataSnapshots"=true and resourceUri not empty).
+     */
     public OperationResult<CollectorSettings> updateCollector(CollectorSettings newData) {
         return buildCollectorRequest().put(newData);
     }
@@ -53,7 +63,7 @@ public class SingleDiagnosticCollectorAdapter extends AbstractAdapter {
     public OperationResult<InputStream> collectorContent() {
         JerseyRequest<InputStream> request = JerseyRequest.buildRequest(sessionStorage,
                 InputStream.class,
-                new String[]{"/collectors", "content", collector.getId()},
+                new String[]{"/diagnostic/collectors", collector.getId(), "content"},
                 new DefaultErrorHandler());
         request.setAccept("application/zip");
         return request.get();
@@ -62,7 +72,7 @@ public class SingleDiagnosticCollectorAdapter extends AbstractAdapter {
     protected JerseyRequest<CollectorSettings> buildCollectorRequest() {
         return JerseyRequest.buildRequest(sessionStorage,
                 CollectorSettings.class,
-                new String[]{"/collectors", collector.getId()},
+                new String[]{"/diagnostic/collectors", collector.getId()},
                 new DefaultErrorHandler());
     }
 

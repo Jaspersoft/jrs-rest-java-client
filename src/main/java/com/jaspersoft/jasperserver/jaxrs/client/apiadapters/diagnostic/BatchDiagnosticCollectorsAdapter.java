@@ -30,7 +30,7 @@ public class BatchDiagnosticCollectorsAdapter extends AbstractAdapter {
     public OperationResult<InputStream> collectorsContent() {
         JerseyRequest<InputStream> request = JerseyRequest.buildRequest(sessionStorage,
                 InputStream.class,
-                new String[]{"/collectors", "content"},
+                new String[]{"/diagnostic/collectors", "content"},
                 new DefaultErrorHandler());
         request.setAccept("application/zip");
         return request.get();
@@ -41,7 +41,7 @@ public class BatchDiagnosticCollectorsAdapter extends AbstractAdapter {
         return buildRequest().delete();
     }
 
-    public OperationResult<CollectorSettingsList> updateCollectorSettings(PatchDescriptor newData) {
+    public OperationResult<CollectorSettingsList> updateCollectorsSettings(PatchDescriptor newData) {
         return buildRequest()
                 .addHeader("X-HTTP-Method-Override", "PATCH")
                 .post(newData);
@@ -51,7 +51,7 @@ public class BatchDiagnosticCollectorsAdapter extends AbstractAdapter {
     protected JerseyRequest<CollectorSettingsList> buildRequest() {
         return JerseyRequest.buildRequest(sessionStorage,
                 CollectorSettingsList.class,
-                new String[]{"/collectors"},
+                new String[]{"/diagnostic/collectors"},
                 new DefaultErrorHandler());
     }
 }
