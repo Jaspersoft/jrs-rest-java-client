@@ -1916,7 +1916,7 @@ After creation you can get metadata  of all collectors:
 OperationResult<CollectorSettingsList> operationResult = session
                 .diagnosticService()
                 .allCollectors()
-                .collectorsMetadata();
+                .collectorsSettings();
 
 CollectorSettingsList result = operationResult
                 .getEntity();
@@ -1926,7 +1926,7 @@ or for single log collector:
 OperationResult<CollectorSettings> operationResult = session
                 .diagnosticService()
                 .forCollector(collector1.getId())
-                .collectorMetadata();
+                .collectorSettings();
 
 CollectorSettings result = operationResult
                 .getEntity();
@@ -1955,14 +1955,14 @@ OperationResult<CollectorSettingsList> operationResult = session
 CollectorSettingsList result = operationResult
                 .getEntity();
 ```
-Also you can update collector with `.updateCollector()` method for single operation:
+Also you can update whole collector:
 ```java
 collector1.setStatus("STOPPED");
 
 OperationResult<CollectorSettings> operationResult = session
                 .diagnosticService()
                 .forCollector(collector1)
-                .updateCollector(collector1);
+                .updateCollectorSettings(collector1);
 
 CollectorSettings result = operationResult
                 .getEntity();
@@ -1985,11 +1985,11 @@ OperationResult<InputStream> operationResult = session
 InputStream result = operationResult
                           .getEntity();
 ````
-Please notice, you should stop them previously using `.updateCollectors()` or `updateCollectorsMetadata()` methods. 
+Please notice, you should stop them previously using `.updateCollectorSettings()` methods. 
 Stopping the collector will turn off logging and begin resource export (if "includeDataSnapshots" is `true` and resourceUri not empty).
 Once stopped, collectors can't be run again.
 When App Server (e.g. Tomcat) is restarted, all collectors must change to stopped state.
-Before getting collectors' content check them status with method `.collectorsMetadata()`.
+Before getting collectors' content check them status with method `.collectorsSettings()`.
 
 Delete log collectors you can as single or as batch operation:
 ```java
