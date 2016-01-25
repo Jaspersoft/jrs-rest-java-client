@@ -1898,7 +1898,7 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
                 ```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
 
-####Diagnostic Service
+###Diagnostic Service
 The service is used to create, update, stop log collectors and get logs and data snapshots.
 To create log collector use the code below:
 ```java
@@ -2003,7 +2003,7 @@ OperationResult<CollectorSettingsList> operationResult = session
                                 .delete();
 ```
 
-####Query Executor Service
+###Query Executor Service
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
 For now the only resource that supports queries is a Domain.
 
