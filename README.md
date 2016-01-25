@@ -1897,7 +1897,6 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
                 .getThumbnails();
                 ```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
-
 ###Diagnostic Service
 The service is used to create, update, stop log collectors and get logs and data snapshots.
 To create log collector use the code below:
