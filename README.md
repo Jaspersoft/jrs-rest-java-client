@@ -114,7 +114,7 @@ Table of Contents
     * [Checking the Import State](#checking-the-import-state).
 11. [Domain metadata service](#domainmetadata-service).
 12. [Thumbnail Search Service](#thumbnail-search-service).
-13. [Diagnostic Service](#diagnostic_service).
+13. [Diagnostic Service](#diagnostic-service).
 14. [Query Executor Service](#query-executor-service).
 15. [Server Information Service](#server-information-service).
 16. [Bundles service](#bundles-service).
