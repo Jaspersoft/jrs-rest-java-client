@@ -40,7 +40,7 @@ public class SingleDiagnosticCollectorAdapter extends AbstractAdapter {
     }
 
 
-    public OperationResult<CollectorSettings> collectorMetadata() {
+    public OperationResult<CollectorSettings> collectorSettings() {
         return buildCollectorRequest().get();
     }
 
@@ -50,7 +50,7 @@ public class SingleDiagnosticCollectorAdapter extends AbstractAdapter {
      * Stopping the collector will turn off logging and begin resource export
      * (if "includeDataSnapshots"=true and resourceUri not empty).
      */
-    public OperationResult<CollectorSettings> updateCollector(CollectorSettings newData) {
+    public OperationResult<CollectorSettings> updateCollectorSettings(CollectorSettings newData) {
         return buildCollectorRequest().put(newData);
     }
 

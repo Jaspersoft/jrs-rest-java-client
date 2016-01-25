@@ -78,7 +78,7 @@ public class BatchDiagnosticCollectorsAdapterTest extends PowerMockTestCase {
         BatchDiagnosticCollectorsAdapter adapter = new BatchDiagnosticCollectorsAdapter(sessionStorageMock);
 
         // When
-        OperationResult<CollectorSettingsList> retrieved = adapter.collectorsMetadata();
+        OperationResult<CollectorSettingsList> retrieved = adapter.collectorsSettings();
 
         // Then /
         assertNotNull(retrieved);

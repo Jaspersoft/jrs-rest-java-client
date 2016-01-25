@@ -22,7 +22,7 @@ public class BatchDiagnosticCollectorsAdapter extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    public OperationResult<CollectorSettingsList> collectorsMetadata() {
+    public OperationResult<CollectorSettingsList> collectorsSettings() {
         return buildRequest().get();
     }
 

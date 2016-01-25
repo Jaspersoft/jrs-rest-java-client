@@ -153,7 +153,7 @@ public class SingleDiagnosticCollectorAdapterTest extends PowerMockTestCase {
         SingleDiagnosticCollectorAdapter adapter = new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock);
 
         // When /
-        OperationResult<CollectorSettings> retrieved = adapter.collectorMetadata();
+        OperationResult<CollectorSettings> retrieved = adapter.collectorSettings();
 
         // Then /
         assertNotNull(retrieved);
@@ -184,7 +184,7 @@ public class SingleDiagnosticCollectorAdapterTest extends PowerMockTestCase {
         SingleDiagnosticCollectorAdapter adapter = new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock);
 
         // When /
-        OperationResult<CollectorSettings> retrieved = adapter.updateCollector(collectorSettingsMock);
+        OperationResult<CollectorSettings> retrieved = adapter.updateCollectorSettings(collectorSettingsMock);
 
         // Then /
         assertNotNull(retrieved);
