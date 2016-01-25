@@ -1897,7 +1897,9 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
                 .getThumbnails();
                 ```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
+
 ###Diagnostic Service
+
 The service is used to create, update, stop log collectors and get logs and data snapshots.
 To create log collector use the code below:
 ```java
@@ -2014,8 +2016,7 @@ QueryResult queryResult = session.queryExecutorService()
         .getEntity();
 ```
 
-Server Information Service
-========================
+###Server Information Service
 Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
 ```java
 OperationResult<ServerInfo> result = client
