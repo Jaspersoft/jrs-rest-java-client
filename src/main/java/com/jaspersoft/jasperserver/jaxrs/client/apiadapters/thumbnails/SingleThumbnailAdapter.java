@@ -6,8 +6,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-
-import javax.ws.rs.core.MultivaluedHashMap;
 import java.io.InputStream;
 
 /**
@@ -17,8 +15,8 @@ import java.io.InputStream;
  */
 public class SingleThumbnailAdapter extends AbstractAdapter {
 
-    private final MultivaluedHashMap<String, String> params = new MultivaluedHashMap<String, String>();
     private String reportName;
+    private Boolean defaultAllowed = false;
 
     public SingleThumbnailAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
@@ -32,7 +30,7 @@ public class SingleThumbnailAdapter extends AbstractAdapter {
     }
 
     public SingleThumbnailAdapter defaultAllowed(Boolean value) {
-        params.add("defaultAllowed", value.toString());
+       this.defaultAllowed = value;
         return this;
     }
 
@@ -47,7 +45,7 @@ public class SingleThumbnailAdapter extends AbstractAdapter {
         JerseyRequest<InputStream> request = JerseyRequest.buildRequest(sessionStorage, InputStream.class,
                 new String[]{"/thumbnails", reportName}, new DefaultErrorHandler());
         request.setAccept("image/jpeg");
-        request.addParams(params);
+        request.addParam("defaultAllowed", defaultAllowed.toString());
         return request;
     }
 }

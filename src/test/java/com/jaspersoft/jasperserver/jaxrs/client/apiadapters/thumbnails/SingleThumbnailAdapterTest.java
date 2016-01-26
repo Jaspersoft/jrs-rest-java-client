@@ -7,8 +7,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParamet
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.io.InputStream;
-import java.util.List;
-import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -79,20 +77,53 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         // Then
         String reportName = (String) Whitebox.getInternalState(retrieved, "reportName");
         assertEquals(reportName, "/public/Samples/Reports/07g.RevenueDetailReport");
-    }    @Test
+    }
+
+    @Test
     /**
      * for {@link SingleThumbnailAdapter#report(String)}
      */
     public void should_not_set_null_report_uri() {
         // Given
-        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+                SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
 
         // When
         SingleThumbnailAdapter retrieved = thumbnailAdapter.report(null);
 
         // Then
-        assertNull(Whitebox.getInternalState(retrieved, "reportName"));
+        String reportName = (String) Whitebox.getInternalState(retrieved, "reportName");
+        assertNull(reportName);
     }
+
+    @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
+    /**
+     * for {@link SingleThumbnailAdapter#report(String)}
+     */
+    public void should_throw_exception_when_report_uri_is_null() {
+        // Given
+                SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+
+        // When
+        thumbnailAdapter.report(null).get();
+
+        // Then
+    }
+
+
+    @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
+    /**
+     * for {@link SingleThumbnailAdapter#report(String)}
+     */
+    public void should_throw_exception_when_report_uri_is_empty() {
+        // Given
+                SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+
+        // When
+        thumbnailAdapter.report("").get();
+
+        // Then
+    }
+
 
     @Test
     /**
@@ -100,13 +131,14 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
      */
     public void should_not_set_empty_report_uri() {
         // Given
-        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+                SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
 
         // When
         SingleThumbnailAdapter retrieved = thumbnailAdapter.report("");
 
         // Then
-        assertNull(Whitebox.getInternalState(retrieved, "reportName"));
+        String reportName = (String) Whitebox.getInternalState(retrieved, "reportName");
+        assertNull(reportName);
     }
 
     @Test
@@ -121,11 +153,9 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         SingleThumbnailAdapter retrieved = thumbnailAdapter.defaultAllowed(true).report("/public/Samples/Reports/07g.RevenueDetailReport");
 
         // Then
-        MultivaluedHashMap<String, String> params =
-                (MultivaluedHashMap<String, String>) Whitebox.getInternalState(retrieved, "params");
-        List<String> list = params.get("defaultAllowed");
+        Boolean param = (Boolean) Whitebox.getInternalState(retrieved,"defaultAllowed");
         assertSame(retrieved, thumbnailAdapter);
-        assertEquals(list.get(0), "true");
+        assertEquals(param, Boolean.TRUE);
     }
 
     @Test
@@ -141,11 +171,9 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         SingleThumbnailAdapter retrieved = thumbnailAdapter.defaultAllowed(true);
 
         // Then
-        MultivaluedHashMap<String, String> params =
-                (MultivaluedHashMap<String, String>) Whitebox.getInternalState(thumbnailAdapter, "params");
-        List<String> list = params.get("defaultAllowed");
+        Boolean param = (Boolean) Whitebox.getInternalState(retrieved, "defaultAllowed");
         assertSame(retrieved, thumbnailAdapter);
-        assertEquals(list.get(0), Boolean.TRUE.toString());
+        assertEquals(param, Boolean.TRUE);
     }
 
     @Test
