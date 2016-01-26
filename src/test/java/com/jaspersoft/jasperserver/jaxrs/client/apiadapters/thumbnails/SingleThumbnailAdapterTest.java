@@ -77,34 +77,6 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         // Then
         String reportName = (String) Whitebox.getInternalState(retrieved, "reportName");
         assertEquals(reportName, "/public/Samples/Reports/07g.RevenueDetailReport");
-    }    @Test
-    /**
-     * for {@link SingleThumbnailAdapter#report(String)}
-     */
-    public void should_not_set_null_report_uri() {
-        // Given
-        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
-
-        // When
-        SingleThumbnailAdapter retrieved = thumbnailAdapter.report(null);
-
-        // Then
-        assertNull(Whitebox.getInternalState(retrieved, "reportName"));
-    }
-
-    @Test
-    /**
-     * for {@link SingleThumbnailAdapter#report(String)}
-     */
-    public void should_not_set_empty_report_uri() {
-        // Given
-        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
-
-        // When
-        SingleThumbnailAdapter retrieved = thumbnailAdapter.report("");
-
-        // Then
-        assertNull(Whitebox.getInternalState(retrieved, "reportName"));
     }
 
     @Test
