@@ -12,6 +12,7 @@ branches:
   only:
     - develop
     - master
+    - develop-domainDesigner
 
 env:
   global:

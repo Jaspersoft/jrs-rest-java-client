@@ -1,12 +1,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails;
 
+import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnailsListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.RequestBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.RequestMethod;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnailsListWrapper;
 import java.util.List;
 import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.ArgumentCaptor;
@@ -46,8 +45,6 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
     @Mock
     private JerseyRequest jerseyRequestMock;
     @Mock
-    private RequestBuilder<ResourceThumbnailsListWrapper> requestBuilderMock;
-    @Mock
     private OperationResult<ResourceThumbnailsListWrapper> operationResultMock;
     @Captor
     private ArgumentCaptor<MultivaluedHashMap> argument = ArgumentCaptor.forClass(MultivaluedHashMap.class);
@@ -80,7 +77,7 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
 
         // Then
         MultivaluedHashMap<String, String> params =
-                (MultivaluedHashMap<String, String>) Whitebox.getInternalState(thumbnailAdapter, "params");
+                (MultivaluedHashMap<String, String>) Whitebox.getInternalState(retrieved, "params");
         List<String> list = params.get("uri");
         assertSame(retrieved, thumbnailAdapter);
         assertEquals(list.get(0), "/public/Samples/Reports/07g.RevenueDetailReport");
@@ -99,29 +96,30 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
         BatchThumbnailAdapter retrieved = thumbnailAdapter.defaultAllowed(true);
 
         // Then /
-        MultivaluedHashMap<String, String> params =
-                (MultivaluedHashMap<String, String>) Whitebox.getInternalState(thumbnailAdapter, "params");
-        List<String> list = params.get("defaultAllowed");
+        Boolean param = (Boolean)Whitebox.getInternalState(retrieved, "defaultAllowed");
         assertSame(retrieved, thumbnailAdapter);
-        assertEquals(list.get(0), Boolean.TRUE.toString());
+        assertEquals(param, Boolean.TRUE);
     }
 
     @Test
     /**
      * for {@link BatchThumbnailAdapter#get()}
      */
-    public void should_return_proper_operation_result_with_defualt_request_method() {
+    public void should_return_proper_operation_result_with_default_request_method() {
 
         // Given
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ResourceThumbnailsListWrapper.class), eq(new String[]{"/thumbnails"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        when(jerseyRequestMock.setContentType("application/x-www-form-urlencoded")).thenReturn(requestBuilderMock);
-        when(requestBuilderMock.post(any(MultivaluedHashMap.class))).thenReturn(operationResultMock);
+        when(jerseyRequestMock.setContentType("application/x-www-form-urlencoded")).thenReturn(jerseyRequestMock);
+        when(jerseyRequestMock.addParam("defaultAllowed", "false")).thenReturn(jerseyRequestMock);
+        when(jerseyRequestMock.post(any(MultivaluedHashMap.class))).thenReturn(operationResultMock);
 
         BatchThumbnailAdapter thumbnailAdapter = new BatchThumbnailAdapter(sessionStorageMock);
 
         // When
-        OperationResult<ResourceThumbnailsListWrapper> retrieved = thumbnailAdapter.reports("/public/Samples/Reports/07g.RevenueDetailReport", "/public/Samples/Reports/03._Store_Segment_Performance_Report").get();
+        OperationResult<ResourceThumbnailsListWrapper> retrieved = thumbnailAdapter
+                .reports("/public/Samples/Reports/07g.RevenueDetailReport", "/public/Samples/Reports/03._Store_Segment_Performance_Report")
+                .get();
 
         // Then
         Assert.assertNotNull(retrieved);
@@ -129,9 +127,10 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
         PowerMockito.verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ResourceThumbnailsListWrapper.class), eq(new String[]{"/thumbnails"}), any(DefaultErrorHandler.class));
         verify(jerseyRequestMock).setContentType(eq("application/x-www-form-urlencoded"));
-        verify(requestBuilderMock).post(argument.capture());
+        verify(jerseyRequestMock).post(any(MultivaluedHashMap.class));
         verify(jerseyRequestMock, never()).addParams(argument.capture());
-        verify(requestBuilderMock, never()).get();
+        verify(jerseyRequestMock, never()).get();
+        verify(jerseyRequestMock).post(argument.capture());
         Assert.assertNotNull(argument.getValue());
         Assert.assertTrue(argument.getValue().containsKey("uri"));
         Assert.assertSame(argument.getValue().get("uri").get(0), "/public/Samples/Reports/07g.RevenueDetailReport");
@@ -146,9 +145,9 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
         // Given
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ResourceThumbnailsListWrapper.class), eq(new String[]{"/thumbnails"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        when(jerseyRequestMock.setContentType("application/x-www-form-urlencoded")).thenReturn(requestBuilderMock);
-        when(jerseyRequestMock.addParams(any(MultivaluedHashMap.class))).thenReturn(requestBuilderMock);
-        when(requestBuilderMock.get()).thenReturn(operationResultMock);
+        when(jerseyRequestMock.setContentType("application/x-www-form-urlencoded")).thenReturn(jerseyRequestMock);
+        when(jerseyRequestMock.addParams(any(MultivaluedHashMap.class))).thenReturn(jerseyRequestMock);
+        when(jerseyRequestMock.get()).thenReturn(operationResultMock);
 
         BatchThumbnailAdapter thumbnailAdapter = new BatchThumbnailAdapter(sessionStorageMock);
 
@@ -165,9 +164,9 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
         PowerMockito.verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ResourceThumbnailsListWrapper.class), eq(new String[]{"/thumbnails"}), any(DefaultErrorHandler.class));
         verify(jerseyRequestMock, never()).setContentType(eq("application/x-www-form-urlencoded"));
-        verify(requestBuilderMock, never()).post(argument.capture());
+        verify(jerseyRequestMock, never()).post(argument.capture());
         verify(jerseyRequestMock).addParams(argument.capture());
-        verify(requestBuilderMock).get();
+        verify(jerseyRequestMock).get();
         Assert.assertNotNull(argument.getValue());
         Assert.assertTrue(argument.getValue().containsKey("uri"));
         Assert.assertSame(argument.getValue().get("uri").get(0), "/public/Samples/Reports/07g.RevenueDetailReport");
@@ -175,6 +174,6 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
 
     @AfterMethod
     public void after() {
-        reset(sessionStorageMock, jerseyRequestMock, requestBuilderMock, operationResultMock);
+        reset(sessionStorageMock, jerseyRequestMock, operationResultMock);
     }
 }
