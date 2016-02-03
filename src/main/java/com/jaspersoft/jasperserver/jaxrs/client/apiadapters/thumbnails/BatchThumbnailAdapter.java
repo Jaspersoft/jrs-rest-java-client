@@ -20,6 +20,7 @@ public class BatchThumbnailAdapter extends AbstractAdapter {
 
     private final MultivaluedHashMap<String, String> params = new MultivaluedHashMap<String, String>();
     private RequestMethod requestMethod;
+    private Boolean defaultAllowed = false;
 
     public BatchThumbnailAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
@@ -46,7 +47,7 @@ public class BatchThumbnailAdapter extends AbstractAdapter {
     }
 
     public BatchThumbnailAdapter defaultAllowed(Boolean value) {
-        params.add("defaultAllowed", value.toString());
+       this.defaultAllowed = value;
         return this;
     }
 
@@ -56,12 +57,19 @@ public class BatchThumbnailAdapter extends AbstractAdapter {
     }
 
     public OperationResult<ResourceThumbnailsListWrapper> get() {
-        return (requestMethod == RequestMethod.POST) ? request().setContentType("application/x-www-form-urlencoded").post(params) : request().addParams(params).get();
+        if (requestMethod == RequestMethod.POST) {
+            return  request()
+                    .setContentType("application/x-www-form-urlencoded")
+                    .post(params);
+        }
+        return  request().addParams(params).get();
     }
 
     private JerseyRequest<ResourceThumbnailsListWrapper> request() {
-        return JerseyRequest.buildRequest(sessionStorage, ResourceThumbnailsListWrapper.class,
+        JerseyRequest<ResourceThumbnailsListWrapper> jerseyRequest = JerseyRequest.buildRequest(sessionStorage, ResourceThumbnailsListWrapper.class,
                 new String[]{"/thumbnails"}, new DefaultErrorHandler());
+        jerseyRequest.addParam("defaultAllowed", defaultAllowed.toString());
+        return jerseyRequest;
     }
 
 }

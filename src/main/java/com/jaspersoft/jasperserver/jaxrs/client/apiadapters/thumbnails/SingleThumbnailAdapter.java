@@ -6,8 +6,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-
-import javax.ws.rs.core.MultivaluedHashMap;
 import java.io.InputStream;
 
 /**
@@ -17,31 +15,37 @@ import java.io.InputStream;
  */
 public class SingleThumbnailAdapter extends AbstractAdapter {
 
-    private final MultivaluedHashMap<String, String> params = new MultivaluedHashMap<String, String>();
+    private String reportName;
+    private Boolean defaultAllowed = false;
 
     public SingleThumbnailAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
     public SingleThumbnailAdapter report(String uri) {
-        params.add("uri", uri);
+        if (uri != null && !uri.equals("")) {
+            reportName = uri;
+        }
         return this;
     }
 
     public SingleThumbnailAdapter defaultAllowed(Boolean value) {
-        params.add("defaultAllowed", value.toString());
+       this.defaultAllowed = value;
         return this;
     }
 
     public OperationResult<InputStream> get() {
-        return request().setAccept("image/jpeg").get();
+        return request().get();
     }
 
     private JerseyRequest<InputStream> request() {
-        if (params.size() == 0) {
+        if (reportName == null) {
             throw new MandatoryParameterNotFoundException("URI of report should be specified");
         }
-        return JerseyRequest.buildRequest(sessionStorage, InputStream.class,
-                new String[]{"/thumbnails",  params.get("uri").get(0)}, new DefaultErrorHandler());
+        JerseyRequest<InputStream> request = JerseyRequest.buildRequest(sessionStorage, InputStream.class,
+                new String[]{"/thumbnails", reportName}, new DefaultErrorHandler());
+        request.setAccept("image/jpeg");
+        request.addParam("defaultAllowed", defaultAllowed.toString());
+        return request;
     }
 }
