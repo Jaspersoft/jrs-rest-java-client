@@ -46,16 +46,13 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({DomainSchemaAdapter.class, JerseyRequest.class})
+@PrepareForTest({JerseyRequest.class})
 public class DomainSchemaAdapterTest extends PowerMockTestCase {
 
     public static final String URI = "domainSchemaUri";
     public static final String CONTENT_TYPE = "application/repository.domainSchema+json";
     @Mock
     private SessionStorage sessionStorageMock;
-
-    @Mock
-    DomainSchemaAdapter schemaAdapterMock;
 
     @Mock
     private JerseyRequest<ClientSchema> requestMock;
@@ -204,6 +201,6 @@ public class DomainSchemaAdapterTest extends PowerMockTestCase {
 
     @AfterMethod
     public void after() {
-        reset(sessionStorageMock, requestMock, resultMock);
+        reset(sessionStorageMock, requestMock, resultMock, fileJerseyRequestMock, fileOperationResultMock);
     }
 }
