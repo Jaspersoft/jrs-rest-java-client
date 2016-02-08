@@ -54,9 +54,9 @@ public class DomainSchemaAdapter extends AbstractAdapter {
     }
 
 
-    public OperationResult<ClientFile> upload(String path) {
+    public OperationResult<ClientFile> upload(String path, String name, String description) {
         File file = new File(path);
-        return uploadFile(file, ClientFile.FileType.xml, "schema.xml", "Domain schema");
+        return uploadFile(file, ClientFile.FileType.xml, name, description);
     }
 
 
@@ -70,7 +70,7 @@ public class DomainSchemaAdapter extends AbstractAdapter {
         return jerseyRequest;
     }
 
-    private OperationResult<ClientFile> uploadFile(File fileContent,
+    protected OperationResult<ClientFile> uploadFile(File fileContent,
                                                   ClientFile.FileType fileType,
                                                   String label,
                                                   String description) {
@@ -79,7 +79,7 @@ public class DomainSchemaAdapter extends AbstractAdapter {
         return request.post(form);
     }
 
-    private FormDataMultiPart prepareUploadForm(File fileContent,
+    protected FormDataMultiPart prepareUploadForm(File fileContent,
                                                 ClientFile.FileType fileType,
                                                 String label,
                                                 String description) {
@@ -93,7 +93,7 @@ public class DomainSchemaAdapter extends AbstractAdapter {
     }
 
 
-    private JerseyRequest<ClientFile> prepareUploadFileRequest() {
+    protected JerseyRequest<ClientFile> prepareUploadFileRequest() {
         JerseyRequest<ClientFile> request = JerseyRequest.buildRequest(sessionStorage, ClientFile.class, new String[]{"/resources", domainSchemaUri});
         request.setContentType(MediaType.MULTIPART_FORM_DATA);
         return request;

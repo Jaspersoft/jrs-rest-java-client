@@ -5,6 +5,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.metadata.Doma
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.newDomain.DomainAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.schema.DomainSchemaAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 
 /**
  * <p/>
@@ -22,11 +23,17 @@ public class DomainService extends AbstractAdapter {
     }
 
     public DomainService forDomain(String uri) {
-     this.uri = uri;
+        if (uri == null) {
+            throw new MandatoryParameterNotFoundException("URI must be specified");
+        }
+        this.uri = uri;
         return this;
     }
 
     public DomainAdapter domain(String uri) {
+        if (uri == null) {
+            throw new MandatoryParameterNotFoundException("URI must be specified");
+        }
         return new DomainAdapter(sessionStorage, uri);
     }
 

@@ -58,7 +58,6 @@ public class DomainAdapter extends AbstractAdapter {
                 new String[]{"/resources", uri},
                 new DefaultErrorHandler()
         );
-
         return jerseyRequest;
     }
 
