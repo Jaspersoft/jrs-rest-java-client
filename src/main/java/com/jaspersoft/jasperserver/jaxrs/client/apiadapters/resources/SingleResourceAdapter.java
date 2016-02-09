@@ -86,6 +86,13 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return request;
     }
 
+    private JerseyRequest<ClientResource> prepareDomainRequest() {
+        JerseyRequest<ClientResource> request = buildRequest(sessionStorage, ClientResource.class, new String[]{"/resources", resourceUri});
+        request.addParams(params);
+
+        return request;
+    }
+
     private boolean isRootFolder(String resourceUri) {
         return "/".equals(resourceUri) || "".equals(resourceUri);
     }
@@ -122,7 +129,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult<ClientResource> createNew(ClientResource resource) {
+    public OperationResult<ClientResource>  createNew(ClientResource resource) {
         return prepareCreateOrUpdateRequest(resource).post(resource);
     }
 

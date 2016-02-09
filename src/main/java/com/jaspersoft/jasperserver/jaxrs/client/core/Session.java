@@ -24,7 +24,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.Attribute
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.diagnostic.DiagnosticService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsService;
@@ -97,8 +98,8 @@ public class Session extends AnonymousSession{
         return getService(JobsService.class);
     }
 
-    public DomainMetadataService domainService() {
-        return getService(DomainMetadataService.class);
+    public DomainService domainService() {
+        return getService(DomainService.class);
     }
 
     public QueryExecutorService queryExecutorService() {
@@ -114,5 +115,7 @@ public class Session extends AnonymousSession{
     }
 
     public InputControlsService inputControlsService() {return getService(InputControlsService.class);}
+
+    public DiagnosticService diagnosticService() {return getService(DiagnosticService.class);}
 
 }

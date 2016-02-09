@@ -114,14 +114,15 @@ Table of Contents
     * [Checking the Import State](#checking-the-import-state).
 11. [Domain metadata service](#domainmetadata-service).
 12. [Thumbnail Search Service](#thumbnail-search-service).
-13. [Query Executor Service](#query-executor-service).
-14. [Server Information Service](#server-information-service).
-15. [Bundles service](#bundles-service).
-16. [Asynchronous API](#asynchronous-api).
-17. [Getting serialized content from response](#getting-serialized-content-from-response).
-18. [Possible issues](#possible-issues).
-19. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-20. [License](#license).
+13. [Diagnostic Service](#diagnostic-service).
+14. [Query Executor Service](#query-executor-service).
+15. [Server Information Service](#server-information-service).
+16. [Bundles service](#bundles-service).
+17. [Asynchronous API](#asynchronous-api).
+18. [Getting serialized content from response](#getting-serialized-content-from-response).
+19. [Possible issues](#possible-issues).
+20. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+21. [License](#license).
 
 Introduction
 -------------
@@ -1897,7 +1898,113 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
                 ```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
 
-####Query Executor Service
+###Diagnostic Service
+
+The service is used to create, update, stop log collectors and get logs and data snapshots.
+To create log collector use the code below:
+```java
+OperationResult<CollectorSettings> operationResult1 = session
+                                                            .diagnosticService()
+                                                            .forCollector(collector1)
+                                                            .create();
+
+collector1 = operationResult1.getEntity();
+```
+New collector gets ID and status "RUNNING" automatically.
+After creation you can get metadata  of all collectors:
+```java
+OperationResult<CollectorSettingsList> operationResult = session
+                .diagnosticService()
+                .allCollectors()
+                .collectorsSettings();
+
+CollectorSettingsList result = operationResult
+                .getEntity();
+```
+or for single log collector:
+```java
+OperationResult<CollectorSettings> operationResult = session
+                .diagnosticService()
+                .forCollector(collector1.getId())
+                .collectorSettings();
+
+CollectorSettings result = operationResult
+                .getEntity();
+```
+You can change collector's metadata or stop it using `.updateCollectorSettings()` method:
+```java
+PatchDescriptor patchDescriptor = new PatchDescriptor();
+List<PatchItem> items = new ArrayList<PatchItem>();
+items.add(new PatchItem().setField("status").setValue("STOPPED"));
+patchDescriptor.setItems(items);
+
+OperationResult<CollectorSettings> operationResult = session
+                .diagnosticService()
+                .forCollector(collector1)
+                .updateCollectorSettings(patchDescriptor);
+
+CollectorSettings result = operationResult
+                .getEntity();
+```
+Using similar method for batch operation you can update the same field of all collectors:
+```java
+OperationResult<CollectorSettingsList> operationResult = session
+                .diagnosticService()
+                .allCollectors()
+                .updateCollectorsSettings(patchDescriptor);
+CollectorSettingsList result = operationResult
+                .getEntity();
+```
+Also you can update whole collector:
+```java
+collector1.setStatus("STOPPED");
+
+OperationResult<CollectorSettings> operationResult = session
+                .diagnosticService()
+                .forCollector(collector1)
+                .updateCollectorSettings(collector1);
+
+CollectorSettings result = operationResult
+                .getEntity();
+
+```
+To get collectors' content use code below:
+```java
+OperationResult<InputStream> operationResult = session
+                .diagnosticService()
+                .allCollectors()
+                .collectorsContent();
+                
+         // or for single collector
+          
+OperationResult<InputStream> operationResult = session
+                          .diagnosticService()
+                          .forCollector(collector1)
+                          .collectorContent();
+          
+InputStream result = operationResult
+                          .getEntity();
+````
+Please notice, you should stop them previously using `.updateCollectorSettings()` methods. 
+Stopping the collector will turn off logging and begin resource export (if "includeDataSnapshots" is `true` and resourceUri not empty).
+Once stopped, collectors can't be run again.
+When App Server (e.g. Tomcat) is restarted, all collectors must change to stopped state.
+Before getting collectors' content check them status with method `.collectorsSettings()`.
+
+Delete log collectors you can as single or as batch operation:
+```java
+OperationResult<CollectorSettings> operationResult = session
+                .diagnosticService()
+                .forCollector(collector1)
+                .delete();
+                
+OperationResult<CollectorSettingsList> operationResult = session
+                                .diagnosticService()
+                                .allCollectors()
+                                .delete();
+```
+
+###Query Executor Service
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
 For now the only resource that supports queries is a Domain.
 
@@ -1909,8 +2016,7 @@ QueryResult queryResult = session.queryExecutorService()
         .getEntity();
 ```
 
-Server Information Service
-========================
+###Server Information Service
 Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
 ```java
 OperationResult<ServerInfo> result = client

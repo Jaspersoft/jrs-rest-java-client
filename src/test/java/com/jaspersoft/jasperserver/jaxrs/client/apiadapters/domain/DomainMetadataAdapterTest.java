@@ -1,6 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;//package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
 
 import com.jaspersoft.jasperserver.dto.domain.DomainMetaData;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.metadata.DomainMetadataAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
@@ -21,7 +22,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataAdapter}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.metadata.DomainMetadataAdapter}
  */
 @PrepareForTest(JerseyRequest.class)
 public class DomainMetadataAdapterTest extends PowerMockTestCase {
@@ -45,7 +46,7 @@ public class DomainMetadataAdapterTest extends PowerMockTestCase {
     }
 
     /**
-     * The constructor under test is {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataAdapter#DomainMetadataAdapter(com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage, String)}
+     * The constructor under test is {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.metadata.DomainMetadataAdapter#DomainMetadataAdapter(com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage, String)}
      */
     @Test(testName = "DomainMetadataAdapter_constructor")
     public void should_pass_not_null_SessionStorage_and_domainUri_to_super_class_without_any_changes() {
