@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;//package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.metadata;//package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
 
 import com.jaspersoft.jasperserver.dto.domain.DomainMetaData;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.metadata.DomainMetadataAdapter;

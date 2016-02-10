@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.newDomain;
 
 
-import com.jaspersoft.jasperserver.dto.domain.ClientSimpleDomain;
+import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
@@ -52,10 +52,10 @@ public class DomainAdapterTest extends PowerMockTestCase {
     private SessionStorage sessionStorageMock;
 
     @Mock
-    private JerseyRequest<ClientSimpleDomain> requestMock;
+    private JerseyRequest<ClientDomain> requestMock;
 
     @Mock
-    private OperationResult<ClientSimpleDomain> resultMock;
+    private OperationResult<ClientDomain> resultMock;
 
     @BeforeMethod
     public void before() {
@@ -103,20 +103,20 @@ public class DomainAdapterTest extends PowerMockTestCase {
         // Given
         DomainAdapter adapter = spy(new DomainAdapter(sessionStorageMock, URI));
 
-        ClientSimpleDomain simpleDomain = new ClientSimpleDomain();
+        ClientDomain domain = new ClientDomain();
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(requestMock).when(requestMock).setContentType(CONTENT_TYPE);
         doReturn(requestMock).when(adapter, "buildRequest");
-        doReturn(resultMock).when(requestMock).post(simpleDomain);
+        doReturn(resultMock).when(requestMock).post(domain);
 
         // When
-        adapter.create(simpleDomain);
+        adapter.create(domain);
 
         // Then
         verifyPrivate(adapter, times(1)).invoke("buildRequest");
-        verify(requestMock, times(1)).post(simpleDomain);
+        verify(requestMock, times(1)).post(domain);
         verify(requestMock, times(1)).setContentType(CONTENT_TYPE);
         verifyNoMoreInteractions(requestMock);
     }
@@ -126,21 +126,21 @@ public class DomainAdapterTest extends PowerMockTestCase {
 
         // Given
         DomainAdapter adapter = spy(new DomainAdapter(sessionStorageMock, URI));
-        ClientSimpleDomain simpleDomain = new ClientSimpleDomain();
+        ClientDomain domain = new ClientDomain();
 
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(requestMock).when(requestMock).setContentType(CONTENT_TYPE);
         doReturn(requestMock).when(adapter, "buildRequest");;
-        doReturn(resultMock).when(requestMock).put(simpleDomain);
+        doReturn(resultMock).when(requestMock).put(domain);
 
         // When
-        adapter.update(simpleDomain);
+        adapter.update(domain);
 
         // Then
         verifyPrivate(adapter, times(1)).invoke("buildRequest");
-        verify(requestMock, times(1)).put(simpleDomain);
+        verify(requestMock, times(1)).put(domain);
         verify(requestMock, times(1)).setContentType(CONTENT_TYPE);
         verifyNoMoreInteractions(requestMock);
     }
@@ -169,7 +169,7 @@ public class DomainAdapterTest extends PowerMockTestCase {
         // Given
         final DomainAdapter adapter = new DomainAdapter(sessionStorageMock, URI);
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientSimpleDomain.class),
+        when(buildRequest(eq(sessionStorageMock), eq(ClientDomain.class),
                 eq(new String[]{"/resources", URI}), any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
@@ -179,13 +179,13 @@ public class DomainAdapterTest extends PowerMockTestCase {
         doReturn(resultMock).when(requestMock).get();
 
         // When
-        OperationResult<ClientSimpleDomain> retrieved = adapter.get();
+        OperationResult<ClientDomain> retrieved = adapter.get();
 
         // Then
         assertNotNull(retrieved);
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock),
-                eq(ClientSimpleDomain.class),
+                eq(ClientDomain.class),
                 eq(new String[]{"/resources", URI}),
                 any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).get();

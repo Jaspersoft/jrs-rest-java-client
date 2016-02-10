@@ -1,6 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.newDomain;
 
-import com.jaspersoft.jasperserver.dto.domain.ClientSimpleDomain;
+import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
@@ -26,35 +26,35 @@ public class DomainAdapter extends AbstractAdapter {
     }
 
 
-    public OperationResult<ClientSimpleDomain> create(ClientSimpleDomain domain) {
-        JerseyRequest<ClientSimpleDomain> request = buildRequest();
+    public OperationResult<ClientDomain> create(ClientDomain domain) {
+        JerseyRequest<ClientDomain> request = buildRequest();
         request.setContentType(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/repository.domain+{mime}"));
         return request.post(domain);
     }
 
 
-    public OperationResult<ClientSimpleDomain> get() {
-        JerseyRequest<ClientSimpleDomain> request = buildRequest();
+    public OperationResult<ClientDomain> get() {
+        JerseyRequest<ClientDomain> request = buildRequest();
         request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/repository.domain+{mime}"));
         return request.get();
     }
 
 
-    public OperationResult<ClientSimpleDomain> update(ClientSimpleDomain domain) {
-        JerseyRequest<ClientSimpleDomain> request = buildRequest();
+    public OperationResult<ClientDomain> update(ClientDomain domain) {
+        JerseyRequest<ClientDomain> request = buildRequest();
         request.setContentType(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/repository.domain+{mime}"));
         return request.put(domain);
     }
 
-    public OperationResult<ClientSimpleDomain> delete() {
+    public OperationResult<ClientDomain> delete() {
         return buildRequest().delete();
     }
 
 
-    protected JerseyRequest<ClientSimpleDomain> buildRequest() {
-        JerseyRequest<ClientSimpleDomain> jerseyRequest = JerseyRequest.buildRequest(
+    protected JerseyRequest<ClientDomain> buildRequest() {
+        JerseyRequest<ClientDomain> jerseyRequest = JerseyRequest.buildRequest(
                 sessionStorage,
-                ClientSimpleDomain.class,
+                ClientDomain.class,
                 new String[]{"/resources", uri},
                 new DefaultErrorHandler()
         );
