@@ -160,21 +160,32 @@ public class JobsService extends AbstractAdapter {
     @VisibleForTesting
     String getJobAsJsonString(Job job) {
 
-        String jsonStringTemplate = "{\"label\":\"%s\",\"description\":\"%s\","
-                + "\"trigger\":{\"simpleTrigger\":{\"startType\":%d,\"misfireInstruction\":%d,\"occurrenceCount\":%d,\"recurrenceInterval\":%d,\"recurrenceIntervalUnit\":\"%s\"}},"
-                + "\"source\":{\"reportUnitURI\":\"%s\",\"parameters\":{\"parameterValues\":%s}},\"baseOutputFilename\":\"%s\","
-                + "\"repositoryDestination\":{\"folderURI\":\"%s\",\"sequentialFilenames\":false,\"overwriteFiles\":true,\"saveToRepository\":true,"
+        String jsonStringTemplate = "{\"label\":\"%s\",\"description\":\"%s\"," 
+        + "\"trigger\":{\"simpleTrigger\":{\"startType\":%d,\"misfireInstruction\":%d,\"occurrenceCount\":%d%s}},"
+        + "\"source\":{\"reportUnitURI\":\"%s\",\"parameters\":{\"parameterValues\":%s}},\"baseOutputFilename\":\"%s\"," 
+        + "\"repositoryDestination\":{\"folderURI\":\"%s\",\"outputLocalFolder\":\"%s\",\"sequentialFilenames\":false,\"overwriteFiles\":true,\"saveToRepository\":%s," 
                 + "\"usingDefaultReportOutputFolderURI\":false},\"outputFormats\":{\"outputFormat\":%s}}";
 
-        SimpleTrigger simpleTrigger = (SimpleTrigger) job.getTrigger();
+        
         JobSource jobSource = job.getSource();
+        SimpleTrigger simpleTrigger = (SimpleTrigger) job.getTrigger();
+        
+        String recurrenceDetails;
+        
+        if (simpleTrigger.getOccurrenceCount() > 1){
+            recurrenceDetails = ",\"recurrenceInterval\":"+simpleTrigger.getRecurrenceInterval()
+                    + ",\"recurrenceIntervalUnit\":\""+simpleTrigger.getRecurrenceIntervalUnit().name()
+                    + "\"";
+        } else {
+            recurrenceDetails="";
+        }
+        
+        String  jsonString = String.format(jsonStringTemplate, job.getLabel(), job.getDescription(), simpleTrigger.getStartType(), 
+                simpleTrigger.getMisfireInstruction(), simpleTrigger.getOccurrenceCount(),recurrenceDetails,
+                jobSource.getReportUnitURI(), getReportParamsAsJsonString(jobSource.getParameters()), job.getBaseOutputFilename(), job.getRepositoryDestination().getFolderURI(), 
+                job.getRepositoryDestination().getOutputLocalFolder(),job.getRepositoryDestination().isSaveToRepository(), getOutputFormatsAsJsonString(job.getOutputFormats()));
 
-        String jsonString = String.format(jsonStringTemplate, job.getLabel(), job.getDescription(),
-                simpleTrigger.getStartType(), simpleTrigger.getMisfireInstruction(), simpleTrigger.getOccurrenceCount(),
-                simpleTrigger.getRecurrenceInterval(), simpleTrigger.getRecurrenceIntervalUnit().name(),
-                jobSource.getReportUnitURI(), getReportParamsAsJsonString(jobSource.getParameters()), job.getBaseOutputFilename(),
-                job.getRepositoryDestination().getFolderURI(),
-                getOutputFormatsAsJsonString(job.getOutputFormats()));
+        
         return jsonString;
     }
 
