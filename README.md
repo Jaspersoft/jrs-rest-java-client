@@ -1374,6 +1374,7 @@ To get file MIME type yo can get `Content-Type` header from the `Response` insta
 The `createNew()` and `createOrUpdate()` methods offer alternative ways to create resources. Both take a resource descriptor but each handles the URL differently. With the `createNew()` method, specify a folder in the URL, and the new resource ID is created automatically from the label attribute in its descriptor. With the `createOrUpdate()` method, specify a unique new resource ID as part of the URL in `resource()` method.
 ```java
 ClientFolder folder = new ClientFolder();
+String parentUri = "/reports";
 folder
         .setUri("/reports/testFolder")
         .setLabel("Test Folder")
@@ -1392,7 +1393,7 @@ OperationResult<ClientResource> result = client
 OperationResult<ClientResource> result = client
         .authenticate("jasperadmin", "jasperadmin")
         .resourcesService()
-        .resource(folder.getUri())
+        .resource(parenUri)
         .createNew(folder);
 ```
 ####Modifying a Resource
