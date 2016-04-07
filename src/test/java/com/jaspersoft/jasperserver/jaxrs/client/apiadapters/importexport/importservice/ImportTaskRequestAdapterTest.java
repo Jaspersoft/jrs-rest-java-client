@@ -7,7 +7,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
+import com.jaspersoft.jasperserver.dto.importexport.State;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -56,19 +56,19 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
     private SessionStorage sessionStorageMock;
 
     @Mock
-    private JerseyRequest<StateDto> requestStateDtoMock;
+    private JerseyRequest<State> requestStateDtoMock;
 
     @Mock
-    private OperationResult<StateDto> operationResultStateDtoMock;
+    private OperationResult<State> operationResultStateDtoMock;
 
     @Mock
-    private Callback<OperationResult<StateDto>, Object> callbackMock;
+    private Callback<OperationResult<State>, Object> callbackMock;
 
     @Mock
     private MultivaluedHashMap<String, String> mapMock;
 
     @Mock
-    private RequestBuilder<StateDto> requestBuilderMock;
+    private RequestBuilder<State> requestBuilderMock;
 
     @BeforeMethod
     public void after() {
@@ -148,7 +148,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         doReturn(operationResultStateDtoMock).when(adapter, "createImport", fileMock);
 
         // When
-        OperationResult<StateDto> retrieved = adapter.create(fileMock);
+        OperationResult<State> retrieved = adapter.create(fileMock);
 
         // Then
         verifyPrivate(adapter).invoke("createImport", eq(fileMock));
@@ -166,7 +166,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         doReturn(operationResultStateDtoMock).when(adapter, "createImport", streamMock);
 
         // When
-        OperationResult<StateDto> retrieved = adapter.create(streamMock);
+        OperationResult<State> retrieved = adapter.create(streamMock);
 
         // Then
         verifyPrivate(adapter).invoke("createImport", eq(streamMock));
@@ -220,7 +220,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         PowerMockito.when(
                 buildRequest(
                         eq(sessionStorageMock),
-                        eq(StateDto.class),
+                        eq(State.class),
                         eq(new String[]{"/import"})))
                 .thenReturn(requestStateDtoMock);
 
@@ -241,7 +241,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         PowerMockito.verifyStatic(times(1));
         JerseyRequest.buildRequest(
                 eq(sessionStorageMock),
-                eq(StateDto.class),
+                eq(State.class),
                 eq(new String[]{"/import"}));
 
         Thread.sleep(500);
@@ -265,7 +265,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         PowerMockito.when(
                 buildRequest(
                         eq(sessionStorageMock),
-                        eq(StateDto.class),
+                        eq(State.class),
                         eq(new String[]{"/import"}),
                         any(DefaultErrorHandler.class)))
                 .thenReturn(requestStateDtoMock);
@@ -277,7 +277,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         InOrder inOrder = Mockito.inOrder(requestStateDtoMock);
 
         // When
-        OperationResult<StateDto> retrieved = requestAdapterSpy.create(fileMock);
+        OperationResult<State> retrieved = requestAdapterSpy.create(fileMock);
 
         // Then
         Assert.assertSame(retrieved, operationResultStateDtoMock);
@@ -285,7 +285,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         PowerMockito.verifyStatic(times(1));
         JerseyRequest.buildRequest(
                 eq(sessionStorageMock),
-                eq(StateDto.class),
+                eq(State.class),
                 eq(new String[]{"/import"}),
                 any(DefaultErrorHandler.class));
 
