@@ -1782,7 +1782,7 @@ Import/Export
 ###Export service
 The export service works asynchronously: first you request the export with the desired options, then you monitor the state of the export, and finally you request the output file. You must be authenticated as the system admin (superuser) for the export services.
 ```java
-OperationResult<StateDto> operationResult =
+OperationResult<State> operationResult =
         client
                 .authenticate("jasperadmin", "jasperadmin")
                 .exportService()
@@ -1792,19 +1792,19 @@ OperationResult<StateDto> operationResult =
                 .parameter(ExportParameter.EVERYTHING)
                 .create();
 
-StateDto stateDto = operationResult.getEntity();
+State state = operationResult.getEntity();
 ```
 ####Checking the Export State
 After receiving the export ID, you can check the state of the export operation.
 ```java
-OperationResult<StateDto> operationResult =
+OperationResult<State> operationResult =
         client
                 .authenticate("jasperadmin", "jasperadmin")
                 .exportService()
-                .task(stateDto.getId())
+                .task(state.getId())
                 .state();
 
-StateDto state = operationResult.getEntity();
+State state = operationResult.getEntity();
 ```
 The body of the response contains the current state of the export operation.
 ####Fetching the Export Output
@@ -1814,7 +1814,7 @@ OperationResult<InputStream> operationResult1 =
         client
                 .authenticate("jasperadmin", "jasperadmin")
                 .exportService()
-                .task(stateDto.getId())
+                .task(state.getId())
                 .fetch();
 
 InputStream inputStream = operationResult1.getEntity();
@@ -1823,7 +1823,7 @@ InputStream inputStream = operationResult1.getEntity();
 Use the following service to upload a catalog as a zip file and import it with the given options. Specify options as arguments from `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportParameter`. Arguments that are omitted are assumed to be false. You must be authenticated as the system admin (superuser) for the import service. Jaspersoft does not recommend uploading files greater than 2 gigabytes.
 ```java
 URL url = ImportService.class.getClassLoader().getResource("testExportArchive.zip");
-OperationResult<StateDto> operationResult =
+OperationResult<State> operationResult =
         client
                 .authenticate("jasperadmin", "jasperadmin")
                 .importService()
@@ -1831,19 +1831,19 @@ OperationResult<StateDto> operationResult =
                 .parameter(ImportParameter.INCLUDE_ACCESS_EVENTS, true)
                 .create(new File(url.toURI()));
 
-StateDto stateDto = operationResult.getEntity();
+State state = operationResult.getEntity();
 ```
 ####Checking the Import State
 After receiving the import ID, you can check the state of the import operation.
 ```java
-OperationResult<StateDto> operationResult =
+OperationResult<State> operationResult =
         client
                 .authenticate("jasperadmin", "jasperadmin")
                 .importService()
-                .task(stateDto.getId())
+                .task(state.getId())
                 .state();
 
-StateDto state = operationResult.getEntity();
+State state = operationResult.getEntity();
 ```
 
 ####DomainMetadata Service

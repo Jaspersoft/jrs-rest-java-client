@@ -193,6 +193,23 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
         // Then
         assertSame(opResult, taskOperationResultMock);
     }
+    @Test(testName = "restartTask")
+    public void should_return_proper_OperationResult_object_when_cancel_task() {
+        // Given
+        PowerMockito.mockStatic(JerseyRequest.class);
+        PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock),
+                eq(ImportTask.class),
+                eq(fakeArrayPathForTask),
+                any(DefaultErrorHandler.class))).thenReturn(taskRequestMock);
+        PowerMockito.when(taskRequestMock.delete()).thenReturn(taskOperationResultMock);
+
+        // When
+        ImportRequestAdapter adapter = new ImportRequestAdapter(storageMock, TASK_ID);
+        OperationResult<ImportTask> opResult = adapter.cancelTask();
+
+        // Then
+        assertSame(opResult, taskOperationResultMock);
+    }
 
     @Test
     public void should_retrieve_state_asynchronously () throws InterruptedException {

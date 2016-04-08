@@ -77,15 +77,23 @@ public class ImportRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<ImportTask> getTask() {
-        return buildRequest(sessionStorage, ImportTask.class,
-                new String[]{IMPORT_URI, taskId}, new DefaultErrorHandler())
+        return buildTaskRequest()
                 .get();
     }
 
-    public OperationResult<ImportTask> restartTask(ImportTask task) {
+    protected JerseyRequest<ImportTask> buildTaskRequest() {
         return buildRequest(sessionStorage, ImportTask.class,
-                new String[]{IMPORT_URI, taskId}, new DefaultErrorHandler())
+                new String[]{IMPORT_URI, taskId}, new DefaultErrorHandler());
+    }
+
+    public OperationResult<ImportTask> restartTask(ImportTask task) {
+        return buildTaskRequest()
                 .put(task);
+    }
+
+    public OperationResult<ImportTask> cancelTask() {
+        return buildTaskRequest()
+                .delete();
     }
 
     public <R> RequestExecution asyncState(final Callback<OperationResult<State>, R> callback) {
