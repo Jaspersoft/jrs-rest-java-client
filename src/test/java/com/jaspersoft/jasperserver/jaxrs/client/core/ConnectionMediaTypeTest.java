@@ -27,8 +27,8 @@ public class ConnectionMediaTypeTest {
         assertEquals(ConnectionMediaType.JNDI_JDBC_DATA_SOURCE_XML, "application/repository.jndiJdbcDataSource+xml");
         assertEquals(ConnectionMediaType.JDBC_DATA_SOURCE_JSON, "application/repository.jdbcDataSource+json");
         assertEquals(ConnectionMediaType.JDBC_DATA_SOURCE_XML, "application/repository.jdbcDataSource+xml");
-        assertEquals(ConnectionMediaType.DOMAIN_DATA_SOURCE_JSON, "application/repository.domain+json");
-        assertEquals(ConnectionMediaType.DOMAIN_DATA_SOURCE_XML, "application/repository.domain+xml");
+        assertEquals(ConnectionMediaType.DOMAIN_DATA_SOURCE_JSON, "application/repository.semanticLayerDataSource+json");
+        assertEquals(ConnectionMediaType.DOMAIN_DATA_SOURCE_XML, "application/repository.semanticLayerDataSource+xml");
         assertEquals(ConnectionMediaType.TXT_FILE_JSON, "application/connections.txtFile+json");
         assertEquals(ConnectionMediaType.TXT_FILE_XML, "application/connections.txtFile+xml");
         assertEquals(ConnectionMediaType.XLS_FILE_JSON, "application/connections.xlsFile+json");

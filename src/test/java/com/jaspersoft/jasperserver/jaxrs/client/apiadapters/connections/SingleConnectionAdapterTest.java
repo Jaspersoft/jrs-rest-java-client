@@ -558,11 +558,9 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         doReturn(tableMetadataOperationResultMock).when(tableMetadataRequestMock).get();
 
         OperationResult<TableMetadata> connection = connectionsService
-                .connection(ClientDomain.class,
-                        ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE,
+                .connection(TEST_UUID,
                         TableMetadata.class,
-                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE,
-                        TEST_UUID)
+                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE)
                 .metadata();
         //then
         assertSame(tableMetadataOperationResultMock, connection);
@@ -596,8 +594,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
                 .connection(ClientDomain.class,
                         ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE,
                         TableMetadata.class,
-                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE,
-                        TEST_UUID)
+                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE)
                 .createAndGetMetadata(new ClientDomain());
         //then
         assertSame(tableMetadataOperationResultMock, connection);
@@ -619,11 +616,9 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
     public void should_return_throw_exception_when_create_connection_and_get_metadata_connection_is_invalid() throws Exception {
         //when
         connectionsService
-                .connection(Object.class,
-                        ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE,
+                .connection(TEST_UUID,
                         TableMetadata.class,
-                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE,
-                        TEST_UUID)
+                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE)
                 .createAndGetMetadata(new Object());
         //then
         // an exception should be thrown

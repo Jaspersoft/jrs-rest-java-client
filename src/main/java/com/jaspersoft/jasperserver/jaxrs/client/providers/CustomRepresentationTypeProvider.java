@@ -107,7 +107,16 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "text/json",
         "text/xml",
         "application/attributes.collection+json",
-        "application/attributes.collection+xml"})
+        "application/attributes.collection+xml",
+        "application/repository.customDataSource.metadata+json",
+        "application/repository.customDataSource.metadata+xml",
+        "application/repository.semanticLayerDataSource+json",
+        "application/repository.semanticLayerDataSource+xml",
+        "application/repository.reportUnit+json",
+        "application/repository.reportUnit+xml",
+        "application/repository.reportUnit.metadata+json",
+        "application/repository.reportUnit.metadata+xml"
+})
 @Produces({
         "application/collection+json",
         "application/collection+xml",
@@ -182,7 +191,16 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "text/json",
         "text/xml",
         "application/attributes.collection+json",
-        "application/attributes.collection+xml"})
+        "application/attributes.collection+xml",
+        "application/repository.customDataSource.metadata+json",
+        "application/repository.customDataSource.metadata+xml",
+        "application/repository.semanticLayerDataSource+json",
+        "application/repository.semanticLayerDataSource+xml",
+        "application/repository.reportUnit+json",
+        "application/repository.reportUnit+xml",
+        "application/repository.reportUnit.metadata+json",
+        "application/repository.reportUnit.metadata+xml"
+})
 public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
 
     @Override

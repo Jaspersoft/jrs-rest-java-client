@@ -83,14 +83,16 @@ Table of Contents
     * [Uploading ReportUnit](#uploading-reportunit).
     * [Uploading File Resources](#uploading-file-resources).
     * [Deleting Resources](#deleting-resources).
+8. [Data Discovery Services](#repository-services).
+  1. [Domain Service](#resources-service).
+    * [Searching the Repository](#searching-the-repository).
+    * [Viewing Resource Details](#viewing-resource-details).
+    * [Downloading File Resources](#downloading-file-resources).
   2. [The Permissions Service](#the-permissions-service).
     * [Viewing Multiple Permissions](#viewing-multiple-permissions).
     * [Viewing a Single Permission](#viewing-a-single-permission).
     * [Setting Multiple Permissions](#setting-multiple-permissions).
-    * [Setting a Single Permission](#setting-a-single-permission).
-    * [Deleting Permissions in Bulk](#deleting-permissions-in-bulk).
-    * [Deleting a Single Permission](#deleting-a-single-permission).
-8. [Jobs service](#jobs-service).
+9. [Jobs service](#jobs-service).
   * [Listing Report Jobs](#listing-report-jobs).
   * [Viewing a Job Definition](#viewing-a-job-definition).
   * [Extended Job Search](#extended-job-search).
@@ -101,28 +103,28 @@ Table of Contents
   * [Pausing Jobs](#pausing-jobs).
   * [Resuming Jobs](#resuming-jobs).
   * [Restarting Failed Jobs](#restarting-failed-jobs).
-9. [Calendars service](#calendars-service).
+10. [Calendars service](#calendars-service).
   * [Listing All Registered Calendar Names](#listing-all-registered-calendar-names).
   * [Viewing an Exclusion Calendar](#viewing-an-exclusion-calendar).
   * [Adding or Updating an Exclusion Calendar](#adding-or-updating-an-exclusion-calendar).
   * [Deleting an Exclusion Calendar](#deleting-an-exclusion-calendar).
-10. [Import/Export](#importexport).
+11. [Import/Export](#importexport).
   1. [Export service](#export-service).
     * [Checking the Export State](#checking-the-export-state).
     * [Fetching the Export Output](#fetching-the-export-output).
   2. [Import service](#import-service).
     * [Checking the Import State](#checking-the-import-state).
-11. [Domain metadata service](#domainmetadata-service).
-12. [Thumbnail Search Service](#thumbnail-search-service).
-13. [Diagnostic Service](#diagnostic-service).
-14. [Query Executor Service](#query-executor-service).
-15. [Server Information Service](#server-information-service).
-16. [Bundles service](#bundles-service).
-17. [Asynchronous API](#asynchronous-api).
-18. [Getting serialized content from response](#getting-serialized-content-from-response).
-19. [Possible issues](#possible-issues).
-20. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-21. [License](#license).
+12. [Domain metadata service](#domainmetadata-service).
+13. [Thumbnail Search Service](#thumbnail-search-service).
+14. [Diagnostic Service](#diagnostic-service).
+15. [Query Executor Service](#query-executor-service).
+16. [Server Information Service](#server-information-service).
+17. [Bundles service](#bundles-service).
+18. [Asynchronous API](#asynchronous-api).
+19. [Getting serialized content from response](#getting-serialized-content-from-response).
+20. [Possible issues](#possible-issues).
+21. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+22. [License](#license).
 
 Introduction
 -------------

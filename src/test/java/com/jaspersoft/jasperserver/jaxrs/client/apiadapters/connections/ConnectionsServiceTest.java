@@ -27,6 +27,10 @@ import static org.testng.Assert.assertSame;
 @PrepareForTest({ConnectionsService.class})
 public class ConnectionsServiceTest extends PowerMockTestCase {
 
+    public static final String SOME_UU_ID = "someUuId";
+    public static final String SOME_MIME_TYPE = "someMimeType";
+    public static final String CONNECTION_MIME_TYPE = "someConnectionMimeType";
+    public static final String METADATA_MIME_TYPE = "someMetadataMimeType";
     private SessionStorage sessionStorageMock;
     private SingleConnectionAdapter singleConnectionAdapterMock;
 
@@ -63,18 +67,18 @@ public class ConnectionsServiceTest extends PowerMockTestCase {
 
         // Given
         whenNew(SingleConnectionAdapter.class)
-                .withArguments(sessionStorageMock, Object.class, null, Object.class, null, "someUuId")
+                .withArguments(sessionStorageMock, Object.class, SOME_MIME_TYPE, SOME_UU_ID)
                 .thenReturn(singleConnectionAdapterMock);
 
         ConnectionsService connectionsService = new ConnectionsService(sessionStorageMock);
 
         // When
-        SingleConnectionAdapter retrieved = connectionsService.connection("someUuId");
+        SingleConnectionAdapter retrieved = connectionsService.connection(Object.class, SOME_MIME_TYPE, SOME_UU_ID);
 
         // Then
         assertSame(singleConnectionAdapterMock, retrieved);
         verifyNew(SingleConnectionAdapter.class, times(1))
-                .withArguments(sessionStorageMock, Object.class, null, Object.class, null, "someUuId");
+                .withArguments(sessionStorageMock, Object.class, SOME_MIME_TYPE, SOME_UU_ID);
     }
 
     @Test
@@ -82,18 +86,18 @@ public class ConnectionsServiceTest extends PowerMockTestCase {
 
         // Given
         whenNew(SingleConnectionAdapter.class)
-                .withArguments(sessionStorageMock, ClientCustomDataSource.class, "someMimeType", Object.class, null, "someUuId")
+                .withArguments(sessionStorageMock, ClientCustomDataSource.class, SOME_MIME_TYPE, SOME_UU_ID)
                 .thenReturn(singleConnectionAdapterMock);
 
         ConnectionsService connectionsService = new ConnectionsService(sessionStorageMock);
 
         // When
-        SingleConnectionAdapter retrieved = connectionsService.connection(ClientCustomDataSource.class, "someMimeType", "someUuId");
+        SingleConnectionAdapter retrieved = connectionsService.connection(ClientCustomDataSource.class, SOME_MIME_TYPE, SOME_UU_ID);
 
         // Then
         assertSame(singleConnectionAdapterMock, retrieved);
         verifyNew(SingleConnectionAdapter.class, times(1))
-                .withArguments(sessionStorageMock, ClientCustomDataSource.class, "someMimeType", Object.class, null, "someUuId");
+                .withArguments(sessionStorageMock, ClientCustomDataSource.class, SOME_MIME_TYPE, SOME_UU_ID);
     }
 
     @Test
@@ -101,28 +105,19 @@ public class ConnectionsServiceTest extends PowerMockTestCase {
 
         // Given
         whenNew(SingleConnectionAdapter.class)
-                .withArguments(sessionStorageMock,
-                        ClientCustomDataSource.class,
-                        "someConnectionMimeType",
-                        TableMetadata.class,
-                        "someMetadataMimeType", "someUuId")
+                .withArguments(sessionStorageMock, SOME_UU_ID, TableMetadata.class, METADATA_MIME_TYPE)
                 .thenReturn(singleConnectionAdapterMock);
 
         ConnectionsService connectionsService = new ConnectionsService(sessionStorageMock);
 
         // When
         SingleConnectionAdapter retrieved = connectionsService.
-                connection(ClientCustomDataSource.class, "someConnectionMimeType", TableMetadata.class,
-                        "someMetadataMimeType", "someUuId");
+                connection(SOME_UU_ID, TableMetadata.class, METADATA_MIME_TYPE);
 
         // Then
         assertSame(singleConnectionAdapterMock, retrieved);
         verifyNew(SingleConnectionAdapter.class, times(1))
-                .withArguments(sessionStorageMock,
-                        ClientCustomDataSource.class,
-                        "someConnectionMimeType",
-                        TableMetadata.class,
-                        "someMetadataMimeType", "someUuId");
+                .withArguments(sessionStorageMock, SOME_UU_ID, TableMetadata.class, METADATA_MIME_TYPE);
     }
 
 }
