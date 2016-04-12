@@ -17,33 +17,27 @@ public class ConnectionsService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    public SingleConnectionAdapter connection(String uuId) {
-        return this.connection(Object.class, null, Object.class, null, uuId);
+    public <C> SingleConnectionAdapter<C, Object> connection(Class<C> connectionClass, String connectionMimeType) {
+        return new SingleConnectionAdapter<C, Object>(sessionStorage, connectionClass, connectionMimeType);
     }
 
-    public SingleConnectionAdapter connection(Class connectionClass, String connectionMimeType, String uuId) {
-        return this.connection(connectionClass, connectionMimeType, Object.class, null, uuId);
+    public <C> SingleConnectionAdapter<C, Object> connection(Class<C> connectionClass, String connectionMimeType, String uuId) {
+        return new SingleConnectionAdapter<C, Object>(sessionStorage, connectionClass, connectionMimeType, uuId);
     }
 
-    public SingleConnectionAdapter connection(Class connectionClass, String connectionMimeType) {
-        return this.connection(connectionClass, connectionMimeType, Object.class, null, null);
+    public <M> SingleConnectionAdapter<Object, M> connection(String uuId, Class<M> metadataClass, String metadataMimeType) {
+        return new SingleConnectionAdapter<Object, M>(sessionStorage, uuId, metadataClass, metadataMimeType);
     }
 
-    public <C, M> SingleConnectionAdapter<C, M> connection(Class<C> connection,
-                                              String connectionMimeType,
-                                              Class<M> metadata,
-                                              String metadataMimeType,
-                                              String uuId) {
+   public <C, M> SingleConnectionAdapter<C, M> connection(Class<C> connection, String connectionMimeType,
+                                                           Class<M> metadataClass,
+                                                           String metadataMimeType) {
+       return new SingleConnectionAdapter<C, M>(sessionStorage, connection, connectionMimeType, metadataClass, metadataMimeType);
+   }
 
-
-        return new SingleConnectionAdapter<C, M>(sessionStorage, connection,
-                connectionMimeType,
-                metadata,
-                metadataMimeType,
-                uuId);
-    }
-
-
+   public SingleConnectionAdapter<Object, Object> connection(String uuId) {
+       return new SingleConnectionAdapter<Object, Object>(sessionStorage, uuId);
+   }
 
 
 }
