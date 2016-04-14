@@ -8,7 +8,7 @@
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
 
-    <version>6.2.1_domain_designer</version>
+    <version>6.2.1_domain_topic_feature</version>
 
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
