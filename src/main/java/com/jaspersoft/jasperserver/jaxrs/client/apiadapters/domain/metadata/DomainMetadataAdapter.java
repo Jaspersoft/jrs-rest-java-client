@@ -27,6 +27,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.dto.domain.DomainMetaData;
 
+/**
+ * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery.DomainContextManager}.
+ */
 public class DomainMetadataAdapter extends AbstractAdapter {
     private final String domainURI;
 
