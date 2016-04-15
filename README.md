@@ -1793,6 +1793,51 @@ OperationResult<State> operationResult =
                 .create();
 
 State state = operationResult.getEntity();
+
+The export parameters you can specify are:
+
+`everything `- export everything except audit data: all repository resources, permissions, report jobs, users, and roles. This option is equivalent to:--uris --repository-permissions --report-jobs --users --roles
+(default value is false). 
+
+`repository-permissions `- when this option is present, repository permissions are exported along with each exported folder and resource. This option should only be used in conjunction with uris (default value is false).
+
+`role-users `- when this option is present, each role export triggers the export of all users belonging to the role. This option should only be used in conjunction with --roles (default value is false).
+
+`include-access-events `- access events (date, time, and user name of last modification) are exported (default value is false).
+
+`include-audit-events `- include audit data for all resources and users in the export (default value is false).
+ 
+`include-monitoring-events `- include monitoring events (default value is false).
+
+`include-attributes `- include attributes in export (default value is false).
+
+`skip-attribute-values `- skip attributes values to be exported (default value is false).
+
+`include-server-settings`	- include server settings in export(default value is false).
+
+`skip-suborganizations `- if the parameter is set to true, the system will omit all the items(e.g. resources, user, roles, organizations) which belong to "sub organizations" even they are directly specified using corresponding options (default value is false).
+
+`skip-dependent-resources `- skip dependent resources (domain, datasource etc.) to be exported (default value is false). 
+//TODO task
+Also you can specify:
+`uris` - list of folder or resource URIs in the repository  to export.
+`scheduledJobs` - list of repository report unit and folder URIs for which report unit jobs should be exported. For a folder URI, this option exports the scheduled jobs of all reports in the folder and all subfolders.	
+`roles` - list of roles to export.
+`users` - list of users to export.
+`resourceTypes` - list of resource types, that will be included in export. If the parameter is null or empty then will include all resource types.
+`organization` - identifier of organization to export together with its sub organizations. If it is specified it also will be the root organization, starting from it system will export all resources, users, roles e.t.c.
+
+```java
+        OperationResult<State> stateOperationResult = session
+                .exportService()
+                .newTask()
+                .uri("/temp/supermartDomain")
+                .user("jasperadmin")
+                .role("ROLE_USER")
+                .resourceTypes(asList("jdbcDataSource", "reportUnit", "file"))
+                .parameter(ExportParameter.EVERYTHING)
+                .create();
+```
 ```
 ####Checking the Export State
 After receiving the export ID, you can check the state of the export operation.
@@ -1832,6 +1877,27 @@ OperationResult<State> operationResult =
                 .create(new File(url.toURI()));
 
 State state = operationResult.getEntity();
+```
+Available parameters are:
+`includeAccessEvents` - access events (date, time, and user name of last modification) are exported (default value is false).
+`includeAuditEvents` - include audit data for all resources and users in the export (default value is false).
+`update` - resources in the catalog replace those in the repository if their URIs and typesmatch (default value is false).
+`skipUserUpdate` - when used with --update, users in the catalog are not imported or updated. Use this option to import catalogs without overwriting currently defined user  (default value is false).
+`includeMonitoringEvents` - include monitoring events (default value is false).
+`includeServerSettings` - include server settings  (default value is false).
+`mergeOrganization` - allows merging of exported organization/resource into organization with different identifier. In the case if it is false, then system will throw an exception, if exportedOrganizationId != organizationId_we_import_Into (default value is false).
+`brokenDependencies` - defines strategy with broken dependencies. Available values are - fail, skip, include (default value is fail). 
+
+Also you can set:
+`brokenDependencies` - defines strategy with broken dependencies. Available values are:
+
+    fail - server will give an error (errorCode=import.broken.dependencies) if import archive contain broken dependent resources.
+    skip - import will skip from import broken resources.
+	include - import will proceed with broken dependencies. In this case server will try to import broken dependent resources. a) In the case when in target environment there are already dependent resources import of target resource will be success, and resource will be skipped from import if there are no dependent resources to recover dependency chain.
+`parameters` - list of import parameters. 
+`organization` - organization identifier we import into.
+```java
+
 ```
 ####Checking the Import State
 After receiving the import ID, you can check the state of the import operation.
