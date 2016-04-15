@@ -21,9 +21,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import java.util.Locale;
@@ -99,14 +99,13 @@ public class JasperserverRestClient {
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
         Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
         if (response.getStatus() == Status.FOUND.getStatusCode()) {
-            String sessionId = null;
             String location = response.getLocation().toString();
-
+            String sessionId;
             if (!location.matches("[^?]+\\?([^&]*&)*error=1(&[^&]*)*$")) {
                 sessionId = response.getCookies().get("JSESSIONID").getValue();
                 storage.setSessionId(sessionId);
             } else {
-                new DefaultErrorHandler().handleError(response);
+                throw new AuthenticationFailedException("Invalid credentials supplied. Could not login to JasperReports Server.");
             }
             rootTarget.register(new SessionOutputFilter(sessionId));
         } else {

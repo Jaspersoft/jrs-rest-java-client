@@ -1,6 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
@@ -622,8 +623,8 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         // an exception should  be thrown
     }
 
-    @Test
-    public void should_invoke_login_method_and_handle_error() throws Exception {
+    @Test(expectedExceptions = AuthenticationFailedException.class)
+    public void should_throw_authentication_failed_exception() throws Exception {
         // Given
         final URI location = new URI("http://location?error=1");
         doReturn("url").when(configurationMock).getJasperReportsServerUrl();
@@ -657,27 +658,12 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         doReturn(responseMock).when(invocationBuilderMock).post(any(Entity.class));
         doReturn(location).when(responseMock).getLocation();
         doReturn(302).when(responseMock).getStatus();
-        PowerMockito.doNothing().when(errorHandler).handleError(responseMock);
 
         // When
         Session session = client.authenticate(USER_NAME, PASSWORD, "de", TIME_ZONE);
 
         // Then
-        assertNotNull(session);
-        verify(sessionStorageMock).getCredentials();
-        verify(sessionStorageMock).getRootTarget();
-        verify(configurationMock).getAuthenticationType();
-        verify(sessionStorageMock).getCredentials();
-        verify(rootTargetMock, never()).register(isA(BasicAuthenticationFilter.class));
-        verify(rootTargetMock).path("/j_spring_security_check");
-        verify(webTargetMock).property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
-        verify(webTargetMock).request();
-        verify(formSpy).param("j_username", USER_NAME);
-        verify(formSpy).param("j_password", PASSWORD);
-        verify(formSpy).param("userTimezone",TIME_ZONE);
-        verify(formSpy).param("userLocale", locale.toString());
-        verify(invocationBuilderMock).post(Entity.entity(formSpy, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
-        verify(errorHandler).handleError(responseMock);
+        // an exception should be thrown
     }
 
     @Test
