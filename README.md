@@ -1845,6 +1845,32 @@ OperationResult<State> operationResult =
 
 State state = operationResult.getEntity();
 ```
+####Getting and restarting import task
+
+To get import task metadata you can use next code example:
+```java
+        OperationResult<State> operationResult = session
+                .importService()
+                .newTask()
+                .parameter(ImportParameter.INCLUDE_ACCESS_EVENTS, true)
+                .parameter(ImportParameter.UPDATE, true)
+                .create(new File("\\import.zip"));
+        State state = operationResult.getEntity();
+
+        ImportTask task = session
+                .importService()
+                .task(state.getId())
+                .getTask()
+                .getEntity();
+```
+Also you can restart import task:
+```java
+
+        ImportTask task = importService.
+                task(state.getId())
+                .restartTask(new ImportTask().setBrokenDependencies("false"))
+                .getEntity();
+```
 
 ####DomainMetadata Service
 The DomainMetadata Service gives access to the sets and items exposed by a Domain for use in Ad
