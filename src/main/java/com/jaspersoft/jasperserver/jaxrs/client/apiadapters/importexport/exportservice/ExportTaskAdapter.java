@@ -25,8 +25,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.ExportTaskDto;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
+import com.jaspersoft.jasperserver.dto.importexport.ExportTask;
+import com.jaspersoft.jasperserver.dto.importexport.State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,49 +35,71 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class ExportTaskAdapter extends AbstractAdapter {
 
-    private final ExportTaskDto exportTaskDto;
+    private final ExportTask exportTask;
 
     public ExportTaskAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
-        this.exportTaskDto = new ExportTaskDto();
-        this.exportTaskDto.setParameters(new ArrayList<String>());
-        this.exportTaskDto.setRoles(new ArrayList<String>());
-        this.exportTaskDto.setUsers(new ArrayList<String>());
-        this.exportTaskDto.setUris(new ArrayList<String>());
+        this.exportTask = new ExportTask();
+        this.exportTask.setParameters(new ArrayList<String>());
+        this.exportTask.setRoles(new ArrayList<String>());
+        this.exportTask.setUsers(new ArrayList<String>());
+        this.exportTask.setUris(new ArrayList<String>());
+        this.exportTask.setResourceTypes(new ArrayList<String>());
+        this.exportTask.setScheduledJobs(new ArrayList<String>());
     }
 
     public ExportTaskAdapter role(String role) {
-        exportTaskDto.getRoles().add(role);
+        exportTask.getRoles().add(role);
         return this;
     }
 
     public ExportTaskAdapter roles(List<String> roles) {
-        exportTaskDto.getRoles().addAll(roles);
+        exportTask.getRoles().addAll(roles);
         return this;
     }
 
     public ExportTaskAdapter user(String user) {
-        exportTaskDto.getUsers().add(user);
+        exportTask.getUsers().add(user);
         return this;
     }
 
     public ExportTaskAdapter users(List<String> users) {
-        exportTaskDto.getUsers().addAll(users);
+        exportTask.getUsers().addAll(users);
         return this;
     }
 
     public ExportTaskAdapter uri(String uri) {
-        exportTaskDto.getUris().add(uri);
+        exportTask.getUris().add(uri);
         return this;
     }
 
     public ExportTaskAdapter uris(List<String> uris) {
-        exportTaskDto.getUris().addAll(uris);
+        exportTask.getUris().addAll(uris);
+        return this;
+    }
+
+    public ExportTaskAdapter scheduledJob(String uri) {
+        exportTask.getScheduledJobs().add(uri);
+        return this;
+    }
+
+    public ExportTaskAdapter scheduledJobs(List<String> uris) {
+        exportTask.getScheduledJobs().addAll(uris);
+        return this;
+    }
+
+    public ExportTaskAdapter resourceType(String uri) {
+        exportTask.getResourceTypes().add(uri);
+        return this;
+    }
+
+    public ExportTaskAdapter resourceTypes(List<String> uris) {
+        exportTask.getResourceTypes().addAll(uris);
         return this;
     }
 
     public ExportTaskAdapter parameter(ExportParameter parameter) {
-        exportTaskDto.getParameters().add(parameter.getParamName());
+        exportTask.getParameters().add(parameter.getParamName());
         return this;
     }
 
@@ -88,16 +110,21 @@ public class ExportTaskAdapter extends AbstractAdapter {
         return this;
     }
 
-    public OperationResult<StateDto> create() {
-        return buildRequest(sessionStorage, StateDto.class, new String[]{"/export"},
-                new DefaultErrorHandler()).post(exportTaskDto);
+    public ExportTaskAdapter organization(String organizationId) {
+        exportTask.setOrganization(organizationId);
+        return this;
     }
 
-    public <R> RequestExecution asyncCreate(final Callback<OperationResult<StateDto>, R> callback) {
-        final JerseyRequest<StateDto> request = buildRequest(sessionStorage, StateDto.class, new String[]{"/export"});
+    public OperationResult<State> create() {
+        return buildRequest(sessionStorage, State.class, new String[]{"/export"},
+                new DefaultErrorHandler()).post(exportTask);
+    }
+
+    public <R> RequestExecution asyncCreate(final Callback<OperationResult<State>, R> callback) {
+        final JerseyRequest<State> request = buildRequest(sessionStorage, State.class, new String[]{"/export"});
         request.setAccept("application/zip");
-        // Guarantee that exportTaskDto won't be modified from another thread
-        final ExportTaskDto localCopy = new ExportTaskDto(exportTaskDto);
+        // Guarantee that exportTask won't be modified from another thread
+        final ExportTask localCopy = new ExportTask(exportTask);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
