@@ -1,6 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
-import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
+import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.domain.DataIslandsContainer;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.SingleConnectionAdapter;
@@ -33,7 +33,7 @@ public class DomainContextManagerTest extends PowerMockTestCase {
     private SessionStorage sessionStorageMock;
     private ConnectionsService connectionsServiceMock;
     private SingleConnectionAdapter connectionAdapterMock;
-    private OperationResult<ClientDomain> operationResultMock;
+    private OperationResult<ClientSemanticLayerDataSource> operationResultMock;
     private OperationResult<DataIslandsContainer> dataIslandsContainerOperationResult;
 
 
@@ -64,12 +64,12 @@ public class DomainContextManagerTest extends PowerMockTestCase {
     public void should_return_proper_domain_when_create_context() throws Exception {
         // When
 
-        ClientDomain domain = spy(new ClientDomain());
+        ClientSemanticLayerDataSource domain = spy(new ClientSemanticLayerDataSource());
         PowerMockito.whenNew(ConnectionsService.class).withArguments(sessionStorageMock).thenReturn(connectionsServiceMock);
-        PowerMockito.when(connectionsServiceMock.connection(ClientDomain.class, ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE)).thenReturn(connectionAdapterMock);
+        PowerMockito.when(connectionsServiceMock.connection(ClientSemanticLayerDataSource.class, ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE)).thenReturn(connectionAdapterMock);
         PowerMockito.when(connectionAdapterMock.create(domain)).thenReturn(operationResultMock);
 
-        OperationResult<ClientDomain> retrievedOperationResult = new DomainContextManager(sessionStorageMock).create(domain);
+        OperationResult<ClientSemanticLayerDataSource> retrievedOperationResult = new DomainContextManager(sessionStorageMock).create(domain);
         //Then
         assertSame(operationResultMock, retrievedOperationResult);
     }
@@ -97,9 +97,9 @@ public class DomainContextManagerTest extends PowerMockTestCase {
     public void should_return_proper_domain_when_create_context_and_get_metadata() throws Exception {
         // When
 
-        ClientDomain domain = spy(new ClientDomain());
+        ClientSemanticLayerDataSource domain = spy(new ClientSemanticLayerDataSource());
         PowerMockito.whenNew(ConnectionsService.class).withArguments(sessionStorageMock).thenReturn(connectionsServiceMock);
-        PowerMockito.when(connectionsServiceMock.connection(ClientDomain.class,
+        PowerMockito.when(connectionsServiceMock.connection(ClientSemanticLayerDataSource.class,
                 ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE,
                 DataIslandsContainer.class,
                 ConnectionMediaType.DOMAIN_METADATA_TYPE

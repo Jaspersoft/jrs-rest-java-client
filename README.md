@@ -1850,8 +1850,9 @@ creator for use by report creators.
 To get domain metadata use code below:
 ```java
 // create domain context by Id of context
- ClientDomain domainContext = new ClientDomain().setUri("/organizations/organization_1/Domains/Simple_Domain");
-        OperationResult<ClientDomain> operationResult = session
+ ClientSemanticLayerDataSource domainContext = new ClientSemanticLayerDataSource().
+                                                setUri("/organizations/organization_1/Domains/Simple_Domain");
+        OperationResult<ClientSemanticLayerDataSource> operationResult = session
                 .dataDiscoveryService()
                 .domainContext()
                 .create(domainContext);

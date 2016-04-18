@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
+import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.dto.resources.domain.DataIslandsContainer;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
@@ -21,9 +22,9 @@ public class DomainContextManager {
         this.sessionStorage = sessionStorage;
     }
 
-    public OperationResult<ClientDomain> create(ClientDomain domain) {
+    public OperationResult<ClientSemanticLayerDataSource> create(ClientSemanticLayerDataSource domain) {
         return new ConnectionsService(sessionStorage).
-                connection(ClientDomain.class, ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE).
+                connection(ClientSemanticLayerDataSource.class, ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE).
                 create(domain);
     }
 
@@ -34,9 +35,9 @@ public class DomainContextManager {
                 metadata();
     }
 
-    public OperationResult<DataIslandsContainer> fetchMetadataByContext(ClientDomain domain) {
+    public OperationResult<DataIslandsContainer> fetchMetadataByContext(ClientSemanticLayerDataSource domain) {
         return new ConnectionsService(sessionStorage).
-                connection(ClientDomain.class,
+                connection(ClientSemanticLayerDataSource.class,
                         ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE,
                         DataIslandsContainer.class,
                         ConnectionMediaType.DOMAIN_METADATA_TYPE).
