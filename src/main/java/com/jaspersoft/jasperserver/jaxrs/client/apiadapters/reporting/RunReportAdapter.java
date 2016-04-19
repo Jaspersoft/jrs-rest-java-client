@@ -43,6 +43,7 @@ import static java.util.regex.Pattern.compile;
 
 public class RunReportAdapter extends AbstractAdapter {
 
+    public static final String SERVICE_URI = "reports";
     private final MultivaluedMap<String, String> params;
     private final String reportUnitUri;
     private final String format;
@@ -131,7 +132,7 @@ public class RunReportAdapter extends AbstractAdapter {
         JerseyRequest<InputStream> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 InputStream.class,
-                new String[]{"/reports", reportUnitUri + "." + format},
+                new String[]{SERVICE_URI, reportUnitUri + "." + format},
                 new RunReportErrorHandler());
 
         request.addParams(params);

@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class InputControlsAdapter extends AbstractAdapter{
 
+    public static final String REPORTS_URI = "reports";
+    public static final String INPUT_CONTROLS_URI = "inputControls";
     private String containerUri;
     private Boolean excludeState = false;
 
@@ -51,7 +53,7 @@ public class InputControlsAdapter extends AbstractAdapter{
         }
         JerseyRequest<ReportInputControlsListWrapper> request = JerseyRequest.buildRequest(sessionStorage,
                 ReportInputControlsListWrapper.class,
-                new String[]{"/reports", containerUri, "/inputControls"},
+                new String[]{REPORTS_URI, containerUri, INPUT_CONTROLS_URI},
                 new DefaultErrorHandler());
         if (excludeState) {
             request.addParam("exclude", "state");

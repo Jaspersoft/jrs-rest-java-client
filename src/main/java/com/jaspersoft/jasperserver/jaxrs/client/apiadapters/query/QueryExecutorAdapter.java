@@ -29,6 +29,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
 import com.jaspersoft.jasperserver.dto.query.QueryResult;
 
 public class QueryExecutorAdapter extends AbstractAdapter {
+    public static final String QUERY_EXECUTOR = "queryExecutor";
     private final String resourceUri;
     private final Query query;
 
@@ -42,7 +43,7 @@ public class QueryExecutorAdapter extends AbstractAdapter {
         JerseyRequest<QueryResult> req = JerseyRequest.buildRequest(
                 sessionStorage,
                 QueryResult.class,
-                new String[]{new StringBuilder(resourceUri).insert(0, "/queryExecutor").toString()},
+                new String[]{QUERY_EXECUTOR, resourceUri},
                 new DefaultErrorHandler()
         );
 

@@ -15,6 +15,7 @@ import java.io.InputStream;
  */
 public class SingleThumbnailAdapter extends AbstractAdapter {
 
+    public static final String SERVICE_URI = "thumbnails";
     private String reportName;
     private Boolean defaultAllowed = false;
 
@@ -43,7 +44,7 @@ public class SingleThumbnailAdapter extends AbstractAdapter {
             throw new MandatoryParameterNotFoundException("URI of report should be specified");
         }
         JerseyRequest<InputStream> request = JerseyRequest.buildRequest(sessionStorage, InputStream.class,
-                new String[]{"/thumbnails", reportName}, new DefaultErrorHandler());
+                new String[]{SERVICE_URI, reportName}, new DefaultErrorHandler());
         request.setAccept("image/jpeg");
         request.addParam("defaultAllowed", defaultAllowed.toString());
         return request;

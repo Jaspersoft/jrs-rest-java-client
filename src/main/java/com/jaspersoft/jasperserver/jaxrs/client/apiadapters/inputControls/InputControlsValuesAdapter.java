@@ -58,7 +58,6 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
             throw new MandatoryParameterNotFoundException();
         }
         if (!includeFullStructure) {
-            ids.append("/");
             Set<String> keySet = inputControlsValues.keySet();
             String[] idsArray = keySet.toArray(new String[keySet.size()]);
             ids.append(StringUtils.join(idsArray, ";"));
@@ -74,7 +73,7 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
 
         JerseyRequest<InputControlStateListWrapper> request = JerseyRequest.buildRequest(sessionStorage,
                 InputControlStateListWrapper.class,
-                new String[]{"/reports", containerUri, "/inputControls",ids.toString(), "/values"},
+                new String[]{"reports", containerUri, "inputControls",ids.toString(), "values"},
                 new DefaultErrorHandler());
         if (useFreshData) {
             request.addParam("freshData", useFreshData.toString());

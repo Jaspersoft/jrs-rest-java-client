@@ -26,25 +26,24 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.dto.domain.DomainMetaData;
+import java.util.ArrayList;
 
 public class DomainMetadataAdapter extends AbstractAdapter {
-    private final String domainURI;
+    private final ArrayList<String> uri = new ArrayList<String>();
 
     public DomainMetadataAdapter(SessionStorage sessionStorage, String domainURI) {
         super(sessionStorage);
-        this.domainURI = domainURI;
+        uri.add("domains");
+        uri.add(domainURI);
+        uri.add("metadata");
     }
 
     public OperationResult<DomainMetaData> retrieve() {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 DomainMetaData.class,
-                new String[]{new StringBuilder(domainURI).insert(0, "/domains").append("/metadata").toString()},
+                uri.toArray(new String[uri.size()]),
                 new DefaultErrorHandler()
         ).get();
-    }
-
-    public String getDomainURI() {
-        return domainURI;
     }
 }

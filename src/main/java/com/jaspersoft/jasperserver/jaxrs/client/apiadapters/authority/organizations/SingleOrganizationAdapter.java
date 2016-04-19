@@ -35,6 +35,7 @@ import javax.ws.rs.core.MultivaluedHashMap;
 
 public class SingleOrganizationAdapter extends AbstractAdapter {
 
+    public static final String SERVICE_URI = "organizations";
     private final ClientTenant clientTenant;
     private final MultivaluedHashMap<String, String> params;
 
@@ -127,7 +128,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 ClientTenant.class,
-                new String[]{"/organizations",
+                new String[]{SERVICE_URI,
                         (clientTenant.getId() == null) ? clientTenant.getAlias() : clientTenant.getId()},
                 new DefaultErrorHandler()
         );
@@ -137,7 +138,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 ClientTenant.class,
-                new String[]{"/organizations"},
+                new String[]{SERVICE_URI},
                 new DefaultErrorHandler()
         );
     }

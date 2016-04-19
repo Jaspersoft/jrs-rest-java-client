@@ -32,6 +32,7 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class PermissionResourceRequestAdapter extends AbstractAdapter {
 
+    public static final String SERVICE_URI = "permissions";
     private final String resourceUri;
     private final MultivaluedMap<String, String> params;
 
@@ -48,13 +49,13 @@ public class PermissionResourceRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<RepositoryPermissionListWrapper> createOrUpdate(RepositoryPermissionListWrapper permissions) {
-        JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
+        JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{SERVICE_URI, resourceUri});
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
         return request.put(permissions);
     }
 
     public <R> RequestExecution asyncCreateOrUpdate(final RepositoryPermissionListWrapper permissions, final Callback<OperationResult<RepositoryPermissionListWrapper>, R> callback) {
-        final JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
+        final JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{SERVICE_URI, resourceUri});
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -72,13 +73,13 @@ public class PermissionResourceRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<RepositoryPermissionListWrapper> get(){
-        JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
+        JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{SERVICE_URI, resourceUri});
         request.addParams(params);
         return request.get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<RepositoryPermissionListWrapper>, R> callback) {
-        final JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
+        final JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{SERVICE_URI, resourceUri});
         request.addParams(params);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -91,11 +92,11 @@ public class PermissionResourceRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult delete(){
-        return buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri}).delete();
+        return buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{SERVICE_URI, resourceUri}).delete();
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult<RepositoryPermissionListWrapper>, R> callback) {
-        final JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
+        final JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{SERVICE_URI, resourceUri});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
