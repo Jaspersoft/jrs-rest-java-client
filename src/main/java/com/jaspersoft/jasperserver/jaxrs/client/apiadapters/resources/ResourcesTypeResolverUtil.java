@@ -24,7 +24,9 @@ import com.jaspersoft.jasperserver.dto.resources.ClientAdhocDataView;
 import com.jaspersoft.jasperserver.dto.resources.ClientAwsDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientBeanDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientCustomDataSource;
+import com.jaspersoft.jasperserver.dto.resources.ClientDashboard;
 import com.jaspersoft.jasperserver.dto.resources.ClientDataType;
+import com.jaspersoft.jasperserver.dto.resources.ClientDomainTopic;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientFolder;
 import com.jaspersoft.jasperserver.dto.resources.ClientInputControl;
@@ -43,9 +45,6 @@ import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientXmlaConnection;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
-import com.jaspersoft.jasperserver.dto.resources.ClientDashboard;
-import com.jaspersoft.jasperserver.dto.resources.ClientDomainTopic;
-import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,7 +80,6 @@ public class ResourcesTypeResolverUtil {
             put(ClientResourceLookup.class, ResourceMediaType.RESOURCE_LOOKUP_CLIENT_TYPE);
             put(ClientDashboard.class, ResourceMediaType.DASHBOARD_CLIENT_TYPE);
             put(ClientDomainTopic.class, ResourceMediaType.DOMAIN_TOPIC_CLIENT_TYPE);
-            put(ClientDomain.class, ResourceMediaType.DOMAIN_CLIENT_TYPE);
         }};
 
         for (Map.Entry<Class<? extends ClientResource>, String> entry : classToMimeMap.entrySet()) {
