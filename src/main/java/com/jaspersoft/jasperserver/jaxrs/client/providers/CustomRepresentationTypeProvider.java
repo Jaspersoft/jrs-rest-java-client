@@ -113,7 +113,19 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/repository.reportUnit+json",
         "application/repository.reportUnit+xml",
         "application/repository.reportUnit.metadata+json",
-        "application/repository.reportUnit.metadata+xml"
+        "application/repository.reportUnit.metadata+xml",
+        "application/execution.multiLevelQuery+json",
+        "application/execution.multiAxesQuery+json",
+        "application/execution.providedQuery+json",
+        "application/execution.multiLevelQuery+xml",
+        "application/execution.multiAxesQuery+xml",
+        "application/execution.providedQuery+xml",
+        "application/flatData+json",
+        "application/multiLevelData+json",
+        "application/multiAxesData+json",
+        "application/flatData+xml",
+        "application/multiLevelData+xml",
+        "application/multiAxesData+xml"
 })
 @Produces({
         "application/collection+json",
@@ -195,7 +207,19 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/repository.reportUnit+json",
         "application/repository.reportUnit+xml",
         "application/repository.reportUnit.metadata+json",
-        "application/repository.reportUnit.metadata+xml"
+        "application/repository.reportUnit.metadata+xml",
+        "application/execution.multiLevelQuery+json",
+        "application/execution.multiAxesQuery+json",
+        "application/execution.providedQuery+json",
+        "application/execution.multiLevelQuery+xml",
+        "application/execution.multiAxesQuery+xml",
+        "application/execution.providedQuery+xml",
+        "application/flatData+json",
+        "application/multiLevelData+json",
+        "application/multiAxesData+json",
+        "application/flatData+xml",
+        "application/multiLevelData+xml",
+        "application/multiAxesData+xml"
 })
 public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
 

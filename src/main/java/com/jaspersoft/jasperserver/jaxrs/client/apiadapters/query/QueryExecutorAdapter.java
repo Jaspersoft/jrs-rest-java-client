@@ -28,6 +28,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
 import com.jaspersoft.jasperserver.dto.query.QueryResult;
 
+/**
+ * @deprecated proposal. Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryExecutionAdapter}
+ */
 public class QueryExecutorAdapter extends AbstractAdapter {
     private final String resourceUri;
     private final Query query;

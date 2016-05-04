@@ -6,7 +6,6 @@ import com.jaspersoft.jasperserver.dto.connection.metadata.TableMetadata;
 import com.jaspersoft.jasperserver.dto.resources.ClientCustomDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientJdbcDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientJndiJdbcDataSource;
-import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
@@ -24,7 +23,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -65,8 +63,6 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
     @Mock
     private JerseyRequest<ClientJdbcDataSource> jdbcDataSourceJerseyRequestMock;
     @Mock
-    private JerseyRequest<ClientDomain> domainJerseyRequestMock;
-    @Mock
     private JerseyRequest<TableMetadata> tableMetadataRequestMock;
     @Mock
     private OperationResult operationResultMock;
@@ -80,8 +76,6 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
     private OperationResult<ClientJndiJdbcDataSource> jndiDataSourceOperationResultMock;
     @Mock
     private OperationResult<ClientJdbcDataSource> jdbcDataSourceOperationResultMock;
-    @Mock
-    private OperationResult<ClientDomain> domainOperationResultMock;
     @Mock
     private OperationResult<TableMetadata> tableMetadataOperationResultMock;
 
@@ -105,13 +99,11 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
                 , jdbcDataSourceJerseyRequestMock
                 , tableMetadataRequestMock
                 , operationResultMock
-                , domainJerseyRequestMock
                 , ftpConnectionOperationResultMock
                 , lfsConnectionOperationResultMock
                 , customDataSourceOperationResultMock
                 , jndiDataSourceOperationResultMock
                 , jdbcDataSourceOperationResultMock
-                , domainOperationResultMock
                 , tableMetadataOperationResultMock);
     }
 
@@ -444,106 +436,6 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_domain_connection_operationResult_when_get() throws Exception {
-        //when
-        mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock)
-                , eq(ClientDomain.class)
-                , eq(new String[]{"/connections", TEST_UUID})
-                , any(DefaultErrorHandler.class))).thenReturn(domainJerseyRequestMock);
-
-        doReturn(domainOperationResultMock).when(domainJerseyRequestMock).get();
-
-        OperationResult<ClientDomain> connection = connectionsService
-                .connection(ClientDomain.class, ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE, TEST_UUID)
-                .get();
-        //then
-        assertSame(domainOperationResultMock, connection);
-        verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock)
-                , eq(ClientDomain.class)
-                , eq(new String[]{"/connections", (TEST_UUID)})
-                , any(DefaultErrorHandler.class));
-    }
-
-    @Test
-    public void should_return_proper_domain_connection_operationResult_when_create() throws Exception {
-        //when
-        mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock)
-                , eq(ClientDomain.class)
-                , eq(new String[]{"/connections"})
-                , any(DefaultErrorHandler.class))).thenReturn(domainJerseyRequestMock);
-        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(domainJerseyRequestMock).when(domainJerseyRequestMock).setContentType(ConnectionMediaType.DOMAIN_DATA_SOURCE_JSON);
-        doReturn(domainOperationResultMock).when(domainJerseyRequestMock).post(any(ClientDomain.class));
-
-        OperationResult<ClientDomain> connection = connectionsService
-                .connection(ClientDomain.class, ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE, TEST_UUID)
-                .create(new ClientDomain());
-        //then
-        assertSame(domainOperationResultMock, connection);
-        verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock)
-                , eq(ClientDomain.class)
-                , eq(new String[]{"/connections"})
-                , any(DefaultErrorHandler.class));
-        verify(sessionStorageMock).getConfiguration();
-        verify(configurationMock).getContentMimeType();
-        verify(domainJerseyRequestMock).setContentType(ConnectionMediaType.DOMAIN_DATA_SOURCE_JSON);
-        verify(domainJerseyRequestMock).post(any(ClientDomain.class));
-    }
-
-    @Test
-    public void should_return_proper_operationResult_when_create_and_mimeType_is_null() throws Exception {
-        //when
-        mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock)
-                , eq(ClientDomain.class)
-                , eq(new String[]{"/connections"})
-                , any(DefaultErrorHandler.class))).thenReturn(domainJerseyRequestMock);
-        doReturn(domainOperationResultMock).when(domainJerseyRequestMock).post(any(ClientDomain.class));
-
-        OperationResult<ClientDomain> connection = connectionsService
-                .connection(ClientDomain.class, null, TEST_UUID)
-                .create(new ClientDomain());
-        //then
-        assertSame(domainOperationResultMock, connection);
-        verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock)
-                , eq(ClientDomain.class)
-                , eq(new String[]{"/connections"})
-                , any(DefaultErrorHandler.class));
-        verify(domainJerseyRequestMock, never()).setContentType(ConnectionMediaType.DOMAIN_DATA_SOURCE_JSON);
-        verify(domainJerseyRequestMock).post(any(ClientDomain.class));
-    }
-
-    @Test
-    public void should_return_proper_operationResult_when_update_and_mimeType_is_null() throws Exception {
-        //when
-        mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock)
-                , eq(ClientDomain.class)
-                , eq(new String[]{"/connections", TEST_UUID})
-                , any(DefaultErrorHandler.class))).thenReturn(domainJerseyRequestMock);
-        doReturn(domainOperationResultMock).when(domainJerseyRequestMock).put(any(ClientDomain.class));
-
-        OperationResult<ClientDomain> connection = connectionsService
-                .connection(ClientDomain.class, null, TEST_UUID)
-                .update(new ClientDomain());
-        //then
-        assertSame(domainOperationResultMock, connection);
-        verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock)
-                , eq(ClientDomain.class)
-                , eq(new String[]{"/connections", TEST_UUID})
-                , any(DefaultErrorHandler.class));
-        verify(domainJerseyRequestMock, never()).setContentType(ConnectionMediaType.DOMAIN_DATA_SOURCE_JSON);
-        verify(domainJerseyRequestMock).put(any(ClientDomain.class));
-    }
-
-    @Test
     public void should_return_proper_operationResult_when_get_metadata() throws Exception {
         //when
         mockStatic(JerseyRequest.class);
@@ -574,43 +466,6 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verify(tableMetadataRequestMock).setAccept(ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_JSON);
         verify(tableMetadataRequestMock).get();
     }
-
-    @Test
-    public void should_return_proper_operationResult_when_create_connection_and_get_metadata() throws Exception {
-        //when
-        mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock)
-                , eq(TableMetadata.class)
-                , eq(new String[]{"/connections"})
-                , any(DefaultErrorHandler.class))).thenReturn(tableMetadataRequestMock);
-        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
-        doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(tableMetadataRequestMock).when(tableMetadataRequestMock).setAccept(ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_JSON);
-        doReturn(tableMetadataRequestMock).when(tableMetadataRequestMock).setContentType(ConnectionMediaType.DOMAIN_DATA_SOURCE_JSON);
-        doReturn(tableMetadataOperationResultMock).when(tableMetadataRequestMock).post(any(ClientDomain.class));
-
-        OperationResult<TableMetadata> connection = connectionsService
-                .connection(ClientDomain.class,
-                        ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE,
-                        TableMetadata.class,
-                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE)
-                .createAndGetMetadata(new ClientDomain());
-        //then
-        assertSame(tableMetadataOperationResultMock, connection);
-        verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock)
-                , eq(TableMetadata.class)
-                , eq(new String[]{"/connections"})
-                , any(DefaultErrorHandler.class));
-        verify(sessionStorageMock, times(2)).getConfiguration();
-        verify(configurationMock).getAcceptMimeType();
-        verify(configurationMock).getContentMimeType();
-        verify(tableMetadataRequestMock).setAccept(ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_JSON);
-        verify(tableMetadataRequestMock).setContentType(ConnectionMediaType.DOMAIN_DATA_SOURCE_JSON);
-        verify(tableMetadataRequestMock).post(any(ClientDomain.class));
-    }
-
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_return_throw_exception_when_create_connection_and_get_metadata_connection_is_invalid() throws Exception {
@@ -652,27 +507,6 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         connectionsService
                 .connection("")
                 .get();
-        //then
-        // an exception should be thrown
-    }
-
-
-    @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
-    public void should_throw_exception_when_update_connection_uuid_is_null() throws Exception {
-        //when
-        connectionsService
-                .connection(null)
-                .update(new ClientDomain());
-        //then
-        // an exception should be thrown
-    }
-
-    @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
-    public void should_throw_exception_when_update_connection_uuid_is_empty() throws Exception {
-        //when
-        connectionsService
-                .connection("")
-                .update(new ClientDomain());
         //then
         // an exception should be thrown
     }
