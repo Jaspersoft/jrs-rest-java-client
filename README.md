@@ -107,7 +107,7 @@ Table of Contents
     * [Checking the Import State](#checking-the-import-state).
 11. [Metadata](#metadata).
     *[Domain Metadata](#domain-metadata)
-    *[repotr Metadata](#report-metadata)
+    *[Report Metadata](#report-metadata)
 12. [Thumbnail Search Service](#thumbnail-search-service).
 13. [Diagnostic Service](#diagnostic-service).
 14. [Query Executor Service](#query-executor-service).
@@ -1842,7 +1842,7 @@ StateDto state = operationResult.getEntity();
 ```
 
 ####Metadata 
-#####DomainMetadata 
+#####Domain Metadata 
 The domain metadata describes the sets and items exposed by a Domain for use in Ad
 Hoc reports. Items are database fields exposed by the Domain, after all joins, filters, and calculated fields have
 been applied to the database tables selected in the Domain. Sets are groups of items, arranged by the Domain
@@ -1872,7 +1872,7 @@ To get domain metadata use code below:
                 
         DataIslandsContainer metadata = operationResult.getEntity();
 ```
-#####ReportMetadata 
+#####Report Metadata 
 Report metadata is used for building AdHoc and query accordingly. 
 To get metadata use next code example:
 ```java
@@ -2042,16 +2042,55 @@ OperationResult<CollectorSettingsList> operationResult = session
                                 .delete();
 ```
 
-###Query Executor Service
-In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
-For now the only resource that supports queries is a Domain.
+###Query Execution Service
+In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecution service.
+For now the only resource that supports queries is an AdHoc data view. In present time JasperReportsServer supports only synchronize query execution.
 
-The following code executes query and retrieves a result of execution as QueryResult entity.
+The following code examples execute query and retrieve a result data for different queries:
+- for flat query:
 ```java
-QueryResult queryResult = session.queryExecutorService()
-        .query(queryFromXmlFile, "/organizations/organization_1/Domains/Simple_Domain")
-        .execute()
-        .getEntity();
+ OperationResult<ClientFlatQueryResultData> execute = session.
+                                queryExecutionService().
+                                flatQuery().
+                                execute(queryExecution);
+```
+- for multi level query:
+```java
+        OperationResult<ClientMultiLevelQueryResultData> execute = session.
+                queryExecutionService().
+                multiLevelQuery().
+                execute(queryExecution);
+```
+- for multi axes query:
+```java
+        OperationResult execute = session.
+                queryExecutionService().
+                multiAxesQuery().
+                execute(queryExecution);
+```
+- for provided query you must specify the type of query:
+```java
+        OperationResult<ClientMultiLevelQueryResultData> execute = session.
+                queryExecutionService().
+                providedQuery(QueryType.MULTI_LEVEL_QUERY).
+                execute(queryExecution);
+```
+Also you can get fragment of result data:
+```java
+        OperationResult<ClientMultiLevelQueryResultData> execute = (OperationResult<ClientMultiLevelQueryResultData>) session.
+                queryExecutionService().
+                providedQuery(QueryType.MULTI_LEVEL_QUERY).
+                offset(0).
+                pageSize(100).
+                retrieveData(uuId);
+     // where uuId   - is Id of query execution, that you can obtain from "Content-Location" header of server's response after execution query.
+```
+And you can delete execution using the following code:
+```java
+        OperationResult<ClientMultiLevelQueryResultData> execute = (OperationResult<ClientMultiLevelQueryResultData>) session.
+                queryExecutionService().
+                providedQuery(QueryType.MULTI_LEVEL_QUERY).
+                deleteExecution(uuId);
 ```
 
 ###Server Information Service
