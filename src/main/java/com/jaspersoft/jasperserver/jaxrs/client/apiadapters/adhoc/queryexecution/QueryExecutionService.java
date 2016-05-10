@@ -5,11 +5,16 @@ import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxesQueryResultData
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.enums.QueryExecutionsMediaType;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.enums.QueryResultDataMediaType;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.enums.QueryType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
+import org.apache.commons.lang3.StringUtils;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.enums.QueryExecutionsMediaType.EXECUTION_MULTI_AXES_QUERY_TYPE;
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.enums.QueryExecutionsMediaType.EXECUTION_MULTI_LEVEL_QUERY_TYPE;
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.enums.QueryExecutionsMediaType.EXECUTION_PROVIDED_QUERY_TYPE;
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.enums.QueryResultDataMediaType.FLAT_DATA_TYPE;
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.enums.QueryResultDataMediaType.MULTI_AXES_DATA_TYPE;
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.enums.QueryResultDataMediaType.MULTI_LEVEL_DATA_TYPE;
 
 /**
  * <p/>
@@ -27,50 +32,35 @@ public class QueryExecutionService extends AbstractAdapter {
 
     public QueryExecutionAdapter<ClientFlatQueryResultData> flatQuery() {
         return this.adapter(sessionStorage,
-                QueryExecutionsMediaType.EXECUTION_MULTI_LEVEL_QUERY_TYPE,
-                QueryResultDataMediaType.FLAT_DATA_TYPE,
+                toCorrectContentMime(EXECUTION_MULTI_LEVEL_QUERY_TYPE),
+                toCorrectAcceptMime(FLAT_DATA_TYPE),
                 ClientFlatQueryResultData.class);
     }
 
     public QueryExecutionAdapter<ClientMultiLevelQueryResultData> multiLevelQuery() {
         return this.adapter(sessionStorage,
-                QueryExecutionsMediaType.EXECUTION_MULTI_LEVEL_QUERY_TYPE,
-                QueryResultDataMediaType.MULTI_LEVEL_DATA_TYPE,
+                toCorrectContentMime(EXECUTION_MULTI_LEVEL_QUERY_TYPE),
+                toCorrectAcceptMime(MULTI_LEVEL_DATA_TYPE),
                 ClientMultiLevelQueryResultData.class);
     }
 
     public QueryExecutionAdapter<ClientMultiAxesQueryResultData> multiAxesQuery() {
         return this.adapter(sessionStorage,
-                QueryExecutionsMediaType.EXECUTION_MULTI_AXES_QUERY_TYPE,
-                QueryResultDataMediaType.MULTI_AXES_DATA_TYPE,
+                toCorrectContentMime(EXECUTION_MULTI_AXES_QUERY_TYPE),
+                toCorrectAcceptMime(MULTI_AXES_DATA_TYPE),
                 ClientMultiAxesQueryResultData.class);
     }
 
 
-    public QueryExecutionAdapter<? extends ClientQueryResultData> providedQuery(QueryType queryType) {
+    public QueryExecutionAdapter<ClientQueryResultData> providedQuery() {
 
-        if (queryType == null) {
-            throw new MandatoryParameterNotFoundException("Query type must be specified");
-        }
-        switch (queryType) {
-            case FLAT_QUERY:
-                return this.adapter(sessionStorage,
-                        QueryExecutionsMediaType.EXECUTION_PROVIDED_QUERY_TYPE,
-                        QueryResultDataMediaType.FLAT_DATA_TYPE,
-                        ClientFlatQueryResultData.class);
-            case MULTI_LEVEL_QUERY:
-                return this.adapter(sessionStorage,
-                        QueryExecutionsMediaType.EXECUTION_PROVIDED_QUERY_TYPE,
-                        QueryResultDataMediaType.MULTI_LEVEL_DATA_TYPE,
-                        ClientMultiLevelQueryResultData.class);
-
-            default:
-                return this.adapter(sessionStorage,
-                    QueryExecutionsMediaType.EXECUTION_PROVIDED_QUERY_TYPE,
-                    QueryResultDataMediaType.MULTI_AXES_DATA_TYPE,
-                    ClientMultiAxesQueryResultData.class);
-
-        }
+        return this.adapter(sessionStorage,
+                toCorrectContentMime(EXECUTION_PROVIDED_QUERY_TYPE),
+                StringUtils.join(new String[]{
+                        toCorrectAcceptMime(FLAT_DATA_TYPE),
+                        toCorrectAcceptMime(MULTI_LEVEL_DATA_TYPE),
+                        toCorrectAcceptMime(MULTI_AXES_DATA_TYPE)}, ", "),
+                ClientQueryResultData.class);
     }
 
     protected <P> QueryExecutionAdapter<P> adapter(SessionStorage sessionStorage,
@@ -78,6 +68,14 @@ public class QueryExecutionService extends AbstractAdapter {
                                                    String acceptType,
                                                    Class<P> clazz) {
         return new QueryExecutionAdapter<P>(sessionStorage, contentType, acceptType, clazz);
+    }
+
+    protected String toCorrectContentMime(String rawType) {
+        return MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), rawType);
+    }
+
+    protected String toCorrectAcceptMime(String rawType) {
+        return MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), rawType);
     }
 
 }

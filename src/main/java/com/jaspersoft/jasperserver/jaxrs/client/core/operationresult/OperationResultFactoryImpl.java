@@ -20,7 +20,9 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
+import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryResultDataTypeResolverUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesTypeResolverUtil;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
@@ -32,6 +34,9 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
     public <T> OperationResult<T> getOperationResult(Response response, Class<T> responseClass) {
         if (isClientResource(responseClass)) {
             responseClass = (Class<T>) getSpecificResourceType(response);
+        }
+        if (isQueryDataSet(responseClass)) {
+            responseClass = (Class<T>) getSpecificQueryResultDataType(response);
         }
         return getAppropriateOperationResultInstance(response, responseClass);
     }
@@ -64,13 +69,20 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
         return result;
     }
 
-
-
     private boolean isClientResource(Class<?> clazz) {
         return clazz != Object.class && clazz.isAssignableFrom(ClientResource.class);
     }
 
+    private boolean isQueryDataSet(Class<?> clazz) {
+        return clazz != Object.class && clazz.isAssignableFrom(ClientQueryResultData.class);
+    }
+
     private Class<? extends ClientResource> getSpecificResourceType(Response response) {
         return ResourcesTypeResolverUtil.getClassForMime(response.getHeaderString("Content-Type"));
+    }
+
+
+    private Class<? extends ClientQueryResultData> getSpecificQueryResultDataType(Response response) {
+        return QueryResultDataTypeResolverUtil.getClassForMime(response.getHeaderString("Content-Type"));
     }
 }

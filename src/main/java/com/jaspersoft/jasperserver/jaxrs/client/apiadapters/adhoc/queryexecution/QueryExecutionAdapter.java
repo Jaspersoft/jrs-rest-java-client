@@ -3,7 +3,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecutio
 import com.jaspersoft.jasperserver.dto.executions.AbstractClientExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
@@ -56,7 +55,7 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
         if (params.size() > 0) {
             request.addParams(params);
         }
-        request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), acceptType));
+        request.setAccept(acceptType);
         return request.get();
     }
 
@@ -71,8 +70,8 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
             throw new MandatoryParameterNotFoundException("Query must be specified");
         }
         JerseyRequest<T> request = buildRequest();
-        request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), contentType));
-        request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), acceptType));
+        request.setContentType(contentType);
+        request.setAccept(acceptType);
         return request.
                 post(query);
     }
@@ -86,4 +85,5 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
 
         return request;
     }
+
 }

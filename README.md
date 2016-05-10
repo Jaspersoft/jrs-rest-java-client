@@ -2068,18 +2068,20 @@ The following code examples execute query and retrieve a result data for differe
                 multiAxesQuery().
                 execute(queryExecution);
 ```
-- for provided query you must specify the type of query:
+- for provided query:
 ```java
-        OperationResult<ClientMultiLevelQueryResultData> execute = session.
+        OperationResult<? extends ClientQueryResultData> execute = session.
                 queryExecutionService().
-                providedQuery(QueryType.MULTI_LEVEL_QUERY).
+                providedQuery().
                 execute(queryExecution);
 ```
+Please notice, that the client resolve type of result dataset according to "Content-Type" header of server's response. 
+
 Also you can get fragment of result data:
 ```java
-        OperationResult<ClientMultiLevelQueryResultData> execute = (OperationResult<ClientMultiLevelQueryResultData>) session.
+        OperationResult<? extends ClientQueryResultData> execute = session.
                 queryExecutionService().
-                providedQuery(QueryType.MULTI_LEVEL_QUERY).
+                providedQuery().
                 offset(0).
                 pageSize(100).
                 retrieveData(uuId);
@@ -2087,9 +2089,9 @@ Also you can get fragment of result data:
 ```
 And you can delete execution using the following code:
 ```java
-        OperationResult<ClientMultiLevelQueryResultData> execute = (OperationResult<ClientMultiLevelQueryResultData>) session.
+        OperationResult<? extends ClientQueryResultData> execute = session.
                 queryExecutionService().
-                providedQuery(QueryType.MULTI_LEVEL_QUERY).
+                providedQuery().
                 deleteExecution(uuId);
 ```
 

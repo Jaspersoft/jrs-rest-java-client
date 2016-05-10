@@ -199,6 +199,7 @@
                 <version>2.12</version>
                 <configuration>
                     <skipTests>false</skipTests>
+                    <testFailureIgnore>true</testFailureIgnore>
                     <excludes>
                         <exclude>**/IT.java</exclude>
                     </excludes>
