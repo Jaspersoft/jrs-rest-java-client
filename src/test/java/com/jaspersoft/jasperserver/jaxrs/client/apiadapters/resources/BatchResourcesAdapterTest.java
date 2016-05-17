@@ -65,6 +65,12 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
         initMocks(this);
     }
 
+
+    @AfterMethod
+    public void after() {
+        reset(sessionStorageMock, requestMock, resultMock, objectJerseyRequestMock, objectOperationResultMock);
+    }
+
     @Test
     /**
      * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.BatchResourcesAdapter#parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourceSearchParameter, String)}
@@ -229,8 +235,4 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
         assertSame(retrieved, objectOperationResultMock);
     }
 
-    @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, requestMock, resultMock, objectJerseyRequestMock, objectOperationResultMock);
-    }
 }

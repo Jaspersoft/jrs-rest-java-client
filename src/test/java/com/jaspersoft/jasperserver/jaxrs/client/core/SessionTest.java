@@ -1,10 +1,12 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryExecutionService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery.DataDiscoveryService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
@@ -286,6 +288,27 @@ public class SessionTest {
         // Then
         assertNotNull(service);
         verify(sessionSpy, times(1)).getService(InputControlsService.class);
+    }
+
+
+    @Test
+    public void should_return_not_null_DataDiscoveryService_instance() {
+        // When
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        DataDiscoveryService service = sessionSpy.dataDiscoveryService();
+        // Then
+        assertNotNull(service);
+        verify(sessionSpy, times(1)).getService(DataDiscoveryService.class);
+    }
+
+    @Test
+    public void should_return_not_null_QueryExecutionService_instance() {
+        // When
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        QueryExecutionService  service = sessionSpy.queryExecutionService();
+        // Then
+        assertNotNull(service);
+        verify(sessionSpy, times(1)).getService(QueryExecutionService.class);
     }
 
     @AfterMethod

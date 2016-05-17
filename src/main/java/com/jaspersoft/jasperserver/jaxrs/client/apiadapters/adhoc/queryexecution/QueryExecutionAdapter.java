@@ -3,6 +3,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecutio
 import com.jaspersoft.jasperserver.dto.executions.AbstractClientExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
@@ -10,6 +11,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.MultivaluedHashMap;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p/>
@@ -25,10 +27,11 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
     private List<String> uri;
     private Class<T> dataSetClass;
     private String contentType;
-    private String acceptType;
+    private String[] acceptType;
     private MultivaluedHashMap<String, String> params;
+    private String responseType;
 
-    public QueryExecutionAdapter(SessionStorage sessionStorage, String contentType, String acceptType, Class<T> dataSetClass) {
+    public QueryExecutionAdapter(SessionStorage sessionStorage, String contentType, Class<T> dataSetClass, String... acceptType) {
         super(sessionStorage);
         this.contentType = contentType;
         this.acceptType = acceptType;
@@ -36,6 +39,16 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
         params = new MultivaluedHashMap<String, String>();
         uri = new ArrayList<String>();
         uri.add(serviceURI);
+    }
+
+    public QueryExecutionAdapter<T> asXml() {
+        this.responseType = "xml";
+        return this;
+    }
+
+    public QueryExecutionAdapter<T> asJson() {
+        this.responseType = "json";
+        return this;
     }
 
     public QueryExecutionAdapter<T> offset(Integer offset) {
@@ -55,7 +68,7 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
         if (params.size() > 0) {
             request.addParams(params);
         }
-        request.setAccept(acceptType);
+        request.setAccept(toCorrectAcceptMime(acceptType));
         return request.get();
     }
 
@@ -70,8 +83,8 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
             throw new MandatoryParameterNotFoundException("Query must be specified");
         }
         JerseyRequest<T> request = buildRequest();
-        request.setContentType(contentType);
-        request.setAccept(acceptType);
+        request.setContentType(toCorrectContentMime(contentType));
+        request.setAccept(toCorrectAcceptMime(acceptType));
         return request.
                 post(query);
     }
@@ -86,4 +99,21 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
         return request;
     }
 
+    protected String toCorrectContentMime(String rawType) {
+        return MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), rawType);
+    }
+
+    protected String toCorrectAcceptMime(String... rawType) {
+        String[] resultArray = new String[rawType.length];
+        if (responseType == null) {
+            for (int i = 0; i < rawType.length; i++) {
+                resultArray[i] = MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), rawType[i]);
+            }
+        } else {
+            for (int i = 0; i < rawType.length; i++) {
+                resultArray[i] = rawType[i].replace("+{mime}", "+" + responseType);
+            }
+        }
+        return StringUtils.join(resultArray, ",");
+    }
 }

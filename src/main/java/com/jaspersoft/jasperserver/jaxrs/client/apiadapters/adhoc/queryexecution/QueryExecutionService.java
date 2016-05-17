@@ -5,9 +5,7 @@ import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxesQueryResultData
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import org.apache.commons.lang3.StringUtils;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.enums.QueryExecutionsMediaType.EXECUTION_MULTI_AXES_QUERY_TYPE;
 import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.enums.QueryExecutionsMediaType.EXECUTION_MULTI_LEVEL_QUERY_TYPE;
@@ -32,50 +30,41 @@ public class QueryExecutionService extends AbstractAdapter {
 
     public QueryExecutionAdapter<ClientFlatQueryResultData> flatQuery() {
         return this.adapter(sessionStorage,
-                toCorrectContentMime(EXECUTION_MULTI_LEVEL_QUERY_TYPE),
-                toCorrectAcceptMime(FLAT_DATA_TYPE),
-                ClientFlatQueryResultData.class);
+                EXECUTION_MULTI_LEVEL_QUERY_TYPE,
+                ClientFlatQueryResultData.class,
+                FLAT_DATA_TYPE);
     }
 
     public QueryExecutionAdapter<ClientMultiLevelQueryResultData> multiLevelQuery() {
         return this.adapter(sessionStorage,
-                toCorrectContentMime(EXECUTION_MULTI_LEVEL_QUERY_TYPE),
-                toCorrectAcceptMime(MULTI_LEVEL_DATA_TYPE),
-                ClientMultiLevelQueryResultData.class);
+                EXECUTION_MULTI_LEVEL_QUERY_TYPE,
+                ClientMultiLevelQueryResultData.class,
+                MULTI_LEVEL_DATA_TYPE);
     }
 
     public QueryExecutionAdapter<ClientMultiAxesQueryResultData> multiAxesQuery() {
         return this.adapter(sessionStorage,
-                toCorrectContentMime(EXECUTION_MULTI_AXES_QUERY_TYPE),
-                toCorrectAcceptMime(MULTI_AXES_DATA_TYPE),
-                ClientMultiAxesQueryResultData.class);
+                EXECUTION_MULTI_AXES_QUERY_TYPE,
+                ClientMultiAxesQueryResultData.class,
+                MULTI_AXES_DATA_TYPE);
     }
 
 
     public QueryExecutionAdapter<ClientQueryResultData> providedQuery() {
 
         return this.adapter(sessionStorage,
-                toCorrectContentMime(EXECUTION_PROVIDED_QUERY_TYPE),
-                StringUtils.join(new String[]{
-                        toCorrectAcceptMime(FLAT_DATA_TYPE),
-                        toCorrectAcceptMime(MULTI_LEVEL_DATA_TYPE),
-                        toCorrectAcceptMime(MULTI_AXES_DATA_TYPE)}, ", "),
-                ClientQueryResultData.class);
+                EXECUTION_PROVIDED_QUERY_TYPE,
+                ClientQueryResultData.class,
+                        FLAT_DATA_TYPE,
+                        MULTI_LEVEL_DATA_TYPE,
+                        MULTI_AXES_DATA_TYPE);
     }
 
     protected <P> QueryExecutionAdapter<P> adapter(SessionStorage sessionStorage,
                                                    String contentType,
-                                                   String acceptType,
-                                                   Class<P> clazz) {
-        return new QueryExecutionAdapter<P>(sessionStorage, contentType, acceptType, clazz);
-    }
-
-    protected String toCorrectContentMime(String rawType) {
-        return MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), rawType);
-    }
-
-    protected String toCorrectAcceptMime(String rawType) {
-        return MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), rawType);
+                                                   Class<P> clazz,
+                                                   String... acceptType) {
+        return new QueryExecutionAdapter<P>(sessionStorage, contentType, clazz, acceptType);
     }
 
 }

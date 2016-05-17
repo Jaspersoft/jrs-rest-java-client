@@ -26,6 +26,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizati
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery.DataDiscoveryService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.diagnostic.DiagnosticService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
@@ -123,5 +124,7 @@ public class Session extends AnonymousSession{
     public ConnectionsService connectionsService() {return getService(ConnectionsService.class);}
 
     public QueryExecutionService queryExecutionService() {return getService(QueryExecutionService.class);}
+
+    public DataDiscoveryService dataDiscoveryService() {return getService(DataDiscoveryService.class);}
 
 }
