@@ -28,7 +28,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ExportFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
+import com.jaspersoft.jasperserver.dto.importexport.State;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -49,12 +49,12 @@ public class ExportRequestAdapter extends AbstractAdapter {
         this.taskId = taskId;
     }
 
-    public OperationResult<StateDto> state() {
-        return buildRequest(sessionStorage, StateDto.class, new String[]{"/export", taskId, STATE_URI}).get();
+    public OperationResult<State> state() {
+        return buildRequest(sessionStorage, State.class, new String[]{"/export", taskId, STATE_URI}).get();
     }
 
-    public <R> RequestExecution asyncState(final Callback<OperationResult<StateDto>, R> callback) {
-        final JerseyRequest<StateDto> request = buildRequest(sessionStorage, StateDto.class, new String[]{"/export", taskId, STATE_URI});
+    public <R> RequestExecution asyncState(final Callback<OperationResult<State>, R> callback) {
+        final JerseyRequest<State> request = buildRequest(sessionStorage, State.class, new String[]{"/export", taskId, STATE_URI});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -66,11 +66,11 @@ public class ExportRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<InputStream> fetch() {
-        StateDto state;
+        State state;
         while (!"finished".equals((state = state().getEntity()).getPhase())) {
             if ("failed".equals(state.getPhase())) {
-                if (state.getErrorDescriptor() != null) {
-                    throw new ExportFailedException(state.getErrorDescriptor().getMessage(), Arrays.asList(state.getErrorDescriptor()));
+                if (state.getError() != null) {
+                    throw new ExportFailedException(state.getError().getMessage(), Arrays.asList(state.getError()));
                 } else {
                     throw new ExportFailedException(state.getMessage());
                 }
@@ -92,11 +92,11 @@ public class ExportRequestAdapter extends AbstractAdapter {
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                StateDto state;
+                State state;
                 while (!"finished".equals((state = state().getEntity()).getPhase())) {
                     if ("failed".equals(state.getPhase())) {
-                        if (state.getErrorDescriptor() != null) {
-                            throw new ExportFailedException(state.getErrorDescriptor().getMessage(), Arrays.asList(state.getErrorDescriptor()));
+                        if (state.getError() != null) {
+                            throw new ExportFailedException(state.getError().getMessage(), Arrays.asList(state.getError()));
                         } else {
                             throw new ExportFailedException(state.getMessage());
                         }
