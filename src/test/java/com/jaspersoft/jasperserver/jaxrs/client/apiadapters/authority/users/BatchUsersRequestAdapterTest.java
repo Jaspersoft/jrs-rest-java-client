@@ -73,7 +73,7 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users/"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(operationResultMock).when(requestMock).get();
         BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, null));
 
@@ -112,7 +112,7 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
         // Given
         MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users/"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(operationResultMock).when(requestMock).get();
         doReturn(requestMock).when(requestMock).addParams(params);
         BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, null));
@@ -128,7 +128,7 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
         // Given
         MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users/"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(operationResultMock).when(requestMock).get();
         doReturn(requestMock).when(requestMock).addParams(params);
         BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, ""));
@@ -145,7 +145,7 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
         // Given
         BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, null));
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users/"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).addParams(any(MultivaluedHashMap.class));
         doReturn(operationResultMock).when(requestMock).get();
         // When

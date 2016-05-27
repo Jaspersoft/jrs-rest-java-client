@@ -71,7 +71,9 @@ public class ReportingServiceTest extends PowerMockTestCase {
         int currentThreadId = (int) Thread.currentThread().getId();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"/reportExecutions"}))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(ReportExecutionDescriptor.class),
+                eq(new String[]{"reportExecutions"}))).thenReturn(requestMock);
 
         ReportingService serviceSpy = PowerMockito.spy(new ReportingService(sessionStorageMock));
         Callback<OperationResult<ReportExecutionDescriptor>, Void> callback = spy(new Callback<OperationResult<ReportExecutionDescriptor>, Void>() {
@@ -112,7 +114,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
         // Given
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class),
-                eq(new String[]{"/reportExecutions"}))).thenReturn(requestMock);
+                eq(new String[]{"reportExecutions"}))).thenReturn(requestMock);
 
         doReturn(resultMock).when(requestMock).post(executionRequestMock);
         ReportingService serviceSpy = PowerMockito.spy(new ReportingService(sessionStorageMock));
@@ -125,7 +127,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
         assertSame(retrieved, resultMock);
 
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"/reportExecutions"}));
+        buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"reportExecutions"}));
     }
 
     @Test
@@ -137,7 +139,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
         // Given
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class),
-                eq(new String[]{"/reportExecutions"}))).thenReturn(requestMock);
+                eq(new String[]{"reportExecutions"}))).thenReturn(requestMock);
 
         doReturn(TimeZone.getTimeZone("America/Los_Angeles")).when(executionRequestMock).getTimeZone();
         doReturn(requestMock).when(requestMock).addHeader("Accept-Timezone", "America/Los_Angeles");
@@ -152,7 +154,7 @@ public class ReportingServiceTest extends PowerMockTestCase {
         assertSame(retrieved, resultMock);
 
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"/reportExecutions"}));
+        buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"reportExecutions"}));
         verify(requestMock).addHeader("Accept-Timezone", "America/Los_Angeles");
     }
 

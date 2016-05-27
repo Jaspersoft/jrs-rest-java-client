@@ -149,7 +149,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      */
     public OperationResult<ClientUser> get(String userId) {
 
-        if (compile("^.*?users/([^/]+)$").matcher(uri.toString()).find()) {
+        if (compile("^.*?users([^/]+)$").matcher(uri.toString()).find()) {
             return request().get();
         }
 
@@ -171,7 +171,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      * @deprecated Replaced by {@link SingleUserRequestAdapter#asyncGet(Callback)}.
      */
     public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientUser>, R> callback, String userId) {
-        if (!compile("^.*?users/([^/]+)$").matcher(uri.toString()).find()) {
+        if (uri.contains("users")) {
             uri.add(userId);
         }
         final JerseyRequest<ClientUser> request = request();
@@ -201,7 +201,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      * @deprecated Replaced by {@link SingleUserRequestAdapter#asyncCreateOrUpdate(ClientUser, Callback)}.
      */
     public <R> RequestExecution asyncCreateOrUpdate(final ClientUser user, final Callback<OperationResult<ClientUser>, R> callback, final String userId) {
-        if (!compile("^.*?users/([^/]+)$").matcher(uri.toString()).find()) {
+        if (uri.contains("users")) {
             uri.add(userId);
         }
         final JerseyRequest<ClientUser> request = request();

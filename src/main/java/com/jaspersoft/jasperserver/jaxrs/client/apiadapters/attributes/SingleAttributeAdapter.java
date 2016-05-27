@@ -41,7 +41,6 @@ import java.util.ArrayList;
 
 public class SingleAttributeAdapter extends AbstractAdapter {
 
-    private String attributeName;
     private Boolean includePermissions = false;
     private ArrayList<String> path = new ArrayList<String>();
 
