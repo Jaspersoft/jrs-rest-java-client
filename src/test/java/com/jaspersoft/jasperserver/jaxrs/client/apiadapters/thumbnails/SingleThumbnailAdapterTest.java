@@ -187,7 +187,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(InputStream.class),
-                eq(new String[]{"/thumbnails", "/public/Samples/Reports/07g.RevenueDetailReport"}),
+                eq(new String[]{"thumbnails", "/public/Samples/Reports/07g.RevenueDetailReport"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.setAccept("image/jpeg")).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.get()).thenReturn(operationResultMock);
@@ -207,7 +207,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(InputStream.class),
-                eq(new String[]{"/thumbnails", "/public/Samples/Reports/07g.RevenueDetailReport"}),
+                eq(new String[]{"thumbnails", "/public/Samples/Reports/07g.RevenueDetailReport"}),
                 any(DefaultErrorHandler.class));
 
     }

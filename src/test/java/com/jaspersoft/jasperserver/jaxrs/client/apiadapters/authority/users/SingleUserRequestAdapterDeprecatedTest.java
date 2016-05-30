@@ -314,7 +314,7 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
 
         // Then
         assertNotNull(retrieved);
-        assertEquals(uri.toString(), "/users/Simon");
+        assertEquals(uri.toString(), "[users, Simon]");
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(operationResultMock);
         verify(userJerseyRequestMock, times(1)).get();

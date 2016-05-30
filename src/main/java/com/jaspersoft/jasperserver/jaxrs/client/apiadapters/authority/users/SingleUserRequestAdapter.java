@@ -11,8 +11,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.util.ArrayList;
 
-import static java.util.regex.Pattern.compile;
-
 public class SingleUserRequestAdapter extends AbstractAdapter {
 
     private ArrayList<String> uri = new ArrayList<String>();
@@ -20,6 +18,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     private ClientUser user;
     /**
      * The field is used for deprecated methods of the class.
+     *
      * @deprecated Replaced by {@link SingleUserRequestAdapter#uri}.
      */
     private String userUriPrefix;
@@ -149,11 +148,12 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      */
     public OperationResult<ClientUser> get(String userId) {
 
-        if (compile("^.*?users([^/]+)$").matcher(uri.toString()).find()) {
+        if (!uri.contains("users")) {
             return request().get();
         }
-
-        uri.add(userId);
+        if (!uri.get(uri.size() - 1).equals(userId)) {
+            uri.add(userId);
+        }
         return request().get();
     }
 
@@ -171,9 +171,10 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      * @deprecated Replaced by {@link SingleUserRequestAdapter#asyncGet(Callback)}.
      */
     public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientUser>, R> callback, String userId) {
-        if (uri.contains("users")) {
+        if (uri.contains("users") && !uri.get(uri.size() - 1).equals(userId)) {
             uri.add(userId);
         }
+
         final JerseyRequest<ClientUser> request = request();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -190,9 +191,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      */
     public OperationResult<ClientUser> updateOrCreate(ClientUser user) {
         uri.add(user.getUsername());
-        if (!uri.toString().contains("organizations") && user.getTenantId() != null) {
+        if ((!uri.toString().contains("organizations")) && (user.getTenantId() != null)) {
             uri.add(0, "organizations");
-            uri.add(user.getTenantId());
+            uri.add(1,user.getTenantId());
         }
         return request().put(user);
     }

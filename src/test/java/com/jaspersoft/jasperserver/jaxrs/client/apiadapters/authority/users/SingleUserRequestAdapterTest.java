@@ -67,7 +67,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
 
         // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
-        assertEquals((ArrayList<String>)Whitebox.getInternalState(adapter, "uri"), "users");
+        assertEquals(((ArrayList<String>)Whitebox.getInternalState(adapter, "uri")).get(0), "users");
         assertEquals(Whitebox.getInternalState(adapter, "user"), userMock);
     }
 
