@@ -45,6 +45,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 public class SingleResourceAdapter extends AbstractAdapter {
     public static final String SERVICE_URI = "resources";
+    public static final String REGEX = "/";
     private final String resourceUri;
     private final MultivaluedMap<String, String> params;
     private ArrayList<String> path = new ArrayList<String>();
@@ -322,7 +323,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
 
     private  <P> JerseyRequest<P> buildRequest(Class<P> clazz) {
         path.add(SERVICE_URI);
-        path.addAll(Arrays.asList(resourceUri.split("/")));
+        path.addAll((resourceUri.equals(REGEX)) ? Arrays.asList(REGEX) : Arrays.asList(resourceUri.split(REGEX)));
         return JerseyRequest.buildRequest(sessionStorage,
                 clazz,
                 path.toArray(new String[path.size()]),
