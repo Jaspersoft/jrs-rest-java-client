@@ -31,8 +31,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobState;
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class SingleJobOperationsAdapter extends AbstractAdapter {
-    public static final String SERVICE_URI = "/jobs";
-    public static final String STATE = "/state";
+    public static final String SERVICE_URI = "jobs";
+    public static final String STATE = "state";
     private final String jobId;
 
     public SingleJobOperationsAdapter(SessionStorage sessionStorage, String jobId) {

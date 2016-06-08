@@ -29,9 +29,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionListW
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-
-
 public class ReportsAndJobsSearchAdapter extends AbstractAdapter {
 
     public static final String REPORT_EXECUTIONS_URI = "reportExecutions";
@@ -49,14 +46,14 @@ public class ReportsAndJobsSearchAdapter extends AbstractAdapter {
 
     public OperationResult<ReportExecutionListWrapper> find(){
         JerseyRequest<ReportExecutionListWrapper> request =
-                buildRequest(sessionStorage, ReportExecutionListWrapper.class, new String[]{REPORT_EXECUTIONS_URI});
+                buildRequest();
         request.addParams(params);
         return request.get();
     }
 
     public <R> RequestExecution asyncFind(final Callback<OperationResult<ReportExecutionListWrapper>, R> callback) {
         final JerseyRequest<ReportExecutionListWrapper> request =
-                buildRequest(sessionStorage, ReportExecutionListWrapper.class, new String[]{REPORT_EXECUTIONS_URI});
+                buildRequest();
         request.addParams(params);
 
         RequestExecution task = new RequestExecution(new Runnable() {
@@ -68,6 +65,12 @@ public class ReportsAndJobsSearchAdapter extends AbstractAdapter {
 
         ThreadPoolUtil.runAsynchronously(task);
         return task;
+    }
+
+    protected JerseyRequest<ReportExecutionListWrapper> buildRequest() {
+        return JerseyRequest.buildRequest(sessionStorage,
+                ReportExecutionListWrapper.class,
+                new String[]{REPORT_EXECUTIONS_URI});
     }
 
 }

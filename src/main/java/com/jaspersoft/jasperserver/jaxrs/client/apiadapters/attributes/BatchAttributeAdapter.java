@@ -64,7 +64,7 @@ public class BatchAttributeAdapter extends AbstractAdapter {
             path.add(organizationId);
         }
         if (userName != null) {
-            path.add("users/");
+            path.add("users");
             path.add(userName);
         }
         this.organizationId = organizationId;

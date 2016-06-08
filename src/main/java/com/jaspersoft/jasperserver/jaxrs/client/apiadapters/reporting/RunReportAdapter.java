@@ -29,6 +29,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -49,6 +50,7 @@ public class RunReportAdapter extends AbstractAdapter {
     private final String format;
     private  TimeZone timeZone;
     private String[] pages = new String[0];
+    private ArrayList<String> path = new ArrayList<String>();
 
     public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, String format) {
         super(sessionStorage);
@@ -96,7 +98,6 @@ public class RunReportAdapter extends AbstractAdapter {
     }
 
     public RunReportAdapter parameter(String name, String... value) {
-
         params.addAll(name, Arrays.asList(value));
         return this;
     }
@@ -128,11 +129,12 @@ public class RunReportAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<InputStream> prepareRunRequest() {
-
+        path.add(SERVICE_URI);
+        path.addAll(Arrays.asList((reportUnitUri + "." + format).split("/")));
         JerseyRequest<InputStream> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 InputStream.class,
-                new String[]{SERVICE_URI, reportUnitUri + "." + format},
+                path.toArray(new String[path.size()]),
                 new RunReportErrorHandler());
 
         request.addParams(params);

@@ -7,6 +7,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParamet
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +21,16 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class InputControlsValuesAdapter extends AbstractAdapter{
 
+    public static final String REPORTS_URI = "reports";
+    public static final String INPUT_CONTROLS_URI = "inputControls";
+    public static final String VALUES_URI = "values";
     private String containerUri;
     private Boolean useFreshData = false;
     private Boolean includeFullStructure = false;
     private MultivaluedHashMap<String, String> inputControlsValues = new MultivaluedHashMap<String, String>();
     private StringBuilder ids = new StringBuilder("");
+    private ArrayList<String> path = new ArrayList<String>();
+
 
     public InputControlsValuesAdapter(SessionStorage sessionStorage, String containerUri) {
         super(sessionStorage);
@@ -70,10 +77,14 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
     }
 
     private JerseyRequest<InputControlStateListWrapper> buildRequest(){
-
+        path.add(REPORTS_URI);
+        path.addAll(Arrays.asList(containerUri.split("/")));
+        path.add(INPUT_CONTROLS_URI);
+        path.add(ids.toString());
+        path.add(VALUES_URI);
         JerseyRequest<InputControlStateListWrapper> request = JerseyRequest.buildRequest(sessionStorage,
                 InputControlStateListWrapper.class,
-                new String[]{"reports", containerUri, "inputControls",ids.toString(), "values"},
+                path.toArray(new String[path.size()]),
                 new DefaultErrorHandler());
         if (useFreshData) {
             request.addParam("freshData", useFreshData.toString());
