@@ -79,6 +79,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         restrictedHttpMethods = sessionStorage.getConfiguration().getRestrictedHttpMethods();
         init(sessionStorage);
     }
+
     private void init(SessionStorage sessionStorage) {
         RestClientConfiguration configuration = sessionStorage.getConfiguration();
 
@@ -104,11 +105,20 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, genericType);
         return configRequest(request, path, errorHandler);
     }
-    private static <T> JerseyRequest<T> configRequest(JerseyRequest<T> request, String[] path, ErrorHandler errorHandler){
+
+    private static <T> JerseyRequest<T> configRequest(JerseyRequest<T> request, String[] path, ErrorHandler errorHandler) {
         request.errorHandler = errorHandler != null ? errorHandler : new DefaultErrorHandler();
+        boolean validatNnext = true;
         for (String pathElem : path) {
-            if(!UriComponent.valid(pathElem, UriComponent.Type.PATH_SEGMENT)){
-                pathElem = UriComponent.contextualEncode(pathElem, UriComponent.Type.PATH_SEGMENT);
+            if (validatNnext) {
+                if (!UriComponent.valid(pathElem, UriComponent.Type.PATH_SEGMENT)) {
+                    pathElem = UriComponent.contextualEncode(pathElem, UriComponent.Type.PATH_SEGMENT);
+                }
+                if (pathElem.equals("inputControls")) {
+                    validatNnext = false;
+                }
+            } else {
+                validatNnext = true;
             }
             request.setPath(pathElem);
         }

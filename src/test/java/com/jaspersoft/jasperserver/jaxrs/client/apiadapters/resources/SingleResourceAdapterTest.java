@@ -300,7 +300,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientResource.class),
-                eq(new String[]{"resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+                eq(new String[]{"resources"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).get();
 
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
@@ -334,7 +334,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientAdhocDataView.class),
-                eq(new String[]{"resources", resourceUri}),
+                eq(new String[]{"resources"}),
                 any(DefaultErrorHandler.class))).thenReturn(adhocDataViewJerseyRequestMock);
         doReturn(adhocDataViewOperationResultMock).when(adhocDataViewJerseyRequestMock).post(descriptorMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -391,7 +391,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientAdhocDataView.class),
-                eq(new String[]{"resources", resourceUri}),
+                eq(new String[]{"resources"}),
                 any(DefaultErrorHandler.class))).thenReturn(adhocDataViewJerseyRequestMock);
         doReturn(adhocDataViewOperationResultMock).when(adhocDataViewJerseyRequestMock).post(descriptorMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -404,7 +404,10 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         /** Then **/
         verifyStatic();
-        buildRequest(eq(sessionStorageMock), eq(ClientAdhocDataView.class), eq(new String[]{"resources", resourceUri}), any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock),
+                eq(ClientAdhocDataView.class),
+                eq(new String[]{"resources"}),
+                any(DefaultErrorHandler.class));
 
         assertNotNull(retrieved);
         assertSame(retrieved, adhocDataViewOperationResultMock);

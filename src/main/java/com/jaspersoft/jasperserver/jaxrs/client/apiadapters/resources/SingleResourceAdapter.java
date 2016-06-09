@@ -197,8 +197,8 @@ public class SingleResourceAdapter extends AbstractAdapter {
      * Allows to upload resource with MultiPart request.
      *
      * @param multipartResource form
-     * @param clazz entity class
-     * @param <T> type of entity class
+     * @param clazz             entity class
+     * @param <T>               type of entity class
      * @return result instance
      */
     public <T> OperationResult<T> uploadMultipartResource(FormDataMultiPart multipartResource, Class<T> clazz) {
@@ -207,7 +207,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return request.post(multipartResource);
     }
 
-    public <T> OperationResult<T> get(Class<T> clazz){
+    public <T> OperationResult<T> get(Class<T> clazz) {
         JerseyRequest<T> request = buildRequest(clazz);
         if (isRootFolder(resourceUri)) {
             request.setAccept(ResourceMediaType.FOLDER_JSON);
@@ -227,10 +227,10 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncUploadFile(final File fileContent,
-                                                 final ClientFile.FileType fileType,
-                                                 final String label,
-                                                 final String description,
-                                                 final Callback<OperationResult<ClientFile>, R> callback) {
+                                                final ClientFile.FileType fileType,
+                                                final String label,
+                                                final String description,
+                                                final Callback<OperationResult<ClientFile>, R> callback) {
         final FormDataMultiPart form = prepareUploadForm(fileContent, fileType, label, description);
         final JerseyRequest<ClientFile> request = prepareUploadFileRequest();
         RequestExecution task = new RequestExecution(new Runnable() {
@@ -321,9 +321,11 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return request;
     }
 
-    private  <P> JerseyRequest<P> buildRequest(Class<P> clazz) {
+    private <P> JerseyRequest<P> buildRequest(Class<P> clazz) {
         path.add(SERVICE_URI);
-        path.addAll((resourceUri.equals(REGEX)) ? Arrays.asList(REGEX) : Arrays.asList(resourceUri.split(REGEX)));
+        if (!resourceUri.equals(REGEX)) {
+            path.addAll(Arrays.asList(resourceUri.split(REGEX)));
+        }
         return JerseyRequest.buildRequest(sessionStorage,
                 clazz,
                 path.toArray(new String[path.size()]),
