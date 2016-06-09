@@ -35,7 +35,6 @@ import javax.ws.rs.core.MultivaluedMap;
 
 public class BatchOrganizationsAdapter extends AbstractAdapter {
 
-    public static final String SERVICE_URI = "organizations";
     private final MultivaluedMap<String, String> params;
 
     public BatchOrganizationsAdapter(SessionStorage sessionStorage) {
@@ -76,7 +75,7 @@ public class BatchOrganizationsAdapter extends AbstractAdapter {
 
     private <T> JerseyRequest<T> buildRequest(Class<T> responseType) {
         return JerseyRequest.buildRequest(sessionStorage, responseType, 
-                new String[]{SERVICE_URI},
+                new String[]{"/organizations"}, 
                 new DefaultErrorHandler());
     }
 }

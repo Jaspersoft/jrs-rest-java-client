@@ -131,10 +131,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         SingleResourceAdapter adapterSpy = PowerMockito.spy(new SingleResourceAdapter(sessionStorageMock, resourceUri));
         mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock),
-                eq(ClientResource.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(ClientResource.class), eq(new String[]{"/resources", resourceUri}))).thenReturn(jerseyRequestMock);
         PowerMockito.doReturn(operationResultMock).when(jerseyRequestMock).get();
 
         final Callback<OperationResult<ClientResource>, Void> callback = PowerMockito.spy(new Callback<OperationResult<ClientResource>, Void>() {
@@ -199,9 +196,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(Object.class),
-                eq(new String[]{"resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(objectJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"/resources", resourceUri}))).thenReturn(objectJerseyRequestMock);
         doReturn(objectOperationResultMock).when(objectJerseyRequestMock).delete();
 
         final Callback<OperationResult, Void> callback = spy(new Callback<OperationResult, Void>() {
@@ -247,7 +242,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientFile.class),
-                eq(new String[]{"resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(clientFileJerseyRequestMock);
+                eq(new String[]{"/resources", resourceUri}))).thenReturn(clientFileJerseyRequestMock);
         doReturn(clientFileOperationResultMock).when(clientFileJerseyRequestMock).post(anyObject());
 
         final Callback<OperationResult<ClientFile>, Void> callback =
@@ -300,7 +295,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientResource.class),
-                eq(new String[]{"resources"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+                eq(new String[]{"/resources", resourceUri}))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).get();
 
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
@@ -334,8 +329,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientAdhocDataView.class),
-                eq(new String[]{"resources"}),
-                any(DefaultErrorHandler.class))).thenReturn(adhocDataViewJerseyRequestMock);
+                eq(new String[]{"/resources", resourceUri}))).thenReturn(adhocDataViewJerseyRequestMock);
         doReturn(adhocDataViewOperationResultMock).when(adhocDataViewJerseyRequestMock).post(descriptorMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
@@ -391,8 +385,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientAdhocDataView.class),
-                eq(new String[]{"resources"}),
-                any(DefaultErrorHandler.class))).thenReturn(adhocDataViewJerseyRequestMock);
+                eq(new String[]{"/resources", resourceUri}))).thenReturn(adhocDataViewJerseyRequestMock);
         doReturn(adhocDataViewOperationResultMock).when(adhocDataViewJerseyRequestMock).post(descriptorMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
@@ -404,10 +397,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         /** Then **/
         verifyStatic();
-        buildRequest(eq(sessionStorageMock),
-                eq(ClientAdhocDataView.class),
-                eq(new String[]{"resources"}),
-                any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock), eq(ClientAdhocDataView.class), eq(new String[]{"/resources", resourceUri}));
 
         assertNotNull(retrieved);
         assertSame(retrieved, adhocDataViewOperationResultMock);
@@ -426,7 +416,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(Object.class),
-                eq(new String[]{"resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(objectJerseyRequestMock);
+                eq(new String[]{"/resources", resourceUri}))).thenReturn(objectJerseyRequestMock);
         doReturn(objectOperationResultMock).when(objectJerseyRequestMock).delete();
 
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
@@ -448,7 +438,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(InputStream.class),
-                eq(new String[]{"resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(inputStreamJerseyRequestMock);
+                eq(new String[]{"/resources", resourceUri}))).thenReturn(inputStreamJerseyRequestMock);
         doReturn(inputStreamOperationResultMock).when(inputStreamJerseyRequestMock).get();
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
@@ -470,7 +460,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(InputStream.class),
-                eq(new String[]{"resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(inputStreamJerseyRequestMock);
+                eq(new String[]{"/resources", resourceUri}))).thenReturn(inputStreamJerseyRequestMock);
         doReturn(inputStreamOperationResultMock).when(inputStreamJerseyRequestMock).get();
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
@@ -520,9 +510,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         ClientVirtualDataSource source = new ClientVirtualDataSource();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientVirtualDataSource.class),
-                eq(new String[]{"resources", resourceUri}), any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientVirtualDataSource.class), eq(new String[]{"/resources", resourceUri}), any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
 
         doReturn(operationResultMock).when(virtualDataSourceJerseyRequestMock).put(source);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -578,9 +566,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         final int currentThreadId = (int) Thread.currentThread().getId();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientResource.class),
-                eq(new String[]{"resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientResource.class), eq(new String[]{"/resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).put("");
 
         final Callback<OperationResult<ClientResource>, Void> callback = Mockito.spy(new Callback<OperationResult<ClientResource>, Void>() {
@@ -628,10 +614,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         final int currentThreadId = (int) Thread.currentThread().getId();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientResource.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientResource.class), eq(new String[]{"/resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).post(null);
 
         final Callback<OperationResult<ClientResource>, Void> callback = Mockito.spy(new Callback<OperationResult<ClientResource>, Void>() {
@@ -677,10 +660,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         ClientVirtualDataSource source = new ClientVirtualDataSource();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientVirtualDataSource.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientVirtualDataSource.class), eq(new String[]{"/resources", resourceUri}), any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
 
         doReturn(operationResultMock).when(virtualDataSourceJerseyRequestMock).post(source);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -734,10 +714,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         ClientVirtualDataSource source = new ClientVirtualDataSource();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientVirtualDataSource.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientVirtualDataSource.class), eq(new String[]{"/resources", resourceUri}), any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
 
         doReturn(operationResultMock).when(virtualDataSourceJerseyRequestMock).post(source);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -768,10 +745,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         ClientVirtualDataSource source = new ClientVirtualDataSource();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientVirtualDataSource.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientVirtualDataSource.class), eq(new String[]{"/resources", resourceUri}), any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
 
         doReturn(operationResultMock).when(virtualDataSourceJerseyRequestMock).put(source);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -803,10 +777,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientFile.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(DefaultErrorHandler.class))).thenReturn(clientFileJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientFile.class), eq(new String[]{"/resources", resourceUri}))).thenReturn(clientFileJerseyRequestMock);
         doReturn(clientFileOperationResultMock).when(clientFileJerseyRequestMock).post(anyObject());
 
 
@@ -834,10 +805,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         String resourceUri = "uri";
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientResource.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientResource.class), eq(new String[]{"/resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).put("");
 
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
@@ -864,9 +832,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         String resourceUri = "uri";
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientResource.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientResource.class), eq(new String[]{"/resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).post(null);
 
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);

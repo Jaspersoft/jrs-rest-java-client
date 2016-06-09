@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -60,8 +61,8 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
     @Mock
     private OperationResult<ImportTask> taskOperationResultMock;
 
-    private String[] fakeArrayPathForState = new String[]{"import", TASK_ID, "state"};
-    private String[] fakeArrayPathForTask= new String[]{"import", TASK_ID};
+    private String[] fakeArrayPathForState = new String[]{"/import", TASK_ID, "/state"};
+    private String[] fakeArrayPathForTask= new String[]{"/import", TASK_ID};
 
     @BeforeMethod
     public void after() {
@@ -247,6 +248,8 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
         }
 
         /* Then */
+        Mockito.verify(stateRequestMock).get();
+        Mockito.verify(callback).execute(stateOperationResultMock);
         Assert.assertNotNull(retrieved);
         Assert.assertNotSame(currentThreadId, newThreadId.get());
     }

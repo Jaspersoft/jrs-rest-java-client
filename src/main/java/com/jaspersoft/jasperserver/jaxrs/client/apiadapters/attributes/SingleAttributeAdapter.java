@@ -31,7 +31,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.ArrayList;
 
 /**
  * @author Alex Krasnyanskiy
@@ -41,22 +40,24 @@ import java.util.ArrayList;
 
 public class SingleAttributeAdapter extends AbstractAdapter {
 
+    private String attributeName;
     private Boolean includePermissions = false;
-    private ArrayList<String> path = new ArrayList<String>();
+    private String holderUri;
 
     public SingleAttributeAdapter(String organizationId, String userName, SessionStorage sessionStorage, String attributeName) {
         super(sessionStorage);
-
+        StringBuilder builder = new StringBuilder("/");
         if (!"/".equals(organizationId) && organizationId != null) {
-            path.add("organizations");
-            path.add(organizationId);
+            builder.append("organizations/");
+            builder.append(organizationId);
+            builder.append("/");
         }
         if (userName != null) {
-            path.add("users");
-            path.add(userName);
+            builder.append("users/");
+            builder.append(userName);
         }
-        this.path.add("attributes");
-        this.path.add(attributeName);
+        this.holderUri = builder.toString();
+        this.attributeName = attributeName;
     }
 
     public SingleAttributeAdapter setIncludePermissions(Boolean includePermissions) {
@@ -132,9 +133,8 @@ public class SingleAttributeAdapter extends AbstractAdapter {
 
     private JerseyRequest<HypermediaAttribute> buildRequest() {
 
-        String[] uri = path.toArray(new String[path.size()]);
         JerseyRequest<HypermediaAttribute> request = JerseyRequest.buildRequest(sessionStorage,HypermediaAttribute.class,
-                uri, new DefaultErrorHandler());
+                new String[]{holderUri,"/attributes/",attributeName}, new DefaultErrorHandler());
         if (includePermissions) {
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/hal+{mime}"));
             request.addParam("_embedded", "permission");

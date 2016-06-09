@@ -32,7 +32,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class BatchResourcesAdapter extends AbstractAdapter {
-    public static final String SERVICE_URI = "resources";
     private MultivaluedMap<String, String> params;
 
     public BatchResourcesAdapter(SessionStorage sessionStorage) {
@@ -82,7 +81,7 @@ public class BatchResourcesAdapter extends AbstractAdapter {
     }
 
     private <T> JerseyRequest<T> getBuilder(Class<T> responseClass) {
-        JerseyRequest<T> request = buildRequest(sessionStorage, responseClass, new String[]{SERVICE_URI}, new DefaultErrorHandler());
+        JerseyRequest<T> request = buildRequest(sessionStorage, responseClass, new String[]{"/resources"}, new DefaultErrorHandler());
         request.addParams(params);
         return request;
     }

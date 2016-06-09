@@ -34,16 +34,13 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
  */
 public class ReorderingReportParametersAdapter extends ReportParametersAdapter {
 
-    public static final String REPORTS_URI = "reports";
-    public static final String INPUT_CONTROLS_URI = "inputControls";
-
     public ReorderingReportParametersAdapter(SessionStorage sessionStorage, String reportUnitUri) {
         super(sessionStorage, reportUnitUri);
     }
 
     public OperationResult<ReportInputControlsListWrapper> reorder(List<ReportInputControl> inputControls){
         ReportInputControlsListWrapper wrapper = new ReportInputControlsListWrapper(inputControls);
-        return buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{REPORTS_URI, reportUnitUri, INPUT_CONTROLS_URI})
+        return buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"})
                 .put(wrapper);
     }
 
@@ -51,7 +48,7 @@ public class ReorderingReportParametersAdapter extends ReportParametersAdapter {
                                              final Callback<OperationResult<ReportInputControlsListWrapper>, R> callback) {
         final ReportInputControlsListWrapper wrapper = new ReportInputControlsListWrapper(inputControls);
         final JerseyRequest<ReportInputControlsListWrapper> request =
-                buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{REPORTS_URI, reportUnitUri, INPUT_CONTROLS_URI});
+                buildRequest(sessionStorage, ReportInputControlsListWrapper.class, new String[]{"/reports", reportUnitUri, "/inputControls"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override

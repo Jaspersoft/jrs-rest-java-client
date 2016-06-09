@@ -33,9 +33,6 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class ReportExecutionRequestBuilder extends AbstractAdapter {
 
-    public static final String REPORT_EXECUTIONS_URI = "reportExecutions";
-    public static final String STATUS_URI = "status";
-    public static final String EXPORTS_URI = "exports";
     private final String requestId;
 
     public ReportExecutionRequestBuilder(SessionStorage sessionStorage, String requestId) {
@@ -44,13 +41,13 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
     }
 
     public OperationResult<ReportExecutionStatusEntity> status() {
-        return buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{REPORT_EXECUTIONS_URI, requestId, STATUS_URI})
+        return buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{"/reportExecutions", requestId, "/status"})
                 .get();
     }
 
     public <R> RequestExecution asyncStatus(final Callback<OperationResult<ReportExecutionStatusEntity>, R> callback) {
         final JerseyRequest<ReportExecutionStatusEntity> request =
-                buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{REPORT_EXECUTIONS_URI, requestId, STATUS_URI});
+                buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{"/reportExecutions", requestId, "/status"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -64,13 +61,13 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
     }
 
     public OperationResult<ReportExecutionDescriptor> executionDetails() {
-        return buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{REPORT_EXECUTIONS_URI, requestId})
+        return buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId})
                 .get();
     }
 
     public <R> RequestExecution asyncExecutionDetails(final Callback<OperationResult<ReportExecutionDescriptor>, R> callback) {
         final JerseyRequest<ReportExecutionDescriptor> request =
-                buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{REPORT_EXECUTIONS_URI, requestId});
+                buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -86,7 +83,7 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
     public OperationResult<ReportExecutionStatusEntity> cancelExecution() {
         ReportExecutionStatusEntity statusEntity = new ReportExecutionStatusEntity();
         statusEntity.setValue("cancelled");
-        return buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{REPORT_EXECUTIONS_URI, requestId, STATUS_URI})
+        return buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{"/reportExecutions", requestId, "/status"})
                 .put(statusEntity);
     }
 
@@ -94,7 +91,7 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
         final ReportExecutionStatusEntity statusEntity = new ReportExecutionStatusEntity();
         statusEntity.setValue("cancelled");
         final JerseyRequest<ReportExecutionStatusEntity> request =
-                buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{REPORT_EXECUTIONS_URI, requestId, STATUS_URI});
+                buildRequest(sessionStorage, ReportExecutionStatusEntity.class, new String[]{"/reportExecutions", requestId, "/status"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -112,14 +109,14 @@ public class ReportExecutionRequestBuilder extends AbstractAdapter {
     }
 
     public OperationResult<ExportExecutionDescriptor> runExport(ExportExecutionOptions exportExecutionOptions) {
-        return buildRequest(sessionStorage, ExportExecutionDescriptor.class, new String[]{REPORT_EXECUTIONS_URI, requestId, EXPORTS_URI})
+        return buildRequest(sessionStorage, ExportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId, "/exports"})
                 .post(exportExecutionOptions);
     }
 
     public <R> RequestExecution asyncRunExport(final ExportExecutionOptions exportExecutionOptions,
                                                final Callback<OperationResult<ExportExecutionDescriptor>, R> callback) {
         final JerseyRequest<ExportExecutionDescriptor> request =
-                buildRequest(sessionStorage, ExportExecutionDescriptor.class, new String[]{REPORT_EXECUTIONS_URI, requestId, EXPORTS_URI});
+                buildRequest(sessionStorage, ExportExecutionDescriptor.class, new String[]{"/reportExecutions", requestId, "/exports"});
 
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override

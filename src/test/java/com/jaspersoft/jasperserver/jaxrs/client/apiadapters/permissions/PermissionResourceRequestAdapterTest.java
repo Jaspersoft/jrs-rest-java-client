@@ -112,9 +112,7 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(sessionStorageMock,
-                RepositoryPermissionListWrapper.class,
-                new String[]{"permissions", fakeUri})).thenReturn(requestMock);
+        when(JerseyRequest.buildRequest(sessionStorageMock, RepositoryPermissionListWrapper.class, new String[]{"/permissions", fakeUri})).thenReturn(requestMock);
         when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
         when(configurationMock.getContentMimeType()).thenReturn(MimeType.JSON);
         doReturn(expectedResultMock).when(requestMock).put(wrapperMock);
@@ -125,7 +123,7 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
 
         // Then
         verifyStatic(times(1));
-        JerseyRequest.buildRequest(sessionStorageMock, RepositoryPermissionListWrapper.class, new String[]{"permissions", fakeUri});
+        JerseyRequest.buildRequest(sessionStorageMock, RepositoryPermissionListWrapper.class, new String[]{"/permissions", fakeUri});
 
         verify(requestMock, times(1)).setContentType("application/collection+json");
         verify(requestMock, times(1)).put(wrapperMock);
@@ -160,9 +158,7 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(sessionStorageMock,
-                RepositoryPermissionListWrapper.class,
-                new String[]{"permissions", fakeUri})).thenReturn(requestMock);
+        when(JerseyRequest.buildRequest(sessionStorageMock, RepositoryPermissionListWrapper.class, new String[]{"/permissions", fakeUri})).thenReturn(requestMock);
         when(requestMock.get()).thenReturn(expectedResultMock);
 
         // When
@@ -187,9 +183,7 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(sessionStorageMock,
-                RepositoryPermissionListWrapper.class,
-                new String[]{"permissions", fakeUri})).thenReturn(requestMock);
+        when(JerseyRequest.buildRequest(sessionStorageMock, RepositoryPermissionListWrapper.class, new String[]{"/permissions", fakeUri})).thenReturn(requestMock);
         when(requestMock.delete()).thenReturn(expectedResultMock);
 
         // When
@@ -199,9 +193,7 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
         // Then
         // Verify that static print is called with the specified parameter.
         verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(RepositoryPermissionListWrapper.class),
-                eq(new String[]{"permissions", fakeUri}));
+        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(RepositoryPermissionListWrapper.class), eq(new String[]{"/permissions", fakeUri}));
 
         // Verify that instance print is called only once
         verify(requestMock, times(1)).delete();
@@ -214,9 +206,7 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock),
-                eq(RepositoryPermissionListWrapper.class),
-                eq(new String[]{"permissions", "resourceUri"}))).thenReturn(requestMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(RepositoryPermissionListWrapper.class), eq(new String[]{"/permissions", "resourceUri"}))).thenReturn(requestMock);
         PowerMockito.doReturn(expectedResultMock).when(requestMock).get();
         PermissionResourceRequestAdapter adapterSpy = PowerMockito.spy(new PermissionResourceRequestAdapter(sessionStorageMock, fakeUri));
 
@@ -255,9 +245,7 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock),
-                eq(RepositoryPermissionListWrapper.class),
-                eq(new String[]{"permissions", "resourceUri"}))).thenReturn(requestMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(RepositoryPermissionListWrapper.class), eq(new String[]{"/permissions", "resourceUri"}))).thenReturn(requestMock);
         PowerMockito.doReturn(expectedResultMock).when(requestMock).delete();
         PermissionResourceRequestAdapter adapterSpy = PowerMockito.spy(new PermissionResourceRequestAdapter(sessionStorageMock, fakeUri));
 
@@ -296,9 +284,7 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock),
-                eq(RepositoryPermissionListWrapper.class),
-                eq(new String[]{"permissions", "resourceUri"}))).thenReturn(requestMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(RepositoryPermissionListWrapper.class), eq(new String[]{"/permissions", "resourceUri"}))).thenReturn(requestMock);
         PowerMockito.doReturn(expectedResultMock).when(requestMock).put(wrapperMock);
 
         PowerMockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();

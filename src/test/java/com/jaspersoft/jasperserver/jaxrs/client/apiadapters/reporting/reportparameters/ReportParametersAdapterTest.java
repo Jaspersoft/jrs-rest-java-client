@@ -74,7 +74,7 @@ public class ReportParametersAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                         eq(sessionStorageMock),
                         eq(ReportInputControlsListWrapper.class),
-                        eq(new String[]{"reports", reportUnitUri, "inputControls"}),
+                        eq(new String[]{"/reports", reportUnitUri, "/inputControls"}),
                         any(DefaultErrorHandler.class))
         ).thenReturn(requestMock);
 

@@ -49,7 +49,7 @@ import static org.testng.Assert.assertTrue;
 public class ExportTaskAdapterTest extends PowerMockTestCase {
 
     public static final String EXPORT_TASK_DTO = "exportTask";
-    public static final String EXPORT_URI = "export";
+    public static final String EXPORT_URI = "/export";
     public static final String NEW_URI = "newUri";
     public static final String FIRST_URI = "firstUri";
     public static final String SECOND_URI = "secondUri";

@@ -71,7 +71,7 @@ public class BatchDiagnosticCollectorsAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
+                eq(new String[]{"/diagnostic/collectors"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).get();
 
@@ -88,7 +88,7 @@ public class BatchDiagnosticCollectorsAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
+                eq(new String[]{"/diagnostic/collectors"}),
                 any(DefaultErrorHandler.class));
 
     }
@@ -100,7 +100,7 @@ public class BatchDiagnosticCollectorsAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
+                eq(new String[]{"/diagnostic/collectors"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).delete();
 
@@ -117,7 +117,7 @@ public class BatchDiagnosticCollectorsAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
+                eq(new String[]{"/diagnostic/collectors"}),
                 any(DefaultErrorHandler.class));
 
     }
@@ -129,7 +129,7 @@ public class BatchDiagnosticCollectorsAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
+                eq(new String[]{"/diagnostic/collectors"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(jerseyRequestMock).when(jerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
         doReturn(operationResultMock).when(jerseyRequestMock).post(any(PatchDescriptor.class));
@@ -148,7 +148,7 @@ public class BatchDiagnosticCollectorsAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
+                eq(new String[]{"/diagnostic/collectors"}),
                 any(DefaultErrorHandler.class));
 
     }
@@ -161,7 +161,7 @@ public class BatchDiagnosticCollectorsAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(InputStream.class),
-                eq(new String[]{"diagnostic", "collectors", "content"}),
+                eq(new String[]{"/diagnostic/collectors", "content"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestContentMock);
         doReturn(jerseyRequestContentMock).when(jerseyRequestContentMock).setAccept("application/zip");
         doReturn(operationResultContentMock).when(jerseyRequestContentMock).get();
@@ -180,7 +180,7 @@ public class BatchDiagnosticCollectorsAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(InputStream.class),
-                eq(new String[]{"diagnostic", "collectors", "content"}),
+                eq(new String[]{"/diagnostic/collectors", "content"}),
                 any(DefaultErrorHandler.class));
 
     }

@@ -52,12 +52,12 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
 
     @Test
     public void should_return_date_time_format_pattern() throws Exception {
-        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "datetimeFormatPattern");
+        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/datetimeFormatPattern");
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 
         OperationResult<String> retrieved = service.dateTimeFormatPattern();
 
-        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "datetimeFormatPattern");
+        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "/datetimeFormatPattern");
         assertSame(retrieved, operationResultMock);
     }
 
@@ -65,12 +65,12 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     public void should_return_proper_date_format_pattern() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
-        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "dateFormatPattern");
+        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/dateFormatPattern");
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 
         OperationResult<String> retrieved = service.dateFormatPattern();
 
-        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "dateFormatPattern");
+        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "/dateFormatPattern");
         assertSame(retrieved, operationResultMock);
     }
 
@@ -78,12 +78,12 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     public void should_return_proper_expiration() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
-        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "expiration");
+        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/expiration");
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 
         OperationResult<String> retrieved = service.expiration();
 
-        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "expiration");
+        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "/expiration");
         assertSame(retrieved, operationResultMock);
     }
 
@@ -91,12 +91,12 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     public void should_return_proper_licence_type() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
-        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "licenseType");
+        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/licenseType");
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 
         OperationResult<String> retrieved = service.licenseType();
 
-        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "licenseType");
+        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "/licenseType");
         assertSame(retrieved, operationResultMock);
     }
 
@@ -104,12 +104,12 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     public void should_return_proper_edition_name() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
-        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "editionName");
+        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/editionName");
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 
         OperationResult<String> retrieved = service.editionName();
 
-        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "editionName");
+        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "/editionName");
         assertSame(retrieved, operationResultMock);
     }
 
@@ -117,12 +117,12 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     public void should_return_proper_features() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
-        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "features");
+        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/features");
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 
         OperationResult<String> retrieved = service.features();
 
-        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "features");
+        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "/features");
         assertSame(retrieved, operationResultMock);
     }
 
@@ -130,12 +130,12 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     public void should_return_proper_build() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
-        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "build");
+        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/build");
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 
         OperationResult<String> retrieved = service.build();
 
-        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "build");
+        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "/build");
         assertSame(retrieved, operationResultMock);
     }
 
@@ -143,21 +143,19 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
     public void should_return_proper_server_version() throws Exception {
 
         ServerInfoService service = PowerMockito.spy(new ServerInfoService(sessionStorageMock));
-        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "version");
+        PowerMockito.doReturn(requestMock).when(service, "buildServerInfoRequest", "/version");
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
 
         OperationResult<String> retrieved = service.version();
 
-        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "version");
+        PowerMockito.verifyPrivate(service, times(1)).invoke("buildServerInfoRequest", "/version");
         assertSame(retrieved, operationResultMock);
     }
     @Test
     public void should_return_proper_server_details() {
 
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(ServerInfo.class),
-                eq(new String[]{"serverInfo"}))).thenReturn(serverInfoJerseyRequest);
+        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ServerInfo.class), eq(new String[]{"/serverInfo"}))).thenReturn(serverInfoJerseyRequest);
         PowerMockito.doReturn(serverInfoOperationResult).when(serverInfoJerseyRequest).get();
 
         ServerInfoService service = new ServerInfoService(sessionStorageMock);
@@ -165,17 +163,17 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
 
         assertSame(details, serverInfoOperationResult);
         verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ServerInfo.class), eq(new String[]{"serverInfo"}));
+        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ServerInfo.class), eq(new String[]{"/serverInfo"}));
     }
 
     @Test
     public void should_return_proper_edition() {
 
         // Given
-        final String path = "edition";
+        final String path = "/edition";
 
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(String.class), eq(new String[]{"serverInfo", path}))).thenReturn(requestMock);
+        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(String.class), eq(new String[]{"/serverInfo", path}))).thenReturn(requestMock);
 
         PowerMockito.doReturn(builderMock).when(requestMock).setAccept("text/plain");
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
@@ -186,7 +184,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
 
         // Then
         verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(String.class), eq(new String[]{"serverInfo", path}));
+        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(String.class), eq(new String[]{"/serverInfo", path}));
 
         assertSame(edition, operationResultMock);
         Mockito.verify(requestMock).setAccept("text/plain");

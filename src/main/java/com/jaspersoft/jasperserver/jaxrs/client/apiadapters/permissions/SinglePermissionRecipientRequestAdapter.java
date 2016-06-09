@@ -28,7 +28,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
-    public static final String SERVICE_URI = "permissions";
     private final String resourceUri;
     private final String recipient;
 
@@ -87,7 +86,7 @@ public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
     }
 
     private <T> JerseyRequest<T> getBuilder(Class<T> responseClass) {
-        JerseyRequest<T> request = buildRequest(sessionStorage, responseClass, new String[]{SERVICE_URI, resourceUri});
+        JerseyRequest<T> request = buildRequest(sessionStorage, responseClass, new String[]{"/permissions", resourceUri});
         request.addMatrixParam("recipient", recipient);
         return request;
     }
