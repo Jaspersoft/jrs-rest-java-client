@@ -63,7 +63,7 @@ public class ReportsAndJobsSearchAdapterTest extends PowerMockTestCase {
         int currentThreadId = (int) Thread.currentThread().getId();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionListWrapper.class), eq(new String[]{"/reportExecutions"}))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionListWrapper.class), eq(new String[]{"reportExecutions"}))).thenReturn(requestMock);
 
         ReportsAndJobsSearchAdapter adapterSpy = spy(new ReportsAndJobsSearchAdapter(sessionStorageMock));
         Callback<OperationResult<ReportExecutionListWrapper>, Void> callback = spy(new Callback<OperationResult<ReportExecutionListWrapper>, Void>() {
@@ -126,7 +126,7 @@ public class ReportsAndJobsSearchAdapterTest extends PowerMockTestCase {
     public void should_return_proper_ReportExecutionListWrapper_with_result_of_find_operation() {
 
         mockStatic(JerseyRequest.class);
-        Mockito.when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionListWrapper.class), eq(new String[]{"/reportExecutions"}))).thenReturn(requestMock);
+        Mockito.when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionListWrapper.class), eq(new String[]{"reportExecutions"}))).thenReturn(requestMock);
         Mockito.doReturn(resultMock).when(requestMock).get();
 
         ReportsAndJobsSearchAdapter adapter = new ReportsAndJobsSearchAdapter(sessionStorageMock);

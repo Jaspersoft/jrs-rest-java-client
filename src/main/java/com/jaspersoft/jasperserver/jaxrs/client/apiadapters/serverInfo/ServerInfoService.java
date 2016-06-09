@@ -31,55 +31,57 @@ import javax.ws.rs.core.MediaType;
 
 public class ServerInfoService extends AbstractAdapter {
 
+    public static final String SERVICE_URI = "serverInfo";
+
     public ServerInfoService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
     public OperationResult<ServerInfo> details(){
-        return JerseyRequest.buildRequest(sessionStorage, ServerInfo.class, new String[]{"/serverInfo"}).get();
+        return JerseyRequest.buildRequest(sessionStorage, ServerInfo.class, new String[]{SERVICE_URI}).get();
     }
 
     private JerseyRequest<String> buildServerInfoRequest(String path){
         JerseyRequest<String> request =
-                JerseyRequest.buildRequest(sessionStorage, String.class, new String[]{"/serverInfo", path});
+                JerseyRequest.buildRequest(sessionStorage, String.class, new String[]{SERVICE_URI, path});
         request.setAccept(MediaType.TEXT_PLAIN);
         return request;
     }
 
     public OperationResult<String> edition(){
-        return buildServerInfoRequest("/edition").get();
+        return buildServerInfoRequest("edition").get();
     }
 
     public OperationResult<String> version(){
-        return buildServerInfoRequest("/version").get();
+        return buildServerInfoRequest("version").get();
     }
 
     public OperationResult<String> build(){
-        return buildServerInfoRequest("/build").get();
+        return buildServerInfoRequest("build").get();
     }
 
     public OperationResult<String> features(){
-        return buildServerInfoRequest("/features").get();
+        return buildServerInfoRequest("features").get();
     }
 
     public OperationResult<String> editionName(){
-        return buildServerInfoRequest("/editionName").get();
+        return buildServerInfoRequest("editionName").get();
     }
 
     public OperationResult<String> licenseType(){
-        return buildServerInfoRequest("/licenseType").get();
+        return buildServerInfoRequest("licenseType").get();
     }
 
     public OperationResult<String> expiration(){
-        return buildServerInfoRequest("/expiration").get();
+        return buildServerInfoRequest("expiration").get();
     }
 
     public OperationResult<String> dateFormatPattern(){
-        return buildServerInfoRequest("/dateFormatPattern").get();
+        return buildServerInfoRequest("dateFormatPattern").get();
     }
 
     public OperationResult<String> dateTimeFormatPattern(){
-        return buildServerInfoRequest("/datetimeFormatPattern").get();
+        return buildServerInfoRequest("datetimeFormatPattern").get();
     }
 
 }

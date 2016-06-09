@@ -100,7 +100,7 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
         SingleOrganizationAdapter adapter = spy(new SingleOrganizationAdapter(sessionStorageMock, clientTenantMock));
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientTenant.class),
-                eq(new String[]{"/organizations", "myOrg"}), any(DefaultErrorHandler.class)))
+                eq(new String[]{"organizations", "myOrg"}), any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         doReturn("myOrg").when(clientTenantMock).getId();
         doReturn(resultMock).when(requestMock).put(clientTenantMock);
@@ -111,7 +111,7 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"/organizations", "myOrg"}), any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"organizations", "myOrg"}), any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).put(clientTenantMock);
     }
 

@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class SingleSettingsAdapter extends AbstractAdapter {
 
+    public static final String SERVICE_URI = "settings";
     private String groupKey;
 
     public SingleSettingsAdapter(SessionStorage sessionStorage) {
@@ -82,7 +83,7 @@ public class SingleSettingsAdapter extends AbstractAdapter {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 resultClass,
-                new String[]{"/settings/" + groupKey},
+                new String[]{SERVICE_URI, groupKey},
                 new DefaultErrorHandler());
     }
 
@@ -90,7 +91,7 @@ public class SingleSettingsAdapter extends AbstractAdapter {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 genericType,
-                new String[]{"/settings/" + groupKey},
+                new String[]{SERVICE_URI, groupKey},
                 new DefaultErrorHandler());
     }
 }

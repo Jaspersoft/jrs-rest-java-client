@@ -78,7 +78,9 @@ public class ReorderingReportParametersAdapterTest extends PowerMockTestCase {
         int currentThreadId = (int) Thread.currentThread().getId();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ReportInputControlsListWrapper.class), eq(new String[]{"/reports", reportUnitUri, "/inputControls"}))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(ReportInputControlsListWrapper.class),
+                eq(new String[]{"reports", reportUnitUri, "inputControls"}))).thenReturn(requestMock);
 
         ReorderingReportParametersAdapter adapterSpy = spy(new ReorderingReportParametersAdapter(sessionStorageMock, reportUnitUri));
         Callback<OperationResult<ReportInputControlsListWrapper>, Void> callback = spy(new Callback<OperationResult<ReportInputControlsListWrapper>, Void>() {
@@ -107,10 +109,7 @@ public class ReorderingReportParametersAdapterTest extends PowerMockTestCase {
         /* Then */
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
-
-        verify(callback, times(1)).execute(resultMock);
         verify(requestMock, times(1)).put(wrapperMock);
-
         verifyNew(ReportInputControlsListWrapper.class, times(1)).withArguments(inputControlsMock);
     }
 
@@ -122,7 +121,9 @@ public class ReorderingReportParametersAdapterTest extends PowerMockTestCase {
 
         /* Given */
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ReportInputControlsListWrapper.class), eq(new String[]{"/reports", reportUnitUri, "/inputControls"}))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(ReportInputControlsListWrapper.class),
+                eq(new String[]{"reports", reportUnitUri, "inputControls"}))).thenReturn(requestMock);
 
         whenNew(ReportInputControlsListWrapper.class).withArguments(inputControlsMock).thenReturn(wrapperMock);
         doReturn(resultMock).when(requestMock).put(wrapperMock);
@@ -137,7 +138,9 @@ public class ReorderingReportParametersAdapterTest extends PowerMockTestCase {
         assertSame(retrieved, resultMock);
 
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(ReportInputControlsListWrapper.class), eq(new String[]{"/reports", reportUnitUri, "/inputControls"}));
+        buildRequest(eq(sessionStorageMock),
+                eq(ReportInputControlsListWrapper.class),
+                eq(new String[]{"reports", reportUnitUri, "inputControls"}));
 
         verifyNew(ReportInputControlsListWrapper.class, times(1)).withArguments(inputControlsMock);
         verify(requestMock, times(1)).put(wrapperMock);

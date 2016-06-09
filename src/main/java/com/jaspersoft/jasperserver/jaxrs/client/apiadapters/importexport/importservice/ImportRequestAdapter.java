@@ -38,8 +38,8 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class ImportRequestAdapter extends AbstractAdapter {
 
-    private static final String STATE_URI = "/state";
-    public static final String IMPORT_URI = "/import";
+    private static final String STATE_URI = "state";
+    public static final String IMPORT_URI = "import";
     private String taskId;
     private ImportTask importTask;
 

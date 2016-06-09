@@ -40,6 +40,7 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class ImportTaskRequestAdapter extends AbstractAdapter {
 
+    public static final String SERVICE_URI = "import";
     private final MultivaluedMap<String, String> params;
 
     public ImportTaskRequestAdapter(SessionStorage sessionStorage) {
@@ -79,13 +80,13 @@ public class ImportTaskRequestAdapter extends AbstractAdapter {
     }
 
     private OperationResult<State> createImport(Object zipArchive) {
-        JerseyRequest<State> request = buildRequest(sessionStorage, State.class, new String[]{"/import"}, new DefaultErrorHandler());
+        JerseyRequest<State> request = buildRequest(sessionStorage, State.class, new String[]{SERVICE_URI}, new DefaultErrorHandler());
         request.setContentType("application/zip").addParams(params);
         return request.post(zipArchive);
     }
 
     private <R> RequestExecution asyncCreateImport(final Object zipArchive, final Callback<OperationResult<State>, R> callback) {
-        final JerseyRequest<State> request = buildRequest(sessionStorage, State.class, new String[]{"/import"});
+        final JerseyRequest<State> request = buildRequest(sessionStorage, State.class, new String[]{SERVICE_URI});
         request.setContentType("application/zip").addParams(params);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
