@@ -75,7 +75,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         SingleThumbnailAdapter retrieved = thumbnailAdapter.report("/public/Samples/Reports/07g.RevenueDetailReport");
 
         // Then
-        String reportName = (String) Whitebox.getInternalState(retrieved, "reportUri");
+        String reportName = (String) Whitebox.getInternalState(retrieved, "reportName");
         assertEquals(reportName, "/public/Samples/Reports/07g.RevenueDetailReport");
     }
 
@@ -85,13 +85,13 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
      */
     public void should_not_set_null_report_uri() {
         // Given
-        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+                SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
 
         // When
         SingleThumbnailAdapter retrieved = thumbnailAdapter.report(null);
 
         // Then
-        String reportName = (String) Whitebox.getInternalState(retrieved, "reportUri");
+        String reportName = (String) Whitebox.getInternalState(retrieved, "reportName");
         assertNull(reportName);
     }
 
@@ -101,7 +101,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
      */
     public void should_throw_exception_when_report_uri_is_null() {
         // Given
-        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+                SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
 
         // When
         thumbnailAdapter.report(null).get();
@@ -116,7 +116,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
      */
     public void should_throw_exception_when_report_uri_is_empty() {
         // Given
-        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+                SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
 
         // When
         thumbnailAdapter.report("").get();
@@ -131,13 +131,13 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
      */
     public void should_not_set_empty_report_uri() {
         // Given
-        SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
+                SingleThumbnailAdapter thumbnailAdapter = new SingleThumbnailAdapter(sessionStorageMock);
 
         // When
         SingleThumbnailAdapter retrieved = thumbnailAdapter.report("");
 
         // Then
-        String reportName = (String) Whitebox.getInternalState(retrieved, "reportUri");
+        String reportName = (String) Whitebox.getInternalState(retrieved, "reportName");
         assertNull(reportName);
     }
 
@@ -153,7 +153,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         SingleThumbnailAdapter retrieved = thumbnailAdapter.defaultAllowed(true).report("/public/Samples/Reports/07g.RevenueDetailReport");
 
         // Then
-        Boolean param = (Boolean) Whitebox.getInternalState(retrieved, "defaultAllowed");
+        Boolean param = (Boolean) Whitebox.getInternalState(retrieved,"defaultAllowed");
         assertSame(retrieved, thumbnailAdapter);
         assertEquals(param, Boolean.TRUE);
     }
@@ -187,7 +187,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(InputStream.class),
-                eq(new String[]{"thumbnails", "", "public", "Samples", "Reports", "07g.RevenueDetailReport"}),
+                eq(new String[]{"/thumbnails", "/public/Samples/Reports/07g.RevenueDetailReport"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.setAccept("image/jpeg")).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.get()).thenReturn(operationResultMock);
@@ -207,7 +207,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(InputStream.class),
-                eq(new String[]{"thumbnails", "", "public", "Samples", "Reports", "07g.RevenueDetailReport"}),
+                eq(new String[]{"/thumbnails", "/public/Samples/Reports/07g.RevenueDetailReport"}),
                 any(DefaultErrorHandler.class));
 
     }

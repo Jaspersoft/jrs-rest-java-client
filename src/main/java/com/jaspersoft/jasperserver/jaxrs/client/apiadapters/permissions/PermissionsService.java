@@ -31,8 +31,6 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class PermissionsService extends AbstractAdapter {
 
-    public static final String SERVICE_URI = "/permissions";
-
     public PermissionsService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
@@ -45,11 +43,11 @@ public class PermissionsService extends AbstractAdapter {
     }
 
     public OperationResult createNew(RepositoryPermission permission) {
-        return buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI}, new DefaultErrorHandler()).post(permission);
+        return buildRequest(sessionStorage, Object.class, new String[]{"/permissions"}, new DefaultErrorHandler()).post(permission);
     }
 
     public <R> RequestExecution asyncCreateNew(final RepositoryPermission permission, final Callback<OperationResult, R> callback) {
-        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI});
+        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -61,13 +59,13 @@ public class PermissionsService extends AbstractAdapter {
     }
 
     public OperationResult createNew(RepositoryPermissionListWrapper permissions) {
-        JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI});
+        JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
         return request.post(permissions);
     }
 
     public <R> RequestExecution asyncCreateNew(final RepositoryPermissionListWrapper permissions, final Callback<OperationResult, R> callback) {
-        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI});
+        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/permissions"});
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override

@@ -85,7 +85,7 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                         eq(sessionStorageMock),
                         eq(InputControlStateListWrapper.class),
-                        eq(new String[]{"reports", uri, "inputControls", "", "values"}),
+                        eq(new String[]{"/reports", uri, "/inputControls", "", "/values"}),
                         any(DefaultErrorHandler.class))
         ).thenReturn(requestMock);
 
@@ -103,7 +103,7 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(InputControlStateListWrapper.class),
-                eq(new String[]{"reports", uri, "inputControls", "", "values"}),
+                eq(new String[]{"/reports", uri, "/inputControls", "", "/values"}),
                 any(DefaultErrorHandler.class));
 
         Mockito.verify(requestMock).get();
@@ -120,7 +120,7 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                         eq(sessionStorageMock),
                         eq(InputControlStateListWrapper.class),
-                        eq(new String[]{"reports", uri, "inputControls", "", "values"}),
+                        eq(new String[]{"/reports", uri, "/inputControls", "", "/values"}),
                         any(DefaultErrorHandler.class))
         ).thenReturn(requestMock);
 
@@ -143,7 +143,7 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(InputControlStateListWrapper.class),
-                eq(new String[]{"reports", uri, "inputControls", "", "values"}),
+                eq(new String[]{"/reports", uri, "/inputControls", "", "/values"}),
                 any(DefaultErrorHandler.class));
 
         Mockito.verify(requestMock).get();
@@ -161,7 +161,7 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                         eq(sessionStorageMock),
                         eq(InputControlStateListWrapper.class),
-                        eq(new String[]{"reports", uri, "inputControls", "param1;param2", "values"}),
+                        eq(new String[]{"/reports", uri, "/inputControls", "/param1;param2", "/values"}),
                         any(DefaultErrorHandler.class))
         ).thenReturn(requestMock);
 
@@ -182,7 +182,7 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(InputControlStateListWrapper.class),
-                eq(new String[]{"reports", uri, "inputControls", "param1;param2", "values"}),
+                eq(new String[]{"/reports", uri, "/inputControls", "/param1;param2", "/values"}),
                 any(DefaultErrorHandler.class));
 
         Mockito.verify(requestMock).post(anyObject());
@@ -199,7 +199,7 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                         eq(sessionStorageMock),
                         eq(InputControlStateListWrapper.class),
-                        eq(new String[]{"reports", uri, "inputControls", "", "values"}),
+                        eq(new String[]{"/reports", uri, "/inputControls", "", "/values"}),
                         any(DefaultErrorHandler.class))
         ).thenReturn(requestMock);
 
@@ -221,7 +221,7 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(InputControlStateListWrapper.class),
-                eq(new String[]{"reports", uri, "inputControls", "", "values"}),
+                eq(new String[]{"/reports", uri, "/inputControls", "", "/values"}),
                 any(DefaultErrorHandler.class));
 
         Mockito.verify(requestMock).post(anyObject());

@@ -20,31 +20,31 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
 
-import com.jaspersoft.jasperserver.dto.domain.DomainMetaData;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.jaspersoft.jasperserver.dto.domain.DomainMetaData;
 
 public class DomainMetadataAdapter extends AbstractAdapter {
-    private final ArrayList<String> path = new ArrayList<String>();
+    private final String domainURI;
 
     public DomainMetadataAdapter(SessionStorage sessionStorage, String domainURI) {
         super(sessionStorage);
-        path.add("domains");
-        path.addAll(Arrays.asList(domainURI.split("/")));
-        path.add("metadata");
+        this.domainURI = domainURI;
     }
 
     public OperationResult<DomainMetaData> retrieve() {
         return JerseyRequest.buildRequest(
                 sessionStorage,
                 DomainMetaData.class,
-                path.toArray(new String[path.size()]),
+                new String[]{new StringBuilder(domainURI).insert(0, "/domains").append("/metadata").toString()},
                 new DefaultErrorHandler()
         ).get();
+    }
+
+    public String getDomainURI() {
+        return domainURI;
     }
 }

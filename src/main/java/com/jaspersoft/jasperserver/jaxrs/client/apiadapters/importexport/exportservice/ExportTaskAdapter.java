@@ -35,7 +35,6 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class ExportTaskAdapter extends AbstractAdapter {
 
-    public static final String SERVICE_URI = "export";
     private final ExportTask exportTask;
 
     public ExportTaskAdapter(SessionStorage sessionStorage) {
@@ -117,12 +116,12 @@ public class ExportTaskAdapter extends AbstractAdapter {
     }
 
     public OperationResult<State> create() {
-        return buildRequest(sessionStorage, State.class, new String[]{SERVICE_URI},
+        return buildRequest(sessionStorage, State.class, new String[]{"/export"},
                 new DefaultErrorHandler()).post(exportTask);
     }
 
     public <R> RequestExecution asyncCreate(final Callback<OperationResult<State>, R> callback) {
-        final JerseyRequest<State> request = buildRequest(sessionStorage, State.class, new String[]{SERVICE_URI});
+        final JerseyRequest<State> request = buildRequest(sessionStorage, State.class, new String[]{"/export"});
         request.setAccept("application/zip");
         // Guarantee that exportTask won't be modified from another thread
         final ExportTask localCopy = new ExportTask(exportTask);

@@ -21,9 +21,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import java.util.Locale;
@@ -83,7 +81,7 @@ public class JasperserverRestClient {
         return new AnonymousSession(new SessionStorage(configuration, null, Locale.getDefault(), TimeZone.getDefault()));
     }
 
-    protected void login(SessionStorage storage) throws JSClientWebException {
+    protected void login(SessionStorage storage) {
 
         AuthenticationCredentials credentials = storage.getCredentials();
         WebTarget rootTarget = storage.getRootTarget();
@@ -98,19 +96,16 @@ public class JasperserverRestClient {
         WebTarget target = rootTarget.path("/j_spring_security_check")
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
         Response response = target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
-        if (response.getStatus() == Status.FOUND.getStatusCode()) {
-            String location = response.getLocation().toString();
-            String sessionId;
-            if (!location.matches("[^?]+\\?([^&]*&)*error=1(&[^&]*)*$")) {
-                sessionId = response.getCookies().get("JSESSIONID").getValue();
-                storage.setSessionId(sessionId);
-            } else {
-                throw new AuthenticationFailedException("Invalid credentials supplied. Could not login to JasperReports Server.");
-            }
-            rootTarget.register(new SessionOutputFilter(sessionId));
+        String sessionId = null;
+        String location = response.getLocation().toString();
+
+        if (response.getStatus() == Status.FOUND.getStatusCode() && !location.matches("[^?]+\\?([^&]*&)*error=1(&[^&]*)*$")) {
+            sessionId = response.getCookies().get("JSESSIONID").getValue();
+            storage.setSessionId(sessionId);
         } else {
-            throw  new ResourceNotFoundException("Server was not found");
+            new DefaultErrorHandler().handleError(response);
         }
+        rootTarget.register(new SessionOutputFilter(sessionId));
     }
 
 

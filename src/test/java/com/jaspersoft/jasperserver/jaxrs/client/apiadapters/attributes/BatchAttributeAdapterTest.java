@@ -46,7 +46,6 @@ import static org.testng.AssertJUnit.assertNotSame;
 import static org.testng.AssertJUnit.assertSame;
 import static org.testng.AssertJUnit.assertTrue;
 
-
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.BatchAttributeAdapter}
  */
@@ -79,7 +78,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
-                eq(new String[]{"attributes"}),
+                eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
@@ -99,7 +98,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
-                eq(new String[]{"attributes"}),
+                eq(new String[]{"/" , "attributes"}),
                 any(DefaultErrorHandler.class));
     }
 
@@ -152,7 +151,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
-                eq(new String[]{"attributes"}),
+                eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
@@ -170,7 +169,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
-                eq(new String[]{"attributes"}),
+                eq(new String[]{"/" , "attributes"}),
                 any(DefaultErrorHandler.class));
     }
 
@@ -182,7 +181,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
-                eq(new String[]{"attributes"}),
+                eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
 
         when(jerseyRequestMock.delete()).thenReturn(operationResultMock);
@@ -198,7 +197,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
-                eq(new String[]{"attributes"}),
+                eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class));
         verify(jerseyRequestMock, times(1)).delete();
     }
@@ -211,7 +210,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
-                eq(new String[]{"attributes"}),
+                eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
 
         when(jerseyRequestMock.get()).thenReturn(operationResultMock);
@@ -227,7 +226,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
-                eq(new String[]{"attributes"}),
+                eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class));
         verify(jerseyRequestMock, times(1)).get();
         verify(jerseyRequestMock, times(1)).addParams(any(MultivaluedHashMap.class));
@@ -243,7 +242,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
-                eq(new String[]{"attributes"}),
+                eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
@@ -262,7 +261,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
-                eq(new String[]{"attributes"}),
+                eq(new String[]{"/", "attributes"}),
                 any(DefaultErrorHandler.class));
         verify(jerseyRequestMock, times(1)).addParams(any(MultivaluedHashMap.class));
         verify(jerseyRequestMock, times(1)).get();

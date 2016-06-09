@@ -31,8 +31,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobState;
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class SingleJobOperationsAdapter extends AbstractAdapter {
-    public static final String SERVICE_URI = "jobs";
-    public static final String STATE = "state";
     private final String jobId;
 
     public SingleJobOperationsAdapter(SessionStorage sessionStorage, String jobId) {
@@ -41,7 +39,7 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<Job> get() {
-        JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{SERVICE_URI, jobId});
+        JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId});
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
         } else {
@@ -51,7 +49,7 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<Job>, R> callback) {
-        final JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{SERVICE_URI, jobId});
+        final JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId});
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
         } else {
@@ -68,11 +66,11 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<JobState> state() {
-        return buildRequest(sessionStorage, JobState.class, new String[]{SERVICE_URI, jobId, STATE}).get();
+        return buildRequest(sessionStorage, JobState.class, new String[]{"/jobs", jobId, "/state"}).get();
     }
 
     public <R> RequestExecution asyncState(final Callback<OperationResult<JobState>, R> callback) {
-        final JerseyRequest<JobState> request = buildRequest(sessionStorage, JobState.class, new String[]{SERVICE_URI, jobId, STATE});
+        final JerseyRequest<JobState> request = buildRequest(sessionStorage, JobState.class, new String[]{"/jobs", jobId, "/state"});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -84,7 +82,7 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<Job> update(Job job) {
-        JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{SERVICE_URI, jobId}, new JobValidationErrorHandler());
+        JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId}, new JobValidationErrorHandler());
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
@@ -96,7 +94,7 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncUpdate(final Job job, final Callback<OperationResult<Job>, R> callback) {
-        final JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{SERVICE_URI, jobId}, new JobValidationErrorHandler());
+        final JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs", jobId}, new JobValidationErrorHandler());
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
@@ -115,11 +113,11 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult delete() {
-        return buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI, jobId}).delete();
+        return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", jobId}).delete();
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
-        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI, jobId});
+        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/jobs", jobId});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {

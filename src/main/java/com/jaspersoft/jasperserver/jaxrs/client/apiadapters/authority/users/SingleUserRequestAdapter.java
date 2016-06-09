@@ -9,16 +9,16 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.ArrayList;
+
+import static java.util.regex.Pattern.compile;
 
 public class SingleUserRequestAdapter extends AbstractAdapter {
 
-    private ArrayList<String> uri = new ArrayList<String>();
+    private StringBuilder uri = new StringBuilder("");
 
     private ClientUser user;
     /**
      * The field is used for deprecated methods of the class.
-     *
      * @deprecated Replaced by {@link SingleUserRequestAdapter#uri}.
      */
     private String userUriPrefix;
@@ -28,10 +28,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
         super(sessionStorage);
         this.user = user;
         if (user.getTenantId() != null && !user.getTenantId().equals("")) {
-            uri.add("organizations");
-            uri.add(user.getTenantId());
+            uri.append("organizations/").append(user.getTenantId()).append("/");
         }
-        uri.add("users");
+        uri.append("users/");
     }
 
     public OperationResult<ClientUser> get() {
@@ -88,10 +87,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
 
 
     private JerseyRequest<ClientUser> buildRequest() {
-        uri.add(user.getUsername());
         return JerseyRequest.buildRequest(sessionStorage,
                 ClientUser.class,
-                uri.toArray(new String[uri.size()]),
+                new String[]{uri.toString(), user.getUsername()},
                 new DefaultErrorHandler());
     }
 
@@ -101,14 +99,13 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     public SingleUserRequestAdapter(SessionStorage sessionStorage, String organizationId, String username) {
         super(sessionStorage);
         if (organizationId != null) {
-            uri.add("organizations");
-            uri.add(organizationId);
-            uri.add("users");
+            userUriPrefix = "/organizations/" + organizationId + "/users/";
         } else {
-            uri.add("users");
+            userUriPrefix = "/users/";
         }
         user = new ClientUser();
         user.setUsername(username);
+        uri.append(userUriPrefix);
     }
 
     /**
@@ -117,11 +114,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     public SingleUserRequestAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
         if (organizationId != null) {
-            uri.add("organizations");
-            uri.add(organizationId);
-            uri.add("users");
+            uri.append("/organizations/").append(organizationId).append("/users/");
         } else {
-            uri.add("users");
+            uri.append("/users/");
         }
     }
 
@@ -131,13 +126,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
     public SingleUserRequestAdapter(String userId, String organizationId, SessionStorage sessionStorage) {
         super(sessionStorage);
         if (organizationId != null && !organizationId.equals("") && userId != null && !userId.equals("")) {
-            uri.add("organizations");
-            uri.add(organizationId);
-            uri.add("users");
-            uri.add(userId);
+            uri.append("/organizations/").append(organizationId).append("/users/").append(userId);
         } else if (organizationId == null && userId != null && !userId.equals("")) {
-            uri.add("users");
-            uri.add(userId);
+            uri.append("/users/").append(userId);
         } else {
             throw new IllegalArgumentException("Wrong parameters has been passed!");
         }
@@ -148,12 +139,11 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      */
     public OperationResult<ClientUser> get(String userId) {
 
-        if (!uri.contains("users")) {
+        if (compile("^.*?users/([^/]+)$").matcher(uri.toString()).find()) {
             return request().get();
         }
-        if (!uri.get(uri.size() - 1).equals(userId)) {
-            uri.add(userId);
-        }
+
+        uri.append(userId);
         return request().get();
     }
 
@@ -161,20 +151,16 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      * @deprecated Replaced by {@link SingleUserRequestAdapter#buildRequest()}.
      */
     private JerseyRequest<ClientUser> request() {
-        return JerseyRequest.buildRequest(sessionStorage,
-                ClientUser.class,
-                uri.toArray(new String[uri.size()]),
-                new DefaultErrorHandler());
+        return JerseyRequest.buildRequest(sessionStorage, ClientUser.class, new String[]{uri.toString()}, new DefaultErrorHandler());
     }
 
     /**
      * @deprecated Replaced by {@link SingleUserRequestAdapter#asyncGet(Callback)}.
      */
     public <R> RequestExecution asyncGet(final Callback<OperationResult<ClientUser>, R> callback, String userId) {
-        if (uri.contains("users") && !uri.get(uri.size() - 1).equals(userId)) {
-            uri.add(userId);
+        if (!compile("^.*?users/([^/]+)$").matcher(uri.toString()).find()) {
+            uri.append(userId);
         }
-
         final JerseyRequest<ClientUser> request = request();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -190,10 +176,9 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      * @deprecated Replaced by {@link SingleUserRequestAdapter#createOrUpdate(ClientUser)}.
      */
     public OperationResult<ClientUser> updateOrCreate(ClientUser user) {
-        uri.add(user.getUsername());
-        if ((!uri.toString().contains("organizations")) && (user.getTenantId() != null)) {
-            uri.add(0, "organizations");
-            uri.add(1,user.getTenantId());
+        uri.append(user.getUsername());
+        if (!uri.toString().contains("organizations") && user.getTenantId() != null) {
+            uri.insert(0, "/organizations/" + user.getTenantId());
         }
         return request().put(user);
     }
@@ -202,8 +187,8 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      * @deprecated Replaced by {@link SingleUserRequestAdapter#asyncCreateOrUpdate(ClientUser, Callback)}.
      */
     public <R> RequestExecution asyncCreateOrUpdate(final ClientUser user, final Callback<OperationResult<ClientUser>, R> callback, final String userId) {
-        if (uri.contains("users")) {
-            uri.add(userId);
+        if (!compile("^.*?users/([^/]+)$").matcher(uri.toString()).find()) {
+            uri.append(userId);
         }
         final JerseyRequest<ClientUser> request = request();
         RequestExecution task = new RequestExecution(new Runnable() {
@@ -220,7 +205,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      * @deprecated Replaced by {@link SingleUserRequestAdapter#delete()}.
      */
     public OperationResult delete(String userId) {
-        uri.add(userId);
+        uri.append(userId);
         return request().delete();
     }
 
@@ -228,7 +213,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      * @deprecated Replaced by {@link SingleUserRequestAdapter#delete()}.
      */
     public OperationResult delete(ClientUser user) {
-        uri.add(user.getUsername());
+        uri.append(user.getUsername());
         return request().delete();
     }
 
@@ -236,7 +221,7 @@ public class SingleUserRequestAdapter extends AbstractAdapter {
      * @deprecated Replaced by {@link SingleUserRequestAdapter#asyncDelete(Callback)}.
      */
     public <R> RequestExecution asyncDelete(final Callback<OperationResult<ClientUser>, R> callback, String userId) {
-        uri.add(userId);
+        uri.append(userId);
         final JerseyRequest<ClientUser> request = request();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override

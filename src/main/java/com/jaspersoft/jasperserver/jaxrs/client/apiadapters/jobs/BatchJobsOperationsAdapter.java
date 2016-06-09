@@ -55,10 +55,6 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     private static final Log log = LogFactory.getLog(BatchJobsOperationsAdapter.class);
-    public static final String SERVICE_URI = "jobs";
-    public static final String PAUSE = "pause";
-    public static final String RESUME = "resume";
-    public static final String RESTART = "restart";
 
     private final MultivaluedMap<String, String> params;
 
@@ -94,7 +90,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<JobSummaryListWrapper> prepareSearchRequest(Job searchCriteria) {
-        JerseyRequest<JobSummaryListWrapper> request = buildRequest(sessionStorage, JobSummaryListWrapper.class, new String[]{SERVICE_URI});
+        JerseyRequest<JobSummaryListWrapper> request = buildRequest(sessionStorage, JobSummaryListWrapper.class, new String[]{"/jobs"});
         request.addParams(params);
         if (searchCriteria != null) {
             String criteriaJson = buildJson(searchCriteria);
@@ -143,7 +139,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
      * Updates all jobs which ids were specified. Updates only set fields, other fields are ignored.
      */
     public OperationResult<JobIdListWrapper> update(ReportJobModel jobModel) {
-        JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI});
+        JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
         request.addParams(params);
         String content;
 
@@ -156,7 +152,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncUpdate(final ReportJobModel jobModel, final Callback<OperationResult<JobIdListWrapper>, R> callback) {
-        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI});
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs"});
         request.addParams(params);
         final String jobJson = buildJson(jobModel);
         RequestExecution task = new RequestExecution(new Runnable() {
@@ -183,12 +179,12 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     public OperationResult<JobIdListWrapper> pause() {
         JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, PAUSE}).post(jobIdListWrapper);
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"}).post(jobIdListWrapper);
     }
 
     public <R> RequestExecution asyncPause(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
         final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, PAUSE});
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/pause"});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -201,12 +197,12 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     public OperationResult<JobIdListWrapper> resume() {
         JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, RESUME}).post(jobIdListWrapper);
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/resume"}).post(jobIdListWrapper);
     }
 
     public <R> RequestExecution asyncResume(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
         final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, RESUME});
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/resume"});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -219,12 +215,12 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     public OperationResult<JobIdListWrapper> restart() {
         JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, RESTART}).post(jobIdListWrapper);
+        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/restart"}).post(jobIdListWrapper);
     }
 
     public <R> RequestExecution asyncRestart(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
         final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, RESTART});
+        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{"/jobs", "/restart"});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {

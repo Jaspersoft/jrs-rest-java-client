@@ -34,7 +34,6 @@ import javax.ws.rs.core.MediaType;
 
 public class BundlesService extends AbstractAdapter {
 
-    public static final String SERVICE_URI = "bundles";
     private Locale locale;
 
     public BundlesService(SessionStorage sessionStorage) {
@@ -67,7 +66,7 @@ public class BundlesService extends AbstractAdapter {
     private JerseyRequest<Map<String, String>> buildBundleRequest(String bundleName) {
         JerseyRequest<Map<String, String>> request =
                 JerseyRequest.buildRequest(sessionStorage, new GenericType<Map<String, String>>() {
-                }, new String[]{SERVICE_URI, bundleName}, new DefaultErrorHandler());
+                }, new String[]{"/bundles", bundleName}, new DefaultErrorHandler());
         request.setAccept(MediaType.APPLICATION_JSON);
         if (!"".equals(this.locale.getLanguage())) {
             request.addHeader("Accept-Language", locale.toString().replace('_', '-'));
@@ -78,7 +77,7 @@ public class BundlesService extends AbstractAdapter {
     private JerseyRequest<Map<String, Map<String, String>>> buildBundlesRequest() {
         JerseyRequest<Map<String, Map<String, String>>> request =
                 JerseyRequest.buildRequest(sessionStorage, new GenericType<Map<String, Map<String, String>>>() {
-                }, new String[]{SERVICE_URI}, new DefaultErrorHandler());
+                }, new String[]{"/bundles"}, new DefaultErrorHandler());
 
         request.setAccept(MediaType.APPLICATION_JSON);
         if (!"".equals(this.locale.getLanguage())) {

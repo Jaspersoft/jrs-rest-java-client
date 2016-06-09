@@ -94,10 +94,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
 
         /** Given **/
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientResourceListWrapper.class),
-                eq(new String[]{"resources"}),
-                any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientResourceListWrapper.class), eq(new String[]{"/resources"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(resultMock).when(requestMock).get();
         BatchResourcesAdapter adapter = new BatchResourcesAdapter(sessionStorageMock);
 
@@ -109,10 +106,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
         assertSame(retrievedResult, resultMock);
 
         verifyStatic();
-        buildRequest(eq(sessionStorageMock),
-                eq(ClientResourceListWrapper.class),
-                eq(new String[]{"resources"}),
-                any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock), eq(ClientResourceListWrapper.class), eq(new String[]{"/resources"}), any(DefaultErrorHandler.class));
 
         verify(requestMock).get();
         verify(requestMock).addParams(any(MultivaluedHashMap.class));
@@ -176,7 +170,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
 
         /** Given **/
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"resources"}), any(DefaultErrorHandler.class))).thenReturn(objectJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"/resources"}), any(DefaultErrorHandler.class))).thenReturn(objectJerseyRequestMock);
         doReturn(objectOperationResultMock).when(objectJerseyRequestMock).delete();
 
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -222,7 +216,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
 
         /** Given **/
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"resources"}), any(DefaultErrorHandler.class))).thenReturn(objectJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"/resources"}), any(DefaultErrorHandler.class))).thenReturn(objectJerseyRequestMock);
         doReturn(objectOperationResultMock).when(objectJerseyRequestMock).delete();
 
         BatchResourcesAdapter adapter = new BatchResourcesAdapter(sessionStorageMock);
