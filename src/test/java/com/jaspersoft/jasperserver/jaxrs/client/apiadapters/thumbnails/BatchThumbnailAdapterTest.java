@@ -109,7 +109,9 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ResourceThumbnailsListWrapper.class), eq(new String[]{"/thumbnails"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(ResourceThumbnailsListWrapper.class),
+                eq(new String[]{"thumbnails"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.setContentType("application/x-www-form-urlencoded")).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.addParam("defaultAllowed", "false")).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.post(any(MultivaluedHashMap.class))).thenReturn(operationResultMock);
@@ -125,7 +127,9 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
         Assert.assertNotNull(retrieved);
         Assert.assertSame(retrieved, operationResultMock);
         PowerMockito.verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(ResourceThumbnailsListWrapper.class), eq(new String[]{"/thumbnails"}), any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock),
+                eq(ResourceThumbnailsListWrapper.class),
+                eq(new String[]{"thumbnails"}), any(DefaultErrorHandler.class));
         verify(jerseyRequestMock).setContentType(eq("application/x-www-form-urlencoded"));
         verify(jerseyRequestMock).post(any(MultivaluedHashMap.class));
         verify(jerseyRequestMock, never()).addParams(argument.capture());
@@ -144,7 +148,9 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ResourceThumbnailsListWrapper.class), eq(new String[]{"/thumbnails"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(ResourceThumbnailsListWrapper.class),
+                eq(new String[]{"thumbnails"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.setContentType("application/x-www-form-urlencoded")).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.addParams(any(MultivaluedHashMap.class))).thenReturn(jerseyRequestMock);
         when(jerseyRequestMock.get()).thenReturn(operationResultMock);
@@ -162,7 +168,9 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
         Assert.assertNotNull(retrieved);
         Assert.assertSame(retrieved, operationResultMock);
         PowerMockito.verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(ResourceThumbnailsListWrapper.class), eq(new String[]{"/thumbnails"}), any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock),
+                eq(ResourceThumbnailsListWrapper.class),
+                eq(new String[]{"thumbnails"}), any(DefaultErrorHandler.class));
         verify(jerseyRequestMock, never()).setContentType(eq("application/x-www-form-urlencoded"));
         verify(jerseyRequestMock, never()).post(argument.capture());
         verify(jerseyRequestMock).addParams(argument.capture());

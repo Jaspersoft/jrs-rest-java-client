@@ -38,6 +38,8 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
  */
 public class ReportParametersValuesAdapter extends AbstractAdapter {
 
+    public static final String REPORTS_URI = "reports";
+    public static final String INPUT_CONTROLS_URI = "inputControls";
     protected final String reportUnitUri;
     protected MultivaluedMap<String, String> params;
     private String idsPathSegment;
@@ -77,7 +79,7 @@ public class ReportParametersValuesAdapter extends AbstractAdapter {
     private JerseyRequest<InputControlStateListWrapper> prepareRequest() {
         JerseyRequest<InputControlStateListWrapper> request =
                 buildRequest(sessionStorage, InputControlStateListWrapper.class,
-                        new String[]{"/reports", reportUnitUri, "/inputControls"}, new DefaultErrorHandler());
+                        new String[]{REPORTS_URI, reportUnitUri, INPUT_CONTROLS_URI}, new DefaultErrorHandler());
         if (idsPathSegment != null) {
             request.setPath(idsPathSegment);
         }

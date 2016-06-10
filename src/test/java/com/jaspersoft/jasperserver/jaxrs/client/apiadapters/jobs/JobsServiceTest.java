@@ -131,7 +131,10 @@ public class JobsServiceTest extends PowerMockTestCase {
         JobsService serviceSpy = spy(new JobsService(sessionStorageMock));
 
         mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs"}), any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
+        when(JerseyRequest.buildRequest(eq(sessionStorageMock),
+                eq(Job.class),
+                eq(new String[]{"jobs"}),
+                any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
         when(jobRequestMock.put(reportMock)).thenReturn(expectedJobOperationResultMock);
         when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
         when(configurationMock.getJrsVersion()).thenReturn(JRSVersion.v5_6_1);
@@ -142,7 +145,10 @@ public class JobsServiceTest extends PowerMockTestCase {
 
         // Then
         verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs"}), any(JobValidationErrorHandler.class));
+        JerseyRequest.buildRequest(eq(sessionStorageMock),
+                eq(Job.class),
+                eq(new String[]{"jobs"}),
+                any(JobValidationErrorHandler.class));
         verify(jobRequestMock, times(1)).put(reportMock);
         verify(jobRequestMock, times(1)).setContentType("application/job+xml");
         verify(jobRequestMock, times(1)).setAccept("application/job+xml");
@@ -153,7 +159,10 @@ public class JobsServiceTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs"}), any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
+        when(JerseyRequest.buildRequest(eq(sessionStorageMock),
+                eq(Job.class),
+                eq(new String[]{"jobs"}),
+                any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
         when(jobRequestMock.put(reportMock)).thenReturn(expectedJobOperationResultMock);
         when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
         when(configurationMock.getJrsVersion()).thenReturn(JRSVersion.v4_7_0);
@@ -165,7 +174,10 @@ public class JobsServiceTest extends PowerMockTestCase {
 
         // Then
         verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs"}), any(JobValidationErrorHandler.class));
+        JerseyRequest.buildRequest(eq(sessionStorageMock),
+                eq(Job.class),
+                eq(new String[]{"jobs"}),
+                any(JobValidationErrorHandler.class));
         verify(jobRequestMock, times(1)).put(reportMock);
         verify(jobRequestMock, times(1)).setContentType("application/job+json");
         verify(jobRequestMock, times(1)).setAccept("application/job+json");
@@ -215,7 +227,9 @@ public class JobsServiceTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(CalendarNameListWrapper.class), eq(new String[]{"/jobs", "/calendars"}))).thenReturn(wrapperRequestMock);
+        when(JerseyRequest.buildRequest(eq(sessionStorageMock),
+                eq(CalendarNameListWrapper.class),
+                eq(new String[]{"jobs", "calendars"}))).thenReturn(wrapperRequestMock);
         when(wrapperRequestMock.get()).thenReturn(expectedWrapperOperationResultMock);
         JobsService serviceSpy = spy(new JobsService(sessionStorageMock));
 
@@ -227,7 +241,9 @@ public class JobsServiceTest extends PowerMockTestCase {
         assertSame(retrieved, expectedWrapperOperationResultMock);
 
         verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(CalendarNameListWrapper.class), eq(new String[]{"/jobs", "/calendars"}));
+        JerseyRequest.buildRequest(eq(sessionStorageMock),
+                eq(CalendarNameListWrapper.class),
+                eq(new String[]{"jobs", "calendars"}));
 
         verify(wrapperRequestMock, times(1)).get();
         verify(wrapperRequestMock, times(1)).addParam("calendarType", CalendarType.daily.toString().toLowerCase());
@@ -239,7 +255,9 @@ public class JobsServiceTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(CalendarNameListWrapper.class), eq(new String[]{"/jobs", "/calendars"}))).thenReturn(wrapperRequestMock);
+        when(JerseyRequest.buildRequest(eq(sessionStorageMock),
+                eq(CalendarNameListWrapper.class),
+                eq(new String[]{"jobs", "calendars"}))).thenReturn(wrapperRequestMock);
         when(wrapperRequestMock.get()).thenReturn(expectedWrapperOperationResultMock);
         JobsService serviceSpy = spy(new JobsService(sessionStorageMock));
 
@@ -251,7 +269,9 @@ public class JobsServiceTest extends PowerMockTestCase {
         assertSame(retrieved, expectedWrapperOperationResultMock);
 
         verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(CalendarNameListWrapper.class), eq(new String[]{"/jobs", "/calendars"}));
+        JerseyRequest.buildRequest(eq(sessionStorageMock),
+                eq(CalendarNameListWrapper.class),
+                eq(new String[]{"jobs", "calendars"}));
 
         verify(wrapperRequestMock, times(1)).get();
         verify(wrapperRequestMock, never()).addParam("calendarType", CalendarType.daily.toString().toLowerCase());
@@ -288,7 +308,9 @@ public class JobsServiceTest extends PowerMockTestCase {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(CalendarNameListWrapper.class), eq(new String[]{"/jobs", "/calendars"}))).thenReturn(wrapperRequestMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock),
+                eq(CalendarNameListWrapper.class),
+                eq(new String[]{"jobs", "calendars"}))).thenReturn(wrapperRequestMock);
 
         PowerMockito.doReturn(expectedWrapperOperationResultMock).when(wrapperRequestMock).get();
         JobsService serviceSpy = PowerMockito.spy(new JobsService(sessionStorageMock));
@@ -331,7 +353,10 @@ public class JobsServiceTest extends PowerMockTestCase {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs"}), any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock),
+                eq(Job.class),
+                eq(new String[]{"jobs"}),
+                any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
 
         PowerMockito.doReturn(expectedJobOperationResultMock).when(jobRequestMock).put(reportMock);
         JobsService serviceSpy = PowerMockito.spy(new JobsService(sessionStorageMock));
@@ -381,7 +406,10 @@ public class JobsServiceTest extends PowerMockTestCase {
 
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(Job.class), eq(new String[]{"/jobs"}), any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock),
+                eq(Job.class),
+                eq(new String[]{"jobs"}),
+                any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
 
         PowerMockito.doReturn(expectedJobOperationResultMock).when(jobRequestMock).put(reportMock);
         JobsService serviceSpy = PowerMockito.spy(new JobsService(sessionStorageMock));

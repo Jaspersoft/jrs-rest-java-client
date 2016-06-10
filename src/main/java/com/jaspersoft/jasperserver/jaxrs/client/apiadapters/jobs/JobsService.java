@@ -34,6 +34,9 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class JobsService extends AbstractAdapter {
 
+    public static final String SERVICE_URI = "jobs";
+    public static final String CALENDARS = "calendars";
+
     public JobsService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
@@ -47,7 +50,7 @@ public class JobsService extends AbstractAdapter {
     }
 
     public OperationResult<Job> scheduleReport(Job report) {
-        JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
+        JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{SERVICE_URI}, new JobValidationErrorHandler());
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
@@ -59,7 +62,7 @@ public class JobsService extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncScheduleReport(final Job report, final Callback<OperationResult<Job>, R> callback) {
-        final JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{"/jobs"}, new JobValidationErrorHandler());
+        final JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{SERVICE_URI}, new JobValidationErrorHandler());
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
             request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
@@ -86,7 +89,7 @@ public class JobsService extends AbstractAdapter {
     }
 
     public OperationResult<CalendarNameListWrapper> calendars(CalendarType type) {
-        JerseyRequest<CalendarNameListWrapper> request = buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
+        JerseyRequest<CalendarNameListWrapper> request = buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{SERVICE_URI, CALENDARS});
         if (type != null) {
             request.addParam("calendarType", type.name().toLowerCase());
         }
@@ -94,7 +97,7 @@ public class JobsService extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncCalendars(final CalendarType type, final Callback<OperationResult<CalendarNameListWrapper>, R> callback) {
-        final JerseyRequest<CalendarNameListWrapper> request = buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{"/jobs", "/calendars"});
+        final JerseyRequest<CalendarNameListWrapper> request = buildRequest(sessionStorage, CalendarNameListWrapper.class, new String[]{SERVICE_URI, CALENDARS});
         if (type != null) {
             request.addParam("calendarType", type.name().toLowerCase());
         }

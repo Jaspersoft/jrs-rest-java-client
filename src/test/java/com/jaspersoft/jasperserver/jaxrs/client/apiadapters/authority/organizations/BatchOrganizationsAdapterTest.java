@@ -75,7 +75,7 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class), eq(new String[]{"/organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class), eq(new String[]{"organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(operationResultMock).when(requestMock).get();
         BatchOrganizationsAdapter adapterSpy = spy(new BatchOrganizationsAdapter(sessionStorageMock));
 
@@ -133,7 +133,7 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
     public void should_get_resource() {
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class), eq(new String[]{"/organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class), eq(new String[]{"organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(operationResultMock).when(requestMock).get();
         BatchOrganizationsAdapter adapterSpy = spy(new BatchOrganizationsAdapter(sessionStorageMock));
 
@@ -149,7 +149,7 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
 
         BatchOrganizationsAdapter adapterSpy = spy(new BatchOrganizationsAdapter(sessionStorageMock));
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class), eq(new String[]{"/organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class), eq(new String[]{"organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(adapterSpy).when(adapterSpy).parameter(OrganizationParameter.INCLUDE_PARENTS, true);
         doReturn(operationResultMock).when(requestMock).get();
 

@@ -22,9 +22,15 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -32,6 +38,8 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class PermissionResourceRequestAdapter extends AbstractAdapter {
 
+    public static final String PERMISSIONS_URI = "permissions";
+    private ArrayList<String> path = new ArrayList<String>();
     private final String resourceUri;
     private final MultivaluedMap<String, String> params;
 
@@ -48,13 +56,13 @@ public class PermissionResourceRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<RepositoryPermissionListWrapper> createOrUpdate(RepositoryPermissionListWrapper permissions) {
-        JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
+        JerseyRequest<RepositoryPermissionListWrapper> request = buildReauest();
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
         return request.put(permissions);
     }
 
     public <R> RequestExecution asyncCreateOrUpdate(final RepositoryPermissionListWrapper permissions, final Callback<OperationResult<RepositoryPermissionListWrapper>, R> callback) {
-        final JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
+        final JerseyRequest<RepositoryPermissionListWrapper> request = buildReauest();
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -66,19 +74,21 @@ public class PermissionResourceRequestAdapter extends AbstractAdapter {
         return task;
     }
 
+
+
     public PermissionResourceRequestAdapter param(PermissionResourceParameter resourceParam, String value) {
         params.add(resourceParam.getParamName(), value);
         return this;
     }
 
     public OperationResult<RepositoryPermissionListWrapper> get(){
-        JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
+        JerseyRequest<RepositoryPermissionListWrapper> request = buildReauest();
         request.addParams(params);
         return request.get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<RepositoryPermissionListWrapper>, R> callback) {
-        final JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
+        final JerseyRequest<RepositoryPermissionListWrapper> request = buildReauest();
         request.addParams(params);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
@@ -91,11 +101,11 @@ public class PermissionResourceRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult delete(){
-        return buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri}).delete();
+        return buildReauest().delete();
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult<RepositoryPermissionListWrapper>, R> callback) {
-        final JerseyRequest<RepositoryPermissionListWrapper> request = buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{"/permissions", resourceUri});
+        final JerseyRequest<RepositoryPermissionListWrapper> request = buildReauest();
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -104,5 +114,11 @@ public class PermissionResourceRequestAdapter extends AbstractAdapter {
         });
         ThreadPoolUtil.runAsynchronously(task);
         return task;
+    }
+
+    protected JerseyRequest<RepositoryPermissionListWrapper> buildReauest() {
+        path.add(PERMISSIONS_URI);
+        path.addAll(Arrays.asList(resourceUri.split("/")));
+        return buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, path.toArray(new String[path.size()]));
     }
 }

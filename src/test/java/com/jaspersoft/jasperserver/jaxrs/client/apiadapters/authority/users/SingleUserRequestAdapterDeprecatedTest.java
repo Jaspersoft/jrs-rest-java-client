@@ -7,6 +7,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -69,8 +70,12 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
         // When
         SingleUserRequestAdapter adapter = new SingleUserRequestAdapter(sessionStorageMock, "MyCoolOrg", "Simon");
 
-        final String retrieved = (String) Whitebox.getInternalState(adapter, "userUriPrefix");
-        final String expected = "/organizations/MyCoolOrg/users/";
+        final ArrayList<String> retrieved = (ArrayList<String>) Whitebox.getInternalState(adapter, "uri");
+        ArrayList<String> expected = new ArrayList<String>() {{
+            add("organizations");
+            add("MyCoolOrg");
+            add("users");
+        }};
 
         // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
@@ -83,8 +88,10 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
         // When
         SingleUserRequestAdapter adapter = new SingleUserRequestAdapter(sessionStorageMock, null, "Simon");
 
-        final String retrieved = (String) Whitebox.getInternalState(adapter, "userUriPrefix");
-        final String expected = "/users/";
+        final ArrayList<String> retrieved = (ArrayList<String>) Whitebox.getInternalState(adapter, "uri");
+        ArrayList<String> expected = new ArrayList<String>() {{
+            add("users");
+        }};
 
         // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
@@ -96,12 +103,18 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
 
         // When
         final SingleUserRequestAdapter adapter = new SingleUserRequestAdapter(sessionStorageMock, "MyCoolOrg");
-        final StringBuilder retrieved = (StringBuilder) Whitebox.getInternalState(adapter, "uri");
-        final String expected = "/organizations/MyCoolOrg/users/";
+        final ArrayList<String> retrieved = (ArrayList<String>) Whitebox.getInternalState(adapter, "uri");
+        ArrayList<String> expected = new ArrayList<String>() {{
+            add("organizations");
+            add("MyCoolOrg");
+            add("users");
+        }};
+
+
 
         // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
-        Assert.assertEquals(retrieved.toString(), expected);
+        Assert.assertEquals(retrieved, expected);
     }
 
     @Test(testName = "constructor_with_StringBuilder")
@@ -109,12 +122,14 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
 
         // When
         final SingleUserRequestAdapter adapter = new SingleUserRequestAdapter(sessionStorageMock, (String)null);
-        final StringBuilder retrieved = (StringBuilder) Whitebox.getInternalState(adapter, "uri");
-        final String expected = "/users/";
+        final ArrayList<String> retrieved = (ArrayList<String>) Whitebox.getInternalState(adapter, "uri");
+        ArrayList<String> expected = new ArrayList<String>() {{
+            add("users");
+        }};
 
         // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
-        Assert.assertEquals(retrieved.toString(), expected);
+        Assert.assertEquals(retrieved, expected);
     }
 
     @Test
@@ -122,12 +137,17 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
 
         // When
         final SingleUserRequestAdapter adapter = new SingleUserRequestAdapter("Simon", "MyCoolOrg", sessionStorageMock);
-        final StringBuilder retrieved = (StringBuilder) Whitebox.getInternalState(adapter, "uri");
-        final String expected = "/organizations/MyCoolOrg/users/Simon";
+        final ArrayList<String> retrieved = (ArrayList<String>) Whitebox.getInternalState(adapter, "uri");
+        ArrayList<String> expected = new ArrayList<String>() {{
+            add("organizations");
+            add("MyCoolOrg");
+            add("users");
+            add("Simon");
+        }};
 
         // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
-        assertEquals(retrieved.toString(), expected);
+        assertEquals(retrieved, expected);
     }
 
     @Test
@@ -135,12 +155,15 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
 
         // When
         final SingleUserRequestAdapter adapter = new SingleUserRequestAdapter("Simon", null, sessionStorageMock);
-        final StringBuilder retrieved = (StringBuilder) Whitebox.getInternalState(adapter, "uri");
-        final String expected = "/users/Simon";
+        final ArrayList<String> retrieved = (ArrayList<String>) Whitebox.getInternalState(adapter, "uri");
+        ArrayList<String> expected = new ArrayList<String>() {{
+            add("users");
+            add("Simon");
+        }};
 
         // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
-        assertEquals(retrieved.toString(), expected);
+        assertEquals(retrieved, expected);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -178,9 +201,10 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
         final String userId = "Simon";
 
         mockStatic(JerseyRequest.class);
-        SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter("Simon", "MyCoolOrg", sessionStorageMock));
+        SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter(userId, "MyCoolOrg", sessionStorageMock));
 
-        when(buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/" + userId}), any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"organizations",
+                "MyCoolOrg", "users", userId}), any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
         doReturn(operationResultMock).when(userJerseyRequestMock).get();
 
         // When
@@ -188,7 +212,8 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
 
         // Then
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/" + userId}), any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"organizations",
+                "MyCoolOrg", "users", userId}), any(DefaultErrorHandler.class));
         assertNotNull(retrieved);
     }
 
@@ -201,7 +226,8 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter(sessionStorageMock, "MyCoolOrg"));
 
-        when(buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/" + userId}), any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"organizations",
+                "MyCoolOrg", "users", userId}), any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
         doReturn(operationResultMock).when(userJerseyRequestMock).get();
 
         // When
@@ -209,7 +235,8 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
 
         // Then
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/" + userId}), any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"organizations",
+                "MyCoolOrg", "users", userId}), any(DefaultErrorHandler.class));
     }
 
     @Test
@@ -258,7 +285,7 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter(/*storageMock, null, "Simon"*/ "Simon", null, sessionStorageMock));
+        SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter("Simon", null, sessionStorageMock));
 
         final Callback<OperationResult<ClientUser>, Void> callback = spy(new Callback<OperationResult<ClientUser>, Void>() {
             @Override
@@ -283,11 +310,11 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        StringBuilder uri = (StringBuilder) Whitebox.getInternalState(adapterSpy, "uri");
+        ArrayList<String> uri = (ArrayList<String>) Whitebox.getInternalState(adapterSpy, "uri");
 
         // Then
         assertNotNull(retrieved);
-        assertEquals(uri.toString(), "/users/Simon");
+        assertEquals(uri.toString(), "[users, Simon]");
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(operationResultMock);
         verify(userJerseyRequestMock, times(1)).get();
@@ -325,11 +352,11 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        StringBuilder uri = (StringBuilder) Whitebox.getInternalState(adapterSpy, "uri");
+        ArrayList<String> uri = (ArrayList<String>) Whitebox.getInternalState(adapterSpy, "uri");
 
         // Then
         assertNotNull(retrieved);
-        assertEquals(uri.toString(), "/users/Simon");
+        assertEquals(uri.toString(), "[users, Simon]");
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(operationResultMock);
         verify(userJerseyRequestMock, times(1)).get();
@@ -404,11 +431,11 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        StringBuilder uri = (StringBuilder) Whitebox.getInternalState(adapterSpy, "uri");
+        ArrayList<String> uri = (ArrayList<String>) Whitebox.getInternalState(adapterSpy, "uri");
 
         // Then
         assertNotNull(retrieved);
-        assertEquals(uri.toString(), "/users/Simon");
+        assertEquals(uri.toString(), "[users, Simon]");
         assertNotSame(currentThreadId, newThreadId.get());
         verify(callback, times(1)).execute(operationResultMock);
         verify(userJerseyRequestMock, times(1)).put(userMock);
@@ -483,12 +510,12 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
             callback.wait(1000);
         }
 
-        StringBuilder uri = (StringBuilder) Whitebox.getInternalState(adapterSpy, "uri");
+        ArrayList<String> uri = (ArrayList<String>) Whitebox.getInternalState(adapterSpy, "uri");
 
         // Then
         assertNotNull(retrieved);
         assertNotSame(currentThreadId, newThreadId.get());
-        assertEquals(uri.toString(), "/organizations/MyCoolOrg/users/Simon");
+        assertEquals(uri.toString(), "[organizations, MyCoolOrg, users, Simon]");
         verify(callback, times(1)).execute(operationResultMock);
         verify(userJerseyRequestMock, times(1)).delete();
     }
@@ -501,7 +528,7 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/", "Simon"}), any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon"}), any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
         doReturn(operationResultMock).when(userJerseyRequestMock).delete();
 
         SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter(sessionStorageMock, "MyCoolOrg", "Simon"));
@@ -511,7 +538,7 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
 
         // Then
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/", "Simon"}), any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon"}), any(DefaultErrorHandler.class));
         verify(userJerseyRequestMock, times(1)).delete();
         assertNotNull(retrieved);
     }
@@ -524,7 +551,7 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/", "Simon"}), any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon"}), any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
         doReturn(operationResultMock).when(userJerseyRequestMock).put(userMock);
 
         SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter(sessionStorageMock, "MyCoolOrg", "Simon"));
@@ -534,7 +561,7 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
 
         // Then
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"/organizations/MyCoolOrg/users/", "Simon"}), any(DefaultErrorHandler.class));
+        buildRequest(eq(sessionStorageMock), eq(ClientUser.class), eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon"}), any(DefaultErrorHandler.class));
         verify(userJerseyRequestMock, times(1)).put(userMock);
         assertNotNull(retrieved);
     }
@@ -547,7 +574,7 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(ClientUser.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon"}),
+                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon"}),
                 any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
 
         SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter(sessionStorageMock, "MyCoolOrg"));
@@ -572,7 +599,7 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(ClientUser.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon"}),
+                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon"}),
                 any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
 
         SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter(sessionStorageMock, (String)null));
@@ -598,7 +625,7 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(ClientUser.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon"}),
+                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon"}),
                 any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
 
         SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter(sessionStorageMock, "MyCoolOrg"));
@@ -621,7 +648,7 @@ public class SingleUserRequestAdapterDeprecatedTest extends PowerMockTestCase {
         when(buildRequest(
                 eq(sessionStorageMock),
                 eq(ClientUser.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon"}),
+                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon"}),
                 any(DefaultErrorHandler.class))).thenReturn(userJerseyRequestMock);
 
         SingleUserRequestAdapter adapterSpy = spy(new SingleUserRequestAdapter(sessionStorageMock, "MyCoolOrg"));

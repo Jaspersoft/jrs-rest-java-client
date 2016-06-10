@@ -221,7 +221,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
                 buildRequest(
                         eq(sessionStorageMock),
                         eq(State.class),
-                        eq(new String[]{"/import"})))
+                        eq(new String[]{"import"})))
                 .thenReturn(requestStateDtoMock);
 
         InOrder inOrder = Mockito.inOrder(requestStateDtoMock);
@@ -242,7 +242,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         JerseyRequest.buildRequest(
                 eq(sessionStorageMock),
                 eq(State.class),
-                eq(new String[]{"/import"}));
+                eq(new String[]{"import"}));
 
         Thread.sleep(500);
 
@@ -266,7 +266,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
                 buildRequest(
                         eq(sessionStorageMock),
                         eq(State.class),
-                        eq(new String[]{"/import"}),
+                        eq(new String[]{"import"}),
                         any(DefaultErrorHandler.class)))
                 .thenReturn(requestStateDtoMock);
 
@@ -286,7 +286,7 @@ public class ImportTaskRequestAdapterTest extends PowerMockTestCase {
         JerseyRequest.buildRequest(
                 eq(sessionStorageMock),
                 eq(State.class),
-                eq(new String[]{"/import"}),
+                eq(new String[]{"import"}),
                 any(DefaultErrorHandler.class));
 
         inOrder.verify(requestStateDtoMock, times(1)).setContentType("application/zip");

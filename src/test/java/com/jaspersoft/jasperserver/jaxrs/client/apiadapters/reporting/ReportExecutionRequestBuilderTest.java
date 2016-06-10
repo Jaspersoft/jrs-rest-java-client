@@ -97,7 +97,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
         int currentThreadId = (int) Thread.currentThread().getId();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionStatusEntity.class), eq(new String[]{"/reportExecutions", "requestId", "/status"}))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionStatusEntity.class), eq(new String[]{"reportExecutions", "requestId", "status"}))).thenReturn(requestMock);
 
         ReportExecutionRequestBuilder builderSpy = PowerMockito.spy(new ReportExecutionRequestBuilder(sessionStorageMock, "requestId"));
 
@@ -144,7 +144,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
         int currentThreadId = (int) Thread.currentThread().getId();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"/reportExecutions", "requestId"}))).thenReturn(reportExecutionDescriptorJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"reportExecutions", "requestId"}))).thenReturn(reportExecutionDescriptorJerseyRequestMock);
 
         ReportExecutionRequestBuilder builderSpy = PowerMockito.spy(new ReportExecutionRequestBuilder(sessionStorageMock, "requestId"));
 
@@ -192,7 +192,7 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
         int currentThreadId = (int) Thread.currentThread().getId();
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ExportExecutionDescriptor.class), eq(new String[]{"/reportExecutions", "requestId", "/exports"}))).thenReturn(exportExecutionDescriptorJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(ExportExecutionDescriptor.class), eq(new String[]{"reportExecutions", "requestId", "exports"}))).thenReturn(exportExecutionDescriptorJerseyRequestMock);
 
         ReportExecutionRequestBuilder builderSpy = PowerMockito.spy(new ReportExecutionRequestBuilder(sessionStorageMock, "requestId"));
 
@@ -238,7 +238,9 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
         whenNew(ReportExecutionStatusEntity.class).withNoArguments().thenReturn(statusEntityMock);
 
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionStatusEntity.class), eq(new String[]{"/reportExecutions", "requestId", "/status"}))).thenReturn(reportExecutionStatusEntityJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(ReportExecutionStatusEntity.class),
+                eq(new String[]{"reportExecutions", "requestId", "status"}))).thenReturn(reportExecutionStatusEntityJerseyRequestMock);
 
         ReportExecutionRequestBuilder builderSpy = PowerMockito.spy(new ReportExecutionRequestBuilder(sessionStorageMock, "requestId"));
         Callback<OperationResult<ReportExecutionStatusEntity>, Void> callback = spy(new Callback<OperationResult<ReportExecutionStatusEntity>, Void>() {
@@ -273,7 +275,9 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
     @Test
     public void should_return_operation_result_with_proper_entity() {
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionStatusEntity.class), eq(new String[]{"/reportExecutions", "requestId", "/status"}))).thenReturn(reportExecutionStatusEntityJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(ReportExecutionStatusEntity.class),
+                eq(new String[]{"reportExecutions", "requestId", "status"}))).thenReturn(reportExecutionStatusEntityJerseyRequestMock);
         doReturn(reportExecutionStatusEntityOperationResultMock).when(reportExecutionStatusEntityJerseyRequestMock).get();
         ReportExecutionRequestBuilder builderSpy = PowerMockito.spy(new ReportExecutionRequestBuilder(sessionStorageMock, "requestId"));
 
@@ -284,7 +288,9 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
     @Test
     public void test_return_execution_details() {
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionDescriptor.class), eq(new String[]{"/reportExecutions", "requestId"}))).thenReturn(reportExecutionDescriptorJerseyRequestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(ReportExecutionDescriptor.class),
+                eq(new String[]{"reportExecutions", "requestId"}))).thenReturn(reportExecutionDescriptorJerseyRequestMock);
         doReturn(reportExecutionDescriptorOperationResultMock).when(reportExecutionDescriptorJerseyRequestMock).get();
         ReportExecutionRequestBuilder builderSpy = PowerMockito.spy(new ReportExecutionRequestBuilder(sessionStorageMock, "requestId"));
 
@@ -300,7 +306,9 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
         ArgumentCaptor<ReportExecutionStatusEntity> captor = ArgumentCaptor.forClass(ReportExecutionStatusEntity.class);
 
         mockStatic(JerseyRequest.class);
-        Mockito.when(buildRequest(eq(sessionStorageMock), eq(ReportExecutionStatusEntity.class), eq(new String[]{"/reportExecutions", "requestId", "/status"}))).thenReturn(reportExecutionStatusEntityJerseyRequestMock);
+        Mockito.when(buildRequest(eq(sessionStorageMock),
+                eq(ReportExecutionStatusEntity.class),
+                eq(new String[]{"reportExecutions", "requestId", "status"}))).thenReturn(reportExecutionStatusEntityJerseyRequestMock);
         Mockito.doReturn(resultMock).when(reportExecutionStatusEntityJerseyRequestMock).put(any(ReportExecutionStatusEntity.class));
 
         ReportExecutionRequestBuilder builder = new ReportExecutionRequestBuilder(sessionStorageMock, "requestId");
@@ -309,7 +317,9 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
         assertSame(retrieved, resultMock);
 
         verifyStatic();
-        buildRequest(eq(sessionStorageMock), eq(ReportExecutionStatusEntity.class), eq(new String[]{"/reportExecutions", "requestId", "/status"}));
+        buildRequest(eq(sessionStorageMock),
+                eq(ReportExecutionStatusEntity.class),
+                eq(new String[]{"reportExecutions", "requestId", "status"}));
 
         verify(reportExecutionStatusEntityJerseyRequestMock).put(captor.capture());
         assertEquals(captor.getValue().getValue(), "cancelled");
@@ -319,14 +329,18 @@ public class ReportExecutionRequestBuilderTest extends PowerMockTestCase {
     public void test_run_export_and_return_descriptor() {
 
         mockStatic(JerseyRequest.class);
-        Mockito.when(buildRequest(eq(sessionStorageMock), eq(ExportExecutionDescriptor.class), eq(new String[]{"/reportExecutions", "requestId", "/exports"}))).thenReturn(exportExecutionDescriptorJerseyRequestMock);
+        Mockito.when(buildRequest(eq(sessionStorageMock),
+                eq(ExportExecutionDescriptor.class),
+                eq(new String[]{"reportExecutions", "requestId", "exports"}))).thenReturn(exportExecutionDescriptorJerseyRequestMock);
         Mockito.doReturn(resultMock).when(exportExecutionDescriptorJerseyRequestMock).post(optionsMock);
 
         ReportExecutionRequestBuilder builder = new ReportExecutionRequestBuilder(sessionStorageMock, "requestId");
         OperationResult<ExportExecutionDescriptor> retrieved = builder.runExport(optionsMock);
 
         verifyStatic();
-        buildRequest(eq(sessionStorageMock), eq(ExportExecutionDescriptor.class), eq(new String[]{"/reportExecutions", "requestId", "/exports"}));
+        buildRequest(eq(sessionStorageMock),
+                eq(ExportExecutionDescriptor.class),
+                eq(new String[]{"reportExecutions", "requestId", "exports"}));
 
         assertNotNull(retrieved);
         assertSame(retrieved, resultMock);
