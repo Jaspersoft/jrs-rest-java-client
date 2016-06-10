@@ -59,7 +59,10 @@ public class BatchRolesRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<RolesListWrapper> get() {
-        JerseyRequest<RolesListWrapper> request = buildRequest(sessionStorage, RolesListWrapper.class, uri.toArray(new String[uri.size()]), new DefaultErrorHandler());
+        JerseyRequest<RolesListWrapper> request = buildRequest(sessionStorage,
+                RolesListWrapper.class,
+                uri.toArray(new String[uri.size()]),
+                new DefaultErrorHandler());
         request.addParams(params);
         return request.get();
     }
