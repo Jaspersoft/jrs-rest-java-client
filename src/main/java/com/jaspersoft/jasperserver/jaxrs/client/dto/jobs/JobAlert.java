@@ -55,9 +55,11 @@ public class JobAlert {
         this.messageTextWhenJobFails = other.messageTextWhenJobFails;
         this.recipient = other.recipient;
         this.subject = other.subject;
-        this.toAddresses = new LinkedList<String>();
-        for (String toAddress : other.toAddresses) {
-            this.toAddresses.add(toAddress);
+        if (other.toAddresses != null) {
+            this.toAddresses = new LinkedList<String>();
+            for (String toAddress : other.toAddresses) {
+                this.toAddresses.add(toAddress);
+            }
         }
         this.version = other.version;
 

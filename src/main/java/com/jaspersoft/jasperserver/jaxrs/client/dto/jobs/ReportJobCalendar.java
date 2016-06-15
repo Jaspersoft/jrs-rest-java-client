@@ -74,18 +74,24 @@ public class ReportJobCalendar {
         this.cronExpression = other.cronExpression;
         this.dataSorted = other.dataSorted;
         this.description = other.description;
-        this.excludeDays = new ArrayList<Calendar>();
-        for (Calendar excludeDay : other.excludeDays) {
-            this.excludeDays.add(excludeDay);
+        if (other.excludeDays != null) {
+            this.excludeDays = new ArrayList<Calendar>();
+            for (Calendar excludeDay : other.excludeDays) {
+                this.excludeDays.add(excludeDay);
+            }
         }
-        this.excludeDaysFlags = new boolean[other.excludeDaysFlags.length];
-        for (int i = 0; i < other.excludeDaysFlags.length; i++) {
-            this.excludeDaysFlags[i] = other.excludeDaysFlags[i];
+        if (other.excludeDaysFlags != null) {
+            this.excludeDaysFlags = new boolean[other.excludeDaysFlags.length];
+            for (int i = 0; i < other.excludeDaysFlags.length; i++) {
+                this.excludeDaysFlags[i] = other.excludeDaysFlags[i];
+            }
         }
         this.invertTimeRange = other.invertTimeRange;
-        this.rangeEndingCalendar = (Calendar) other.rangeEndingCalendar.clone();
-        this.rangeStartingCalendar = (Calendar) other.rangeStartingCalendar.clone();
-        this.timeZone = (TimeZone) other.timeZone.clone();
+        this.rangeEndingCalendar = (other.rangeEndingCalendar != null) ?
+                (Calendar) other.rangeEndingCalendar.clone() : null;
+        this.rangeStartingCalendar = (other.rangeStartingCalendar != null) ?
+                (Calendar) other.rangeStartingCalendar.clone() : null;
+        this.timeZone = (other.timeZone != null) ? (TimeZone) other.timeZone.clone() : null;
     }
 
     public String getCalendarType() {

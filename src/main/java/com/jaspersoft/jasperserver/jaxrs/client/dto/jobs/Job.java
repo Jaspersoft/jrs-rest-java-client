@@ -61,9 +61,11 @@ public class Job {
         this.id = other.id;
         this.label = other.label;
         this.mailNotification = (other.mailNotification != null) ? new MailNotification(other.mailNotification) : null;
-        this.outputFormats = new HashSet<OutputFormat>();
-        for (OutputFormat outputFormat : other.outputFormats) {
-            this.outputFormats.add(outputFormat);
+        if (other.outputFormats != null) {
+            this.outputFormats = new HashSet<OutputFormat>();
+            for (OutputFormat outputFormat : other.outputFormats) {
+                this.outputFormats.add(outputFormat);
+            }
         }
         this.outputLocale = other.outputLocale;
         this.outputTimeZone = other.outputTimeZone;

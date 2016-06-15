@@ -12,10 +12,10 @@ public class DataSourceType {
     public DataSourceType() {
     }
 
-    public DataSourceType(String type, String typeValue, String labelMessage) {
-        this.type = type;
-        this.typeValue = typeValue;
-        this.labelMessage = labelMessage;
+    public DataSourceType(DataSourceType other) {
+        this.type = other.type;
+        this.typeValue = other.typeValue;
+        this.labelMessage = other.labelMessage;
     }
 
     public String getType() {

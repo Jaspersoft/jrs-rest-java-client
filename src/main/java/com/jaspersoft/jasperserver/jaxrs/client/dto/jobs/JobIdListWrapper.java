@@ -34,6 +34,7 @@ import java.util.List;
 public class JobIdListWrapper {
 
     private List<Long> ids;
+
     public JobIdListWrapper(){
     }
 

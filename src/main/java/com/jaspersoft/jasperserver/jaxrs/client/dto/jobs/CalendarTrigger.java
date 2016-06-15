@@ -49,16 +49,21 @@ public class CalendarTrigger extends JobTrigger {
         this.minutes = other.minutes;
         this.hours = other.hours;
         this.daysType = other.daysType;
-        this.weekDays = new TreeSet<Byte>();
-        Iterator<Byte> iterator = other.weekDays.iterator();
-        while (iterator.hasNext()) {
-            this.weekDays.add(iterator.next());
+        Iterator<Byte> iterator;
+        if (other.weekDays != null) {
+            this.weekDays = new TreeSet<Byte>();
+            iterator = other.weekDays.iterator();
+            while (iterator.hasNext()) {
+                this.weekDays.add(iterator.next());
+            }
         }
         this.monthDays = other.monthDays;
-        this.months = new TreeSet<Byte>();
-        Iterator<Byte> monthItertor = other.months.iterator();
-        while (monthItertor.hasNext()) {
-            this.months.add(iterator.next());
+        if (other.months != null) {
+            this.months = new TreeSet<Byte>();
+            Iterator<Byte> monthItertor = other.months.iterator();
+            while (monthItertor.hasNext()) {
+                this.months.add(monthItertor.next());
+            }
         }
     }
 

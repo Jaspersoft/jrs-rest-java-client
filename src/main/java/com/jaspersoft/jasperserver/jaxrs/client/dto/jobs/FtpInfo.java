@@ -50,9 +50,11 @@ public class FtpInfo {
         this.password = other.password;
         this.pbsz = other.pbsz;
         this.port = other.port;
-        this.propertiesMap = new LinkedHashMap<String, String>();
-        for (Map.Entry<String, String> entry: other.propertiesMap.entrySet()) {
-            this.propertiesMap.put(entry.getKey(), entry.getValue());
+        if (other.propertiesMap != null) {
+            this.propertiesMap = new LinkedHashMap<String, String>();
+            for (Map.Entry<String, String> entry: other.propertiesMap.entrySet()) {
+                this.propertiesMap.put(entry.getKey(), entry.getValue());
+            }
         }
         this.prot = other.prot;
         this.protocol = other.protocol;

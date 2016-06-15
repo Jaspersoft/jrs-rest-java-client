@@ -41,9 +41,11 @@ public class JobSource {
     }
 
     public JobSource(JobSource other) {
-        this.parameters = new LinkedHashMap<String, Object>();
-        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-            parameters.put(entry.getKey(),entry.getValue());
+        if (other.parameters != null) {
+            this.parameters = new LinkedHashMap<String, Object>();
+            for (Map.Entry<String, Object> entry : other.parameters.entrySet()) {
+                parameters.put(entry.getKey(),entry.getValue());
+            }
         }
         this.reportUnitURI = other.reportUnitURI;
     }

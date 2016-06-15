@@ -50,17 +50,23 @@ public class MailNotification {
     }
 
     public MailNotification(MailNotification other) {
-        this.bccAddresses = new LinkedList<String>();
-        for (String bccAddress : other.bccAddresses) {
-            this.bccAddresses.add(bccAddress);
+        if (other.bccAddresses != null) {
+            this.bccAddresses = new LinkedList<String>();
+            for (String bccAddress : other.bccAddresses) {
+                this.bccAddresses.add(bccAddress);
+            }
         }
-        this.ccAddresses = new LinkedList<String>();
-        for (String ccAddress : other.ccAddresses) {
-            this.ccAddresses.add(ccAddress);
+        if (other.ccAddresses != null) {
+            this.ccAddresses = new LinkedList<String>();
+            for (String ccAddress : other.ccAddresses) {
+                this.ccAddresses.add(ccAddress);
+            }
         }
-        this.toAddresses = new LinkedList<String>();
-        for (String toAddress : other.toAddresses) {
-            this.toAddresses.add(toAddress);
+        if (other.toAddresses != null) {
+            this.toAddresses = new LinkedList<String>();
+            for (String toAddress : other.toAddresses) {
+                this.toAddresses.add(toAddress);
+            }
         }
         this.id = other.id;
         this.includingStackTraceWhenJobFails = other.includingStackTraceWhenJobFails;

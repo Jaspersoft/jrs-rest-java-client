@@ -39,13 +39,17 @@ public class Timepicker {
         this.currentText = other.currentText;
         this.closeText = other.closeText;
         this.timeFormat = other.timeFormat;
-        this.amNames = new LinkedList<String>();
-        for (String amName : other.amNames) {
-            this.amNames.add(amName);
+        if (other.amNames != null) {
+            this.amNames = new LinkedList<String>();
+            for (String amName : other.amNames) {
+                this.amNames.add(amName);
+            }
         }
-        this.pmNames = new LinkedList<String>();
-        for (String pmName : other.pmNames) {
-            this.pmNames.add(pmName);
+        if (other.pmNames != null) {
+            this.pmNames = new LinkedList<String>();
+            for (String pmName : other.pmNames) {
+                this.pmNames.add(pmName);
+            }
         }
         this.isRTL = other.isRTL;
         this.dateFormat = other.dateFormat;
