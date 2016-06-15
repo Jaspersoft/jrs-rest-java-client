@@ -65,6 +65,34 @@ public class ReportJobCalendar {
     // java.util.Calendar.get( ) as index.
     private boolean[] excludeDaysFlags;
 
+    public ReportJobCalendar() {
+    }
+
+    public ReportJobCalendar(ReportJobCalendar other) {
+        this.baseCalendar = (other.baseCalendar != null) ? new ReportJobCalendar(other.baseCalendar) : null;
+        this.calendarType = other.calendarType;
+        this.cronExpression = other.cronExpression;
+        this.dataSorted = other.dataSorted;
+        this.description = other.description;
+        if (other.excludeDays != null) {
+            this.excludeDays = new ArrayList<Calendar>();
+            for (Calendar excludeDay : other.excludeDays) {
+                this.excludeDays.add(excludeDay);
+            }
+        }
+        if (other.excludeDaysFlags != null) {
+            this.excludeDaysFlags = new boolean[other.excludeDaysFlags.length];
+            for (int i = 0; i < other.excludeDaysFlags.length; i++) {
+                this.excludeDaysFlags[i] = other.excludeDaysFlags[i];
+            }
+        }
+        this.invertTimeRange = other.invertTimeRange;
+        this.rangeEndingCalendar = (other.rangeEndingCalendar != null) ?
+                (Calendar) other.rangeEndingCalendar.clone() : null;
+        this.rangeStartingCalendar = (other.rangeStartingCalendar != null) ?
+                (Calendar) other.rangeStartingCalendar.clone() : null;
+        this.timeZone = (other.timeZone != null) ? (TimeZone) other.timeZone.clone() : null;
+    }
 
     public String getCalendarType() {
         return calendarType;

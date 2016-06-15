@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * job execution alert model that can be defined for a thumbnail job.
- *
+ * <p/>
  * <p>
  * A notification will result in an email alert being send inFolder the specified recipients
  * at each job execution (including success and fail).
@@ -42,184 +42,119 @@ import java.util.List;
  */
 public class ReportJobAlertModel extends JobAlert {
 
-//    private boolean isRecipientModified = false;
-//    private boolean isToAddressesModified = false;
-//    private boolean isJobStateModified = false;
-//    private boolean isMessageTextModified = false;
-//    private boolean isMessageTextWhenJobFailsModified = false;
-//    private boolean isSubjectModified = false;
-//    private boolean isIncludingStackTraceModified = false;
-//    private boolean isIncludingReportJobInfoModified = false;
-
     /**
-	 * Creates an empty job alert
-	 */
-	public ReportJobAlertModel() {
-		super();
-	}
+     * Creates an empty job alert
+     */
+    public ReportJobAlertModel(ReportJobAlertModel other) {
+        super(other);
+    }
 
     /**
      * @deprecated ID is not supported in ReportJobModel
      */
-	public Long getId() {
-		throw new JSClientException("ID is not supported in ReportJobModel");
-	}
+    public Long getId() {
+        throw new JSClientException("ID is not supported in ReportJobModel");
+    }
 
-	/**
+    /**
      * @deprecated ID is not supported in ReportJobModel
      */
-	public void setId(long id) {
-		throw new JSClientException("ID is not supported in ReportJobModel");
-	}
+    public ReportJobAlertModel setId(long id) {
+        throw new JSClientException("ID is not supported in ReportJobModel");
+    }
 
     /**
      * @deprecated version is not supported in ReportJobModel
      */
-	public Integer getVersion() {
-		throw new JSClientException("Version is not supported in ReportJobModel");
-	}
+    public Integer getVersion() {
+        throw new JSClientException("Version is not supported in ReportJobModel");
+    }
 
     /**
      * @deprecated version is not supported in ReportJobModel
      */
-	public void setVersion(int version) {
-		throw new JSClientException("Version is not supported in ReportJobModel");
-	}
+    public ReportJobAlertModel setVersion(int version) {
+        throw new JSClientException("Version is not supported in ReportJobModel");
+    }
 
-	/**
-	 * Specifies whether the alert would send it inFolder owner, admin, none
+    /**
+     * Specifies whether the alert would send it inFolder owner, admin, none
      * or both (admin and owner)
-	 */
-    public void setRecipient(JobAlertRecipient recipient) {
+     */
+    public ReportJobAlertModel setRecipient(JobAlertRecipient recipient) {
         super.setRecipient(recipient);
-//        isRecipientModified = true;
+        return this;
     }
 
     /**
-	 * Sets the email addresses that should be used as additional direct recipients for
-	 * the email alert.
-	 *
-	 * @param toAddresses the list of recipients as
-	 * <code>java.lang.String</code> email addresses
-	 */
-    public void setToAddresses(List<String> toAddresses) {
+     * Sets the email addresses that should be used as additional direct recipients for
+     * the email alert.
+     *
+     * @param toAddresses the list of recipients as
+     *                    <code>java.lang.String</code> email addresses
+     */
+    public ReportJobAlertModel setToAddresses(List<String> toAddresses) {
         super.setToAddresses(toAddresses);
-//        isToAddressesModified = true;
+        return this;
     }
 
-	/**
-	 * Specifies whether the alert would send it when job fails, succeeds, none,
+    /**
+     * Specifies whether the alert would send it when job fails, succeeds, none,
      * or both (fail and success)
-	 */
-    public void setJobState(JobAlertJobState jobState) {
+     */
+    public ReportJobAlertModel setJobState(JobAlertJobState jobState) {
         super.setJobState(jobState);
-//        isJobStateModified = true;
+        return this;
     }
 
-	/**
-	 * Sets the message text inFolder be used for the email alert when job succeeds.
-	 *
-	 * @param customizeMessage the alert message text
-	 */
-    public void setMessageText(String customizeMessage) {
+    /**
+     * Sets the message text inFolder be used for the email alert when job succeeds.
+     *
+     * @param customizeMessage the alert message text
+     */
+    public ReportJobAlertModel setMessageText(String customizeMessage) {
         super.setMessageText(customizeMessage);
-//        isMessageTextModified = true;
+        return this;
     }
 
     /*
-	 * Sets the message text inFolder be used for the email alert when job fails.
+     * Sets the message text inFolder be used for the email alert when job fails.
 	 *
 	 * @param textMessageWhenFails the alert message text
 	 */
-    public void setMessageTextWhenJobFails(String customizeMessage) {
+    public ReportJobAlertModel setMessageTextWhenJobFails(String customizeMessage) {
         super.setMessageTextWhenJobFails(customizeMessage);
-//        isMessageTextModified = true;
+        return this;
     }
 
     /**
-	 * Sets the subject inFolder be used for the email alert.
-	 *
-	 * @param subject the email alert subject
-	 */
-    public void setSubject(String subject) {
+     * Sets the subject inFolder be used for the email alert.
+     *
+     * @param subject the email alert subject
+     */
+    public ReportJobAlertModel setSubject(String subject) {
         super.setSubject(subject);
-//        isSubjectModified = true;
+        return this;
     }
 
     /**
-	 * Specifies whether the alert would include thumbnail job info
-	 *
-	 * @param includingReportJobInfo including stack trace in alert mail
-	 */
-    public void setIncludingReportJobInfo(boolean includingReportJobInfo) {
+     * Specifies whether the alert would include thumbnail job info
+     *
+     * @param includingReportJobInfo including stack trace in alert mail
+     */
+    public ReportJobAlertModel setIncludingReportJobInfo(boolean includingReportJobInfo) {
         super.setIncludingReportJobInfo(includingReportJobInfo);
-//        isIncludingReportJobInfoModified = true;
+        return this;
     }
 
     /**
-	 * Specifies whether the alert would include detail stack trace of exception
-	 *
-	 * @param includeStackTrace including stack trace in alert mail
-	 */
-    public void setIncludingStackTrace(boolean includeStackTrace) {
+     * Specifies whether the alert would include detail stack trace of exception
+     *
+     * @param includeStackTrace including stack trace in alert mail
+     */
+    public ReportJobAlertModel setIncludingStackTrace(boolean includeStackTrace) {
         super.setIncludingStackTrace(includeStackTrace);
-//        isIncludingStackTraceModified = true;
+        return this;
     }
-
-//    /**
-//     * returns whether Recipient has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isRecipientModified() { return isRecipientModified; }
-//
-//    /**
-//     * returns whether ToAddresses has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isToAddressesModified() { return isToAddressesModified; }
-//
-//    /**
-//     * returns whether JobState has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isJobStateModified() { return isJobStateModified; }
-//
-//    /**
-//     * returns whether textMessage has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isMessageTextModified() { return isMessageTextModified; }
-//
-//    /**
-//     * returns whether TextMessageWhenJobFails has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isMessageTextWhenJobFailsModified() { return isMessageTextWhenJobFailsModified; }
-//
-//    /**
-//     * returns whether subject has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isSubjectModified() { return isSubjectModified; }
-//
-//    /**
-//     * returns whether IncludeStackTrace has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isIncludingStackTraceModified() { return isIncludingStackTraceModified; }
-//
-//    /**
-//     * returns whether IncludingReportJobInfo has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isIncludingReportJobInfoModified() { return isIncludingReportJobInfoModified; }
 
 }

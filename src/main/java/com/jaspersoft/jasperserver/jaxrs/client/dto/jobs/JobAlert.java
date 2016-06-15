@@ -23,6 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.AddressesXmlAdapter;
 
+import java.util.LinkedList;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -40,9 +41,29 @@ public class JobAlert {
     private String subject;
     private Boolean includingStackTrace;
     private Boolean includingReportJobInfo;
-
     private List<String> toAddresses;
 
+    public JobAlert() {
+    }
+
+    public JobAlert(JobAlert other) {
+        this.id = other.id;
+        this.includingReportJobInfo = other.includingReportJobInfo;
+        this.includingStackTrace = other.includingStackTrace;
+        this.jobState = other.jobState;
+        this.messageText = other.messageText;
+        this.messageTextWhenJobFails = other.messageTextWhenJobFails;
+        this.recipient = other.recipient;
+        this.subject = other.subject;
+        if (other.toAddresses != null) {
+            this.toAddresses = new LinkedList<String>();
+            for (String toAddress : other.toAddresses) {
+                this.toAddresses.add(toAddress);
+            }
+        }
+        this.version = other.version;
+
+    }
 
     @XmlElement(name = "toAddresses")
     public List<String> getToAddresses() {
@@ -50,80 +71,90 @@ public class JobAlert {
     }
 
     @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
-    public void setToAddresses(List<String> toAddresses) {
+    public JobAlert setToAddresses(List<String> toAddresses) {
         this.toAddresses = toAddresses;
+        return this;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public JobAlert setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
+    public JobAlert setVersion(Integer version) {
         this.version = version;
+        return this;
     }
 
     public JobAlertRecipient getRecipient() {
         return recipient;
     }
 
-    public void setRecipient(JobAlertRecipient recipient) {
+    public JobAlert setRecipient(JobAlertRecipient recipient) {
         this.recipient = recipient;
+        return this;
     }
 
     public JobAlertJobState getJobState() {
         return jobState;
     }
 
-    public void setJobState(JobAlertJobState jobState) {
+    public JobAlert setJobState(JobAlertJobState jobState) {
         this.jobState = jobState;
+        return this;
     }
 
     public String getMessageText() {
         return messageText;
     }
 
-    public void setMessageText(String messageText) {
+    public JobAlert setMessageText(String messageText) {
         this.messageText = messageText;
+        return this;
     }
 
     public String getMessageTextWhenJobFails() {
         return messageTextWhenJobFails;
     }
 
-    public void setMessageTextWhenJobFails(String messageTextWhenJobFails) {
+    public JobAlert setMessageTextWhenJobFails(String messageTextWhenJobFails) {
         this.messageTextWhenJobFails = messageTextWhenJobFails;
+        return this;
     }
 
     public String getSubject() {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public JobAlert setSubject(String subject) {
         this.subject = subject;
+        return this;
     }
 
     public Boolean isIncludingStackTrace() {
         return includingStackTrace;
     }
 
-    public void setIncludingStackTrace(Boolean includingStackTrace) {
+    public JobAlert setIncludingStackTrace(Boolean includingStackTrace) {
         this.includingStackTrace = includingStackTrace;
+        return this;
     }
 
     public Boolean isIncludingReportJobInfo() {
         return includingReportJobInfo;
     }
 
-    public void setIncludingReportJobInfo(Boolean includingReportJobInfo) {
+    public JobAlert setIncludingReportJobInfo(Boolean includingReportJobInfo) {
         this.includingReportJobInfo = includingReportJobInfo;
+        return this;
     }
 
     @Override

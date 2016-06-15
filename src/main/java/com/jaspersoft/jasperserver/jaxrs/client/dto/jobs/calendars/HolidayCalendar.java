@@ -37,6 +37,15 @@ public class HolidayCalendar extends Calendar {
         this.calendarType = CalendarType.holiday;
     }
 
+    public HolidayCalendar(HolidayCalendar other) {
+        super(other);
+        this.dataSorted = other.dataSorted;
+        this.excludeDays = new ArrayList<java.util.Calendar>();
+        for (java.util.Calendar excludeDay : other.excludeDays) {
+            this.excludeDays.add(excludeDay);
+        }
+    }
+
     private ArrayList<java.util.Calendar> excludeDays = new ArrayList<java.util.Calendar>();
     // true, if excludeDays is sorted
     private Boolean dataSorted;
@@ -46,16 +55,18 @@ public class HolidayCalendar extends Calendar {
         return excludeDays;
     }
 
-    public void setExcludeDays(ArrayList<java.util.Calendar> excludeDays) {
+    public HolidayCalendar setExcludeDays(ArrayList<java.util.Calendar> excludeDays) {
         this.excludeDays = excludeDays;
+        return this;
     }
 
     public Boolean getDataSorted() {
         return dataSorted;
     }
 
-    public void setDataSorted(Boolean dataSorted) {
+    public HolidayCalendar setDataSorted(Boolean dataSorted) {
         this.dataSorted = dataSorted;
+        return this;
     }
 
     @Override

@@ -24,7 +24,12 @@ public class AwsSettings {
         this.productTypeIsEc2 = other.productTypeIsEc2;
         this.isEc2Instance = other.isEc2Instance;
         this.productTypeIsJrsAmi = other.productTypeIsJrsAmi;
-        this.awsRegions = (other.awsRegions != null) ? new LinkedList<String>(other.awsRegions) : null;
+        if (other.awsRegions != null) {
+            this.awsRegions = new LinkedList<String>();
+            for (String awsRegion : other.awsRegions) {
+                this.awsRegions.add(awsRegion);
+            }
+        }
         this.productTypeIsMpAmi = other.productTypeIsMpAmi;
         this.suppressEc2CredentialsWarnings = other.suppressEc2CredentialsWarnings;
     }
