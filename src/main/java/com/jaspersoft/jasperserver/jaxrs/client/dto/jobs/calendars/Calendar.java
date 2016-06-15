@@ -31,30 +31,40 @@ public abstract class Calendar {
     protected String description;
     protected TimeZone timeZone;
 
-    protected Calendar(){}
+    public Calendar() {
+    }
+
+    protected Calendar(Calendar other){
+        this.calendarType = other.calendarType;
+        this.description = other.description;
+        this.timeZone = (other.timeZone != null) ? (TimeZone) other.timeZone.clone() : null;
+    }
 
     public CalendarType getCalendarType() {
         return calendarType;
     }
 
-    public void setCalendarType(CalendarType calendarType) {
+    public Calendar setCalendarType(CalendarType calendarType) {
         this.calendarType = calendarType;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public Calendar setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     public TimeZone getTimeZone() {
         return timeZone;
     }
 
-    public void setTimeZone(TimeZone timeZone) {
+    public Calendar setTimeZone(TimeZone timeZone) {
         this.timeZone = timeZone;
+        return this;
     }
 
     @Override

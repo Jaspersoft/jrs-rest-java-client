@@ -24,6 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.ReportJobSourceParametersXmlAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.ValuesCollection;
 
+import java.util.LinkedHashMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -36,12 +37,24 @@ public class JobSource {
     private String reportUnitURI;
     private Map<String, Object> parameters;
 
+    public JobSource() {
+    }
+
+    public JobSource(JobSource other) {
+        this.parameters = new LinkedHashMap<String, Object>();
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            parameters.put(entry.getKey(),entry.getValue());
+        }
+        this.reportUnitURI = other.reportUnitURI;
+    }
+
     public String getReportUnitURI() {
         return reportUnitURI;
     }
 
-    public void setReportUnitURI(String reportUnitURI) {
+    public JobSource setReportUnitURI(String reportUnitURI) {
         this.reportUnitURI = reportUnitURI;
+        return this;
     }
 
     @XmlJavaTypeAdapter(ReportJobSourceParametersXmlAdapter.class)
@@ -49,8 +62,9 @@ public class JobSource {
         return parameters;
     }
 
-    public void setParameters(Map<String, Object> parameters) {
+    public JobSource setParameters(Map<String, Object> parameters) {
         this.parameters = parameters;
+        return this;
     }
 
     @Override

@@ -39,10 +39,6 @@ import java.util.Map;
  * @since 4.7
  */
 public class ReportJobSourceModel extends JobSource {
-
-    /*private boolean isReportUnitURIModified = false;
-    private boolean isParametersMapModified = false;*/
-
 	/**
 	 * Creates an empty job source.
 	 */
@@ -55,9 +51,9 @@ public class ReportJobSourceModel extends JobSource {
 	 * @param reportUnitURI the repository URI/path of the thumbnail that the job
 	 * should execute
 	 */
-	public void setReportUnitURI(String reportUnitURI) {
-//        isReportUnitURIModified = true;
+	public ReportJobSourceModel setReportUnitURI(String reportUnitURI) {
 		super.setReportUnitURI(reportUnitURI);
+		return this;
 	}
 
 	/**
@@ -70,22 +66,8 @@ public class ReportJobSourceModel extends JobSource {
 	 *
 	 * @param parameters the thumbnail input values
 	 */
-	public void setParameters(Map<String, Object> parameters) {
-//		isParametersMapModified = true;
+	public ReportJobSourceModel setParameters(Map<String, Object> parameters) {
         super.setParameters(parameters);
+		return this;
 	}
-
-//    /**
-//     * returns whether thumbnail unit uri has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isReportUnitURIModified() { return isReportUnitURIModified; }
-//
-//    /**
-//     * returns whether parameters map has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isParametersMapModified() { return isParametersMapModified; }
 }

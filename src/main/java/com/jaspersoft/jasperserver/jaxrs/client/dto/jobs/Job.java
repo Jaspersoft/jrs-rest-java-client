@@ -24,6 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.OutputFormatXmlAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.TimestampToStringXmlAdapter;
 
+import java.util.HashSet;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -42,54 +43,82 @@ public class Job {
     private Timestamp creationDate;
     private String baseOutputFilename;
     private String outputLocale;
-
     private RepositoryDestination repositoryDestination;
     private MailNotification mailNotification;
     private JobSource source;
     private JobAlert alert;
     private Set<OutputFormat> outputFormats;
     private JobTrigger trigger;
-
     private String outputTimeZone;
+
+    public Job() {
+    }
+
+    public Job(Job other) {
+        this.alert = (other.alert != null) ? new JobAlert(other.alert) : null;
+        this.baseOutputFilename = other.baseOutputFilename;
+        this.description = other.description;
+        this.id = other.id;
+        this.label = other.label;
+        this.mailNotification = (other.mailNotification != null) ? new MailNotification(other.mailNotification) : null;
+        this.outputFormats = new HashSet<OutputFormat>();
+        for (OutputFormat outputFormat : other.outputFormats) {
+            this.outputFormats.add(outputFormat);
+        }
+        this.outputLocale = other.outputLocale;
+        this.outputTimeZone = other.outputTimeZone;
+        this.repositoryDestination = (other.repositoryDestination != null) ?
+                new RepositoryDestination(other.repositoryDestination) : null;
+        this.source = (other.source != null) ? new JobSource(other.source) : null;
+        this.username = other.username;
+        this.version = other.version;
+        this.creationDate = new Timestamp(other.creationDate.getTime());
+        this.trigger = other.trigger.deepClone();
+    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public Job setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public Long getVersion() {
         return version;
     }
 
-    public void setVersion(Long version) {
+    public Job setVersion(Long version) {
         this.version = version;
+        return this;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public Job setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     public String getLabel() {
         return label;
     }
 
-    public void setLabel(String label) {
+    public Job setLabel(String label) {
         this.label = label;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public Job setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     @XmlJavaTypeAdapter(TimestampToStringXmlAdapter.class)
@@ -97,24 +126,27 @@ public class Job {
         return creationDate;
     }
 
-    public void setCreationDate(Timestamp creationDate) {
+    public Job setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
+        return this;
     }
 
     public String getBaseOutputFilename() {
         return baseOutputFilename;
     }
 
-    public void setBaseOutputFilename(String baseOutputFilename) {
+    public Job setBaseOutputFilename(String baseOutputFilename) {
         this.baseOutputFilename = baseOutputFilename;
+        return this;
     }
 
     public String getOutputLocale() {
         return outputLocale;
     }
 
-    public void setOutputLocale(String outputLocale) {
+    public Job setOutputLocale(String outputLocale) {
         this.outputLocale = outputLocale;
+        return this;
     }
 
     @XmlElement(name = "repositoryDestination")
@@ -122,8 +154,9 @@ public class Job {
         return repositoryDestination;
     }
 
-    public void setRepositoryDestination(RepositoryDestination repositoryDestination) {
+    public Job setRepositoryDestination(RepositoryDestination repositoryDestination) {
         this.repositoryDestination = repositoryDestination;
+        return this;
     }
 
     @XmlElement(name = "mailNotification")
@@ -131,8 +164,9 @@ public class Job {
         return mailNotification;
     }
 
-    public void setMailNotification(MailNotification mailNotification) {
+    public Job setMailNotification(MailNotification mailNotification) {
         this.mailNotification = mailNotification;
+        return this;
     }
 
     @XmlElement(name = "source")
@@ -140,8 +174,9 @@ public class Job {
         return source;
     }
 
-    public void setSource(JobSource source) {
+    public Job setSource(JobSource source) {
         this.source = source;
+        return this;
     }
 
     @XmlElement(name = "alert")
@@ -149,8 +184,9 @@ public class Job {
         return alert;
     }
 
-    public void setAlert(JobAlert alert) {
+    public Job setAlert(JobAlert alert) {
         this.alert = alert;
+        return this;
     }
 
     @XmlElements({
@@ -160,8 +196,9 @@ public class Job {
         return trigger;
     }
 
-    public void setTrigger(JobTrigger trigger) {
+    public Job setTrigger(JobTrigger trigger) {
         this.trigger = trigger;
+        return this;
     }
 
     @XmlElement(name = "outputFormats")
@@ -170,17 +207,20 @@ public class Job {
         return outputFormats;
     }
 
-    public void setOutputFormats(Set<OutputFormat> outputFormats) {
+    public Job setOutputFormats(Set<OutputFormat> outputFormats) {
         this.outputFormats = outputFormats;
+        return this;
     }
 
     public String getOutputTimeZone() {
         return outputTimeZone;
     }
 
-    public void setOutputTimeZone(String outputTimeZone) {
+    public Job setOutputTimeZone(String outputTimeZone) {
         this.outputTimeZone = outputTimeZone;
+        return this;
     }
+
 
     @Override
     public boolean equals(Object o) {

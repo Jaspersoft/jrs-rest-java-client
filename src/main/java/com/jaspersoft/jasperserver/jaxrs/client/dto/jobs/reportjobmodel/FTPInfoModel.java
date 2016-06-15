@@ -34,58 +34,52 @@ import java.util.Map;
  * @since 1.0
  */
 public class FTPInfoModel extends FtpInfo {
-
-//    private boolean isUserNameModified = false;
-//    private boolean isPasswordModified = false;
-//    private boolean isFolderPathModified = false;
-//    private boolean isServerNameModified = false;
-//    private boolean isPropertiesMapModified = false;
-
-	/**
-	 * Creates an empty job source.
-	 */
-	public FTPInfoModel() {
-	}
+    /**
+     * Creates an empty job source.
+     */
+    public FTPInfoModel(FTPInfoModel other) {
+        super(other);
+    }
 
     /**
-	 * Specifies whether the login user name for the FTP server
-	 *
-	 * @param  userName the login user name
-	 */
-    public void setUserName(String userName) {
-//        isUserNameModified = true;
+     * Specifies whether the login user name for the FTP server
+     *
+     * @param userName the login user name
+     */
+    public FTPInfoModel setUserName(String userName) {
         super.setUserName(userName);
+        return this;
     }
 
-     /**
-	 * Specifies whether the login password for the FTP server
-	 *
-	 * @param password the login password
-	 */
-    public void setPassword(String password) {
-//        isPasswordModified = true;
+    /**
+     * Specifies whether the login password for the FTP server
+     *
+     * @param password the login password
+     */
+    public FTPInfoModel setPassword(String password) {
         super.setPassword(password);
+        return this;
     }
 
     /**
-	 * Specifies whether the path of the folder under which job output
-	 * resources would be created.
-	 *
-	 * @param folderPath the folder path
-	 */
-    public void setFolderPath(String folderPath) {
-//        isFolderPathModified = true;
+     * Specifies whether the path of the folder under which job output
+     * resources would be created.
+     *
+     * @param folderPath the folder path
+     */
+    public FTPInfoModel setFolderPath(String folderPath) {
         super.setFolderPath(folderPath);
+        return this;
     }
 
     /**
-	 * Returns the server name for the ftp site.
-	 *
-	 * @return the server name
-	 */
-    public void setServerName(String serverName) {
-//        isServerNameModified = true;
+     * Returns the server name for the ftp site.
+     *
+     * @return the server name
+     */
+    public FTPInfoModel setServerName(String serverName) {
         super.setServerName(serverName);
+        return this;
     }
 
     /**
@@ -93,9 +87,9 @@ public class FTPInfoModel extends FtpInfo {
      *
      * @param type the ftp type
      */
-    public void setType(FtpType type) {
-//        isPropertiesMapModified = true;
+    public FTPInfoModel setType(FtpType type) {
         super.setType(type);
+        return this;
     }
 
     /**
@@ -103,9 +97,9 @@ public class FTPInfoModel extends FtpInfo {
      *
      * @param port the port number
      */
-    public void setPort(int port) {
-//        isPropertiesMapModified = true;
+    public FTPInfoModel setPort(int port) {
         super.setPort(port);
+        return this;
     }
 
     /**
@@ -113,9 +107,9 @@ public class FTPInfoModel extends FtpInfo {
      *
      * @param protocol the protocol
      */
-    public void setProtocol(String protocol) {
-//        isPropertiesMapModified = true;
+    public FTPInfoModel setProtocol(String protocol) {
         super.setProtocol(protocol);
+        return this;
     }
 
     /**
@@ -124,18 +118,19 @@ public class FTPInfoModel extends FtpInfo {
      *
      * @param implicit
      */
-    public void setImplicit(boolean implicit) {
-//        isPropertiesMapModified = true;
+    public FTPInfoModel setImplicit(boolean implicit) {
         super.setImplicit(implicit);
+        return this;
     }
 
     /**
      * specifies pbsz value: 0 inFolder (2^32)-1 decimal integer.
+     *
      * @param pbsz Protection Buffer Size.
      */
-    public void setPbsz(long pbsz) {
-//        isPropertiesMapModified = true;
+    public FTPInfoModel setPbsz(long pbsz) {
         super.setPbsz(pbsz);
+        return this;
     }
 
     /**
@@ -146,11 +141,12 @@ public class FTPInfoModel extends FtpInfo {
      * <li>E - Confidential(SSL protocol only)</li>
      * <li>P - Private</li>
      * </ul>
+     *
      * @param prot Data Channel Protection Level
      */
-    public void setProt(String prot) {
-//        isPropertiesMapModified = true;
+    public FTPInfoModel setProt(String prot) {
         super.setProt(prot);
+        return this;
     }
 
     /**
@@ -158,43 +154,8 @@ public class FTPInfoModel extends FtpInfo {
      *
      * @param propertiesMap extra properties for FTP info
      */
-    public void setPropertiesMap(Map<String, String>  propertiesMap) {
-//        isPropertiesMapModified = true;
+    public FTPInfoModel setPropertiesMap(Map<String, String> propertiesMap) {
         super.setPropertiesMap(propertiesMap);
+        return this;
     }
-
-//    /**
-//     * returns whether UserName has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isUserNameModified() { return isUserNameModified; }
-//
-//    /**
-//     * returns whether Password has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isPasswordModified() { return isPasswordModified; }
-//
-//    /**
-//     * returns whether folder path has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isFolderPathModified() { return isFolderPathModified; }
-//
-//    /**
-//     * returns whether server name has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isServerNameModified() { return isServerNameModified; }
-//
-//    /**
-//     * returns whether Properties Map has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isPropertiesMapModified() { return isPropertiesMapModified; }
 }
