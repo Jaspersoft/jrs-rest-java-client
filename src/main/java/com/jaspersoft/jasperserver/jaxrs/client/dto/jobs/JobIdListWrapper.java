@@ -21,6 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
+import java.util.LinkedList;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
@@ -32,22 +33,30 @@ import java.util.List;
 @XmlRootElement(name = "jobIdList")
 public class JobIdListWrapper {
 
-    public JobIdListWrapper(){
+    private List<Long> ids;
 
+    public JobIdListWrapper(){
     }
 
     public JobIdListWrapper(List<Long> ids){
         this.ids = ids;
     }
-    private List<Long> ids;
+
+    public JobIdListWrapper(JobIdListWrapper other){
+        this.ids = new LinkedList<Long>();
+        for (Long id : other.ids) {
+            this.ids.add(id);
+        }
+    }
 
     @XmlElement(name = "jobId")
     public List<Long> getIds() {
         return ids;
     }
 
-    public void setIds(List<Long> ids) {
+    public JobIdListWrapper setIds(List<Long> ids) {
         this.ids = ids;
+        return this;
     }
 
     @Override
