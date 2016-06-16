@@ -56,12 +56,7 @@ public class GlobalConfigurationSettings {
     }
 
     public GlobalConfigurationSettings(GlobalConfigurationSettings other) {
-        if (other.messages != null) {
-            this.messages = new LinkedHashMap<String, String>();
-            messages.putAll(other.messages);
-        } else {
-            this.messages = null;
-        }
+        this.messages = (other.messages != null) ? new LinkedHashMap<String, String>(other.messages) : null;
         this.paginatorItemsPerPage = other.paginatorItemsPerPage;
         this.paginatorPagesRange = other.paginatorPagesRange;
         this.reportLevelConfigurable = other.reportLevelConfigurable;
@@ -75,9 +70,12 @@ public class GlobalConfigurationSettings {
         this.userNameSeparator = other.userNameSeparator;
         this.defaultRole = other.defaultRole;
         this.passwordMask = other.passwordMask;
-        this.viewReportsFilterList = (other.viewReportsFilterList != null) ? new LinkedList<String>(other.viewReportsFilterList) : null;
-        this.outputFolderFilterList = (other.outputFolderFilterList != null) ? new LinkedList<String>(other.outputFolderFilterList) : null;
-        this.outputFolderFilterPatterns = (other.outputFolderFilterPatterns != null) ? new LinkedList<String>(other.outputFolderFilterPatterns) : null;
+        this.viewReportsFilterList = (other.viewReportsFilterList != null) ?
+                new LinkedList<String>(other.viewReportsFilterList) : null;
+        this.outputFolderFilterList = (other.outputFolderFilterList != null) ?
+                new LinkedList<String>(other.outputFolderFilterList) : null;
+        this.outputFolderFilterPatterns = (other.outputFolderFilterPatterns != null) ?
+                new LinkedList<String>(other.outputFolderFilterPatterns) : null;
         this.tenantNameNotSupportedSymbols = other.tenantNameNotSupportedSymbols;
         this.tenantIdNotSupportedSymbols = other.tenantIdNotSupportedSymbols;
         this.resourceIdNotSupportedSymbols = other.resourceIdNotSupportedSymbols;
@@ -101,13 +99,14 @@ public class GlobalConfigurationSettings {
         this.forceDomainDependentsUseACL = other.forceDomainDependentsUseACL;
         this.defaultDomainDependentsBlockAndUpdate = other.defaultDomainDependentsBlockAndUpdate;
         this.defaultDontUpdateDomainDependents = other.defaultDontUpdateDomainDependents;
-        this.dataSourceTypes = (other.dataSourceTypes != null) ? new LinkedList<DataSourceType>(other.dataSourceTypes) : null;
-        if (other.allFileResourceTypes != null) {
-            this.allFileResourceTypes = new LinkedHashMap<String, String>();
-            allFileResourceTypes.putAll(other.allFileResourceTypes);
-        } else {
-            this.allFileResourceTypes = null;
+        if (other.dataSourceTypes != null) {
+            this.dataSourceTypes = new LinkedList<DataSourceType>();
+            for (DataSourceType dataSourceType : other.dataSourceTypes) {
+                this.dataSourceTypes.add(new DataSourceType(dataSourceType));
+            }
         }
+        this.allFileResourceTypes = (other.allFileResourceTypes != null) ?
+                new LinkedHashMap<String, String>(other.allFileResourceTypes) : null;
     }
 
     public Map<String, String> getMessages() {

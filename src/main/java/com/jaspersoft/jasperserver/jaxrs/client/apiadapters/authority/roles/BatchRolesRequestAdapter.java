@@ -23,27 +23,34 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles;
 
 import com.jaspersoft.jasperserver.dto.authority.RolesListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-
+import java.util.ArrayList;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
+
 public class BatchRolesRequestAdapter extends AbstractAdapter {
 
     private final MultivaluedMap<String, String> params;
-    private final String uri;
+    private final ArrayList<String> uri = new ArrayList<String>();
 
     public BatchRolesRequestAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
         params = new MultivaluedHashMap<String, String>();
         if (organizationId != null) {
-            uri = "/organizations/" + organizationId + "/roles";
+            uri.add("organizations");
+            uri.add(organizationId);
+            uri.add("roles");
         } else {
-            uri = "/roles";
+            uri.add("roles");
         }
     }
 
@@ -53,13 +60,19 @@ public class BatchRolesRequestAdapter extends AbstractAdapter {
     }
 
     public OperationResult<RolesListWrapper> get() {
-        JerseyRequest<RolesListWrapper> request = buildRequest(sessionStorage, RolesListWrapper.class, new String[]{uri}, new DefaultErrorHandler());
+        JerseyRequest<RolesListWrapper> request = buildRequest(sessionStorage,
+                RolesListWrapper.class,
+                uri.toArray(new String[uri.size()]),
+                new DefaultErrorHandler());
         request.addParams(params);
         return request.get();
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<RolesListWrapper>, R> callback) {
-        final JerseyRequest<RolesListWrapper> request = buildRequest(sessionStorage, RolesListWrapper.class, new String[]{uri}, new DefaultErrorHandler());
+        final JerseyRequest<RolesListWrapper> request = buildRequest(sessionStorage,
+                RolesListWrapper.class,
+                uri.toArray(new String[uri.size()]),
+                new DefaultErrorHandler());
         request.addParams(params);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override

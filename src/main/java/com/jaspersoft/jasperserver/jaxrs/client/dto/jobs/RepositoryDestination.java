@@ -39,100 +39,130 @@ public class RepositoryDestination {
     private String outputLocalFolder;
     private FtpInfo outputFTPInfo;
 
+    public RepositoryDestination() {
+    }
+
+    public RepositoryDestination(RepositoryDestination other) {
+        this.defaultReportOutputFolderURI = other.defaultReportOutputFolderURI;
+        this.folderURI = other.folderURI;
+        this.id = other.id;
+        this.outputDescription = other.outputDescription;
+        this.outputFTPInfo = (other.outputFTPInfo != null) ? new FtpInfo(other.outputFTPInfo) : null;
+        this.outputLocalFolder = other.outputLocalFolder;
+        this.overwriteFiles = other.overwriteFiles;
+        this.saveToRepository = other.saveToRepository;
+        this.sequentialFilenames = other.sequentialFilenames;
+        this.timestampPattern = other.timestampPattern;
+        this.usingDefaultReportOutputFolderURI = other.usingDefaultReportOutputFolderURI;
+        this.version = other.version;
+    }
+
     public String getFolderURI() {
         return folderURI;
     }
 
-    public void setFolderURI(String folderURI) {
+    public RepositoryDestination setFolderURI(String folderURI) {
         this.folderURI = folderURI;
+        return this;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public RepositoryDestination setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getOutputDescription() {
         return outputDescription;
     }
 
-    public void setOutputDescription(String outputDescription) {
+    public RepositoryDestination setOutputDescription(String outputDescription) {
         this.outputDescription = outputDescription;
+        return this;
     }
 
     public Boolean isOverwriteFiles() {
         return overwriteFiles;
     }
 
-    public void setOverwriteFiles(Boolean overwriteFiles) {
+    public RepositoryDestination setOverwriteFiles(Boolean overwriteFiles) {
         this.overwriteFiles = overwriteFiles;
+        return this;
     }
 
     public Boolean isSequentialFilenames() {
         return sequentialFilenames;
     }
 
-    public void setSequentialFilenames(Boolean sequentialFilenames) {
+    public RepositoryDestination setSequentialFilenames(Boolean sequentialFilenames) {
         this.sequentialFilenames = sequentialFilenames;
+        return this;
     }
 
     public Long getVersion() {
         return version;
     }
 
-    public void setVersion(Long version) {
+    public RepositoryDestination setVersion(Long version) {
         this.version = version;
+        return this;
     }
 
     public String getTimestampPattern() {
         return timestampPattern;
     }
 
-    public void setTimestampPattern(String timestampPattern) {
+    public RepositoryDestination setTimestampPattern(String timestampPattern) {
         this.timestampPattern = timestampPattern;
+        return this;
     }
 
     public Boolean isSaveToRepository() {
         return saveToRepository;
     }
 
-    public void setSaveToRepository(Boolean saveToRepository) {
+    public RepositoryDestination setSaveToRepository(Boolean saveToRepository) {
         this.saveToRepository = saveToRepository;
+        return this;
     }
 
     public String getDefaultReportOutputFolderURI() {
         return defaultReportOutputFolderURI;
     }
 
-    public void setDefaultReportOutputFolderURI(String defaultReportOutputFolderURI) {
+    public RepositoryDestination setDefaultReportOutputFolderURI(String defaultReportOutputFolderURI) {
         this.defaultReportOutputFolderURI = defaultReportOutputFolderURI;
+        return this;
     }
 
     public Boolean isUsingDefaultReportOutputFolderURI() {
         return usingDefaultReportOutputFolderURI;
     }
 
-    public void setUsingDefaultReportOutputFolderURI(Boolean usingDefaultReportOutputFolderURI) {
+    public RepositoryDestination setUsingDefaultReportOutputFolderURI(Boolean usingDefaultReportOutputFolderURI) {
         this.usingDefaultReportOutputFolderURI = usingDefaultReportOutputFolderURI;
+        return this;
     }
 
     public String getOutputLocalFolder() {
         return outputLocalFolder;
     }
 
-    public void setOutputLocalFolder(String outputLocalFolder) {
+    public RepositoryDestination setOutputLocalFolder(String outputLocalFolder) {
         this.outputLocalFolder = outputLocalFolder;
+        return this;
     }
 
     public FtpInfo getOutputFTPInfo() {
         return outputFTPInfo;
     }
 
-    public void setOutputFTPInfo(FtpInfo outputFTPInfo) {
+    public RepositoryDestination setOutputFTPInfo(FtpInfo outputFTPInfo) {
         this.outputFTPInfo = outputFTPInfo;
+        return this;
     }
 
     @Override

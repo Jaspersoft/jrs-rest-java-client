@@ -35,12 +35,18 @@ public class CronCalendar extends Calendar {
         this.calendarType = CalendarType.cron;
     }
 
+    public CronCalendar(CronCalendar other) {
+        super(other);
+        this.cronExpression = other.cronExpression;
+    }
+
     public String getCronExpression() {
         return cronExpression;
     }
 
-    public void setCronExpression(String cronExpression) {
+    public CronCalendar setCronExpression(String cronExpression) {
         this.cronExpression = cronExpression;
+        return this;
     }
 
     @Override

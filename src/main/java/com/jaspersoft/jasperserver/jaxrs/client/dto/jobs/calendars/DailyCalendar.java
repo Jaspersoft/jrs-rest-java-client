@@ -37,28 +37,38 @@ public class DailyCalendar extends Calendar {
         calendarType = CalendarType.daily;
     }
 
+    public DailyCalendar(DailyCalendar other) {
+        super(other);
+        this.invertTimeRange = other.invertTimeRange;
+        this.rangeEndingCalendar = (other.rangeEndingCalendar != null) ? (java.util.Calendar) other.rangeEndingCalendar.clone() : null;
+        this.rangeStartingCalendar = (other.rangeStartingCalendar != null) ? (java.util.Calendar) other.rangeStartingCalendar.clone() : null;
+    }
+
     public java.util.Calendar getRangeStartingCalendar() {
         return rangeStartingCalendar;
     }
 
-    public void setRangeStartingCalendar(java.util.Calendar rangeStartingCalendar) {
+    public DailyCalendar setRangeStartingCalendar(java.util.Calendar rangeStartingCalendar) {
         this.rangeStartingCalendar = rangeStartingCalendar;
+        return this;
     }
 
     public java.util.Calendar getRangeEndingCalendar() {
         return rangeEndingCalendar;
     }
 
-    public void setRangeEndingCalendar(java.util.Calendar rangeEndingCalendar) {
+    public DailyCalendar setRangeEndingCalendar(java.util.Calendar rangeEndingCalendar) {
         this.rangeEndingCalendar = rangeEndingCalendar;
+        return this;
     }
 
     public Boolean getInvertTimeRange() {
         return invertTimeRange;
     }
 
-    public void setInvertTimeRange(Boolean invertTimeRange) {
+    public DailyCalendar setInvertTimeRange(Boolean invertTimeRange) {
         this.invertTimeRange = invertTimeRange;
+        return this;
     }
 
     @Override

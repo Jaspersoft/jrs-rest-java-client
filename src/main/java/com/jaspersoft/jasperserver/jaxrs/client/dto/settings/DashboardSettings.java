@@ -14,7 +14,12 @@ public class DashboardSettings {
     }
 
     public DashboardSettings(DashboardSettings other) {
-        this.newItemsRegistry = (other.newItemsRegistry != null) ? new LinkedList<ItemRegistry>(other.newItemsRegistry) : null;
+        if (other.newItemsRegistry != null) {
+            this.newItemsRegistry = new LinkedList<ItemRegistry>();
+            for (ItemRegistry itemRegistry : other.newItemsRegistry) {
+                this.newItemsRegistry.add(new ItemRegistry(itemRegistry));
+            }
+        }
     }
 
     public List<ItemRegistry> getNewItemsRegistry() {

@@ -31,30 +31,41 @@ import java.util.ArrayList;
 @XmlRootElement(name = "reportJobCalendar")
 public class AnnualCalendar extends Calendar {
 
+    private ArrayList<java.util.Calendar> excludeDays = new ArrayList<java.util.Calendar>();
+    // true, if excludeDays is sorted
+    private Boolean dataSorted;
+
     public AnnualCalendar() {
         super();
         this.calendarType = CalendarType.annual;
     }
 
-    private ArrayList<java.util.Calendar> excludeDays = new ArrayList<java.util.Calendar>();
-    // true, if excludeDays is sorted
-    private Boolean dataSorted;
+    public AnnualCalendar(AnnualCalendar other) {
+        super(other);
+        this.excludeDays = new ArrayList<java.util.Calendar>();
+        for (java.util.Calendar calendar : other.getExcludeDays()) {
+            this.excludeDays.add((java.util.Calendar) calendar.clone());
+        }
+        this.dataSorted = other.dataSorted;
+    }
 
     @XmlJavaTypeAdapter(ExcludeDaysXmlAdapter.class)
     public ArrayList<java.util.Calendar> getExcludeDays() {
         return excludeDays;
     }
 
-    public void setExcludeDays(ArrayList<java.util.Calendar> excludeDays) {
+    public AnnualCalendar setExcludeDays(ArrayList<java.util.Calendar> excludeDays) {
         this.excludeDays = excludeDays;
+        return this;
     }
 
     public Boolean getDataSorted() {
         return dataSorted;
     }
 
-    public void setDataSorted(Boolean dataSorted) {
+    public AnnualCalendar setDataSorted(Boolean dataSorted) {
         this.dataSorted = dataSorted;
+        return this;
     }
 
     @Override

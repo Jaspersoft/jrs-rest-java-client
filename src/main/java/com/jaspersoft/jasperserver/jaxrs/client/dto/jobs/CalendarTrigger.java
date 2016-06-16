@@ -23,10 +23,10 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.DaysByteXmlAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.MonthsByteXmlAdapter;
-
+import java.util.SortedSet;
+import java.util.TreeSet;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.util.SortedSet;
 
 @XmlRootElement(name = "calendarTrigger")
 public class CalendarTrigger extends JobTrigger {
@@ -38,36 +38,54 @@ public class CalendarTrigger extends JobTrigger {
     private String monthDays;
     private SortedSet<Byte> months;
 
+    public CalendarTrigger() {
+        super();
+    }
+
+    public CalendarTrigger(CalendarTrigger other) {
+        super(other);
+        this.minutes = other.minutes;
+        this.hours = other.hours;
+        this.daysType = other.daysType;
+        this.weekDays = (other.weekDays != null) ? new TreeSet<Byte>(other.weekDays) : null;
+        this.monthDays = other.monthDays;
+        this.months = (other.months != null) ? new TreeSet<Byte>(other.months) : null;
+    }
+
     public String getMinutes() {
         return minutes;
     }
 
-    public void setMinutes(String minutes) {
+    public CalendarTrigger setMinutes(String minutes) {
         this.minutes = minutes;
+        return this;
     }
 
     public String getHours() {
         return hours;
     }
 
-    public void setHours(String hours) {
+    public CalendarTrigger setHours(String hours) {
         this.hours = hours;
+        return this;
     }
 
     public String getMonthDays() {
         return monthDays;
     }
 
-    public void setMonthDays(String monthDays) {
+    public CalendarTrigger setMonthDays(String monthDays) {
         this.monthDays = monthDays;
+        return this;
     }
 
     public CalendarDaysType getDaysType() {
         return daysType;
     }
 
-    public void setDaysType(CalendarDaysType daysType) {
+    public CalendarTrigger setDaysType(CalendarDaysType daysType) {
         this.daysType = daysType;
+        return this;
     }
 
     @XmlJavaTypeAdapter(DaysByteXmlAdapter.class)
@@ -75,8 +93,9 @@ public class CalendarTrigger extends JobTrigger {
         return weekDays;
     }
 
-    public void setWeekDays(SortedSet<Byte> weekDays) {
+    public CalendarTrigger setWeekDays(SortedSet<Byte> weekDays) {
         this.weekDays = weekDays;
+        return this;
     }
 
     @XmlJavaTypeAdapter(MonthsByteXmlAdapter.class)
@@ -84,8 +103,9 @@ public class CalendarTrigger extends JobTrigger {
         return months;
     }
 
-    public void setMonths(SortedSet<Byte> months) {
+    public CalendarTrigger setMonths(SortedSet<Byte> months) {
         this.months = months;
+        return this;
     }
 
     @Override
