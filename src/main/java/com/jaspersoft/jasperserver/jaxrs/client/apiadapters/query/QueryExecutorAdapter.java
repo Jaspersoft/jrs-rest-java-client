@@ -20,15 +20,19 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query;
 
+import com.jaspersoft.jasperserver.dto.query.QueryResult;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
-import com.jaspersoft.jasperserver.dto.query.QueryResult;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class QueryExecutorAdapter extends AbstractAdapter {
+    public static final String QUERY_EXECUTOR_URI = "queryExecutor";
+    private ArrayList<String> path = new ArrayList<String>();
     private final String resourceUri;
     private final Query query;
 
@@ -39,10 +43,12 @@ public class QueryExecutorAdapter extends AbstractAdapter {
     }
 
     public OperationResult<QueryResult> execute() {
+        path.add(QUERY_EXECUTOR_URI);
+        path.addAll(Arrays.asList(resourceUri.split("/")));
         JerseyRequest<QueryResult> req = JerseyRequest.buildRequest(
                 sessionStorage,
                 QueryResult.class,
-                new String[]{new StringBuilder(resourceUri).insert(0, "/queryExecutor").toString()},
+                path.toArray(new String[path.size()]),
                 new DefaultErrorHandler()
         );
 

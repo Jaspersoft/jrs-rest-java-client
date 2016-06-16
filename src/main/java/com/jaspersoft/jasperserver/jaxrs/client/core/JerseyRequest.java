@@ -29,6 +29,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityO
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
+import com.sun.jersey.api.uri.UriComponent;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.client.Entity;
@@ -78,6 +79,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         restrictedHttpMethods = sessionStorage.getConfiguration().getRestrictedHttpMethods();
         init(sessionStorage);
     }
+
     private void init(SessionStorage sessionStorage) {
         RestClientConfiguration configuration = sessionStorage.getConfiguration();
 
@@ -103,11 +105,24 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         JerseyRequest<T> request = new JerseyRequest<T>(sessionStorage, genericType);
         return configRequest(request, path, errorHandler);
     }
-    private static <T> JerseyRequest<T> configRequest(JerseyRequest<T> request, String[] path, ErrorHandler errorHandler){
+
+    private static <T> JerseyRequest<T> configRequest(JerseyRequest<T> request, String[] path, ErrorHandler errorHandler) {
         request.errorHandler = errorHandler != null ? errorHandler : new DefaultErrorHandler();
+        boolean validatNnext = true;
         for (String pathElem : path) {
+            if (validatNnext) {
+                if (!UriComponent.valid(pathElem, UriComponent.Type.PATH_SEGMENT)) {
+                    pathElem = UriComponent.contextualEncode(pathElem, UriComponent.Type.PATH_SEGMENT);
+                }
+                if (pathElem.equals("inputControls")) {
+                    validatNnext = false;
+                }
+            } else {
+                validatNnext = true;
+            }
             request.setPath(pathElem);
         }
+
         return request;
     }
 

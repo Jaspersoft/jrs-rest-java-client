@@ -34,52 +34,70 @@ public class JobSummary {
     private JobState state;
     private Long version;
 
+    public JobSummary() {
+    }
+
+    public JobSummary(JobSummary other) {
+        this.id = other.id;
+        this.label = other.label;
+        this.owner = other.owner;
+        this.reportUnitURI = other.reportUnitURI;
+        this.state = (other.state != null) ? new JobState(other.state) : null;
+        this.version = other.version;
+    }
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public JobSummary setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getLabel() {
         return label;
     }
 
-    public void setLabel(String label) {
+    public JobSummary setLabel(String label) {
         this.label = label;
+        return this;
     }
 
     public String getReportUnitURI() {
         return reportUnitURI;
     }
 
-    public void setReportUnitURI(String reportUnitURI) {
+    public JobSummary setReportUnitURI(String reportUnitURI) {
         this.reportUnitURI = reportUnitURI;
+        return this;
     }
 
     public String getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public JobSummary setOwner(String owner) {
         this.owner = owner;
+        return this;
     }
 
     public JobState getState() {
         return state;
     }
 
-    public void setState(JobState state) {
+    public JobSummary setState(JobState state) {
         this.state = state;
+        return this;
     }
 
     public Long getVersion() {
         return version;
     }
 
-    public void setVersion(Long version) {
+    public JobSummary setVersion(Long version) {
         this.version = version;
+        return this;
     }
 
     @Override

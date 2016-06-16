@@ -30,7 +30,7 @@ public class SingleDiagnosticCollectorAdapter extends AbstractAdapter {
     public OperationResult<CollectorSettings> create() {
         return JerseyRequest.buildRequest(sessionStorage,
                 CollectorSettings.class,
-                new String[]{"/diagnostic/collectors"},
+                new String[]{"diagnostic", "collectors"},
                 new DefaultErrorHandler()).post(collector);
     }
 
@@ -63,7 +63,7 @@ public class SingleDiagnosticCollectorAdapter extends AbstractAdapter {
     public OperationResult<InputStream> collectorContent() {
         JerseyRequest<InputStream> request = JerseyRequest.buildRequest(sessionStorage,
                 InputStream.class,
-                new String[]{"/diagnostic/collectors", collector.getId(), "content"},
+                new String[]{"diagnostic", "collectors", collector.getId(), "content"},
                 new DefaultErrorHandler());
         request.setAccept("application/zip");
         return request.get();
@@ -72,7 +72,7 @@ public class SingleDiagnosticCollectorAdapter extends AbstractAdapter {
     protected JerseyRequest<CollectorSettings> buildCollectorRequest() {
         return JerseyRequest.buildRequest(sessionStorage,
                 CollectorSettings.class,
-                new String[]{"/diagnostic/collectors", collector.getId()},
+                new String[]{"diagnostic", "collectors", collector.getId()},
                 new DefaultErrorHandler());
     }
 

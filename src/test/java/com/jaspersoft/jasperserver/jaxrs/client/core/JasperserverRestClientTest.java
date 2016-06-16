@@ -1,6 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
@@ -577,8 +579,8 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         verify(rootTargetMock).register(isA(SessionOutputFilter.class));
     }
 
-    @Test
-    public void should_invoke_login_method_and_handle_error() throws Exception {
+    @Test(expectedExceptions = ResourceNotFoundException.class)
+    public void should_invoke_login_method_and_throw_exception() throws Exception {
         // Given
         final URI location = new URI("location");
         doReturn("url").when(configurationMock).getJasperReportsServerUrl();
@@ -611,28 +613,57 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         doReturn(invocationBuilderMock).when(webTargetMock).request();
         doReturn(responseMock).when(invocationBuilderMock).post(any(Entity.class));
         doReturn(location).when(responseMock).getLocation();
-        doReturn(400).when(responseMock).getStatus();
+        doReturn(404).when(responseMock).getStatus();
         PowerMockito.doNothing().when(errorHandler).handleError(responseMock);
 
         // When
         Session session = client.authenticate(USER_NAME, PASSWORD, "de", TIME_ZONE);
 
         // Then
-        assertNotNull(session);
-        verify(sessionStorageMock).getCredentials();
-        verify(sessionStorageMock).getRootTarget();
-        verify(configurationMock).getAuthenticationType();
-        verify(sessionStorageMock).getCredentials();
-        verify(rootTargetMock, never()).register(isA(BasicAuthenticationFilter.class));
-        verify(rootTargetMock).path("/j_spring_security_check");
-        verify(webTargetMock).property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
-        verify(webTargetMock).request();
-        verify(formSpy).param("j_username", USER_NAME);
-        verify(formSpy).param("j_password", PASSWORD);
-        verify(formSpy).param("userTimezone",TIME_ZONE);
-        verify(formSpy).param("userLocale", locale.toString());
-        verify(invocationBuilderMock).post(Entity.entity(formSpy, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
-        verify(errorHandler).handleError(responseMock);
+        // an exception should  be thrown
+    }
+
+    @Test(expectedExceptions = AuthenticationFailedException.class)
+    public void should_throw_authentication_failed_exception() throws Exception {
+        // Given
+        final URI location = new URI("http://location?error=1");
+        doReturn("url").when(configurationMock).getJasperReportsServerUrl();
+        final JasperserverRestClient client = new JasperserverRestClient(configurationMock);
+        final Locale locale = new Locale("de");
+        Form formSpy = spy(new Form());
+        whenNew(AuthenticationCredentials.class)
+                .withArguments(USER_NAME, PASSWORD)
+                .thenReturn(credentialsMock);
+
+        whenNew(SessionStorage.class)
+                .withArguments(eq(configurationMock), eq(credentialsMock), any(Locale.class), any(TimeZone.class))
+                .thenReturn(sessionStorageMock);
+        whenNew(Form.class)
+                .withNoArguments()
+                .thenReturn(formSpy);
+
+        whenNew(DefaultErrorHandler.class)
+                .withNoArguments()
+                .thenReturn(errorHandler);
+        doReturn(credentialsMock).when(sessionStorageMock).getCredentials();
+        doReturn(rootTargetMock).when(sessionStorageMock).getRootTarget();
+        doReturn(AuthenticationType.SPRING).when(configurationMock).getAuthenticationType();
+        doReturn(USER_NAME).when(credentialsMock).getUsername();
+        doReturn(PASSWORD).when(credentialsMock).getPassword();
+        doReturn(TimeZone.getTimeZone(TIME_ZONE)).when(sessionStorageMock).getUserTimeZone();
+        doReturn(locale).when(sessionStorageMock).getUserLocale();
+        doReturn(webTargetMock).when(rootTargetMock).path(anyString());
+        doReturn(webTargetMock).when(webTargetMock).property(anyString(), anyBoolean());
+        doReturn(invocationBuilderMock).when(webTargetMock).request();
+        doReturn(responseMock).when(invocationBuilderMock).post(any(Entity.class));
+        doReturn(location).when(responseMock).getLocation();
+        doReturn(302).when(responseMock).getStatus();
+
+        // When
+        Session session = client.authenticate(USER_NAME, PASSWORD, "de", TIME_ZONE);
+
+        // Then
+        // an exception should be thrown
     }
 
     @Test

@@ -31,6 +31,8 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class ReportingService extends AbstractAdapter {
 
+    public static final String REPORT_EXECUTIONS_URI = "reportExecutions";
+
     public ReportingService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
@@ -38,7 +40,7 @@ public class ReportingService extends AbstractAdapter {
     public OperationResult<ReportExecutionDescriptor> newReportExecutionRequest(ReportExecutionRequest request) {
         JerseyRequest<ReportExecutionDescriptor> jerseyRequest = buildRequest(sessionStorage,
                 ReportExecutionDescriptor.class,
-                new String[]{"/reportExecutions"});
+                new String[]{REPORT_EXECUTIONS_URI});
         if (request.getTimeZone() != null) {
             jerseyRequest.addHeader("Accept-Timezone", request.getTimeZone().getID());
         }
@@ -47,7 +49,7 @@ public class ReportingService extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncNewReportExecutionRequest(final ReportExecutionRequest reportExecutionRequest, final Callback<OperationResult<ReportExecutionDescriptor>, R> callback) {
-        final JerseyRequest<ReportExecutionDescriptor> request = buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{"/reportExecutions"});
+        final JerseyRequest<ReportExecutionDescriptor> request = buildRequest(sessionStorage, ReportExecutionDescriptor.class, new String[]{REPORT_EXECUTIONS_URI});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {

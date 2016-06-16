@@ -23,6 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.AddressesXmlAdapter;
 
+import java.util.LinkedList;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
@@ -34,7 +35,6 @@ public class MailNotification {
     private List<String> bccAddresses;
     private List<String> ccAddresses;
     private List<String> toAddresses;
-
     private Integer version;
     private Long id;
     private Boolean includingStackTraceWhenJobFails;
@@ -45,13 +45,32 @@ public class MailNotification {
     private String subject;
     private String messageTextWhenJobFails;
 
+    public MailNotification() {
+    }
+
+    public MailNotification(MailNotification other) {
+        this.bccAddresses = (other.bccAddresses != null) ? new LinkedList<String>(other.bccAddresses) : null;
+        this.ccAddresses = (other.ccAddresses != null) ? new LinkedList<String>(other.ccAddresses) : null;
+        this.toAddresses = (other.toAddresses != null) ? new LinkedList<String>(other.toAddresses) : null;
+        this.id = other.id;
+        this.includingStackTraceWhenJobFails = other.includingStackTraceWhenJobFails;
+        this.messageText = other.messageText;
+        this.messageTextWhenJobFails = other.messageTextWhenJobFails;
+        this.resultSendType = other.resultSendType;
+        this.skipEmptyReports = other.skipEmptyReports;
+        this.skipNotificationWhenJobFails = other.skipNotificationWhenJobFails;
+        this.subject = other.subject;
+        this.version = other.version;
+    }
+
     @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
     public List<String> getCcAddresses() {
         return ccAddresses;
     }
 
-    public void setCcAddresses(List<String> ccAddresses) {
+    public MailNotification setCcAddresses(List<String> ccAddresses) {
         this.ccAddresses = ccAddresses;
+        return this;
     }
 
     @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
@@ -59,8 +78,9 @@ public class MailNotification {
         return toAddresses;
     }
 
-    public void setToAddresses(List<String> toAddresses) {
+    public MailNotification setToAddresses(List<String> toAddresses) {
         this.toAddresses = toAddresses;
+        return this;
     }
 
     @XmlJavaTypeAdapter(AddressesXmlAdapter.class)
@@ -68,80 +88,90 @@ public class MailNotification {
         return bccAddresses;
     }
 
-    public void setBccAddresses(List<String> bccAddresses) {
+    public MailNotification setBccAddresses(List<String> bccAddresses) {
         this.bccAddresses = bccAddresses;
+        return this;
     }
 
     public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
+    public MailNotification setVersion(Integer version) {
         this.version = version;
+        return this;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public MailNotification setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public Boolean isIncludingStackTraceWhenJobFails() {
         return includingStackTraceWhenJobFails;
     }
 
-    public void setIncludingStackTraceWhenJobFails(Boolean includingStackTraceWhenJobFails) {
+    public MailNotification setIncludingStackTraceWhenJobFails(Boolean includingStackTraceWhenJobFails) {
         this.includingStackTraceWhenJobFails = includingStackTraceWhenJobFails;
+        return this;
     }
 
     public String getMessageText() {
         return messageText;
     }
 
-    public void setMessageText(String messageText) {
+    public MailNotification setMessageText(String messageText) {
         this.messageText = messageText;
+        return this;
     }
 
     public Boolean isSkipEmptyReports() {
         return skipEmptyReports;
     }
 
-    public void setSkipEmptyReports(Boolean skipEmptyReports) {
+    public MailNotification setSkipEmptyReports(Boolean skipEmptyReports) {
         this.skipEmptyReports = skipEmptyReports;
+        return this;
     }
 
     public Boolean isSkipNotificationWhenJobFails() {
         return skipNotificationWhenJobFails;
     }
 
-    public void setSkipNotificationWhenJobFails(Boolean skipNotificationWhenJobFails) {
+    public MailNotification setSkipNotificationWhenJobFails(Boolean skipNotificationWhenJobFails) {
         this.skipNotificationWhenJobFails = skipNotificationWhenJobFails;
+        return this;
     }
 
     public String getSubject() {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public MailNotification setSubject(String subject) {
         this.subject = subject;
+        return this;
     }
 
     public String getMessageTextWhenJobFails() {
         return messageTextWhenJobFails;
     }
 
-    public void setMessageTextWhenJobFails(String messageTextWhenJobFails) {
+    public MailNotification setMessageTextWhenJobFails(String messageTextWhenJobFails) {
         this.messageTextWhenJobFails = messageTextWhenJobFails;
+        return this;
     }
 
     public MailNotificationSendType getResultSendType() {
         return resultSendType;
     }
 
-    public void setResultSendType(MailNotificationSendType resultSendType) {
+    public MailNotification setResultSendType(MailNotificationSendType resultSendType) {
         this.resultSendType = resultSendType;
+        return this;
     }
 
     @Override

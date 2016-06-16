@@ -34,6 +34,8 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class SingleCalendarOperationsAdapter extends AbstractAdapter {
 
+    public static final String JOBS = "jobs";
+    public static final String CALENDARS = "calendars";
     private final String calendarName;
     private final MultivaluedMap<String, String> params;
 
@@ -49,7 +51,7 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<Calendar> get() {
-        OperationResult<ReportJobCalendar> result = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName}).get();
+        OperationResult<ReportJobCalendar> result = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{JOBS, CALENDARS, calendarName}).get();
         return convertToLocalCalendarType(result);
     }
 
@@ -124,7 +126,7 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<Calendar>, R> callback) {
-        final JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
+        final JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{JOBS, CALENDARS, calendarName});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -136,11 +138,11 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult delete() {
-        return buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName}).delete();
+        return buildRequest(sessionStorage, Object.class, new String[]{JOBS, CALENDARS, calendarName}).delete();
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
-        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{"/jobs", "/calendars", calendarName});
+        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{JOBS, CALENDARS, calendarName});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
@@ -152,13 +154,13 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
     }
 
     public OperationResult<ReportJobCalendar> createNew(Calendar calendarDescriptor) {
-        JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
+        JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{JOBS, CALENDARS, calendarName});
         request.addParams(params);
         return request.put(calendarDescriptor);
     }
 
     public <R> RequestExecution asyncCreateNew(final Calendar calendarDescriptor, final Callback<OperationResult<ReportJobCalendar>, R> callback) {
-        final JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{"/jobs", "/calendars", calendarName});
+        final JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{JOBS, CALENDARS, calendarName});
         request.addParams(params);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override

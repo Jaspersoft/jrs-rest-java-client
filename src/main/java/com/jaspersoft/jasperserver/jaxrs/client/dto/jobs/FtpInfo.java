@@ -22,6 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
 
+import java.util.LinkedHashMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Map;
 
@@ -40,93 +41,124 @@ public class FtpInfo {
     private String prot;
     private Map<String, String> propertiesMap;
 
+    public FtpInfo() {
+    }
+
+    public FtpInfo(FtpInfo other) {
+        this.folderPath = other.folderPath;
+        this.implicit = other.implicit;
+        this.password = other.password;
+        this.pbsz = other.pbsz;
+        this.port = other.port;
+        this.propertiesMap = (other.propertiesMap != null) ? new LinkedHashMap<String, String>(other.propertiesMap) : null;
+        this.prot = other.prot;
+        this.protocol = other.protocol;
+        this.serverName = other.serverName;
+        this.type = other.type;
+        this.userName = other.userName;
+    }
 
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
+    public FtpInfo setUserName(String userName) {
         this.userName = userName;
+        return this;
+    }
+
+    public Boolean getImplicit() {
+        return implicit;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public FtpInfo setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public String getFolderPath() {
         return folderPath;
     }
 
-    public void setFolderPath(String folderPath) {
+    public FtpInfo setFolderPath(String folderPath) {
         this.folderPath = folderPath;
+        return this;
     }
 
     public String getServerName() {
         return serverName;
     }
 
-    public void setServerName(String serverName) {
+    public FtpInfo setServerName(String serverName) {
         this.serverName = serverName;
+        return this;
     }
 
     public FtpType getType() {
         return type;
     }
 
-    public void setType(FtpType type) {
+    public FtpInfo setType(FtpType type) {
         this.type = type;
+        return this;
     }
 
     public String getProtocol() {
         return protocol;
     }
 
-    public void setProtocol(String protocol) {
+    public FtpInfo setProtocol(String protocol) {
         this.protocol = protocol;
+        return this;
     }
 
     public Integer getPort() {
         return port;
     }
 
-    public void setPort(Integer port) {
+    public FtpInfo setPort(Integer port) {
         this.port = port;
+        return this;
     }
 
     public Boolean isImplicit() {
         return implicit;
     }
 
-    public void setImplicit(Boolean implicit) {
+    public FtpInfo setImplicit(Boolean implicit) {
         this.implicit = implicit;
+        return this;
     }
 
     public Long getPbsz() {
         return pbsz;
     }
 
-    public void setPbsz(Long pbsz) {
+    public FtpInfo setPbsz(Long pbsz) {
         this.pbsz = pbsz;
+        return this;
     }
 
     public String getProt() {
         return prot;
     }
 
-    public void setProt(String prot) {
+    public FtpInfo setProt(String prot) {
         this.prot = prot;
+        return this;
     }
 
     public Map<String, String> getPropertiesMap() {
         return propertiesMap;
     }
 
-    public void setPropertiesMap(Map<String, String> propertiesMap) {
+    public FtpInfo setPropertiesMap(Map<String, String> propertiesMap) {
         this.propertiesMap = propertiesMap;
+        return this;
     }
 
     @Override

@@ -38,14 +38,23 @@ public class MonthlyCalendar extends Calendar {
         this.calendarType = CalendarType.monthly;
     }
 
+    public MonthlyCalendar(MonthlyCalendar other) {
+        super(other);
+        this.excludeDaysFlags = new boolean[other.excludeDaysFlags.length];
+        for (int i = 0; i < other.excludeDaysFlags.length; i++) {
+            this.excludeDaysFlags[i] = other.excludeDaysFlags[i];
+        }
+    }
+
     @XmlElementWrapper(name = "excludeDaysFlags")
     @XmlElement(name = "excludeDayFlag")
     public boolean[] getExcludeDaysFlags() {
         return excludeDaysFlags;
     }
 
-    public void setExcludeDaysFlags(boolean[] excludeDaysFlags) {
+    public MonthlyCalendar setExcludeDaysFlags(boolean[] excludeDaysFlags) {
         this.excludeDaysFlags = excludeDaysFlags;
+        return this;
     }
 
     @Override

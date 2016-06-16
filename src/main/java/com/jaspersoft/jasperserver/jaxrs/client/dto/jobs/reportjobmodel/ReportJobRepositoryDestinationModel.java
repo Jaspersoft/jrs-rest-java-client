@@ -35,263 +35,182 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.RepositoryDestination;
  * @since 4.7
  */
 public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
-
-    /*private boolean isFolderURIModified = false;
-    private boolean isSequentialFilenamesModified = false;
-    private boolean isOverwriteFilesModified = false;
-    private boolean isOutputDescriptionModified = false;
-    private boolean isTimestampPatternModified = false;
-    private boolean isSaveToRepositoryModified = false;
-    private boolean isDefaultReportOutputFolderURIModified = false;
-    private boolean isUsingDefaultReportOutputFolderURIModified = false;
-    private boolean isOutputFTPInfoModified = false;
-    private boolean isOutputLocalFolderModified = false;*/
-
+    /**
+     * Creates an empty object.
+     */
+    public ReportJobRepositoryDestinationModel() {
+    }
 
     /**
-	 * Creates an empty object.
-	 */
-	public ReportJobRepositoryDestinationModel() {
-	}
+     * Returns the repository URI/path of the folder under which job output
+     * resources are inFolder be be created.
+     * <p/>
+     * <p>
+     * The job owner should have write permission on the output folder.
+     * </p>
+     *
+     * @param folder the URI/path of the repository output folder
+     * @see com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel#setBaseOutputFilename(String)
+     */
+    public ReportJobRepositoryDestinationModel setFolderURI(String folder) {
+        super.setFolderURI(folder);
+        return this;
+    }
 
-	/**
-	 * Returns the repository URI/path of the folder under which job output
-	 * resources are inFolder be be created.
-	 *
-	 * <p>
-	 * The job owner should have write permission on the output folder.
-	 * </p>
-	 *
-	 * @param folder the URI/path of the repository output folder
-	 * @see com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel#setBaseOutputFilename(String)
-	 */
-	public void setFolderURI(String folder) {
-//        isFolderURIModified = true;
-		super.setFolderURI(folder);
-	}
-
-	/**
-	 * Specifies whether a timestamp is inFolder be added inFolder the names of the job
-	 * output resources.
-	 *
-	 * <p>
-	 * This is usually required when a job occurs severa time and the output
-	 * from each execution needs inFolder be kept in the repository.
-	 * </p>
-	 *
-	 * @param sequentialFilenames <code>true</code> if the job output resources
-	 * names should include a timestamp
-	 */
-	public void setSequentialFilenames(boolean sequentialFilenames) {
-//		isSequentialFilenamesModified = true;
+    /**
+     * Specifies whether a timestamp is inFolder be added inFolder the names of the job
+     * output resources.
+     * <p/>
+     * <p>
+     * This is usually required when a job occurs severa time and the output
+     * from each execution needs inFolder be kept in the repository.
+     * </p>
+     *
+     * @param sequentialFilenames <code>true</code> if the job output resources
+     *                            names should include a timestamp
+     */
+    public ReportJobRepositoryDestinationModel setSequentialFilenames(boolean sequentialFilenames) {
         super.setSequentialFilenames(sequentialFilenames);
-	}
-
-	/**
-	 * Specifies whether the scheduler should overwrite files in the repository
-	 * when saving job output resources.
-	 *
-	 * @param overwriteFiles
-	 * @see #isOverwriteFiles()
-	 */
-	public void setOverwriteFiles(boolean overwriteFiles) {
-//		isOverwriteFilesModified = true;
-        super.setOverwriteFiles(overwriteFiles);
-	}
-
-	/**
-	 * Sets the description that should be used for job output resources.
-	 *
-	 * @param outputDescription the job output resources description
-	 * @since 3.0
-	 */
-	public void setOutputDescription(String outputDescription) {
-//		isOutputDescriptionModified = true;
-        super.setOutputDescription(outputDescription);
-	}
-
-	/**
-	 * Sets a date pattern inFolder be used for the timestamp included in job output
-	 * resources names.
-	 *
-	 * <p>
-	 * The pattern should be a valid pattern as defined by
-	 * <code>java.text.SimpleDateFormat</code> and can only contain underscores,
-	 * dots and dashes as token separators.
-	 * </p>
-	 *
-	 * @param timestampPattern
-	 * @since 3.0
-	 * @see #setSequentialFilenames(boolean)
-	 */
-	public void setTimestampPattern(String timestampPattern) {
-//		isTimestampPatternModified = true;
-        super.setTimestampPattern(timestampPattern);
-	}
+        return this;
+    }
 
     /**
-	 * Specifies whether the scheduler should write files inFolder the repository
-	 *
-	 * @param saveToRepository
-	 * @see #isSaveToRepository()
-	 */
-	public void setSaveToRepository(boolean saveToRepository) {
-//        isSaveToRepositoryModified = true;
-		super.setSaveToRepository(saveToRepository);
-	}
+     * Specifies whether the scheduler should overwrite files in the repository
+     * when saving job output resources.
+     *
+     * @param overwriteFiles
+     * @see #isOverwriteFiles()
+     */
+    public ReportJobRepositoryDestinationModel setOverwriteFiles(boolean overwriteFiles) {
+        super.setOverwriteFiles(overwriteFiles);
+        return this;
+    }
 
-     /**
+    /**
+     * Sets the description that should be used for job output resources.
+     *
+     * @param outputDescription the job output resources description
+     * @since 3.0
+     */
+    public ReportJobRepositoryDestinationModel setOutputDescription(String outputDescription) {
+        super.setOutputDescription(outputDescription);
+        return this;
+    }
+
+    /**
+     * Sets a date pattern inFolder be used for the timestamp included in job output
+     * resources names.
+     * <p/>
+     * <p>
+     * The pattern should be a valid pattern as defined by
+     * <code>java.text.SimpleDateFormat</code> and can only contain underscores,
+     * dots and dashes as token separators.
+     * </p>
+     *
+     * @param timestampPattern
+     * @see #setSequentialFilenames(boolean)
+     * @since 3.0
+     */
+    public ReportJobRepositoryDestinationModel setTimestampPattern(String timestampPattern) {
+        super.setTimestampPattern(timestampPattern);
+        return this;
+    }
+
+    /**
+     * Specifies whether the scheduler should write files inFolder the repository
+     *
+     * @param saveToRepository
+     * @see #isSaveToRepository()
+     */
+    public ReportJobRepositoryDestinationModel setSaveToRepository(boolean saveToRepository) {
+        super.setSaveToRepository(saveToRepository);
+        return this;
+    }
+
+    /**
      * Sets the default scheduled thumbnail output folder URI of the job owner
      *
-     * @param  defaultReportOutputFolderURI default scheduled thumbnail output folder URI of the job owner
+     * @param defaultReportOutputFolderURI default scheduled thumbnail output folder URI of the job owner
      * @see #getDefaultReportOutputFolderURI()
      * @since 4.7
      */
-	public void setDefaultReportOutputFolderURI(String defaultReportOutputFolderURI) {
-//        isDefaultReportOutputFolderURIModified = true;
+    public ReportJobRepositoryDestinationModel setDefaultReportOutputFolderURI(String defaultReportOutputFolderURI) {
         super.setDefaultReportOutputFolderURI(defaultReportOutputFolderURI);
+        return this;
     }
 
-	/**
-	 * Specifies whether the scheduler should write files inFolder default thumbnail output folder URI of the job owner
-	 *
-	 * @param usingDefaultReportOutputFolderURI
-	 * @see #isUsingDefaultReportOutputFolderURI()
+    /**
+     * Specifies whether the scheduler should write files inFolder default thumbnail output folder URI of the job owner
+     *
+     * @param usingDefaultReportOutputFolderURI
+     * @see #isUsingDefaultReportOutputFolderURI()
      * @since 4.7
-	 */
-	public void setUsingDefaultReportOutputFolderURI(boolean usingDefaultReportOutputFolderURI) {
-//        isUsingDefaultReportOutputFolderURIModified = true;
-		super.setUsingDefaultReportOutputFolderURI(usingDefaultReportOutputFolderURI);
-	}
-
-	/**
-	 * Returns the output local path of the folder under which job output
-	 * resources are inFolder be be created.
-	 *
-	 * @param outputLocalFolder the path of the local output folder
-	 */
-    public void setOutputLocalFolder(String outputLocalFolder) {
-//        isOutputLocalFolderModified = true;
-        super.setOutputLocalFolder(outputLocalFolder);
+     */
+    public ReportJobRepositoryDestinationModel setUsingDefaultReportOutputFolderURI(boolean usingDefaultReportOutputFolderURI) {
+        super.setUsingDefaultReportOutputFolderURI(usingDefaultReportOutputFolderURI);
+        return this;
     }
 
     /**
-	 * Returns the output FTP location information which job output
-	 * resources are inFolder be be created.
-	 *
-	 * @return the output FTP Information
-	 * @see #setOutputFTPInfoModel(com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.FTPInfoModel)
-     * @deprecated use #getOutputFTPInfoModel() instead
-	 */
-	public FtpInfo getOutputFTPInfo() {
-        return getOutputFTPInfoModel();
-	}
+     * Returns the output local path of the folder under which job output
+     * resources are inFolder be be created.
+     *
+     * @param outputLocalFolder the path of the local output folder
+     */
+    public ReportJobRepositoryDestinationModel setOutputLocalFolder(String outputLocalFolder) {
+        super.setOutputLocalFolder(outputLocalFolder);
+        return this;
+    }
 
     /**
-	 * Returns the output FTP location information which job output
-	 * resources would be created.
-	 *
-	 * @return FTP information of the output folder
-	 * @see #setOutputFTPInfoModel(com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.FTPInfoModel)
-	 */
-	public FTPInfoModel getOutputFTPInfoModel() {
+     * Returns the output FTP location information which job output
+     * resources are inFolder be be created.
+     *
+     * @return the output FTP Information
+     * @see #setOutputFTPInfoModel(com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.FTPInfoModel)
+     * @deprecated use #getOutputFTPInfoModel() instead
+     */
+    public FtpInfo getOutputFTPInfo() {
+        return getOutputFTPInfoModel();
+    }
+
+    /**
+     * Returns the output FTP location information which job output
+     * resources would be created.
+     *
+     * @return FTP information of the output folder
+     * @see #setOutputFTPInfoModel(com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.FTPInfoModel)
+     */
+    public FTPInfoModel getOutputFTPInfoModel() {
         FtpInfo model = super.getOutputFTPInfo();
         if (model == null) return null;
         if (model instanceof FTPInfoModel) return (FTPInfoModel) model;
         throw new JSClientException("Please use FTPInfoModel instead of FTPInfo in ReportJobRepositoryDestinationModel class.");
-	}
-
-	/**
-	 * Returns the output FTP location information which job output
-	 * resources are inFolder be be created.
-	 *
-	 * @param ftpInfo FTP information of the output folder
-     * @deprecated use #setOutputFTPInfo(FTPInfoModel) instead
-	 */
-	public void setOutputFTPInfo(FtpInfo ftpInfo) {
-        if (ftpInfo == null) setOutputFTPInfoModel(null);
-		else if (ftpInfo instanceof FTPInfoModel) setOutputFTPInfoModel((FTPInfoModel)ftpInfo);
-        else throw new JSClientException("Please use FTPInfoModel instead of FTPInfo in ReportJobRepositoryDestinationModel class.");
-	}
-
-    /**
-	 * Returns the output FTP location information which job output
-	 * resources are inFolder be be created.
-	 *
-	 * @param outputFTPInfo FTP information of the output folder
-	 */
-    public void setOutputFTPInfoModel(FTPInfoModel outputFTPInfo) {
-//        isOutputFTPInfoModified = true;
-        super.setOutputFTPInfo(outputFTPInfo);
     }
 
-//    /**
-//     * returns whether FolderURI has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isFolderURIModified() { return isFolderURIModified; }
-//
-//    /**
-//     * returns whether SequentialFilenames has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isSequentialFilenamesModified() { return isSequentialFilenamesModified; }
-//
-//    /**
-//     * returns whether OutputDescription has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isOutputDescriptionsModified() { return isOutputDescriptionModified; }
-//
-//    /**
-//     * returns whether TimestampPattern has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isTimestampPatternModified() { return isTimestampPatternModified; }
-//
-//    /**
-//     * returns whether OverwriteFiles has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isOverwriteFilesModified() { return isOverwriteFilesModified; }
-//
-//    /**
-//     * returns whether SaveToRepository has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isSaveToRepositoryModified() { return isSaveToRepositoryModified; }
-//
-//    /**
-//     * returns whether DefaultReportOutputFolderURI has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isDefaultReportOutputFolderURIModified() { return isDefaultReportOutputFolderURIModified; }
-//
-//    /**
-//     * returns whether UsingDefaultReportOutputFolderURI has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isUsingDefaultReportOutputFolderURIModified() { return isUsingDefaultReportOutputFolderURIModified; }
-//
-//    /**
-//     * returns whether OutputLocalFolder has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isOutputLocalFolderModified() { return isOutputLocalFolderModified; }
-//
-//    /**
-//     * returns whether OutputFTPInfo has been modified
-//     *
-//     * @return true if the attribute has been modified
-//     */
-//    public boolean isOutputFTPInfoModified() { return isOutputFTPInfoModified; }
+    /**
+     * Returns the output FTP location information which job output
+     * resources are inFolder be be created.
+     *
+     * @param ftpInfo FTP information of the output folder
+     * @deprecated use #setOutputFTPInfo(FTPInfoModel) instead
+     */
+    public ReportJobRepositoryDestinationModel setOutputFTPInfo(FtpInfo ftpInfo) {
+        if (ftpInfo == null) setOutputFTPInfoModel(null);
+        else if (ftpInfo instanceof FTPInfoModel) setOutputFTPInfoModel((FTPInfoModel) ftpInfo);
+        else
+            throw new JSClientException("Please use FTPInfoModel instead of FTPInfo in ReportJobRepositoryDestinationModel class.");
+        return this;
+    }
+
+    /**
+     * Returns the output FTP location information which job output
+     * resources are inFolder be be created.
+     *
+     * @param outputFTPInfo FTP information of the output folder
+     */
+    public ReportJobRepositoryDestinationModel setOutputFTPInfoModel(FTPInfoModel outputFTPInfo) {
+        super.setOutputFTPInfo(outputFTPInfo);
+        return this;
+    }
 }
