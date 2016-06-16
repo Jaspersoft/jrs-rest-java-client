@@ -69,7 +69,10 @@ public class BatchRolesRequestAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncGet(final Callback<OperationResult<RolesListWrapper>, R> callback) {
-        final JerseyRequest<RolesListWrapper> request = buildRequest(sessionStorage, RolesListWrapper.class, uri.toArray(new String[uri.size()]), new DefaultErrorHandler());
+        final JerseyRequest<RolesListWrapper> request = buildRequest(sessionStorage,
+                RolesListWrapper.class,
+                uri.toArray(new String[uri.size()]),
+                new DefaultErrorHandler());
         request.addParams(params);
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
