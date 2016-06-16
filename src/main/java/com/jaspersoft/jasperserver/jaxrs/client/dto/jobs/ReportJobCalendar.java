@@ -77,7 +77,7 @@ public class ReportJobCalendar {
         if (other.excludeDays != null) {
             this.excludeDays = new ArrayList<Calendar>();
             for (Calendar excludeDay : other.excludeDays) {
-                this.excludeDays.add(excludeDay);
+                this.excludeDays.add((Calendar) excludeDay.clone());
             }
         }
         if (other.excludeDaysFlags != null) {

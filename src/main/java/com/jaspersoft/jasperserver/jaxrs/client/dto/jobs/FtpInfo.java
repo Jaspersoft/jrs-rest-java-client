@@ -29,17 +29,17 @@ import java.util.Map;
 @XmlRootElement(name = "outputFTPInfo")
 public class FtpInfo {
 
-    protected String userName;
-    protected String password;
-    protected String folderPath;
-    protected String serverName;
-    protected FtpType type;
-    protected String protocol;
-    protected Integer port;
-    protected Boolean implicit;
-    protected Long pbsz;
-    protected String prot;
-    protected Map<String, String> propertiesMap;
+    private String userName;
+    private String password;
+    private String folderPath;
+    private String serverName;
+    private FtpType type;
+    private String protocol;
+    private Integer port;
+    private Boolean implicit;
+    private Long pbsz;
+    private String prot;
+    private Map<String, String> propertiesMap;
 
     public FtpInfo() {
     }
@@ -50,12 +50,7 @@ public class FtpInfo {
         this.password = other.password;
         this.pbsz = other.pbsz;
         this.port = other.port;
-        if (other.propertiesMap != null) {
-            this.propertiesMap = new LinkedHashMap<String, String>();
-            for (Map.Entry<String, String> entry: other.propertiesMap.entrySet()) {
-                this.propertiesMap.put(entry.getKey(), entry.getValue());
-            }
-        }
+        this.propertiesMap = (other.propertiesMap != null) ? new LinkedHashMap<String, String>(other.propertiesMap) : null;
         this.prot = other.prot;
         this.protocol = other.protocol;
         this.serverName = other.serverName;

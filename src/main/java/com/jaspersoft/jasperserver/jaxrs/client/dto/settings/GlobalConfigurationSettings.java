@@ -56,12 +56,7 @@ public class GlobalConfigurationSettings {
     }
 
     public GlobalConfigurationSettings(GlobalConfigurationSettings other) {
-        if (other.messages != null) {
-            this.messages = new LinkedHashMap<String, String>();
-            for (Map.Entry<String, String> entry : other.messages.entrySet()) {
-                this.messages.put(entry.getKey(), entry.getValue());
-            }
-        }
+        this.messages = (other.messages != null) ? new LinkedHashMap<String, String>(other.messages) : null;
         this.paginatorItemsPerPage = other.paginatorItemsPerPage;
         this.paginatorPagesRange = other.paginatorPagesRange;
         this.reportLevelConfigurable = other.reportLevelConfigurable;
@@ -75,24 +70,12 @@ public class GlobalConfigurationSettings {
         this.userNameSeparator = other.userNameSeparator;
         this.defaultRole = other.defaultRole;
         this.passwordMask = other.passwordMask;
-        if (other.viewReportsFilterList != null) {
-            this.viewReportsFilterList = new LinkedList<String>();
-            for (String viewReportsFilter : other.viewReportsFilterList) {
-                this.viewReportsFilterList.add(viewReportsFilter);
-            }
-        }
-        if (other.outputFolderFilterList != null) {
-            this.outputFolderFilterList = new LinkedList<String>();
-            for (String outputFolderFilter : other.outputFolderFilterList) {
-                this.outputFolderFilterList.add(outputFolderFilter);
-            }
-        }
-        if (other.outputFolderFilterPatterns != null) {
-            this.outputFolderFilterPatterns = new LinkedList<String>();
-            for (String outputFolderFilterPattern : other.outputFolderFilterPatterns) {
-                this.outputFolderFilterPatterns.add(outputFolderFilterPattern);
-            }
-        }
+        this.viewReportsFilterList = (other.viewReportsFilterList != null) ?
+                new LinkedList<String>(other.viewReportsFilterList) : null;
+        this.outputFolderFilterList = (other.outputFolderFilterList != null) ?
+                new LinkedList<String>(other.outputFolderFilterList) : null;
+        this.outputFolderFilterPatterns = (other.outputFolderFilterPatterns != null) ?
+                new LinkedList<String>(other.outputFolderFilterPatterns) : null;
         this.tenantNameNotSupportedSymbols = other.tenantNameNotSupportedSymbols;
         this.tenantIdNotSupportedSymbols = other.tenantIdNotSupportedSymbols;
         this.resourceIdNotSupportedSymbols = other.resourceIdNotSupportedSymbols;
@@ -122,12 +105,8 @@ public class GlobalConfigurationSettings {
                 this.dataSourceTypes.add(new DataSourceType(dataSourceType));
             }
         }
-        if (other.allFileResourceTypes != null) {
-            this.allFileResourceTypes = new LinkedHashMap<String, String>();
-            for (Map.Entry<String, String> entry : other.allFileResourceTypes.entrySet()) {
-                this.allFileResourceTypes.put(entry.getKey(), entry.getValue());
-            }
-        }
+        this.allFileResourceTypes = (other.allFileResourceTypes != null) ?
+                new LinkedHashMap<String, String>(other.allFileResourceTypes) : null;
     }
 
     public Map<String, String> getMessages() {

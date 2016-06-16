@@ -4,25 +4,25 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *  @author Tetiana Iefimenko
+ * @author Tetiana Iefimenko
  */
 public class Timepicker {
-    private  String timeOnlyTitle;
-    private  String timeText;
-    private  String hourText;
-    private  String minuteText;
-    private  String secondText;
-    private  String millisecText;
-    private  String microsecText;
-    private  String timezoneText;
-    private  String currentText;
-    private  String closeText;
-    private  String timeFormat;
+    private String timeOnlyTitle;
+    private String timeText;
+    private String hourText;
+    private String minuteText;
+    private String secondText;
+    private String millisecText;
+    private String microsecText;
+    private String timezoneText;
+    private String currentText;
+    private String closeText;
+    private String timeFormat;
     private List<String> amNames;
     private List<String> pmNames;
-    private  Boolean isRTL;
-    private  String dateFormat;
-    private  String separator;
+    private Boolean isRTL;
+    private String dateFormat;
+    private String separator;
 
     public Timepicker() {
     }
@@ -39,18 +39,8 @@ public class Timepicker {
         this.currentText = other.currentText;
         this.closeText = other.closeText;
         this.timeFormat = other.timeFormat;
-        if (other.amNames != null) {
-            this.amNames = new LinkedList<String>();
-            for (String amName : other.amNames) {
-                this.amNames.add(amName);
-            }
-        }
-        if (other.pmNames != null) {
-            this.pmNames = new LinkedList<String>();
-            for (String pmName : other.pmNames) {
-                this.pmNames.add(pmName);
-            }
-        }
+        this.amNames = (other.amNames != null) ? new LinkedList<String>(other.amNames) : null;
+        this.pmNames = (other.pmNames != null) ? new LinkedList<String>(other.pmNames) : null;
         this.isRTL = other.isRTL;
         this.dateFormat = other.dateFormat;
         this.separator = other.separator;

@@ -35,7 +35,6 @@ public class MailNotification {
     private List<String> bccAddresses;
     private List<String> ccAddresses;
     private List<String> toAddresses;
-
     private Integer version;
     private Long id;
     private Boolean includingStackTraceWhenJobFails;
@@ -50,24 +49,9 @@ public class MailNotification {
     }
 
     public MailNotification(MailNotification other) {
-        if (other.bccAddresses != null) {
-            this.bccAddresses = new LinkedList<String>();
-            for (String bccAddress : other.bccAddresses) {
-                this.bccAddresses.add(bccAddress);
-            }
-        }
-        if (other.ccAddresses != null) {
-            this.ccAddresses = new LinkedList<String>();
-            for (String ccAddress : other.ccAddresses) {
-                this.ccAddresses.add(ccAddress);
-            }
-        }
-        if (other.toAddresses != null) {
-            this.toAddresses = new LinkedList<String>();
-            for (String toAddress : other.toAddresses) {
-                this.toAddresses.add(toAddress);
-            }
-        }
+        this.bccAddresses = (other.bccAddresses != null) ? new LinkedList<String>(other.bccAddresses) : null;
+        this.ccAddresses = (other.ccAddresses != null) ? new LinkedList<String>(other.ccAddresses) : null;
+        this.toAddresses = (other.toAddresses != null) ? new LinkedList<String>(other.toAddresses) : null;
         this.id = other.id;
         this.includingStackTraceWhenJobFails = other.includingStackTraceWhenJobFails;
         this.messageText = other.messageText;
