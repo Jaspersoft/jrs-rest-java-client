@@ -23,12 +23,10 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.DaysByteXmlAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.MonthsByteXmlAdapter;
-
-import java.util.Iterator;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.util.SortedSet;
 
 @XmlRootElement(name = "calendarTrigger")
 public class CalendarTrigger extends JobTrigger {
@@ -49,22 +47,9 @@ public class CalendarTrigger extends JobTrigger {
         this.minutes = other.minutes;
         this.hours = other.hours;
         this.daysType = other.daysType;
-        Iterator<Byte> iterator;
-        if (other.weekDays != null) {
-            this.weekDays = new TreeSet<Byte>();
-            iterator = other.weekDays.iterator();
-            while (iterator.hasNext()) {
-                this.weekDays.add(iterator.next());
-            }
-        }
+        this.weekDays = (other.weekDays != null) ? new TreeSet<Byte>(other.weekDays) : null;
         this.monthDays = other.monthDays;
-        if (other.months != null) {
-            this.months = new TreeSet<Byte>();
-            Iterator<Byte> monthItertor = other.months.iterator();
-            while (monthItertor.hasNext()) {
-                this.months.add(monthItertor.next());
-            }
-        }
+        this.months = (other.months != null) ? new TreeSet<Byte>(other.months) : null;
     }
 
     public String getMinutes() {

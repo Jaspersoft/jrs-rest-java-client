@@ -32,36 +32,11 @@ public class Datepicker {
         this.prevText = other.prevText;
         this.nextText = other.nextText;
         this.currentText = other.currentText;
-        if (other.monthNames != null) {
-            this.monthNames = new LinkedList<String>();
-            for (String monthName : other.monthNames) {
-                this.monthNames.add(monthName);
-            }
-        }
-        if (other.monthNamesShort != null) {
-            this.monthNamesShort = new LinkedList<String>();
-            for (String monthNameShort : other.monthNamesShort) {
-                this.monthNamesShort.add(monthNameShort);
-            }
-        }
-        if (other.dayNames != null) {
-            this.dayNames = new LinkedList<String>();
-            for (String dayName : other.dayNames) {
-                this.dayNames.add(dayName);
-            }
-        }
-        if (other.dayNamesShort != null) {
-            this.dayNamesShort = new LinkedList<String>();
-            for (String dayNameShort : other.dayNamesShort) {
-                this.dayNamesShort.add(dayNameShort);
-            }
-        }
-        if (other.dayNamesMin != null) {
-            this.dayNamesMin = new LinkedList<String>();
-            for (String dayNameMin : other.dayNames) {
-                this.dayNamesMin.add(dayNameMin);
-            }
-        }
+        this.monthNames = (other.monthNames != null) ? new LinkedList<String>(other.monthNames) : null;
+        this.monthNamesShort = (other.monthNamesShort != null) ? new LinkedList<String>(other.monthNamesShort) : null;
+        this.dayNames = (other.dayNames != null) ? new LinkedList<String>(other.dayNames) : null;
+        this.dayNamesShort = (other.dayNamesShort != null) ? new LinkedList<String>(other.dayNamesShort) : null;
+        this.dayNamesMin = (other.dayNamesMin != null) ? new LinkedList<String>(other.dayNamesMin) : null;
         this.weekHeader = other.weekHeader;
         this.dateFormat = other.dateFormat;
         this.firstDay = other.firstDay;
