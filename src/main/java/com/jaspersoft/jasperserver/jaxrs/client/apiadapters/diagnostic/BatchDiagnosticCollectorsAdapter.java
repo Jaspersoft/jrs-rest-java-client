@@ -30,7 +30,7 @@ public class BatchDiagnosticCollectorsAdapter extends AbstractAdapter {
     public OperationResult<InputStream> collectorsContent() {
         JerseyRequest<InputStream> request = JerseyRequest.buildRequest(sessionStorage,
                 InputStream.class,
-                new String[]{"/diagnostic/collectors", "content"},
+                new String[]{"diagnostic", "collectors", "content"},
                 new DefaultErrorHandler());
         request.setAccept("application/zip");
         return request.get();
@@ -51,7 +51,7 @@ public class BatchDiagnosticCollectorsAdapter extends AbstractAdapter {
     protected JerseyRequest<CollectorSettingsList> buildRequest() {
         return JerseyRequest.buildRequest(sessionStorage,
                 CollectorSettingsList.class,
-                new String[]{"/diagnostic/collectors"},
+                new String[]{"diagnostic", "collectors"},
                 new DefaultErrorHandler());
     }
 }

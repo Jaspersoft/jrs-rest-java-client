@@ -3,6 +3,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import java.util.Collections;
+import java.util.List;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.Assert;
@@ -10,6 +12,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
@@ -24,13 +27,13 @@ public class AttributesServiceTest extends PowerMockTestCase {
 
     private SessionStorage sessionStorageMock;
     private SingleAttributeAdapter singleAttributeAdapterMock;
-//    private BatchAttributeAdapter batchAttributeAdapterMock;
+    private BatchAttributeAdapter batchAttributeAdapterMock;
 
     @BeforeMethod
     public void before() {
         sessionStorageMock = mock(SessionStorage.class);
         singleAttributeAdapterMock = mock(SingleAttributeAdapter.class);
-//        batchAttributeAdapterMock = mock(BatchAttributeAdapter.class);
+        batchAttributeAdapterMock = mock(BatchAttributeAdapter.class);
     }
 
     @Test
@@ -129,7 +132,7 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_ServerSingleAttributeAdapter_instance() throws Exception {
+    public void should_return_proper_SingleAttributeAdapter_instance() throws Exception {
 
         // Given
         whenNew(SingleAttributeAdapter.class)
@@ -148,7 +151,7 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_ServerSingleAttributeAdapter_instance_for_organization() throws Exception {
+    public void should_return_proper_SingleAttributeAdapter_instance_for_organization() throws Exception {
 
         // Given
         whenNew(SingleAttributeAdapter.class)
@@ -167,7 +170,7 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_ServerSingleAttributeAdapter_instance_for_organization_as_object() throws Exception {
+    public void should_return_proper_SingleAttributeAdapter_instance_for_organization_as_object() throws Exception {
 
         // Given
         whenNew(SingleAttributeAdapter.class)
@@ -189,7 +192,7 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_ServerSingleAttributeAdapter_instance_for_user() throws Exception {
+    public void should_return_proper_SingleAttributeAdapter_instance_for_user() throws Exception {
 
         // Given
         whenNew(SingleAttributeAdapter.class)
@@ -209,7 +212,7 @@ public class AttributesServiceTest extends PowerMockTestCase {
 
 
     @Test
-    public void should_return_proper_ServerSingleAttributeAdapter_instance_for_user_as_object() throws Exception {
+    public void should_return_proper_SingleAttributeAdapter_instance_for_user_as_object() throws Exception {
 
         // Given
         whenNew(SingleAttributeAdapter.class)
@@ -231,7 +234,7 @@ public class AttributesServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_ServerSingleAttributeAdapter_instance_for_organization_for_user() throws Exception {
+    public void should_return_proper_SingleAttributeAdapter_instance_for_organization_for_user() throws Exception {
 
         // Given
         whenNew(SingleAttributeAdapter.class)
@@ -269,68 +272,86 @@ public class AttributesServiceTest extends PowerMockTestCase {
                 .withArguments(null, null, sessionStorageMock, "status");
     }
 
-//    @Test
-//    public void should_return_proper_BatchAttributeAdapter_instance() throws Exception {
-//
-//        // Given
-//        whenNew(BatchAttributeAdapter.class)
-//                .withArguments(asList("/"), sessionStorageMock)
-//                .thenReturn(batchAttributeAdapterMock);
-//
-//        AttributesService attributesService = new AttributesService(sessionStorageMock);
-//
-//        // When
-//        BatchAttributeAdapter retrieved = attributesService.allAttributes();
-//
-//        // Then
-//        assertSame(retrieved, batchAttributeAdapterMock);
-//        verifyNew(BatchAttributeAdapter.class, times(1))
-//                .withArguments(asList("/"), sessionStorageMock);
-//    }
-//
-//    @Test
-//    public void should_instantiate_proper_BatchAttributeAdapter_instance() throws Exception {
-//
-//        // Given
-//        List<String> list = asList("attr1", "attr2", "attr3");
-//        whenNew(BatchAttributeAdapter.class)
-//                .withArguments(asList("/"), sessionStorageMock, list)
-//                .thenReturn(batchAttributeAdapterMock);
-//
-//        AttributesService attributesService = new AttributesService(sessionStorageMock);
-//
-//        // When
-//        BatchAttributeAdapter retrieved = attributesService.attributes(list);
-//
-//        // Then
-//        assertSame(retrieved, batchAttributeAdapterMock);
-//        verifyNew(BatchAttributeAdapter.class, times(1))
-//                .withArguments(asList("/"), sessionStorageMock, list);
-//    }
-//
-//    @Test
-//    public void should_instantiate_proper_BatchAttributeAdapter_instance_when_pass_vararg() throws Exception {
-//
-//        // Given
-//        whenNew(BatchAttributeAdapter.class)
-//                .withArguments(asList("/"), sessionStorageMock, asList("attr1", "attr2", "attr3"))
-//                .thenReturn(batchAttributeAdapterMock);
-//
-//        AttributesService attributesService = new AttributesService(sessionStorageMock);
-//
-//        // When
-//        BatchAttributeAdapter retrieved = attributesService.attributes("attr1", "attr2", "attr3");
-//
-//        // Then
-//        assertSame(retrieved, batchAttributeAdapterMock);
-//        verifyNew(BatchAttributeAdapter.class, times(1))
-//                .withArguments(asList("/"), sessionStorageMock, asList("attr1", "attr2", "attr3"));
-//    }
+    @Test
+    public void should_return_proper_BatchAttributeAdapter_instance() throws Exception {
+
+        // Given
+        whenNew(BatchAttributeAdapter.class)
+                .withArguments(null, null, sessionStorageMock)
+                .thenReturn(batchAttributeAdapterMock);
+
+        AttributesService attributesService = new AttributesService(sessionStorageMock);
+
+        // When
+        BatchAttributeAdapter retrieved = attributesService.allAttributes();
+
+        // Then
+        assertSame(retrieved, batchAttributeAdapterMock);
+        verifyNew(BatchAttributeAdapter.class, times(1))
+                .withArguments(null, null, sessionStorageMock);
+    }
+
+    @Test
+    public void should_instantiate_proper_BatchAttributeAdapter_instance() throws Exception {
+
+        // Given
+        List<String> list = asList("attr1", "attr2", "attr3");
+        whenNew(BatchAttributeAdapter.class)
+                .withArguments(null, null, sessionStorageMock, list)
+                .thenReturn(batchAttributeAdapterMock);
+
+        AttributesService attributesService = new AttributesService(sessionStorageMock);
+
+        // When
+        BatchAttributeAdapter retrieved = attributesService.attributes(list);
+
+        // Then
+        assertSame(retrieved, batchAttributeAdapterMock);
+        verifyNew(BatchAttributeAdapter.class, times(1))
+                .withArguments(null, null, sessionStorageMock, list);
+    }
+
+    @Test
+    public void should_instantiate_proper_BatchAttributeAdapter_instance_when_pass_vararg() throws Exception {
+
+        // Given
+        whenNew(BatchAttributeAdapter.class)
+                .withArguments(null, null, sessionStorageMock, asList("attr1", "attr2", "attr3"))
+                .thenReturn(batchAttributeAdapterMock);
+
+        AttributesService attributesService = new AttributesService(sessionStorageMock);
+
+        // When
+        BatchAttributeAdapter retrieved = attributesService.attributes("attr1", "attr2", "attr3");
+
+        // Then
+        assertSame(retrieved, batchAttributeAdapterMock);
+        verifyNew(BatchAttributeAdapter.class, times(1))
+                .withArguments(null, null, sessionStorageMock, asList("attr1", "attr2", "attr3"));
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_exceptopn_when_attributes_list_is_empty() throws Exception {
+
+        // Given
+        List<String> list = Collections.EMPTY_LIST;
+        whenNew(BatchAttributeAdapter.class)
+                .withArguments(null, null, sessionStorageMock, list)
+                .thenReturn(batchAttributeAdapterMock);
+
+        AttributesService attributesService = new AttributesService(sessionStorageMock);
+
+        // When
+        attributesService.attributes(list);
+
+        // Then
+        // an exception should be thrown
+    }
 
     @AfterMethod
     public void after() {
         sessionStorageMock = null;
         singleAttributeAdapterMock = null;
-//        batchAttributeAdapterMock = null;
+        batchAttributeAdapterMock = null;
     }
 }

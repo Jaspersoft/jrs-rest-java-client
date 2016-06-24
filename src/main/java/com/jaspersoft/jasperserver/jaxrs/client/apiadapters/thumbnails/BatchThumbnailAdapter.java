@@ -18,6 +18,7 @@ import java.util.Collection;
  */
 public class BatchThumbnailAdapter extends AbstractAdapter {
 
+    public static final String SERVICE_URI = "thumbnails";
     private final MultivaluedHashMap<String, String> params = new MultivaluedHashMap<String, String>();
     private RequestMethod requestMethod;
     private Boolean defaultAllowed = false;
@@ -67,9 +68,8 @@ public class BatchThumbnailAdapter extends AbstractAdapter {
 
     private JerseyRequest<ResourceThumbnailsListWrapper> request() {
         JerseyRequest<ResourceThumbnailsListWrapper> jerseyRequest = JerseyRequest.buildRequest(sessionStorage, ResourceThumbnailsListWrapper.class,
-                new String[]{"/thumbnails"}, new DefaultErrorHandler());
+                new String[]{SERVICE_URI}, new DefaultErrorHandler());
         jerseyRequest.addParam("defaultAllowed", defaultAllowed.toString());
         return jerseyRequest;
     }
-
 }

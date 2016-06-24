@@ -73,7 +73,7 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users/"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(operationResultMock).when(requestMock).get();
         BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, null));
 
@@ -112,7 +112,7 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
         // Given
         MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users/"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(operationResultMock).when(requestMock).get();
         doReturn(requestMock).when(requestMock).addParams(params);
         BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, null));
@@ -128,7 +128,7 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
         // Given
         MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users/"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(operationResultMock).when(requestMock).get();
         doReturn(requestMock).when(requestMock).addParams(params);
         BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, ""));
@@ -145,7 +145,26 @@ public class BatchUsersRequestAdapterTest extends PowerMockTestCase {
         // Given
         BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, null));
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users/"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class), eq(new String[]{"users"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        doReturn(requestMock).when(requestMock).addParams(any(MultivaluedHashMap.class));
+        doReturn(operationResultMock).when(requestMock).get();
+        // When
+        OperationResult<UsersListWrapper> retrievedResult = adapterSpy.param(UsersParameter.INCLUDE_SUB_ORGS, "true").get();
+        // Then
+        assertSame(retrievedResult, operationResultMock);
+        verify(requestMock, times(1)).get();
+        assertTrue(((MultivaluedHashMap<String, String>)getInternalState(adapterSpy, "params")).size()== 1);
+        verify(requestMock, times(1)).addParams(any(MultivaluedHashMap.class));
+    }
+
+    @Test
+    public void should_get_resource_with_params_for_user_in_organization() {
+        // Given
+        BatchUsersRequestAdapter adapterSpy = spy(new BatchUsersRequestAdapter(sessionStorageMock, "myOrg"));
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(eq(sessionStorageMock), eq(UsersListWrapper.class),
+                eq(new String[]{"organizations", "myOrg", "users"}),
+                any(DefaultErrorHandler.class))).thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).addParams(any(MultivaluedHashMap.class));
         doReturn(operationResultMock).when(requestMock).get();
         // When

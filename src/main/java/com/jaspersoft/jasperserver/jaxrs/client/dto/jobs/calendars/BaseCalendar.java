@@ -32,4 +32,9 @@ public class BaseCalendar extends Calendar {
         this.calendarType = CalendarType.base;
     }
 
+    BaseCalendar(BaseCalendar other) {
+        super(other);
+    }
+
+
 }

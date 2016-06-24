@@ -4,25 +4,25 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *  @author Tetiana Iefimenko
+ * @author Tetiana Iefimenko
  */
 public class Timepicker {
-    private  String timeOnlyTitle;
-    private  String timeText;
-    private  String hourText;
-    private  String minuteText;
-    private  String secondText;
-    private  String millisecText;
-    private  String microsecText;
-    private  String timezoneText;
-    private  String currentText;
-    private  String closeText;
-    private  String timeFormat;
+    private String timeOnlyTitle;
+    private String timeText;
+    private String hourText;
+    private String minuteText;
+    private String secondText;
+    private String millisecText;
+    private String microsecText;
+    private String timezoneText;
+    private String currentText;
+    private String closeText;
+    private String timeFormat;
     private List<String> amNames;
     private List<String> pmNames;
-    private  Boolean isRTL;
-    private  String dateFormat;
-    private  String separator;
+    private Boolean isRTL;
+    private String dateFormat;
+    private String separator;
 
     public Timepicker() {
     }

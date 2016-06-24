@@ -8,7 +8,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ExportFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.importexport.StateDto;
+import com.jaspersoft.jasperserver.dto.importexport.State;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -49,19 +49,19 @@ import static org.testng.Assert.assertSame;
 public class ExportRequestAdapterTest extends PowerMockTestCase {
 
     @Mock
-    private StateDto stateMock;
+    private State stateMock;
 
     @Mock
     private SessionStorage sessionStorageMock;
 
     @Mock
-    private JerseyRequest<StateDto> requestStateDtoMock;
+    private JerseyRequest<State> requestStateDtoMock;
 
     @Mock
     private JerseyRequest<InputStream> requestInputStreamMock;
 
     @Mock
-    private OperationResult<StateDto> operationResultStateDtoMock;
+    private OperationResult<State> operationResultStateDtoMock;
 
     @Mock
     private OperationResult<InputStream> operationResultInputStreamMock;
@@ -73,14 +73,14 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
     private RequestBuilder<InputStream> streamRequestBuilderMock;
 
     @Mock
-    private Callback<OperationResult<StateDto>, Object> operationResultObjectCallback;
+    private Callback<OperationResult<State>, Object> operationResultObjectCallback;
 
     @Mock
     private ErrorDescriptor descriptorMock;
 
     private ExportRequestAdapter adapterSpy;
     private String taskId = "njkhfs8374";
-    private String[] fakeArrayPath = new String[]{"/export", taskId, "/state"};
+    private String[] fakeArrayPath = new String[]{"export", taskId, "state"};
 
     @BeforeMethod
     public void before() {
@@ -109,12 +109,12 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(sessionStorageMock, StateDto.class, fakeArrayPath)).thenReturn(requestStateDtoMock);
+        when(JerseyRequest.buildRequest(sessionStorageMock, State.class, fakeArrayPath)).thenReturn(requestStateDtoMock);
         when(requestStateDtoMock.get()).thenReturn(operationResultStateDtoMock);
 
         // When
         ExportRequestAdapter adapter = new ExportRequestAdapter(sessionStorageMock, taskId);
-        OperationResult<StateDto> opResult = adapter.state();
+        OperationResult<State> opResult = adapter.state();
 
         // Then
         assertSame(opResult, operationResultStateDtoMock);
@@ -130,7 +130,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
         doReturn("finished").when(stateMock).getPhase();
 
         when(JerseyRequest.buildRequest(sessionStorageMock, InputStream.class,
-                new String[]{"/export", taskId, "/exportFile"})).thenReturn(requestInputStreamMock);
+                new String[]{"export", taskId, "exportFile"})).thenReturn(requestInputStreamMock);
 
         doReturn(operationResultInputStreamMock).when(requestInputStreamMock).get();
 
@@ -153,11 +153,11 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
         PowerMockito.mockStatic(JerseyRequest.class);
         PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class),
-                eq(new String[]{"/export", taskId, "/exportFile"})))
+                eq(new String[]{"export", taskId, "exportFile"})))
                 .thenReturn(requestInputStreamMock);
 
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(StateDto.class),
-                eq(new String[]{"/export", taskId, "/state"})))
+        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(State.class),
+                eq(new String[]{"export", taskId, "state"})))
                 .thenReturn(requestStateDtoMock);
 
         PowerMockito.doReturn(operationResultInputStreamMock).when(requestInputStreamMock).get();
@@ -201,17 +201,17 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
         PowerMockito.mockStatic(JerseyRequest.class);
         PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class),
-                eq(new String[]{"/export", taskId, "/exportFile"})))
+                eq(new String[]{"export", taskId, "exportFile"})))
                 .thenReturn(requestInputStreamMock);
 
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(StateDto.class),
-                eq(new String[]{"/export", taskId, "/state"})))
+        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(State.class),
+                eq(new String[]{"export", taskId, "state"})))
                 .thenReturn(requestStateDtoMock);
 
         PowerMockito.doReturn(operationResultInputStreamMock).when(requestInputStreamMock).get();
         PowerMockito.doReturn(operationResultStateDtoMock).when(requestStateDtoMock).get();
         PowerMockito.doReturn(stateMock).when(operationResultStateDtoMock).getEntity();
-        PowerMockito.doReturn(null).when(stateMock).getErrorDescriptor();
+        PowerMockito.doReturn(null).when(stateMock).getError();
         PowerMockito.doReturn("msg").when(stateMock).getMessage();
 
         PowerMockito
@@ -256,8 +256,8 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
         PowerMockito.when(
                 buildRequest(
                         eq(sessionStorageMock),
-                        eq(StateDto.class),
-                        eq(new String[]{"/export", taskId, "/state"})))
+                        eq(State.class),
+                        eq(new String[]{"export", taskId, "state"})))
                 .thenReturn(requestStateDtoMock);
 
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -265,8 +265,8 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
         ExportRequestAdapter taskAdapterSpy = PowerMockito.spy(new ExportRequestAdapter(sessionStorageMock, taskId));
 
-        final Callback<OperationResult<StateDto>, Void> callback = spy(new Callback<OperationResult<StateDto>, Void>() {
-            public Void execute(OperationResult<StateDto> data) {
+        final Callback<OperationResult<State>, Void> callback = spy(new Callback<OperationResult<State>, Void>() {
+            public Void execute(OperationResult<State> data) {
                 newThreadId.set((int) Thread.currentThread().getId());
                 synchronized (this) {
                     this.notify();
@@ -300,16 +300,16 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         PowerMockito.doReturn(requestStateDtoMock).when(JerseyRequest.class, "buildRequest",
                 eq(sessionStorageMock),
-                eq(StateDto.class),
-                eq(new String[]{"/export", "task77", "/state"}));
+                eq(State.class),
+                eq(new String[]{"export", "task77", "state"}));
 
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
         ExportRequestAdapter requestAdapterSpy = new ExportRequestAdapter(sessionStorageMock, "task77");
-        Callback<OperationResult<StateDto>, Void> callbackSpy = PowerMockito.spy(new Callback<OperationResult<StateDto>, Void>() {
+        Callback<OperationResult<State>, Void> callbackSpy = PowerMockito.spy(new Callback<OperationResult<State>, Void>() {
             @Override
-            public Void execute(OperationResult<StateDto> data) {
+            public Void execute(OperationResult<State> data) {
                 newThreadId.set((int) Thread.currentThread().getId());
                 synchronized (this) {
                     this.notify();
@@ -350,17 +350,17 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
         PowerMockito.mockStatic(JerseyRequest.class);
         PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class),
-                eq(new String[]{"/export", taskId, "/exportFile"})))
+                eq(new String[]{"export", taskId, "exportFile"})))
                 .thenReturn(requestInputStreamMock);
 
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(StateDto.class),
-                eq(new String[]{"/export", taskId, "/state"})))
+        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(State.class),
+                eq(new String[]{"export", taskId, "state"})))
                 .thenReturn(requestStateDtoMock);
 
         PowerMockito.doReturn(operationResultInputStreamMock).when(requestInputStreamMock).get();
         PowerMockito.doReturn(operationResultStateDtoMock).when(requestStateDtoMock).get();
         PowerMockito.doReturn(stateMock).when(operationResultStateDtoMock).getEntity();
-        PowerMockito.doReturn(descriptorMock).when(stateMock).getErrorDescriptor();
+        PowerMockito.doReturn(descriptorMock).when(stateMock).getError();
         PowerMockito.doReturn("msg").when(stateMock).getMessage();
 
         PowerMockito
@@ -406,11 +406,11 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
         PowerMockito.mockStatic(JerseyRequest.class, Thread.class);
         PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class),
-                eq(new String[]{"/export", taskId, "/exportFile"})))
+                eq(new String[]{"export", taskId, "exportFile"})))
                 .thenReturn(requestInputStreamMock);
 
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(StateDto.class),
-                eq(new String[]{"/export", taskId, "/state"})))
+        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(State.class),
+                eq(new String[]{"export", taskId, "state"})))
                 .thenReturn(requestStateDtoMock);
 
         PowerMockito.doThrow(new InterruptedException()).when(Thread.class);
@@ -419,7 +419,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
         PowerMockito.doReturn(operationResultInputStreamMock).when(requestInputStreamMock).get();
         PowerMockito.doReturn(operationResultStateDtoMock).when(requestStateDtoMock).get();
         PowerMockito.doReturn(stateMock).when(operationResultStateDtoMock).getEntity();
-        PowerMockito.doReturn(descriptorMock).when(stateMock).getErrorDescriptor();
+        PowerMockito.doReturn(descriptorMock).when(stateMock).getError();
         PowerMockito.doReturn("msg").when(stateMock).getMessage();
 
         PowerMockito
@@ -467,7 +467,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
         Mockito.doReturn(operationResultStateDtoMock).when(adapterSpy).state();
         Mockito.doReturn(stateMock).when(operationResultStateDtoMock).getEntity();
         Mockito.doReturn("failed").doReturn("failed").when(stateMock).getPhase();
-        Mockito.doReturn(descriptorMock).when(stateMock).getErrorDescriptor();
+        Mockito.doReturn(descriptorMock).when(stateMock).getError();
 
         /* When */
         try {
@@ -491,7 +491,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
         Mockito.doReturn(operationResultStateDtoMock).when(adapterSpy).state();
         Mockito.doReturn(stateMock).when(operationResultStateDtoMock).getEntity();
         Mockito.doReturn("failed").doReturn("failed").when(stateMock).getPhase();
-        Mockito.doReturn(null).when(stateMock).getErrorDescriptor();
+        Mockito.doReturn(null).when(stateMock).getError();
 
         /* When */
         try {
@@ -513,7 +513,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
         /* Given */
         PowerMockito.mockStatic(JerseyRequest.class, Thread.class);
         PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class),
-                eq(new String[]{"/export", taskId, "/exportFile"})))
+                eq(new String[]{"export", taskId, "exportFile"})))
                 .thenReturn(requestInputStreamMock);
 
         ExportRequestAdapter adapterSpy = Mockito.spy(new ExportRequestAdapter(sessionStorageMock, taskId));
@@ -529,7 +529,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
         /* Then */
         verifyStatic(times(1));
-        buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/export", taskId, "/exportFile"}));
+        buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"export", taskId, "exportFile"}));
 
         verify(requestInputStreamMock, times(1)).setAccept("application/zip");
         verify(requestInputStreamMock, times(1)).get();
@@ -543,7 +543,9 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
         // ...
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/export", taskId, "/exportFile"}))).thenReturn(requestInputStreamMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock),
+                eq(InputStream.class),
+                eq(new String[]{"export", taskId, "exportFile"}))).thenReturn(requestInputStreamMock);
 
         ExportRequestAdapter adapterSpy = PowerMockito.spy(new ExportRequestAdapter(sessionStorageMock, taskId));
 
@@ -604,7 +606,9 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
         // ...
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/export", taskId, "/exportFile"}))).thenReturn(requestInputStreamMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock),
+                eq(InputStream.class),
+                eq(new String[]{"export", taskId, "exportFile"}))).thenReturn(requestInputStreamMock);
 
         ExportRequestAdapter adapterSpy = PowerMockito.spy(new ExportRequestAdapter(sessionStorageMock, taskId));
 
@@ -669,7 +673,9 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
 
         // ...
         PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/export", taskId, "/exportFile"}))).thenReturn(requestInputStreamMock);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock),
+                eq(InputStream.class),
+                eq(new String[]{"export", taskId, "exportFile"}))).thenReturn(requestInputStreamMock);
 
         ExportRequestAdapter adapterSpy = PowerMockito.spy(new ExportRequestAdapter(sessionStorageMock, taskId));
 
@@ -697,7 +703,7 @@ public class ExportRequestAdapterTest extends PowerMockTestCase {
         PowerMockito
                 .doReturn(descriptorMock)
                 .when(stateMock)
-                .getErrorDescriptor();
+                .getError();
         PowerMockito
                 .doReturn("_msg")
                 .when(descriptorMock)

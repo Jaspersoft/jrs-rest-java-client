@@ -7,6 +7,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -66,7 +67,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
 
         // Then
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
-        assertEquals(Whitebox.getInternalState(adapter, "uri").toString(), "users/");
+        assertEquals(((ArrayList<String>)Whitebox.getInternalState(adapter, "uri")).get(0), "users");
         assertEquals(Whitebox.getInternalState(adapter, "user"), userMock);
     }
 
@@ -129,7 +130,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         SingleUserRequestAdapter adapter = spy(new SingleUserRequestAdapter(sessionStorageMock, new ClientUser().setTenantId("myOrg").setUsername("Simon")));
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientUser.class),
-                eq(new String[]{"organizations/myOrg/users/", "Simon"}), any(DefaultErrorHandler.class)))
+                eq(new String[]{"organizations", "myOrg", "users", "Simon"}), any(DefaultErrorHandler.class)))
                 .thenReturn(userJerseyRequestMock);
         doReturn(operationResultMock).when(userJerseyRequestMock).delete();
 
@@ -140,7 +141,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         assertNotNull(retrieved);
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUser.class),
-                eq(new String[]{"organizations/myOrg/users/", "Simon"}), any(DefaultErrorHandler.class));
+                eq(new String[]{"organizations", "myOrg", "users", "Simon"}), any(DefaultErrorHandler.class));
         verify(userJerseyRequestMock, times(1)).delete();
     }
 
@@ -152,7 +153,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         SingleUserRequestAdapter adapter = spy(new SingleUserRequestAdapter(sessionStorageMock, new ClientUser().setTenantId("").setUsername("Simon")));
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientUser.class),
-                eq(new String[]{"users/", "Simon"}), any(DefaultErrorHandler.class)))
+                eq(new String[]{"users", "Simon"}), any(DefaultErrorHandler.class)))
                 .thenReturn(userJerseyRequestMock);
         doReturn(operationResultMock).when(userJerseyRequestMock).get();
 
@@ -163,7 +164,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
         assertNotNull(retrieved);
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUser.class),
-                eq(new String[]{"users/", "Simon"}), any(DefaultErrorHandler.class));
+                eq(new String[]{"users", "Simon"}), any(DefaultErrorHandler.class));
         verify(userJerseyRequestMock, times(1)).get();
     }
 

@@ -51,7 +51,6 @@ public class DomainMetadataAdapterTest extends PowerMockTestCase {
     @Test(testName = "DomainMetadataAdapter_constructor")
     public void should_pass_not_null_SessionStorage_and_domainUri_to_super_class_without_any_changes() {
         assertEquals(sessionStorageMock, domainMetadataAdapter.getSessionStorage());
-        assertEquals(VALID_URI_FAKE, domainMetadataAdapter.getDomainURI());
     }
 
     @Test

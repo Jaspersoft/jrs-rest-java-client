@@ -30,17 +30,22 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.util.ArrayList;
 
 public class SingleRoleRequestAdapter extends AbstractAdapter {
 
-    private final String roleUriPrefix;
+    private final ArrayList<String> roleUri = new ArrayList<String>();
 
     public SingleRoleRequestAdapter(SessionStorage sessionStorage, String organizationId, String roleName) {
         super(sessionStorage);
         if (organizationId != null) {
-            roleUriPrefix = "/organizations/" + organizationId + "/roles/" + roleName;
+            roleUri.add("organizations");
+            roleUri.add(organizationId);
+            roleUri.add("roles");
+            roleUri.add(roleName);
         } else {
-            roleUriPrefix = "/roles/" + roleName;
+            roleUri.add("roles");
+            roleUri.add(roleName);
         }
     }
 
@@ -94,6 +99,6 @@ public class SingleRoleRequestAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<ClientRole> buildRequest() {
-        return JerseyRequest.buildRequest(sessionStorage, ClientRole.class, new String[]{roleUriPrefix}, new DefaultErrorHandler());
+        return JerseyRequest.buildRequest(sessionStorage, ClientRole.class, roleUri.toArray(new String[roleUri.size()]), new DefaultErrorHandler());
     }
 }
