@@ -30,14 +30,20 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.sun.jersey.multipart.FormDataMultiPart;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ws.rs.core.MediaType;
 
+import static java.util.Arrays.asList;
+
 public class DomainSchemaAdapter extends AbstractAdapter {
-    private final String domainSchemaUri;
+    public static final String SERVICE_URI = "resources";
+    private final List<String> path = new ArrayList<String>();
 
     public DomainSchemaAdapter(SessionStorage sessionStorage, String domainURI) {
         super(sessionStorage);
-        this.domainSchemaUri = domainURI;
+        this.path.add(SERVICE_URI);
+        this.path.addAll(asList(domainURI.split("/")));
     }
 
     public OperationResult<Schema> get() {
@@ -66,7 +72,7 @@ public class DomainSchemaAdapter extends AbstractAdapter {
         JerseyRequest<Schema> jerseyRequest = JerseyRequest.buildRequest(
                 sessionStorage,
                 Schema.class,
-                new String[]{"resources", domainSchemaUri},
+                path.toArray(new String[path.size()]),
                 new DefaultErrorHandler()
         );
         return jerseyRequest;
@@ -98,7 +104,7 @@ public class DomainSchemaAdapter extends AbstractAdapter {
     protected JerseyRequest<ClientFile> prepareUploadFileRequest() {
         JerseyRequest<ClientFile> request = JerseyRequest.buildRequest(sessionStorage,
                 ClientFile.class,
-                new String[]{"resources", domainSchemaUri});
+                path.toArray(new String[path.size()]));
         request.setContentType(MediaType.MULTIPART_FORM_DATA);
         return request;
     }

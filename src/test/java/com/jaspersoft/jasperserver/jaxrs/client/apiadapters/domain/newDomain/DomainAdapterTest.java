@@ -8,6 +8,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.util.ArrayList;
+import java.util.List;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
@@ -16,6 +18,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
+import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.reset;
@@ -47,6 +50,7 @@ import static org.testng.Assert.assertSame;
 public class DomainAdapterTest extends PowerMockTestCase {
 
     public static final String URI = "uri";
+    public static final List<String> path = asList("resources", "uri");
     public static final String CONTENT_TYPE = "application/repository.domain+json";
     @Mock
     private SessionStorage sessionStorageMock;
@@ -67,11 +71,11 @@ public class DomainAdapterTest extends PowerMockTestCase {
 
         // When
         DomainAdapter adapter = new DomainAdapter(sessionStorageMock, URI);
-        String uri = (String) getInternalState(adapter, URI);
+        ArrayList<String> uri = (ArrayList<String>) getInternalState(adapter, "path");
 
         // Then
         assertNotNull(adapter);
-        assertEquals(uri, URI);
+        assertEquals(uri, path);
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
     }
 

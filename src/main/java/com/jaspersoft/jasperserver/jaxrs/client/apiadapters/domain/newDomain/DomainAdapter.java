@@ -7,6 +7,10 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * <p/>
@@ -18,11 +22,13 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
  */
 public class DomainAdapter extends AbstractAdapter {
 
-    private String uri;
+    public static final String SERVICE_URI = "resources";
+    private List<String> path = new ArrayList<String>();
 
     public DomainAdapter(SessionStorage sessionStorage, String uri) {
         super(sessionStorage);
-        this.uri = uri;
+        this.path.add(SERVICE_URI);
+        this.path.addAll(asList(uri.split("/")));
     }
 
 
@@ -55,7 +61,7 @@ public class DomainAdapter extends AbstractAdapter {
         JerseyRequest<ClientDomain> jerseyRequest = JerseyRequest.buildRequest(
                 sessionStorage,
                 ClientDomain.class,
-                new String[]{"resources", uri},
+                path.toArray(new String[path.size()]),
                 new DefaultErrorHandler()
         );
         return jerseyRequest;
