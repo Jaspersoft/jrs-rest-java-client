@@ -9,6 +9,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -64,13 +65,14 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         // When
         SingleAttributeAdapter adapter = new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State");
-        String uri = (String) getInternalState(adapter, "holderUri");
-        String attributeName = (String) getInternalState(adapter, "attributeName");
+        ArrayList<String> uri = (ArrayList<String>) getInternalState(adapter, "path");
 
         // Then
         assertNotNull(adapter);
-        assertEquals(uri, "/organizations/MyCoolOrg/users/Simon");
-        assertEquals(attributeName, "State");
+        assertEquals(uri.get(0), "organizations");
+        assertEquals(uri.get(1), "MyCoolOrg");
+        assertEquals(uri.get(2), "users");
+        assertEquals(uri.get(3), "Simon");
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
     }
 
@@ -214,7 +216,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}), any(DefaultErrorHandler.class)))
+                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}), any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
@@ -229,7 +231,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(HypermediaAttribute.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}),
+                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
                 any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).put(userAttributeMock);
     }
@@ -241,7 +243,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}), any(DefaultErrorHandler.class)))
+                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}), any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).setAccept(anyString());
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
@@ -258,7 +260,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(HypermediaAttribute.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}),
+                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
                 any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).get();
         verify(requestMock, times(1)).setAccept("application/hal+json");
@@ -274,7 +276,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"/users/Simon", "/attributes/", "State"}), any(DefaultErrorHandler.class)))
+                eq(new String[]{"users", "Simon", "attributes", "State"}), any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).setAccept(anyString());
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
@@ -291,7 +293,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(HypermediaAttribute.class),
-                eq(new String[]{"/users/Simon", "/attributes/", "State"}),
+                eq(new String[]{"users", "Simon", "attributes", "State"}),
                 any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).get();
         verify(requestMock, times(1)).setAccept("application/hal+json");
@@ -305,7 +307,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         // Given
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"/users/Simon", "/attributes/", "State"}), any(DefaultErrorHandler.class)))
+                eq(new String[]{"users", "Simon", "attributes", "State"}), any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).setAccept(anyString());
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
@@ -327,7 +329,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(HypermediaAttribute.class),
-                eq(new String[]{"/users/Simon", "/attributes/", "State"}),
+                eq(new String[]{"users", "Simon", "attributes", "State"}),
                 any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).get();
         verify(requestMock, times(1)).setAccept("application/hal+json");
@@ -343,7 +345,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}),
+                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
                 any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         doReturn(resultMock).when(requestMock).delete();
@@ -356,7 +358,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(HypermediaAttribute.class),
-                eq(new String[]{"/organizations/MyCoolOrg/users/Simon", "/attributes/", "State"}),
+                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
                 any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).delete();
     }

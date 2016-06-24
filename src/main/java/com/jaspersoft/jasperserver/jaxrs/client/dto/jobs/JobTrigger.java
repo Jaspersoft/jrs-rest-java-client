@@ -21,12 +21,14 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.common.DeepCloneable;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.NoTimezoneDateToStringXmlAdapter;
 
+import java.lang.reflect.Constructor;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
 
-public abstract class JobTrigger {
+public abstract class JobTrigger implements DeepCloneable<JobTrigger> {
 
     /**
      * Start type that indicates that the job should be scheduled inFolder start
@@ -54,44 +56,63 @@ public abstract class JobTrigger {
     private Date endDate;
     private Integer misfireInstruction;
 
+    public JobTrigger() {
+    }
+
+    public JobTrigger(JobTrigger other) {
+        this.calendarName = other.calendarName;
+        this.endDate = (other.endDate != null) ? new Date(other.endDate.getTime()) : null;
+        this.id = other.id;
+        this.misfireInstruction = other.misfireInstruction;
+        this.startDate = (other.startDate != null) ? new Date(other.startDate.getTime()) : null;
+        this.startType = other.startType;
+        this.timezone = other.timezone;
+        this.version = other.version;
+    }
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public JobTrigger setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
+    public JobTrigger setVersion(Integer version) {
         this.version = version;
+        return this;
     }
 
     public String getTimezone() {
         return timezone;
     }
 
-    public void setTimezone(String timezone) {
+    public JobTrigger setTimezone(String timezone) {
         this.timezone = timezone;
+        return this;
     }
 
     public String getCalendarName() {
         return calendarName;
     }
 
-    public void setCalendarName(String calendarName) {
+    public JobTrigger setCalendarName(String calendarName) {
         this.calendarName = calendarName;
+        return this;
     }
 
     public int getStartType() {
         return startType;
     }
 
-    public void setStartType(int startType) {
+    public JobTrigger setStartType(int startType) {
         this.startType = startType;
+        return this;
     }
 
     @XmlJavaTypeAdapter(NoTimezoneDateToStringXmlAdapter.class)
@@ -99,8 +120,9 @@ public abstract class JobTrigger {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public JobTrigger setStartDate(Date startDate) {
         this.startDate = startDate;
+        return this;
     }
 
     @XmlJavaTypeAdapter(NoTimezoneDateToStringXmlAdapter.class)
@@ -108,16 +130,18 @@ public abstract class JobTrigger {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public JobTrigger setEndDate(Date endDate) {
         this.endDate = endDate;
+        return this;
     }
 
     public Integer getMisfireInstruction() {
         return misfireInstruction;
     }
 
-    public void setMisfireInstruction(Integer misfireInstruction) {
+    public JobTrigger setMisfireInstruction(Integer misfireInstruction) {
         this.misfireInstruction = misfireInstruction;
+        return this;
     }
 
     @Override
@@ -167,4 +191,18 @@ public abstract class JobTrigger {
                 ", misfireInstruction=" + misfireInstruction +
                 '}';
     }
+
+    @Override
+    public JobTrigger deepClone() {
+            Class<? extends JobTrigger> thisClass = this.getClass();
+
+            JobTrigger instance = null;
+            try {
+                Constructor<? extends JobTrigger> constructor = thisClass.getConstructor(thisClass);
+                instance = constructor.newInstance(this);
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
+            return instance;
+        }
 }

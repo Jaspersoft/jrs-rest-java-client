@@ -35,13 +35,23 @@ public class JobState {
     private Date nextFireTime;
     private JobStateType value;
 
+    public JobState() {
+    }
+
+    public JobState(JobState other) {
+        this.nextFireTime = (other.nextFireTime != null) ? new Date(other.nextFireTime.getTime()) : null;
+        this.previousFireTime = (other.previousFireTime != null) ? new Date(other.previousFireTime.getTime()) : null;
+        this.value = other.value;
+    }
+
     @XmlJavaTypeAdapter(DateToStringXmlAdapter.class)
     public Date getPreviousFireTime() {
         return previousFireTime;
     }
 
-    public void setPreviousFireTime(Date previousFireTime) {
+    public JobState setPreviousFireTime(Date previousFireTime) {
         this.previousFireTime = previousFireTime;
+        return this;
     }
 
     @XmlJavaTypeAdapter(DateToStringXmlAdapter.class)
@@ -49,16 +59,18 @@ public class JobState {
         return nextFireTime;
     }
 
-    public void setNextFireTime(Date nextFireTime) {
+    public JobState setNextFireTime(Date nextFireTime) {
         this.nextFireTime = nextFireTime;
+        return this;
     }
 
     public JobStateType getValue() {
         return value;
     }
 
-    public void setValue(JobStateType value) {
+    public JobState setValue(JobStateType value) {
         this.value = value;
+        return this;
     }
 
     @Override

@@ -75,7 +75,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock).get();
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, Map<String, String>>>() {
-        }), eq(new String[]{"/bundles"}), any(DefaultErrorHandler.class));
+        }), eq(new String[]{"bundles"}), any(DefaultErrorHandler.class));
         Locale locale = (Locale) Whitebox.getInternalState(service, "locale");
         assertEquals(locale.toString(), defaultLocale);
     }
@@ -101,7 +101,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock).get();
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, Map<String, String>>>() {
-        }), eq(new String[]{"/bundles"}), any(DefaultErrorHandler.class));
+        }), eq(new String[]{"bundles"}), any(DefaultErrorHandler.class));
         Locale locale = (Locale) Whitebox.getInternalState(service, "locale");
         assertEquals(locale.toString(), "de");
     }
@@ -127,7 +127,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock).get();
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, Map<String, String>>>() {
-        }), eq(new String[]{"/bundles"}), any(DefaultErrorHandler.class));
+        }), eq(new String[]{"bundles"}), any(DefaultErrorHandler.class));
         Locale locale = (Locale) Whitebox.getInternalState(service, "locale");
         assertEquals(locale.toString(), "de");
     }
@@ -151,7 +151,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock).get();
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, String>>() {
-        }), eq(new String[]{"/bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
+        }), eq(new String[]{"bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
     }
 
     @Test
@@ -173,7 +173,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock).get();
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),  eq(new GenericType<Map<String, String>>() {
-        }), eq(new String[]{"/bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
+        }), eq(new String[]{"bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
     }
 
     @Test
@@ -197,7 +197,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock).get();
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, String>>() {
-        }), eq(new String[]{"/bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
+        }), eq(new String[]{"bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
     }
 
     @Test
@@ -219,7 +219,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock).get();
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, String>>() {
-        }), eq(new String[]{"/bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
+        }), eq(new String[]{"bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
     }
 
     @Test

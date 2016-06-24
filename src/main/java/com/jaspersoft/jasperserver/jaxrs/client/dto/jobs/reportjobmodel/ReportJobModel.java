@@ -47,6 +47,10 @@ import java.util.Set;
 @XmlRootElement(name = "jobModel")
 public class ReportJobModel extends Job {
 
+    public ReportJobModel(Job other) {
+        super(other);
+    }
+
     public enum ReportJobSortType {
         NONE,
         SORTBY_JOBID,
@@ -70,8 +74,9 @@ public class ReportJobModel extends Job {
     }
 
     @Override
-    public void setSource(JobSource source) {
+    public ReportJobModel setSource(JobSource source) {
         super.setSource(source);
+        return this;
     }
 
     @Override
@@ -88,7 +93,7 @@ public class ReportJobModel extends Job {
     }
 
     @Override
-    public void setTrigger(JobTrigger trigger) {
+    public ReportJobModel setTrigger(JobTrigger trigger) {
         if (trigger == null) {
             super.setTrigger(null);
         } else if ((trigger instanceof ReportJobSimpleTriggerModel) || (trigger instanceof ReportJobCalendarTriggerModel)) {
@@ -100,6 +105,7 @@ public class ReportJobModel extends Job {
                 throw new JSClientException("Please use ReportJobCalendarTriggerModel instead of ReportJobCalendarTrigger in ReportJobModel class.");
             }
         }
+        return this;
     }
 
     @Override
@@ -116,8 +122,9 @@ public class ReportJobModel extends Job {
     }
 
     @Override
-    public void setAlert(JobAlert alert) {
+    public ReportJobModel setAlert(JobAlert alert) {
         super.setAlert(alert);
+        return this;
     }
 
     @Override
@@ -130,8 +137,9 @@ public class ReportJobModel extends Job {
     }
 
     @Override
-    public void setMailNotification(MailNotification mailNotification) {
+    public ReportJobModel setMailNotification(MailNotification mailNotification) {
         super.setMailNotification(mailNotification);
+        return this;
     }
 
     @Override
@@ -144,8 +152,9 @@ public class ReportJobModel extends Job {
     }
 
     @Override
-    public void setRepositoryDestination(RepositoryDestination contentRepositoryDestination) {
+    public ReportJobModel setRepositoryDestination(RepositoryDestination contentRepositoryDestination) {
         super.setRepositoryDestination(contentRepositoryDestination);
+        return this;
     }
 
     /**
@@ -160,8 +169,9 @@ public class ReportJobModel extends Job {
     /**
      * @deprecated ID is not supported in ReportJobModel
      */
-    public void setId(Long id) {
+    public ReportJobModel setId(Long id) {
         super.setId(id);
+        return this;
     }
 
     /**
@@ -176,8 +186,9 @@ public class ReportJobModel extends Job {
     /**
      * @deprecated Version is not supported in ReportJobModel
      */
-    public void setVersion(Long version) {
+    public ReportJobModel setVersion(Long version) {
         super.setVersion(version);
+        return this;
     }
 
     /**
@@ -185,9 +196,10 @@ public class ReportJobModel extends Job {
      *
      * @param description the job description
      */
-    public void setDescription(String description) {
+    public ReportJobModel setDescription(String description) {
 //        isDescriptionModified = true;
         super.setDescription(description);
+        return this;
     }
 
     /**
@@ -196,9 +208,10 @@ public class ReportJobModel extends Job {
      * @param creationDate the job creation date
      * @since 4.7
      */
-    public void setCreationDate(Timestamp creationDate) {
+    public ReportJobModel setCreationDate(Timestamp creationDate) {
 //        isCreationDateModified = true;
         super.setCreationDate(creationDate);
+        return this;
     }
 
     /**
@@ -206,9 +219,10 @@ public class ReportJobModel extends Job {
      *
      * @param label the job label
      */
-    public void setLabel(String label) {
+    public ReportJobModel setLabel(String label) {
 //        isLabelModified = true;
         super.setLabel(label);
+        return this;
     }
 
     /**
@@ -217,9 +231,10 @@ public class ReportJobModel extends Job {
      * @param baseOutputFilename the job output base filename
      * @see #getBaseOutputFilename()
      */
-    public void setBaseOutputFilename(String baseOutputFilename) {
+    public ReportJobModel setBaseOutputFilename(String baseOutputFilename) {
 //        isBaseOutputFileNameModified = true;
         super.setBaseOutputFilename(baseOutputFilename);
+        return this;
     }
 
     /**
@@ -228,9 +243,10 @@ public class ReportJobModel extends Job {
      * @param outputFormats the set of output formats as
      *                      <code>java.lang.Byte</code> keys
      */
-    public void setOutputFormatsSet(Set<OutputFormat> outputFormats) {
+    public ReportJobModel setOutputFormatsSet(Set<OutputFormat> outputFormats) {
 //        isOutputFormatsModified = true;
         super.setOutputFormats(outputFormats);
+        return this;
     }
 
     /**
@@ -244,9 +260,10 @@ public class ReportJobModel extends Job {
      *
      * @param username the job owner
      */
-    public void setUsername(String username) {
+    public ReportJobModel setUsername(String username) {
 //        isUsernameModified = true;
         super.setUsername(username);
+        return this;
     }
 
     /**
@@ -258,7 +275,8 @@ public class ReportJobModel extends Job {
      *
      * @param outputLocale the locale code as in <code>java.util.Locale.toString()</code>
      */
-    public void setOutputLocale(String outputLocale) {
+    public ReportJobModel setOutputLocale(String outputLocale) {
         super.setOutputLocale(outputLocale);
+    return this;
     }
 }

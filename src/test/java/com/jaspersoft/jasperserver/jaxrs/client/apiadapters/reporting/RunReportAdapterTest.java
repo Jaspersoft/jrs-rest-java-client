@@ -112,7 +112,7 @@ public class RunReportAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
         doReturn(resultMock).when(requestMock).get();
 
         RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", ReportOutputFormat.CSV.toString().toLowerCase(), new PageRange(1, 10));
@@ -139,7 +139,10 @@ public class RunReportAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(InputStream.class),
+                eq(new String[]{"reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}),
+                any(RunReportErrorHandler.class))).thenReturn(requestMock);
         doReturn(resultMock).when(requestMock).get();
 
         RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", "csv", new Integer[]{1, 5, 6, 9, 100});
@@ -165,7 +168,10 @@ public class RunReportAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(InputStream.class),
+                eq(new String[]{"reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}),
+                any(RunReportErrorHandler.class))).thenReturn(requestMock);
         doReturn(resultMock).when(requestMock).get();
 
         RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", "csv", new Integer[]{0, -1, 1});
@@ -191,7 +197,10 @@ public class RunReportAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(InputStream.class),
+                eq(new String[]{"reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}),
+                any(RunReportErrorHandler.class))).thenReturn(requestMock);
         doReturn(resultMock).when(requestMock).get();
 
         RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", "csv", new Integer[]{0, -1});
@@ -217,7 +226,10 @@ public class RunReportAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(InputStream.class),
+                eq(new String[]{"reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}),
+                any(RunReportErrorHandler.class))).thenReturn(requestMock);
         doReturn(resultMock).when(requestMock).get();
 
         RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", "CSV", new Integer[]{5});
@@ -243,7 +255,10 @@ public class RunReportAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(InputStream.class),
+                eq(new String[]{"reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}),
+                any(RunReportErrorHandler.class))).thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).addHeader("Accept-Timezone", "America/Los_Angeles");
         doReturn(resultMock).when(requestMock).get();
 
@@ -271,7 +286,10 @@ public class RunReportAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(InputStream.class),
+                eq(new String[]{"reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}),
+                any(RunReportErrorHandler.class))).thenReturn(requestMock);
         doReturn(requestMock).when(requestMock).addHeader("Accept-Timezone", "America/Los_Angeles");
         doReturn(resultMock).when(requestMock).get();
 
@@ -299,7 +317,10 @@ public class RunReportAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"/reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
+        when(buildRequest(eq(sessionStorageMock),
+                eq(InputStream.class),
+                eq(new String[]{"reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}),
+                any(RunReportErrorHandler.class))).thenReturn(requestMock);
         doReturn(resultMock).when(requestMock).get();
 
         RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", "CSV", new Integer[]{0});

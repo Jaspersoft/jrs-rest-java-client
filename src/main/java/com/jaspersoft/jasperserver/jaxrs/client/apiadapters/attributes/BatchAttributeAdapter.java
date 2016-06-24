@@ -32,6 +32,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -47,27 +48,25 @@ import static java.util.Arrays.asList;
  */
 public class BatchAttributeAdapter extends AbstractAdapter {
 
+    public static final String SERVICE_URI = "attributes";
+    private static final String SEPARATOR = "/";
     private MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
     private Boolean includePermissions = false;
-    private String holderUri;
     private String userName;
     private String organizationId;
-    private final String SEPARATOR = "/";
+    private ArrayList<String> path = new ArrayList<String>();
 
     public BatchAttributeAdapter(String organizationId, String userName, SessionStorage sessionStorage) {
         super(sessionStorage);
-        StringBuilder builder = new StringBuilder(SEPARATOR);
+
         if (!"/" .equals(organizationId) && organizationId != null) {
-            builder.append("organizations/");
-            builder.append(organizationId);
-            builder.append(SEPARATOR);
+            path.add("organizations");
+            path.add(organizationId);
         }
         if (userName != null) {
-            builder.append("users/");
-            builder.append(userName);
-            builder.append(SEPARATOR);
+            path.add("users");
+            path.add(userName);
         }
-        this.holderUri = builder.toString();
         this.organizationId = organizationId;
         this.userName = userName;
     }
@@ -195,10 +194,11 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     }
 
     private JerseyRequest<HypermediaAttributesListWrapper> buildRequest() {
+        path.add(SERVICE_URI);
         JerseyRequest<HypermediaAttributesListWrapper> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 HypermediaAttributesListWrapper.class,
-                new String[]{holderUri, "attributes"}, new DefaultErrorHandler());
+                path.toArray(new String[path.size()]), new DefaultErrorHandler());
         if (includePermissions) {
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/hal+{mime}"));
             request.addParam("_embedded", "permission");
@@ -211,7 +211,7 @@ public class BatchAttributeAdapter extends AbstractAdapter {
         JerseyRequest<HypermediaAttributesListWrapper> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 HypermediaAttributesListWrapper.class,
-                new String[]{"attributes"}, new DefaultErrorHandler());
+                new String[]{SERVICE_URI}, new DefaultErrorHandler());
         if (includePermissions) {
             request.addParam("_embedded", "permission");
         }

@@ -48,6 +48,7 @@ import static org.testng.Assert.assertSame;
 public class SingleConnectionAdapterTest extends PowerMockTestCase {
 
     public static final String TEST_UUID = "someUuId";
+    public static final String CONNECTIONS = "connections";
     @Mock
     private SessionStorage sessionStorageMock;
     @Mock
@@ -121,7 +122,8 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(FtpConnection.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{
+                CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class))).thenReturn(ftpConnectionJerseyRequestMock);
 
         doReturn(ftpConnectionOperationResultMock).when(ftpConnectionJerseyRequestMock).get();
@@ -134,7 +136,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(FtpConnection.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class));
         verify(ftpConnectionJerseyRequestMock).get();
     }
@@ -145,7 +147,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(FtpConnection.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class))).thenReturn(ftpConnectionJerseyRequestMock);
 
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -161,7 +163,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(FtpConnection.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
@@ -175,7 +177,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(FtpConnection.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class))).thenReturn(ftpConnectionJerseyRequestMock);
 
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -191,7 +193,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(FtpConnection.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
@@ -205,7 +207,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(Object.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
 
         doReturn(operationResultMock).when(jerseyRequestMock).delete();
@@ -218,7 +220,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(Object.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class));
         verify(jerseyRequestMock).delete();
     }
@@ -229,7 +231,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(LfsConnection.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class))).thenReturn(lfsConnectionJerseyRequestMock);
 
         doReturn(lfsConnectionOperationResultMock).when(lfsConnectionJerseyRequestMock).get();
@@ -242,7 +244,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(LfsConnection.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class));
         verify(lfsConnectionJerseyRequestMock).get();
     }
@@ -253,7 +255,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(LfsConnection.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class))).thenReturn(lfsConnectionJerseyRequestMock);
 
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -269,7 +271,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(LfsConnection.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
@@ -284,7 +286,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientCustomDataSource.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class))).thenReturn(customDataSourceJerseyRequestMock);
 
         doReturn(customDataSourceOperationResultMock).when(customDataSourceJerseyRequestMock).get();
@@ -297,7 +299,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientCustomDataSource.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class));
         verify(customDataSourceJerseyRequestMock).get();
 
@@ -309,7 +311,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientCustomDataSource.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class))).thenReturn(customDataSourceJerseyRequestMock);
 
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -325,7 +327,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientCustomDataSource.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
@@ -340,7 +342,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJndiJdbcDataSource.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class))).thenReturn(jndiJdbcDataSourceJerseyRequestMock);
 
         doReturn(jndiDataSourceOperationResultMock).when(jndiJdbcDataSourceJerseyRequestMock).get();
@@ -353,7 +355,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJndiJdbcDataSource.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class));
         verify(jndiJdbcDataSourceJerseyRequestMock).get();
     }
@@ -365,7 +367,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJndiJdbcDataSource.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class))).thenReturn(jndiJdbcDataSourceJerseyRequestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
@@ -380,7 +382,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJndiJdbcDataSource.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
@@ -395,7 +397,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJdbcDataSource.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class))).thenReturn(jdbcDataSourceJerseyRequestMock);
 
         doReturn(jdbcDataSourceOperationResultMock).when(jdbcDataSourceJerseyRequestMock).get();
@@ -408,7 +410,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJdbcDataSource.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class));
         verify(jdbcDataSourceJerseyRequestMock).get();
     }
@@ -420,7 +422,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJdbcDataSource.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class))).thenReturn(jdbcDataSourceJerseyRequestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
@@ -435,7 +437,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJdbcDataSource.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
@@ -449,7 +451,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientDomain.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class))).thenReturn(domainJerseyRequestMock);
 
         doReturn(domainOperationResultMock).when(domainJerseyRequestMock).get();
@@ -462,7 +464,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientDomain.class)
-                , eq(new String[]{"/connections", (TEST_UUID)})
+                , eq(new String[]{CONNECTIONS, (TEST_UUID)})
                 , any(DefaultErrorHandler.class));
     }
 
@@ -472,7 +474,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientDomain.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class))).thenReturn(domainJerseyRequestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
@@ -487,7 +489,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientDomain.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
@@ -501,7 +503,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientDomain.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class))).thenReturn(domainJerseyRequestMock);
         doReturn(domainOperationResultMock).when(domainJerseyRequestMock).post(any(ClientDomain.class));
 
@@ -513,7 +515,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientDomain.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class));
         verify(domainJerseyRequestMock, never()).setContentType(ConnectionMediaType.DOMAIN_DATA_SOURCE_JSON);
         verify(domainJerseyRequestMock).post(any(ClientDomain.class));
@@ -525,7 +527,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientDomain.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class))).thenReturn(domainJerseyRequestMock);
         doReturn(domainOperationResultMock).when(domainJerseyRequestMock).put(any(ClientDomain.class));
 
@@ -537,7 +539,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientDomain.class)
-                , eq(new String[]{"/connections", TEST_UUID})
+                , eq(new String[]{CONNECTIONS, TEST_UUID})
                 , any(DefaultErrorHandler.class));
         verify(domainJerseyRequestMock, never()).setContentType(ConnectionMediaType.DOMAIN_DATA_SOURCE_JSON);
         verify(domainJerseyRequestMock).put(any(ClientDomain.class));
@@ -549,7 +551,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(TableMetadata.class)
-                , eq(new String[]{"/connections", TEST_UUID, "metadata"})
+                , eq(new String[]{CONNECTIONS, TEST_UUID, "metadata"})
                 , any(DefaultErrorHandler.class))).thenReturn(tableMetadataRequestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
@@ -569,7 +571,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(TableMetadata.class)
-                , eq(new String[]{"/connections", TEST_UUID, "metadata"})
+                , eq(new String[]{CONNECTIONS, TEST_UUID, "metadata"})
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getAcceptMimeType();
@@ -583,7 +585,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(TableMetadata.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class))).thenReturn(tableMetadataRequestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
@@ -604,7 +606,7 @@ public class SingleConnectionAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(TableMetadata.class)
-                , eq(new String[]{"/connections"})
+                , eq(new String[]{CONNECTIONS})
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getAcceptMimeType();

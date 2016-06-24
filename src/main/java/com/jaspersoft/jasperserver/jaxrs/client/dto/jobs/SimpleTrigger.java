@@ -30,28 +30,42 @@ public class SimpleTrigger extends JobTrigger {
     private Integer recurrenceInterval;
     private IntervalUnitType recurrenceIntervalUnit;
 
+    public SimpleTrigger() {
+        super();
+    }
+
+    public SimpleTrigger(SimpleTrigger other) {
+        super(other);
+        this.occurrenceCount = other.occurrenceCount;
+        this.recurrenceInterval = other.recurrenceInterval;
+        this.recurrenceIntervalUnit = other.recurrenceIntervalUnit;
+    }
+
     public Integer getOccurrenceCount() {
         return occurrenceCount;
     }
 
-    public void setOccurrenceCount(Integer occurrenceCount) {
+    public SimpleTrigger setOccurrenceCount(Integer occurrenceCount) {
         this.occurrenceCount = occurrenceCount;
+        return this;
     }
 
     public Integer getRecurrenceInterval() {
         return recurrenceInterval;
     }
 
-    public void setRecurrenceInterval(Integer recurrenceInterval) {
+    public SimpleTrigger setRecurrenceInterval(Integer recurrenceInterval) {
         this.recurrenceInterval = recurrenceInterval;
+        return this;
     }
 
     public IntervalUnitType getRecurrenceIntervalUnit() {
         return recurrenceIntervalUnit;
     }
 
-    public void setRecurrenceIntervalUnit(IntervalUnitType recurrenceIntervalUnit) {
+    public SimpleTrigger setRecurrenceIntervalUnit(IntervalUnitType recurrenceIntervalUnit) {
         this.recurrenceIntervalUnit = recurrenceIntervalUnit;
+        return this;
     }
 
     @Override

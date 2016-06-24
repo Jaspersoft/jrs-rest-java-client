@@ -68,7 +68,9 @@ public class BatchJobsOperationsAdapterTest extends PowerMockTestCase {
 
         // Given
         mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(JobSummaryListWrapper.class), eq(new String[]{"/jobs"}))).thenReturn(jobSummaryListWrapperJerseyRequest);
+        when(JerseyRequest.buildRequest(eq(sessionStorageMock),
+                eq(JobSummaryListWrapper.class),
+                eq(new String[]{"jobs"}))).thenReturn(jobSummaryListWrapperJerseyRequest);
         when(jobSummaryListWrapperJerseyRequest.get()).thenReturn(jobSummaryListWrapperOperationResult);
         when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
 
@@ -78,7 +80,7 @@ public class BatchJobsOperationsAdapterTest extends PowerMockTestCase {
 
         // Then
         verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(JobSummaryListWrapper.class), eq(new String[]{"/jobs"}));
+        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(JobSummaryListWrapper.class), eq(new String[]{"jobs"}));
         verify(jobSummaryListWrapperJerseyRequest, times(1)).get();
         assertNotNull(retrieved);
         assertSame(retrieved, jobSummaryListWrapperOperationResult);

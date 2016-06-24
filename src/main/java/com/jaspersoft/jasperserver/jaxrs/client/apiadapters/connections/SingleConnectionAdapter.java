@@ -23,6 +23,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
  * @see
  */
 public class SingleConnectionAdapter<C, M> extends AbstractAdapter {
+    public static final String SERVICE_URI = "connections";
     private String uuId;
     private Class<C> connectionClass;
     private String connectionMimeType;
@@ -49,7 +50,7 @@ public class SingleConnectionAdapter<C, M> extends AbstractAdapter {
         }
         JerseyRequest<C> jerseyRequest = JerseyRequest.buildRequest(this.sessionStorage
                 , connectionClass
-                , new String[]{"/connections"}
+                , new String[]{SERVICE_URI}
                 , new DefaultErrorHandler());
         if (connectionMimeType != null) {
             jerseyRequest
@@ -87,7 +88,7 @@ public class SingleConnectionAdapter<C, M> extends AbstractAdapter {
         }
         return JerseyRequest.buildRequest(this.sessionStorage
                 , connectionClass
-                , new String[]{"/connections", uuId}
+                , new String[]{SERVICE_URI, uuId}
                 , new DefaultErrorHandler());
     }
 
@@ -98,7 +99,7 @@ public class SingleConnectionAdapter<C, M> extends AbstractAdapter {
         JerseyRequest<M> jerseyRequest = JerseyRequest.buildRequest(
                 sessionStorage,
                 metadataClass,
-                new String[]{"/connections", uuId, "metadata"},
+                new String[]{SERVICE_URI, uuId, "metadata"},
                 new DefaultErrorHandler()
         );
         jerseyRequest.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration()
@@ -112,7 +113,7 @@ public class SingleConnectionAdapter<C, M> extends AbstractAdapter {
         }
         JerseyRequest<M> jerseyRequest = JerseyRequest.buildRequest(this.sessionStorage
                 , metadataClass
-                , new String[]{"/connections"}
+                , new String[]{SERVICE_URI}
                 , new DefaultErrorHandler());
         jerseyRequest
                 .setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration()
