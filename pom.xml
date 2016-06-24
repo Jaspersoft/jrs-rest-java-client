@@ -16,6 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
+        <jasperserver-dto.version>full-domain-api-SNAPSHOT</jasperserver-dto.version>
     </properties>
 
     <scm>
@@ -40,7 +41,7 @@
         <dependency>
             <groupId>com.jaspersoft.jasperserver</groupId>
             <artifactId>jasperserver-dto</artifactId>
-            <version>7.0-domain-designer-SNAPSHOT</version>
+            <version>${jasperserver-dto.version}</version>
         </dependency>
 
         <!-- Jersey-->
