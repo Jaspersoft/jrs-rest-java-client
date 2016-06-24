@@ -170,7 +170,7 @@ public class DomainAdapterTest extends PowerMockTestCase {
         final DomainAdapter adapter = new DomainAdapter(sessionStorageMock, URI);
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientDomain.class),
-                eq(new String[]{"/resources", URI}), any(DefaultErrorHandler.class)))
+                eq(new String[]{"resources", URI}), any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
@@ -186,7 +186,7 @@ public class DomainAdapterTest extends PowerMockTestCase {
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(ClientDomain.class),
-                eq(new String[]{"/resources", URI}),
+                eq(new String[]{"resources", URI}),
                 any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).get();
         verify(requestMock, times(1)).setAccept(CONTENT_TYPE);

@@ -21,7 +21,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.schema;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
-import com.jaspersoft.jasperserver.dto.resources.domain.ClientSchema;
+import com.jaspersoft.jasperserver.dto.resources.domain.Schema;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
@@ -40,16 +40,18 @@ public class DomainSchemaAdapter extends AbstractAdapter {
         this.domainSchemaUri = domainURI;
     }
 
-    public OperationResult<ClientSchema> get() {
-        JerseyRequest<ClientSchema> request = buildRequest();
-        request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/repository.domainSchema+{mime}"));
+    public OperationResult<Schema> get() {
+        JerseyRequest<Schema> request = buildRequest();
+        request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(),
+                "application/repository.domainSchema+{mime}"));
         return request.get();
     }
 
 
-    public OperationResult<ClientSchema> update(ClientSchema schema) {
-        JerseyRequest<ClientSchema> request = buildRequest();
-        request.setContentType(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/repository.domainSchema+{mime}"));
+    public OperationResult<Schema> update(Schema schema) {
+        JerseyRequest<Schema> request = buildRequest();
+        request.setContentType(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(),
+                "application/repository.domainSchema+{mime}"));
         return request.put(schema);
     }
 
@@ -60,11 +62,11 @@ public class DomainSchemaAdapter extends AbstractAdapter {
     }
 
 
-    protected JerseyRequest<ClientSchema> buildRequest() {
-        JerseyRequest<ClientSchema> jerseyRequest = JerseyRequest.buildRequest(
+    protected JerseyRequest<Schema> buildRequest() {
+        JerseyRequest<Schema> jerseyRequest = JerseyRequest.buildRequest(
                 sessionStorage,
-                ClientSchema.class,
-                new String[]{"/resources/", domainSchemaUri},
+                Schema.class,
+                new String[]{"resources", domainSchemaUri},
                 new DefaultErrorHandler()
         );
         return jerseyRequest;
@@ -94,7 +96,9 @@ public class DomainSchemaAdapter extends AbstractAdapter {
 
 
     protected JerseyRequest<ClientFile> prepareUploadFileRequest() {
-        JerseyRequest<ClientFile> request = JerseyRequest.buildRequest(sessionStorage, ClientFile.class, new String[]{"/resources", domainSchemaUri});
+        JerseyRequest<ClientFile> request = JerseyRequest.buildRequest(sessionStorage,
+                ClientFile.class,
+                new String[]{"resources", domainSchemaUri});
         request.setContentType(MediaType.MULTIPART_FORM_DATA);
         return request;
     }

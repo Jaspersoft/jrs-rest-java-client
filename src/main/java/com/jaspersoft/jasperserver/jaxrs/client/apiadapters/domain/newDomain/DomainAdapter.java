@@ -55,7 +55,7 @@ public class DomainAdapter extends AbstractAdapter {
         JerseyRequest<ClientDomain> jerseyRequest = JerseyRequest.buildRequest(
                 sessionStorage,
                 ClientDomain.class,
-                new String[]{"/resources", uri},
+                new String[]{"resources", uri},
                 new DefaultErrorHandler()
         );
         return jerseyRequest;

@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.schema;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
-import com.jaspersoft.jasperserver.dto.resources.domain.ClientSchema;
+import com.jaspersoft.jasperserver.dto.resources.domain.Schema;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
@@ -55,10 +55,10 @@ public class DomainSchemaAdapterTest extends PowerMockTestCase {
     private SessionStorage sessionStorageMock;
 
     @Mock
-    private JerseyRequest<ClientSchema> requestMock;
+    private JerseyRequest<Schema> requestMock;
 
     @Mock
-    private OperationResult<ClientSchema> resultMock;
+    private OperationResult<Schema> resultMock;
 
     @Mock
     private JerseyRequest<ClientFile> fileJerseyRequestMock;
@@ -111,7 +111,7 @@ public class DomainSchemaAdapterTest extends PowerMockTestCase {
 
         // Given
         DomainSchemaAdapter adapter = spy(new DomainSchemaAdapter(sessionStorageMock, URI));
-        ClientSchema schema = new ClientSchema();
+        Schema schema = new Schema();
 
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
@@ -137,7 +137,7 @@ public class DomainSchemaAdapterTest extends PowerMockTestCase {
         DomainSchemaAdapter adapter = spy(new DomainSchemaAdapter(sessionStorageMock, URI));
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientFile.class),
-                eq(new String[]{"/resources", URI})))
+                eq(new String[]{"resources", URI})))
                 .thenReturn(fileJerseyRequestMock);
         doReturn(fileJerseyRequestMock).when(fileJerseyRequestMock).setContentType(MediaType.MULTIPART_FORM_DATA);
         doReturn(fileOperationResultMock).when(fileJerseyRequestMock).post(any(FormDataMultiPart.class));
@@ -176,8 +176,8 @@ public class DomainSchemaAdapterTest extends PowerMockTestCase {
         // Given
         DomainSchemaAdapter schemaAdapter = new DomainSchemaAdapter(sessionStorageMock, URI);
         mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientSchema.class),
-                eq(new String[]{"/resources/", URI}), any(DefaultErrorHandler.class)))
+        when(buildRequest(eq(sessionStorageMock), eq(Schema.class),
+                eq(new String[]{"resources", URI}), any(DefaultErrorHandler.class)))
                 .thenReturn(requestMock);
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
         doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
@@ -186,14 +186,14 @@ public class DomainSchemaAdapterTest extends PowerMockTestCase {
         doReturn(resultMock).when(requestMock).get();
 
         // When
-        OperationResult<ClientSchema> retrieved = schemaAdapter.get();
+        OperationResult<Schema> retrieved = schemaAdapter.get();
 
         // Then
         assertNotNull(retrieved);
         verifyStatic(times(1));
         buildRequest(eq(sessionStorageMock),
-                eq(ClientSchema.class),
-                eq(new String[]{"/resources/", URI}),
+                eq(Schema.class),
+                eq(new String[]{"resources", URI}),
                 any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).get();
         verify(requestMock, times(1)).setAccept(CONTENT_TYPE);
