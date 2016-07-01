@@ -14,6 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
+        <jasperserver-dto.version>6.3.0</jasperserver-dto.version>
     </properties>
 
     <scm>
@@ -38,7 +39,7 @@
         <dependency>
             <groupId>com.jaspersoft.jasperserver</groupId>
             <artifactId>jasperserver-dto</artifactId>
-            <version>6.2.1</version>
+            <version>${jasperserver-dto.version}</version>
         </dependency>
 
         <!-- Jersey-->

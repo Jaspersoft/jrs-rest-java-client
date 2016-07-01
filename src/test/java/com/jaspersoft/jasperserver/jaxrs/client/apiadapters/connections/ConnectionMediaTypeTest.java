@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connection;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType;
 import org.testng.annotations.Test;

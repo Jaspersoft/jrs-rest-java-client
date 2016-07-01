@@ -24,17 +24,20 @@ import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.util.ArrayList;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
+import static java.util.Arrays.asList;
 
 public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
     public static final String SERVICE_URI = "permissions";
-    private final String resourceUri;
     private final String recipient;
+    private ArrayList<String> path = new ArrayList<String>();
 
     public SinglePermissionRecipientRequestAdapter(SessionStorage sessionStorage, String resourceUri, String recipient) {
         super(sessionStorage);
-        this.resourceUri = resourceUri;
+        this.path.add(SERVICE_URI);
+        this.path.addAll(asList(resourceUri.split("/")));
         this.recipient = recipient;
     }
 
@@ -87,7 +90,8 @@ public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
     }
 
     private <T> JerseyRequest<T> getBuilder(Class<T> responseClass) {
-        JerseyRequest<T> request = buildRequest(sessionStorage, responseClass, new String[]{SERVICE_URI, resourceUri});
+
+        JerseyRequest<T> request = buildRequest(sessionStorage, responseClass, path.toArray(new String[path.size()]));
         request.addMatrixParam("recipient", recipient);
         return request;
     }

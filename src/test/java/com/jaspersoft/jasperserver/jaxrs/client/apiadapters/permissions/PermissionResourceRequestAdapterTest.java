@@ -3,11 +3,15 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.ws.rs.core.MultivaluedMap;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -18,11 +22,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.MultivaluedMap;
-import java.lang.reflect.Field;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
+import static java.util.Arrays.asList;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -97,14 +98,14 @@ public class PermissionResourceRequestAdapterTest extends PowerMockTestCase {
         SinglePermissionRecipientRequestAdapter retrieved = adapter.permissionRecipient(PermissionRecipient.ROLE, "abc");
 
         Field recipientField = field(SinglePermissionRecipientRequestAdapter.class, "recipient");
-        Field resourceUriField = field(SinglePermissionRecipientRequestAdapter.class, "resourceUri");
+        Field pathField = field(SinglePermissionRecipientRequestAdapter.class, "path");
 
         String recipient = (String) recipientField.get(retrieved);
-        String resourceUri = (String) resourceUriField.get(retrieved);
+        ArrayList<String> path = (ArrayList<String>) pathField.get(retrieved);
 
         // Then
         assertEquals(recipient, "role:%2Fabc");
-        assertEquals(resourceUri, "resourceUri");
+        assertEquals(path, asList("permissions", fakeUri));
     }
 
     @Test(testName = "updateOrCreate")
