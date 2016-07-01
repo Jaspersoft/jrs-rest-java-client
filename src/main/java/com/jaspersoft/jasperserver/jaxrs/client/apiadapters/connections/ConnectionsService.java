@@ -43,7 +43,4 @@ public class ConnectionsService extends AbstractAdapter {
                 uuId);
     }
 
-
-
-
 }
