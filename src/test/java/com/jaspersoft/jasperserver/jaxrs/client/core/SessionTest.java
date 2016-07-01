@@ -5,6 +5,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.Attribute
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.diagnostic.DiagnosticService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
@@ -286,6 +288,27 @@ public class SessionTest {
         // Then
         assertNotNull(service);
         verify(sessionSpy, times(1)).getService(InputControlsService.class);
+    }
+
+
+    @Test
+    public void should_return_not_null_DiagnosticService_instance() {
+        // When
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        DiagnosticService service = sessionSpy.diagnosticService();
+        // Then
+        assertNotNull(service);
+        verify(sessionSpy, times(1)).getService(DiagnosticService.class);
+    }
+
+    @Test
+    public void should_return_not_null_ConnectionsService_instance() {
+        // When
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        ConnectionsService service = sessionSpy.connectionsService();
+        // Then
+        assertNotNull(service);
+        verify(sessionSpy, times(1)).getService(ConnectionsService.class);
     }
 
     @AfterMethod
