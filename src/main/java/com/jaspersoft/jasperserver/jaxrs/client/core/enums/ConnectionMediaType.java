@@ -21,47 +21,42 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.enums;
 
-public final class ConnectionMediaType {
+public interface ConnectionMediaType {
 
-    public static final String FTP_TYPE = "application/connections.ftp";
-    public static final String FTP_JSON = "application/connections.ftp+json";
-    public static final String FTP_XML = "application/connections.ftp+xml";
+    String FTP_TYPE = "application/connections.ftp";
+    String FTP_JSON = "application/connections.ftp+json";
+    String FTP_XML = "application/connections.ftp+xml";
 
-    public static final String LOCAL_FILE_SYSTEM_TYPE = "application/connections.lfs";
-    public static final String LOCAL_FILE_SYSTEM_JSON = "application/connections.lfs+json";
-    public static final String LOCAL_FILE_SYSTEM_XML = "application/connections.lfs+xml";
+    String LOCAL_FILE_SYSTEM_TYPE = "application/connections.lfs";
+    String LOCAL_FILE_SYSTEM_JSON = "application/connections.lfs+json";
+    String LOCAL_FILE_SYSTEM_XML = "application/connections.lfs+xml";
 
-    public static final String CUSTOM_DATA_SOURCE_TYPE = "application/repository.customDataSource";
-    public static final String CUSTOM_DATA_SOURCE_JSON = "application/repository.customDataSource+json";
-    public static final String CUSTOM_DATA_SOURCE_XML = "application/repository.customDataSource+xml";
+    String CUSTOM_DATA_SOURCE_TYPE = "application/repository.customDataSource";
+    String CUSTOM_DATA_SOURCE_JSON = "application/repository.customDataSource+json";
+    String CUSTOM_DATA_SOURCE_XML = "application/repository.customDataSource+xml";
 
-    public static final String CUSTOM_DATA_SOURCE_METADATA_TYPE = "application/table.metadata";
-    public static final String CUSTOM_DATA_SOURCE_METADATA_JSON = "application/table.metadata+json";
-    public static final String CUSTOM_DATA_SOURCE_METADATA_XML = "application/table.metadata+xml";
+    String CUSTOM_DATA_SOURCE_METADATA_TYPE = "application/table.metadata";
+    String CUSTOM_DATA_SOURCE_METADATA_JSON = "application/table.metadata+json";
+    String CUSTOM_DATA_SOURCE_METADATA_XML = "application/table.metadata+xml";
 
-    public static final String JNDI_JDBC_DATA_SOURCE_TYPE = "application/repository.jndiJdbcDataSource";
-    public static final String JNDI_JDBC_DATA_SOURCE_JSON = "application/repository.jndiJdbcDataSource+json";
-    public static final String JNDI_JDBC_DATA_SOURCE_XML = "application/repository.jndiJdbcDataSource+xml";
+    String JNDI_JDBC_DATA_SOURCE_TYPE = "application/repository.jndiJdbcDataSource";
+    String JNDI_JDBC_DATA_SOURCE_JSON = "application/repository.jndiJdbcDataSource+json";
+    String JNDI_JDBC_DATA_SOURCE_XML = "application/repository.jndiJdbcDataSource+xml";
 
-    public static final String JDBC_DATA_SOURCE_TYPE = "application/repository.jdbcDataSource";
-    public static final String JDBC_DATA_SOURCE_JSON = "application/repository.jdbcDataSource+json";
-    public static final String JDBC_DATA_SOURCE_XML = "application/repository.jdbcDataSource+xml";
+    String JDBC_DATA_SOURCE_TYPE = "application/repository.jdbcDataSource";
+    String JDBC_DATA_SOURCE_JSON = "application/repository.jdbcDataSource+json";
+    String JDBC_DATA_SOURCE_XML = "application/repository.jdbcDataSource+xml";
 
-    public static final String JDBC_DATA_SOURCE_METADATA_TYPE = "application/repository.customDataSource.metadata";
-    public static final String JDBC_DATA_SOURCE_METADATA_JSON = "application/repository.customDataSource.metadata+json";
-    public static final String JDBC_DATA_SOURCE_METADATA_XML = "application/repository.customDataSource.metadata+xml";
+    String JDBC_DATA_SOURCE_METADATA_TYPE = "application/repository.customDataSource.metadata";
+    String JDBC_DATA_SOURCE_METADATA_JSON = "application/repository.customDataSource.metadata+json";
+    String JDBC_DATA_SOURCE_METADATA_XML = "application/repository.customDataSource.metadata+xml";
 
-    public static final String DOMAIN_DATA_SOURCE_TYPE = "application/repository.domain";
-    public static final String DOMAIN_DATA_SOURCE_JSON = "application/repository.domain+json";
-    public static final String DOMAIN_DATA_SOURCE_XML = "application/repository.domain+xml";
+    String TXT_FILE_TYPE = "application/connections.txtFile";
+    String TXT_FILE_JSON = "application/connections.txtFile+json";
+    String TXT_FILE_XML = "application/connections.txtFile+xml";
 
-    public static final String TXT_FILE_TYPE = "application/connections.txtFile";
-    public static final String TXT_FILE_JSON = "application/connections.txtFile+json";
-    public static final String TXT_FILE_XML = "application/connections.txtFile+xml";
+    String XLS_FILE_TYPE = "application/connections.xlsFile";
+    String XLS_FILE_JSON = "application/connections.xlsFile+json";
+    String XLS_FILE_XML = "application/connections.xlsFile+xml";
 
-    public static final String XLS_FILE_TYPE = "application/connections.xlsFile";
-    public static final String XLS_FILE_JSON = "application/connections.xlsFile+json";
-    public static final String XLS_FILE_XML = "application/connections.xlsFile+xml";
-
-    private ConnectionMediaType(){}
 }
