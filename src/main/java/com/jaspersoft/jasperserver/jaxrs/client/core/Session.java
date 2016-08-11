@@ -26,11 +26,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.Role
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.diagnostic.DiagnosticService;
-<<<<<<< HEAD
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainService;
-=======
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataService;
->>>>>>> master
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsService;
