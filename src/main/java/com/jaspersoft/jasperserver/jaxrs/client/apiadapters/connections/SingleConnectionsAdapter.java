@@ -45,7 +45,6 @@ public class SingleConnectionsAdapter<C, M> extends AbstractAdapter {
         this.metadataClass = metadataClass;
         this.metadataMimeType = metadataMimeType;
     }
-
     public SingleConnectionsAdapter(SessionStorage sessionStorage, Class<C> connectionClass,
                                    String connectionMimeType) {
         this(sessionStorage, connectionClass, connectionMimeType, null, null, null);
@@ -69,7 +68,6 @@ public class SingleConnectionsAdapter<C, M> extends AbstractAdapter {
     public SingleConnectionsAdapter(SessionStorage sessionStorage, String uuId) {
         this(sessionStorage, (Class<C>)Object.class, null, null, null, uuId);
     }
-
     @SuppressWarnings("unchecked")
     public OperationResult<C> create(C connection) {
         if (!isConnectionTypeValid(connection)) {

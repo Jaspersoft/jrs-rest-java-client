@@ -16,7 +16,6 @@ public class ConnectionsService extends AbstractAdapter {
     public ConnectionsService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
-
     public <C> SingleConnectionsAdapter<C, Object> connection(Class<C> connectionClass, String connectionMimeType) {
         return new SingleConnectionsAdapter<C, Object>(sessionStorage, connectionClass, connectionMimeType);
     }
@@ -38,6 +37,5 @@ public class ConnectionsService extends AbstractAdapter {
     public SingleConnectionsAdapter connection(String uuId) {
         return new SingleConnectionsAdapter(sessionStorage, uuId);
     }
-
 
 }
