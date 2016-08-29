@@ -32,6 +32,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.sun.jersey.multipart.FormDataMultiPart;
@@ -82,9 +83,11 @@ public class SingleResourceAdapter extends AbstractAdapter {
         JerseyRequest<ClientResource> request = buildRequest(ClientResource.class);
         request.addParams(params);
         if (isRootFolder(resourceUri)) {
-            request.setAccept(ResourceMediaType.FOLDER_JSON);
+            request.setAccept(sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON) ?
+                    ResourceMediaType.FOLDER_JSON : ResourceMediaType.FOLDER_XML);
         } else {
-            request.setAccept(ResourceMediaType.FILE_JSON);
+            request.setAccept(sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON) ?
+                    ResourceMediaType.FILE_JSON : ResourceMediaType.FILE_XML);
         }
         return request;
     }
@@ -210,9 +213,11 @@ public class SingleResourceAdapter extends AbstractAdapter {
     public <T> OperationResult<T> get(Class<T> clazz) {
         JerseyRequest<T> request = buildRequest(clazz);
         if (isRootFolder(resourceUri)) {
-            request.setAccept(ResourceMediaType.FOLDER_JSON);
+            request.setAccept(sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON) ?
+                    ResourceMediaType.FOLDER_JSON : ResourceMediaType.FOLDER_XML);
         } else {
-            request.setAccept(ResourceMediaType.FILE_JSON);
+            request.setAccept(sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON) ?
+                    ResourceMediaType.FILE_JSON : ResourceMediaType.FILE_XML);
         }
         return request.get();
     }
