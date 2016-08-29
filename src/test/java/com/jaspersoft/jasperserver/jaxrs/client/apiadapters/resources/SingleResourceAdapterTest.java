@@ -55,8 +55,8 @@ import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertSame;
 
 /**
-* Unit Tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter}
-*/
+ * Unit Tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter}
+ */
 @PrepareForTest(JerseyRequest.class)
 public class SingleResourceAdapterTest extends PowerMockTestCase {
 
@@ -121,7 +121,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
     /**
      * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter#asyncDetails(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
      */
-    public void should_return_specified_resource_asynchronously() throws InterruptedException {
+    public void should_return_specified_resource_asynchronously_as_json() throws InterruptedException {
 
         /** Given **/
         String resourceUri = "requestId";
@@ -130,6 +130,58 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         final int currentThreadId = (int) Thread.currentThread().getId();
 
         SingleResourceAdapter adapterSpy = PowerMockito.spy(new SingleResourceAdapter(sessionStorageMock, resourceUri));
+        when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+        when(configurationMock.getAcceptMimeType()).thenReturn(MimeType.JSON);
+        mockStatic(JerseyRequest.class);
+        PowerMockito.when(buildRequest(eq(sessionStorageMock),
+                eq(ClientResource.class),
+                eq(new String[]{"resources", resourceUri}),
+                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        PowerMockito.doReturn(operationResultMock).when(jerseyRequestMock).get();
+
+        final Callback<OperationResult<ClientResource>, Void> callback = PowerMockito.spy(new Callback<OperationResult<ClientResource>, Void>() {
+            @Override
+            public Void execute(OperationResult<ClientResource> data) {
+                newThreadId.set((int) Thread.currentThread().getId());
+                synchronized (this) {
+                    this.notify();
+                }
+                return null;
+            }
+        });
+        PowerMockito.doReturn(null).when(callback).execute(operationResultMock);
+
+        /** When **/
+        RequestExecution retrieved = adapterSpy.asyncDetails(callback);
+
+        /** Wait **/
+        synchronized (callback) {
+            callback.wait(1000);
+        }
+
+        /** Then **/
+        assertNotNull(retrieved);
+        assertNotSame(currentThreadId, newThreadId.get());
+        verify(jerseyRequestMock, times(1)).get();
+        verify(callback).execute(operationResultMock);
+    }
+
+
+    @Test
+    /**
+     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter#asyncDetails(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
+     */
+    public void should_return_specified_resource_asynchronously_as_xml() throws InterruptedException {
+
+        /** Given **/
+        String resourceUri = "requestId";
+
+        final AtomicInteger newThreadId = new AtomicInteger();
+        final int currentThreadId = (int) Thread.currentThread().getId();
+
+        SingleResourceAdapter adapterSpy = PowerMockito.spy(new SingleResourceAdapter(sessionStorageMock, resourceUri));
+        when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+        when(configurationMock.getAcceptMimeType()).thenReturn(MimeType.XML);
         mockStatic(JerseyRequest.class);
         PowerMockito.when(buildRequest(eq(sessionStorageMock),
                 eq(ClientResource.class),
@@ -297,7 +349,8 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         /** Given **/
         String resourceUri = "/";
-
+        when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+        when(configurationMock.getAcceptMimeType()).thenReturn(MimeType.JSON);
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock), eq(ClientResource.class),
                 eq(new String[]{"resources"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
@@ -314,6 +367,36 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
         Mockito.verify(jerseyRequestMock).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(jerseyRequestMock).setAccept(ResourceMediaType.FOLDER_JSON);
+        Mockito.verify(jerseyRequestMock).get();
+    }
+
+    @Test
+    /**
+     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter#details()}
+     */
+    @SuppressWarnings("unchecked")
+    public void should_return_operation_result_with_client_resource_folder_as_xml() {
+
+        /** Given **/
+        String resourceUri = "/";
+        when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+        when(configurationMock.getAcceptMimeType()).thenReturn(MimeType.XML);
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(eq(sessionStorageMock), eq(ClientResource.class),
+                eq(new String[]{"resources"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        doReturn(operationResultMock).when(jerseyRequestMock).get();
+
+        SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
+
+        /** When **/
+        OperationResult<ClientResource> retrieved = adapter.details();
+
+        /** Then **/
+        assertNotNull(retrieved);
+        assertSame(retrieved, operationResultMock);
+
+        Mockito.verify(jerseyRequestMock).addParams(any(MultivaluedHashMap.class));
+        Mockito.verify(jerseyRequestMock).setAccept(ResourceMediaType.FOLDER_XML);
         Mockito.verify(jerseyRequestMock).get();
     }
 
