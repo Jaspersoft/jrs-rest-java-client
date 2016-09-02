@@ -51,8 +51,12 @@ public class SessionStorage {
     private WebTarget rootTarget;
     private String sessionId;
 
+
+    private Client client;
+
     /**
-     * @deprecated */
+     * @deprecated
+     */
     public SessionStorage(RestClientConfiguration configuration, AuthenticationCredentials credentials) {
         this.configuration = configuration;
         this.credentials = credentials;
@@ -60,7 +64,8 @@ public class SessionStorage {
     }
 
     /**
-     * @deprecated */
+     * @deprecated
+     */
     public SessionStorage(RestClientConfiguration configuration, AuthenticationCredentials credentials, TimeZone userTimeZone) {
         this.configuration = configuration;
         this.credentials = credentials;
@@ -75,6 +80,15 @@ public class SessionStorage {
         this.userTimeZone = userTimeZone;
         this.userLocale = userLocale;
         init();
+    }
+
+
+    protected Client getRawClient() {
+        return client;
+    }
+
+    protected WebTarget getConfiguredClient() {
+        return configClient();
     }
 
     private void initSSL(ClientBuilder clientBuilder) {
@@ -103,7 +117,7 @@ public class SessionStorage {
             initSSL(clientBuilder);
         }
 
-        Client client = clientBuilder.build();
+        client = clientBuilder.build();
 
         Integer connectionTimeout = configuration.getConnectionTimeout();
 
@@ -117,6 +131,10 @@ public class SessionStorage {
             client.property(ClientProperties.READ_TIMEOUT, readTimeout);
         }
 
+        configClient();
+    }
+
+    protected WebTarget configClient() {
         JacksonJsonProvider customRepresentationTypeProvider = new CustomRepresentationTypeProvider()
                 .configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
@@ -127,6 +145,7 @@ public class SessionStorage {
         if (configuration.getLogHttp()) {
             rootTarget.register(initLoggingFilter());
         }
+        return rootTarget;
     }
 
     private LoggingFilter initLoggingFilter() {

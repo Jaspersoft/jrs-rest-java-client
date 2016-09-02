@@ -19,6 +19,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesS
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails.ThumbnailsService;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.RequestedRepresentationNotAvailableForResourceException;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
@@ -35,6 +36,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
@@ -58,6 +60,8 @@ public class SessionTest {
     public Response responseMock;
     @Mock
     public StatusType statusTypeMock;
+    @Mock
+    public Client clientMock;
 
     @BeforeMethod
     public void before() {
@@ -148,6 +152,24 @@ public class SessionTest {
         Session session = new Session(storageMock);
         // Then
         assertSame(session.getStorage(), storageMock);
+    }
+
+    @Test
+    public void should_return_proper_client() {
+        // When
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        when(sessionSpy.rawClient()).thenReturn(clientMock);
+        // Then
+        assertSame(sessionSpy.rawClient(), clientMock);
+    }
+
+    @Test
+    public void should_return_proper_configured_client() {
+        // When
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        when(sessionSpy.configuredClient()).thenReturn(targetMock);
+        // Then
+        assertSame(sessionSpy.configuredClient(), targetMock);
     }
 
     @Test
@@ -313,6 +335,6 @@ public class SessionTest {
 
     @AfterMethod
     public void after() {
-        reset(storageMock, targetMock, builderMock, responseMock, statusTypeMock);
+        reset(storageMock, targetMock, builderMock, responseMock, statusTypeMock, clientMock);
     }
 }
