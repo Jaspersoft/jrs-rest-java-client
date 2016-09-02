@@ -14,7 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <jasperserver-dto.version>full-domain-api-SNAPSHOT</jasperserver-dto.version>
+        <jasperserver-dto.version>full-domain-api2-SNAPSHOT</jasperserver-dto.version>
     </properties>
 
     <scm>
@@ -32,6 +32,14 @@
         <repository>
             <id>opencast-public</id>
             <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
+        </repository>
+        <repository>
+          <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+          <id>artifactory_ua</id>
+          <name>artifactory_ua</name>
+          <url>http://mvnrepo.jaspersoft.com:8081/artifactory/repo</url>
         </repository>
     </repositories>
 
