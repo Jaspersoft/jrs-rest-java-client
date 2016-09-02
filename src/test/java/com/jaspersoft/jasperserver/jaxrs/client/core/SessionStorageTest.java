@@ -18,6 +18,7 @@ import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
@@ -46,11 +47,18 @@ import static org.testng.Assert.assertNotNull;
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage}
  */
-@PrepareForTest({SessionStorage.class, SSLContext.class, EncryptionUtils.class, ClientBuilder.class})
+@PrepareForTest({SessionStorage.class,
+        SSLContext.class,
+        EncryptionUtils.class,
+        ClientBuilder.class,
+        Client.class,
+        WebTarget.class})
 public class SessionStorageTest extends PowerMockTestCase {
 
     @Mock
     private ClientBuilder builderMock;
+    @Mock
+    private SessionStorage sessionStorageMock;
     @Mock
     private RestClientConfiguration configurationMock;
     @Mock
@@ -166,6 +174,49 @@ public class SessionStorageTest extends PowerMockTestCase {
         verify(targetMock).register(MultiPartWriter.class);
         verify(configurationMock).getLogHttp();
         verify(targetMock).register(isA(LoggingFilter.class));
+    }
+
+    @Test
+    public void should_return_client_without_configuration() throws Exception {
+
+        //  Given
+        suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
+        SessionStorage sessionStorage = Mockito.spy(new SessionStorage(configurationMock, credentialsMock, null, null));
+        when(sessionStorage.getRawClient()).thenReturn(clientMock);
+
+        // When
+
+        // When
+        Client configuredClient = sessionStorage.getRawClient();
+
+        // Then
+        assertEquals(configuredClient, clientMock);
+    }
+
+    @Test
+    public void should_return_client_with_configuration() throws Exception {
+
+        //  Given
+        suppress(method(SessionStorage.class, "init"));
+        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
+        SessionStorage sessionStorage = Mockito.spy(new SessionStorage(configurationMock, credentialsMock, null, null));
+        Whitebox.setInternalState(sessionStorage, "client", clientMock);
+        doReturn(targetMock).when(clientMock).target(anyString());
+        doReturn(targetMock).when(targetMock).register(JacksonFeature.class);
+        doReturn(targetMock).when(targetMock).register(MultiPartWriter.class);
+        doReturn(targetMock).when(targetMock).register(any(JacksonJsonProvider.class));
+        doReturn(true).when(configurationMock).getLogHttp();
+        doReturn(targetMock).when(targetMock).register(any(LoggingFilter.class));
+        when(sessionStorage.getConfiguredClient()).thenReturn(targetMock);
+
+        // When
+
+        // When
+        WebTarget configuredClient = sessionStorage.getConfiguredClient();
+
+        // Then
+        assertEquals(configuredClient, targetMock);
     }
 
     @Test
