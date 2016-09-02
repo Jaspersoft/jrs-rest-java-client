@@ -38,6 +38,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesS
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails.ThumbnailsService;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
@@ -45,9 +46,16 @@ import javax.ws.rs.core.Response;
 
 public class Session extends AnonymousSession{
 
-
     public Session(SessionStorage sessionStorage) {
         super(sessionStorage);
+    }
+
+    public Client rawClient() {
+        return storage.getRawClient();
+    }
+
+    public WebTarget configuredClient() {
+        return storage.getConfiguredClient();
     }
 
     public void logout() {
