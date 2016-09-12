@@ -56,7 +56,13 @@ public enum  RolesParameter {
     /**
      *  Returns roles of user, can be set multiple times.
      */
-    USER("user")
+    USER("user"),
+
+    OFFSET("offset"),
+
+    LIMIT("limit"),
+
+    Q("q")
     ;
 
     private String paramName;
