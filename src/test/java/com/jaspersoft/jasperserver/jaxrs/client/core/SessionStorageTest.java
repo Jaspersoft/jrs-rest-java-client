@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import com.sun.jersey.multipart.impl.MultiPartWriter;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -202,10 +203,12 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn("http").when(configurationMock).getJasperReportsServerUrl();
         SessionStorage sessionStorage = Mockito.spy(new SessionStorage(configurationMock, credentialsMock, null, null));
         Whitebox.setInternalState(sessionStorage, "client", clientMock);
+        Whitebox.setInternalState(sessionStorage, "sessionId", "sessionId");
         doReturn(targetMock).when(clientMock).target(anyString());
         doReturn(targetMock).when(targetMock).register(JacksonFeature.class);
         doReturn(targetMock).when(targetMock).register(MultiPartWriter.class);
         doReturn(targetMock).when(targetMock).register(any(JacksonJsonProvider.class));
+        doReturn(targetMock).when(targetMock).register(any(SessionOutputFilter.class));
         doReturn(true).when(configurationMock).getLogHttp();
         doReturn(targetMock).when(targetMock).register(any(LoggingFilter.class));
         when(sessionStorage.getConfiguredClient()).thenReturn(targetMock);
