@@ -451,8 +451,8 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
         doReturn(tableMetadataOperationResultMock).when(tableMetadataRequestMock).get();
 
         OperationResult<TableMetadata> connection = connectionsService
-                .connection(ClientJdbcDataSource.class, ConnectionMediaType.JDBC_DATA_SOURCE_TYPE, TableMetadata.class,
-                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE, TEST_UUID)
+                .connection(TEST_UUID, TableMetadata.class,
+                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE)
                 .metadata();
         //then
         assertSame(tableMetadataOperationResultMock, connection);
@@ -465,17 +465,6 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
         verify(configurationMock).getAcceptMimeType();
         verify(tableMetadataRequestMock).setAccept(ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_JSON);
         verify(tableMetadataRequestMock).get();
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_return_throw_exception_when_create_connection_and_get_metadata_connection_is_invalid() throws Exception {
-        //when
-        connectionsService
-                .connection(TableMetadata.class,
-                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE, TEST_UUID)
-                .createAndGetMetadata(new Object());
-        //then
-        // an exception should be thrown
     }
 
     @Test(expectedExceptions = MandatoryParameterNotFoundException.class)

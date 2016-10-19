@@ -7,14 +7,14 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>6.3.2-SNAPSHOT</version>
+    <version>6.3.3-SNAPSHOT</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <jasperserver-dto.version>6.3.0</jasperserver-dto.version>
+        <jasperserver-dto.version>trunk-SNAPSHOT</jasperserver-dto.version>
     </properties>
 
     <scm>
@@ -32,6 +32,14 @@
         <repository>
             <id>opencast-public</id>
             <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
+        </repository>
+        <repository>
+          <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+          <id>artifactory_ua</id>
+          <name>artifactory_ua</name>
+          <url>http://mvnrepo.jaspersoft.com:8081/artifactory/repo</url>
         </repository>
     </repositories>
 
