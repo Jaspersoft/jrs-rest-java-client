@@ -128,7 +128,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult<ClientResource> createNew(ClientResource resource) {
+    public OperationResult<ClientResource>  createNew(ClientResource resource) {
         return prepareCreateOrUpdateRequest(resource).post(resource);
     }
 

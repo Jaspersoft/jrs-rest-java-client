@@ -6,7 +6,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientCustomDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientJdbcDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientJndiJdbcDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
-import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
+import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
@@ -24,7 +24,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
  * @see
  */
 public class SingleConnectionsAdapter<C, M> extends AbstractAdapter {
+
     public static final String SERVICE_URI = "connections";
+
     private String uuId;
     private Class<C> connectionClass;
     private String connectionMimeType;
@@ -32,10 +34,10 @@ public class SingleConnectionsAdapter<C, M> extends AbstractAdapter {
     private String metadataMimeType;
 
     public SingleConnectionsAdapter(SessionStorage sessionStorage, Class<C> connectionClass,
-                                    String connectionMimeType,
-                                    Class<M> metadataClass,
-                                    String metadataMimeType,
-                                    String uuId) {
+                                   String connectionMimeType,
+                                   Class<M> metadataClass,
+                                   String metadataMimeType,
+                                   String uuId) {
         super(sessionStorage);
         this.uuId = uuId;
         this.connectionClass = connectionClass;
@@ -43,7 +45,29 @@ public class SingleConnectionsAdapter<C, M> extends AbstractAdapter {
         this.metadataClass = metadataClass;
         this.metadataMimeType = metadataMimeType;
     }
+    public SingleConnectionsAdapter(SessionStorage sessionStorage, Class<C> connectionClass,
+                                   String connectionMimeType) {
+        this(sessionStorage, connectionClass, connectionMimeType, null, null, null);
+    }
 
+    public SingleConnectionsAdapter(SessionStorage sessionStorage, Class<C> connectionClass,
+                                   String connectionMimeType, String uuId) {
+        this(sessionStorage, connectionClass, connectionMimeType, null, null, uuId);
+    }
+
+    public SingleConnectionsAdapter(SessionStorage sessionStorage, String uuId, Class<M> metadataClass,
+                                   String metadataMimeType) {
+        this(sessionStorage, null, null, metadataClass, metadataMimeType, uuId);
+    }
+    public SingleConnectionsAdapter(SessionStorage sessionStorage, Class<C> connectionClass,
+                                   String connectionMimeType,
+                                   Class<M> metadataClass,
+                                   String metadataMimeType) {
+        this(sessionStorage, connectionClass, connectionMimeType, metadataClass, metadataMimeType, null);
+    }
+    public SingleConnectionsAdapter(SessionStorage sessionStorage, String uuId) {
+        this(sessionStorage, (Class<C>)Object.class, null, null, null, uuId);
+    }
     @SuppressWarnings("unchecked")
     public OperationResult<C> create(C connection) {
         if (!isConnectionTypeValid(connection)) {
@@ -127,11 +151,11 @@ public class SingleConnectionsAdapter<C, M> extends AbstractAdapter {
 
     protected <T> Boolean isConnectionTypeValid(T connection) {
         if (connection == null) {
-            throw  new MandatoryParameterNotFoundException("Connection is null");
+            throw new MandatoryParameterNotFoundException("Connection is null");
         }
         return (connection instanceof FtpConnection ||
                 connection instanceof LfsConnection ||
-                connection instanceof ClientSemanticLayerDataSource ||
+                connection instanceof ClientDomain ||
                 connection instanceof ClientCustomDataSource ||
                 connection instanceof ClientJndiJdbcDataSource ||
                 connection instanceof ClientJdbcDataSource ||
