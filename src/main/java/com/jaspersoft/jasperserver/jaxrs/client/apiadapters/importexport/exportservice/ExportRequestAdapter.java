@@ -63,7 +63,16 @@ public class ExportRequestAdapter extends AbstractAdapter {
         return task;
     }
 
+    /**
+     * @deprecated Replaced by {@link ExportRequestAdapter#fetch(long)}
+     * */
     public OperationResult<InputStream> fetch() {
+
+        return fetch(500);
+    }
+
+
+    public OperationResult<InputStream> fetch(long interval) {
         State state;
         while (!"finished".equals((state = state().getEntity()).getPhase())) {
             if ("failed".equals(state.getPhase())) {
@@ -74,7 +83,7 @@ public class ExportRequestAdapter extends AbstractAdapter {
                 }
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(interval);
             } catch (InterruptedException ignored) {
                 // NOP
             }
