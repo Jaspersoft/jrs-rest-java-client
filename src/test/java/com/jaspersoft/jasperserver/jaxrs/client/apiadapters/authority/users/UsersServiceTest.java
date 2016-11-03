@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
@@ -154,10 +155,11 @@ public class UsersServiceTest extends PowerMockTestCase {
         // Given
         UsersService service = new UsersService(sessionStorageMock);
         ClientUser clientUser = new ClientUser().setUsername("Simon");
-        whenNew(SingleUserRequestAdapter.class).withArguments(sessionStorageMock, clientUser)
-                .thenReturn(singleUserRequestAdapterMock);
         whenNew(ClientUser.class).withArguments(clientUser)
                 .thenReturn(clientUserMock);
+        whenNew(SingleUserRequestAdapter.class).withArguments(sessionStorageMock, clientUserMock)
+                .thenReturn(singleUserRequestAdapterMock);
+        doReturn(clientUserMock).when(clientUserMock).setTenantId(ORGANIZATION_ID);
         // When
         SingleUserRequestAdapter retrieved = service.
                 forOrganization(ORGANIZATION_ID).
@@ -242,6 +244,6 @@ public class UsersServiceTest extends PowerMockTestCase {
 
     @AfterMethod
     public void after() {
-        reset(sessionStorageMock, singleUserRequestAdapterMock, batchUsersRequestAdapterMock);
+        reset(sessionStorageMock, singleUserRequestAdapterMock, clientUserMock, batchUsersRequestAdapterMock);
     }
 }
