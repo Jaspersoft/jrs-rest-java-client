@@ -56,11 +56,38 @@ public enum OrganizationParameter {
      * users.
      * Type: Boolean (Optional)
      */
-    CREATE_DEFAULT_USERS("createDefaultUsers");
+    CREATE_DEFAULT_USERS("createDefaultUsers"),
+
+    /**
+     * Pagination
+     *
+     * Default value: 0
+     */
+    OFFSET("offset"),
+
+    /**
+     * Sagination
+     *
+     * Default value: 0
+     */
+    LIMIT("limit"),
+
+    /**
+     * Enables sorting by  "name", "alias", "id". All other values are ignored.
+     * Default order is natural order (order, in which organizations were created)
+     */
+    SORT_BY("sortBy"),
+
+    /**
+     * Max depth of organization tree traversing.
+     *
+     * Default value: 0
+     */
+    MAX_DEPTH("maxDepth");
 
     private String paramName;
 
-    private OrganizationParameter(String paramName){
+    private OrganizationParameter(String paramName) {
         this.paramName = paramName;
     }
 
