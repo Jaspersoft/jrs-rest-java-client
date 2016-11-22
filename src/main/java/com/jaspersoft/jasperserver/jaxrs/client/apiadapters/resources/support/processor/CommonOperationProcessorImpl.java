@@ -20,6 +20,7 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.processor;
 
+import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -29,7 +30,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * @author Alexander Krasnyanskiy
  */
-public class CommonOperationProcessorImpl<ResourceType> implements CommonOperationProcessor<ResourceType> {
+public class CommonOperationProcessorImpl<ResourceType extends ClientResource> implements CommonOperationProcessor<ResourceType> {
     private ResourceType resource;
     private Class<ResourceType> resourceTypeClass;
     private SessionStorage sessionStorage;

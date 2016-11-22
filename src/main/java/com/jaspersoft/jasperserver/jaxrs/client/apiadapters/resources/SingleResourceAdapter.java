@@ -128,7 +128,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult<ClientResource>  createNew(ClientResource resource) {
+    public OperationResult<ClientResource> createNew(ClientResource resource) {
         return prepareCreateOrUpdateRequest(resource).post(resource);
     }
 
@@ -210,14 +210,18 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return request.post(multipartResource);
     }
 
-    public <T> OperationResult<T> get(Class<T> clazz) {
+    public <T extends ClientResource<T>> OperationResult<T> get(Class<T> clazz) {
         JerseyRequest<T> request = buildRequest(clazz);
-        if (isRootFolder(resourceUri)) {
-            request.setAccept(sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON) ?
-                    ResourceMediaType.FOLDER_JSON : ResourceMediaType.FOLDER_XML);
+        if (ResourcesTypeResolverUtil.isCustomResourceType(clazz)) {
+            request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), ResourcesTypeResolverUtil.getMimeType(clazz)));
         } else {
-            request.setAccept(sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON) ?
-                    ResourceMediaType.FILE_JSON : ResourceMediaType.FILE_XML);
+            if (isRootFolder(resourceUri)) {
+                request.setAccept(sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON) ?
+                        ResourceMediaType.FOLDER_JSON : ResourceMediaType.FOLDER_XML);
+            } else {
+                request.setAccept(sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON) ?
+                        ResourceMediaType.FILE_JSON : ResourceMediaType.FILE_XML);
+            }
         }
         return request.get();
     }
