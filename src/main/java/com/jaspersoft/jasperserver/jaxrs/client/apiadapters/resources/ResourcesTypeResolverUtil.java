@@ -48,6 +48,8 @@ import com.jaspersoft.jasperserver.dto.resources.ClientDomainTopic;
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 public class ResourcesTypeResolverUtil {
 
@@ -109,7 +111,21 @@ public class ResourcesTypeResolverUtil {
         return resource.getClass();
     }
 
-    public static <T> boolean isCustomResourceType(Class<T> clazz) {
-        return classToMimeMap.containsKey(clazz);
+    public static String extractClientType(Class<?> clientObjectClass) {
+        String clientResourceType = null;
+        final XmlRootElement xmlRootElement = clientObjectClass.getAnnotation(XmlRootElement.class);
+        if (xmlRootElement != null && !"##default".equals(xmlRootElement.name())) {
+            clientResourceType = xmlRootElement.name();
+        } else {
+            final XmlType xmlType = clientObjectClass.getAnnotation(XmlType.class);
+            if (xmlType != null && !"##default".equals(xmlType.name())) {
+                clientResourceType = xmlType.name();
+            }
+        }
+        if (clientResourceType == null) {
+            final String classSimpleName = clientObjectClass.getSimpleName();
+            clientResourceType = classSimpleName.replaceFirst("^.", classSimpleName.substring(0, 1).toLowerCase());
+        }
+        return typeToMime(clientResourceType);
     }
 }
