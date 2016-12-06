@@ -51,9 +51,21 @@ public final class ConnectionMediaType {
     public static final String JDBC_DATA_SOURCE_METADATA_JSON = "application/repository.customDataSource.metadata+json";
     public static final String JDBC_DATA_SOURCE_METADATA_XML = "application/repository.customDataSource.metadata+xml";
 
-    public static final String DOMAIN_DATA_SOURCE_TYPE = "application/repository.domain";
-    public static final String DOMAIN_DATA_SOURCE_JSON = "application/repository.domain+json";
-    public static final String DOMAIN_DATA_SOURCE_XML = "application/repository.domain+xml";
+    public static final String DOMAIN_DATA_SOURCE_TYPE = "application/repository.semanticLayerDataSource";
+    public static final String DOMAIN_DATA_SOURCE_JSON = "application/repository.semanticLayerDataSource+json";
+    public static final String DOMAIN_DATA_SOURCE_XML = "application/repository.semanticLayerDataSource+xml";
+
+    public static final String DOMAIN_METADATA_TYPE = "application/repository.semanticLayerDataSource.metadata";
+    public static final String DOMAIN_METADATA_JSON = "application/repository.semanticLayerDataSource.metadata+json";
+    public static final String DOMAIN_METADATA_XML = "application/repository.semanticLayerDataSource.metadata+xml";
+
+    public static final String REPORT_UNIT_TYPE = "application/repository.reportUnit";
+    public static final String REPORT_UNIT_JSON = "application/repository.reportUnit+json";
+    public static final String REPORT_UNIT_XML = "application/repository.reportUnit+xml";
+
+    public static final String REPORT_UNIT_METADATA_TYPE = "application/repository.reportUnit.metadata";
+    public static final String REPORT_UNIT_METADATA_JSON = "application/repository.reportUnit.metadata+json";
+    public static final String REPORT_UNIT_METADATA_XML = "application/repository.reportUnit.metadata+xml";
 
     public static final String TXT_FILE_TYPE = "application/connections.txtFile";
     public static final String TXT_FILE_JSON = "application/connections.txtFile+json";

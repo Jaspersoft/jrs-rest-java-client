@@ -29,6 +29,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery.DomainContextManager}.
+ */
 public class DomainMetadataAdapter extends AbstractAdapter {
     private final ArrayList<String> path = new ArrayList<String>();
 

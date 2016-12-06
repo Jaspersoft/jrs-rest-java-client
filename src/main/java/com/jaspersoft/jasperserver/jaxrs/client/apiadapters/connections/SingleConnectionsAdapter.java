@@ -9,6 +9,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.query.SingleQueryAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
@@ -149,6 +150,12 @@ public class SingleConnectionsAdapter<C, M> extends AbstractAdapter {
                         , metadataMimeType + "+{mime}"));
         return jerseyRequest.post(connection);
     }
+
+
+    public <T> SingleQueryAdapter<T> query(String query, Class<T> queryResponseClass) {
+        return new SingleQueryAdapter<T>(sessionStorage, uuId, query, queryResponseClass);
+    }
+
 
     protected <T> Boolean isConnectionTypeValid(T connection) {
         if (connection == null) {

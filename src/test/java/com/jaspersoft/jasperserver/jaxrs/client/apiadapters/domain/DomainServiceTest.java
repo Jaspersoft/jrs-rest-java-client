@@ -1,8 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.metadata.DomainMetadataAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.newDomain.DomainAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.schema.DomainSchemaAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import org.mockito.Mock;
@@ -28,11 +26,7 @@ public class DomainServiceTest extends PowerMockTestCase {
     @Mock
     private SessionStorage sessionStorageMock;
     @Mock
-    private DomainAdapter domainAdapterMock;
-    @Mock
     private DomainMetadataAdapter domainMetadataAdapterMock;
-    @Mock
-    private DomainSchemaAdapter domainSchemaAdapterMock;
 
 
     @BeforeMethod
@@ -63,32 +57,6 @@ public class DomainServiceTest extends PowerMockTestCase {
         // should be thrown an exception
     }
 
-    @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
-    public void should_throw_an_exception_when_domain_is_null() {
-        // When
-        new DomainService(sessionStorageMock).domain(null);
-        // Then
-        // should be thrown an exception
-    }
-
-    @Test
-    public void should_return_proper_DomainAdapter_instance() throws Exception {
-
-        // Given
-        whenNew(DomainAdapter.class)
-                .withArguments(sessionStorageMock, URI)
-                .thenReturn(domainAdapterMock);
-
-        DomainService domainService = new DomainService(sessionStorageMock);
-
-        // When
-        DomainAdapter retrieved = domainService.domain(URI);
-
-        // Then
-        assertSame(retrieved, domainAdapterMock);
-        verifyNew(DomainAdapter.class, times(1))
-                .withArguments(sessionStorageMock, URI);
-    }
 
     @Test
     public void should_return_proper_DomainMetadataAdapter_instance() throws Exception {
@@ -109,33 +77,9 @@ public class DomainServiceTest extends PowerMockTestCase {
                 .withArguments(sessionStorageMock, URI);
     }
 
-    @Test
-    public void should_return_proper_DomainSchemaAdapter_instance() throws Exception {
-
-        // Given
-        whenNew(DomainSchemaAdapter.class)
-                .withArguments(sessionStorageMock, URI)
-                .thenReturn(domainSchemaAdapterMock);
-
-        DomainService domainService = new DomainService(sessionStorageMock);
-
-        // When
-        DomainSchemaAdapter retrieved = domainService
-                .forDomain(URI)
-                .schema();
-
-        // Then
-        assertSame(retrieved, domainSchemaAdapterMock);
-        verifyNew(DomainSchemaAdapter.class, times(1))
-                .withArguments(sessionStorageMock, URI);
-    }
-
     @AfterMethod
     public void after() {
         sessionStorageMock = null;
-        domainAdapterMock = null;
         domainMetadataAdapterMock = null;
-        domainSchemaAdapterMock = null;
-
     }
 }

@@ -24,7 +24,9 @@ import com.jaspersoft.jasperserver.dto.resources.ClientAdhocDataView;
 import com.jaspersoft.jasperserver.dto.resources.ClientAwsDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientBeanDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientCustomDataSource;
+import com.jaspersoft.jasperserver.dto.resources.ClientDashboard;
 import com.jaspersoft.jasperserver.dto.resources.ClientDataType;
+import com.jaspersoft.jasperserver.dto.resources.ClientDomainTopic;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientFolder;
 import com.jaspersoft.jasperserver.dto.resources.ClientInputControl;
@@ -43,11 +45,10 @@ import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientXmlaConnection;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
-import com.jaspersoft.jasperserver.dto.resources.ClientDashboard;
-import com.jaspersoft.jasperserver.dto.resources.ClientDomainTopic;
-import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 public class ResourcesTypeResolverUtil {
 
@@ -81,7 +82,6 @@ public class ResourcesTypeResolverUtil {
             put(ClientResourceLookup.class, ResourceMediaType.RESOURCE_LOOKUP_CLIENT_TYPE);
             put(ClientDashboard.class, ResourceMediaType.DASHBOARD_CLIENT_TYPE);
             put(ClientDomainTopic.class, ResourceMediaType.DOMAIN_TOPIC_CLIENT_TYPE);
-            put(ClientDomain.class, ResourceMediaType.DOMAIN_CLIENT_TYPE);
         }};
 
         for (Map.Entry<Class<? extends ClientResource>, String> entry : classToMimeMap.entrySet()) {
@@ -109,7 +109,21 @@ public class ResourcesTypeResolverUtil {
         return resource.getClass();
     }
 
-    public static <T> boolean isCustomResourceType(Class<T> clazz) {
-        return classToMimeMap.containsKey(clazz);
+    public static String extractClientType(Class<?> clientObjectClass) {
+        String clientResourceType = null;
+        final XmlRootElement xmlRootElement = clientObjectClass.getAnnotation(XmlRootElement.class);
+        if (xmlRootElement != null && !"##default".equals(xmlRootElement.name())) {
+            clientResourceType = xmlRootElement.name();
+        } else {
+            final XmlType xmlType = clientObjectClass.getAnnotation(XmlType.class);
+            if (xmlType != null && !"##default".equals(xmlType.name())) {
+                clientResourceType = xmlType.name();
+            }
+        }
+        if (clientResourceType == null) {
+            final String classSimpleName = clientObjectClass.getSimpleName();
+            clientResourceType = classSimpleName.replaceFirst("^.", classSimpleName.substring(0, 1).toLowerCase());
+        }
+        return typeToMime(clientResourceType);
     }
 }
