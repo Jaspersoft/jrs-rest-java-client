@@ -3,7 +3,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.dto.resources.domain.ResourceGroupElement;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.SingleConnectionAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.SingleConnectionsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -28,11 +28,11 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({ConnectionsService.class, SessionStorage.class, SingleConnectionAdapter.class, TopicContextManager.class})
+@PrepareForTest({ConnectionsService.class, SessionStorage.class, SingleConnectionsAdapter.class, TopicContextManager.class})
 public class TopicContextManagerTest extends PowerMockTestCase {
     private SessionStorage sessionStorageMock;
     private ConnectionsService connectionsServiceMock;
-    private SingleConnectionAdapter connectionAdapterMock;
+    private SingleConnectionsAdapter connectionAdapterMock;
     private OperationResult<ClientReportUnit> operationResultMock;
     private OperationResult<ResourceGroupElement> resourceGroupElementOperationResult;
 
@@ -41,7 +41,7 @@ public class TopicContextManagerTest extends PowerMockTestCase {
     public void before() {
         sessionStorageMock = mock(SessionStorage.class);
         connectionsServiceMock = mock(ConnectionsService.class);
-        connectionAdapterMock = mock(SingleConnectionAdapter.class);
+        connectionAdapterMock = mock(SingleConnectionsAdapter.class);
         operationResultMock = mock(OperationResult.class);
         resourceGroupElementOperationResult = mock(OperationResult.class);
     }

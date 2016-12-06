@@ -83,6 +83,13 @@ Table of Contents
     * [Uploading ReportUnit](#uploading-reportunit).
     * [Uploading File Resources](#uploading-file-resources).
     * [Deleting Resources](#deleting-resources).
+  2. [The Permissions Service](#the-permissions-service).
+    * [Viewing Multiple Permissions](#viewing-multiple-permissions).
+    * [Viewing a Single Permission](#viewing-a-single-permission).
+    * [Setting Multiple Permissions](#setting-multiple-permissions).
+    * [Setting a Single Permission](#setting-a-single-permission).
+    * [Deleting Permissions in Bulk](#deleting-permissions-in-bulk).
+    * [Deleting a Single Permission](#deleting-a-single-permission).
 8. [Jobs service](#jobs-service).
   * [Listing Report Jobs](#listing-report-jobs).
   * [Viewing a Job Definition](#viewing-a-job-definition).
@@ -1940,7 +1947,12 @@ The domain metadata describes the sets and items exposed by a Domain for use in 
 Hoc reports. Items are database fields exposed by the Domain, after all joins, filters, and calculated fields have
 been applied to the database tables selected in the Domain. Sets are groups of items, arranged by the Domain
 creator for use by report creators.
-To get domain metadata use code below:
+
+A limitation of the DomainMetadata Service only allows it to operate on Domains with a single data
+island. A data island is a group of fields that are all related by joins between the database tables in the
+Domain. Fields that belong to tables that are not joined in the Domain belong to separate data islands.
+
+The following code retrieves metadata of Domain.
 ```java
 // create domain context by Id of context
  ClientSemanticLayerDataSource domainContext = new ClientSemanticLayerDataSource().

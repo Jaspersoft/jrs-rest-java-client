@@ -1,9 +1,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
-import com.jaspersoft.jasperserver.dto.resources.domain.DataIslandsContainer;
+import com.jaspersoft.jasperserver.dto.resources.domain.PresentationGroupElement;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.SingleConnectionAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.SingleConnectionsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -28,20 +28,20 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({ConnectionsService.class, SessionStorage.class, SingleConnectionAdapter.class, DomainContextManager.class})
+@PrepareForTest({ConnectionsService.class, SessionStorage.class, SingleConnectionsAdapter.class, DomainContextManager.class})
 public class DomainContextManagerTest extends PowerMockTestCase {
     private SessionStorage sessionStorageMock;
     private ConnectionsService connectionsServiceMock;
-    private SingleConnectionAdapter connectionAdapterMock;
+    private SingleConnectionsAdapter connectionAdapterMock;
     private OperationResult<ClientSemanticLayerDataSource> operationResultMock;
-    private OperationResult<DataIslandsContainer> dataIslandsContainerOperationResult;
+    private OperationResult<PresentationGroupElement> dataIslandsContainerOperationResult;
 
 
     @BeforeMethod
     public void before() {
         sessionStorageMock = mock(SessionStorage.class);
         connectionsServiceMock = mock(ConnectionsService.class);
-        connectionAdapterMock = mock(SingleConnectionAdapter.class);
+        connectionAdapterMock = mock(SingleConnectionsAdapter.class);
         operationResultMock = mock(OperationResult.class);
         dataIslandsContainerOperationResult = mock(OperationResult.class);
     }
@@ -81,12 +81,12 @@ public class DomainContextManagerTest extends PowerMockTestCase {
         String someId = "someId";
         PowerMockito.whenNew(ConnectionsService.class).withArguments(sessionStorageMock).thenReturn(connectionsServiceMock);
         PowerMockito.when(connectionsServiceMock.connection(someId,
-                DataIslandsContainer.class,
+                PresentationGroupElement.class,
                 ConnectionMediaType.DOMAIN_METADATA_TYPE)).
                 thenReturn(connectionAdapterMock);
         PowerMockito.when(connectionAdapterMock.metadata()).thenReturn(dataIslandsContainerOperationResult);
 
-        OperationResult<DataIslandsContainer> retrievedOperationResult = new DomainContextManager(sessionStorageMock).
+        OperationResult<PresentationGroupElement> retrievedOperationResult = new DomainContextManager(sessionStorageMock).
                 fetchMetadataById(someId);
         //Then
         assertSame(dataIslandsContainerOperationResult, retrievedOperationResult);
@@ -101,12 +101,12 @@ public class DomainContextManagerTest extends PowerMockTestCase {
         PowerMockito.whenNew(ConnectionsService.class).withArguments(sessionStorageMock).thenReturn(connectionsServiceMock);
         PowerMockito.when(connectionsServiceMock.connection(ClientSemanticLayerDataSource.class,
                 ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE,
-                DataIslandsContainer.class,
+                PresentationGroupElement.class,
                 ConnectionMediaType.DOMAIN_METADATA_TYPE
                 )).thenReturn(connectionAdapterMock);
         PowerMockito.when(connectionAdapterMock.createAndGetMetadata(domain)).thenReturn(dataIslandsContainerOperationResult);
 
-        OperationResult<DataIslandsContainer> retrievedOperationResult = new DomainContextManager(sessionStorageMock).fetchMetadataByContext(domain);
+        OperationResult<PresentationGroupElement> retrievedOperationResult = new DomainContextManager(sessionStorageMock).fetchMetadataByContext(domain);
         //Then
         assertSame(dataIslandsContainerOperationResult, retrievedOperationResult);
     }

@@ -26,15 +26,8 @@ import static org.testng.Assert.assertSame;
  */
 @PrepareForTest({ConnectionsService.class})
 public class ConnectionsServiceTest extends PowerMockTestCase {
-<<<<<<< HEAD
     public static final String SOME_UU_ID = "someUuId";
     public static final String SOME_MIME_TYPE = "someMimeType";
-=======
-
-    public static final String SOME_UU_ID = "someUuId";
-    public static final String SOME_MIME_TYPE = "someMimeType";
-    public static final String CONNECTION_MIME_TYPE = "someConnectionMimeType";
->>>>>>> develop-domainQuery
     public static final String METADATA_MIME_TYPE = "someMetadataMimeType";
     private SessionStorage sessionStorageMock;
     private SingleConnectionsAdapter singleConnectionAdapterMock;
@@ -71,30 +64,18 @@ public class ConnectionsServiceTest extends PowerMockTestCase {
     public void should_return_proper_SingleConnectionAdapter_instance_by_uuid() throws Exception {
 
         // Given
-<<<<<<< HEAD
         whenNew(SingleConnectionsAdapter.class)
-=======
-        whenNew(SingleConnectionAdapter.class)
->>>>>>> develop-domainQuery
                 .withArguments(sessionStorageMock, Object.class, SOME_MIME_TYPE, SOME_UU_ID)
                 .thenReturn(singleConnectionAdapterMock);
 
         ConnectionsService connectionsService = new ConnectionsService(sessionStorageMock);
 
         // When
-<<<<<<< HEAD
         SingleConnectionsAdapter retrieved = connectionsService.connection(Object.class, SOME_MIME_TYPE, SOME_UU_ID);
 
         // Then
         assertSame(singleConnectionAdapterMock, retrieved);
         verifyNew(SingleConnectionsAdapter.class, times(1))
-=======
-        SingleConnectionAdapter retrieved = connectionsService.connection(Object.class, SOME_MIME_TYPE, SOME_UU_ID);
-
-        // Then
-        assertSame(singleConnectionAdapterMock, retrieved);
-        verifyNew(SingleConnectionAdapter.class, times(1))
->>>>>>> develop-domainQuery
                 .withArguments(sessionStorageMock, Object.class, SOME_MIME_TYPE, SOME_UU_ID);
     }
 
@@ -102,30 +83,18 @@ public class ConnectionsServiceTest extends PowerMockTestCase {
     public void should_return_proper_SingleConnectionAdapter_instance_by_class_mimeType_uuid() throws Exception {
 
         // Given
-<<<<<<< HEAD
         whenNew(SingleConnectionsAdapter.class)
-=======
-        whenNew(SingleConnectionAdapter.class)
->>>>>>> develop-domainQuery
                 .withArguments(sessionStorageMock, ClientCustomDataSource.class, SOME_MIME_TYPE, SOME_UU_ID)
                 .thenReturn(singleConnectionAdapterMock);
 
         ConnectionsService connectionsService = new ConnectionsService(sessionStorageMock);
 
         // When
-<<<<<<< HEAD
         SingleConnectionsAdapter retrieved = connectionsService.connection(ClientCustomDataSource.class, SOME_MIME_TYPE, SOME_UU_ID);
 
         // Then
         assertSame(singleConnectionAdapterMock, retrieved);
         verifyNew(SingleConnectionsAdapter.class, times(1))
-=======
-        SingleConnectionAdapter retrieved = connectionsService.connection(ClientCustomDataSource.class, SOME_MIME_TYPE, SOME_UU_ID);
-
-        // Then
-        assertSame(singleConnectionAdapterMock, retrieved);
-        verifyNew(SingleConnectionAdapter.class, times(1))
->>>>>>> develop-domainQuery
                 .withArguments(sessionStorageMock, ClientCustomDataSource.class, SOME_MIME_TYPE, SOME_UU_ID);
     }
 
@@ -133,31 +102,19 @@ public class ConnectionsServiceTest extends PowerMockTestCase {
     public void should_return_proper_SingleConnectionAdapter_instance_by_connection_metadata_class_mimeType_uuid() throws Exception {
 
         // Given
-<<<<<<< HEAD
         whenNew(SingleConnectionsAdapter.class)
-=======
-        whenNew(SingleConnectionAdapter.class)
->>>>>>> develop-domainQuery
                 .withArguments(sessionStorageMock, SOME_UU_ID, TableMetadata.class, METADATA_MIME_TYPE)
                 .thenReturn(singleConnectionAdapterMock);
 
         ConnectionsService connectionsService = new ConnectionsService(sessionStorageMock);
 
         // When
-<<<<<<< HEAD
         SingleConnectionsAdapter retrieved = connectionsService.
-=======
-        SingleConnectionAdapter retrieved = connectionsService.
->>>>>>> develop-domainQuery
                 connection(SOME_UU_ID, TableMetadata.class, METADATA_MIME_TYPE);
 
         // Then
         assertSame(singleConnectionAdapterMock, retrieved);
-<<<<<<< HEAD
         verifyNew(SingleConnectionsAdapter.class, times(1))
-=======
-        verifyNew(SingleConnectionAdapter.class, times(1))
->>>>>>> develop-domainQuery
                 .withArguments(sessionStorageMock, SOME_UU_ID, TableMetadata.class, METADATA_MIME_TYPE);
     }
 }

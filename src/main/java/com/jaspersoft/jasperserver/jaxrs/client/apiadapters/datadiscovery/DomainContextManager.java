@@ -1,8 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
-import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
-import com.jaspersoft.jasperserver.dto.resources.domain.DataIslandsContainer;
+import com.jaspersoft.jasperserver.dto.resources.domain.PresentationGroupElement;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType;
@@ -28,18 +27,18 @@ public class DomainContextManager {
                 create(domain);
     }
 
-    public OperationResult<DataIslandsContainer> fetchMetadataById(String id) {
+    public OperationResult<PresentationGroupElement> fetchMetadataById(String id) {
         return new ConnectionsService(sessionStorage).connection(id,
-                DataIslandsContainer.class,
+                PresentationGroupElement.class,
                 ConnectionMediaType.DOMAIN_METADATA_TYPE).
                 metadata();
     }
 
-    public OperationResult<DataIslandsContainer> fetchMetadataByContext(ClientSemanticLayerDataSource domain) {
+    public OperationResult<PresentationGroupElement> fetchMetadataByContext(ClientSemanticLayerDataSource domain) {
         return new ConnectionsService(sessionStorage).
                 connection(ClientSemanticLayerDataSource.class,
                         ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE,
-                        DataIslandsContainer.class,
+                        PresentationGroupElement.class,
                         ConnectionMediaType.DOMAIN_METADATA_TYPE).
                 createAndGetMetadata(domain);
     }

@@ -7,10 +7,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientJdbcDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientJndiJdbcDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
-<<<<<<< HEAD:src/main/java/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/connections/SingleConnectionsAdapter.java
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
-=======
->>>>>>> develop-domainQuery:src/main/java/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/connections/SingleConnectionAdapter.java
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.query.SingleQueryAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
@@ -60,44 +57,19 @@ public class SingleConnectionsAdapter<C, M> extends AbstractAdapter {
         this(sessionStorage, connectionClass, connectionMimeType, null, null, uuId);
     }
 
-<<<<<<< HEAD:src/main/java/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/connections/SingleConnectionsAdapter.java
     public SingleConnectionsAdapter(SessionStorage sessionStorage, String uuId, Class<M> metadataClass,
                                    String metadataMimeType) {
         this(sessionStorage, null, null, metadataClass, metadataMimeType, uuId);
     }
     public SingleConnectionsAdapter(SessionStorage sessionStorage, Class<C> connectionClass,
-=======
-    public SingleConnectionAdapter(SessionStorage sessionStorage, Class<C> connectionClass,
-                                   String connectionMimeType) {
-        this(sessionStorage, connectionClass, connectionMimeType, null, null, null);
-    }
-
-    public SingleConnectionAdapter(SessionStorage sessionStorage, Class<C> connectionClass,
-                                   String connectionMimeType, String uuId) {
-        this(sessionStorage, connectionClass, connectionMimeType, null, null, uuId);
-    }
-
-    public SingleConnectionAdapter(SessionStorage sessionStorage, String uuId, Class<M> metadataClass,
-                                   String metadataMimeType) {
-        this(sessionStorage, null, null, metadataClass, metadataMimeType, uuId);
-    }
-    public SingleConnectionAdapter(SessionStorage sessionStorage, Class<C> connectionClass,
->>>>>>> develop-domainQuery:src/main/java/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/connections/SingleConnectionAdapter.java
                                    String connectionMimeType,
                                    Class<M> metadataClass,
                                    String metadataMimeType) {
         this(sessionStorage, connectionClass, connectionMimeType, metadataClass, metadataMimeType, null);
     }
-<<<<<<< HEAD:src/main/java/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/connections/SingleConnectionsAdapter.java
     public SingleConnectionsAdapter(SessionStorage sessionStorage, String uuId) {
         this(sessionStorage, (Class<C>)Object.class, null, null, null, uuId);
     }
-=======
-    public SingleConnectionAdapter(SessionStorage sessionStorage, String uuId) {
-        this(sessionStorage, (Class<C>)Object.class, null, null, null, uuId);
-    }
-
->>>>>>> develop-domainQuery:src/main/java/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/connections/SingleConnectionAdapter.java
     @SuppressWarnings("unchecked")
     public OperationResult<C> create(C connection) {
         if (!isConnectionTypeValid(connection)) {
@@ -191,10 +163,7 @@ public class SingleConnectionsAdapter<C, M> extends AbstractAdapter {
         }
         return (connection instanceof FtpConnection ||
                 connection instanceof LfsConnection ||
-<<<<<<< HEAD:src/main/java/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/connections/SingleConnectionsAdapter.java
                 connection instanceof ClientDomain ||
-=======
->>>>>>> develop-domainQuery:src/main/java/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/connections/SingleConnectionAdapter.java
                 connection instanceof ClientSemanticLayerDataSource ||
                 connection instanceof ClientCustomDataSource ||
                 connection instanceof ClientJndiJdbcDataSource ||
