@@ -30,6 +30,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * @deprecated proposal. Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryExecutionAdapter}
+ */
 public class QueryExecutorAdapter extends AbstractAdapter {
     public static final String QUERY_EXECUTOR_URI = "queryExecutor";
     private ArrayList<String> path = new ArrayList<String>();

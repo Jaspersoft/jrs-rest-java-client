@@ -7,7 +7,13 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
+<<<<<<< HEAD
     <version>6.3.4-SNAPSHOT</version>
+=======
+
+    <version>6.2.1_domain_metadata_query</version>
+
+>>>>>>> develop-domainQuery
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
@@ -189,6 +195,7 @@
                             </exclude>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/exceptions/**</exclude>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/enums/**</exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/adhoc/queryexecution/enums/**</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
@@ -210,6 +217,7 @@
                 <version>2.12</version>
                 <configuration>
                     <skipTests>false</skipTests>
+                    <testFailureIgnore>true</testFailureIgnore>
                     <excludes>
                         <exclude>**/IT.java</exclude>
                     </excludes>

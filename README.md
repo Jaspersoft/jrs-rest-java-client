@@ -83,13 +83,6 @@ Table of Contents
     * [Uploading ReportUnit](#uploading-reportunit).
     * [Uploading File Resources](#uploading-file-resources).
     * [Deleting Resources](#deleting-resources).
-  2. [The Permissions Service](#the-permissions-service).
-    * [Viewing Multiple Permissions](#viewing-multiple-permissions).
-    * [Viewing a Single Permission](#viewing-a-single-permission).
-    * [Setting Multiple Permissions](#setting-multiple-permissions).
-    * [Setting a Single Permission](#setting-a-single-permission).
-    * [Deleting Permissions in Bulk](#deleting-permissions-in-bulk).
-    * [Deleting a Single Permission](#deleting-a-single-permission).
 8. [Jobs service](#jobs-service).
   * [Listing Report Jobs](#listing-report-jobs).
   * [Viewing a Job Definition](#viewing-a-job-definition).
@@ -112,7 +105,9 @@ Table of Contents
     * [Fetching the Export Output](#fetching-the-export-output).
   2. [Import service](#import-service).
     * [Checking the Import State](#checking-the-import-state).
-11. [Domain metadata service](#domainmetadata-service).
+11. [Metadata](#metadata).
+    *[Domain Metadata](#domain-metadata)
+    *[Report Metadata](#report-metadata)
 12. [Thumbnail Search Service](#thumbnail-search-service).
 13. [Diagnostic Service](#diagnostic-service).
 14. [Query Executor Service](#query-executor-service).
@@ -1939,23 +1934,66 @@ Also you can restart import task:
                 .getEntity();
 ```
 
-####DomainMetadata Service
-The DomainMetadata Service gives access to the sets and items exposed by a Domain for use in Ad
+####Metadata 
+#####Domain Metadata 
+The domain metadata describes the sets and items exposed by a Domain for use in Ad
 Hoc reports. Items are database fields exposed by the Domain, after all joins, filters, and calculated fields have
 been applied to the database tables selected in the Domain. Sets are groups of items, arranged by the Domain
 creator for use by report creators.
-
-A limitation of the DomainMetadata Service only allows it to operate on Domains with a single data
-island. A data island is a group of fields that are all related by joins between the database tables in the
-Domain. Fields that belong to tables that are not joined in the Domain belong to separate data islands.
-
-The following code retrieves metadata of Domain.
+To get domain metadata use code below:
 ```java
-DomainMetaData domainMetaData = session.domainService()
-        .domainMetadata("/Foodmart_Sales")
-        .retrieve()
-        .getEntity();
+// create domain context by Id of context
+ ClientSemanticLayerDataSource domainContext = new ClientSemanticLayerDataSource().
+                                                setUri("/organizations/organization_1/Domains/Simple_Domain");
+        OperationResult<ClientSemanticLayerDataSource> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .create(domainContext);
+// get uuId of context from "Location" header of response
+// get metadata of domain bi uuId of context
+        OperationResult<DataIslandsContainer> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .fetchMetadataById(uuId); 
+                
+// or you can get metadata by context directly
+
+        OperationResult<DataIslandsContainer> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .fetchMetadataByContext(domainContext);
+                
+        DataIslandsContainer metadata = operationResult.getEntity();
 ```
+#####Report Metadata 
+Report metadata is used for building AdHoc and query accordingly. 
+To get metadata use next code example:
+```java
+// create domain context by Id of context
+ClientReportUnit reportUnit = new ClientReportUnit().setUri("/public/Samples/Domains/supermartDomain");
+
+         OperationResult<ClientReportUnit> operationResult = session
+                        .dataDiscoveryService()
+                        .topicContext()
+                        .create(reportUnit);
+// get uuId of context from "Location" header of response
+// get metadata of domain bi uuId of context
+         OperationResult<ResourceGroupElement> operationResult = session
+                        .dataDiscoveryService()
+                        .topicContext()
+                        .fetchMetadataById(uuId);
+         ResourceGroupElement metadata = operationResult.getEntity();
+                
+// or you can get metadata by context directly
+
+         OperationResult<ResourceGroupElement> operationResult = session
+                        .dataDiscoveryService()
+                        .topicContext()
+                        .fetchMetadataByContext(reportUnit);
+                
+        ResourceGroupElement metadata = operationResult.getEntity();
+```
+
 ####Thumbnail Search Service
 This service is used for requesting a thumbnail image of an existing resource. You can get a single resource. See code below.
 ```java
@@ -2097,16 +2135,57 @@ OperationResult<CollectorSettingsList> operationResult = session
                                 .delete();
 ```
 
-###Query Executor Service
-In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
-For now the only resource that supports queries is a Domain.
+###Query Execution Service
+In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecution service.
+For now the only resource that supports queries is an AdHoc data view. In present time JasperReportsServer supports only synchronize query execution.
 
-The following code executes query and retrieves a result of execution as QueryResult entity.
+The following code examples execute query and retrieve a result data for different queries:
+- for flat query:
 ```java
-QueryResult queryResult = session.queryExecutorService()
-        .query(queryFromXmlFile, "/organizations/organization_1/Domains/Simple_Domain")
-        .execute()
-        .getEntity();
+ OperationResult<ClientFlatQueryResultData> execute = session.
+                                queryExecutionService().
+                                flatQuery().
+                                execute(queryExecution);
+```
+- for multi level query:
+```java
+        OperationResult<ClientMultiLevelQueryResultData> execute = session.
+                queryExecutionService().
+                multiLevelQuery().
+                execute(queryExecution);
+```
+- for multi axes query:
+```java
+        OperationResult execute = session.
+                queryExecutionService().
+                multiAxesQuery().
+                execute(queryExecution);
+```
+- for provided query:
+```java
+        OperationResult<? extends ClientQueryResultData> execute = session.
+                queryExecutionService().
+                providedQuery().
+                execute(queryExecution);
+```
+Please notice, that the client resolve type of result dataset according to "Content-Type" header of server's response. 
+
+Also you can get fragment of result data:
+```java
+        OperationResult<? extends ClientQueryResultData> execute = session.
+                queryExecutionService().
+                providedQuery().
+                offset(0).
+                pageSize(100).
+                retrieveData(uuId);
+     // where uuId   - is Id of query execution, that you can obtain from "Content-Location" header of server's response after execution query.
+```
+And you can delete execution using the following code:
+```java
+        OperationResult<? extends ClientQueryResultData> execute = session.
+                queryExecutionService().
+                providedQuery().
+                deleteExecution(uuId);
 ```
 
 ###Server Information Service
