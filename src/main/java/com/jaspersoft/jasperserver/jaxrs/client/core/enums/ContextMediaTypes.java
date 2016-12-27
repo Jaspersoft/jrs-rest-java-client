@@ -21,7 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.enums;
 
-public final class ConnectionMediaType {
+public final class ContextMediaTypes {
 
     public static final String FTP_TYPE = "application/connections.ftp";
     public static final String FTP_JSON = "application/connections.ftp+json";
@@ -55,9 +55,17 @@ public final class ConnectionMediaType {
     public static final String DOMAIN_DATA_SOURCE_JSON = "application/repository.semanticLayerDataSource+json";
     public static final String DOMAIN_DATA_SOURCE_XML = "application/repository.semanticLayerDataSource+xml";
 
-    public static final String DOMAIN_METADATA_TYPE = "application/repository.semanticLayerDataSource.metadata";
-    public static final String DOMAIN_METADATA_JSON = "application/repository.semanticLayerDataSource.metadata+json";
-    public static final String DOMAIN_METADATA_XML = "application/repository.semanticLayerDataSource.metadata+xml";
+    public static final String DOMAIN_TYPE = "application/repository.domain";
+    public static final String DOMAIN_JSON = "application/repository.domain+json";
+    public static final String DOMAIN_XML = "application/repository.domain+xml";
+
+    public static final String DOMAIN_METADATA_TYPE = "application/repository.domain.metadata";
+    public static final String DOMAIN_METADATA_JSON = "application/repository.domain.metadata+json";
+    public static final String DOMAIN_METADATA_XML = "application/repository.domain.metadata+xml";
+
+    public static final String DOMAIN_DATA_SOURCE_METADATA_TYPE = "application/repository.semanticLayerDataSource.metadata";
+    public static final String DOMAIN_DATA_SOURCE_METADATA_JSON = "application/repository.semanticLayerDataSource.metadata+json";
+    public static final String DOMAIN_DATA_SOURCE_METADATA_XML = "application/repository.semanticLayerDataSource.metadata+xml";
 
     public static final String REPORT_UNIT_TYPE = "application/repository.reportUnit";
     public static final String REPORT_UNIT_JSON = "application/repository.reportUnit+json";
@@ -75,5 +83,5 @@ public final class ConnectionMediaType {
     public static final String XLS_FILE_JSON = "application/connections.xlsFile+json";
     public static final String XLS_FILE_XML = "application/connections.xlsFile+xml";
 
-    private ConnectionMediaType(){}
+    private ContextMediaTypes(){}
 }

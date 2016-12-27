@@ -2,9 +2,9 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.dto.resources.domain.ResourceGroupElement;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextService;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 /**
@@ -22,25 +22,26 @@ public class TopicContextManager {
     }
 
     public OperationResult<ClientReportUnit> create(ClientReportUnit reportUnit) {
-        return new ConnectionsService(sessionStorage).
-                connection(ClientReportUnit.class,
-                        ConnectionMediaType.REPORT_UNIT_TYPE).
+        return new ContextService(sessionStorage).
+                context(ClientReportUnit.class,
+                        ContextMediaTypes.REPORT_UNIT_JSON).
                 create(reportUnit);
     }
 
     public OperationResult<ResourceGroupElement> fetchMetadataById(String id) {
-        return new ConnectionsService(sessionStorage).connection(id,
+        return new ContextService(sessionStorage).
+                context(id,
                 ResourceGroupElement.class,
-                ConnectionMediaType.REPORT_UNIT_METADATA_TYPE).
+                ContextMediaTypes.REPORT_UNIT_METADATA_JSON).
                 metadata();
     }
 
     public OperationResult<ResourceGroupElement> fetchMetadataByContext(ClientReportUnit reportUnit) {
-        return new ConnectionsService(sessionStorage).
-                connection(ClientReportUnit.class,
-                        ConnectionMediaType.REPORT_UNIT_TYPE,
+        return new ContextService(sessionStorage).
+                context(ClientReportUnit.class,
+                        ContextMediaTypes.REPORT_UNIT_JSON,
                         ResourceGroupElement.class,
-                        ConnectionMediaType.REPORT_UNIT_METADATA_TYPE).
+                        ContextMediaTypes.REPORT_UNIT_METADATA_JSON).
                 createAndGetMetadata(reportUnit);
     }
 }

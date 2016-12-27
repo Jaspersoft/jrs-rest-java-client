@@ -24,6 +24,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
  * @author tetiana.iefimenko
  * @version $Id$
  * @see
+ *
+ * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.SingleContextAdapter}
  */
 public class SingleConnectionsAdapter<C, M> extends AbstractAdapter {
 

@@ -10,6 +10,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
  * @author tetiana.iefimenko
  * @version $Id$
  * @see
+ *
+ * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextService}
  */
 public class ConnectionsService extends AbstractAdapter {
 

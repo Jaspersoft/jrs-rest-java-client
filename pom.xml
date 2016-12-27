@@ -7,14 +7,14 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>6.3.4-SNAPSHOT</version>
+    <version>develop-context-SNAPSHOT</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <jasperserver-dto.version>trunk-SNAPSHOT</jasperserver-dto.version>
+        <jasperserver-dto.version>domain-designer-SNAPSHOT</jasperserver-dto.version>
     </properties>
 
     <scm>
@@ -211,7 +211,7 @@
                 <version>2.12</version>
                 <configuration>
                     <skipTests>false</skipTests>
-                    <testFailureIgnore>true</testFailureIgnore>
+                    <testFailureIgnore>false</testFailureIgnore>
                     <excludes>
                         <exclude>**/IT.java</exclude>
                     </excludes>

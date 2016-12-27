@@ -2,10 +2,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.dto.resources.domain.ResourceGroupElement;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.SingleConnectionsAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.SingleContextAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
@@ -28,11 +29,11 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({ConnectionsService.class, SessionStorage.class, SingleConnectionsAdapter.class, TopicContextManager.class})
+@PrepareForTest({ContextService.class, SessionStorage.class, SingleConnectionsAdapter.class, TopicContextManager.class})
 public class TopicContextManagerTest extends PowerMockTestCase {
     private SessionStorage sessionStorageMock;
-    private ConnectionsService connectionsServiceMock;
-    private SingleConnectionsAdapter connectionAdapterMock;
+    private ContextService contextServiceMock;
+    private SingleContextAdapter contextAdapterMock;
     private OperationResult<ClientReportUnit> operationResultMock;
     private OperationResult<ResourceGroupElement> resourceGroupElementOperationResult;
 
@@ -40,15 +41,15 @@ public class TopicContextManagerTest extends PowerMockTestCase {
     @BeforeMethod
     public void before() {
         sessionStorageMock = mock(SessionStorage.class);
-        connectionsServiceMock = mock(ConnectionsService.class);
-        connectionAdapterMock = mock(SingleConnectionsAdapter.class);
+        contextServiceMock = mock(ContextService.class);
+        contextAdapterMock = mock(SingleContextAdapter.class);
         operationResultMock = mock(OperationResult.class);
         resourceGroupElementOperationResult = mock(OperationResult.class);
     }
 
     @AfterMethod
     public void after() {
-        reset(sessionStorageMock, connectionAdapterMock, connectionsServiceMock, operationResultMock, resourceGroupElementOperationResult);
+        reset(sessionStorageMock, contextAdapterMock, contextServiceMock, operationResultMock, resourceGroupElementOperationResult);
     }
 
 
@@ -65,10 +66,10 @@ public class TopicContextManagerTest extends PowerMockTestCase {
         // When
 
         ClientReportUnit reportUnit = spy(new ClientReportUnit());
-        PowerMockito.whenNew(ConnectionsService.class).withArguments(sessionStorageMock).thenReturn(connectionsServiceMock);
-        PowerMockito.when(connectionsServiceMock.connection(ClientReportUnit.class,
-                ConnectionMediaType.REPORT_UNIT_TYPE)).thenReturn(connectionAdapterMock);
-        PowerMockito.when(connectionAdapterMock.create(reportUnit)).thenReturn(operationResultMock);
+        PowerMockito.whenNew(ContextService.class).withArguments(sessionStorageMock).thenReturn(contextServiceMock);
+        PowerMockito.when(contextServiceMock.context(ClientReportUnit.class,
+                ContextMediaTypes.REPORT_UNIT_JSON)).thenReturn(contextAdapterMock);
+        PowerMockito.when(contextAdapterMock.create(reportUnit)).thenReturn(operationResultMock);
 
         OperationResult<ClientReportUnit> retrievedOperationResult = new TopicContextManager(sessionStorageMock).create(reportUnit);
         //Then
@@ -80,12 +81,12 @@ public class TopicContextManagerTest extends PowerMockTestCase {
         // When
 
         String someId = "someId";
-        PowerMockito.whenNew(ConnectionsService.class).withArguments(sessionStorageMock).thenReturn(connectionsServiceMock);
-        PowerMockito.when(connectionsServiceMock.connection(someId,
+        PowerMockito.whenNew(ContextService.class).withArguments(sessionStorageMock).thenReturn(contextServiceMock);
+        PowerMockito.when(contextServiceMock.context(someId,
                 ResourceGroupElement.class,
-                ConnectionMediaType.REPORT_UNIT_METADATA_TYPE)).
-                thenReturn(connectionAdapterMock);
-        PowerMockito.when(connectionAdapterMock.metadata()).thenReturn(resourceGroupElementOperationResult);
+                ContextMediaTypes.REPORT_UNIT_METADATA_JSON)).
+                thenReturn(contextAdapterMock);
+        PowerMockito.when(contextAdapterMock.metadata()).thenReturn(resourceGroupElementOperationResult);
 
         OperationResult<ResourceGroupElement> retrievedOperationResult = new TopicContextManager(sessionStorageMock).
                 fetchMetadataById(someId);
@@ -99,13 +100,13 @@ public class TopicContextManagerTest extends PowerMockTestCase {
         // When
 
         ClientReportUnit reportUnit = spy(new ClientReportUnit());
-        PowerMockito.whenNew(ConnectionsService.class).withArguments(sessionStorageMock).thenReturn(connectionsServiceMock);
-        PowerMockito.when(connectionsServiceMock.connection(ClientReportUnit.class,
-                ConnectionMediaType.REPORT_UNIT_TYPE,
+        PowerMockito.whenNew(ContextService.class).withArguments(sessionStorageMock).thenReturn(contextServiceMock);
+        PowerMockito.when(contextServiceMock.context(ClientReportUnit.class,
+                ContextMediaTypes.REPORT_UNIT_JSON,
                 ResourceGroupElement.class,
-                ConnectionMediaType.REPORT_UNIT_METADATA_TYPE
-                )).thenReturn(connectionAdapterMock);
-        PowerMockito.when(connectionAdapterMock.createAndGetMetadata(reportUnit)).thenReturn(resourceGroupElementOperationResult);
+                ContextMediaTypes.REPORT_UNIT_METADATA_JSON
+                )).thenReturn(contextAdapterMock);
+        PowerMockito.when(contextAdapterMock.createAndGetMetadata(reportUnit)).thenReturn(resourceGroupElementOperationResult);
 
         OperationResult<ResourceGroupElement> retrievedOperationResult = new TopicContextManager(sessionStorageMock).fetchMetadataByContext(reportUnit);
         //Then
