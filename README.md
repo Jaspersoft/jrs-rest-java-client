@@ -7,47 +7,47 @@ Table of Contents
 ------------------
 1. [Introduction](#introduction).
 2. [Configuration](#configuration).
-  * [Loading configuration from file](#loading-configuration-from-file).
-  * [Creation of manual configuration](#creation-of-manual-configuration).
-  * [HTTPS configuration](#https-configuration).
-  * [X-HTTP-Method override](#x-http-method-override).
-  * [Switching of authentication type](#switching-authentication-type).
-  * [Exception handling](#exception-handling).
-  * [Logging](#logging).
-  * [Switching between JSON and XML](#switching-between-json-and-xml).
-  * [Client instantiation](#client-instantiation).
+   * [Loading configuration from file](#loading-configuration-from-file).
+   * [Creation of manual configuration](#creation-of-manual-configuration).
+   * [HTTPS configuration](#https-configuration).
+   * [X-HTTP-Method override](#x-http-method-override).
+   * [Switching of authentication type](#switching-authentication-type).
+   * [Exception handling](#exception-handling).
+   * [Logging](#logging).
+   * [Switching between JSON and XML](#switching-between-json-and-xml).
+   * [Client instantiation](#client-instantiation).
 3. [Authentication](#authentication).
-  * [Anonymous session](#anonymous-session).
-  * [Invalidating session](#invalidating-session).
+   * [Anonymous session](#anonymous-session).
+   * [Invalidating session](#invalidating-session).
 4. [Report services](#report-services).
-  * [Running a report](#running-a-report).
-  * [Requesting report execution status](#requesting-report-execution-status).
-  * [Requesting report execution details](#requesting-report-execution-details).
-  * [Requesting Report Output](#requesting-report-output).
-  * [Download file attachments for report output](#download-file-attachments-for-report-output).
-  * [Exporting a Report Asynchronously](#exporting-a-report-asynchronously).
-  * [Polling Export Execution](#polling-export-execution).
-  * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
-  * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
+   * [Running a report](#running-a-report).
+   * [Requesting report execution status](#requesting-report-execution-status).
+   * [Requesting report execution details](#requesting-report-execution-details).
+   * [Requesting Report Output](#requesting-report-output).
+   * [Download file attachments for report output](#download-file-attachments-for-report-output).
+   * [Exporting a Report Asynchronously](#exporting-a-report-asynchronously).
+   * [Polling Export Execution](#polling-export-execution).
+   * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
+   * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
 5. [Input controls service](#input-controls-service).
-  * [Listing input controls structure](#listing-input-controls-structure).
-  * [Reordering input controls structure](#reordering-input-controls-structure).
-  * [Listing input controls values](#listing-input-controls-values).
-  * [Setting input controls values](#setting-input-controls-values).
+   * [Listing input controls structure](#listing-input-controls-structure).
+   * [Reordering input controls structure](#reordering-input-controls-structure).
+   * [Listing input controls values](#listing-input-controls-values).
+   * [Setting input controls values](#setting-input-controls-values).
 6. [Administration services](#administration-services).
-  1. [Organizations service](#organizations-service).
+   1. [Organizations service](#organizations-service).
     * [Searching for Organizations](#searching-for-organizations).
     * [Viewing an Organization](#viewing-an-organization).
     * [Creating an Organization](#creating-an-organization).
     * [Modifying Organization Properties](#modifying-organization-properties).
     * [Deleting an Organization](#deleting-an-organization).
-  2. [Users service](#users-service).
+   2. [Users service](#users-service).
     * [Searching for Users](#searching-for-users).
     * [Viewing a User](#viewing-a-user).
     * [Creating a User](#creating-a-user).
     * [Modifying User Properties](#modifying-user-properties).
     * [Deleting a User](#deleting-a-user).
-  3. [Attributes service](#attributes-service).
+   3. [Attributes service](#attributes-service).
     * [Viewing User Attributes](#viewing-user-attributes).
     * [Setting User Attributes](#setting-user-attributes).
     * [Deleting User Attributes](#deleting-user-attributes).
@@ -59,17 +59,17 @@ Table of Contents
     * [Deleting Server Attributes](#deleting-server-attributes).
     * [Getting attributes permissions](#getting-attributes-permissions).
     * [Searching attributes ](#searching-attributes).
-  4. [The Roles Service](#the-roles-service).
+   4. [The Roles Service](#the-roles-service).
     * [Searching for Roles](#searching-for-roles).
     * [Viewing a Role](#viewing-a-role).
     * [Creating a Role](#creating-a-role).
     * [Modifying a Role](#modifying-a-role).
     * [Setting Role Membership](#setting-role-membership).
     * [Deleting a Role](#deleting-a-role).
-  5. [The Settings Service](#settings-service).
+   5. [The Settings Service](#settings-service).
     * [Getting server specific settings](#getting-server-specific-settings).
 7. [Repository Services](#repository-services).
-  1. [Resources Service](#resources-service).
+   1. [Resources Service](#resources-service).
     * [Searching the Repository](#searching-the-repository).
     * [Viewing Resource Details](#viewing-resource-details).
     * [Downloading File Resources](#downloading-file-resources).
@@ -83,7 +83,7 @@ Table of Contents
     * [Uploading ReportUnit](#uploading-reportunit).
     * [Uploading File Resources](#uploading-file-resources).
     * [Deleting Resources](#deleting-resources).
-  2. [The Permissions Service](#the-permissions-service).
+   2. [The Permissions Service](#the-permissions-service).
     * [Viewing Multiple Permissions](#viewing-multiple-permissions).
     * [Viewing a Single Permission](#viewing-a-single-permission).
     * [Setting Multiple Permissions](#setting-multiple-permissions).
@@ -108,23 +108,24 @@ Table of Contents
   * [Deleting an Exclusion Calendar](#deleting-an-exclusion-calendar).
 10. [Import/Export](#importexport).
   1. [Export service](#export-service).
-    * [Checking the Export State](#checking-the-export-state).
-    * [Fetching the Export Output](#fetching-the-export-output).
+   * [Checking the Export State](#checking-the-export-state).
+   * [Fetching the Export Output](#fetching-the-export-output).
   2. [Import service](#import-service).
-    * [Checking the Import State](#checking-the-import-state).
+  * [Checking the Import State](#checking-the-import-state).
 11. [Metadata](#metadata).
-    *[Domain Metadata](#domain-metadata)
-    *[Report Metadata](#report-metadata)
+  *[Domain Metadata](#domain-metadata)
+  *[Report Metadata](#report-metadata)
 12. [Thumbnail Search Service](#thumbnail-search-service).
 13. [Diagnostic Service](#diagnostic-service).
-14. [Query Executor Service](#query-executor-service).
-15. [Server Information Service](#server-information-service).
-16. [Bundles service](#bundles-service).
-17. [Asynchronous API](#asynchronous-api).
-18. [Getting serialized content from response](#getting-serialized-content-from-response).
-19. [Possible issues](#possible-issues).
-20. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-21. [License](#license).
+14. [Contexts Service] (#contexts-service).
+15. [Query Executor Service](#query-executor-service).
+16. [Server Information Service](#server-information-service).
+17. [Bundles service](#bundles-service).
+18. [Asynchronous API](#asynchronous-api).
+19. [Getting serialized content from response](#getting-serialized-content-from-response).
+20. [Possible issues](#possible-issues).
+21. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+22. [License](#license).
 
 Introduction
 -------------
@@ -2145,6 +2146,113 @@ OperationResult<CollectorSettingsList> operationResult = session
                                 .diagnosticService()
                                 .allCollectors()
                                 .delete();
+```
+
+###Contexts Service
+
+Using the service you are able to keep some state or context on the server and execute some actions on this state. General service have next API:
+- save context: 
+```java
+        OperationResult<ContextClass> operationResult = session
+                .contextService()
+                .context(contextClass, contextMimeType)
+                .create(context);
+```
+Response header `"Content-Location"`contains contextUuid.
+
+- get context:
+```java
+        OperationResult<ContextClass> operationResult = session
+                .contextService()
+                .context(contextClass, contextMimeType, uuId)
+                .create(context);
+```
+
+- modify context:
+```java
+        OperationResult<ContextClass> operationResult = session
+                .contextService()
+                .context(contextClass, contextMimeType, uuId)
+                .update(context);
+```
+- delete context:
+```java
+        OperationResult<ContextClass> operationResult = session
+                .contextService()
+                .context(uuId)
+                .delete();
+```
+- get context metadata:
+```java
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(uuId, contextMatadataClass, contextMetadataMimeType)
+                .metadata();
+```
+- create context and get context metadata:
+```java
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(contextClass, contextMimeType,contextMatadataClass, contextMetadataMimeType)
+                .createAndGetMetadata(context);
+```
+###Data Discovery Service
+
+The service based on Context Service and allows to work with supported contexts(Domain, DomEl, reports etc) directly.
+
+####Domain data discovery 
+This API allows to execute query of in-memory domain. I.e. domain, that doesn't exist in repository.
+
+```java
+   private String uuId; // available in Content-Location header in responce
+   private ClientDomain domainContext = new ClientDomain().setUri("/public/Samples/Domains/supermartDomain");
+
+// create context
+        OperationResult<ClientDomain> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .create(domainContext);
+// get context metadata
+        OperationResult<PresentationGroupElement> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .fetchMetadataById(uuId);
+// create context and get metadata
+        OperationResult<PresentationGroupElement> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .fetchMetadataByContext(domainContext);
+```
+####DomEl data discovery 
+This API allows to validate DomEL expressions and convert them from string representation to object representation and back.
+
+```java
+   private DomElExpressionContext expressionStringContext;
+   private DomElExpressionContext expressionObjectContext;
+
+        expressionObjectContext = new DomElExpressionContext().
+                setExpression(new ClientExpressionContainer().setObject(new ClientFunction().
+                        setFunctionName("concat").addOperand(new ClientVariable("test")).addOperand(new ClientVariable("test1")).addOperand(new ClientVariable("b")))).
+                setVariables(Arrays.asList(new DomElVariable().setName("test").setType("java.lang.String"),
+                        new DomElVariable().setName("test1").setType("java.lang.String"))).
+                setResultType("java.lang.String");
+
+        expressionStringContext= new DomElExpressionContext().
+                setExpression(new ClientExpressionContainer().setString("concat(test, test1,'b')")).
+                setVariables(Arrays.asList(new DomElVariable().setName("test").setType("java.lang.String"),
+                        new DomElVariable().setName("test1").setType("java.lang.String"))).
+                setResultType("java.lang.String");
+
+// convert sring expression to object representation
+        OperationResult<DomElExpressionContext> operationResult = session
+                .dataDiscoveryService()
+                .domElContext()
+                .create(expressionStringContext);
+// convert object representation o fexpression to stirng view
+        OperationResult<DomElExpressionContext> operationResult = session
+                .dataDiscoveryService()
+                .domElContext()
+                .create(expressionStringContext);
 ```
 
 ###Query Execution Service

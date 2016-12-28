@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context;
 
+import com.jaspersoft.jasperserver.dto.connection.FtpConnection;
 import com.jaspersoft.jasperserver.dto.connection.LfsConnection;
 import com.jaspersoft.jasperserver.dto.domain.DomElExpressionContext;
 import com.jaspersoft.jasperserver.dto.resources.ClientCustomDataSource;
@@ -45,6 +46,7 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
         this.metadataClass = metadataClass;
         this.metadataMimeType = metadataMimeType;
     }
+
     public SingleContextAdapter(SessionStorage sessionStorage, Class<C> contextClass,
                                 String contextMimeType) {
         this(sessionStorage, contextClass, contextMimeType, null, null, null);
@@ -59,15 +61,18 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
                                 String metadataMimeType) {
         this(sessionStorage, null, null, metadataClass, metadataMimeType, uuId);
     }
+
     public SingleContextAdapter(SessionStorage sessionStorage, Class<C> contextClass,
                                 String contextMimeType,
                                 Class<M> metadataClass,
                                 String metadataMimeType) {
         this(sessionStorage, contextClass, contextMimeType, metadataClass, metadataMimeType, null);
     }
+
     public SingleContextAdapter(SessionStorage sessionStorage, String uuId) {
-        this(sessionStorage, (Class<C>)Object.class, null, null, null, uuId);
+        this(sessionStorage, (Class<C>) Object.class, null, null, null, uuId);
     }
+
     @SuppressWarnings("unchecked")
     public OperationResult<C> create(C context) {
         if (!isContextTypeValid(context)) {
@@ -96,7 +101,7 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
         JerseyRequest<C> jerseyRequest = buildRequest();
         if (contextMimeType != null) {
             jerseyRequest
-                    .setContentType(contextMimeType + "+{mime}");
+                    .setContentType(contextMimeType);
         }
         return jerseyRequest.put(context);
     }
@@ -150,6 +155,7 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
             throw new MandatoryParameterNotFoundException("context is null");
         }
         return (context instanceof LfsConnection ||
+                context instanceof FtpConnection ||
                 context instanceof ClientDomain ||
                 context instanceof ClientSemanticLayerDataSource ||
                 context instanceof ClientCustomDataSource ||
