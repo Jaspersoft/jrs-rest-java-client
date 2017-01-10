@@ -148,7 +148,9 @@ public class SingleResourceAdapter extends AbstractAdapter {
     private JerseyRequest<ClientResource> prepareCreateOrUpdateRequest(ClientResource resource) {
         Class<? extends ClientResource> resourceType = ResourcesTypeResolverUtil.getResourceType(resource);
         JerseyRequest<? extends ClientResource> request = buildRequest(resourceType);
-        request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), ResourcesTypeResolverUtil.getMimeType(resourceType)));
+        String resourceMimeType = ResourcesTypeResolverUtil.getMimeType(resourceType);
+        request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), resourceMimeType));
+        request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), resourceMimeType));
         request.addParams(params);
         return (JerseyRequest<ClientResource>) request;
     }
