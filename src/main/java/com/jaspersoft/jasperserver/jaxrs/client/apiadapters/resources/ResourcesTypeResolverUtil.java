@@ -45,6 +45,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientXmlaConnection;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
+import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -82,6 +83,7 @@ public class ResourcesTypeResolverUtil {
             put(ClientResourceLookup.class, ResourceMediaType.RESOURCE_LOOKUP_CLIENT_TYPE);
             put(ClientDashboard.class, ResourceMediaType.DASHBOARD_CLIENT_TYPE);
             put(ClientDomainTopic.class, ResourceMediaType.DOMAIN_TOPIC_CLIENT_TYPE);
+            put(ClientDomain.class, ResourceMediaType.DOMAIN_CLIENT_TYPE);
         }};
 
         for (Map.Entry<Class<? extends ClientResource>, String> entry : classToMimeMap.entrySet()) {
