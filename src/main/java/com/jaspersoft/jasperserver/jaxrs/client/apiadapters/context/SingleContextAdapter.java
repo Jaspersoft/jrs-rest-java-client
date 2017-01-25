@@ -7,6 +7,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientCustomDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientJdbcDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientJndiJdbcDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
+import com.jaspersoft.jasperserver.dto.resources.ClientResourceLookup;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
@@ -15,6 +16,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import javax.ws.rs.core.MultivaluedHashMap;
 
 /**
  * <p/>
@@ -33,6 +35,7 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
     private String contextMimeType;
     private Class<M> metadataClass;
     private String metadataMimeType;
+    private MultivaluedHashMap<String, String> params;
 
     public SingleContextAdapter(SessionStorage sessionStorage, Class<C> contextClass,
                                 String contextMimeType,
@@ -45,6 +48,7 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
         this.contextMimeType = contextMimeType;
         this.metadataClass = metadataClass;
         this.metadataMimeType = metadataMimeType;
+        params = new MultivaluedHashMap<>();
     }
 
     public SingleContextAdapter(SessionStorage sessionStorage, Class<C> contextClass,
@@ -71,6 +75,11 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
 
     public SingleContextAdapter(SessionStorage sessionStorage, String uuId) {
         this(sessionStorage, (Class<C>) Object.class, null, null, null, uuId);
+    }
+
+    public SingleContextAdapter<C, M> addParameter(String key, String value) {
+        params.add(key, value);
+        return this;
     }
 
     @SuppressWarnings("unchecked")
@@ -131,7 +140,23 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
                 new DefaultErrorHandler()
         );
         jerseyRequest.setAccept(metadataMimeType);
+        if (!params.isEmpty()) jerseyRequest.addParams(params);
         return jerseyRequest.get();
+    }
+
+    public OperationResult<M> partialMetadata() {
+        if (uuId == null || uuId.isEmpty()) {
+            throw new MandatoryParameterNotFoundException("Uuid of the context must be specified");
+        }
+
+        JerseyRequest<M> jerseyRequest = JerseyRequest.buildRequest(
+                sessionStorage,
+                metadataClass,
+                new String[]{SERVICE_URI, uuId, "metadata"},
+                new DefaultErrorHandler()
+        );
+        jerseyRequest.setContentType(metadataMimeType);
+        return jerseyRequest.post(params);
     }
 
     public OperationResult<M> createAndGetMetadata(C context) {
@@ -158,6 +183,7 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
                 context instanceof FtpConnection ||
                 context instanceof ClientDomain ||
                 context instanceof ClientSemanticLayerDataSource ||
+                context instanceof ClientResourceLookup ||
                 context instanceof ClientCustomDataSource ||
                 context instanceof ClientJndiJdbcDataSource ||
                 context instanceof ClientJdbcDataSource ||

@@ -2165,7 +2165,7 @@ Response header `"Content-Location"`contains contextUuid.
         OperationResult<ContextClass> operationResult = session
                 .contextService()
                 .context(contextClass, contextMimeType, uuId)
-                .create(context);
+                .get(context);
 ```
 
 - modify context:
@@ -2188,7 +2188,39 @@ Response header `"Content-Location"`contains contextUuid.
                 .contextService()
                 .context(uuId, contextMatadataClass, contextMetadataMimeType)
                 .metadata();
+
+// get context metadata with paramerets
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(uuId, contextMatadataClass, contextMetadataMimeType)
+                .addParameter("expand", "public.accounts")
+                .addParameter("", "")
+                .metadata();
+        
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(uuId, contextMatadataClass, contextMetadataMimeType)
+                .addParameter("include", "public.currency")
+                .metadata();
+        
+        // or
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(uuId, contextMatadataClass, contextMetadataMimeType)
+                .addParameter("expands", "public.account")
+                .addParameter("expands", "public.category")
+                .partialMetadata();
+        
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(uuId, contextMatadataClass, contextMetadataMimeType)
+                .addParameter("includes", "public.currency")
+                .partialMetadata();
 ```
+The difference between `.metadata()` and `.partialMetadata()` is in HTTP methods and a way to pass parameters:
+`.metadata()` - sends GET request and parameters as URL query parameters;
+`.partialMetadata()` - sends POST request and parameters as JSON;
+
 - create context and get context metadata:
 ```java
         OperationResult<ContextMetadataClass> operationResult = session
