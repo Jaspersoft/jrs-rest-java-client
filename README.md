@@ -35,19 +35,19 @@ Table of Contents
    * [Listing input controls values](#listing-input-controls-values).
    * [Setting input controls values](#setting-input-controls-values).
 6. [Administration services](#administration-services).
-   1. [Organizations service](#organizations-service).
+  1. [Organizations service](#organizations-service).
     * [Searching for Organizations](#searching-for-organizations).
     * [Viewing an Organization](#viewing-an-organization).
     * [Creating an Organization](#creating-an-organization).
     * [Modifying Organization Properties](#modifying-organization-properties).
     * [Deleting an Organization](#deleting-an-organization).
-   2. [Users service](#users-service).
+  2. [Users service](#users-service).
     * [Searching for Users](#searching-for-users).
     * [Viewing a User](#viewing-a-user).
     * [Creating a User](#creating-a-user).
     * [Modifying User Properties](#modifying-user-properties).
     * [Deleting a User](#deleting-a-user).
-   3. [Attributes service](#attributes-service).
+  3. [Attributes service](#attributes-service).
     * [Viewing User Attributes](#viewing-user-attributes).
     * [Setting User Attributes](#setting-user-attributes).
     * [Deleting User Attributes](#deleting-user-attributes).
@@ -59,17 +59,17 @@ Table of Contents
     * [Deleting Server Attributes](#deleting-server-attributes).
     * [Getting attributes permissions](#getting-attributes-permissions).
     * [Searching attributes ](#searching-attributes).
-   4. [The Roles Service](#the-roles-service).
+  4. [The Roles Service](#the-roles-service).
     * [Searching for Roles](#searching-for-roles).
     * [Viewing a Role](#viewing-a-role).
     * [Creating a Role](#creating-a-role).
     * [Modifying a Role](#modifying-a-role).
     * [Setting Role Membership](#setting-role-membership).
     * [Deleting a Role](#deleting-a-role).
-   5. [The Settings Service](#settings-service).
+  5. [The Settings Service](#settings-service).
     * [Getting server specific settings](#getting-server-specific-settings).
 7. [Repository Services](#repository-services).
-   1. [Resources Service](#resources-service).
+  1. [Resources Service](#resources-service).
     * [Searching the Repository](#searching-the-repository).
     * [Viewing Resource Details](#viewing-resource-details).
     * [Downloading File Resources](#downloading-file-resources).
@@ -83,7 +83,7 @@ Table of Contents
     * [Uploading ReportUnit](#uploading-reportunit).
     * [Uploading File Resources](#uploading-file-resources).
     * [Deleting Resources](#deleting-resources).
-   2. [The Permissions Service](#the-permissions-service).
+  2. [The Permissions Service](#the-permissions-service).
     * [Viewing Multiple Permissions](#viewing-multiple-permissions).
     * [Viewing a Single Permission](#viewing-a-single-permission).
     * [Setting Multiple Permissions](#setting-multiple-permissions).
@@ -119,14 +119,15 @@ Table of Contents
 13. [Diagnostic Service](#diagnostic-service).
 14. [Contexts Service] (#contexts-service).
   *[Domain Context Service](#domain-context-service).
-15. [Query Executor Service](#query-executor-service).
-16. [Server Information Service](#server-information-service).
-17. [Bundles service](#bundles-service).
-18. [Asynchronous API](#asynchronous-api).
-19. [Getting serialized content from response](#getting-serialized-content-from-response).
-20. [Possible issues](#possible-issues).
-21. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-22. [License](#license).
+15. [Data Discovery Service] (#data-discovery-service).
+16. [Query Executor Service](#query-executor-service).
+17. [Server Information Service](#server-information-service).
+18. [Bundles service](#bundles-service).
+19. [Asynchronous API](#asynchronous-api).
+20. [Getting serialized content from response](#getting-serialized-content-from-response).
+21. [Possible issues](#possible-issues).
+22. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+23. [License](#license).
 
 Introduction
 -------------
