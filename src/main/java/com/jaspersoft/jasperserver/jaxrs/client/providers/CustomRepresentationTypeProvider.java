@@ -110,6 +110,8 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/repository.customDataSource.metadata+xml",
         "application/repository.semanticLayerDataSource+json",
         "application/repository.semanticLayerDataSource+xml",
+        "application/repository.domain+json",
+        "application/repository.domain+xml",
         "application/repository.reportUnit+json",
         "application/repository.reportUnit+xml",
         "application/repository.reportUnit.metadata+json",
@@ -127,7 +129,9 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/flatData+xml",
         "application/multiLevelData+xml",
         "application/multiAxesData+xml",
-        "application/contexts.domElExpressionContext+json"
+        "application/contexts.domElExpressionContext+json",
+        "application/contexts.partialMetadataOptions+json",
+        "application/adhoc.multiLevelQuery+json"
 })
 @Produces({
         "application/collection+json",
@@ -206,6 +210,8 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/repository.customDataSource.metadata+xml",
         "application/repository.semanticLayerDataSource+json",
         "application/repository.semanticLayerDataSource+xml",
+        "application/repository.domain+json",
+        "application/repository.domain+xml",
         "application/repository.reportUnit+json",
         "application/repository.reportUnit+xml",
         "application/repository.reportUnit.metadata+json",
@@ -223,7 +229,9 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/flatData+xml",
         "application/multiLevelData+xml",
         "application/multiAxesData+xml",
-        "application/contexts.domElExpressionContext+json"
+        "application/contexts.domElExpressionContext+json",
+        "application/contexts.partialMetadataOptions+json",
+        "application/adhoc.multiLevelQuery+json"
 })
 public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
 

@@ -66,7 +66,7 @@ public class JasperserverRestClient {
 
     public Session authenticate(String username, String password, Locale userLocale, TimeZone userTimeZone) {
 
-        if (username != null && username.length() > 0 && password != null && password.length() > 0) {
+        if (username != null && username.length() > 0) {
             AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
             SessionStorage sessionStorage =
                     new SessionStorage(configuration,
