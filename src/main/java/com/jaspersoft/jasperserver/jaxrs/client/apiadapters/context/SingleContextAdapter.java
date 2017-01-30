@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context;
 
+import com.jaspersoft.jasperserver.dto.adhoc.query.ClientMultiLevelQuery;
 import com.jaspersoft.jasperserver.dto.connection.FtpConnection;
 import com.jaspersoft.jasperserver.dto.connection.LfsConnection;
 import com.jaspersoft.jasperserver.dto.domain.DomElExpressionContext;
@@ -16,7 +17,10 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.util.List;
 import javax.ws.rs.core.MultivaluedHashMap;
+
+import static java.util.Arrays.asList;
 
 /**
  * <p/>
@@ -79,6 +83,21 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
 
     public SingleContextAdapter<C, M> addParameter(String key, String value) {
         params.add(key, value);
+        return this;
+    }
+
+    public SingleContextAdapter<C, M> addParameter(String key, String... value) {
+        params.addAll(key, asList(value));
+        return this;
+    }
+
+    public SingleContextAdapter<C, M> addParameters(MultivaluedHashMap<String, String> values) {
+        params.putAll(values);
+        return this;
+    }
+
+    public SingleContextAdapter<C, M> addParameter(String key, List<String> value) {
+        params.addAll(key, value);
         return this;
     }
 
@@ -172,6 +191,16 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
         jerseyRequest
                 .setAccept(metadataMimeType);
         return jerseyRequest.post(context);
+    }
+
+    public OperationResult<ClientMultiLevelQuery> executeQuery(ClientMultiLevelQuery query) {
+
+        JerseyRequest<ClientMultiLevelQuery> jerseyRequest = JerseyRequest.buildRequest(this.sessionStorage
+                , ClientMultiLevelQuery.class
+                , new String[]{SERVICE_URI, uuId, "data"});
+        jerseyRequest
+                .setContentType("application/adhoc.multiLevelQuery+json");
+        return jerseyRequest.post(query);
     }
 
 

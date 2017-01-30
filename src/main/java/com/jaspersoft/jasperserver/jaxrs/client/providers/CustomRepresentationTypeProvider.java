@@ -130,7 +130,8 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/multiLevelData+xml",
         "application/multiAxesData+xml",
         "application/contexts.domElExpressionContext+json",
-        "application/contexts.partialMetadataOptions+json"
+        "application/contexts.partialMetadataOptions+json",
+        "application/adhoc.multiLevelQuery+json"
 })
 @Produces({
         "application/collection+json",
@@ -229,7 +230,8 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/multiLevelData+xml",
         "application/multiAxesData+xml",
         "application/contexts.domElExpressionContext+json",
-        "application/contexts.partialMetadataOptions+json"
+        "application/contexts.partialMetadataOptions+json",
+        "application/adhoc.multiLevelQuery+json"
 })
 public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
 

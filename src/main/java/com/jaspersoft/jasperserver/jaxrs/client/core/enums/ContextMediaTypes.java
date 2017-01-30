@@ -55,6 +55,14 @@ public final class ContextMediaTypes {
     public static final String DOMAIN_DATA_SOURCE_JSON = "application/repository.semanticLayerDataSource+json";
     public static final String DOMAIN_DATA_SOURCE_XML = "application/repository.semanticLayerDataSource+xml";
 
+    public static final String RESOURCE_LOOKUP_TYPE = "application/repository.resourceLookup";
+    public static final String RESOURCE_LOOKUP_JSON = "application/repository.resourceLookup+json";
+    public static final String RESOURCE_LOOKUP_XML = "application/repository.resourceLookup+xml";
+
+    public static final String RESOURCE_LOOKUP_METADATA_TYPE = "application/repository.resourceLookup";
+    public static final String RESOURCE_LOOKUP_METADATA_JSON = "application/repository.resourceLookup+json";
+    public static final String RESOURCE_LOOKUP_METADATA_XML = "application/repository.resourceLookup+xml";
+
     public static final String DOMAIN_TYPE = "application/repository.domain";
     public static final String DOMAIN_JSON = "application/repository.domain+json";
     public static final String DOMAIN_XML = "application/repository.domain+xml";

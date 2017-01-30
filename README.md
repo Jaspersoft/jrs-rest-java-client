@@ -118,6 +118,7 @@ Table of Contents
 12. [Thumbnail Search Service](#thumbnail-search-service).
 13. [Diagnostic Service](#diagnostic-service).
 14. [Contexts Service] (#contexts-service).
+  *[Domain Context Service](#domain-context-service).
 15. [Query Executor Service](#query-executor-service).
 16. [Server Information Service](#server-information-service).
 17. [Bundles service](#bundles-service).
@@ -2228,6 +2229,45 @@ The difference between `.metadata()` and `.partialMetadata()` is in HTTP methods
                 .context(contextClass, contextMimeType,contextMatadataClass, contextMetadataMimeType)
                 .createAndGetMetadata(context);
 ```
+
+####Domain Context Service
+This service allows to execute query of in-memory domain. I.e. domain, that doesn't exist in repository.
+- to create context: 
+```java
+       OperationResult<ClientResourceLookup> operationResult = session
+                .domainContextService()
+                .context(context)
+                .create();
+``` 
+`context` here might be instance of ClientDomain or ClientSemanticLayerDataSource with data source URI and domain schema URI of datasource.
+- to get domain metadata:
+```java
+
+        OperationResult<PresentationGroupElement> operationResult = session
+                .domainContextService()
+                .context(context)
+                .create().getMetadata();
+    // or expznded metadata            
+        OperationResult<PresentationGroupElement> operationResult = session
+                .domainContextService()
+                .context(context)
+                .create()
+                .addParam("expand", nodeName)
+                .getMetadata();
+```   
+- to execute query (only multi level queries are supported):
+```java
+       ClientMultiLevelQuery clientMultiLevelQuery = new ClientMultiLevelQuery().setGroupBy(
+                new ClientQueryGroupBy().setGroups(
+                        asList(new ClientQueryGroup().
+                                setId("account_type").
+                                setFieldName("account_type"))));
+        OperationResult<ClientMultiLevelQueryResultData> operationResult = session
+                .domainContextService()
+                .context(clientDomain)
+                .create().executeQuery(clientMultiLevelQuery);
+```
+
 ###Data Discovery Service
 
 The service based on Context Service and allows to work with supported contexts(Domain, DomEl, reports etc) directly.
