@@ -188,7 +188,7 @@ public class DomainContextOperationResultTest extends PowerMockTestCase {
         doReturn(operationResultMock).when(singleContextAdapterMock).executeQuery(any(ClientMultiLevelQuery.class));
 
         //when
-        OperationResult<ClientMultiLevelQuery> queryResultSet = domainContextOperationResult.executeQuery(new ClientMultiLevelQuery());
+        OperationResult<ClientMultiLevelQueryResultData> queryResultSet = domainContextOperationResult.executeQuery(new ClientMultiLevelQuery());
 
         //then
         assertSame(operationResultMock, queryResultSet);
@@ -210,7 +210,7 @@ public class DomainContextOperationResultTest extends PowerMockTestCase {
         doReturn(responseMock).when(resourceLookupOperationResultMock).getResponse();
 
         //when
-        OperationResult<ClientMultiLevelQuery> queryResultSet = domainContextOperationResult.executeQuery(new ClientMultiLevelQuery());
+        OperationResult<ClientMultiLevelQueryResultData> queryResultSet = domainContextOperationResult.executeQuery(new ClientMultiLevelQuery());
 
         // then
         // an exception should be thrown

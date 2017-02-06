@@ -7,6 +7,7 @@ import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryExecution
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientProvidedQueryExecution;
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
+import com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
@@ -88,6 +89,8 @@ public class QueryExecutionAdapterTest extends PowerMockTestCase {
     @BeforeMethod
     public void before() {
         initMocks(this);
+        doReturn(configurationMock).when(storageMock).getConfiguration();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
     }
 
     @AfterMethod
@@ -165,6 +168,48 @@ public class QueryExecutionAdapterTest extends PowerMockTestCase {
                 setContentType(EXECUTION_MULTI_LEVEL_QUERY_JSON);
         verify(multiLevelRequestMock).
                 setAccept(MULTI_LEVEL_DATA_JSON);
+        verify(multiLevelRequestMock).post(any(ClientMultiLevelQueryExecution.class));
+        verifyStatic(times(1));
+        buildRequest(
+                eq(storageMock),
+                eq(ClientMultiLevelQueryResultData.class),
+                eq(new String[]{QUERY_EXECUTIONS_URI}),
+                any(DefaultErrorHandler.class));
+
+    }
+
+    @Test
+    public void should_return_proper_flatData_operation_result_when_execute_multi_level_query() {
+        // Given
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(
+                eq(storageMock),
+                eq(ClientMultiLevelQueryResultData.class),
+                eq(new String[]{QUERY_EXECUTIONS_URI}),
+                any(DefaultErrorHandler.class))).thenReturn(multiLevelRequestMock);
+        doReturn(multiLevelRequestMock).when(multiLevelRequestMock).
+                setContentType(EXECUTION_MULTI_LEVEL_QUERY_JSON);
+        doReturn(multiLevelRequestMock).when(multiLevelRequestMock).
+                setAccept(FLAT_DATA_JSON);
+        doReturn(multiLevelOperationResultMock).when(multiLevelRequestMock).post(any(ClientMultiLevelQueryExecution.class));
+
+        QueryExecutionAdapter<ClientMultiLevelQueryResultData> adapter = new QueryExecutionAdapter(storageMock,
+                EXECUTION_MULTI_LEVEL_QUERY_JSON,
+                ClientMultiLevelQueryResultData.class,
+                MULTI_LEVEL_DATA_JSON);
+
+        // When /
+        OperationResult<ClientMultiLevelQueryResultData> retrieved = adapter.
+                asResultDataSet(QueryResultDataMediaType.FLAT_DATA_JSON).
+                execute(new ClientMultiLevelQueryExecution());
+
+        // Then /
+        assertNotNull(retrieved);
+        assertSame(retrieved, multiLevelOperationResultMock);
+        verify(multiLevelRequestMock).
+                setContentType(EXECUTION_MULTI_LEVEL_QUERY_JSON);
+        verify(multiLevelRequestMock).
+                setAccept(FLAT_DATA_JSON);
         verify(multiLevelRequestMock).post(any(ClientMultiLevelQueryExecution.class));
         verifyStatic(times(1));
         buildRequest(

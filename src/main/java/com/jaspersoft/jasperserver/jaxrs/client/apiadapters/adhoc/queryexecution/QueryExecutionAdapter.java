@@ -28,6 +28,7 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
     private Class<T> dataSetClass;
     private String contentType;
     private String[] acceptType;
+    private MimeType responseFormat = sessionStorage.getConfiguration().getAcceptMimeType();
     private MultivaluedHashMap<String, String> params;
 
     public QueryExecutionAdapter(SessionStorage sessionStorage, String contentType, Class<T> dataSetClass, String... acceptType) {
@@ -41,20 +42,18 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
     }
 
     public QueryExecutionAdapter<T> asXml() {
-        if (!sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.XML)) {
-            for (int i = 0; i < acceptType.length; i++) {
-                acceptType[i] = acceptType[i].replace("json", "xml");
-            }
-        }
+        responseFormat = MimeType.XML;
         return this;
     }
 
+
     public QueryExecutionAdapter<T> asJson() {
-        if (!sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON)) {
-            for (int i = 0; i < acceptType.length; i++) {
-                acceptType[i] = acceptType[i].replace("xml", "json");
-            }
-        }
+        responseFormat = MimeType.JSON;
+        return this;
+    }
+
+    public QueryExecutionAdapter<T> asResultDataSet(String... resultMimeTypes) {
+        acceptType = resultMimeTypes;
         return this;
     }
 
@@ -75,6 +74,7 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
         if (params.size() > 0) {
             request.addParams(params);
         }
+
         request.setAccept(StringUtils.join(acceptType, ","));
         return request.get();
     }
@@ -91,6 +91,12 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
         }
         JerseyRequest<T> request = buildRequest();
         request.setContentType(contentType);
+        if (!(sessionStorage.getConfiguration().getAcceptMimeType() == responseFormat)) {
+            for (int i = 0; i < acceptType.length; i++) {
+                String type = acceptType[i];
+                acceptType[i] = type.replace(type.substring(type.lastIndexOf("+") + 1), responseFormat.toString().toLowerCase());
+            }
+        }
         request.setAccept(StringUtils.join(acceptType, ","));
         return request.
                 post(query);
@@ -105,4 +111,5 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
 
         return request;
     }
+
 }
