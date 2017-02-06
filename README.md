@@ -2166,6 +2166,14 @@ The following code examples execute query and retrieve a result data for differe
                 multiLevelQuery().
                 execute(queryExecution);
 ```
+Result data set of multi level query can be obtained as MultiLevelResultData(by default) or as FlatQueryResultData:
+```java
+        OperationResult<ClientMultiLevelQueryResultData> execute = session.
+                queryExecutionService().
+                multiLevelQuery().
+                asResultDataSet(QueryResultDataMediaType.FLAT_DATA_JSON).
+                execute(queryExecution);
+```
 - for multi axes query:
 ```java
         OperationResult execute = session.
