@@ -4,6 +4,7 @@ import com.jaspersoft.jasperserver.dto.adhoc.query.ClientMultiLevelQuery;
 import com.jaspersoft.jasperserver.dto.connection.FtpConnection;
 import com.jaspersoft.jasperserver.dto.connection.LfsConnection;
 import com.jaspersoft.jasperserver.dto.domain.DomElExpressionContext;
+import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.resources.ClientCustomDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientJdbcDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientJndiJdbcDataSource;
@@ -193,10 +194,10 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
         return jerseyRequest.post(context);
     }
 
-    public OperationResult<ClientMultiLevelQuery> executeQuery(ClientMultiLevelQuery query) {
+    public OperationResult<ClientMultiLevelQueryResultData> executeQuery(ClientMultiLevelQuery query) {
 
-        JerseyRequest<ClientMultiLevelQuery> jerseyRequest = JerseyRequest.buildRequest(this.sessionStorage
-                , ClientMultiLevelQuery.class
+        JerseyRequest<ClientMultiLevelQueryResultData> jerseyRequest = JerseyRequest.buildRequest(this.sessionStorage
+                , ClientMultiLevelQueryResultData.class
                 , new String[]{SERVICE_URI, uuId, "data"});
         jerseyRequest
                 .setContentType("application/adhoc.multiLevelQuery+json");

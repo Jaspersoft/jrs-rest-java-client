@@ -1,6 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.domain;
 
 import com.jaspersoft.jasperserver.dto.adhoc.query.ClientMultiLevelQuery;
+import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.resources.ClientResourceLookup;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
@@ -76,9 +77,9 @@ public class DomainContextOperationResult<T> extends OperationResult<T> {
         return contextMimeType.replace("+", ".metadata+");
     }
 
-    public OperationResult<ClientMultiLevelQuery> executeQuery(ClientMultiLevelQuery query) {
+    public OperationResult<ClientMultiLevelQueryResultData> executeQuery(ClientMultiLevelQuery query) {
 
-        OperationResult<ClientMultiLevelQuery> queryOperationResult;
+        OperationResult<ClientMultiLevelQueryResultData> queryOperationResult;
         try {
             queryOperationResult = service
                     .context(uuId)
