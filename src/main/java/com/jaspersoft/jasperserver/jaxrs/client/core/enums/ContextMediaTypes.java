@@ -91,5 +91,11 @@ public final class ContextMediaTypes {
     public static final String XLS_FILE_JSON = "application/connections.xlsFile+json";
     public static final String XLS_FILE_XML = "application/connections.xlsFile+xml";
 
+    public static final String DOM_EL_CONTEXT_TYPE= "application/contexts.domElExpressionContext";
+    public static final String DOM_EL_CONTEXT_JSON= "application/contexts.domElExpressionContext+json";
+
+    public static final String DOM_EL_COLLECTION_CONTEXT_TYPE= "application/contexts.domElExpressionCollectionContext";
+    public static final String DOM_EL_COLLECTION_CONTEXT_JSON= "application/contexts.domElExpressionCollectionContext+json";
+
     private ContextMediaTypes(){}
 }

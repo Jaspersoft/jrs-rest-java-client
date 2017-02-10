@@ -1,9 +1,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
+import com.jaspersoft.jasperserver.dto.domain.DomElExpressionCollectionContext;
 import com.jaspersoft.jasperserver.dto.domain.DomElExpressionContext;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.SingleContextAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
@@ -31,7 +33,8 @@ public class DomElContextManagerTest extends PowerMockTestCase {
     private SessionStorage sessionStorageMock;
     private ContextService contextServiceMock;
     private SingleContextAdapter contextAdapterMock;
-    private OperationResult<DomElExpressionContext> operationResultMock;
+    private OperationResult<DomElExpressionContext> domElContextOperationResultMock;
+    private OperationResult<DomElExpressionCollectionContext> domElCollectionContextOperationResultMock;
 
 
     @BeforeMethod
@@ -39,12 +42,12 @@ public class DomElContextManagerTest extends PowerMockTestCase {
         sessionStorageMock = mock(SessionStorage.class);
         contextServiceMock = mock(ContextService.class);
         contextAdapterMock = mock(SingleContextAdapter.class);
-        operationResultMock = mock(OperationResult.class);
+        domElContextOperationResultMock = mock(OperationResult.class);
     }
 
     @AfterMethod
     public void after() {
-        reset(sessionStorageMock, contextAdapterMock, contextServiceMock, operationResultMock);
+        reset(sessionStorageMock, contextAdapterMock, contextServiceMock, domElContextOperationResultMock);
     }
 
 
@@ -57,20 +60,39 @@ public class DomElContextManagerTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_domain_when_create_context() throws Exception {
+    public void should_return_proper_operation_result_when_create_context() throws Exception {
         // When
 
         DomElExpressionContext context = spy(new DomElExpressionContext());
 
         PowerMockito.whenNew(ContextService.class).withArguments(sessionStorageMock).thenReturn(contextServiceMock);
         PowerMockito.when(contextServiceMock.context(DomElExpressionContext.class,
-                "application/contexts.domElExpressionContext+json")).
+                ContextMediaTypes.DOM_EL_CONTEXT_JSON)).
                 thenReturn(contextAdapterMock);
-        PowerMockito.when(contextAdapterMock.create(context)).thenReturn(operationResultMock);
+        PowerMockito.when(contextAdapterMock.create(context)).thenReturn(domElContextOperationResultMock);
 
         OperationResult<DomElExpressionContext> retrievedOperationResult = new DomElContextManager(sessionStorageMock).create(context);
         //Then
-        assertSame(operationResultMock, retrievedOperationResult);
+        assertSame(domElContextOperationResultMock, retrievedOperationResult);
+    }
+
+
+    @Test
+    public void should_return_proper_operation_result_when_create_collection_context() throws Exception {
+        // When
+
+        DomElExpressionCollectionContext context = spy(new DomElExpressionCollectionContext());
+
+        PowerMockito.whenNew(ContextService.class).withArguments(sessionStorageMock).thenReturn(contextServiceMock);
+        PowerMockito.when(contextServiceMock.context(DomElExpressionCollectionContext.class,
+                ContextMediaTypes.DOM_EL_COLLECTION_CONTEXT_JSON)).
+                thenReturn(contextAdapterMock);
+        PowerMockito.when(contextAdapterMock.create(context)).thenReturn(domElCollectionContextOperationResultMock);
+
+        OperationResult<DomElExpressionCollectionContext> retrievedOperationResult =
+                new DomElContextManager(sessionStorageMock).create(context);
+        //Then
+        assertSame(domElCollectionContextOperationResultMock, retrievedOperationResult);
     }
 
 }

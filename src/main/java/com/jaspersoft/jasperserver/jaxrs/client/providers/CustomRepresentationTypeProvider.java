@@ -100,6 +100,8 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         ContextMediaTypes.FTP_XML,
         ContextMediaTypes.LOCAL_FILE_SYSTEM_JSON,
         ContextMediaTypes.LOCAL_FILE_SYSTEM_XML,
+        ContextMediaTypes.DOM_EL_CONTEXT_JSON,
+        ContextMediaTypes.DOM_EL_COLLECTION_CONTEXT_JSON,
         "application/hal+json",
         "application/hal+xml",
         "text/json",
@@ -129,7 +131,6 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/flatData+xml",
         "application/multiLevelData+xml",
         "application/multiAxesData+xml",
-        "application/contexts.domElExpressionContext+json",
         "application/contexts.partialMetadataOptions+json",
         "application/adhoc.multiLevelQuery+json"
 })
@@ -197,6 +198,8 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         ContextMediaTypes.FTP_XML,
         ContextMediaTypes.LOCAL_FILE_SYSTEM_JSON,
         ContextMediaTypes.LOCAL_FILE_SYSTEM_XML,
+        ContextMediaTypes.DOM_EL_CONTEXT_JSON,
+        ContextMediaTypes.DOM_EL_COLLECTION_CONTEXT_JSON,
         "application/repository.domainSchema+json",
         "application/repository.domainSchema+xml",
         "application/xml",
@@ -229,7 +232,6 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/flatData+xml",
         "application/multiLevelData+xml",
         "application/multiAxesData+xml",
-        "application/contexts.domElExpressionContext+json",
         "application/contexts.partialMetadataOptions+json",
         "application/adhoc.multiLevelQuery+json"
 })

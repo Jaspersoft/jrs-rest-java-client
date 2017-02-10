@@ -3,6 +3,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context;
 import com.jaspersoft.jasperserver.dto.adhoc.query.ClientMultiLevelQuery;
 import com.jaspersoft.jasperserver.dto.connection.FtpConnection;
 import com.jaspersoft.jasperserver.dto.connection.LfsConnection;
+import com.jaspersoft.jasperserver.dto.domain.DomElExpressionCollectionContext;
 import com.jaspersoft.jasperserver.dto.domain.DomElExpressionContext;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.resources.ClientCustomDataSource;
@@ -218,6 +219,7 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
                 context instanceof ClientJndiJdbcDataSource ||
                 context instanceof ClientJdbcDataSource ||
                 context instanceof ClientReportUnit ||
-                context instanceof DomElExpressionContext);
+                context instanceof DomElExpressionContext||
+                context instanceof DomElExpressionCollectionContext);
     }
 }
