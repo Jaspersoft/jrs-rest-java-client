@@ -117,9 +117,12 @@ Table of Contents
   *[Report Metadata](#report-metadata)
 12. [Thumbnail Search Service](#thumbnail-search-service).
 13. [Diagnostic Service](#diagnostic-service).
-14. [Contexts Service] (#contexts-service).
+14. [Contexts Service](#contexts-service).
   *[Domain Context Service](#domain-context-service).
-15. [Data Discovery Service] (#data-discovery-service).
+15. [Data Discovery Service](#data-discovery-service).
+  *[Domain data discovery](#domain-data-discovery).
+  *[DomEl data discovery](#domel-data-discovery ).
+  *[Derived table data discovery](#derived-table-data-discovery).
 16. [Query Executor Service](#query-executor-service).
 17. [Server Information Service](#server-information-service).
 18. [Bundles service](#bundles-service).
@@ -2150,7 +2153,7 @@ OperationResult<CollectorSettingsList> operationResult = session
                                 .delete();
 ```
 
-###Contexts Service
+### Contexts Service
 
 Using the service you are able to keep some state or context on the server and execute some actions on this state. General service have next API:
 - save context: 
@@ -2327,7 +2330,22 @@ This API allows to validate DomEL expressions and convert them from string repre
                 .domElContext()
                 .create(expressionStringContext);
 ```
+####Derived table data discovery
+This API allows to validate DomEL expressions and convert them from string representation to object representation and back.
 
+```java
+  private SqlExecutionRequest sqlExecutionRequest;
+        sqlExecutionRequest = new SqlExecutionRequest().
+                setSql("select * from account").
+                setDataSourceUri("/public/Samples/Data_Sources/FoodmartDataSource");
+
+     OperationResult<PresentationGroupElement> operationResult = session
+                .dataDiscoveryService()
+                .derivedTableContext()
+                .execute(sqlExecutionRequest);
+
+
+```
 ###Query Execution Service
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecution service.
 For now the only resource that supports queries is an AdHoc data view. In present time JasperReportsServer supports only synchronize query execution.
