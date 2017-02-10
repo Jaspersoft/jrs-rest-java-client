@@ -29,4 +29,8 @@ public class DataDiscoveryService extends AbstractAdapter {
         return new DomElContextManager(sessionStorage);
     }
 
+    public DerivedTableContextManager derivedTableContext() {
+        return new DerivedTableContextManager(sessionStorage);
+    }
+
 }

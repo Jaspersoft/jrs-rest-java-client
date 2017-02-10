@@ -97,5 +97,11 @@ public final class ContextMediaTypes {
     public static final String DOM_EL_COLLECTION_CONTEXT_TYPE= "application/contexts.domElExpressionCollectionContext";
     public static final String DOM_EL_COLLECTION_CONTEXT_JSON= "application/contexts.domElExpressionCollectionContext+json";
 
+    public static final String SQL_EXECUTION_TYPE= "application/contexts.sqlExecutionRequest";
+    public static final String SQL_EXECUTION_JSON= "application/contexts.sqlExecutionRequest+json";
+
+    public static final String DATASET_METADATA_TYPE= "application/dataset.metadata";
+    public static final String DATASET_METADATA_JSON= "application/dataset.metadata+json";
+
     private ContextMediaTypes(){}
 }
