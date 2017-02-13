@@ -12,6 +12,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientJndiJdbcDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.dto.resources.ClientResourceLookup;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
+import com.jaspersoft.jasperserver.dto.resources.SqlExecutionRequest;
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
@@ -220,6 +221,7 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
                 context instanceof ClientJdbcDataSource ||
                 context instanceof ClientReportUnit ||
                 context instanceof DomElExpressionContext||
-                context instanceof DomElExpressionCollectionContext);
+                context instanceof DomElExpressionCollectionContext ||
+                context instanceof SqlExecutionRequest);
     }
 }

@@ -29,6 +29,7 @@ public class DataDiscoveryServiceTest extends PowerMockTestCase {
     private DomainContextManager domainContextManager;
     private TopicContextManager topicContextManager;
     private DomElContextManager domElContextManager;
+    private DerivedTableContextManager derivedTableContextManager;
 
     @BeforeMethod
     public void before() {
@@ -36,12 +37,17 @@ public class DataDiscoveryServiceTest extends PowerMockTestCase {
         domainContextManager = mock(DomainContextManager.class);
         topicContextManager = mock(TopicContextManager.class);
         domElContextManager= mock(DomElContextManager.class);
+        derivedTableContextManager = mock(DerivedTableContextManager.class);
 
     }
 
     @AfterMethod
     public void after() {
-        reset(sessionStorageMock, domainContextManager, domElContextManager, topicContextManager);
+        reset(sessionStorageMock,
+                domainContextManager,
+                domElContextManager,
+                topicContextManager,
+                derivedTableContextManager);
     }
 
     @Test
@@ -114,6 +120,25 @@ public class DataDiscoveryServiceTest extends PowerMockTestCase {
         // Then
         assertSame(domElContextManager, retrieved);
         verifyNew(DomElContextManager.class, times(1))
+                .withArguments(sessionStorageMock);
+    }
+
+    @Test
+    public void should_return_proper_deridved_table_context_manager() throws Exception {
+
+        // Given
+        whenNew(DerivedTableContextManager.class)
+                .withArguments(sessionStorageMock)
+                .thenReturn(derivedTableContextManager);
+
+        DataDiscoveryService dataDiscoveryService = new DataDiscoveryService(sessionStorageMock);
+
+        // When
+        DerivedTableContextManager retrieved = dataDiscoveryService.derivedTableContext();
+
+        // Then
+        assertSame(derivedTableContextManager, retrieved);
+        verifyNew(DerivedTableContextManager.class, times(1))
                 .withArguments(sessionStorageMock);
     }
 
