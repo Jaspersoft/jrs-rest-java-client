@@ -31,6 +31,7 @@ import java.util.Set;
  *
  * @author Yaroslav.Kovalchyk
  * @version $Id: ReportJobOutputFormatsWrapper.java 22756 2012-03-23 10:39:15Z sergey.prilukin $
+ * @deprecated (use server adapter).
  */
 @XmlRootElement(name = "outputFormats")
 public class ReportJobOutputFormatsWrapper {

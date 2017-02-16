@@ -22,7 +22,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
+/**
+ * @deprecated (use server DTO).
+ */
 @XmlRootElement(name = "simpleTrigger")
 public class SimpleTrigger extends JobTrigger {
 

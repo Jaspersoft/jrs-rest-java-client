@@ -41,6 +41,7 @@ import java.util.Date;
  * @author Ivan Chan (ichan@jaspersoft.com)
  * @version $Id: ReportJobSimpleTriggerModel.java 25010 2012-09-26 16:56:35Z sergey.prilukin $
  * @since 4.7
+ * @deprecated (use server adapter).
  */
 public class ReportJobSimpleTriggerModel extends SimpleTrigger {
     /**

@@ -1673,7 +1673,7 @@ OperationResult<JobState> result = client
         .authenticate("jasperadmin", "jasperadmin")
         .jobsService()
         .job(8600)
-        .state();
+        .jobState();
 
 JobState jobState = result.getEntity();
 ```
@@ -1716,7 +1716,7 @@ OperationResult<JobIdListWrapper> result = client
         .jobsService()
         .jobs()
         .parameter(JobsParameter.JOB_ID, "8600")
-        .pause();
+        .pauseJobs();
 ```
 ####Resuming Jobs
 Use the following method to resume any or all paused jobs in the scheduler. Resuming a job means that any defined trigger in the schedule that occurs after the time it is resumed will cause the report to run again. Missed schedule triggers that occur before the job is resumed are never run.
@@ -1726,7 +1726,7 @@ OperationResult<JobIdListWrapper> result = client
         .jobsService()
         .jobs()
         .parameter(JobsParameter.JOB_ID, "8600")
-        .resume();
+        .resumeJobs();
 ```
 ####Restarting Failed Jobs
 Use the following method to rerun failed jobs in the scheduler. For each job to be restarted, the scheduler creates an immediate single-run copy of job, to replace the one that failed. Therefore, all jobs listed in the request body will run once immediately after issuing this command. The single-run copies have a misfire policy set so that they do not trigger any further failures (`MISFIRE_ INSTRUCTION_IGNORE_MISFIRE_POLICY`). If the single-run copies fail themselves, no further attempts are made automatically.
@@ -1736,7 +1736,7 @@ OperationResult<JobIdListWrapper> result = client
         .jobsService()
         .jobs()
         .parameter(JobsParameter.JOB_ID, "8600")
-        .restart();
+        .restarJobs();
 ```
 ###Calendars service
 The scheduler allows a job to be defined with a list of excluded days or times when you do not want the job to run. For example, if you have a report scheduled to run every business day, you want to exclude holidays that change every year. The list for excluded days and times is defined as a calendar, and there are various ways to define the calendar.  The scheduler stores any number of exclusion calendars that you can reference by name. When scheduling a report, reference the name of the calendar to exclude, and the scheduler automatically calculates the correct days to trigger the report. The scheduler also allows you to update an exclusion calendar and update all of the report jobs that used it. Therefore, you can update the calendar of excluded holidays every year and not need to modify any report jobs.
@@ -1746,7 +1746,7 @@ The following method returns the list of all calendar names that were added to t
 OperationResult<CalendarNameListWrapper> result = client
         .authenticate("jasperadmin", "jasperadmin")
         .jobsService()
-        .calendars();  //OR .calendars(CalendarType.HOLIDAY); //to specify the desired calendar type
+        .allCalendars();  
 
 CalendarNameListWrapper calendarNameListWrapper = result.getEntity();
 ```
@@ -1757,7 +1757,7 @@ OperationResult<Calendar> result = client
         .authenticate("jasperadmin", "jasperadmin")
         .jobsService()
         .calendar("testCalendar")
-        .get();
+        .getCalendar();
 
 Calendar jobCalendar = result.getEntity();
 ```
