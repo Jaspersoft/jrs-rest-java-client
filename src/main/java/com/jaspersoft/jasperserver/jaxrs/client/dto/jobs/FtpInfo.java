@@ -25,7 +25,9 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 import java.util.LinkedHashMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Map;
-
+/**
+ * @deprecated (use server DTO).
+ */
 @XmlRootElement(name = "outputFTPInfo")
 public class FtpInfo {
 

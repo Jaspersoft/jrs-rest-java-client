@@ -33,6 +33,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.RepositoryDestination;
  * @author Ivan Chan (ichan@jaspersoft.com)
  * @version $Id: ReportJobRepositoryDestinationModel.java 25010 2012-09-26 16:56:35Z sergey.prilukin $
  * @since 4.7
+ * @deprecated (use server adapter).
  */
 public class ReportJobRepositoryDestinationModel extends RepositoryDestination {
     /**

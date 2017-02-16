@@ -36,6 +36,7 @@ import java.util.TimeZone;
 /**
  * @author Yaroslav.Kovalchyk
  * @version $Id: ReportJobCalendar.java 23844 2012-05-22 06:23:41Z ykovalchyk $
+ * @deprecated (use server DTO).
  */
 @XmlRootElement
 public class ReportJobCalendar {

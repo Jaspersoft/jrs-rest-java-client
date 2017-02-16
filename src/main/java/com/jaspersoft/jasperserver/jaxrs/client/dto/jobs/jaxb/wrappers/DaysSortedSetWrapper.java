@@ -31,6 +31,7 @@ import java.util.SortedSet;
  *
  * @author Yaroslav.Kovalchyk
  * @version $Id: DaysSortedSetWrapper.java 22756 2012-03-23 10:39:15Z sergey.prilukin $
+ * @deprecated (use server adapter).
  */
 @XmlRootElement
 public class DaysSortedSetWrapper {
