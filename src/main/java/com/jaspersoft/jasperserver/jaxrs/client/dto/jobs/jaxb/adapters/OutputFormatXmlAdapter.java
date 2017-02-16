@@ -35,6 +35,7 @@ import java.util.Set;
  *
  * @author Yaroslav.Kovalchyk
  * @version $Id: OutputFormatXmlAdapter.java 38764 2013-10-10 18:42:07Z carbiv $
+ * @deprecated (use server adapter).
  */
 
 public class OutputFormatXmlAdapter extends XmlAdapter<ReportJobOutputFormatsWrapper, Set<OutputFormat>> {

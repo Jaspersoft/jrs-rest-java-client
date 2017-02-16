@@ -27,7 +27,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
+/**
+ * @deprecated (use server DTO).
+ */
 @XmlRootElement(name = "calendarTrigger")
 public class CalendarTrigger extends JobTrigger {
 
