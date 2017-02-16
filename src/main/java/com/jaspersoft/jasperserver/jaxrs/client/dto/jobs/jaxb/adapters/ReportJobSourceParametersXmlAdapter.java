@@ -33,6 +33,7 @@ import java.util.TimeZone;
 /**
  * @author Yaroslav.Kovalchyk
  * @version $Id: ReportJobSourceParametersXmlAdapter.java 28947 2013-02-26 15:02:08Z vsabadosh $
+ * @deprecated (use server adapter).
  */
 public class ReportJobSourceParametersXmlAdapter extends XmlAdapter<ReportParametersMapWrapper, Map<String, Object>> {
 

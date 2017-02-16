@@ -32,6 +32,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
  * @author Ivan Chan (ichan@jaspersoft.com)
  * @version $Id: ReportJobModel.java 25010 2012-09-26 16:56:35Z sergey.prilukin $
  * @since 4.7
+ * @deprecated (use server adapter).
  */
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
