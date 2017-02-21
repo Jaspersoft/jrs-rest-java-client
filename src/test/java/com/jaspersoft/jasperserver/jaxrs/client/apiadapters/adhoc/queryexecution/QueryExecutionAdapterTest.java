@@ -184,14 +184,14 @@ public class QueryExecutionAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(buildRequest(
                 eq(storageMock),
-                eq(ClientMultiLevelQueryResultData.class),
+                eq(ClientFlatQueryResultData.class),
                 eq(new String[]{QUERY_EXECUTIONS_URI}),
-                any(DefaultErrorHandler.class))).thenReturn(multiLevelRequestMock);
-        doReturn(multiLevelRequestMock).when(multiLevelRequestMock).
+                any(DefaultErrorHandler.class))).thenReturn(flatRequestMock);
+        doReturn(flatRequestMock).when(flatRequestMock).
                 setContentType(EXECUTION_MULTI_LEVEL_QUERY_JSON);
-        doReturn(multiLevelRequestMock).when(multiLevelRequestMock).
+        doReturn(flatRequestMock).when(flatRequestMock).
                 setAccept(FLAT_DATA_JSON);
-        doReturn(multiLevelOperationResultMock).when(multiLevelRequestMock).post(any(ClientMultiLevelQueryExecution.class));
+        doReturn(flatOperationResultMock).when(flatRequestMock).post(any(ClientMultiLevelQueryExecution.class));
 
         QueryExecutionAdapter<ClientMultiLevelQueryResultData> adapter = new QueryExecutionAdapter(storageMock,
                 EXECUTION_MULTI_LEVEL_QUERY_JSON,
@@ -205,16 +205,16 @@ public class QueryExecutionAdapterTest extends PowerMockTestCase {
 
         // Then /
         assertNotNull(retrieved);
-        assertSame(retrieved, multiLevelOperationResultMock);
-        verify(multiLevelRequestMock).
+        assertSame(retrieved, flatOperationResultMock);
+        verify(flatRequestMock).
                 setContentType(EXECUTION_MULTI_LEVEL_QUERY_JSON);
-        verify(multiLevelRequestMock).
+        verify(flatRequestMock).
                 setAccept(FLAT_DATA_JSON);
-        verify(multiLevelRequestMock).post(any(ClientMultiLevelQueryExecution.class));
+        verify(flatRequestMock).post(any(ClientMultiLevelQueryExecution.class));
         verifyStatic(times(1));
         buildRequest(
                 eq(storageMock),
-                eq(ClientMultiLevelQueryResultData.class),
+                eq(ClientFlatQueryResultData.class),
                 eq(new String[]{QUERY_EXECUTIONS_URI}),
                 any(DefaultErrorHandler.class));
 

@@ -1,6 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution;
 
 import com.jaspersoft.jasperserver.dto.executions.AbstractClientExecution;
+import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
+import com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
@@ -21,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id$
  * @see
  */
-public class QueryExecutionAdapter<T> extends AbstractAdapter {
+public class QueryExecutionAdapter<T extends ClientQueryResultData> extends AbstractAdapter {
 
     private String serviceURI = "queryExecutions";
     private List<String> uri;
@@ -52,8 +54,9 @@ public class QueryExecutionAdapter<T> extends AbstractAdapter {
         return this;
     }
 
-    public QueryExecutionAdapter<T> asResultDataSet(String... resultMimeTypes) {
-        acceptType = resultMimeTypes;
+    public QueryExecutionAdapter<T> asResultDataSet(String resultMimeType) {
+        acceptType = new String[]{resultMimeType};
+        dataSetClass = (Class<T>) QueryResultDataMediaType.getResultDataType(resultMimeType);
         return this;
     }
 
