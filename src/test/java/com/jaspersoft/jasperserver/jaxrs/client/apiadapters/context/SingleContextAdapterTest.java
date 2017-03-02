@@ -125,7 +125,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 ClientDomain.class,
                 ContextMediaTypes.DOMAIN_JSON);
         //then
-        assertEquals(Whitebox.getInternalState(contextAdapter, "contextMimeType"), ContextMediaTypes.DOMAIN_JSON);
+        assertEquals(Whitebox.getInternalState(contextAdapter, "contextContentMimeType"), ContextMediaTypes.DOMAIN_JSON);
         assertEquals(Whitebox.getInternalState(contextAdapter, "contextClass"), ClientDomain.class);
         assertNull(Whitebox.getInternalState(contextAdapter, "uuId"));
         assertNull(Whitebox.getInternalState(contextAdapter, "metadataClass"));
@@ -469,16 +469,6 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
         verify(presentationGroupElementRequestMock).post(any(ClientDomain.class));
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exception_when_create_context_and_get_metadata_context_is_invalid() throws Exception {
-        //when
-        contextService
-                .context(Object.class, ContextMediaTypes.DOMAIN_JSON, PresentationGroupElement.class,
-                        ContextMediaTypes.DOMAIN_METADATA_JSON)
-                .createAndGetMetadata(new Object());
-        //then
-        // exception should be thrown
-    }
 
     @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
     public void should_throw_exception_when_get_metadata_Uuid_is_null() throws Exception {
@@ -522,8 +512,8 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
     public void should_throw_exception_when_update_connection_is_null() throws Exception {
         //when
         contextService
-                .context(TEST_UUID)
-                .update(null);
+                .context(Object.class, "someMiMeType")
+                .create(null);
         //then
         // an exception should be thrown
 
@@ -546,26 +536,6 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
         contextService
                 .context("")
                 .get();
-        //then
-        // an exception should be thrown
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exception_when_update_connection_type_is_invalid() throws Exception {
-        //when
-        contextService
-                .context(TEST_UUID)
-                .update(new Object());
-        //then
-        // an exception should be thrown
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exception_when_connection_class_is_invalid() throws Exception {
-        //when
-        contextService
-                .context(TEST_UUID)
-                .create(new Object());
         //then
         // an exception should be thrown
     }

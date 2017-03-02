@@ -1,19 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context;
 
 import com.jaspersoft.jasperserver.dto.adhoc.query.ClientMultiLevelQuery;
-import com.jaspersoft.jasperserver.dto.connection.FtpConnection;
-import com.jaspersoft.jasperserver.dto.connection.LfsConnection;
-import com.jaspersoft.jasperserver.dto.domain.DomElExpressionCollectionContext;
-import com.jaspersoft.jasperserver.dto.domain.DomElExpressionContext;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
-import com.jaspersoft.jasperserver.dto.resources.ClientCustomDataSource;
-import com.jaspersoft.jasperserver.dto.resources.ClientJdbcDataSource;
-import com.jaspersoft.jasperserver.dto.resources.ClientJndiJdbcDataSource;
-import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
-import com.jaspersoft.jasperserver.dto.resources.ClientResourceLookup;
-import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
-import com.jaspersoft.jasperserver.dto.resources.SqlExecutionRequest;
-import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
@@ -39,33 +27,33 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
 
     private String uuId;
     private Class<C> contextClass;
-    private String contextMimeType;
+    private String contextContentMimeType;
     private Class<M> metadataClass;
     private String metadataMimeType;
     private MultivaluedHashMap<String, String> params;
 
     public SingleContextAdapter(SessionStorage sessionStorage, Class<C> contextClass,
-                                String contextMimeType,
+                                String contextContentMimeType,
                                 Class<M> metadataClass,
                                 String metadataMimeType,
                                 String uuId) {
         super(sessionStorage);
         this.uuId = uuId;
         this.contextClass = contextClass;
-        this.contextMimeType = contextMimeType;
+        this.contextContentMimeType = contextContentMimeType;
         this.metadataClass = metadataClass;
         this.metadataMimeType = metadataMimeType;
         params = new MultivaluedHashMap<>();
     }
 
     public SingleContextAdapter(SessionStorage sessionStorage, Class<C> contextClass,
-                                String contextMimeType) {
-        this(sessionStorage, contextClass, contextMimeType, null, null, null);
+                                String contextContentMimeType) {
+        this(sessionStorage, contextClass, contextContentMimeType, null, null, null);
     }
 
     public SingleContextAdapter(SessionStorage sessionStorage, Class<C> contextClass,
-                                String contextMimeType, String uuId) {
-        this(sessionStorage, contextClass, contextMimeType, null, null, uuId);
+                                String contextContentMimeType, String uuId) {
+        this(sessionStorage, contextClass, contextContentMimeType, null, null, uuId);
     }
 
     public SingleContextAdapter(SessionStorage sessionStorage, String uuId, Class<M> metadataClass,
@@ -74,10 +62,10 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
     }
 
     public SingleContextAdapter(SessionStorage sessionStorage, Class<C> contextClass,
-                                String contextMimeType,
+                                String contextContentMimeType,
                                 Class<M> metadataClass,
                                 String metadataMimeType) {
-        this(sessionStorage, contextClass, contextMimeType, metadataClass, metadataMimeType, null);
+        this(sessionStorage, contextClass, contextContentMimeType, metadataClass, metadataMimeType, null);
     }
 
     public SingleContextAdapter(SessionStorage sessionStorage, String uuId) {
@@ -106,16 +94,16 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
 
     @SuppressWarnings("unchecked")
     public OperationResult<C> create(C context) {
-        if (!isContextTypeValid(context)) {
-            throw new IllegalArgumentException("Unsupported contextClass type");
+        if (context == null) {
+            throw new MandatoryParameterNotFoundException("Context is null");
         }
         JerseyRequest<C> jerseyRequest = JerseyRequest.buildRequest(this.sessionStorage
                 , contextClass
                 , new String[]{SERVICE_URI}
                 , new DefaultErrorHandler());
-        if (contextMimeType != null) {
+        if (contextContentMimeType != null) {
             jerseyRequest
-                    .setContentType(contextMimeType);
+                    .setContentType(contextContentMimeType);
         }
         return jerseyRequest.post(context);
     }
@@ -126,13 +114,10 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
     }
 
     public OperationResult<C> update(C context) {
-        if (!isContextTypeValid(context)) {
-            throw new IllegalArgumentException("Unsupported contextClass type");
-        }
         JerseyRequest<C> jerseyRequest = buildRequest();
-        if (contextMimeType != null) {
+        if (contextContentMimeType != null) {
             jerseyRequest
-                    .setContentType(contextMimeType);
+                    .setContentType(contextContentMimeType);
         }
         return jerseyRequest.put(context);
     }
@@ -182,15 +167,15 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
     }
 
     public OperationResult<M> createAndGetMetadata(C context) {
-        if (!isContextTypeValid(context)) {
-            throw new IllegalArgumentException("Unsupported contextClass type");
+        if (context == null) {
+            throw new MandatoryParameterNotFoundException("Context is null");
         }
         JerseyRequest<M> jerseyRequest = JerseyRequest.buildRequest(this.sessionStorage
                 , metadataClass
                 , new String[]{SERVICE_URI}
                 , new DefaultErrorHandler());
         jerseyRequest
-                .setContentType(contextMimeType);
+                .setContentType(contextContentMimeType);
         jerseyRequest
                 .setAccept(metadataMimeType);
         return jerseyRequest.post(context);
@@ -204,24 +189,5 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
         jerseyRequest
                 .setContentType("application/adhoc.multiLevelQuery+json");
         return jerseyRequest.post(query);
-    }
-
-
-    protected <T> Boolean isContextTypeValid(T context) {
-        if (context == null) {
-            throw new MandatoryParameterNotFoundException("context is null");
-        }
-        return (context instanceof LfsConnection ||
-                context instanceof FtpConnection ||
-                context instanceof ClientDomain ||
-                context instanceof ClientSemanticLayerDataSource ||
-                context instanceof ClientResourceLookup ||
-                context instanceof ClientCustomDataSource ||
-                context instanceof ClientJndiJdbcDataSource ||
-                context instanceof ClientJdbcDataSource ||
-                context instanceof ClientReportUnit ||
-                context instanceof DomElExpressionContext||
-                context instanceof DomElExpressionCollectionContext ||
-                context instanceof SqlExecutionRequest);
     }
 }

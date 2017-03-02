@@ -479,6 +479,17 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
     }
 
     @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
+    public void should_throw_exception_when_create_connection_is_null() throws Exception {
+        //when
+        connectionsService
+                .connection(TEST_UUID)
+                .update(null);
+        //then
+        // an exception should be thrown
+
+    }
+
+    @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
     public void should_throw_exception_when_create_connection_uuid_is_null() throws Exception {
         //when
         connectionsService
@@ -495,26 +506,6 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
         connectionsService
                 .connection("")
                 .get();
-        //then
-        // an exception should be thrown
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exception_when_update_connection_type_is_invalid() throws Exception {
-        //when
-        connectionsService
-                .connection(TEST_UUID)
-                .update(new Object());
-        //then
-        // an exception should be thrown
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exception_when_connection_class_is_invalid() throws Exception {
-        //when
-        connectionsService
-                .connection(TEST_UUID)
-                .create(new Object());
         //then
         // an exception should be thrown
     }
