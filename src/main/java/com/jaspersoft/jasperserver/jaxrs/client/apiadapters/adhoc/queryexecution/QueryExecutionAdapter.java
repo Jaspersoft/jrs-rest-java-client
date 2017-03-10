@@ -1,7 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution;
 
 import com.jaspersoft.jasperserver.dto.executions.AbstractClientExecution;
-import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
@@ -23,17 +22,18 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id$
  * @see
  */
-public class QueryExecutionAdapter<T extends ClientQueryResultData> extends AbstractAdapter {
+public class QueryExecutionAdapter extends AbstractAdapter {
+
 
     private String serviceURI = "queryExecutions";
     private List<String> uri;
-    private Class<T> dataSetClass;
+    private Class dataSetClass;
     private String contentType;
     private String[] acceptType;
     private MimeType responseFormat = sessionStorage.getConfiguration().getAcceptMimeType();
     private MultivaluedHashMap<String, String> params;
 
-    public QueryExecutionAdapter(SessionStorage sessionStorage, String contentType, Class<T> dataSetClass, String... acceptType) {
+    public QueryExecutionAdapter(SessionStorage sessionStorage, String contentType, Class dataSetClass, String... acceptType) {
         super(sessionStorage);
         this.contentType = contentType;
         this.acceptType = acceptType;
@@ -43,37 +43,36 @@ public class QueryExecutionAdapter<T extends ClientQueryResultData> extends Abst
         uri.add(serviceURI);
     }
 
-    public QueryExecutionAdapter<T> asXml() {
+    public QueryExecutionAdapter asXml() {
         responseFormat = MimeType.XML;
         return this;
     }
 
-
-    public QueryExecutionAdapter<T> asJson() {
+    public QueryExecutionAdapter asJson() {
         responseFormat = MimeType.JSON;
         return this;
     }
 
-    public QueryExecutionAdapter<T> asResultDataSet(String resultMimeType) {
+    public QueryExecutionAdapter asResultDataSet(String resultMimeType) {
         acceptType = new String[]{resultMimeType};
-        dataSetClass = (Class<T>) QueryResultDataMediaType.getResultDataType(resultMimeType);
+        dataSetClass = QueryResultDataMediaType.getResultDataType(resultMimeType);
         return this;
     }
 
-    public QueryExecutionAdapter<T> offset(Integer offset) {
+    public QueryExecutionAdapter offset(Integer offset) {
         params.add("offset", offset.toString());
         return this;
     }
 
-    public QueryExecutionAdapter<T> pageSize(Integer pageSize) {
+    public QueryExecutionAdapter pageSize(Integer pageSize) {
         params.add("pageSize", pageSize.toString());
         return this;
     }
 
-    public OperationResult<T> retrieveData(String executionId) {
+    public <T> OperationResult<T> retrieveData(String executionId) {
         uri.add(executionId);
         uri.add("data");
-        JerseyRequest<T> request = buildRequest();
+        JerseyRequest<T> request = buildRequest(dataSetClass);
         if (params.size() > 0) {
             request.addParams(params);
         }
@@ -82,17 +81,17 @@ public class QueryExecutionAdapter<T extends ClientQueryResultData> extends Abst
         return request.get();
     }
 
-    public OperationResult<T> deleteExecution(String executionId) {
+    public <T> OperationResult<T> deleteExecution(String executionId) {
         uri.add(executionId);
-        JerseyRequest<T> request = buildRequest();
+        JerseyRequest<T> request = buildRequest(dataSetClass);
         return request.delete();
     }
 
-    public OperationResult<T> execute(AbstractClientExecution query) {
+    public <T> OperationResult<T> execute(AbstractClientExecution query) {
         if (query == null) {
             throw new MandatoryParameterNotFoundException("Query must be specified");
         }
-        JerseyRequest<T> request = buildRequest();
+        JerseyRequest<T> request = buildRequest(dataSetClass);
         request.setContentType(contentType);
         if (!(sessionStorage.getConfiguration().getAcceptMimeType() == responseFormat)) {
             for (int i = 0; i < acceptType.length; i++) {
@@ -105,7 +104,7 @@ public class QueryExecutionAdapter<T extends ClientQueryResultData> extends Abst
                 post(query);
     }
 
-    protected JerseyRequest<T> buildRequest() {
+    protected <T> JerseyRequest<T> buildRequest(Class<T> dataSetClass) {
 
         JerseyRequest<T> request = JerseyRequest.buildRequest(sessionStorage,
                 dataSetClass,

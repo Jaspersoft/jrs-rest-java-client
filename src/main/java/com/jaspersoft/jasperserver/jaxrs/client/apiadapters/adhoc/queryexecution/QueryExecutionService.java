@@ -35,7 +35,7 @@ public class QueryExecutionService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    public QueryExecutionAdapter<ClientFlatQueryResultData> flatQuery() {
+    public QueryExecutionAdapter flatQuery() {
         return this.adapter(sessionStorage,
                 (sessionStorage.getConfiguration().getContentMimeType().equals(MimeType.JSON)) ?
                         EXECUTION_MULTI_LEVEL_QUERY_JSON : EXECUTION_MULTI_LEVEL_QUERY_XML,
@@ -44,7 +44,7 @@ public class QueryExecutionService extends AbstractAdapter {
                         FLAT_DATA_JSON : FLAT_DATA_XML);
     }
 
-    public QueryExecutionAdapter<ClientMultiLevelQueryResultData> multiLevelQuery() {
+    public QueryExecutionAdapter multiLevelQuery() {
         return this.adapter(sessionStorage,
                 (sessionStorage.getConfiguration().getContentMimeType().equals(MimeType.JSON)) ?
                         EXECUTION_MULTI_LEVEL_QUERY_JSON : EXECUTION_MULTI_LEVEL_QUERY_XML,
@@ -53,7 +53,7 @@ public class QueryExecutionService extends AbstractAdapter {
                         MULTI_LEVEL_DATA_JSON : MULTI_LEVEL_DATA_XML);
     }
 
-    public QueryExecutionAdapter<ClientMultiAxesQueryResultData> multiAxesQuery() {
+    public QueryExecutionAdapter multiAxesQuery() {
         return this.adapter(sessionStorage,
                 (sessionStorage.getConfiguration().getContentMimeType().equals(MimeType.JSON)) ?
                         EXECUTION_MULTI_AXES_QUERY_JSON : EXECUTION_MULTI_AXES_QUERY_XML,
@@ -63,7 +63,7 @@ public class QueryExecutionService extends AbstractAdapter {
     }
 
 
-    public QueryExecutionAdapter<ClientQueryResultData> providedQuery() {
+    public QueryExecutionAdapter providedQuery() {
 
         return this.adapter(sessionStorage,
                 (sessionStorage.getConfiguration().getContentMimeType().equals(MimeType.JSON)) ?
@@ -74,11 +74,12 @@ public class QueryExecutionService extends AbstractAdapter {
                         new String[]{FLAT_DATA_XML, MULTI_LEVEL_DATA_XML, MULTI_AXES_DATA_XML});
     }
 
-    protected <P extends ClientQueryResultData> QueryExecutionAdapter<P> adapter(SessionStorage sessionStorage,
+
+    protected QueryExecutionAdapter adapter(SessionStorage sessionStorage,
                                                    String contentType,
-                                                   Class<P> clazz,
+                                                   Class clazz,
                                                    String... acceptType) {
-        return new QueryExecutionAdapter<P>(sessionStorage, contentType, clazz, acceptType);
+        return new QueryExecutionAdapter(sessionStorage, contentType, clazz, acceptType);
     }
 
 }

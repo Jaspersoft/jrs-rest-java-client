@@ -49,9 +49,9 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
     @Mock
     private SessionStorage sessionStorageMock;
     @Mock
-    private QueryExecutionAdapter<ClientMultiLevelQueryResultData> multiLevelAdapterMock;
+    private QueryExecutionAdapter multiLevelAdapterMock;
     @Mock
-    private QueryExecutionAdapter<ClientMultiAxesQueryResultData> multiAxesAdapterMock;
+    private QueryExecutionAdapter multiAxesAdapterMock;
     @Mock
     private RestClientConfiguration configurationMock;
 
@@ -89,7 +89,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 FLAT_DATA_JSON).thenReturn(multiLevelAdapterMock);
 
         // When
-        QueryExecutionAdapter<ClientFlatQueryResultData> adapter = executionService.flatQuery();
+        QueryExecutionAdapter adapter = executionService.flatQuery();
 
         // Then
         assertEquals(adapter, multiLevelAdapterMock);
@@ -111,7 +111,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 MULTI_AXES_DATA_JSON).thenReturn(multiAxesAdapterMock);
 
         // When
-        QueryExecutionAdapter<ClientMultiAxesQueryResultData> adapter = executionService.multiAxesQuery();
+        QueryExecutionAdapter adapter = executionService.multiAxesQuery();
 
         // Then
         assertEquals(adapter, multiAxesAdapterMock);
@@ -133,7 +133,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 MULTI_LEVEL_DATA_JSON).thenReturn(multiLevelAdapterMock);
 
         // When
-        QueryExecutionAdapter<ClientMultiLevelQueryResultData> adapter = executionService.multiLevelQuery();
+        QueryExecutionAdapter adapter = executionService.multiLevelQuery();
 
         // Then
         assertEquals(adapter, multiLevelAdapterMock);
@@ -157,7 +157,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 MULTI_AXES_DATA_JSON).thenReturn(multiLevelAdapterMock);
 
         // When
-        QueryExecutionAdapter<? extends ClientQueryResultData> adapter = executionService.providedQuery();
+        QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
         assertEquals(adapter, multiLevelAdapterMock);
@@ -181,7 +181,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 MULTI_AXES_DATA_JSON).thenReturn(multiLevelAdapterMock);
 
         // When
-        QueryExecutionAdapter<? extends ClientQueryResultData> adapter = executionService.providedQuery();
+        QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
         assertEquals(adapter, multiLevelAdapterMock);
@@ -206,7 +206,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 MULTI_AXES_DATA_JSON).thenReturn(multiAxesAdapterMock);
 
         // When
-        QueryExecutionAdapter<? extends ClientQueryResultData> adapter = executionService.providedQuery();
+        QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
         assertEquals(adapter, multiAxesAdapterMock);
@@ -228,7 +228,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 MULTI_AXES_DATA_XML).thenReturn(multiAxesAdapterMock);
 
         // When
-        QueryExecutionAdapter<ClientMultiAxesQueryResultData> adapter = executionService.multiAxesQuery();
+        QueryExecutionAdapter adapter = executionService.multiAxesQuery();
 
         // Then
         assertEquals(adapter, multiAxesAdapterMock);
@@ -250,7 +250,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 MULTI_LEVEL_DATA_XML).thenReturn(multiLevelAdapterMock);
 
         // When
-        QueryExecutionAdapter<ClientMultiLevelQueryResultData> adapter = executionService.multiLevelQuery();
+        QueryExecutionAdapter adapter = executionService.multiLevelQuery();
 
         // Then
         assertEquals(adapter, multiLevelAdapterMock);
@@ -274,7 +274,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 MULTI_AXES_DATA_XML).thenReturn(multiLevelAdapterMock);
 
         // When
-        QueryExecutionAdapter<? extends ClientQueryResultData> adapter = executionService.providedQuery();
+        QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
         assertEquals(adapter, multiLevelAdapterMock);
@@ -298,7 +298,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 MULTI_AXES_DATA_XML).thenReturn(multiLevelAdapterMock);
 
         // When
-        QueryExecutionAdapter<? extends ClientQueryResultData> adapter = executionService.providedQuery();
+        QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
         assertEquals(adapter, multiLevelAdapterMock);
@@ -323,7 +323,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 MULTI_AXES_DATA_XML).thenReturn(multiAxesAdapterMock);
 
         // When
-        QueryExecutionAdapter<? extends ClientQueryResultData> adapter = executionService.providedQuery();
+        QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
         assertEquals(adapter, multiAxesAdapterMock);
