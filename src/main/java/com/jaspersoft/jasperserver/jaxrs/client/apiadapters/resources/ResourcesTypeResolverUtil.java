@@ -46,6 +46,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientXmlaConnection;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
+import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomainSchema;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -84,6 +85,7 @@ public class ResourcesTypeResolverUtil {
             put(ClientDashboard.class, ResourceMediaType.DASHBOARD_CLIENT_TYPE);
             put(ClientDomainTopic.class, ResourceMediaType.DOMAIN_TOPIC_CLIENT_TYPE);
             put(ClientDomain.class, ResourceMediaType.DOMAIN_CLIENT_TYPE);
+            put(ClientDomainSchema.class, "domainSchema");
         }};
 
         for (Map.Entry<Class<? extends ClientResource>, String> entry : classToMimeMap.entrySet()) {
