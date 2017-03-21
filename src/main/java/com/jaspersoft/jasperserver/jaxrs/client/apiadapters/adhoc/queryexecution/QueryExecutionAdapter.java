@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class QueryExecutionAdapter extends AbstractAdapter {
 
+
     private String serviceURI = "queryExecutions";
     private List<String> uri;
     private Class dataSetClass;
@@ -75,6 +76,7 @@ public class QueryExecutionAdapter extends AbstractAdapter {
         if (params.size() > 0) {
             request.addParams(params);
         }
+
         request.setAccept(StringUtils.join(acceptType, ","));
         return request.get();
     }
@@ -111,4 +113,5 @@ public class QueryExecutionAdapter extends AbstractAdapter {
 
         return request;
     }
+
 }

@@ -74,6 +74,7 @@ public class QueryExecutionService extends AbstractAdapter {
                         new String[]{FLAT_DATA_XML, MULTI_LEVEL_DATA_XML, MULTI_AXES_DATA_XML});
     }
 
+
     protected QueryExecutionAdapter adapter(SessionStorage sessionStorage,
                                                    String contentType,
                                                    Class clazz,

@@ -1,10 +1,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
-import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
+import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.dto.resources.domain.PresentationGroupElement;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextService;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 /**
@@ -21,25 +21,25 @@ public class DomainContextManager {
         this.sessionStorage = sessionStorage;
     }
 
-    public OperationResult<ClientSemanticLayerDataSource> create(ClientSemanticLayerDataSource domain) {
-        return new ConnectionsService(sessionStorage).
-                connection(ClientSemanticLayerDataSource.class, ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE).
+    public OperationResult<ClientDomain> create(ClientDomain domain) {
+        return new ContextService(sessionStorage).
+                context(ClientDomain.class, ContextMediaTypes.DOMAIN_JSON).
                 create(domain);
     }
 
     public OperationResult<PresentationGroupElement> fetchMetadataById(String id) {
-        return new ConnectionsService(sessionStorage).connection(id,
+        return new ContextService(sessionStorage).context(id,
                 PresentationGroupElement.class,
-                ConnectionMediaType.DOMAIN_METADATA_TYPE).
+                ContextMediaTypes.DOMAIN_METADATA_JSON).
                 metadata();
     }
 
-    public OperationResult<PresentationGroupElement> fetchMetadataByContext(ClientSemanticLayerDataSource domain) {
-        return new ConnectionsService(sessionStorage).
-                connection(ClientSemanticLayerDataSource.class,
-                        ConnectionMediaType.DOMAIN_DATA_SOURCE_TYPE,
+    public OperationResult<PresentationGroupElement> fetchMetadataByContext(ClientDomain domain) {
+        return new ContextService(sessionStorage).
+                context(ClientDomain.class,
+                        ContextMediaTypes.DOMAIN_JSON,
                         PresentationGroupElement.class,
-                        ConnectionMediaType.DOMAIN_METADATA_TYPE).
+                        ContextMediaTypes.DOMAIN_METADATA_JSON).
                 createAndGetMetadata(domain);
     }
 }

@@ -22,7 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.providers;
 
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import javax.ws.rs.Consumes;
@@ -40,14 +40,14 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/job+json",
         "application/json",
         "application/job+xml",
-        ConnectionMediaType.FTP_JSON,
-        ConnectionMediaType.FTP_XML,
-        ConnectionMediaType.LOCAL_FILE_SYSTEM_JSON,
-        ConnectionMediaType.LOCAL_FILE_SYSTEM_XML,
-        ConnectionMediaType.TXT_FILE_JSON,
-        ConnectionMediaType.TXT_FILE_XML,
-        ConnectionMediaType.XLS_FILE_JSON,
-        ConnectionMediaType.XLS_FILE_XML,
+        ContextMediaTypes.FTP_JSON,
+        ContextMediaTypes.FTP_XML,
+        ContextMediaTypes.LOCAL_FILE_SYSTEM_JSON,
+        ContextMediaTypes.LOCAL_FILE_SYSTEM_XML,
+        ContextMediaTypes.TXT_FILE_JSON,
+        ContextMediaTypes.TXT_FILE_XML,
+        ContextMediaTypes.XLS_FILE_JSON,
+        ContextMediaTypes.XLS_FILE_XML,
         ResourceMediaType.LIST_OF_VALUES_JSON,
         ResourceMediaType.LIST_OF_VALUES_XML,
         ResourceMediaType.ADHOC_DATA_VIEW_JSON,
@@ -96,10 +96,12 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/repository.domainTopic+xml",
         "application/repository.domainSchema+json",
         "application/repository.domainSchema+xml",
-        ConnectionMediaType.FTP_JSON,
-        ConnectionMediaType.FTP_XML,
-        ConnectionMediaType.LOCAL_FILE_SYSTEM_JSON,
-        ConnectionMediaType.LOCAL_FILE_SYSTEM_XML,
+        ContextMediaTypes.FTP_JSON,
+        ContextMediaTypes.FTP_XML,
+        ContextMediaTypes.LOCAL_FILE_SYSTEM_JSON,
+        ContextMediaTypes.LOCAL_FILE_SYSTEM_XML,
+        ContextMediaTypes.DOM_EL_CONTEXT_JSON,
+        ContextMediaTypes.DOM_EL_COLLECTION_CONTEXT_JSON,
         "application/hal+json",
         "application/hal+xml",
         "text/json",
@@ -118,6 +120,7 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/repository.reportUnit+xml",
         "application/repository.reportUnit.metadata+json",
         "application/repository.reportUnit.metadata+xml",
+        "application/repository.domain+json",
         "application/execution.multiLevelQuery+json",
         "application/execution.multiAxesQuery+json",
         "application/execution.providedQuery+json",
@@ -129,7 +132,9 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/multiAxesData+json",
         "application/flatData+xml",
         "application/multiLevelData+xml",
-        "application/multiAxesData+xml"
+        "application/multiAxesData+xml",
+        "application/contexts.partialMetadataOptions+json",
+        "application/adhoc.multiLevelQuery+json"
 })
 @Produces({
         "application/collection+json",
@@ -137,14 +142,14 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/job+json",
         "application/json",
         "application/job+xml",
-        ConnectionMediaType.FTP_JSON,
-        ConnectionMediaType.FTP_XML,
-        ConnectionMediaType.LOCAL_FILE_SYSTEM_JSON,
-        ConnectionMediaType.LOCAL_FILE_SYSTEM_XML,
-        ConnectionMediaType.TXT_FILE_JSON,
-        ConnectionMediaType.TXT_FILE_XML,
-        ConnectionMediaType.XLS_FILE_JSON,
-        ConnectionMediaType.XLS_FILE_XML,
+        ContextMediaTypes.FTP_JSON,
+        ContextMediaTypes.FTP_XML,
+        ContextMediaTypes.LOCAL_FILE_SYSTEM_JSON,
+        ContextMediaTypes.LOCAL_FILE_SYSTEM_XML,
+        ContextMediaTypes.TXT_FILE_JSON,
+        ContextMediaTypes.TXT_FILE_XML,
+        ContextMediaTypes.XLS_FILE_JSON,
+        ContextMediaTypes.XLS_FILE_XML,
         ResourceMediaType.LIST_OF_VALUES_JSON,
         ResourceMediaType.LIST_OF_VALUES_XML,
         ResourceMediaType.ADHOC_DATA_VIEW_JSON,
@@ -191,10 +196,12 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/repository.dashboard+xml",
         "application/repository.domainTopic+json",
         "application/repository.domainTopic+xml",
-        ConnectionMediaType.FTP_JSON,
-        ConnectionMediaType.FTP_XML,
-        ConnectionMediaType.LOCAL_FILE_SYSTEM_JSON,
-        ConnectionMediaType.LOCAL_FILE_SYSTEM_XML,
+        ContextMediaTypes.FTP_JSON,
+        ContextMediaTypes.FTP_XML,
+        ContextMediaTypes.LOCAL_FILE_SYSTEM_JSON,
+        ContextMediaTypes.LOCAL_FILE_SYSTEM_XML,
+        ContextMediaTypes.DOM_EL_CONTEXT_JSON,
+        ContextMediaTypes.DOM_EL_COLLECTION_CONTEXT_JSON,
         "application/repository.domainSchema+json",
         "application/repository.domainSchema+xml",
         "application/xml",
@@ -216,6 +223,7 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/repository.reportUnit+xml",
         "application/repository.reportUnit.metadata+json",
         "application/repository.reportUnit.metadata+xml",
+        "application/repository.domain+json",
         "application/execution.multiLevelQuery+json",
         "application/execution.multiAxesQuery+json",
         "application/execution.providedQuery+json",
@@ -227,7 +235,9 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/multiAxesData+json",
         "application/flatData+xml",
         "application/multiLevelData+xml",
-        "application/multiAxesData+xml"
+        "application/multiAxesData+xml",
+        "application/contexts.partialMetadataOptions+json",
+        "application/adhoc.multiLevelQuery+json"
 })
 public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
 

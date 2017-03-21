@@ -138,6 +138,8 @@ public class SessionStorage {
     protected WebTarget configClient() {
         JacksonJsonProvider customRepresentationTypeProvider = new CustomRepresentationTypeProvider()
                 .configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         rootTarget
                 .register(customRepresentationTypeProvider)
