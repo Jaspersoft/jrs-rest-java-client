@@ -6,8 +6,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.jaspersoft</groupId>
-    <artifactId>6.3.4-SNAPSHOT</artifactId>
-    <version>develop-context-SNAPSHOT</version>
+    <artifactId>jrs-rest-java-client</artifactId>
+    <version>6.3.4-SNAPSHOT</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
