@@ -138,7 +138,7 @@ To do this you should create instance of `RestClientConfiguration`. It can be do
 - loading configuration from file;
 - creation of manual configuration in java code.
 
-####Loading configuration from file:
+###Loading configuration from file:
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("configuration.properties");
 ```
@@ -160,7 +160,8 @@ acceptMimeType=JSON
 ```
 File must contain at least URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}`.
 Please notice, configuration settings may be changed after loading manually in java code.
-####Creation of manual configuration
+
+###Creation of manual configuration
 To configure `JasperserverRestClient` manually, use the constructor of `RestClientConfiguration` and properties:
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
