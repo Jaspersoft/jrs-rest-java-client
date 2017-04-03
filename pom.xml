@@ -7,14 +7,14 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>6.3.1</version>
+    <version>develop-context-SNAPSHOT</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <jasperserver-dto.version>6.3.0</jasperserver-dto.version>
+        <jasperserver-dto.version>domain-designer-SNAPSHOT</jasperserver-dto.version>
     </properties>
 
     <scm>
@@ -32,6 +32,14 @@
         <repository>
             <id>opencast-public</id>
             <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
+        </repository>
+        <repository>
+          <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+          <id>artifactory_ua</id>
+          <name>artifactory_ua</name>
+          <url>http://mvnrepo.jaspersoft.com:8081/artifactory/repo</url>
         </repository>
     </repositories>
 
@@ -161,8 +169,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -181,6 +189,7 @@
                             </exclude>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/exceptions/**</exclude>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/enums/**</exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/adhoc/queryexecution/enums/**</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
@@ -202,6 +211,7 @@
                 <version>2.12</version>
                 <configuration>
                     <skipTests>false</skipTests>
+                    <testFailureIgnore>false</testFailureIgnore>
                     <excludes>
                         <exclude>**/IT.java</exclude>
                     </excludes>

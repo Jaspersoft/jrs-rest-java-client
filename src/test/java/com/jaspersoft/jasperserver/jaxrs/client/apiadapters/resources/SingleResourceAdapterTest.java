@@ -611,6 +611,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
 
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -647,7 +648,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(callback).execute(operationResultMock);
         Mockito.verify(virtualDataSourceJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(virtualDataSourceJerseyRequestMock).setContentType("application/repository.virtualDataSource+json");
-        Mockito.verifyNoMoreInteractions(virtualDataSourceJerseyRequestMock);
+        Mockito.verify(virtualDataSourceJerseyRequestMock).setAccept("application/repository.virtualDataSource+json");
     }
 
     @Test
@@ -769,6 +770,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
 
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -805,7 +807,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(callback).execute(operationResultMock);
         Mockito.verify(virtualDataSourceJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(virtualDataSourceJerseyRequestMock).setContentType("application/repository.virtualDataSource+json");
-        Mockito.verifyNoMoreInteractions(virtualDataSourceJerseyRequestMock);
+        Mockito.verify(virtualDataSourceJerseyRequestMock).setAccept("application/repository.virtualDataSource+json");
     }
 
     @Test
@@ -826,6 +828,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
 
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
 
@@ -839,7 +842,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(virtualDataSourceJerseyRequestMock).post(source);
         Mockito.verify(virtualDataSourceJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(virtualDataSourceJerseyRequestMock).setContentType("application/repository.virtualDataSource+json");
-        Mockito.verifyNoMoreInteractions(virtualDataSourceJerseyRequestMock);
+        Mockito.verify(virtualDataSourceJerseyRequestMock).setAccept("application/repository.virtualDataSource+json");
     }
 
     @Test
@@ -860,6 +863,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
 
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
 
@@ -873,7 +877,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(virtualDataSourceJerseyRequestMock).put(source);
         Mockito.verify(virtualDataSourceJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(virtualDataSourceJerseyRequestMock).setContentType("application/repository.virtualDataSource+json");
-        Mockito.verifyNoMoreInteractions(virtualDataSourceJerseyRequestMock);
+        Mockito.verify(virtualDataSourceJerseyRequestMock).setAccept("application/repository.virtualDataSource+json");
     }
 
 

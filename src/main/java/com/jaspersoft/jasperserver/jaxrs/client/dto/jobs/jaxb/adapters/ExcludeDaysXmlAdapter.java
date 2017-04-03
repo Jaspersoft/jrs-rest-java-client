@@ -34,6 +34,7 @@ import java.util.List;
 /**
  * @author Yaroslav.Kovalchyk
  * @version $Id: ExcludeDaysXmlAdapter.java 23844 2012-05-22 06:23:41Z ykovalchyk $
+ * @deprecated (use server adapter).
  */
 public class ExcludeDaysXmlAdapter extends XmlAdapter<ExcludeDaysWrapper, ArrayList<Calendar>> {
     private DateFormat format = new SimpleDateFormat("yyyy-MM-dd");

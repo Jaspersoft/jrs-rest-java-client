@@ -21,7 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.enums;
 
-public final class ConnectionMediaType {
+public final class ContextMediaTypes {
 
     public static final String FTP_TYPE = "application/connections.ftp";
     public static final String FTP_JSON = "application/connections.ftp+json";
@@ -51,9 +51,37 @@ public final class ConnectionMediaType {
     public static final String JDBC_DATA_SOURCE_METADATA_JSON = "application/repository.customDataSource.metadata+json";
     public static final String JDBC_DATA_SOURCE_METADATA_XML = "application/repository.customDataSource.metadata+xml";
 
-    public static final String DOMAIN_DATA_SOURCE_TYPE = "application/repository.domain";
-    public static final String DOMAIN_DATA_SOURCE_JSON = "application/repository.domain+json";
-    public static final String DOMAIN_DATA_SOURCE_XML = "application/repository.domain+xml";
+    public static final String DOMAIN_DATA_SOURCE_TYPE = "application/repository.semanticLayerDataSource";
+    public static final String DOMAIN_DATA_SOURCE_JSON = "application/repository.semanticLayerDataSource+json";
+    public static final String DOMAIN_DATA_SOURCE_XML = "application/repository.semanticLayerDataSource+xml";
+
+    public static final String RESOURCE_LOOKUP_TYPE = "application/repository.resourceLookup";
+    public static final String RESOURCE_LOOKUP_JSON = "application/repository.resourceLookup+json";
+    public static final String RESOURCE_LOOKUP_XML = "application/repository.resourceLookup+xml";
+
+    public static final String RESOURCE_LOOKUP_METADATA_TYPE = "application/repository.resourceLookup";
+    public static final String RESOURCE_LOOKUP_METADATA_JSON = "application/repository.resourceLookup+json";
+    public static final String RESOURCE_LOOKUP_METADATA_XML = "application/repository.resourceLookup+xml";
+
+    public static final String DOMAIN_TYPE = "application/repository.domain";
+    public static final String DOMAIN_JSON = "application/repository.domain+json";
+    public static final String DOMAIN_XML = "application/repository.domain+xml";
+
+    public static final String DOMAIN_METADATA_TYPE = "application/repository.domain.metadata";
+    public static final String DOMAIN_METADATA_JSON = "application/repository.domain.metadata+json";
+    public static final String DOMAIN_METADATA_XML = "application/repository.domain.metadata+xml";
+
+    public static final String DOMAIN_DATA_SOURCE_METADATA_TYPE = "application/repository.semanticLayerDataSource.metadata";
+    public static final String DOMAIN_DATA_SOURCE_METADATA_JSON = "application/repository.semanticLayerDataSource.metadata+json";
+    public static final String DOMAIN_DATA_SOURCE_METADATA_XML = "application/repository.semanticLayerDataSource.metadata+xml";
+
+    public static final String REPORT_UNIT_TYPE = "application/repository.reportUnit";
+    public static final String REPORT_UNIT_JSON = "application/repository.reportUnit+json";
+    public static final String REPORT_UNIT_XML = "application/repository.reportUnit+xml";
+
+    public static final String REPORT_UNIT_METADATA_TYPE = "application/repository.reportUnit.metadata";
+    public static final String REPORT_UNIT_METADATA_JSON = "application/repository.reportUnit.metadata+json";
+    public static final String REPORT_UNIT_METADATA_XML = "application/repository.reportUnit.metadata+xml";
 
     public static final String TXT_FILE_TYPE = "application/connections.txtFile";
     public static final String TXT_FILE_JSON = "application/connections.txtFile+json";
@@ -63,5 +91,17 @@ public final class ConnectionMediaType {
     public static final String XLS_FILE_JSON = "application/connections.xlsFile+json";
     public static final String XLS_FILE_XML = "application/connections.xlsFile+xml";
 
-    private ConnectionMediaType(){}
+    public static final String DOM_EL_CONTEXT_TYPE= "application/contexts.domElExpressionContext";
+    public static final String DOM_EL_CONTEXT_JSON= "application/contexts.domElExpressionContext+json";
+
+    public static final String DOM_EL_COLLECTION_CONTEXT_TYPE= "application/contexts.domElExpressionCollectionContext";
+    public static final String DOM_EL_COLLECTION_CONTEXT_JSON= "application/contexts.domElExpressionCollectionContext+json";
+
+    public static final String SQL_EXECUTION_TYPE= "application/contexts.sqlExecutionRequest";
+    public static final String SQL_EXECUTION_JSON= "application/contexts.sqlExecutionRequest+json";
+
+    public static final String DATASET_METADATA_TYPE= "application/dataset.metadata";
+    public static final String DATASET_METADATA_JSON= "application/dataset.metadata+json";
+
+    private ContextMediaTypes(){}
 }

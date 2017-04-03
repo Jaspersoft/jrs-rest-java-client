@@ -7,33 +7,33 @@ Table of Contents
 ------------------
 1. [Introduction](#introduction).
 2. [Configuration](#configuration).
-  * [Loading configuration from file](#loading-configuration-from-file).
-  * [Creation of manual configuration](#creation-of-manual-configuration).
-  * [HTTPS configuration](#https-configuration).
-  * [X-HTTP-Method override](#x-http-method-override).
-  * [Switching of authentication type](#switching-authentication-type).
-  * [Exception handling](#exception-handling).
-  * [Logging](#logging).
-  * [Switching between JSON and XML](#switching-between-json-and-xml).
-  * [Client instantiation](#client-instantiation).
+   * [Loading configuration from file](#loading-configuration-from-file).
+   * [Creation of manual configuration](#creation-of-manual-configuration).
+   * [HTTPS configuration](#https-configuration).
+   * [X-HTTP-Method override](#x-http-method-override).
+   * [Switching of authentication type](#switching-authentication-type).
+   * [Exception handling](#exception-handling).
+   * [Logging](#logging).
+   * [Switching between JSON and XML](#switching-between-json-and-xml).
+   * [Client instantiation](#client-instantiation).
 3. [Authentication](#authentication).
-  * [Anonymous session](#anonymous-session).
-  * [Invalidating session](#invalidating-session).
+   * [Anonymous session](#anonymous-session).
+   * [Invalidating session](#invalidating-session).
 4. [Report services](#report-services).
-  * [Running a report](#running-a-report).
-  * [Requesting report execution status](#requesting-report-execution-status).
-  * [Requesting report execution details](#requesting-report-execution-details).
-  * [Requesting Report Output](#requesting-report-output).
-  * [Download file attachments for report output](#download-file-attachments-for-report-output).
-  * [Exporting a Report Asynchronously](#exporting-a-report-asynchronously).
-  * [Polling Export Execution](#polling-export-execution).
-  * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
-  * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
+   * [Running a report](#running-a-report).
+   * [Requesting report execution status](#requesting-report-execution-status).
+   * [Requesting report execution details](#requesting-report-execution-details).
+   * [Requesting Report Output](#requesting-report-output).
+   * [Download file attachments for report output](#download-file-attachments-for-report-output).
+   * [Exporting a Report Asynchronously](#exporting-a-report-asynchronously).
+   * [Polling Export Execution](#polling-export-execution).
+   * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
+   * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
 5. [Input controls service](#input-controls-service).
-  * [Listing input controls structure](#listing-input-controls-structure).
-  * [Reordering input controls structure](#reordering-input-controls-structure).
-  * [Listing input controls values](#listing-input-controls-values).
-  * [Setting input controls values](#setting-input-controls-values).
+   * [Listing input controls structure](#listing-input-controls-structure).
+   * [Reordering input controls structure](#reordering-input-controls-structure).
+   * [Listing input controls values](#listing-input-controls-values).
+   * [Setting input controls values](#setting-input-controls-values).
 6. [Administration services](#administration-services).
   1. [Organizations service](#organizations-service).
     * [Searching for Organizations](#searching-for-organizations).
@@ -108,21 +108,29 @@ Table of Contents
   * [Deleting an Exclusion Calendar](#deleting-an-exclusion-calendar).
 10. [Import/Export](#importexport).
   1. [Export service](#export-service).
-    * [Checking the Export State](#checking-the-export-state).
-    * [Fetching the Export Output](#fetching-the-export-output).
+   * [Checking the Export State](#checking-the-export-state).
+   * [Fetching the Export Output](#fetching-the-export-output).
   2. [Import service](#import-service).
-    * [Checking the Import State](#checking-the-import-state).
-11. [Domain metadata service](#domainmetadata-service).
+  * [Checking the Import State](#checking-the-import-state).
+11. [Metadata](#metadata).
+  * [Domain Metadata](#domain-metadata)
+  * [Report Metadata](#report-metadata)
 12. [Thumbnail Search Service](#thumbnail-search-service).
 13. [Diagnostic Service](#diagnostic-service).
-14. [Query Executor Service](#query-executor-service).
-15. [Server Information Service](#server-information-service).
-16. [Bundles service](#bundles-service).
-17. [Asynchronous API](#asynchronous-api).
-18. [Getting serialized content from response](#getting-serialized-content-from-response).
-19. [Possible issues](#possible-issues).
-20. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-21. [License](#license).
+14. [Contexts Service](#contexts-service).
+  * [Domain Context Service](#domain-context-service).
+15. [Data Discovery Service](#data-discovery-service).
+  * [Domain data discovery](#domain-data-discovery).
+  * [DomEl data discovery](#domel-data-discovery ).
+  * [Derived table data discovery](#derived-table-data-discovery).
+16. [Query Executor Service](#query-executor-service).
+17. [Server Information Service](#server-information-service).
+18. [Bundles service](#bundles-service).
+19. [Asynchronous API](#asynchronous-api).
+20. [Getting serialized content from response](#getting-serialized-content-from-response).
+21. [Possible issues](#possible-issues).
+22. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+23. [License](#license).
 
 Introduction
 -------------
@@ -1666,7 +1674,7 @@ OperationResult<JobState> result = client
         .authenticate("jasperadmin", "jasperadmin")
         .jobsService()
         .job(8600)
-        .state();
+        .jobState();
 
 JobState jobState = result.getEntity();
 ```
@@ -1709,7 +1717,7 @@ OperationResult<JobIdListWrapper> result = client
         .jobsService()
         .jobs()
         .parameter(JobsParameter.JOB_ID, "8600")
-        .pause();
+        .pauseJobs();
 ```
 ####Resuming Jobs
 Use the following method to resume any or all paused jobs in the scheduler. Resuming a job means that any defined trigger in the schedule that occurs after the time it is resumed will cause the report to run again. Missed schedule triggers that occur before the job is resumed are never run.
@@ -1719,7 +1727,7 @@ OperationResult<JobIdListWrapper> result = client
         .jobsService()
         .jobs()
         .parameter(JobsParameter.JOB_ID, "8600")
-        .resume();
+        .resumeJobs();
 ```
 ####Restarting Failed Jobs
 Use the following method to rerun failed jobs in the scheduler. For each job to be restarted, the scheduler creates an immediate single-run copy of job, to replace the one that failed. Therefore, all jobs listed in the request body will run once immediately after issuing this command. The single-run copies have a misfire policy set so that they do not trigger any further failures (`MISFIRE_ INSTRUCTION_IGNORE_MISFIRE_POLICY`). If the single-run copies fail themselves, no further attempts are made automatically.
@@ -1729,7 +1737,7 @@ OperationResult<JobIdListWrapper> result = client
         .jobsService()
         .jobs()
         .parameter(JobsParameter.JOB_ID, "8600")
-        .restart();
+        .restarJobs();
 ```
 ###Calendars service
 The scheduler allows a job to be defined with a list of excluded days or times when you do not want the job to run. For example, if you have a report scheduled to run every business day, you want to exclude holidays that change every year. The list for excluded days and times is defined as a calendar, and there are various ways to define the calendar.  The scheduler stores any number of exclusion calendars that you can reference by name. When scheduling a report, reference the name of the calendar to exclude, and the scheduler automatically calculates the correct days to trigger the report. The scheduler also allows you to update an exclusion calendar and update all of the report jobs that used it. Therefore, you can update the calendar of excluded holidays every year and not need to modify any report jobs.
@@ -1739,7 +1747,7 @@ The following method returns the list of all calendar names that were added to t
 OperationResult<CalendarNameListWrapper> result = client
         .authenticate("jasperadmin", "jasperadmin")
         .jobsService()
-        .calendars();  //OR .calendars(CalendarType.HOLIDAY); //to specify the desired calendar type
+        .allCalendars();  
 
 CalendarNameListWrapper calendarNameListWrapper = result.getEntity();
 ```
@@ -1750,7 +1758,7 @@ OperationResult<Calendar> result = client
         .authenticate("jasperadmin", "jasperadmin")
         .jobsService()
         .calendar("testCalendar")
-        .get();
+        .getCalendar();
 
 Calendar jobCalendar = result.getEntity();
 ```
@@ -1940,8 +1948,9 @@ Also you can restart import task:
                 .getEntity();
 ```
 
-####DomainMetadata Service
-The DomainMetadata Service gives access to the sets and items exposed by a Domain for use in Ad
+####Metadata 
+#####Domain Metadata 
+The domain metadata describes the sets and items exposed by a Domain for use in Ad
 Hoc reports. Items are database fields exposed by the Domain, after all joins, filters, and calculated fields have
 been applied to the database tables selected in the Domain. Sets are groups of items, arranged by the Domain
 creator for use by report creators.
@@ -1952,11 +1961,58 @@ Domain. Fields that belong to tables that are not joined in the Domain belong to
 
 The following code retrieves metadata of Domain.
 ```java
-DomainMetaData domainMetaData = session.domainService()
-        .domainMetadata("/Foodmart_Sales")
-        .retrieve()
-        .getEntity();
+// create domain context by Id of context
+ ClientSemanticLayerDataSource domainContext = new ClientSemanticLayerDataSource().
+                                                setUri("/organizations/organization_1/Domains/Simple_Domain");
+        OperationResult<ClientSemanticLayerDataSource> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .create(domainContext);
+// get uuId of context from "Location" header of response
+// get metadata of domain bi uuId of context
+        OperationResult<DataIslandsContainer> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .fetchMetadataById(uuId); 
+                
+// or you can get metadata by context directly
+
+        OperationResult<DataIslandsContainer> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .fetchMetadataByContext(domainContext);
+                
+        DataIslandsContainer metadata = operationResult.getEntity();
 ```
+#####Report Metadata 
+Report metadata is used for building AdHoc and query accordingly. 
+To get metadata use next code example:
+```java
+// create domain context by Id of context
+ClientReportUnit reportUnit = new ClientReportUnit().setUri("/public/Samples/Domains/supermartDomain");
+
+         OperationResult<ClientReportUnit> operationResult = session
+                        .dataDiscoveryService()
+                        .topicContext()
+                        .create(reportUnit);
+// get uuId of context from "Location" header of response
+// get metadata of domain bi uuId of context
+         OperationResult<ResourceGroupElement> operationResult = session
+                        .dataDiscoveryService()
+                        .topicContext()
+                        .fetchMetadataById(uuId);
+         ResourceGroupElement metadata = operationResult.getEntity();
+                
+// or you can get metadata by context directly
+
+         OperationResult<ResourceGroupElement> operationResult = session
+                        .dataDiscoveryService()
+                        .topicContext()
+                        .fetchMetadataByContext(reportUnit);
+                
+        ResourceGroupElement metadata = operationResult.getEntity();
+```
+
 ####Thumbnail Search Service
 This service is used for requesting a thumbnail image of an existing resource. You can get a single resource. See code below.
 ```java
@@ -2098,16 +2154,258 @@ OperationResult<CollectorSettingsList> operationResult = session
                                 .delete();
 ```
 
-###Query Executor Service
-In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
-For now the only resource that supports queries is a Domain.
+### Contexts Service
 
-The following code executes query and retrieves a result of execution as QueryResult entity.
+Using the service you are able to keep some state or context on the server and execute some actions on this state. General service have next API:
+- save context: 
 ```java
-QueryResult queryResult = session.queryExecutorService()
-        .query(queryFromXmlFile, "/organizations/organization_1/Domains/Simple_Domain")
-        .execute()
-        .getEntity();
+        OperationResult<ContextClass> operationResult = session
+                .contextService()
+                .context(contextClass, contextMimeType)
+                .create(context);
+```
+Response header `"Content-Location"`contains contextUuid.
+
+- get context:
+```java
+        OperationResult<ContextClass> operationResult = session
+                .contextService()
+                .context(contextClass, contextMimeType, uuId)
+                .get(context);
+```
+
+- modify context:
+```java
+        OperationResult<ContextClass> operationResult = session
+                .contextService()
+                .context(contextClass, contextMimeType, uuId)
+                .update(context);
+```
+- delete context:
+```java
+        OperationResult<ContextClass> operationResult = session
+                .contextService()
+                .context(uuId)
+                .delete();
+```
+- get context metadata:
+```java
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(uuId, contextMatadataClass, contextMetadataMimeType)
+                .metadata();
+
+// get context metadata with paramerets
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(uuId, contextMatadataClass, contextMetadataMimeType)
+                .addParameter("expand", "public.accounts")
+                .addParameter("", "")
+                .metadata();
+        
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(uuId, contextMatadataClass, contextMetadataMimeType)
+                .addParameter("include", "public.currency")
+                .metadata();
+        
+        // or
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(uuId, contextMatadataClass, contextMetadataMimeType)
+                .addParameter("expands", "public.account")
+                .addParameter("expands", "public.category")
+                .partialMetadata();
+        
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(uuId, contextMatadataClass, contextMetadataMimeType)
+                .addParameter("includes", "public.currency")
+                .partialMetadata();
+```
+The difference between `.metadata()` and `.partialMetadata()` is in HTTP methods and a way to pass parameters:
+`.metadata()` - sends GET request and parameters as URL query parameters;
+`.partialMetadata()` - sends POST request and parameters as JSON;
+
+- create context and get context metadata:
+```java
+        OperationResult<ContextMetadataClass> operationResult = session
+                .contextService()
+                .context(contextClass, contextMimeType,contextMatadataClass, contextMetadataMimeType)
+                .createAndGetMetadata(context);
+```
+
+####Domain Context Service
+This service allows to execute query of in-memory domain. I.e. domain, that doesn't exist in repository.
+- to create context: 
+```java
+       OperationResult<ClientResourceLookup> operationResult = session
+                .domainContextService()
+                .context(context)
+                .create();
+``` 
+`context` here might be instance of ClientDomain or ClientSemanticLayerDataSource with data source URI and domain schema URI of datasource.
+- to get domain metadata:
+```java
+
+        OperationResult<PresentationGroupElement> operationResult = session
+                .domainContextService()
+                .context(context)
+                .create().getMetadata();
+    // or expznded metadata            
+        OperationResult<PresentationGroupElement> operationResult = session
+                .domainContextService()
+                .context(context)
+                .create()
+                .addParam("expand", nodeName)
+                .getMetadata();
+```   
+- to execute query (only multi level queries are supported):
+```java
+       ClientMultiLevelQuery clientMultiLevelQuery = new ClientMultiLevelQuery().setGroupBy(
+                new ClientQueryGroupBy().setGroups(
+                        asList(new ClientQueryGroup().
+                                setId("account_type").
+                                setFieldName("account_type"))));
+        OperationResult<ClientMultiLevelQueryResultData> operationResult = session
+                .domainContextService()
+                .context(clientDomain)
+                .create().executeQuery(clientMultiLevelQuery);
+```
+
+###Data Discovery Service
+
+The service based on Context Service and allows to work with supported contexts(Domain, DomEl, reports etc) directly.
+
+####Domain data discovery 
+This API allows to execute query of in-memory domain. I.e. domain, that doesn't exist in repository.
+
+```java
+   private String uuId; // available in Content-Location header in responce
+   private ClientDomain domainContext = new ClientDomain().setUri("/public/Samples/Domains/supermartDomain");
+
+// create context
+        OperationResult<ClientDomain> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .create(domainContext);
+// get context metadata
+        OperationResult<PresentationGroupElement> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .fetchMetadataById(uuId);
+// create context and get metadata
+        OperationResult<PresentationGroupElement> operationResult = session
+                .dataDiscoveryService()
+                .domainContext()
+                .fetchMetadataByContext(domainContext);
+```
+####DomEl data discovery 
+This API allows to validate DomEL expressions and convert them from string representation to object representation and back.
+
+```java
+   private DomElExpressionContext expressionStringContext;
+   private DomElExpressionContext expressionObjectContext;
+
+        expressionObjectContext = new DomElExpressionContext().
+                setExpression(new ClientExpressionContainer().setObject(new ClientFunction().
+                        setFunctionName("concat").addOperand(new ClientVariable("test")).addOperand(new ClientVariable("test1")).addOperand(new ClientVariable("b")))).
+                setVariables(Arrays.asList(new DomElVariable().setName("test").setType("java.lang.String"),
+                        new DomElVariable().setName("test1").setType("java.lang.String"))).
+                setResultType("java.lang.String");
+
+        expressionStringContext= new DomElExpressionContext().
+                setExpression(new ClientExpressionContainer().setString("concat(test, test1,'b')")).
+                setVariables(Arrays.asList(new DomElVariable().setName("test").setType("java.lang.String"),
+                        new DomElVariable().setName("test1").setType("java.lang.String"))).
+                setResultType("java.lang.String");
+
+// convert sring expression to object representation
+        OperationResult<DomElExpressionContext> operationResult = session
+                .dataDiscoveryService()
+                .domElContext()
+                .create(expressionStringContext);
+// convert object representation o fexpression to stirng view
+        OperationResult<DomElExpressionContext> operationResult = session
+                .dataDiscoveryService()
+                .domElContext()
+                .create(expressionStringContext);
+```
+####Derived table data discovery
+This API allows to validate DomEL expressions and convert them from string representation to object representation and back.
+
+```java
+  private SqlExecutionRequest sqlExecutionRequest;
+        sqlExecutionRequest = new SqlExecutionRequest().
+                setSql("select * from account").
+                setDataSourceUri("/public/Samples/Data_Sources/FoodmartDataSource");
+
+     OperationResult<PresentationGroupElement> operationResult = session
+                .dataDiscoveryService()
+                .derivedTableContext()
+                .execute(sqlExecutionRequest);
+
+
+```
+###Query Execution Service
+In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecution service.
+For now the only resource that supports queries is an AdHoc data view. In present time JasperReportsServer supports only synchronize query execution.
+
+The following code examples execute query and retrieve a result data for different queries:
+- for flat query:
+```java
+ OperationResult<ClientFlatQueryResultData> execute = session.
+                                queryExecutionService().
+                                flatQuery().
+                                execute(queryExecution);
+```
+- for multi level query:
+```java
+        OperationResult<ClientMultiLevelQueryResultData> execute = session.
+                queryExecutionService().
+                multiLevelQuery().
+                execute(queryExecution);
+```
+Result data set of multi level query can be obtained as MultiLevelResultData(by default) or as FlatQueryResultData:
+```java
+        OperationResult<ClientMultiLevelQueryResultData> execute = session.
+                queryExecutionService().
+                multiLevelQuery().
+                asResultDataSet(QueryResultDataMediaType.FLAT_DATA_JSON).
+                execute(queryExecution);
+```
+- for multi axes query:
+```java
+        OperationResult execute = session.
+                queryExecutionService().
+                multiAxesQuery().
+                execute(queryExecution);
+```
+- for provided query:
+```java
+        OperationResult<? extends ClientQueryResultData> execute = session.
+                queryExecutionService().
+                providedQuery().
+                execute(queryExecution);
+```
+Please notice, that the client resolve type of result dataset according to "Content-Type" header of server's response. 
+
+Also you can get fragment of result data:
+```java
+        OperationResult<? extends ClientQueryResultData> execute = session.
+                queryExecutionService().
+                providedQuery().
+                offset(0).
+                pageSize(100).
+                retrieveData(uuId);
+     // where uuId   - is Id of query execution, that you can obtain from "Content-Location" header of server's response after execution query.
+```
+And you can delete execution using the following code:
+```java
+        OperationResult<? extends ClientQueryResultData> execute = session.
+                queryExecutionService().
+                providedQuery().
+                deleteExecution(uuId);
 ```
 
 ###Server Information Service

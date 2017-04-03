@@ -24,6 +24,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.query.Query;
 
+/**
+ * @deprecated proposal. Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryExecutionService}
+ */
 public class QueryExecutorService extends AbstractAdapter {
 
     public QueryExecutorService(SessionStorage sessionStorage) {

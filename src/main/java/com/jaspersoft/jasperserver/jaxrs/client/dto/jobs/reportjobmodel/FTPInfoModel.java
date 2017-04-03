@@ -32,6 +32,7 @@ import java.util.Map;
  * @author Ivan Chan (ichan@jaspersoft.com)
  * @version $Id: FTPInfoModel.java 38348 2013-09-30 04:57:18Z carbiv $
  * @since 1.0
+ * @deprecated (use server adapter).
  */
 public class FTPInfoModel extends FtpInfo {
     /**

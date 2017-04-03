@@ -9,7 +9,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientJndiJdbcDataSource;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ConnectionMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
@@ -143,11 +143,11 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
 
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(ftpConnectionJerseyRequestMock).when(ftpConnectionJerseyRequestMock).setContentType(ConnectionMediaType.FTP_JSON);
+        doReturn(ftpConnectionJerseyRequestMock).when(ftpConnectionJerseyRequestMock).setContentType(ContextMediaTypes.FTP_JSON);
         doReturn(ftpConnectionOperationResultMock).when(ftpConnectionJerseyRequestMock).post(any(FtpConnection.class));
 
         OperationResult<FtpConnection> connection = connectionsService
-                .connection(FtpConnection.class, ConnectionMediaType.FTP_TYPE, TEST_UUID)
+                .connection(FtpConnection.class, ContextMediaTypes.FTP_TYPE, TEST_UUID)
                 .create(new FtpConnection());
         //then
         assertSame(ftpConnectionOperationResultMock, connection);
@@ -158,7 +158,7 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
-        verify(ftpConnectionJerseyRequestMock).setContentType(ConnectionMediaType.FTP_JSON);
+        verify(ftpConnectionJerseyRequestMock).setContentType(ContextMediaTypes.FTP_JSON);
         verify(ftpConnectionJerseyRequestMock).post(any(FtpConnection.class));
     }
 
@@ -173,11 +173,11 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
 
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(ftpConnectionJerseyRequestMock).when(ftpConnectionJerseyRequestMock).setContentType(ConnectionMediaType.FTP_JSON);
+        doReturn(ftpConnectionJerseyRequestMock).when(ftpConnectionJerseyRequestMock).setContentType(ContextMediaTypes.FTP_JSON);
         doReturn(ftpConnectionOperationResultMock).when(ftpConnectionJerseyRequestMock).put(any(FtpConnection.class));
 
         OperationResult<FtpConnection> connection = connectionsService
-                .connection(FtpConnection.class, ConnectionMediaType.FTP_TYPE, TEST_UUID)
+                .connection(FtpConnection.class, ContextMediaTypes.FTP_TYPE, TEST_UUID)
                 .update(new FtpConnection());
         //then
         assertSame(ftpConnectionOperationResultMock, connection);
@@ -188,7 +188,7 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
-        verify(ftpConnectionJerseyRequestMock).setContentType(ConnectionMediaType.FTP_JSON);
+        verify(ftpConnectionJerseyRequestMock).setContentType(ContextMediaTypes.FTP_JSON);
         verify(ftpConnectionJerseyRequestMock).put(any(FtpConnection.class));
     }
 
@@ -228,7 +228,7 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
         doReturn(lfsConnectionOperationResultMock).when(lfsConnectionJerseyRequestMock).get();
 
         OperationResult<LfsConnection> connection = connectionsService
-                .connection(LfsConnection.class, ConnectionMediaType.LOCAL_FILE_SYSTEM_TYPE, TEST_UUID)
+                .connection(LfsConnection.class, ContextMediaTypes.LOCAL_FILE_SYSTEM_TYPE, TEST_UUID)
                 .get();
         //then
         assertSame(lfsConnectionOperationResultMock, connection);
@@ -251,11 +251,11 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
 
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(lfsConnectionJerseyRequestMock).when(lfsConnectionJerseyRequestMock).setContentType(ConnectionMediaType.LOCAL_FILE_SYSTEM_JSON);
+        doReturn(lfsConnectionJerseyRequestMock).when(lfsConnectionJerseyRequestMock).setContentType(ContextMediaTypes.LOCAL_FILE_SYSTEM_JSON);
         doReturn(lfsConnectionOperationResultMock).when(lfsConnectionJerseyRequestMock).post(any(LfsConnection.class));
 
         OperationResult<LfsConnection> connection = connectionsService
-                .connection(LfsConnection.class, ConnectionMediaType.LOCAL_FILE_SYSTEM_TYPE, TEST_UUID)
+                .connection(LfsConnection.class, ContextMediaTypes.LOCAL_FILE_SYSTEM_TYPE, TEST_UUID)
                 .create(new LfsConnection());
         //then
         assertSame(lfsConnectionOperationResultMock, connection);
@@ -266,7 +266,7 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
-        verify(lfsConnectionJerseyRequestMock).setContentType(ConnectionMediaType.LOCAL_FILE_SYSTEM_JSON);
+        verify(lfsConnectionJerseyRequestMock).setContentType(ContextMediaTypes.LOCAL_FILE_SYSTEM_JSON);
         verify(lfsConnectionJerseyRequestMock).post(any(LfsConnection.class));
 
     }
@@ -283,7 +283,7 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
         doReturn(customDataSourceOperationResultMock).when(customDataSourceJerseyRequestMock).get();
 
         OperationResult<ClientCustomDataSource> connection = connectionsService
-                .connection(ClientCustomDataSource.class, ConnectionMediaType.CUSTOM_DATA_SOURCE_TYPE, TEST_UUID)
+                .connection(ClientCustomDataSource.class, ContextMediaTypes.CUSTOM_DATA_SOURCE_TYPE, TEST_UUID)
                 .get();
         //then
         assertSame(customDataSourceOperationResultMock, connection);
@@ -307,11 +307,11 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
 
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(customDataSourceJerseyRequestMock).when(customDataSourceJerseyRequestMock).setContentType(ConnectionMediaType.CUSTOM_DATA_SOURCE_JSON);
+        doReturn(customDataSourceJerseyRequestMock).when(customDataSourceJerseyRequestMock).setContentType(ContextMediaTypes.CUSTOM_DATA_SOURCE_JSON);
         doReturn(customDataSourceOperationResultMock).when(customDataSourceJerseyRequestMock).post(any(ClientCustomDataSource.class));
 
         OperationResult<ClientCustomDataSource> connection = connectionsService
-                .connection(ClientCustomDataSource.class, ConnectionMediaType.CUSTOM_DATA_SOURCE_TYPE, TEST_UUID)
+                .connection(ClientCustomDataSource.class, ContextMediaTypes.CUSTOM_DATA_SOURCE_TYPE, TEST_UUID)
                 .create(new ClientCustomDataSource());
         //then
         assertSame(customDataSourceOperationResultMock, connection);
@@ -322,7 +322,7 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
-        verify(customDataSourceJerseyRequestMock).setContentType(ConnectionMediaType.CUSTOM_DATA_SOURCE_JSON);
+        verify(customDataSourceJerseyRequestMock).setContentType(ContextMediaTypes.CUSTOM_DATA_SOURCE_JSON);
         verify(customDataSourceJerseyRequestMock).post(any(ClientCustomDataSource.class));
 
     }
@@ -339,7 +339,7 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
         doReturn(jndiDataSourceOperationResultMock).when(jndiJdbcDataSourceJerseyRequestMock).get();
 
         OperationResult<ClientJndiJdbcDataSource> connection = connectionsService
-                .connection(ClientJndiJdbcDataSource.class, ConnectionMediaType.JNDI_JDBC_DATA_SOURCE_TYPE, TEST_UUID)
+                .connection(ClientJndiJdbcDataSource.class, ContextMediaTypes.JNDI_JDBC_DATA_SOURCE_TYPE, TEST_UUID)
                 .get();
         //then
         assertSame(jndiDataSourceOperationResultMock, connection);
@@ -362,11 +362,11 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
                 , any(DefaultErrorHandler.class))).thenReturn(jndiJdbcDataSourceJerseyRequestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(jndiJdbcDataSourceJerseyRequestMock).when(jndiJdbcDataSourceJerseyRequestMock).setContentType(ConnectionMediaType.JNDI_JDBC_DATA_SOURCE_JSON);
+        doReturn(jndiJdbcDataSourceJerseyRequestMock).when(jndiJdbcDataSourceJerseyRequestMock).setContentType(ContextMediaTypes.JNDI_JDBC_DATA_SOURCE_JSON);
         doReturn(jndiDataSourceOperationResultMock).when(jndiJdbcDataSourceJerseyRequestMock).post(any(ClientJndiJdbcDataSource.class));
 
         OperationResult<ClientJndiJdbcDataSource> connection = connectionsService
-                .connection(ClientJndiJdbcDataSource.class, ConnectionMediaType.JNDI_JDBC_DATA_SOURCE_TYPE, TEST_UUID)
+                .connection(ClientJndiJdbcDataSource.class, ContextMediaTypes.JNDI_JDBC_DATA_SOURCE_TYPE, TEST_UUID)
                 .create(new ClientJndiJdbcDataSource());
         //then
         assertSame(jndiDataSourceOperationResultMock, connection);
@@ -377,7 +377,7 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
-        verify(jndiJdbcDataSourceJerseyRequestMock).setContentType(ConnectionMediaType.JNDI_JDBC_DATA_SOURCE_JSON);
+        verify(jndiJdbcDataSourceJerseyRequestMock).setContentType(ContextMediaTypes.JNDI_JDBC_DATA_SOURCE_JSON);
         verify(jndiJdbcDataSourceJerseyRequestMock).post(any(ClientJndiJdbcDataSource.class));
 
     }
@@ -394,7 +394,7 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
         doReturn(jdbcDataSourceOperationResultMock).when(jdbcDataSourceJerseyRequestMock).get();
 
         OperationResult<ClientJdbcDataSource> connection = connectionsService
-                .connection(ClientJdbcDataSource.class, ConnectionMediaType.JDBC_DATA_SOURCE_TYPE, TEST_UUID)
+                .connection(ClientJdbcDataSource.class, ContextMediaTypes.JDBC_DATA_SOURCE_TYPE, TEST_UUID)
                 .get();
         //then
         assertSame(jdbcDataSourceOperationResultMock, connection);
@@ -417,11 +417,11 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
                 , any(DefaultErrorHandler.class))).thenReturn(jdbcDataSourceJerseyRequestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(jdbcDataSourceJerseyRequestMock).when(jdbcDataSourceJerseyRequestMock).setContentType(ConnectionMediaType.JDBC_DATA_SOURCE_JSON);
+        doReturn(jdbcDataSourceJerseyRequestMock).when(jdbcDataSourceJerseyRequestMock).setContentType(ContextMediaTypes.JDBC_DATA_SOURCE_JSON);
         doReturn(jdbcDataSourceOperationResultMock).when(jdbcDataSourceJerseyRequestMock).post(any(ClientJdbcDataSource.class));
 
         OperationResult<ClientJdbcDataSource> connection = connectionsService
-                .connection(ClientJdbcDataSource.class, ConnectionMediaType.JDBC_DATA_SOURCE_TYPE, TEST_UUID)
+                .connection(ClientJdbcDataSource.class, ContextMediaTypes.JDBC_DATA_SOURCE_TYPE, TEST_UUID)
                 .create(new ClientJdbcDataSource());
         //then
         assertSame(jdbcDataSourceOperationResultMock, connection);
@@ -432,7 +432,7 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getContentMimeType();
-        verify(jdbcDataSourceJerseyRequestMock).setContentType(ConnectionMediaType.JDBC_DATA_SOURCE_JSON);
+        verify(jdbcDataSourceJerseyRequestMock).setContentType(ContextMediaTypes.JDBC_DATA_SOURCE_JSON);
         verify(jdbcDataSourceJerseyRequestMock).post(any(ClientJdbcDataSource.class));
     }
 
@@ -446,13 +446,13 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
                 , any(DefaultErrorHandler.class))).thenReturn(tableMetadataRequestMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
-        doReturn(tableMetadataRequestMock).when(tableMetadataRequestMock).setAccept(ConnectionMediaType.JDBC_DATA_SOURCE_JSON);
+        doReturn(tableMetadataRequestMock).when(tableMetadataRequestMock).setAccept(ContextMediaTypes.JDBC_DATA_SOURCE_JSON);
 
         doReturn(tableMetadataOperationResultMock).when(tableMetadataRequestMock).get();
 
         OperationResult<TableMetadata> connection = connectionsService
-                .connection(ClientJdbcDataSource.class, ConnectionMediaType.JDBC_DATA_SOURCE_TYPE, TableMetadata.class,
-                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE, TEST_UUID)
+                .connection(TEST_UUID, TableMetadata.class,
+                        ContextMediaTypes.JDBC_DATA_SOURCE_METADATA_TYPE)
                 .metadata();
         //then
         assertSame(tableMetadataOperationResultMock, connection);
@@ -463,23 +463,23 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
                 , any(DefaultErrorHandler.class));
         verify(sessionStorageMock).getConfiguration();
         verify(configurationMock).getAcceptMimeType();
-        verify(tableMetadataRequestMock).setAccept(ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_JSON);
+        verify(tableMetadataRequestMock).setAccept(ContextMediaTypes.JDBC_DATA_SOURCE_METADATA_JSON);
         verify(tableMetadataRequestMock).get();
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_return_throw_exception_when_create_connection_and_get_metadata_connection_is_invalid() throws Exception {
-        //when
-        connectionsService
-                .connection(TableMetadata.class,
-                        ConnectionMediaType.JDBC_DATA_SOURCE_METADATA_TYPE, TEST_UUID)
-                .createAndGetMetadata(new Object());
-        //then
-        // an exception should be thrown
     }
 
     @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
     public void should_throw_exception_when_update_connection_is_null() throws Exception {
+        //when
+        connectionsService
+                .connection(TEST_UUID)
+                .update(null);
+        //then
+        // an exception should be thrown
+
+    }
+
+    @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
+    public void should_throw_exception_when_create_connection_is_null() throws Exception {
         //when
         connectionsService
                 .connection(TEST_UUID)
@@ -506,26 +506,6 @@ public class SingleConnectionsAdapterTest extends PowerMockTestCase {
         connectionsService
                 .connection("")
                 .get();
-        //then
-        // an exception should be thrown
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exception_when_update_connection_type_is_invalid() throws Exception {
-        //when
-        connectionsService
-                .connection(TEST_UUID)
-                .update(new Object());
-        //then
-        // an exception should be thrown
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exception_when_connection_class_is_invalid() throws Exception {
-        //when
-        connectionsService
-                .connection(TEST_UUID)
-                .create(new Object());
         //then
         // an exception should be thrown
     }

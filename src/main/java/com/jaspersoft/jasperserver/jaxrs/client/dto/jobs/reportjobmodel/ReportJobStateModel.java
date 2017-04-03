@@ -33,6 +33,7 @@ import java.util.Date;
  * @author Ivan Chan (ichan@jaspersoft.com)
  * @version $Id: ReportJobStateModel.java 25420 2012-10-20 16:36:09Z sergey.prilukin $
  * @since 1.0
+ * @deprecated (use server adapter).
  */
 @XmlRootElement(name = "stateModel")
 public class ReportJobStateModel extends JobState {

@@ -22,6 +22,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
 import com.jaspersoft.jasperserver.dto.common.PatchDescriptor;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
+import com.jaspersoft.jasperserver.dto.resources.ClientFolder;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
@@ -147,7 +148,9 @@ public class SingleResourceAdapter extends AbstractAdapter {
     private JerseyRequest<ClientResource> prepareCreateOrUpdateRequest(ClientResource resource) {
         Class<? extends ClientResource> resourceType = ResourcesTypeResolverUtil.getResourceType(resource);
         JerseyRequest<? extends ClientResource> request = buildRequest(resourceType);
-        request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), ResourcesTypeResolverUtil.getMimeType(resourceType)));
+        String resourceMimeType = ResourcesTypeResolverUtil.getMimeType(resourceType);
+        request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), resourceMimeType));
+        request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), resourceMimeType));
         request.addParams(params);
         return (JerseyRequest<ClientResource>) request;
     }
@@ -210,14 +213,23 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return request.post(multipartResource);
     }
 
-    public <T> OperationResult<T> get(Class<T> clazz) {
+    public <T extends ClientResource<T>> OperationResult<T> get(Class<T> clazz) {
         JerseyRequest<T> request = buildRequest(clazz);
+            request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),
+                    ResourcesTypeResolverUtil.extractClientType(clazz)));
+        return request.get();
+    }
+
+    public <T extends ClientResource<T>> OperationResult<? extends ClientResource> get() {
+        JerseyRequest<? extends ClientResource> request;
         if (isRootFolder(resourceUri)) {
-            request.setAccept(sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON) ?
-                    ResourceMediaType.FOLDER_JSON : ResourceMediaType.FOLDER_XML);
+            request = buildRequest(ClientFolder.class);
+            request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),
+                    ResourcesTypeResolverUtil.extractClientType(ClientFolder.class)));
         } else {
-            request.setAccept(sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON) ?
-                    ResourceMediaType.FILE_JSON : ResourceMediaType.FILE_XML);
+            request = buildRequest(ClientFile.class);
+            request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),
+                    ResourcesTypeResolverUtil.extractClientType(ClientFile.class)));
         }
         return request.get();
     }

@@ -18,18 +18,22 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendar;
 
-public class DomainMetadataService extends AbstractAdapter {
+import com.jaspersoft.jasperserver.dto.job.ClientJobCalendar;
+import javax.xml.bind.annotation.XmlRootElement;
 
-    public DomainMetadataService(SessionStorage sessionStorage) {
-        super(sessionStorage);
+@XmlRootElement(name = "reportJobCalendar")
+public class BaseCalendar extends Calendar {
+
+    public BaseCalendar(){
+        this.calendarType = ClientJobCalendar.Type.base;
     }
 
-    public DomainMetadataAdapter domainMetadata(String domainURI) {
-        return new DomainMetadataAdapter(sessionStorage, domainURI);
+    BaseCalendar(BaseCalendar other) {
+        super(other);
     }
+
+
 }
