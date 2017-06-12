@@ -178,6 +178,7 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
                 .setContentType(contextContentMimeType);
         jerseyRequest
                 .setAccept(metadataMimeType);
+        if (!params.isEmpty()) jerseyRequest.addParams(params);
         return jerseyRequest.post(context);
     }
 
