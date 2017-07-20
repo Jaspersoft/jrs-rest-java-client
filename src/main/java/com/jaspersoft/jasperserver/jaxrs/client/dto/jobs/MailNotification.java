@@ -27,7 +27,9 @@ import java.util.LinkedList;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
-
+/**
+ * @deprecated (use server DTO).
+ */
 @XmlRootElement(name = "mailNotification")
 public class MailNotification {
 

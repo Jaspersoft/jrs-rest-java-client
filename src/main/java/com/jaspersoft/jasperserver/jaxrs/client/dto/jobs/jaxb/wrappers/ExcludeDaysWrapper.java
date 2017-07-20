@@ -31,6 +31,7 @@ import java.util.List;
  *
  * @author Yaroslav.Kovalchyk
  * @version $Id: ExcludeDaysWrapper.java 23844 2012-05-22 06:23:41Z ykovalchyk $
+ * @deprecated (use server adapter).
  */
 @XmlRootElement(name = "excludeDays")
 public class ExcludeDaysWrapper {

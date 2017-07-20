@@ -27,7 +27,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Arrays;
-
+/**
+ * @deprecated (use com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendar.* pakage).
+ */
 @XmlRootElement(name = "reportJobCalendar")
 public class MonthlyCalendar extends Calendar {
 

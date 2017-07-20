@@ -29,6 +29,7 @@ import java.util.List;
 /**
  * @author Yaroslav.Kovalchyk
  * @version $Id: JobIdListWrapper.java 38348 2013-09-30 04:57:18Z carbiv $
+ * @deprecated (use server DTO).
  */
 @XmlRootElement(name = "jobIdList")
 public class JobIdListWrapper {
