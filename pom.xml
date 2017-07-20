@@ -14,7 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <jasperserver-dto.version>6.3.0</jasperserver-dto.version>
+        <jasperserver-dto.version>trunk-SNAPSHOT</jasperserver-dto.version>
     </properties>
 
     <scm>
