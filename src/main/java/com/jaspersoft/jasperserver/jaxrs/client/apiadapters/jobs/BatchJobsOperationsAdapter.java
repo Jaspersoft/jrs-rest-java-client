@@ -76,6 +76,20 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
         return this;
     }
 
+    public BatchJobsOperationsAdapter parameters(JobsParameter parameter, String... values) {
+        for (String value : values) {
+            params.add(parameter.getName(), value);
+        }
+        return this;
+    }
+
+    public BatchJobsOperationsAdapter parameters(JobsParameter parameter, int... values) {
+        for (int value : values) {
+            params.add(parameter.getName(), String.valueOf(value));
+        }
+        return this;
+    }
+
     public OperationResult<ClientJobSummariesListWrapper> searchJobs() {
         return searchJobs(null);
     }
@@ -397,6 +411,12 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
         });
         ThreadPoolUtil.runAsynchronously(task);
         return task;
+    }
+
+    public OperationResult<ClientJobIdListWrapper> delete() {
+        JerseyRequest<ClientJobIdListWrapper> jerseyRequest = buildRequest(sessionStorage, ClientJobIdListWrapper.class, new String[]{SERVICE_URI});
+        jerseyRequest.addParams(params);
+        return jerseyRequest.delete();
     }
 
 }
