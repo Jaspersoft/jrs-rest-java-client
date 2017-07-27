@@ -40,9 +40,11 @@ public class MonthlyCalendar extends Calendar {
 
     public MonthlyCalendar(MonthlyCalendar other) {
         super(other);
-        this.excludeDaysFlags = new boolean[other.excludeDaysFlags.length];
-        for (int i = 0; i < other.excludeDaysFlags.length; i++) {
-            this.excludeDaysFlags[i] = other.excludeDaysFlags[i];
+        if (other.excludeDaysFlags != null) {
+            this.excludeDaysFlags = new boolean[other.excludeDaysFlags.length];
+            for (int i = 0; i < other.excludeDaysFlags.length; i++) {
+                this.excludeDaysFlags[i] = other.excludeDaysFlags[i];
+            }
         }
     }
 
