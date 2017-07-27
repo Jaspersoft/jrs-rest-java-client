@@ -42,8 +42,10 @@ public class AnnualCalendar extends Calendar {
     public AnnualCalendar(AnnualCalendar other) {
         super(other);
         this.excludeDays = new ArrayList<java.util.Calendar>();
-        for (java.util.Calendar calendar : other.getExcludeDays()) {
-            this.excludeDays.add((java.util.Calendar) calendar.clone());
+        if (other.getExcludeDays() != null) {
+            for (java.util.Calendar calendar : other.getExcludeDays()) {
+                this.excludeDays.add((java.util.Calendar) calendar.clone());
+            }
         }
         this.dataSorted = other.dataSorted;
     }

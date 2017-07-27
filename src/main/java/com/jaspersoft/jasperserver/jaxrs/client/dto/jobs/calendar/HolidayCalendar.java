@@ -40,8 +40,10 @@ public class HolidayCalendar extends Calendar {
         super(other);
         this.dataSorted = other.dataSorted;
         this.excludeDays = new ArrayList<java.util.Calendar>();
-        for (java.util.Calendar excludeDay : other.excludeDays) {
-            this.excludeDays.add(excludeDay);
+        if (other.getExcludeDays() != null) {
+            for (java.util.Calendar excludeDay : other.getExcludeDays()) {
+                this.excludeDays.add(excludeDay);
+            }
         }
     }
 
