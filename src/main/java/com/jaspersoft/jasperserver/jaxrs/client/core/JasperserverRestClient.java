@@ -22,16 +22,20 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.BadRequestException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.client.ClientProperties;
@@ -113,5 +117,51 @@ public class JasperserverRestClient {
         }
     }
 
+    public Session getTokenSession (Map<String, String> tokenHeaders) {
+        SessionStorage sessionStorage = new SessionStorage(configuration,
+                null,
+                Locale.getDefault(),
+                TimeZone.getDefault());
+        getToken(sessionStorage, tokenHeaders);
+        return new Session(sessionStorage);
+    }
 
+    protected void getToken(SessionStorage sessionStorage, Map<String, String> tokenHeaders) {
+        AuthenticationCredentials credentials = sessionStorage.getCredentials();
+
+        WebTarget rootTarget = sessionStorage.getRootTarget();
+        if (!tokenHeaders.containsKey("principalParameter")) {
+            throw new BadRequestException("prinipalParameter header not found in the request");
+        }
+
+        String pp = tokenHeaders.get("principalParameter");
+        tokenHeaders.remove("principalParameter");
+        StringBuilder headerValues = new StringBuilder();
+        for (Map.Entry<String, String> tokenHeader : tokenHeaders.entrySet()) {
+            String key;
+            if (headerValues.length() == 0) {
+                key = tokenHeader.getKey() + "=";
+            } else {
+                key = "|" + tokenHeader.getKey() + "=";
+            }
+
+            String value = tokenHeader.getValue();
+            headerValues.append(key).append(value);
+        }
+
+        WebTarget queryParam = rootTarget.queryParam(pp, headerValues.toString());
+        Invocation.Builder acceptTarget = queryParam.request().accept(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+        Response response = acceptTarget.get(Response.class);
+
+        if (response.getStatus() == Status.OK.getStatusCode()) {
+            Map<String, NewCookie> cookies = response.getCookies();
+            NewCookie sessionCookie = cookies.get("JSESSIONID");
+
+            String sessionId = sessionCookie.getValue();
+            sessionStorage.setSessionId(sessionId);
+            rootTarget.register(new SessionOutputFilter(sessionId));
+        } else {
+            throw new ResourceNotFoundException("Server was not found");
+        }
+    }
 }
