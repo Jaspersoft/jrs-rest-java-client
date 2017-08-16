@@ -30,6 +30,10 @@ public class AuthenticationCredentials {
         this.password = password;
     }
 
+    public AuthenticationCredentials(String username) {
+        this.username = username;
+    }
+
     public String getUsername() {
         return username;
     }
