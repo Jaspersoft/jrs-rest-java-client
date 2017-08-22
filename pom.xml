@@ -23,16 +23,17 @@
         <tag>HEAD</tag>
     </scm>
 
-    <repositories>
+    <repositories>      
         <repository>
-            <id>jrs-ce-releases</id>
-            <name>JasperReports Server CE releases repository</name>
-            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jrs-ce-releases/</url>
+          <id>jaspersoft-clients-snapshots</id>
+          <name>Jaspersoft clients snapshots</name>
+          <url>https://jaspersoft.jfrog.io/jaspersoft/jaspersoft-clients-releases</url>
         </repository>
         <repository>
-            <id>opencast-public</id>
-            <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
-        </repository>
+          <id>central</id>
+          <name>jaspersoft-releases</name>
+          <url>https://jaspersoft.jfrog.io/jaspersoft/jrs-ce-releases</url>
+        </repository>        
     </repositories>
 
     <dependencies>
