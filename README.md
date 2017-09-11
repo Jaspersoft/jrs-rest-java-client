@@ -415,7 +415,7 @@ request
                 .setAsync(true);            
 ```
 
-#Requesting report execution status:
+ #Requesting report execution status:
 After you've got `ReportExecutionDescriptor` you can request for the report execution status:
 ```java
 OperationResult<ReportExecutionStatusEntity> operationResult =
@@ -428,7 +428,7 @@ ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
 ```
 In the above code we've just specified request ID and got its status as a `ReportExecutionStatusEntity` instance.
 
-#Requesting report execution details:
+ #Requesting report execution details:
 Once the report is ready, your client must determine the names of the files to download by requesting the
 reportExecution descriptor again.
 ```java
@@ -441,7 +441,7 @@ OperationResult<ReportExecutionDescriptor> operationResult =
 ReportExecutionDescriptor descriptor = operationResult.getEntity();
 ```
 
-#Requesting Report Output
+ #Requesting Report Output
 After requesting a report execution and waiting synchronously or asynchronously for it to finish, you are ready to download the report output. Every export format of the report has an ID that is used to retrieve it. For example, the HTML export has the ID html. To download the main report output, specify this export ID in the `export` method. For example, to download the main HTML of the report execution response above, use the following code:
 ```java
 OperationResult<InputStream> operationResult =
