@@ -1,152 +1,22 @@
 Rest Client for JasperReports Server [![Build Status](https://travis-ci.org/Jaspersoft/jrs-rest-java-client.svg?branch=master)](https://travis-ci.org/Jaspersoft/jrs-rest-java-client) [![Coverage Status](https://coveralls.io/repos/Jaspersoft/jrs-rest-java-client/badge.png?branch=master)](https://coveralls.io/r/Jaspersoft/jrs-rest-java-client?branch=master)
-=========================================
-
 With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests.
 
-Table of Contents
-------------------
-1. [Introduction](#introduction).
-2. [Configuration](#configuration).
-   * [Loading configuration from file](#loading-configuration-from-file).
-   * [Creation of manual configuration](#creation-of-manual-configuration).
-   * [HTTPS configuration](#https-configuration).
-   * [X-HTTP-Method override](#x-http-method-override).
-   * [Switching of authentication type](#switching-authentication-type).
-   * [Exception handling](#exception-handling).
-   * [Logging](#logging).
-   * [Switching between JSON and XML](#switching-between-json-and-xml).
-   * [Client instantiation](#client-instantiation).
-3. [Authentication](#authentication).
-   * [Anonymous session](#anonymous-session).
-   * [Invalidating session](#invalidating-session).
-4. [Report services](#report-services).
-   * [Running a report](#running-a-report).
-   * [Requesting report execution status](#requesting-report-execution-status).
-   * [Requesting report execution details](#requesting-report-execution-details).
-   * [Requesting Report Output](#requesting-report-output).
-   * [Download file attachments for report output](#download-file-attachments-for-report-output).
-   * [Exporting a Report Asynchronously](#exporting-a-report-asynchronously).
-   * [Polling Export Execution](#polling-export-execution).
-   * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
-   * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
-5. [Input controls service](#input-controls-service).
-   * [Listing input controls structure](#listing-input-controls-structure).
-   * [Reordering input controls structure](#reordering-input-controls-structure).
-   * [Listing input controls values](#listing-input-controls-values).
-   * [Setting input controls values](#setting-input-controls-values).
-6. [Administration services](#administration-services).
-  1. [Organizations service](#organizations-service).
-    * [Searching for Organizations](#searching-for-organizations).
-    * [Viewing an Organization](#viewing-an-organization).
-    * [Creating an Organization](#creating-an-organization).
-    * [Modifying Organization Properties](#modifying-organization-properties).
-    * [Deleting an Organization](#deleting-an-organization).
-  2. [Users service](#users-service).
-    * [Searching for Users](#searching-for-users).
-    * [Viewing a User](#viewing-a-user).
-    * [Creating a User](#creating-a-user).
-    * [Modifying User Properties](#modifying-user-properties).
-    * [Deleting a User](#deleting-a-user).
-  3. [Attributes service](#attributes-service).
-    * [Viewing User Attributes](#viewing-user-attributes).
-    * [Setting User Attributes](#setting-user-attributes).
-    * [Deleting User Attributes](#deleting-user-attributes).
-    * [Viewing Organization Attributes](#viewing-organization-attributes).
-    * [Setting Organization Attributes](#setting-organization-attributes).
-    * [Deleting Organization Attributes](#deleting-organization-attributes).
-    * [Viewing Server Attributes](#viewing-server-attributes).
-    * [Setting Server Attributes](#setting-server-attributes).
-    * [Deleting Server Attributes](#deleting-server-attributes).
-    * [Getting attributes permissions](#getting-attributes-permissions).
-    * [Searching attributes ](#searching-attributes).
-  4. [The Roles Service](#the-roles-service).
-    * [Searching for Roles](#searching-for-roles).
-    * [Viewing a Role](#viewing-a-role).
-    * [Creating a Role](#creating-a-role).
-    * [Modifying a Role](#modifying-a-role).
-    * [Setting Role Membership](#setting-role-membership).
-    * [Deleting a Role](#deleting-a-role).
-  5. [The Settings Service](#settings-service).
-    * [Getting server specific settings](#getting-server-specific-settings).
-7. [Repository Services](#repository-services).
-  1. [Resources Service](#resources-service).
-    * [Searching the Repository](#searching-the-repository).
-    * [Viewing Resource Details](#viewing-resource-details).
-    * [Downloading File Resources](#downloading-file-resources).
-    * [Creating a Resource](#creating-a-resource).
-    * [Modifying a Resource](#modifying-a-resource).
-    * [Copying a Resource](#copying-a-resource).
-    * [Moving a Resource](#moving-a-resource).
-    * [Uploading SemanticLayerDataSource](#uploading-semanticlayerdatasource).   
-    * [Uploading MondrianConnection](#uploading-mondrianconnection).
-    * [Uploading SecureMondrianConnection](#uploading-securemondrianconnection).
-    * [Uploading ReportUnit](#uploading-reportunit).
-    * [Uploading File Resources](#uploading-file-resources).
-    * [Deleting Resources](#deleting-resources).
-  2. [The Permissions Service](#the-permissions-service).
-    * [Viewing Multiple Permissions](#viewing-multiple-permissions).
-    * [Viewing a Single Permission](#viewing-a-single-permission).
-    * [Setting Multiple Permissions](#setting-multiple-permissions).
-    * [Setting a Single Permission](#setting-a-single-permission).
-    * [Deleting Permissions in Bulk](#deleting-permissions-in-bulk).
-    * [Deleting a Single Permission](#deleting-a-single-permission).
-8. [Jobs service](#jobs-service).
-  * [Listing Report Jobs](#listing-report-jobs).
-  * [Viewing a Job Definition](#viewing-a-job-definition).
-  * [Extended Job Search](#extended-job-search).
-  * [Scheduling a Report](#scheduling-a-report).
-  * [Viewing Job Status](#viewing-job-status).
-  * [Editing a Job Definition](#editing-a-job-definition).
-  * [Updating Jobs in Bulk](#updating-jobs-in-bulk).
-  * [Pausing Jobs](#pausing-jobs).
-  * [Resuming Jobs](#resuming-jobs).
-  * [Restarting Failed Jobs](#restarting-failed-jobs).
-9. [Calendars service](#calendars-service).
-  * [Listing All Registered Calendar Names](#listing-all-registered-calendar-names).
-  * [Viewing an Exclusion Calendar](#viewing-an-exclusion-calendar).
-  * [Adding or Updating an Exclusion Calendar](#adding-or-updating-an-exclusion-calendar).
-  * [Deleting an Exclusion Calendar](#deleting-an-exclusion-calendar).
-10. [Import/Export](#importexport).
-  1. [Export service](#export-service).
-   * [Checking the Export State](#checking-the-export-state).
-   * [Fetching the Export Output](#fetching-the-export-output).
-  2. [Import service](#import-service).
-  * [Checking the Import State](#checking-the-import-state).
-11. [Metadata](#metadata).
-  * [Domain Metadata](#domain-metadata)
-  * [Report Metadata](#report-metadata)
-12. [Thumbnail Search Service](#thumbnail-search-service).
-13. [Diagnostic Service](#diagnostic-service).
-14. [Contexts Service](#contexts-service).
-  * [Domain Context Service](#domain-context-service).
-15. [Data Discovery Service](#data-discovery-service).
-  * [Domain data discovery](#domain-data-discovery).
-  * [DomEl data discovery](#domel-data-discovery ).
-  * [Derived table data discovery](#derived-table-data-discovery).
-16. [Query Executor Service](#query-executor-service).
-17. [Server Information Service](#server-information-service).
-18. [Bundles service](#bundles-service).
-19. [Asynchronous API](#asynchronous-api).
-20. [Getting serialized content from response](#getting-serialized-content-from-response).
-21. [Possible issues](#possible-issues).
-22. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-23. [License](#license).
-
 Introduction
--------------
+============
 With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests. To use library in your maven-based application you need just to specify dependency and repository which are given below or download jar file manually from
 ```
 http://jaspersoft.artifactoryonline.com/jaspersoft/repo/com/jaspersoft/jrs-rest-java-client/{version}/jrs-rest-java-client-{version}.jar
 ```
 
 Configuration
--------------
+=============
 To start working with the library you should firstly configure one ore more instances of `JasperserverRestClient`.
 To do this you should create instance of `RestClientConfiguration`. It can be done in two ways:
 - loading configuration from file;
 - creation of manual configuration in java code.
 
-####Loading configuration from file:
+Loading configuration from file:
+--------------------------------
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("configuration.properties");
 ```
@@ -168,13 +38,16 @@ acceptMimeType=JSON
 ```
 File must contain at least URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}`.
 Please notice, configuration settings may be changed after loading manually in java code.
-####Creation of manual configuration
+
+Creation of manual configuration
+--------------------------------
 To configure `JasperserverRestClient` manually, use the constructor of `RestClientConfiguration` and properties:
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
 configuration.setAcceptMimeType(MimeType.JSON).setContentMimeType(MimeType.JSON).setJrsVersion(JRSVersion.v6_0_0).setLogHttp(true);
 ```
-####HTTPS configuration
+HTTPS configuration
+-------------------
 **To use HTTPS you need:**
  1. Configure your server to support HTTPS
  2. Download [InstallCert](http://miteff.com/files/InstallCert-bin.zip) util and follow  [InstallCert-Guide](http://www.mkyong.com/webservices/jax-ws/suncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target/) instructions.
@@ -188,7 +61,8 @@ TrustManager[] trustManagers = new TrustManager[1];
 trustManagers[0] = x509TrustManager;
 configuration.setTrustManagers(trustManagers);
 ```
-####X-HTTP-Method override
+X-HTTP-Method override
+----------------------
 To avoid situation, when your proxies or web services do not support arbitrary HTTP methods or newer HTTP methods, you can use “restricted mode”. In this mode `JaperserverRestClient` sends requests through POST method and set the `X-HTTP-Method-Override` header with value of intended HTTP method. To use this mode you should set flag `RestrictedHttpMethods`:
 ```java
 configuration.setRestrictedHttpMethods(true);
@@ -198,7 +72,9 @@ Or in configuration file:
 restrictedHttpMethods=false
 ````
 If you do not use the "restricted mode", POST or GET methods and server returns  the response with 411 error code, `JaperserverRestClient` resend this request through POST method with the X-HTTP-Method-Override header automatically.
-####Switching authentication type
+
+Switching authentication type
+-----------------------------
 `JasperserverRestClient` supports two authentication types: SPRING and BASIC. 
 `SPRING` type of authentication means that your credentials are sent as a form  to `/j_security_check directly/` uri. Using these types you obtain JSESSIONID cookie of authenticated session after sending credentials.
 In the `BASIC` mode `JasperserverRestClient` uses basic authentication (sends encrypted credentials with each request).
@@ -213,7 +89,9 @@ Or set authentication type in configuration file:
  authenticationType=BASIC
  ```
 Please notice, the basic authentication is not stateless and it is valid till method logout() is called or the application is restarted and you can not use this authentication type for Report Service, because all operations must be executed in the same session (for details, read section [Report services](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#report-services)).
-####Exception handling
+
+Exception handling
+------------------
 You can choose strategy of errors that are specified by status code of server response:
 1. handling of errors directly. This mode is allowed by default.
 2. getting operation result in any case with null entity and handling error after calling `getEntity()` method:
@@ -242,7 +120,8 @@ JRS REST client exception handling system is based on `com.jaspersoft.jasperserv
  2. You can create your own handler by implementing `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler`.
  3. You can extend `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` or any other handler and override its methods `void handleBodyError(Response response)` and/or `void handleStatusCodeError(Response response, String overridingMessage)`.
 
-####Logging
+Logging
+-------
 It is possible to log outgoing requests and incoming responses using `logHttp` property of `RestCleintConfiguration`:
 ```java
 config.setLogHttp(true);
@@ -256,7 +135,8 @@ In configuration file:
 logHttp=true
 logHttpEntity=true
 ```
-####Switching between JSON and XML
+Switching between JSON and XML
+------------------------------
 You can configure a client to make request either with JSON or XML content.
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver");
@@ -271,14 +151,15 @@ or
 contentMimeType=XML
 acceptMimeType=XML
 ```
-####Client instantiation:
+Client instantiation:
+---------------------
 After configuration you need just to pass `configuration` instance to `JasperserverRestClient` constructor.
 ```java
 JasperserverRestClient client = new JasperserverRestClient(configuration);
 ```
 
 Authentication
----------------
+==============
 This library automatically encrypts your password before send it if encryption is on, so to authenticate you need just specify login and password (not encrypted) in `authenticate()` method.
 ```java
 Session session = client.authenticate("jasperadmin", "jasperadmin");
