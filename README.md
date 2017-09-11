@@ -1,6 +1,127 @@
 Rest Client for JasperReports Server [![Build Status](https://travis-ci.org/Jaspersoft/jrs-rest-java-client.svg?branch=master)](https://travis-ci.org/Jaspersoft/jrs-rest-java-client) [![Coverage Status](https://coveralls.io/repos/Jaspersoft/jrs-rest-java-client/badge.png?branch=master)](https://coveralls.io/r/Jaspersoft/jrs-rest-java-client?branch=master)
 With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests.
 
+Table of Contents
+------------------
+1. [Introduction](#introduction).
+2. [Configuration](#configuration).
+  * [Loading configuration from file](#loading-configuration-from-file).
+  * [Creation of manual configuration](#creation-of-manual-configuration).
+  * [HTTPS configuration](#https-configuration).
+  * [X-HTTP-Method override](#x-http-method-override).
+  * [Switching of authentication type](#switching-authentication-type).
+  * [Exception handling](#exception-handling).
+  * [Logging](#logging).
+  * [Switching between JSON and XML](#switching-between-json-and-xml).
+  * [Client instantiation](#client-instantiation).
+3. [Authentication](#authentication).
+  * [Anonymous session](#anonymous-session).
+  * [Invalidating session](#invalidating-session).
+4. [Report services](#report-services).
+  * [Running a report](#running-a-report).
+  * [Requesting report execution status](#requesting-report-execution-status).
+  * [Requesting report execution details](#requesting-report-execution-details).
+  * [Requesting Report Output](#requesting-report-output).
+  * [Download file attachments for report output](#download-file-attachments-for-report-output).
+  * [Exporting a Report Asynchronously](#exporting-a-report-asynchronously).
+  * [Polling Export Execution](#polling-export-execution).
+  * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
+  * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
+5. [Input controls service](#input-controls-service).
+  * [Listing input controls structure](#listing-input-controls-structure).
+  * [Reordering input controls structure](#reordering-input-controls-structure).
+  * [Listing input controls values](#listing-input-controls-values).
+  * [Setting input controls values](#setting-input-controls-values).
+6. [Administration services](#administration-services).
+  1. [Organizations service](#organizations-service).
+    * [Searching for Organizations](#searching-for-organizations).
+    * [Viewing an Organization](#viewing-an-organization).
+    * [Creating an Organization](#creating-an-organization).
+    * [Modifying Organization Properties](#modifying-organization-properties).
+    * [Deleting an Organization](#deleting-an-organization).
+  2. [Users service](#users-service).
+    * [Searching for Users](#searching-for-users).
+    * [Viewing a User](#viewing-a-user).
+    * [Creating a User](#creating-a-user).
+    * [Modifying User Properties](#modifying-user-properties).
+    * [Deleting a User](#deleting-a-user).
+  3. [Attributes service](#attributes-service).
+    * [Viewing User Attributes](#viewing-user-attributes).
+    * [Setting User Attributes](#setting-user-attributes).
+    * [Deleting User Attributes](#deleting-user-attributes).
+    * [Viewing Organization Attributes](#viewing-organization-attributes).
+    * [Setting Organization Attributes](#setting-organization-attributes).
+    * [Deleting Organization Attributes](#deleting-organization-attributes).
+    * [Viewing Server Attributes](#viewing-server-attributes).
+    * [Setting Server Attributes](#setting-server-attributes).
+    * [Deleting Server Attributes](#deleting-server-attributes).
+    * [Getting attributes permissions](#getting-attributes-permissions).
+    * [Searching attributes ](#searching-attributes).
+  4. [The Roles Service](#the-roles-service).
+    * [Searching for Roles](#searching-for-roles).
+    * [Viewing a Role](#viewing-a-role).
+    * [Creating a Role](#creating-a-role).
+    * [Modifying a Role](#modifying-a-role).
+    * [Setting Role Membership](#setting-role-membership).
+    * [Deleting a Role](#deleting-a-role).
+  5. [The Settings Service](#settings-service).
+    * [Getting server specific settings](#getting-server-specific-settings).
+7. [Repository Services](#repository-services).
+  1. [Resources Service](#resources-service).
+    * [Searching the Repository](#searching-the-repository).
+    * [Viewing Resource Details](#viewing-resource-details).
+    * [Downloading File Resources](#downloading-file-resources).
+    * [Creating a Resource](#creating-a-resource).
+    * [Modifying a Resource](#modifying-a-resource).
+    * [Copying a Resource](#copying-a-resource).
+    * [Moving a Resource](#moving-a-resource).
+    * [Uploading SemanticLayerDataSource](#uploading-semanticlayerdatasource).   
+    * [Uploading MondrianConnection](#uploading-mondrianconnection).
+    * [Uploading SecureMondrianConnection](#uploading-securemondrianconnection).
+    * [Uploading ReportUnit](#uploading-reportunit).
+    * [Uploading File Resources](#uploading-file-resources).
+    * [Deleting Resources](#deleting-resources).
+  2. [The Permissions Service](#the-permissions-service).
+    * [Viewing Multiple Permissions](#viewing-multiple-permissions).
+    * [Viewing a Single Permission](#viewing-a-single-permission).
+    * [Setting Multiple Permissions](#setting-multiple-permissions).
+    * [Setting a Single Permission](#setting-a-single-permission).
+    * [Deleting Permissions in Bulk](#deleting-permissions-in-bulk).
+    * [Deleting a Single Permission](#deleting-a-single-permission).
+8. [Jobs service](#jobs-service).
+  * [Listing Report Jobs](#listing-report-jobs).
+  * [Viewing a Job Definition](#viewing-a-job-definition).
+  * [Extended Job Search](#extended-job-search).
+  * [Scheduling a Report](#scheduling-a-report).
+  * [Viewing Job Status](#viewing-job-status).
+  * [Editing a Job Definition](#editing-a-job-definition).
+  * [Updating Jobs in Bulk](#updating-jobs-in-bulk).
+  * [Pausing Jobs](#pausing-jobs).
+  * [Resuming Jobs](#resuming-jobs).
+  * [Restarting Failed Jobs](#restarting-failed-jobs).
+9. [Calendars service](#calendars-service).
+  * [Listing All Registered Calendar Names](#listing-all-registered-calendar-names).
+  * [Viewing an Exclusion Calendar](#viewing-an-exclusion-calendar).
+  * [Adding or Updating an Exclusion Calendar](#adding-or-updating-an-exclusion-calendar).
+  * [Deleting an Exclusion Calendar](#deleting-an-exclusion-calendar).
+10. [Import/Export](#importexport).
+  1. [Export service](#export-service).
+    * [Checking the Export State](#checking-the-export-state).
+    * [Fetching the Export Output](#fetching-the-export-output).
+  2. [Import service](#import-service).
+    * [Checking the Import State](#checking-the-import-state).
+11. [Domain metadata service](#domainmetadata-service).
+12. [Thumbnail Search Service](#thumbnail-search-service).
+13. [Diagnostic Service](#diagnostic-service).
+14. [Query Executor Service](#query-executor-service).
+15. [Server Information Service](#server-information-service).
+16. [Bundles service](#bundles-service).
+17. [Asynchronous API](#asynchronous-api).
+18. [Getting serialized content from response](#getting-serialized-content-from-response).
+19. [Possible issues](#possible-issues).
+20. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+21. [License](#license).
+
 Introduction
 ============
 With this library you can easily write Java applications which can interact with one or more JasperReports servers simultaneously in a very simple way. Library provides very friendly API for user, it minimizes possibility of building wrong requests. To use library in your maven-based application you need just to specify dependency and repository which are given below or download jar file manually from
@@ -178,12 +299,14 @@ Session session = client.authenticate("jasperadmin", "jasperadmin", new Locale("
 // or
 Session session = client.authenticate("jasperadmin", "jasperadmin", "de", America/Los_Angeles");
 ```
-###Anonymous session
+Anonymous session
+-----------------
 For some Jasperserver services authentication is not required (for example, settings service, bundles service or server info service), so you can use anonymous session:
  ```java
 AnonymousSession session = client.getAnonymousSession();
 ```
-####Invalidating session
+Invalidating session
+--------------------
 Not to store session on server you can invalidate it with `logout()` method.
 ```java
 session.logout();
@@ -197,7 +320,9 @@ After you've configured the client you can easily use any of available services.
 Session session = client.authenticate("jasperadmin", "password");
 ```
 We've authenticated as `jasperadmin` user an got a session for this user, all subsequent operations must be done through this session instance.
-####Running a report:
+
+Running a report:
+-----------------
 There are two approaches to run a report - in synchronous and asynchronous modes.
 To run report in synchronous mode you can use the code below:
 ```java
@@ -289,7 +414,8 @@ request
                 .setReportUnitUri("/public/Samples/Reports/12g.PromotionDetailsReport")
                 .setAsync(true);            
 ```
-####Requesting report execution status:
+
+###Requesting report execution status:
 After you've got `ReportExecutionDescriptor` you can request for the report execution status:
 ```java
 OperationResult<ReportExecutionStatusEntity> operationResult =
@@ -301,7 +427,8 @@ OperationResult<ReportExecutionStatusEntity> operationResult =
 ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
 ```
 In the above code we've just specified request ID and got its status as a `ReportExecutionStatusEntity` instance.
-####Requesting report execution details:
+
+###Requesting report execution details:
 Once the report is ready, your client must determine the names of the files to download by requesting the
 reportExecution descriptor again.
 ```java
@@ -313,7 +440,8 @@ OperationResult<ReportExecutionDescriptor> operationResult =
 
 ReportExecutionDescriptor descriptor = operationResult.getEntity();
 ```
-####Requesting Report Output
+
+###Requesting Report Output
 After requesting a report execution and waiting synchronously or asynchronously for it to finish, you are ready to download the report output. Every export format of the report has an ID that is used to retrieve it. For example, the HTML export has the ID html. To download the main report output, specify this export ID in the `export` method. For example, to download the main HTML of the report execution response above, use the following code:
 ```java
 OperationResult<InputStream> operationResult =
@@ -326,6 +454,7 @@ OperationResult<InputStream> operationResult =
 InputStream file = operationResult.getEntity();
 ```
 As a response you'll get an `InputStream` instance.
+
 ####Download file attachments for report output:
 To download file attachments for HTML output, use the following code. You must download all attachments to display the HMTL content properly.
 ```java
@@ -343,6 +472,7 @@ for(AttachmentDescriptor attDescriptor : htmlExportDescriptor.getAttachments()){
     //doing something with file
 }
 ```
+
 ####Exporting a Report Asynchronously
 After running a report and downloading its content in a given format, you can request the same report in other formats. As with exporting report formats through the user interface, the report does not run again because the export process is independent of the report.
 ```java
@@ -371,6 +501,7 @@ OperationResult<ReportExecutionStatusEntity> operationResult =
 
 ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
 ```
+
 ####Finding Running Reports and Jobs
 You can search for reports that are running on the server, including
 report jobs triggered by the scheduler.
@@ -385,6 +516,7 @@ OperationResult<ReportExecutionListWrapper> operationResult =
 
 ReportExecutionListWrapper entity = operationResult1.getEntity();
 ```
+
 ####Stopping Running Reports and Jobs
 To stop a report that is running and cancel its output, use the code below:
 ```java
@@ -397,7 +529,8 @@ OperationResult<ReportExecutionStatusEntity> operationResult1 =
 ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
 ```
 
-###Input controls service:
+Input controls service:
+-----------------------
 The reports service includes methods for reading and setting input controls of any input controls container, i.e. reportUnit, reportOptions, dashboard, adhocDataView
 ####Listing Report Parameters Structure
 The following code returns a description of the structure of the input controls for a given container.
@@ -423,7 +556,8 @@ OperationResult<ReportInputControlsListWrapper> operationResult = session
                 .get();
 ReportInputControlsListWrapper result = operationResult.getEntity();
 ```
-####Reordering input controls structure
+
+###Reordering input controls structure
 You can change structure of input controls according to client demands using the next code:
 ```java
 OperationResult<ReportInputControlsListWrapper> reorderedOperationResult = session
@@ -435,6 +569,7 @@ OperationResult<ReportInputControlsListWrapper> reorderedOperationResult = sessi
 It is impossible to change input controls except change of theirs order. Sent to server structure MUST be the same as it received
 from there, except order.
 You cannot modify some values, add or remove control, etc.
+
 ####Listing input controls values
 The following code returns a description of the possible values of all report parameters for the report. Among these choices, it shows which ones are selected.
 ```java
@@ -459,6 +594,7 @@ Use setting `useCashedData(false)` to avoid getting cashed data:
                 .get();
 InputControlStateListWrapper result = operationResult.getEntity();
 ```
+
 ####Setting input controls values
 The following code updates the state of specified input controls values, so they are set for the next run of the report.
 ```java
@@ -485,13 +621,16 @@ OperationResult<InputControlStateListWrapper> operationResult = session
                 .run();
 InputControlStateListWrapper result = operationResult.getEntity();
 ```
+
 Administration services:
 ========================
 Only administrative users may access the REST services for administration.
 
-###Organizations service
+Organizations service
+---------------------
 It provides methods that allow you to list, view, create, modify, and delete organizations (also known as tenants). Because the organization ID is used in the URL, this service can operate only on organizations whose ID is less than 100 characters long and does not contain spaces or special symbols. As with resource IDs, the organization ID is permanent and cannot be modified for the life of the organization.
-####Searching for Organizations
+
+###Searching for Organizations
 The service searches for organizations by ID, alias, or display name. If no search is specified, it returns a list of all organizations. Searches and listings start from but do not include the
 logged-in user’s organization or the specified base.
 ```java
@@ -501,7 +640,7 @@ OperationResult<OrganizationsListWrapper> result = session
         .parameter(OrganizationParameter.INCLUDE_PARENTS, "true")
         .get();
 ```
-####Viewing an Organization
+###Viewing an Organization
 The `organization()` method with an organization ID retrieves a single descriptor containing the list of properties for the organization. When you specify an organization, use its unique ID, not its path.
 ```java
 OperationResult<ClientTenant> result = session
@@ -519,7 +658,8 @@ OperationResult<ClientTenant> result = session
         .organization(organization)
         .get();
 ```
-####Creating an Organization
+
+###Creating an Organization
 To create an organization, put all information in an organization descriptor, and include it in a request to the `rest_v2/organizations` service, with no ID specified. The organization is created in the organization specified by the `parentId` value of the descriptor.
 ```java
 OperationResult<Organization> result = session
@@ -548,7 +688,8 @@ OperationResult<ClientTenant> result = session
         .organization("myOrg1")
         .createOrUpdate(organization);
 ```
-####Deleting an Organization
+
+###Deleting an Organization
 To delete an organization, use the `delete()` method and specify the organization ID in the `organization()` method. When deleting an organization, all of its resources in the repository, all of its sub-organizations, all of its users, and all of its roles are permanently deleted.
 ```java
 OperationResult<ClientTenant> result = session
@@ -556,10 +697,13 @@ OperationResult<ClientTenant> result = session
         .organization("myOrg1")
         .delete();
 ```
-###Users service
+
+Users service
+-------------
 It provides methods that allow you to list, view, create, modify, and delete user accounts, including setting role membership.
 Because the user ID is used in the URL, this service can operate only on users whose ID is less than 100 characters long and does not contain spaces or special symbols. As with resource IDs, the user ID is permanent and cannot be modified for the life of the user account.
-####Searching for Users
+
+###Searching for Users
 You can search for users by name or by role. If no search is specified, service returns all users.
 ```java
 OperationResult<UsersListWrapper> operationResult =
@@ -571,7 +715,8 @@ OperationResult<UsersListWrapper> operationResult =
 
 UsersListWrapper usersListWrapper = operationResult.getEntity();
 ```
-####Viewing a User
+
+###Viewing a User
 Method `username()` with a user ID (username) retrieves a single descriptor containing the full list of user properties and roles.
 ```java
 OperationResult<ClientUser> operationResult =
@@ -602,7 +747,8 @@ OperationResult<ClientUser> operationResult =
 ClientUser user = operationResult.getEntity();
 ```
 The full user descriptor includes detailed information about the user account, including any roles.
-####Creating a User
+
+###Creating a User
 To create a user account, put all required information in a user descriptor `ClientUser`, and include it in a request to the users service (`createOrUpdate()` method), with the intended user ID (username) specified in the `username()` method. To create a user, the user ID in the `username()` method must be unique on the server. If the user ID already exists, that user account will be modified. The descriptor sent in the request should contain all the properties you want to set on the new user, except for the username that is specified in the `username()` method. To set roles on the user, specify them as a list of roles.
 ```java
 //Creating a user
@@ -638,7 +784,8 @@ client
     .user(user.getUsername())
     .createOrUpdate(user);
 ```
-####Modifying User Properties
+
+###Modifying User Properties
 To modify the properties of a user account, put all desired information in a user descriptor (`ClientUser`), and include it in a request to the users service (`createOrUpdate()` method), with the existing user ID (username) specified in the `username()` method. To modify a user, the user ID must already exist on the server. If the user ID doesn’t exist, a user account will be created. To add a role to the user, specify the entire list of roles with the desired role added. To remove a role from a user, specify the entire list of roles without the desired role removed.
 ```java
 ClientUser user = new ClientUser()
@@ -655,7 +802,8 @@ client
     .user("john.doe")
     .createOrUpdate(user);
 ```
-####Deleting a User
+
+###Deleting a User
 To delete a user, call the `delete()` method and specify the user ID in the `username()` method.
 ```java
 client
@@ -665,11 +813,13 @@ client
     .delete();
 ```
 
-###Attributes service
+Attributes service
+------------------
 Attributes, also called profile attributes, are name-value pairs associated with a user, organization or server. Certain advanced features such as Domain security and OLAP access grants use profile attributes in addition to roles to grant certain permissions. Unlike roles, attributes are not pre-defined, and thus any attribute name can be assigned any value at any time.
 Attributes service provides methods for reading, writing, and deleting attributes on any given holder (server, organization or user account). All attribute operations apply to a single specific holder; there are no operations for reading or searching attributes from multiple holders.
 As the holder's id is used in the URL, this service can operate only on holders whose ID is less than 100 characters long and does not contain spaces or special symbols. In addition, both attribute names and attribute values being written with this service are limited to 255 characters and may not be empty (null) or not contain only whitespace characters.
-####Viewing User Attributes
+
+###Viewing User Attributes
 The code below allow you to retrieve single attribute defined for the user:
 ```java
    HypermediaAttribute userAttribute = session
@@ -744,7 +894,7 @@ You can get the list of all attributes that includes the name and value of each 
 ```
  Each attribute may only have one value, however that value may contain a comma-separated list that is interpreted by the server as being multi-valued.
 
-####Setting User Attributes
+###Setting User Attributes
 The `createOrUpdate()` method of the attributes service adds or replaces attributes on the specified user. The list of attributes defines the name and value of each attribute. Each attribute may only have one value, however, that value may contain a comma separated list that is interpreted by the server as being multi-valued.
 There are two syntaxes, the following one is for adding or replacing all attributes
 ```java
@@ -787,7 +937,8 @@ The second way of using the attributes service is adding or replacing individual
                         .createOrUpdate(attribute)
                         .getEntity();
 ```
-####Deleting User Attributes
+
+###Deleting User Attributes
 The `delete()` method of the attributes service removes attributes from the specified user. When attributes are
 removed, both the name and the value of the attribute are removed, not only the value.
 There are two syntaxes, the following one is for deleting multiple attributes or all attributes at once.
@@ -818,7 +969,8 @@ session
                 .attribute("attributeName")
                 .delete();
 ```
-####Viewing Organization Attributes
+
+###Viewing Organization Attributes
 The code below retrieves the list of attributes, if any, defined for the organization.
 ```java
 List<HypermediaAttribute> attributes = session
@@ -848,7 +1000,8 @@ HypermediaAttribute attributes = session
         .get()
         .getEntity();
 ```
-####Setting Organization Attributes
+
+###Setting Organization Attributes
 Service allows you to create new organization attributes. See code below:
 ```java
 HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
@@ -881,7 +1034,8 @@ OperationResult<HypermediaAttribute> retrieved = session
         .createOrUpdate(attribute);
 ```
 Attribute name should not exist on the server and match with `name` field of `attribute` object, otherwise the attribute will be deleted. 
-####Deleting Organization Attributes
+
+###Deleting Organization Attributes
 You can also delete a single organization attribute.
 ```java
 OperationResult<HypermediaAttribute> operationResult = session
@@ -898,7 +1052,8 @@ OperationResult<HypermediaAttributesListWrapper> operationResult = session
                 .attributes("number_of_employees", "country_code")
                 .delete();
 ```
-####Viewing Server Attributes
+
+###Viewing Server Attributes
 We have also provided service to get server attributes. Code below return available server attributes. 
 ```java
 List<HypermediaAttribute> attributes = session
