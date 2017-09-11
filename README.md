@@ -14,38 +14,38 @@ Table of Contents
   * [Logging](#logging).
   * [Switching between JSON and XML](#switching-between-json-and-xml).
   * [Client instantiation](#client-instantiation).
-3. [Authentication](#authentication).
+* [Authentication](#authentication).
   * [Anonymous session](#anonymous-session).
   * [Invalidating session](#invalidating-session).
-4. [Report services](#report-services).
+* [Report services](#report-services).
   * [Running a report](#running-a-report).
-  * [Requesting report execution status](#requesting-report-execution-status).
-  * [Requesting report execution details](#requesting-report-execution-details).
-  * [Requesting Report Output](#requesting-report-output).
-   * [Download file attachments for report output](#download-file-attachments-for-report-output).
+    * [Requesting report execution status](#requesting-report-execution-status).
+    * [Requesting report execution details](#requesting-report-execution-details).
+    * [Requesting Report Output](#requesting-report-output).
+    * [Download file attachments for report output](#download-file-attachments-for-report-output).
   * [Exporting a Report Asynchronously](#exporting-a-report-asynchronously).
   * [Polling Export Execution](#polling-export-execution).
   * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
   * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
-5. [Input controls service](#input-controls-service).
+* [Input controls service](#input-controls-service).
   * [Listing input controls structure](#listing-input-controls-structure).
   * [Reordering input controls structure](#reordering-input-controls-structure).
   * [Listing input controls values](#listing-input-controls-values).
   * [Setting input controls values](#setting-input-controls-values).
-6. [Administration services](#administration-services).
-  1. [Organizations service](#organizations-service).
+* [Administration services](#administration-services).
+  * [Organizations service](#organizations-service).
     * [Searching for Organizations](#searching-for-organizations).
     * [Viewing an Organization](#viewing-an-organization).
     * [Creating an Organization](#creating-an-organization).
     * [Modifying Organization Properties](#modifying-organization-properties).
     * [Deleting an Organization](#deleting-an-organization).
-  2. [Users service](#users-service).
+  * [Users service](#users-service).
     * [Searching for Users](#searching-for-users).
     * [Viewing a User](#viewing-a-user).
     * [Creating a User](#creating-a-user).
     * [Modifying User Properties](#modifying-user-properties).
     * [Deleting a User](#deleting-a-user).
-  3. [Attributes service](#attributes-service).
+  * [Attributes service](#attributes-service).
     * [Viewing User Attributes](#viewing-user-attributes).
     * [Setting User Attributes](#setting-user-attributes).
     * [Deleting User Attributes](#deleting-user-attributes).
@@ -57,17 +57,17 @@ Table of Contents
     * [Deleting Server Attributes](#deleting-server-attributes).
     * [Getting attributes permissions](#getting-attributes-permissions).
     * [Searching attributes ](#searching-attributes).
-  4. [The Roles Service](#the-roles-service).
+  * [The Roles Service](#the-roles-service).
     * [Searching for Roles](#searching-for-roles).
     * [Viewing a Role](#viewing-a-role).
     * [Creating a Role](#creating-a-role).
     * [Modifying a Role](#modifying-a-role).
     * [Setting Role Membership](#setting-role-membership).
     * [Deleting a Role](#deleting-a-role).
-  5. [The Settings Service](#settings-service).
+  * [The Settings Service](#settings-service).
     * [Getting server specific settings](#getting-server-specific-settings).
-7. [Repository Services](#repository-services).
-  1. [Resources Service](#resources-service).
+* [Repository Services](#repository-services).
+  * [Resources Service](#resources-service).
     * [Searching the Repository](#searching-the-repository).
     * [Viewing Resource Details](#viewing-resource-details).
     * [Downloading File Resources](#downloading-file-resources).
@@ -81,14 +81,14 @@ Table of Contents
     * [Uploading ReportUnit](#uploading-reportunit).
     * [Uploading File Resources](#uploading-file-resources).
     * [Deleting Resources](#deleting-resources).
-  2. [The Permissions Service](#the-permissions-service).
+  * [The Permissions Service](#the-permissions-service).
     * [Viewing Multiple Permissions](#viewing-multiple-permissions).
     * [Viewing a Single Permission](#viewing-a-single-permission).
     * [Setting Multiple Permissions](#setting-multiple-permissions).
     * [Setting a Single Permission](#setting-a-single-permission).
     * [Deleting Permissions in Bulk](#deleting-permissions-in-bulk).
     * [Deleting a Single Permission](#deleting-a-single-permission).
-8. [Jobs service](#jobs-service).
+* [Jobs service](#jobs-service).
   * [Listing Report Jobs](#listing-report-jobs).
   * [Viewing a Job Definition](#viewing-a-job-definition).
   * [Extended Job Search](#extended-job-search).
@@ -99,28 +99,28 @@ Table of Contents
   * [Pausing Jobs](#pausing-jobs).
   * [Resuming Jobs](#resuming-jobs).
   * [Restarting Failed Jobs](#restarting-failed-jobs).
-9. [Calendars service](#calendars-service).
+ * [Calendars service](#calendars-service).
   * [Listing All Registered Calendar Names](#listing-all-registered-calendar-names).
   * [Viewing an Exclusion Calendar](#viewing-an-exclusion-calendar).
   * [Adding or Updating an Exclusion Calendar](#adding-or-updating-an-exclusion-calendar).
   * [Deleting an Exclusion Calendar](#deleting-an-exclusion-calendar).
-10. [Import/Export](#importexport).
-  1. [Export service](#export-service).
+* [Import/Export](#importexport).
+  * [Export service](#export-service).
     * [Checking the Export State](#checking-the-export-state).
     * [Fetching the Export Output](#fetching-the-export-output).
-  2. [Import service](#import-service).
+  * [Import service](#import-service).
     * [Checking the Import State](#checking-the-import-state).
-11. [Domain metadata service](#domainmetadata-service).
-12. [Thumbnail Search Service](#thumbnail-search-service).
-13. [Diagnostic Service](#diagnostic-service).
-14. [Query Executor Service](#query-executor-service).
-15. [Server Information Service](#server-information-service).
-16. [Bundles service](#bundles-service).
-17. [Asynchronous API](#asynchronous-api).
-18. [Getting serialized content from response](#getting-serialized-content-from-response).
-19. [Possible issues](#possible-issues).
-20. [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
-21. [License](#license).
+* [Domain metadata service](#domainmetadata-service).
+* [Thumbnail Search Service](#thumbnail-search-service).
+* [Diagnostic Service](#diagnostic-service).
+* [Query Executor Service](#query-executor-service).
+* [Server Information Service](#server-information-service).
+* [Bundles service](#bundles-service).
+* [Asynchronous API](#asynchronous-api).
+* [Getting serialized content from response](#getting-serialized-content-from-response).
+* [Possible issues](#possible-issues).
+* [Maven dependency to add jasperserver-rest-client to your app](#maven-dependency-to-add-jasperserver-rest-client-to-your-app).
+* [License](#license).
 
 Introduction
 ============
