@@ -415,7 +415,7 @@ request
                 .setAsync(true);            
 ```
 
- #Requesting report execution status:
+ ###Requesting report execution status:
 After you've got `ReportExecutionDescriptor` you can request for the report execution status:
 ```java
 OperationResult<ReportExecutionStatusEntity> operationResult =
@@ -428,7 +428,7 @@ ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
 ```
 In the above code we've just specified request ID and got its status as a `ReportExecutionStatusEntity` instance.
 
- #Requesting report execution details:
+ ### Requesting report execution details:
 Once the report is ready, your client must determine the names of the files to download by requesting the
 reportExecution descriptor again.
 ```java
