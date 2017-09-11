@@ -570,7 +570,7 @@ It is impossible to change input controls except change of theirs order. Sent to
 from there, except order.
 You cannot modify some values, add or remove control, etc.
 
-####Listing input controls values
+###Listing input controls values
 The following code returns a description of the possible values of all report parameters for the report. Among these choices, it shows which ones are selected.
 ```java
 OperationResult<InputControlStateListWrapper> operationResult = session
@@ -595,7 +595,7 @@ Use setting `useCashedData(false)` to avoid getting cashed data:
 InputControlStateListWrapper result = operationResult.getEntity();
 ```
 
-####Setting input controls values
+###Setting input controls values
 The following code updates the state of specified input controls values, so they are set for the next run of the report.
 ```java
 OperationResult<InputControlStateListWrapper> operationResult = session
@@ -640,6 +640,7 @@ OperationResult<OrganizationsListWrapper> result = session
         .parameter(OrganizationParameter.INCLUDE_PARENTS, "true")
         .get();
 ```
+
 ###Viewing an Organization
 The `organization()` method with an organization ID retrieves a single descriptor containing the list of properties for the organization. When you specify an organization, use its unique ID, not its path.
 ```java
@@ -677,7 +678,8 @@ OperationResult<Organization> result = session
 Be carefully using this method because you can damage existing organization if the `organizationId` of new organization is already used.
 The descriptor is sent in the request should contain all the properties you want to set on the new organization. Specify the `parentId` value to set the parent of the organization, not the `tenantUri` or `tenantFolderUri` properties.
 However, all properties have defaults or can be determined based on the alias value. The minimal descriptor necessary to create an organization is simply the alias property. In this case, the organization is created as child of the logged-in user’s home organization.
-####Modifying Organization Properties
+
+###Modifying Organization Properties
 To modify the properties of an organization, use the `update` method and specify the organization ID in the URL. The request must include an organization descriptor with the values you want to change. You cannot change the ID of an organization, only its name (used for display) and its alias (used for logging in).
 ```java
 Organization organization = new Organization();
