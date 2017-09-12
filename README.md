@@ -19,10 +19,10 @@ Table of Contents
   * [Invalidating session](#invalidating-session).
 * [Report services](#report-services).
   * [Running a report](#running-a-report).
-    * [Requesting report execution status](#requesting-report-execution-status).
-    * [Requesting report execution details](#requesting-report-execution-details).
-    * [Requesting Report Output](#requesting-report-output).
-    * [Download file attachments for report output](#download-file-attachments-for-report-output).
+  * [Requesting report execution status](#requesting-report-execution-status).
+  * [Requesting report execution details](#requesting-report-execution-details).
+  * [Requesting Report Output](#requesting-report-output).
+  * [Download file attachments for report output](#download-file-attachments-for-report-output).
   * [Exporting a Report Asynchronously](#exporting-a-report-asynchronously).
   * [Polling Export Execution](#polling-export-execution).
   * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
@@ -110,7 +110,8 @@ Table of Contents
     * [Fetching the Export Output](#fetching-the-export-output).
   * [Import service](#import-service).
     * [Checking the Import State](#checking-the-import-state).
-* [Domain metadata service](#domainmetadata-service).
+* [Metadata](#metadata)
+  * [Domain metadata service](#domainmetadata-service).
 * [Thumbnail Search Service](#thumbnail-search-service).
 * [Diagnostic Service](#diagnostic-service).
 * [Query Executor Service](#query-executor-service).
@@ -415,7 +416,8 @@ request
                 .setAsync(true);            
 ```
 
-### Requesting report execution status:
+Requesting report execution status:
+-----------------------------------
 After you've got `ReportExecutionDescriptor` you can request for the report execution status:
 ```java
 OperationResult<ReportExecutionStatusEntity> operationResult =
@@ -428,7 +430,8 @@ ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
 ```
 In the above code we've just specified request ID and got its status as a `ReportExecutionStatusEntity` instance.
 
-### Requesting report execution details:
+Requesting report execution details:
+------------------------------------
 Once the report is ready, your client must determine the names of the files to download by requesting the
 reportExecution descriptor again.
 ```java
@@ -456,7 +459,8 @@ InputStream file = operationResult.getEntity();
 ```
 As a response you'll get an `InputStream` instance.
 
-### Download file attachments for report output:
+Download file attachments for report output:
+--------------------------------------------
 To download file attachments for HTML output, use the following code. You must download all attachments to display the HMTL content properly.
 ```java
 ExportDescriptor htmlExportDescriptor = ... //retrieving htmlExportDescriptor from reportExecutionDescriptor
@@ -490,7 +494,8 @@ OperationResult<ExportExecutionDescriptor> operationResult =
 
 ExportExecutionDescriptor statusEntity = operationResult.getEntity();
 ```
-### Polling Export Execution
+Polling Export Execution
+------------------------
 As with the execution of the main report, you can also poll the execution of the export process.
 For example, to get the status of the HTML export in the previous example, use the following code:
 ```java
@@ -537,7 +542,8 @@ Input controls service:
 =======================
 The reports service includes methods for reading and setting input controls of any input controls container, i.e. reportUnit, reportOptions, dashboard, adhocDataView
 
-### Listing Report Parameters Structure
+Listing Report Parameters Structure
+-----------------------------------
 The following code returns a description of the structure of the input controls for a given container.
 ```java
  OperationResult<ReportInputControlsListWrapper> operationResult = session
@@ -562,7 +568,8 @@ OperationResult<ReportInputControlsListWrapper> operationResult = session
 ReportInputControlsListWrapper result = operationResult.getEntity();
 ```
 
-### Reordering input controls structure
+Reordering input controls structure
+-----------------------------------
 You can change structure of input controls according to client demands using the next code:
 ```java
 OperationResult<ReportInputControlsListWrapper> reorderedOperationResult = session
@@ -575,7 +582,8 @@ It is impossible to change input controls except change of theirs order. Sent to
 from there, except order.
 You cannot modify some values, add or remove control, etc.
 
-### Listing input controls values
+Listing input controls values
+-----------------------------
 The following code returns a description of the possible values of all report parameters for the report. Among these choices, it shows which ones are selected.
 ```java
 OperationResult<InputControlStateListWrapper> operationResult = session
@@ -600,7 +608,8 @@ Use setting `useCashedData(false)` to avoid getting cashed data:
 InputControlStateListWrapper result = operationResult.getEntity();
 ```
 
-### Setting input controls values
+Setting input controls values
+-----------------------------
 The following code updates the state of specified input controls values, so they are set for the next run of the report.
 ```java
 OperationResult<InputControlStateListWrapper> operationResult = session
@@ -1217,7 +1226,8 @@ Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with p
 ```
 Pay attention, the setting `setIncludePermission()` specify only the **server response format**, you can not set any permissions with this setting.
 
-###The Roles Service
+The Roles Service
+-----------------
 It provides similar methods that allow you to list, view, create, modify, and delete roles. The new service provides improved search functionality, including user-based role searches. Because the role ID is used in the URL, this service can operate only on roles whose ID is less than 100 characters long and does not contain spaces or special symbols. Unlike resource IDs, the role ID is the role name and can be modified.
 
 ### Searching for Roles
@@ -1557,7 +1567,7 @@ ClientReportUnit entity = session.resourcesService()
                 .entity();
 ```
 
-#### Deleting Resources
+### Deleting Resources
 You can delete resources in two ways, one for single resources and one for multiple resources. To delete multiple resources at once, specify multiple URIs with the `ResourceSearchParameter.RESOURCE_URI` parameter.
 ```java
 //multiple
@@ -1578,14 +1588,14 @@ OperationResult result = client
 ```
 
 The Permissions Service
+-----------------------
 In the permissions service, the syntax is expanded so that you can specify the resource, the recipient (user name or role name) and the permission value within the URL. This makes it simpler to set permissions because you don’t need to send a resource descriptor to describe the permissions. In order to set, modify, or delete permissions, you must use credentials or login with a user that has “administer” permissions on the target resource.
 Because a permission can apply to either a user or a role, the permissions service uses the concept of a “recipient”. A recipient specifies whether the permission applies to a user or a role, and gives the ID of the user or role.
 There are two qualities of a permission:
 * The assigned permission is one that is set explicitly for a given resource and a given user or role. Not all permissions are assigned, in which case the permission is inherited from the parent folder.
 * The effective permission is the permission that is being enforced, whether it is assigned or inherited.
 
-####Viewing Multiple Permissions
-
+### Viewing Multiple Permissions
 ```java
 OperationResult<RepositoryPermissionListWrapper> operationResult =
         client
@@ -1594,7 +1604,8 @@ OperationResult<RepositoryPermissionListWrapper> operationResult =
                 .resource("/datasources")
                 .get();
 ```
-####Viewing a Single Permission
+
+### Viewing a Single Permission
 Specify the recipient in the URL to see a specific assigned permission.
 ```java
 OperationResult<RepositoryPermission> operationResult =
@@ -1607,7 +1618,8 @@ OperationResult<RepositoryPermission> operationResult =
 
 RepositoryPermission permission = operationResult.getEntity();
 ```
-####Setting Multiple Permissions
+
+### Setting Multiple Permissions
 The `createNew()` method assigns any number of permissions to any number of resources specified in the body of the request. All permissions must be newly assigned, and the request will fail if a recipient already has an assigned (not inherited) permission. Use the `createOrUpdate()` method to update assigned permissions. The `createOrUpdate()` method modifies exiting permissions (already assigned).
 ```java
 List<RepositoryPermission> permissionList = new ArrayList<RepositoryPermission>();
@@ -1623,7 +1635,8 @@ OperationResult operationResult =
 
 Response response = operationResult.getResponse();
 ```
-####Setting a Single Permission
+
+### Setting a Single Permission
 The `createNew()` method accepts a single permission descriptor.
 ```java
 RepositoryPermission permission = new RepositoryPermission();
@@ -1640,7 +1653,8 @@ OperationResult operationResult =
 
 Response response = operationResult.getResponse();
 ```
-####Deleting Permissions in Bulk
+
+### Deleting Permissions in Bulk
 The `delete()` method removes all assigned permissions from the designated resource. After returning successfully, all effective permissions for the resource are inherited.
 ```java
 OperationResult operationResult =
@@ -1652,7 +1666,8 @@ OperationResult operationResult =
 
 Response response = operationResult.getResponse();
 ```
-####Deleting a Single Permission
+
+### Deleting a Single Permission
 Specify a recipient in the `permissionRecipient()` method and call the `delete()` method to remove only that permission.
 ```java
 OperationResult operationResult =
@@ -1665,10 +1680,13 @@ OperationResult operationResult =
 
 Response response = operationResult.getResponse();
 ```
+
 Jobs service
 ==================
 The jobs service provides the interface to schedule reports and manage scheduled reports (also called jobs). In addition, this service provides an API to scheduler features that were introduced in JasperReports Server 4.7, such as bulk updates, pausing jobs, FTP output and exclusion calendars.
-####Listing Report Jobs
+
+Listing Report Jobs
+-------------------
 Use the following method to list all jobs managed by the scheduler.
 ```java
 OperationResult<JobSummaryListWrapper> result = client
@@ -1680,7 +1698,9 @@ OperationResult<JobSummaryListWrapper> result = client
 JobSummaryListWrapper jobSummaryListWrapper = result.getEntity();
 ```
 The jobs are described in the `JobSummary` element.
-####Viewing a Job Definition
+
+Viewing a Job Definition
+------------------------
 The following piece of code with a specific job ID specified in `job()` method retrieves the detailed information about that scheduled job.
 ```java
 OperationResult<Job> result = client
@@ -1692,7 +1712,9 @@ OperationResult<Job> result = client
 Job job = result.getEntity();
 ```
 This code returns a job element that gives the output, scheduling, and parameter details, if any, for the job.
-####Extended Job Search
+
+Extended Job Search
+-------------------
 The `search()` method is used for more advanced job searches. Some field of the jobsummary descriptor can be used directly as parameters, and fields of the job descriptor can also be used as search criteria. You can also control the pagination and sorting order of the reply.
 ```java
 Job criteria = new Job);
@@ -1718,7 +1740,9 @@ JobExtension criteria = new JobExtension();
 criteria.setOutputFormats(wrapper);
 ```
 Currently the code is a little bit littered, in futere versions it will be eliminated.
-####Scheduling a Report
+
+Scheduling a Report
+-------------------
 To schedule a report, create its job descriptor similar to the one returned by the `job(id).get();` method, and use the `scheduleReport()` method of the jobs service. Specify the report being scheduled inside the job descriptor. You do not need to specify any job IDs in the descriptor, because the server will assign them.
 ```java
 job.setLabel("NewScheduledReport");
@@ -1734,7 +1758,9 @@ OperationResult<Job> result = client
 job = result.getEntity();
 ```
 The body contains the job descriptor of the newly created job. It is similar to the one that was sent but now contains the jobID for the new job.
-####Viewing Job Status
+
+Viewing Job Status
+------------------
 The following method returns the current runtime state of a job:
 ```java
 OperationResult<JobState> result = client
@@ -1746,7 +1772,9 @@ OperationResult<JobState> result = client
 JobState jobState = result.getEntity();
 ```
 Response contains the `JobState` status descriptor.
-####Editing a Job Definition
+
+Editing a Job Definition
+------------------------
 To modify an existing job definition, use the `job(id).get()` method to read its job descriptor, modify the descriptor as required, and use the `update()` method of the jobs service. The `update()` method replaces the definition of the job with the given job ID.
 ```java
 String label = "updatedLabel";
@@ -1761,7 +1789,9 @@ OperationResult<Job> result = client
 
 Job job = result.getEntity();
 ```
-####Updating Jobs in Bulk
+
+Updating Jobs in Bulk
+---------------------
 To update several jobs at once you should specify jobs IDs as parameters, and send a descriptor with filled fields to update.
 ```java
 Job jobDescriptor = new Job();
@@ -1776,7 +1806,9 @@ OperationResult<JobIdListWrapper> result = client
         .update(jobDescriptor);
 ```
 The code above will update the `description` field of jobs with IDs `8600` and `8601`.
-####Pausing Jobs
+
+Pausing Jobs
+------------
 The following method pauses currently scheduled job execution. Pausing keeps the job schedule and all other details but prevents the job from running. It does not delete the job.
 ```java
 OperationResult<JobIdListWrapper> result = client
@@ -1786,7 +1818,9 @@ OperationResult<JobIdListWrapper> result = client
         .parameter(JobsParameter.JOB_ID, "8600")
         .pauseJobs();
 ```
-####Resuming Jobs
+
+Resuming Jobs
+-------------
 Use the following method to resume any or all paused jobs in the scheduler. Resuming a job means that any defined trigger in the schedule that occurs after the time it is resumed will cause the report to run again. Missed schedule triggers that occur before the job is resumed are never run.
 ```java
 OperationResult<JobIdListWrapper> result = client
@@ -1796,7 +1830,9 @@ OperationResult<JobIdListWrapper> result = client
         .parameter(JobsParameter.JOB_ID, "8600")
         .resumeJobs();
 ```
-####Restarting Failed Jobs
+
+Restarting Failed Jobs
+----------------------
 Use the following method to rerun failed jobs in the scheduler. For each job to be restarted, the scheduler creates an immediate single-run copy of job, to replace the one that failed. Therefore, all jobs listed in the request body will run once immediately after issuing this command. The single-run copies have a misfire policy set so that they do not trigger any further failures (`MISFIRE_ INSTRUCTION_IGNORE_MISFIRE_POLICY`). If the single-run copies fail themselves, no further attempts are made automatically.
 ```java
 OperationResult<JobIdListWrapper> result = client
@@ -1806,9 +1842,13 @@ OperationResult<JobIdListWrapper> result = client
         .parameter(JobsParameter.JOB_ID, "8600")
         .restarJobs();
 ```
-###Calendars service
+
+Calendars service
+=================
 The scheduler allows a job to be defined with a list of excluded days or times when you do not want the job to run. For example, if you have a report scheduled to run every business day, you want to exclude holidays that change every year. The list for excluded days and times is defined as a calendar, and there are various ways to define the calendar.  The scheduler stores any number of exclusion calendars that you can reference by name. When scheduling a report, reference the name of the calendar to exclude, and the scheduler automatically calculates the correct days to trigger the report. The scheduler also allows you to update an exclusion calendar and update all of the report jobs that used it. Therefore, you can update the calendar of excluded holidays every year and not need to modify any report jobs.
-####Listing All Registered Calendar Names
+
+Listing All Registered Calendar Names
+-------------------------------------
 The following method returns the list of all calendar names that were added to the scheduler.
 ```java
 OperationResult<CalendarNameListWrapper> result = client
@@ -1818,7 +1858,9 @@ OperationResult<CalendarNameListWrapper> result = client
 
 CalendarNameListWrapper calendarNameListWrapper = result.getEntity();
 ```
-####Viewing an Exclusion Calendar
+
+Viewing an Exclusion Calendar
+-----------------------------
 The following method takes the name of an exclusion calendar and returns the definition of the calendar:
 ```java
 OperationResult<Calendar> result = client
@@ -1830,7 +1872,9 @@ OperationResult<Calendar> result = client
 Calendar jobCalendar = result.getEntity();
 ```
 As a result we have common caledar descriptor `ReportJobCalendar`.
-####Adding or Updating an Exclusion Calendar
+
+Adding or Updating an Exclusion Calendar
+----------------------------------------
 This method creates a named exclusion calendar that you can use when scheduling reports. If the calendar already exists, you have the option of replacing it and updating all the jobs that used it.
 ```java
 WeeklyCalendar calendar = new WeeklyCalendar();
@@ -1845,7 +1889,9 @@ OperationResult result = client
         .createOrUpdate(calendar);
 ```
 Unlike common `ReportJobCalendar` which we receive as result of GET operation here we need create the calendar instance of desired type and path it to the `createOrUpdate()` method.
-####Deleting an Exclusion Calendar
+
+Deleting an Exclusion Calendar
+------------------------------
 Use the following method to delete a calendar by name.
 ```java
 OperationResult result = client
@@ -1856,7 +1902,9 @@ OperationResult result = client
 ```
 Import/Export
 =============
-###Export service
+
+Export service
+--------------
 The export service works asynchronously: first you request the export with the desired options, then you monitor the state of the export, and finally you request the output file. You must be authenticated as the system admin (superuser)or jasperadmin for the export services.
 ```java
 OperationResult<State> operationResult =
@@ -1916,7 +1964,8 @@ Also you can specify:
                 .create();
 ```
 ```
-####Checking the Export State
+
+### Checking the Export State
 After receiving the export ID, you can check the state of the export operation.
 ```java
 OperationResult<State> operationResult =
@@ -1929,7 +1978,8 @@ OperationResult<State> operationResult =
 State state = operationResult.getEntity();
 ```
 The body of the response contains the current state of the export operation.
-####Fetching the Export Output
+
+### Fetching the Export Output
 When the export state is ready, you can download the zip file containing the export catalog.
 ```java
 OperationResult<InputStream> operationResult1 =
@@ -1941,7 +1991,9 @@ OperationResult<InputStream> operationResult1 =
 
 InputStream inputStream = operationResult1.getEntity();
 ```
-###Import service
+
+Import service
+--------------
 Use the following service to upload a catalog as a zip file and import it with the given options. Specify options as arguments from `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportParameter`. Arguments that are omitted are assumed to be false. You must be authenticated as the system admin (superuser) or jasperadmin for the import service. Jaspersoft does not recommend uploading files greater than 2 gigabytes.
 ```java
 URL url = ImportService.class.getClassLoader().getResource("testExportArchive.zip");
@@ -1976,7 +2028,8 @@ Also you can set:
 ```java
 
 ```
-####Checking the Import State
+
+### Checking the Import State
 After receiving the import ID, you can check the state of the import operation.
 ```java
 OperationResult<State> operationResult =
@@ -1988,8 +2041,8 @@ OperationResult<State> operationResult =
 
 State state = operationResult.getEntity();
 ```
-####Getting and restarting import task
 
+### Getting and restarting import task
 To get import task metadata you can use next code example:
 ```java
         OperationResult<State> operationResult = session
@@ -2015,7 +2068,8 @@ Also you can restart import task:
                 .getEntity();
 ```
 
-####Metadata 
+Metadata 
+========
 #####Domain Metadata 
 The domain metadata describes the sets and items exposed by a Domain for use in Ad
 Hoc reports. Items are database fields exposed by the Domain, after all joins, filters, and calculated fields have
