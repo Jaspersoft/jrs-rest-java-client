@@ -115,7 +115,7 @@ Table of Contents
   * [Report metadata](#report-metadata).
 * [Thumbnail Search Service](#thumbnail-search-service).
 * [Diagnostic Service](#diagnostic-service).
-* [Context service](#context-service)
+* [Contexts service](#contexts-service)
   * [Domain Context Service](#domain-context-service).
 * [Data Discovery Service](#data-discovery-service).
   * [Domain data discovery](#domain-data-discovery).
@@ -2178,7 +2178,7 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
                 .get()
                 .getEntity()
                 .getThumbnails();
-                ```
+```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
 
 Diagnostic Service
