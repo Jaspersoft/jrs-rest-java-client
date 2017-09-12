@@ -27,6 +27,11 @@ Table of Contents
   * [Polling Export Execution](#polling-export-execution).
   * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
   * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
+  * [Report options service](#report-options-service).
+    * [Listing report options](#listing-report-options).
+    * [Creating report options](#creating-report-options).
+    * [Updating report options](#updating-report-options).
+    * [Deleting report options](#deleting-report-options).
 * [Input controls service](#input-controls-service).
   * [Listing input controls structure](#listing-input-controls-structure).
   * [Reordering input controls structure](#reordering-input-controls-structure).
@@ -543,6 +548,64 @@ OperationResult<ReportExecutionStatusEntity> operationResult1 =
                 .cancelExecution();
 
 ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
+```
+
+Report options service
+----------------------
+Report options are sets of input control values that are saved in the repository. A report option is always associated with a report.
+
+### Listing report options
+```java
+            OperationResult<ReportOptionsSummaryList> result = session
+                    .reportingService()
+                    .report(reportUnitUri)
+                    .reportOptions()
+                    .get();
+
+            final ReportOptionsSummaryList entity = result.getEntity();
+```
+The body of the response contains the description of the report options(URI, Id and label).
+
+### Creating report options
+The following code example creates a new report option for a given report. A report option is defined by a set of values for **all** of the report’s input controls.
+```java
+            final MultivaluedHashMap<String, String> map = new MultivaluedHashMap<String, String>();
+            map.addAll("Country_multi_select", "Mexico");
+            map.addAll("Cascading_state_multi_select", "Guerrero", "Sinaloa");
+            map.addAll("Cascading_name_single_select", "Crow-Sims Construction Associates");
+
+            OperationResult<ReportOptionsSummary> result = session
+                    .reportingService()
+                    .report(reportUnitUri)
+                    .reportOptions(map)
+                    .label(OPTIONS_LABEL)
+                    .create();
+
+            final ReportOptionsSummary entity = result.getEntity();
+ ```
+The server responds with a JSON object that describes the new report options
+ 
+### Updating report options 
+Use the following example to modify the values in a given report option
+```java
+            final MultivaluedHashMap<String, String> map = new MultivaluedHashMap<String, String>();
+            map.addAll("Country_multi_select", "USA");
+
+            OperationResult<ReportOptionsSummary> result = session
+                    .reportingService()
+                    .report(reportUnitUri)
+                    .reportOptions(OPTIONS_LABEL)
+                    .update(map);
+```
+
+### Deleting report options
+To delete a given report option you can use  followingcode:
+```java
+            OperationResult result = session
+                    .reportingService()
+                    .report(reportUnitUri)
+                    .reportOptions(OPTIONS_LABEL)
+                    .delete();
 ```
 
 Input controls service:
