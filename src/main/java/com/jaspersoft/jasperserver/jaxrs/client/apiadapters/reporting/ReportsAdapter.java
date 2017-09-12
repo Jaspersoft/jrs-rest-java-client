@@ -22,6 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.peroprtoptions.ReportOptionsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReorderingReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersUtils;
@@ -30,6 +31,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.ws.rs.core.MultivaluedHashMap;
 
 public class ReportsAdapter extends AbstractAdapter {
 
@@ -42,6 +44,18 @@ public class ReportsAdapter extends AbstractAdapter {
 
     public ReorderingReportParametersAdapter reportParameters() {
         return new ReorderingReportParametersAdapter(sessionStorage, reportUnitUri);
+    }
+
+    public ReportOptionsAdapter reportOptions() {
+        return new ReportOptionsAdapter(sessionStorage, reportUnitUri);
+    }
+
+    public ReportOptionsAdapter reportOptions(String optionsId) {
+        return new ReportOptionsAdapter(sessionStorage, reportUnitUri, optionsId);
+    }
+
+    public ReportOptionsAdapter reportOptions(MultivaluedHashMap options) {
+        return new ReportOptionsAdapter(sessionStorage, reportUnitUri, options);
     }
 
     public ReportParametersAdapter reportParameters(String mandatoryId, String... otherIds) {
