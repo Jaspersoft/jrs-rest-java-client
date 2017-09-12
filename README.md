@@ -2070,7 +2070,9 @@ Also you can restart import task:
 
 Metadata 
 ========
-#####Domain Metadata 
+
+Domain Metadata
+---------------
 The domain metadata describes the sets and items exposed by a Domain for use in Ad
 Hoc reports. Items are database fields exposed by the Domain, after all joins, filters, and calculated fields have
 been applied to the database tables selected in the Domain. Sets are groups of items, arranged by the Domain
@@ -2105,7 +2107,9 @@ The following code retrieves metadata of Domain.
                 
         DataIslandsContainer metadata = operationResult.getEntity();
 ```
-#####Report Metadata 
+
+Report Metadata 
+---------------
 Report metadata is used for building AdHoc and query accordingly. 
 To get metadata use next code example:
 ```java
@@ -2134,7 +2138,8 @@ ClientReportUnit reportUnit = new ClientReportUnit().setUri("/public/Samples/Dom
         ResourceGroupElement metadata = operationResult.getEntity();
 ```
 
-####Thumbnail Search Service
+Thumbnail Search Service
+========================
 This service is used for requesting a thumbnail image of an existing resource. You can get a single resource. See code below.
 ```java
 InputStream entity = session.thumbnailsService()
@@ -2169,8 +2174,8 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
                 ```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
 
-###Diagnostic Service
-
+Diagnostic Service
+==================
 The service is used to create, update, stop log collectors and get logs and data snapshots.
 To create log collector use the code below:
 ```java
@@ -2275,8 +2280,8 @@ OperationResult<CollectorSettingsList> operationResult = session
                                 .delete();
 ```
 
-### Contexts Service
-
+Contexts Service
+================
 Using the service you are able to keep some state or context on the server and execute some actions on this state. General service have next API:
 - save context: 
 ```java
@@ -2356,7 +2361,8 @@ The difference between `.metadata()` and `.partialMetadata()` is in HTTP methods
                 .createAndGetMetadata(context);
 ```
 
-####Domain Context Service
+Domain Context Service
+----------------------
 This service allows to execute query of in-memory domain. I.e. domain, that doesn't exist in repository.
 - to create context: 
 ```java
@@ -2394,11 +2400,12 @@ This service allows to execute query of in-memory domain. I.e. domain, that does
                 .create().executeQuery(clientMultiLevelQuery);
 ```
 
-###Data Discovery Service
-
+Data Discovery Service
+======================
 The service based on Context Service and allows to work with supported contexts(Domain, DomEl, reports etc) directly.
 
-####Domain data discovery 
+Domain data discovery 
+---------------------
 This API allows to execute query of in-memory domain. I.e. domain, that doesn't exist in repository.
 
 ```java
@@ -2421,7 +2428,9 @@ This API allows to execute query of in-memory domain. I.e. domain, that doesn't 
                 .domainContext()
                 .fetchMetadataByContext(domainContext);
 ```
-####DomEl data discovery 
+
+DomEl data discovery
+--------------------
 This API allows to validate DomEL expressions and convert them from string representation to object representation and back.
 
 ```java
@@ -2452,7 +2461,9 @@ This API allows to validate DomEL expressions and convert them from string repre
                 .domElContext()
                 .create(expressionStringContext);
 ```
-####Derived table data discovery
+
+Derived table data discovery
+----------------------------
 This API allows to validate DomEL expressions and convert them from string representation to object representation and back.
 
 ```java
@@ -2468,7 +2479,9 @@ This API allows to validate DomEL expressions and convert them from string repre
 
 
 ```
-###Query Execution Service
+
+Query Execution Service
+=======================
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecution service.
 For now the only resource that supports queries is an AdHoc data view. In present time JasperReportsServer supports only synchronize query execution.
 
@@ -2529,7 +2542,8 @@ And you can delete execution using the following code:
                 deleteExecution(uuId);
 ```
 
-###Server Information Service
+Server Information Service
+==========================
 Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
 ```java
 OperationResult<ServerInfo> result = client
@@ -2557,7 +2571,9 @@ OperationResult<String> result = client
 
 String edition = result.getEntity();
 ```
-###Bundles service
+
+Bundles service
+===============
 Use bundles service to get bundles of internalization properties for particular or default user’s locale as JSON. 
 By default service use default system locale where the application was stared.
 If user specified locale at authentication, the service will use it as default locale.
@@ -2600,7 +2616,8 @@ final Map<String, String> bundle = session
         .getEntity();
 ```
 
-###Asynchronous API
+Asynchronous API
+================
 Each operation which requests server has its asynchronous brother which has same name with `async` prefix, e. g. `get() -> asyncGet()`. Each of these operations take a `com.jaspersoft.jasperserver.jaxrs.client.core.Callback` implementation with `execute()` method implemented. `execute()` takes an `OperationResult` instance as a parameter. The `execute` method is called when the response from server came.
 Each of these `async` operations returns `com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution` instance which gives you ability to cancel execution.
 Example:
@@ -2619,14 +2636,16 @@ RequestExecution requestExecution = session
         requestExecution.cancel();
 ```
 
-###Getting serialized content from response
+Getting serialized content from response
+========================================
 If you need to get a plain response body, either JSON, XML, HTML or plain text, you gen get it it with code below:
 ```java
 OperationResult<UsersListWrapper> result = ...
 result.getSerializedContent();
 ```
 
-###Possible issues
+Possible issues
+===============
 1. <strong>Deploying jrs-rest-client within web app to any Appplication Server, e.g. JBoss, Glassfish, WebSphere etc.</strong>
 jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your application server does not support this version you will get an error. To solve this problem you need to add to your application a deployment configuration specific for your AS where you need to exclude modules with old JAX-RS API version. Example of such descriptor for JBoss AS you can find below:
 
@@ -2657,7 +2676,8 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
 </jboss-deployment-structure>
 ```
 
-###Maven dependency to add jasperserver-rest-client to your app:
+Maven dependency to add jasperserver-rest-client to your app:
+=============================================================
 ```xml
     <dependencies>
         <dependency>
@@ -2679,7 +2699,7 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
 ```
 
 License
---------
+=======
 Copyright &copy; 2005 - 2014 Jaspersoft Corporation. All rights reserved.
 http://www.jaspersoft.com.
 
