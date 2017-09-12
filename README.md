@@ -111,9 +111,16 @@ Table of Contents
   * [Import service](#import-service).
     * [Checking the Import State](#checking-the-import-state).
 * [Metadata](#metadata)
-  * [Domain metadata service](#domainmetadata-service).
+  * [Domain metadata](#domain-metadata).
+  * [Report metadata](#report-metadata).
 * [Thumbnail Search Service](#thumbnail-search-service).
 * [Diagnostic Service](#diagnostic-service).
+* [Context service](#context-service)
+  * [Domain Context Service](#domain-context-service).
+* [Data Discovery Service](#data-discovery-service).
+  * [Domain data discovery](#domain-data-discovery).
+  * [DomEl data discovery](#domel-data-discovery).
+  * [Derived table data discovery](#derived-table-data-discovery).
 * [Query Executor Service](#query-executor-service).
 * [Server Information Service](#server-information-service).
 * [Bundles service](#bundles-service).
@@ -1294,7 +1301,8 @@ Response response = operationResult.getResponse();
 ### Setting Role Membership
 To assign role membership to a user, set the roles property on the user account with the PUT method of the rest_
 v2/users service. For details, see section [creating a user](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#creating-a-user).
-####Deleting a Role
+
+### Deleting a Role
 To delete a role, send the DELETE method and specify the role ID (name) in the URL.
 When this method is successful, the role is permanently deleted.
 ```java
@@ -1918,7 +1926,7 @@ OperationResult<State> operationResult =
                 .create();
 
 State state = operationResult.getEntity();
-
+```
 The export parameters you can specify are:
 
 `everything `- export everything except audit data: all repository resources, permissions, report jobs, users, and roles. This option is equivalent to:--uris --repository-permissions --report-jobs --users --roles
@@ -1962,7 +1970,6 @@ Also you can specify:
                 .resourceTypes(asList("jdbcDataSource", "reportUnit", "file"))
                 .parameter(ExportParameter.EVERYTHING)
                 .create();
-```
 ```
 
 ### Checking the Export State
