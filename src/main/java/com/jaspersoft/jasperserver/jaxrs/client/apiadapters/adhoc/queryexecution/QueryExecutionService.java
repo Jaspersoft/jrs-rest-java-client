@@ -74,6 +74,10 @@ public class QueryExecutionService extends AbstractAdapter {
                         new String[]{FLAT_DATA_XML, MULTI_LEVEL_DATA_XML, MULTI_AXES_DATA_XML});
     }
 
+    public QueryExecutionAdapter execution(String uuIUd) {
+        return new QueryExecutionAdapter(sessionStorage, uuIUd);
+    }
+
 
     protected QueryExecutionAdapter adapter(SessionStorage sessionStorage,
                                                    String contentType,

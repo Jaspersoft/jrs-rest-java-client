@@ -21,8 +21,10 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
+import com.jaspersoft.jasperserver.dto.reports.ReportParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.peroprtoptions.ReportOptionsAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReorderingReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersUtils;
@@ -56,6 +58,10 @@ public class ReportsAdapter extends AbstractAdapter {
 
     public ReportOptionsAdapter reportOptions(MultivaluedHashMap options) {
         return new ReportOptionsAdapter(sessionStorage, reportUnitUri, options);
+    }
+
+    public ReportOptionsAdapter reportOptions(List<ReportParameter> options) {
+        return new ReportOptionsAdapter(sessionStorage, reportUnitUri, ReportOptionsUtil.toMap(options));
     }
 
     public ReportParametersAdapter reportParameters(String mandatoryId, String... otherIds) {

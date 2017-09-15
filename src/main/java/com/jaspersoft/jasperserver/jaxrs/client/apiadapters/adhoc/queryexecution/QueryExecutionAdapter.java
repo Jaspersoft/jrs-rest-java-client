@@ -43,6 +43,14 @@ public class QueryExecutionAdapter extends AbstractAdapter {
         uri.add(serviceURI);
     }
 
+    public QueryExecutionAdapter(SessionStorage sessionStorage, String executionId) {
+        super(sessionStorage);
+        uri = new ArrayList<String>();
+        uri.add(serviceURI);
+        uri.add(executionId);
+
+    }
+
     public QueryExecutionAdapter asXml() {
         responseFormat = MimeType.XML;
         return this;
@@ -81,9 +89,18 @@ public class QueryExecutionAdapter extends AbstractAdapter {
         return request.get();
     }
 
+    /**
+     * @deprecated Replaced by {@link QueryExecutionAdapter#delete()}
+     */
+    @Deprecated
     public <T> OperationResult<T> deleteExecution(String executionId) {
         uri.add(executionId);
         JerseyRequest<T> request = buildRequest(dataSetClass);
+        return request.delete();
+    }
+
+    public  OperationResult delete() {
+        JerseyRequest request = buildRequest(Object.class);
         return request.delete();
     }
 

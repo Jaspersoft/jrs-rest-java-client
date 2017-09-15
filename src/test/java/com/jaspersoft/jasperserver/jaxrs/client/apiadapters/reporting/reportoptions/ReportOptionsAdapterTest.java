@@ -1,10 +1,13 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.peroprtoptions;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions;
 
+import com.jaspersoft.jasperserver.dto.reports.ReportParameter;
 import com.jaspersoft.jasperserver.dto.reports.options.ReportOptionsSummary;
 import com.jaspersoft.jasperserver.dto.reports.options.ReportOptionsSummaryList;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import java.util.LinkedList;
+import java.util.List;
 import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -16,6 +19,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -136,7 +140,7 @@ public class ReportOptionsAdapterTest extends PowerMockTestCase {
 
 
     @Test
-    public void should_return_proper_operationResult_when_update() throws Exception {
+    public void should_return_proper_operationResult_when_update_map() throws Exception {
         MultivaluedHashMap<String, String> options = new MultivaluedHashMap<>();
         ReportOptionsAdapter adapter = new ReportOptionsAdapter(sessionStorageMock, REPORT_UNIT_URI, OPTIONS_ID);
         //when
@@ -153,6 +157,26 @@ public class ReportOptionsAdapterTest extends PowerMockTestCase {
                 ReportOptionsSummary.class,
                 new String[]{REPORT_SERVICE_URI, REPORT_UNIT_URI, OPTIONS_SERVICE_URI, OPTIONS_ID});
         Mockito.verify(requestMock).put(options);
+    }
+
+    @Test
+    public void should_return_proper_operationResult_when_update_list() throws Exception {
+        List<ReportParameter> parameterList = new LinkedList<>();
+        ReportOptionsAdapter adapter = new ReportOptionsAdapter(sessionStorageMock, REPORT_UNIT_URI, OPTIONS_ID);
+        //when
+        PowerMockito.mockStatic(JerseyRequest.class);
+        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
+                eq(ReportOptionsSummary.class), eq(new String[]{REPORT_SERVICE_URI, REPORT_UNIT_URI, OPTIONS_SERVICE_URI, OPTIONS_ID}))).thenReturn(requestMock);
+        PowerMockito.doReturn(resultMock).when(requestMock).put(anyMap());
+
+        OperationResult<ReportOptionsSummary> result = adapter.update(parameterList);
+        //then
+        assertSame(result, resultMock);
+        verifyStatic(times(1));
+        JerseyRequest.buildRequest(sessionStorageMock,
+                ReportOptionsSummary.class,
+                new String[]{REPORT_SERVICE_URI, REPORT_UNIT_URI, OPTIONS_SERVICE_URI, OPTIONS_ID});
+        Mockito.verify(requestMock).put(anyMap());
     }
 
     @Test

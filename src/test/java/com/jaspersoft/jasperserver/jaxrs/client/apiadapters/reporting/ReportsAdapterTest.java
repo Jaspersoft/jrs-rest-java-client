@@ -1,9 +1,13 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.peroprtoptions.ReportOptionsAdapter;
+import com.jaspersoft.jasperserver.dto.reports.ReportParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReorderingReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import java.util.LinkedList;
+import java.util.List;
 import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
@@ -18,12 +22,15 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
-@PrepareForTest({ReorderingReportParametersAdapter.class, ReportParametersAdapter.class, /*RunReportAdapter.class,*/ ReportsAdapter.class})
+@PrepareForTest({ReorderingReportParametersAdapter.class, ReportParametersAdapter.class, /*RunReportAdapter.class,*/ ReportsAdapter.class, ReportOptionsUtil.class})
 public class ReportsAdapterTest extends PowerMockTestCase {
 
     public static final String REPORT_UNIT_URI = "reportUnitUri";
@@ -95,6 +102,22 @@ public class ReportsAdapterTest extends PowerMockTestCase {
 
         ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, REPORT_UNIT_URI);
         ReportOptionsAdapter retrieved = adapterSpy.reportOptions(map);
+
+        assertSame(retrieved, reportOptionsAdapterMock);
+        verifyNew(ReportOptionsAdapter.class, times(1)).withArguments(sessionStorageMock, REPORT_UNIT_URI, map);
+    }
+
+    @Test
+    public void should_return_proper_ReportOptionsAdapter_object_by_options_list() throws Exception {
+        List<ReportParameter> parameterList = new LinkedList<>();
+        MultivaluedHashMap<String, String> map = spy(new MultivaluedHashMap<String, String>());
+        /* When */
+        mockStatic(ReportOptionsUtil.class);
+        when(ReportOptionsUtil.toMap(parameterList)).thenReturn(map);
+        PowerMockito.whenNew(ReportOptionsAdapter.class).withArguments(sessionStorageMock, REPORT_UNIT_URI, map).thenReturn(reportOptionsAdapterMock);
+
+        ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, REPORT_UNIT_URI);
+        ReportOptionsAdapter retrieved = adapterSpy.reportOptions(parameterList);
 
         assertSame(retrieved, reportOptionsAdapterMock);
         verifyNew(ReportOptionsAdapter.class, times(1)).withArguments(sessionStorageMock, REPORT_UNIT_URI, map);
