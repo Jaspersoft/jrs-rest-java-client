@@ -126,7 +126,7 @@ Table of Contents
   * [Domain data discovery](#domain-data-discovery).
   * [DomEl data discovery](#domel-data-discovery).
   * [Derived table data discovery](#derived-table-data-discovery).
-* [Query Executor Service](#query-executor-service).
+* [Query Execution Service](#query-execution-service).
 * [Server Information Service](#server-information-service).
 * [Bundles service](#bundles-service).
 * [Asynchronous API](#asynchronous-api).
@@ -583,6 +583,23 @@ The following code example creates a new report option for a given report. A rep
 
             final ReportOptionsSummary entity = result.getEntity();
  ```
+ or
+ ```java
+             final List<ReportParameter> reportParameters = new LinkedList<ReportParameter>();
+            reportParameters.add(new ReportParameter().setName("Country_multi_select").setValues(asList("Mexico")));
+            reportParameters.add(new ReportParameter().setName("Cascading_state_multi_select").setValues(asList("Guerrero", "Sinaloa")));
+            reportParameters.add(new ReportParameter().setName("Cascading_name_single_select").setValues(asList("Crow-Sims Construction Associates")));
+
+            
+            OperationResult<ReportOptionsSummary> result = session
+                    .reportingService()
+                    .report(reportUnitUri)
+                    .reportOptions(reportParameters)
+                    .label(OPTIONS_LABEL)
+                    .create();
+
+            final ReportOptionsSummary entity = result.getEntity()
+ ```
 The server responds with a JSON object that describes the new report options
  
 ### Updating report options 
@@ -596,6 +613,21 @@ Use the following example to modify the values in a given report option
                     .report(reportUnitUri)
                     .reportOptions(OPTIONS_LABEL)
                     .update(map);
+```
+or
+```java
+            final List<ReportParameter> reportParameters = new LinkedList<ReportParameter>();
+            reportParameters.add(new ReportParameter().setName("Country_multi_select").setValues(asList("USA")));
+
+
+            
+            OperationResult<ReportOptionsSummary> result = session
+                    .reportingService()
+                    .report(reportUnitUri)
+                    .reportOptions(OPTIONS_LABEL)
+                    .update(reportParameters);
+
+            final ReportOptionsSummary entity = result.getEntity();
 ```
 
 ### Deleting report options
@@ -2606,10 +2638,10 @@ Also you can get fragment of result data:
 ```
 And you can delete execution using the following code:
 ```java
-        OperationResult<? extends ClientQueryResultData> execute = session.
+        OperationResult execute = session.
                 queryExecutionService().
-                providedQuery().
-                deleteExecution(uuId);
+                execution(uuId).
+                delete();
 ```
 
 Server Information Service

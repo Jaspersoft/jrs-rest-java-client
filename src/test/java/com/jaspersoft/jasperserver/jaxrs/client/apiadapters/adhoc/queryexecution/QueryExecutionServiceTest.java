@@ -27,11 +27,14 @@ import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaTyp
 import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_AXES_DATA_XML;
 import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_LEVEL_DATA_JSON;
 import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_LEVEL_DATA_XML;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
@@ -49,9 +52,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
     @Mock
     private SessionStorage sessionStorageMock;
     @Mock
-    private QueryExecutionAdapter multiLevelAdapterMock;
-    @Mock
-    private QueryExecutionAdapter multiAxesAdapterMock;
+    private QueryExecutionAdapter executionAdapterMock;
     @Mock
     private RestClientConfiguration configurationMock;
 
@@ -63,7 +64,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
 
     @AfterMethod
     public void after() {
-        reset(sessionStorageMock, multiLevelAdapterMock, multiAxesAdapterMock, configurationMock);
+        reset(sessionStorageMock, executionAdapterMock, configurationMock);
     }
 
 
@@ -86,13 +87,13 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
         whenNew(QueryExecutionAdapter.class).withArguments(sessionStorageMock,
                 EXECUTION_MULTI_LEVEL_QUERY_JSON,
                 ClientFlatQueryResultData.class,
-                FLAT_DATA_JSON).thenReturn(multiLevelAdapterMock);
+                FLAT_DATA_JSON).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.flatQuery();
 
         // Then
-        assertEquals(adapter, multiLevelAdapterMock);
+        assertEquals(adapter, executionAdapterMock);
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getContentMimeType();
         verify(configurationMock).getAcceptMimeType();
@@ -108,13 +109,13 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
         whenNew(QueryExecutionAdapter.class).withArguments(sessionStorageMock,
                 EXECUTION_MULTI_AXES_QUERY_JSON,
                 ClientMultiAxesQueryResultData.class,
-                MULTI_AXES_DATA_JSON).thenReturn(multiAxesAdapterMock);
+                MULTI_AXES_DATA_JSON).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.multiAxesQuery();
 
         // Then
-        assertEquals(adapter, multiAxesAdapterMock);
+        assertEquals(adapter, executionAdapterMock);
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getContentMimeType();
         verify(configurationMock).getAcceptMimeType();
@@ -130,13 +131,13 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
         whenNew(QueryExecutionAdapter.class).withArguments(sessionStorageMock,
                 EXECUTION_MULTI_LEVEL_QUERY_JSON,
                 ClientMultiLevelQueryResultData.class,
-                MULTI_LEVEL_DATA_JSON).thenReturn(multiLevelAdapterMock);
+                MULTI_LEVEL_DATA_JSON).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.multiLevelQuery();
 
         // Then
-        assertEquals(adapter, multiLevelAdapterMock);
+        assertEquals(adapter, executionAdapterMock);
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getContentMimeType();
         verify(configurationMock).getAcceptMimeType();
@@ -154,13 +155,13 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_JSON,
                 MULTI_LEVEL_DATA_JSON,
-                MULTI_AXES_DATA_JSON).thenReturn(multiLevelAdapterMock);
+                MULTI_AXES_DATA_JSON).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
-        assertEquals(adapter, multiLevelAdapterMock);
+        assertEquals(adapter, executionAdapterMock);
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getContentMimeType();
         verify(configurationMock).getAcceptMimeType();
@@ -178,13 +179,13 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_JSON,
                 MULTI_LEVEL_DATA_JSON,
-                MULTI_AXES_DATA_JSON).thenReturn(multiLevelAdapterMock);
+                MULTI_AXES_DATA_JSON).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
-        assertEquals(adapter, multiLevelAdapterMock);
+        assertEquals(adapter, executionAdapterMock);
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getContentMimeType();
         verify(configurationMock).getAcceptMimeType();
@@ -203,13 +204,13 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_JSON,
                 MULTI_LEVEL_DATA_JSON,
-                MULTI_AXES_DATA_JSON).thenReturn(multiAxesAdapterMock);
+                MULTI_AXES_DATA_JSON).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
-        assertEquals(adapter, multiAxesAdapterMock);
+        assertEquals(adapter, executionAdapterMock);
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getContentMimeType();
         verify(configurationMock).getAcceptMimeType();
@@ -225,13 +226,13 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
         whenNew(QueryExecutionAdapter.class).withArguments(sessionStorageMock,
                 EXECUTION_MULTI_AXES_QUERY_XML,
                 ClientMultiAxesQueryResultData.class,
-                MULTI_AXES_DATA_XML).thenReturn(multiAxesAdapterMock);
+                MULTI_AXES_DATA_XML).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.multiAxesQuery();
 
         // Then
-        assertEquals(adapter, multiAxesAdapterMock);
+        assertEquals(adapter, executionAdapterMock);
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getContentMimeType();
         verify(configurationMock).getAcceptMimeType();
@@ -247,13 +248,13 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
         whenNew(QueryExecutionAdapter.class).withArguments(sessionStorageMock,
                 EXECUTION_MULTI_LEVEL_QUERY_XML,
                 ClientMultiLevelQueryResultData.class,
-                MULTI_LEVEL_DATA_XML).thenReturn(multiLevelAdapterMock);
+                MULTI_LEVEL_DATA_XML).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.multiLevelQuery();
 
         // Then
-        assertEquals(adapter, multiLevelAdapterMock);
+        assertEquals(adapter, executionAdapterMock);
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getContentMimeType();
         verify(configurationMock).getAcceptMimeType();
@@ -271,13 +272,13 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_XML,
                 MULTI_LEVEL_DATA_XML,
-                MULTI_AXES_DATA_XML).thenReturn(multiLevelAdapterMock);
+                MULTI_AXES_DATA_XML).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
-        assertEquals(adapter, multiLevelAdapterMock);
+        assertEquals(adapter, executionAdapterMock);
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getContentMimeType();
         verify(configurationMock).getAcceptMimeType();
@@ -295,13 +296,13 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_XML,
                 MULTI_LEVEL_DATA_XML,
-                MULTI_AXES_DATA_XML).thenReturn(multiLevelAdapterMock);
+                MULTI_AXES_DATA_XML).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
-        assertEquals(adapter, multiLevelAdapterMock);
+        assertEquals(adapter, executionAdapterMock);
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getContentMimeType();
         verify(configurationMock).getAcceptMimeType();
@@ -320,16 +321,30 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_XML,
                 MULTI_LEVEL_DATA_XML,
-                MULTI_AXES_DATA_XML).thenReturn(multiAxesAdapterMock);
+                MULTI_AXES_DATA_XML).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();
 
         // Then
-        assertEquals(adapter, multiAxesAdapterMock);
+        assertEquals(adapter, executionAdapterMock);
         verify(sessionStorageMock, times(2)).getConfiguration();
         verify(configurationMock).getContentMimeType();
         verify(configurationMock).getAcceptMimeType();
+    }
+
+    @Test
+    public void should_return_proper_adapter_for_delete_builder() throws Exception {
+        // Given
+        QueryExecutionService executionService = new QueryExecutionService(sessionStorageMock);
+        whenNew(QueryExecutionAdapter.class).withArguments(eq(sessionStorageMock), anyString()).thenReturn(executionAdapterMock);
+
+        // When
+        QueryExecutionAdapter adapter = executionService.execution("testUuid");
+
+        // Then
+        assertEquals(adapter, executionAdapterMock);
+        verifyNew(QueryExecutionAdapter.class, times(1)).withArguments(sessionStorageMock, "testUuid");
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)

@@ -1,5 +1,6 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.peroprtoptions;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions;
 
+import com.jaspersoft.jasperserver.dto.reports.ReportParameter;
 import com.jaspersoft.jasperserver.dto.reports.options.ReportOptionsSummary;
 import com.jaspersoft.jasperserver.dto.reports.options.ReportOptionsSummaryList;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
@@ -47,7 +48,7 @@ public class ReportOptionsAdapter extends AbstractAdapter {
         initRequestPath();
     }
 
-    public ReportOptionsAdapter(SessionStorage sessionStorage, String reportUnitUri, MultivaluedHashMap options) {
+    public ReportOptionsAdapter(SessionStorage sessionStorage, String reportUnitUri, MultivaluedHashMap<String, String> options) {
         super(sessionStorage);
         this.reportUnitUri = reportUnitUri;
         this.options = options;
@@ -91,9 +92,14 @@ public class ReportOptionsAdapter extends AbstractAdapter {
         return request.put(options);
     }
 
+    public OperationResult<ReportOptionsSummary> update(List<ReportParameter> reportParameters) {
+        return update(ReportOptionsUtil.toMap(reportParameters));
+    }
+
     public OperationResult delete() {
         path.add(optionsId);
         return JerseyRequest.
                 buildRequest(sessionStorage, Object.class, path.toArray(new String[path.size()])).delete();
     }
+
 }
