@@ -23,7 +23,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 
 @XmlRootElement(name = "export")
@@ -52,7 +51,6 @@ public class ExportExecutionOptions {
         return this;
     }
 
-    @XmlTransient
     public String getPages(){
         return pages;
     }

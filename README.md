@@ -464,7 +464,7 @@ OperationResult<InputStream> operationResult =
         session                                 //pay attention to this, all requests are in the same session!!!
                 .reportingService()
                 .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                .export("html")
+                .export(exportId)
                 .outputResource();
 
 InputStream file = operationResult.getEntity();
