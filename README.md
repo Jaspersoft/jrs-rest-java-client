@@ -111,10 +111,17 @@ Table of Contents
   * [Deleting an Exclusion Calendar](#deleting-an-exclusion-calendar).
 * [Import/Export](#importexport).
   * [Export service](#export-service).
-    * [Checking the Export State](#checking-the-export-state).
-    * [Fetching the Export Output](#fetching-the-export-output).
+    * [Strat export](#strat-export).
+    * [Check the export state](#check-the-export-state).
+    * [Fetching the export output](#fetching-the-export-output).
+    * [Cancel the export task](#cancel-the-export-task).
   * [Import service](#import-service).
-    * [Checking the Import State](#checking-the-import-state).
+    * [Strat import](#strat-import).
+    * [Import using mulpipart form](#import-using-mulpipart-form).
+    * [Check the Import State](#check-the-import-state).
+    * [Getting and restarting import task](#checking-the-export-state).
+    * [Check import state](#check-import-state).
+    * [Cancel import task](#cancel-import-task).
 * [Metadata](#metadata)
   * [Domain metadata](#domain-metadata).
   * [Report metadata](#report-metadata).
@@ -2004,6 +2011,8 @@ Import/Export
 
 Export service
 --------------
+
+### Strat export
 The export service works asynchronously: first you request the export with the desired options, then you monitor the state of the export, and finally you request the output file. You must be authenticated as the system admin (superuser)or jasperadmin for the export services.
 ```java
 OperationResult<State> operationResult =
@@ -2042,8 +2051,8 @@ The export parameters you can specify are:
 `skip-suborganizations `- if the parameter is set to true, the system will omit all the items(e.g. resources, user, roles, organizations) which belong to "sub organizations" even they are directly specified using corresponding options (default value is false).
 
 `skip-dependent-resources `- skip dependent resources (domain, datasource etc.) to be exported (default value is false). 
-//TODO task
-Also you can specify:
+
+In sent tas DTO you can specify:
 `uris` - list of folder or resource URIs in the repository  to export.
 `scheduledJobs` - list of repository report unit and folder URIs for which report unit jobs should be exported. For a folder URI, this option exports the scheduled jobs of all reports in the folder and all subfolders.	
 `roles` - list of roles to export.
@@ -2052,56 +2061,73 @@ Also you can specify:
 `organization` - identifier of organization to export together with its sub organizations. If it is specified it also will be the root organization, starting from it system will export all resources, users, roles e.t.c.
 
 ```java
+        ExportTask exportTask = new ExportTask()
+				.setUris(asList(TEST_URI))
+				.setUsers(asList("superuser"))
+				.setRoles(asList("ROLE_USER"));
         OperationResult<State> stateOperationResult = session
                 .exportService()
-                .newTask()
-                .uri("/temp/supermartDomain")
-                .user("jasperadmin")
-                .role("ROLE_USER")
-                .resourceTypes(asList("jdbcDataSource", "reportUnit", "file"))
-                .parameter(ExportParameter.EVERYTHING)
+                .newTask(exportTask)
                 .create();
+		
+	State stateDto = stateOperationResult.getEntity();
+        taskId = stateDto.getId();
 ```
 
-### Checking the Export State
+### Check the export state
 After receiving the export ID, you can check the state of the export operation.
 ```java
-OperationResult<State> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<State> stateOperationResult = session
                 .exportService()
-                .task(state.getId())
+                .task(taskId)
                 .state();
 
-State state = operationResult.getEntity();
+	State stateOperationResult = operationResult.getEntity();
 ```
 The body of the response contains the current state of the export operation.
 
-### Fetching the Export Output
+### Fetching the export output
 When the export state is ready, you can download the zip file containing the export catalog.
 ```java
-OperationResult<InputStream> operationResult1 =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .exportService()
-                .task(state.getId())
-                .fetch();
+        String state = "inprogres";
+        while (!"finished".equals(state)) {
+            state = session.exportService().task(taskId).state().getEntity().getPhase();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
 
-InputStream inputStream = operationResult1.getEntity();
+            }
+        }
+
+        OperationResult<InputStream> operationResult = session
+                .exportService()
+                .task(taskId)
+                .fetchToFile("export.zip");
+
+        InputStream inputStream = operationResult.getEntity();
+```
+Please, pay attention, only export with "finished" state can be fetched.
+
+### Cancel the export task
+Only `stateDto.getPhase() = "inprogress"` export can be cancelled: 
+```java
+        OperationResult OperationResult = session
+                .exportService()
+                .task(taskId)
+                .cancel();
 ```
 
 Import service
 --------------
+### Strat import
 Use the following service to upload a catalog as a zip file and import it with the given options. Specify options as arguments from `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportParameter`. Arguments that are omitted are assumed to be false. You must be authenticated as the system admin (superuser) or jasperadmin for the import service. Jaspersoft does not recommend uploading files greater than 2 gigabytes.
 ```java
-URL url = ImportService.class.getClassLoader().getResource("testExportArchive.zip");
-OperationResult<State> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<State> operationResult = session
                 .importService()
-                .newTask()
-                .parameter(ImportParameter.INCLUDE_ACCESS_EVENTS, true)
-                .create(new File(url.toURI()));
+                .newImport(pathToFile)
+                .parameter(ImportParameter.UPDATE, true)
+                .create();
+
 
 State state = operationResult.getEntity();
 ```
@@ -2113,47 +2139,39 @@ Available parameters are:
 `includeMonitoringEvents` - include monitoring events (default value is false).
 `includeServerSettings` - include server settings  (default value is false).
 `mergeOrganization` - allows merging of exported organization/resource into organization with different identifier. In the case if it is false, then system will throw an exception, if exportedOrganizationId != organizationId_we_import_Into (default value is false).
-`brokenDependencies` - defines strategy with broken dependencies. Available values are - fail, skip, include (default value is fail). 
-
-Also you can set:
 `brokenDependencies` - defines strategy with broken dependencies. Available values are:
-
-    fail - server will give an error (errorCode=import.broken.dependencies) if import archive contain broken dependent resources.
-    skip - import will skip from import broken resources.
+    	fail - server will give an error (errorCode=import.broken.dependencies) if import archive contain broken dependent resources.
+    	skip - import will skip from import broken resources.
 	include - import will proceed with broken dependencies. In this case server will try to import broken dependent resources. a) In the case when in target environment there are already dependent resources import of target resource will be success, and resource will be skipped from import if there are no dependent resources to recover dependency chain.
-`parameters` - list of import parameters. 
 `organization` - organization identifier we import into.
-```java
 
+#### Import using mulpipart form
+```java
+        State state = session
+                .importService()
+                .newMultiPartImport(new File(pathToFile))
+                .parameter(ImportParameter.UPDATE, true)
+                .create()
+		.getEntity();
 ```
 
-### Checking the Import State
+### Check the Import State
 After receiving the import ID, you can check the state of the import operation.
 ```java
-OperationResult<State> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<State> operationResult = session
                 .importService()
-                .task(state.getId())
+                .task(taskId)
                 .state();
 
-State state = operationResult.getEntity();
+        State stateDto = operationResult.getEntity();
 ```
 
 ### Getting and restarting import task
 To get import task metadata you can use next code example:
 ```java
-        OperationResult<State> operationResult = session
-                .importService()
-                .newTask()
-                .parameter(ImportParameter.INCLUDE_ACCESS_EVENTS, true)
-                .parameter(ImportParameter.UPDATE, true)
-                .create(new File("\\import.zip"));
-        State state = operationResult.getEntity();
-
         ImportTask task = session
                 .importService()
-                .task(state.getId())
+                .task(taskId)
                 .getTask()
                 .getEntity();
 ```
@@ -2165,7 +2183,25 @@ Also you can restart import task:
                 .restartTask(new ImportTask().setBrokenDependencies("false"))
                 .getEntity();
 ```
+Notice, only task in phase "pending" can be restarted. Pending will happen if import task failed with error codes: import.organizations.not.match or import.broken.dependencies.
 
+### Check import state
+```java
+        OperationResult<State> operationResult = session
+                .importService()
+                .task(taskId)
+                .state();
+
+        State state = operationResult.getEntity();
+```
+
+### Cancel import task
+```java
+        OperationResult operationResult = session
+                .importService()
+                .task(taskId)
+                .cancel();
+```
 Metadata 
 ========
 
