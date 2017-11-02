@@ -1700,22 +1700,27 @@ There are two qualities of a permission:
 
 ### Viewing Multiple Permissions
 ```java
-OperationResult<RepositoryPermissionListWrapper> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<RepositoryPermissionListWrapper> operationResult = session
                 .permissionsService()
-                .resource("/datasources")
+                .forResource(RESOURCE_URI)
+                .permissions()
                 .get();
 ```
+Also serch permissions with parameters is supported. Available parameters are:
+   **effectivePermissions** - when set to true shows all permissions who affect given uri, if false - only directly assigned. If recipient does not have any permission assigned or permission is not reacheable not uri will be returned. Default - false;
+   **recipientType** - type of recipient (e.g. user/role);
+   **recipientId** - Id of recipient, requires `recipientType`. For multitenant environment should be tenant qualified.
+   **resolveAll** - describes resolving of recipients. Default - false;
+   **offset** - pagination. Start index for requested pate;
+   **limit** - pagination, resources count per page;
 
 ### Viewing a Single Permission
 Specify the recipient in the URL to see a specific assigned permission.
 ```java
-OperationResult<RepositoryPermission> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<RepositoryPermission> operationResult = session
                 .permissionsService()
-                .resource("/datasources")
+                .forResource(RESOURCE_URI)
+                .permission()
                 .permissionRecipient(PermissionRecipient.ROLE, "ROLE_USER")
                 .get();
 
@@ -1723,51 +1728,41 @@ RepositoryPermission permission = operationResult.getEntity();
 ```
 
 ### Setting Multiple Permissions
-The `createNew()` method assigns any number of permissions to any number of resources specified in the body of the request. All permissions must be newly assigned, and the request will fail if a recipient already has an assigned (not inherited) permission. Use the `createOrUpdate()` method to update assigned permissions. The `createOrUpdate()` method modifies exiting permissions (already assigned).
+The `create()` method assigns any number of permissions to any number of resources specified in the body of the request. All permissions must be newly assigned, and the request will fail if a recipient already has an assigned (not inherited) permission. Use the `createOrUpdate()` method to update assigned permissions. The `createOrUpdate()` method modifies exiting permissions (already assigned).
 ```java
-List<RepositoryPermission> permissionList = new ArrayList<RepositoryPermission>();
-permissionList.add(new RepositoryPermission("/themes", "user:/joeuser", 30));
+        RepositoryPermissionListWrapper permissions = new RepositoryPermissionListWrapper();
+        final RepositoryPermission repositoryPermission = new RepositoryPermission().setUri(RESOURCE_URI).setRecipient("role:/ROLE_USER").setMask(1);
+        final RepositoryPermission repositoryPermission1 = new RepositoryPermission().setUri(RESOURCE_URI).setRecipient("role:/ROLE_ADMIN").setMask(1);
+        permissions.setPermissions(asList(repositoryPermission, repositoryPermission1));
 
-RepositoryPermissionListWrapper permissionListWrapper = new RepositoryPermissionListWrapper(permissionList);
-
-OperationResult operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<RepositoryPermissionListWrapper> operationResult = session
                 .permissionsService()
-                .createNew(permissionListWrapper);
-
-Response response = operationResult.getResponse();
+                .permissions(permissions)
+                .create();
 ```
 
 ### Setting a Single Permission
 The `createNew()` method accepts a single permission descriptor.
 ```java
-RepositoryPermission permission = new RepositoryPermission();
-permission
-        .setUri("/")
-        .setRecipient("user:/joeuser")
-        .setMask(PermissionMask.READ_WRITE_DELETE);
+        final RepositoryPermission repositoryPermission = new RepositoryPermission()
+                .setUri(RESOURCE_URI)
+                .setRecipient("role:/ROLE_USER")
+                .setMask(1);
 
-OperationResult operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult operationResult = session
                 .permissionsService()
-                .createNew(permission);
-
-Response response = operationResult.getResponse();
+                .permission(repositoryPermission)
+                .create();
 ```
 
 ### Deleting Permissions in Bulk
 The `delete()` method removes all assigned permissions from the designated resource. After returning successfully, all effective permissions for the resource are inherited.
 ```java
-OperationResult operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult operationResult = session
                 .permissionsService()
-                .resource("/themes")
+                .forResource(RESOURCE_URI)
+                .permissions()
                 .delete();
-
-Response response = operationResult.getResponse();
 ```
 
 ### Deleting a Single Permission
@@ -1777,7 +1772,8 @@ OperationResult operationResult =
         client
                 .authenticate("jasperadmin", "jasperadmin")
                 .permissionsService()
-                .resource("/")
+                .forResource(RESOURCE_URI)
+		.permission()
                 .permissionRecipient(PermissionRecipient.USER, "joeuser")
                 .delete();
 
