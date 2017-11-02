@@ -29,6 +29,10 @@ import java.util.ArrayList;
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static java.util.Arrays.asList;
 
+/**
+ * @deprecated Replaced with @Link {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.BatchPermissionsAdapter}
+ * and @Link {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.SinglePermissionsAdapter}
+ */
 public class SinglePermissionRecipientRequestAdapter extends AbstractAdapter {
     public static final String SERVICE_URI = "permissions";
     private final String recipient;
