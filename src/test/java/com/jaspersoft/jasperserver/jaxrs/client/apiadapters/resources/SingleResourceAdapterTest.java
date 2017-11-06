@@ -6,6 +6,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceValidationErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -14,8 +15,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.sun.jersey.multipart.FormDataBodyPart;
-import com.sun.jersey.multipart.FormDataMultiPart;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -23,6 +22,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -218,7 +219,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter#parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourceServiceParameter, String)}
+     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter#parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceServiceParameter, String)}
      */
     @SuppressWarnings("unchecked")
     public void should_set_parameter() {
