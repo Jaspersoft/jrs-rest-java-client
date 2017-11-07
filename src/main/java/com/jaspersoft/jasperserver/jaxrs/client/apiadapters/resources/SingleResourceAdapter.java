@@ -70,7 +70,6 @@ public class SingleResourceAdapter extends AbstractAdapter {
 
     public OperationResult<ClientResource> details() {
         JerseyRequest<ClientResource> request = prepareDetailsRequest();
-        request.addParams(params);
         return request.get();
     }
 
@@ -216,6 +215,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
     public <T> OperationResult<T> uploadMultipartResource(FormDataMultiPart multipartResource, Class<T> clazz) {
         JerseyRequest<T> request = buildRequest(clazz);
         request.setContentType(MediaType.MULTIPART_FORM_DATA);
+        request.addParams(params);
         return request.post(multipartResource);
     }
 
@@ -223,6 +223,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
         JerseyRequest<T> request = buildRequest(clazz);
             request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),
                     ResourcesTypeResolverUtil.extractClientType(clazz)));
+        request.addParams(params);
         return request.get();
     }
 
@@ -237,6 +238,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
             request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),
                     ResourcesTypeResolverUtil.extractClientType(ClientFile.class)));
         }
+        request.addParams(params);
         return request.get();
     }
 
@@ -341,6 +343,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
         JerseyRequest<ResourceType> request = buildRequest(resourceTypeClass);
         request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), ResourcesTypeResolverUtil.getMimeType(resourceTypeClass)));
         request.addHeader("X-HTTP-Method-Override", "PATCH");
+        request.addParams(params);
         return request;
     }
 

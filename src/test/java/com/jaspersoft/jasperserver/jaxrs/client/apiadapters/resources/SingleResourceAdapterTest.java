@@ -365,7 +365,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
 
-        Mockito.verify(jerseyRequestMock, times(2)).addParams(any(MultivaluedHashMap.class));
+        Mockito.verify(jerseyRequestMock, times(1)).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(jerseyRequestMock).setAccept(ResourceMediaType.FOLDER_JSON);
         Mockito.verify(jerseyRequestMock).get();
     }
@@ -395,7 +395,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
 
-        Mockito.verify(jerseyRequestMock, times(2)).addParams(any(MultivaluedHashMap.class));
+        Mockito.verify(jerseyRequestMock, times(1)).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(jerseyRequestMock).setAccept(ResourceMediaType.FOLDER_XML);
         Mockito.verify(jerseyRequestMock).get();
     }
@@ -498,7 +498,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(adhocDataViewJerseyRequestMock).post(descriptorMock);
         Mockito.verify(adhocDataViewJerseyRequestMock).setAccept("application/repository.adhocDataView+json");
         Mockito.verify(adhocDataViewJerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
-        Mockito.verifyNoMoreInteractions(adhocDataViewJerseyRequestMock);
+        Mockito.verify(adhocDataViewJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
     }
 
     @Test
