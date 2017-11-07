@@ -337,6 +337,8 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
     public void should_return_proper_adapter_for_delete_builder() throws Exception {
         // Given
         QueryExecutionService executionService = new QueryExecutionService(sessionStorageMock);
+        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         whenNew(QueryExecutionAdapter.class).withArguments(eq(sessionStorageMock), anyString()).thenReturn(executionAdapterMock);
 
         // When
