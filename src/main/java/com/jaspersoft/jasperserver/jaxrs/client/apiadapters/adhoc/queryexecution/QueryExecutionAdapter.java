@@ -77,11 +77,6 @@ public class QueryExecutionAdapter extends AbstractAdapter {
         return this;
     }
 
-    public QueryExecutionAdapter expressionRepresentation(String type) {
-        params.add("expression", type);
-        return this;
-    }
-
     public QueryExecutionAdapter withQuerParameter(String name, String value) {
         params.add(name, value);
         return this;
