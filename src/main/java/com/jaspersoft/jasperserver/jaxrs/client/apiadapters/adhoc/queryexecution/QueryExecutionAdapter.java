@@ -77,7 +77,7 @@ public class QueryExecutionAdapter extends AbstractAdapter {
         return this;
     }
 
-    public QueryExecutionAdapter withQuerParameter(String name, String value) {
+    public QueryExecutionAdapter withQueryParameter(String name, String value) {
         params.add(name, value);
         return this;
     }
