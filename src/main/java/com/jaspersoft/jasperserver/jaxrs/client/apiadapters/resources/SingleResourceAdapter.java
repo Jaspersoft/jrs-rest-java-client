@@ -28,6 +28,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourcesTypeResolverUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceServiceParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
@@ -52,7 +53,6 @@ public class SingleResourceAdapter extends AbstractAdapter {
     private String resourceUri;
     private String parentUri;
     private MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
-    ;
     private ArrayList<String> path = new ArrayList<String>();
 
     private ClientResource resource;
@@ -87,6 +87,11 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return this;
     }
 
+    public SingleResourceAdapter parameter(String param, String value) {
+        params.add(param, value);
+        return this;
+    }
+
     public OperationResult<ClientResource> details() {
         JerseyRequest<ClientResource> request = prepareDetailsRequest();
         return request.get();
@@ -96,6 +101,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
         JerseyRequest<T> request = buildRequest(clazz);
         request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),
                 ResourcesTypeResolverUtil.extractClientType(clazz)));
+        request.addParams(params);
         return request.get();
     }
 

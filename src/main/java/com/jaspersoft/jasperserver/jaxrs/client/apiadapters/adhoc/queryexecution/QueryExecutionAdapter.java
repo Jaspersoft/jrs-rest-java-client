@@ -77,6 +77,16 @@ public class QueryExecutionAdapter extends AbstractAdapter {
         return this;
     }
 
+    public QueryExecutionAdapter expressionRepresentation(String type) {
+        params.add("expression", type);
+        return this;
+    }
+
+    public QueryExecutionAdapter withQuerParameter(String name, String value) {
+        params.add(name, value);
+        return this;
+    }
+
     public <T> OperationResult<T> retrieveData(String executionId) {
         uri.add(executionId);
         uri.add("data");
@@ -117,6 +127,7 @@ public class QueryExecutionAdapter extends AbstractAdapter {
             }
         }
         request.setAccept(StringUtils.join(acceptType, ","));
+        request.addParams(params);
         return request.
                 post(query);
     }
