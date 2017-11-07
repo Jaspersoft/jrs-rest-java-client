@@ -4,10 +4,11 @@ import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.DomainResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.MondrianConnectionResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.ReportUnitResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.SecureMondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.ResourceBuilderFactory;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.SemanticLayerResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.MondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.ReportUnitResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.SecureMondrianConnectionResourceBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -30,7 +31,7 @@ public class ResourceBuilderFactoryTest extends PowerMockTestCase {
     private SessionStorage sessionStorageMock;
 
     @Mock
-    private DomainResourceBuilder domainBuilderMock;
+    private SemanticLayerResourceBuilder domainBuilderMock;
 
     @Mock
     private MondrianConnectionResourceBuilder mondrianConnectionBuilderMock;
@@ -51,16 +52,16 @@ public class ResourceBuilderFactoryTest extends PowerMockTestCase {
 
         /* Given */
         ClientSemanticLayerDataSource dataSource = new ClientSemanticLayerDataSource();
-        whenNew(DomainResourceBuilder.class)
+        whenNew(SemanticLayerResourceBuilder.class)
                 .withParameterTypes(ClientSemanticLayerDataSource.class, SessionStorage.class)
                 .withArguments(dataSource, sessionStorageMock).thenReturn(domainBuilderMock);
 
         /* When */
-        DomainResourceBuilder retrieved = ResourceBuilderFactory.getBuilder(dataSource, sessionStorageMock);
+        SemanticLayerResourceBuilder retrieved = ResourceBuilderFactory.getBuilder(dataSource, sessionStorageMock);
 
         /* Then */
         assertSame(retrieved, domainBuilderMock);
-        verifyNew(DomainResourceBuilder.class, times(1))
+        verifyNew(SemanticLayerResourceBuilder.class, times(1))
                 .withArguments(dataSource, sessionStorageMock);
     }
 

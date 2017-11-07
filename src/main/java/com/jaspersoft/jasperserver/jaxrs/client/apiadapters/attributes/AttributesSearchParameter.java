@@ -50,7 +50,7 @@ public enum AttributesSearchParameter {
     /**
      * 	Pagination. Resources count per page
      */
-    LIMIT("limit");
+    LIMIT("limit");// @QueryParam("_embedded") String embedded,
 
     private String name;
 

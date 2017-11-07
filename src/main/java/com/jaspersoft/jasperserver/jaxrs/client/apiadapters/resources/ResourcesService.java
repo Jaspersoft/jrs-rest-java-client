@@ -20,18 +20,29 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
+import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
+import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
+import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.DomainResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.MondrianConnectionResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.ReportUnitResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.SecureMondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.DomainResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.MondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.ReportUnitResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.SecureMondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.SemanticLayerResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.DomainOperationProcessorDecorator;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.MondrianConnectionResourceOperationProcessorDecorator;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.ReportUnitResourceOperationProcessorDecorator;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.SecureMondrianConnectionResourceOperationProcessorDecorator;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.SemanticLayerResourceOperationProcessorDecorator;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import java.io.InputStream;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.ResourceBuilderFactory.getBuilder;
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.ResourceBuilderFactory.getBuilder;
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.ResourceBuilderFactory.getDecorator;
 
 public class ResourcesService extends AbstractAdapter {
 
@@ -43,10 +54,21 @@ public class ResourcesService extends AbstractAdapter {
         return new BatchResourcesAdapter(sessionStorage);
     }
 
-    public SingleResourceAdapter resource(String uri) {
-        return new SingleResourceAdapter(sessionStorage, uri);
+    public SingleResourceAdapter resource(String resourceUri) {
+        return new SingleResourceAdapter(sessionStorage, resourceUri);
     }
 
+    public SingleResourceAdapter resource(ClientResource resourceDescriptor) {
+        return new SingleResourceAdapter(sessionStorage, resourceDescriptor);
+    }
+
+    public SingleFileResourceUploadAdapter fileResource(InputStream inputStream, ClientFile resourceDescriptor) {
+        return new SingleFileResourceUploadAdapter(sessionStorage, inputStream, resourceDescriptor);
+    }
+
+    public SingleFileResourceUploadAdapter fileResource(String fileResourceUri) {
+        return new SingleFileResourceUploadAdapter(sessionStorage, fileResourceUri);
+    }
 
     /**
      * Additional features to work with such resources as
@@ -55,24 +77,66 @@ public class ResourcesService extends AbstractAdapter {
      * - MondrianConnection
      * - SecureMondrianConnection
      */
-
-    public DomainResourceBuilder resource(ClientSemanticLayerDataSource resource) {
-        ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource(resource);
+    @Deprecated
+    public SemanticLayerResourceBuilder resource(ClientSemanticLayerDataSource resourceDescriptor) {
+        ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource(resourceDescriptor);
         return getBuilder(copy, sessionStorage);
     }
 
-    public ReportUnitResourceBuilder resource(ClientReportUnit resource) {
-        ClientReportUnit copy = new ClientReportUnit(resource);
+    public SemanticLayerResourceBuilder semanticLayerDataSourceResource() {
+        return getBuilder(new ClientSemanticLayerDataSource(), sessionStorage);
+    }
+
+    public SemanticLayerResourceOperationProcessorDecorator semanticLayerDataSourceResource(ClientSemanticLayerDataSource resourceDescriptor) {
+        return getDecorator(resourceDescriptor, sessionStorage);
+    }
+
+    public DomainResourceBuilder domainResource() {
+        return getBuilder(new ClientDomain(), sessionStorage);
+    }
+
+    public DomainOperationProcessorDecorator domainResource(ClientDomain resourceDescriptor) {
+        return getDecorator(resourceDescriptor, sessionStorage);
+    }
+
+    public ReportUnitResourceBuilder reportUnitResource() {
+        return getBuilder(new ClientReportUnit(), sessionStorage);
+    }
+
+    public ReportUnitResourceOperationProcessorDecorator reportUnitResource(ClientReportUnit resourceDescriptor) {
+        return getDecorator(resourceDescriptor, sessionStorage);
+    }
+
+    public MondrianConnectionResourceBuilder mondrianConnection() {
+        return getBuilder(new ClientMondrianConnection(), sessionStorage);
+    }
+
+    public MondrianConnectionResourceOperationProcessorDecorator mondrianConnection(ClientMondrianConnection mondrianConnectionDescriptor) {
+        return getDecorator(mondrianConnectionDescriptor, sessionStorage);
+    }
+    public SecureMondrianConnectionResourceBuilder secureMondrianConnection() {
+        return getBuilder(new ClientSecureMondrianConnection(), sessionStorage);
+    }
+
+    public SecureMondrianConnectionResourceOperationProcessorDecorator secureMondrianConnection(ClientSecureMondrianConnection mondrianConnectionDescriptor) {
+        return getDecorator(mondrianConnectionDescriptor, sessionStorage);
+    }
+
+    @Deprecated
+    public ReportUnitResourceBuilder resource(ClientReportUnit resourceDescriptor) {
+        ClientReportUnit copy = new ClientReportUnit(resourceDescriptor);
         return getBuilder(copy, sessionStorage);
     }
 
-    public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resource) {
-        ClientMondrianConnection copy = new ClientMondrianConnection(resource);
+    @Deprecated
+    public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resourceDescriptor) {
+        ClientMondrianConnection copy = new ClientMondrianConnection(resourceDescriptor);
         return getBuilder(copy, sessionStorage);
     }
 
-    public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resource) {
-        ClientSecureMondrianConnection copy = new ClientSecureMondrianConnection(resource);
+    @Deprecated
+    public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resourceDescriptor) {
+        ClientSecureMondrianConnection copy = new ClientSecureMondrianConnection(resourceDescriptor);
         return getBuilder(copy, sessionStorage);
     }
 }

@@ -1505,7 +1505,7 @@ Repository Services
 
 Resources Service
 -----------------
-This new service provides greater performance and more consistent handling of resource descriptors for all repository resource types. The service has two formats, one takes search parameters to find resources, the other takes a repository URI to access resource descriptors and file contents.
+This service provides greater performance and more consistent handling of resource descriptors for all repository resource types. The service has two formats, one takes search parameters to find resources, the other takes a repository URI to access resource descriptors and file contents.
 
 ### Searching the Repository
 The resources service, when `resources()` method used without specifying any repository URI, is used to search the repository. The various parameters let you refine the search and specify how you receive search results.
@@ -1529,7 +1529,7 @@ ClientResourceListWrapper resourceListWrapper = result.getEntity();
 The response of a search is a set of shortened descriptors showing only the common attributes of each resource. One additional attribute specifies the type of the resource. This allows you to quickly receive a list of resources for display or further processing.
 
 ### Viewing Resource Details
-Use the `resource()` method and a resource URI with `details()` method to request the resource's complete descriptor.
+Use the `resource(uri)` method and a resource URI with `details()` method to request the file resource's complete descriptor.
 ```java
 OperationResult<ClientResource> result = client
         .authenticate("jasperadmin", "jasperadmin")
@@ -1537,6 +1537,15 @@ OperationResult<ClientResource> result = client
         .resource("/properties/GlobalPropertiesList")
         .details();
 ```
+To get details of resource with particular type, use `detailsForType(resourceClass)` method:
+```java
+OperationResult<ClientResource> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource("/properties/GlobalPropertiesList")
+        .detailsForType();
+```
+
 
 ### Downloading File Resources
 There are two operations on file resources:
@@ -1557,32 +1566,73 @@ InputStream inputStream = result.getEntity();
 To get file MIME type yo can get `Content-Type` header from the `Response` instance.
 
 ### Creating a Resource
-The `createNew()` and `createOrUpdate()` methods offer alternative ways to create resources. Both take a resource descriptor but each handles the URL differently. With the `createNew()` method, specify a folder in the URL, and the new resource ID is created automatically from the label attribute in its descriptor. With the `createOrUpdate()` method, specify a unique new resource ID as part of the URL in `resource()` method.
+The `create()` and `createOrUpdate()` methods offer two alternative ways to create resources. Both take a resource descriptor but each handles the URL differently and use different HTTP methods. With the `create()` method, specify a folder in the URL, and the new resource ID is created automatically from the label attribute in its descriptor in body of  POST request. With the `createOrUpdate()` method, specify a unique new resource ID as part of the URL in `resource()` method and uses PUR method.
 ```java
-ClientFolder folder = new ClientFolder();
-String parentUri = "/reports";
-folder
-        .setUri("/reports/testFolder")
-        .setLabel("Test Folder")
-        .setDescription("Test folder description")
-        .setPermissionMask(0)
-        .setCreationDate("2014-01-24 16:27:47")
-        .setUpdateDate("2014-01-24 16:27:47")
-        .setVersion(0);
+        ClientFolder new Folder = new ClientFolder();
+        folder
+                .setLabel("testFolder")
+                .setDescription("Test folder");
 
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource(folder.getUri())
-        .createOrUpdate(folder);
+        final OperationResult<ClientResource> operationResult = session
+                .resourcesService()
+                .resource(newFolder)
+                .inFolder("/public")
+                .create();
 //OR
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource(parenUri)
-        .createNew(folder);
-```
+        ClientFolder folder = new ClientFolder();
+        folder
+                .setUri("/public/testFolder1")
+                .setLabel("testFolder1")
+                .setDescription("Test folder")
+                .setVersion(-1);
 
+        OperationResult<ClientResource> operationResult = session
+                .resourcesService()
+                .resource(folder.getUri())
+                .createOrUpdate(folder);
+```
+#### Creating File resource
+The REST client allows to create file resource in few ways:
+ - **as direct streaming** 
+ ```java
+ 	ClientFile fileResourceDescriptor = new ClientFile()
+                                .setLabel("testImage.jpg")
+                                .setDescription("test description")
+                                .setType(ClientFile.FileType.img);
+         OperationResult<ClientFile> result = session
+                .resourcesService()
+                .fileResource(new FileInputStream(pathToFile), fileResourceDescriptor)
+                .asInputStream()
+                .toFolder("/public")
+                .upload();
+ ```
+ - **as Base64** encoded content:
+ ```java
+         final ClientFile resourceDescriptor = new ClientFile().setLabel("testImage1.jpg")
+                .setDescription("test description")
+                .setType(ClientFile.FileType.img);
+        
+        OperationResult<ClientFile> result = session
+                .resourcesService()
+                .fileResource(new FileInputStream(pathToFile), resourceDescriptor)
+                .asBase64EncodedContent()
+                .toFolder("/public")
+                .upload();
+ ```
+  - **as multipart form** :
+  ```java
+          final ClientFile resourceDescriptor = new ClientFile()
+                .setLabel("testImage2.jpg")
+                .setDescription("test description")
+                .setType(ClientFile.FileType.img);
+        OperationResult<ClientFile> result = session
+                .resourcesService()
+                .fileResource(new FileInputStream(pathToFile),
+                        resourceDescriptor)
+                .asMultipartForm()
+                .toFolder("/public")
+                .upload();
+  ```
 ### Modifying a Resource
 Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual fields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.
 The `patchResource()` method updates individual descriptor fields on the target resource. It also accept expressions that modify the descriptor in the Spring Expression Language. This expression language lets you easily modify the structure and values of descriptors.
@@ -1600,89 +1650,193 @@ OperationResult<ClientFolder> result = client
 Note that you must explicitly set the type of resource to update because of server issue.
 
 ### Copying a Resource
-To copy a resource, specify in `copyFrom()` method its URI and in `resource()` method URI of destination location.
+To copy a resource, specify in `toFolder()` method its URI and in `resource()` method URI of destination location.
 ```java
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource("/reports")
-        .copyFrom("/datasources/testFolder");
+        OperationResult<ClientResource> clientResource = session.resourcesService()
+                .resource(testDomainUri)
+                .toFolder("/public/testFolder")
+                .copy();
 ```
 
 ### Moving a Resource
 To move a resource, specify in `moveFrom()` method its URI and in `resource()` method URI of destination location.
 ```java
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource("/datasources")
-        .moveFrom("/reports/testFolder");
+        OperationResult<ClientResource> clientResource = session.resourcesService()
+                .resource(testResourceUri)
+                .toFolder("/public/testFolder")
+                .move();
 ```
-
-### Uploading File Resources
-To upload file you must specify the MIME type that corresponds with the desired file type, you can take it from `ClientFile.FileType` enumeration.
-```java
-OperationResult<ClientFile> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource("/reports/testFolder")
-        .uploadFile(imageFile, ClientFile.FileType.img, "fileName", "fileDescription");
-```
-
+### Uploading complex resources
+RestClient also provides API that allows to create complex resources and their nested resources in a single multipart request. Supported resources are:
+	- SemanticLayerDataSource;
+	- Domain;
+	- ReportUnit;
+	- MondrianConnection;
+	- SecureMondrianConnection.
+	
 #### Uploading SemanticLayerDataSource
-RestClient also supports a way to create complex resources and their nested resources in a single multipart request. One of such resources is `SemanticLayerDataSource`.  
+SemanticLayerDataSource nested resources (schema, bundles and security file) might be specified as java.io.InputStream, java.io.File, content as java.lang.String or resource descriptor (with resource's URI or BASE64 encoded content). 
 ```java
-ClientSemanticLayerDataSource domainEntity = session
-        .resourcesService()
-            .resource(domain)
-                .withBundle(defBundle, newDefaultBundle)
-                .withBundle(enUSBundle, newEnUsBundle)
-                .withSecurityFile(securityFile, securityFile)
-                .withSchema(schemaFile, schema)
-            .inFolder("/my/new/folder/")
-                .create()
-                    .entity();        
+        OperationResult<ClientSemanticLayerDataSource> testResource =
+                session.resourcesService()
+                        .semanticLayerDataSourceResource()
+                        .withDataSource(new ClientReference().setUri(datasourceUri))
+                        .withSchema(schemaInputStream, schemaFilelabel, schemaFileDescription)
+			//OR .withSchema(schemaStringXmlContent, label, description)
+			//OR .withSchema(schemaUri)
+			.withSecurityFile(securityFileInputStream, label, description)
+			//OR .withSecurityFile(securityFile, label, description)
+			//OR .withSecurityFile(securityFileXmlStringCntent, label, description)
+			//OR .withSecurityFile(securityFileDecriptor)
+			.withBundle(bundleInputStream, label, description)
+			//OR .withBundle(bundleFile, label, description)
+			//OR .withBundle(bundleSringContent, label, description)
+			//OR .withBundle(bundleDescriptor)
+			//OR .withBundles(bundlesDescriptorsList)
+			.withLabel("testDomain")
+                        .withDescription("testDescription")
+                        .inFolder("/public")
+                        .create();        
+```
+The other way to create SemanticLayerDataSource is to decribe it in resourceDescriptor. In this case nested resources (schema, bundles and security file) can be specified as resource descriptors (with resource's URI or BASE64 encoded content). 
+```java
+        ClientSemanticLayerDataSource resourceDescriptor = new ClientSemanticLayerDataSource()
+                .setSchema(new ClientFile()
+				.setUri(schemaUri)
+				.setType(ClientFile.FileType.xml)
+				.setLabel("schema.Xml"))
+                .setDataSource(new ClientReference().setUri(domain.getDataSource().getUri()))
+                .setLabel("testDomain");
+		
+        OperationResult<ClientSemanticLayerDataSource> testResource =
+                session.resourcesService()
+                        .semanticLayerDataSourceResource(resourceDescriptor)
+                        .inFolder("/public")
+                        .create();        
 ```
 
 #### Uploading MondrianConnection
-REST Client allows you to create `MondrianConnection` Resource with mondrian schema XML file. You can specify the folder in which the resource will be placed. Provided API allows to add XML schema as `String` or `InputStream`.    
+REST Client allows you to create `MondrianConnection` resource with mondrian schema XML file specified as java.io.InputStream, java.io.File or as java.lang.String. 
+  
 ```java
-ClientMondrianConnection connection = session
-    .resourcesService()
-        .resource(mondrianConnection)
-            .withMondrianSchema(schema, schemaRef)
-        .createInFolder("my/olap/folder")
-            .entity();
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.mondrianConnection()
+            	.withMondrianSchema(schemaInputStream, label, description)
+	    	//OR .withMondrianSchema(schemaFile, label, description)
+	    	//OR .withMondrianSchema(schemaXmlStringContent, label, description)
+	    	.withDatasource(dataSource)
+	    	.withLabel(label)
+		.withDescription(description)
+		.inFolder(parentFolderUri)
+		.create()
+```
+or create `MondrianConnection` using resource descriptor:
+```java
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.mondrianConnection(respurceDescriptor)
+	    	.inFolder(parentFolder)
+		.create()
 ```
 
 #### Uploading SecureMondrianConnection
-To upload `SecureMondrianConnection` Resource with a bunch of support files such as Mondrian schema XML file and AccessGrantSchemas files you can use our new API
+REST Client allows you to create `MondrianConnection` resource with mondrian schema XML and AccessGrantSchemas specified as java.io.InputStream, java.io.File or as java.lang.String. 
+  
 ```java
-ClientSecureMondrianConnection entity = session.resourcesService()
-    .resource(secureMondrianConnection)
-        .withMondrianSchema(mondrianSchema)
-        .withAccessGrantSchemas(Arrays.asList(accessGrantSchema))
-    .createInFolder("/my/new/folder/")
-        .entity();
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.secureMondrianConnection()
+            	. withMondrianSchema(schemainputStream, label, description)
+	    	//OR .withMondrianSchema(schemaFile, label, description)
+	    	//OR .withMondrianSchema(schemaXmlStringContent, label, description) 
+	    	.withDatasource(dataSource)
+	    	.withLabel(label)
+		.withDescription(description)
+		.inFolder(parentFolderUri)
+		.create()
+```
+or create `MondrianConnection` using resource descriptor:
+```java
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.secureMondrianConnection(respurceDescriptor)
+	    	.inFolder(parentFolder)
+		.create()
 ```
 
 #### Uploading ReportUnit
-To upload `ReportUnit` resource to the server you can use next API, which allows you to do it in a very simple way. You can add JRXML file and a bunch of various files like images and others as well.
+To upload `ReportUnit` resource to the server you can use next API, where JRXML file can be added as java.lang.String, java.io.File,  java.io.InputStream or as resource URI in resource descriptor. A bunch of various additional files like images and others can be added as well.
 ```java
-ClientReportUnit entity = session.resourcesService()
-    .resource(reportUnit)
-        .withJrxml(file, descriptor)
-        .withNewFile(imgFile, "myFile", imgDescriptor)        
-            .createInFolder("/my/new/folder/")
-                .entity();
+        OperationResult<ClientReportUnit> repUnut =
+                session.resourcesService()
+                        .reportUnitResource()
+                        .withJrxml(inputStream, label, description)
+                        //OR .withJrxml(jrxmlStringContent, label, description)
+			//OR .withJrxml(jrxmlFile, label, description) 
+			//OR .withJrxml(resourceDescriptor)
+			.withFile(new ClientReference().setUri(fileUri), label)
+                        .withFile(new ClientReference().setUri(fileUri), label)
+                        //OR .withFile(InputStream fileData, String label, String description)
+			//OR .withFile(File fileData, String label, String description)
+			//OR .withFile(String fileData, String label, String description) 
+			//OR .withFile(ClientReferenceableFile fileUri, String name)
+			.withLabel("testReport")
+                        .withDescription("testDescription")
+                        .inFolder("/public")
+                        .create();
+```
+Also the API alloes to upload reportUnit  described in resource descriptor only:
+```java
+        final ClientReportUnit clientReportUnit = new ClientReportUnit()
+                .setLabel("testReport")
+                .setDescription("testDescription");
+        clientReportUnit.setFiles(new HashMap<String, ClientReferenceableFile>());
+        clientReportUnit.getFiles().put(label, new ClientFile()
+                .setUri(fileUri)
+                .setLabel(label)
+                .setType(ClientFile.FileType.img));
+
+        clientReportUnit.setJrxml(new ClientFile()
+                .setLabel(jrxmlLabel)
+                .setType(ClientFile.FileType.jrxml)
+                .setContent(base64EncodedContent);
+
+        OperationResult<ClientReportUnit> repUnut =
+                session.resourcesService()
+                        .reportUnitResource(clientReportUnit)
+                        .inFolder("/public")
+                        .create();
+```
+#### Uploading domain
+Domain's its nested resources (bundles and security file) might be specified as java.io.InputStream, java.io.File, content as java.lang.String or resource descriptor (with resource's URI or BASE64 encoded content). 
+Please, pay attention, unlike SemanticLayerDataSource the Domain resource doesn't reference external schema file, so schema can be specified only as Java object.  
+```java
+       OperationResult<ClientDomain> resDomain =
+                session.resourcesService()
+                        .domainResource()
+                        .withDataSource(new ClientReference().setUri(datasourceUri))
+                        .withSchema(schemaObject)
+                        .withLabel("testDomain")
+                        .withDescription("testDescription")
+                        .inFolder("/public")
+                        .create();
+        
+```
+The other way to create SemanticLayerDataSource is to decribe it in resourceDescriptor. In this case nested resources (schema, bundles and security file) can be specified as resource descriptors (with resource's URI or BASE64 encoded content). 
+```java
+        ClientDomain resDomain =
+                session.resourcesService()
+                        .domainResource(domain)
+                        .inFolder("/public")
+                        .create()       
 ```
 
 ### Deleting Resources
 You can delete resources in two ways, one for single resources and one for multiple resources. To delete multiple resources at once, specify multiple URIs with the `ResourceSearchParameter.RESOURCE_URI` parameter.
 ```java
 //multiple
-OperationResult result = client
-        .authenticate("jasperadmin", "jasperadmin")
+OperationResult result = session
         .resourcesService()
         .resources()
         .parameter(ResourceSearchParameter.RESOURCE_URI, "/some/resource/uri/1")
@@ -1690,8 +1844,7 @@ OperationResult result = client
         .delete();
 //OR
 //single
-OperationResult result = client
-        .authenticate("jasperadmin", "jasperadmin")
+OperationResult result = session
         .resourcesService()
         .resource("/reports/testFolder")
         .delete();
