@@ -63,8 +63,14 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return this;
     }
 
+    public SingleResourceAdapter parameter(String param, String value) {
+        params.add(param, value);
+        return this;
+    }
+
     public OperationResult<ClientResource> details() {
         JerseyRequest<ClientResource> request = prepareDetailsRequest();
+        request.addParams(params);
         return request.get();
     }
 
