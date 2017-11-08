@@ -1529,7 +1529,7 @@ ClientResourceListWrapper resourceListWrapper = result.getEntity();
 The response of a search is a set of shortened descriptors showing only the common attributes of each resource. One additional attribute specifies the type of the resource. This allows you to quickly receive a list of resources for display or further processing.
 
 ### Viewing Resource Details
-Use the `resource()` method and a resource URI with `details()` method to request the resource's complete descriptor.
+Use the `resource(uri)` method and a resource URI with `details()` method to request the file resource's complete descriptor.
 ```java
 OperationResult<ClientResource> result = client
         .authenticate("jasperadmin", "jasperadmin")
@@ -1537,6 +1537,15 @@ OperationResult<ClientResource> result = client
         .resource("/properties/GlobalPropertiesList")
         .details();
 ```
+To get details of resource with particular type, use `detailsForType(resourceClass)` method:
+```java
+OperationResult<ClientResource> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource("/properties/GlobalPropertiesList")
+        .detailsForType();
+```
+
 
 ### Downloading File Resources
 There are two operations on file resources:
@@ -1658,7 +1667,7 @@ To move a resource, specify in `moveFrom()` method its URI and in `resource()` m
                 .move();
 ```
 ### Uploading complex resources
-	RestClient also provides API that allows to create complex resources and their nested resources in a single multipart request. Supported resources are:
+RestClient also provides API that allows to create complex resources and their nested resources in a single multipart request. Supported resources are:
 	- SemanticLayerDataSource;
 	- Domain;
 	- ReportUnit;
@@ -1666,7 +1675,7 @@ To move a resource, specify in `moveFrom()` method its URI and in `resource()` m
 	- SecureMondrianConnection.
 	
 #### Uploading SemanticLayerDataSource
-	SemanticLayerDataSource nested resources (schema, bundles and security file) might be specified as java.io.InputStream, java.io.File, content as java.lang.String or resource descriptor (with resource's URI or BASE64 encoded content). 
+SemanticLayerDataSource nested resources (schema, bundles and security file) might be specified as java.io.InputStream, java.io.File, content as java.lang.String or resource descriptor (with resource's URI or BASE64 encoded content). 
 ```java
         OperationResult<ClientSemanticLayerDataSource> testResource =
                 session.resourcesService()
@@ -1676,14 +1685,14 @@ To move a resource, specify in `moveFrom()` method its URI and in `resource()` m
 			//OR .withSchema(schemaStringXmlContent, label, description)
 			//OR .withSchema(schemaUri)
 			.withSecurityFile(securityFileInputStream, label, description)
-			//.withSecurityFile(securityFile, label, description)
-			//.withSecurityFile(securityFileXmlStringCntent, label, description)
-			//.withSecurityFile(securityFileDecriptor)
+			//OR .withSecurityFile(securityFile, label, description)
+			//OR .withSecurityFile(securityFileXmlStringCntent, label, description)
+			//OR .withSecurityFile(securityFileDecriptor)
 			.withBundle(bundleInputStream, label, description)
-			//.withBundle(bundleFile, label, description)
-			//.withBundle(bundleSringContent, label, description)
-			//.withBundle(bundleDescriptor)
-			//.withBundles(bundlesDescriptorsList)
+			//OR .withBundle(bundleFile, label, description)
+			//OR .withBundle(bundleSringContent, label, description)
+			//OR .withBundle(bundleDescriptor)
+			//OR .withBundles(bundlesDescriptorsList)
 			.withLabel("testDomain")
                         .withDescription("testDescription")
                         .inFolder("/public")
@@ -1800,8 +1809,8 @@ Also the API alloes to upload reportUnit  described in resource descriptor only:
                         .create();
 ```
 #### Uploading domain
-	Domain's its nested resources (bundles and security file) might be specified as java.io.InputStream, java.io.File, content as java.lang.String or resource descriptor (with resource's URI or BASE64 encoded content). 
-	Please, pay attention, unlike SemanticLayerDataSource the Domain resource doesn't reference external schema file, so schema can be specified only as Java object.  
+Domain's its nested resources (bundles and security file) might be specified as java.io.InputStream, java.io.File, content as java.lang.String or resource descriptor (with resource's URI or BASE64 encoded content). 
+Please, pay attention, unlike SemanticLayerDataSource the Domain resource doesn't reference external schema file, so schema can be specified only as Java object.  
 ```java
        OperationResult<ClientDomain> resDomain =
                 session.resourcesService()
