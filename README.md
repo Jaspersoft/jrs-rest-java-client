@@ -111,10 +111,17 @@ Table of Contents
   * [Deleting an Exclusion Calendar](#deleting-an-exclusion-calendar).
 * [Import/Export](#importexport).
   * [Export service](#export-service).
-    * [Checking the Export State](#checking-the-export-state).
-    * [Fetching the Export Output](#fetching-the-export-output).
+    * [Strat export](#strat-export).
+    * [Check the export state](#check-the-export-state).
+    * [Fetching the export output](#fetching-the-export-output).
+    * [Cancel the export task](#cancel-the-export-task).
   * [Import service](#import-service).
-    * [Checking the Import State](#checking-the-import-state).
+    * [Strat import](#strat-import).
+    * [Import using mulpipart form](#import-using-mulpipart-form).
+    * [Check the Import State](#check-the-import-state).
+    * [Getting and restarting import task](#checking-the-export-state).
+    * [Check import state](#check-import-state).
+    * [Cancel import task](#cancel-import-task).
 * [Metadata](#metadata)
   * [Domain metadata](#domain-metadata).
   * [Report metadata](#report-metadata).
@@ -1498,7 +1505,7 @@ Repository Services
 
 Resources Service
 -----------------
-This new service provides greater performance and more consistent handling of resource descriptors for all repository resource types. The service has two formats, one takes search parameters to find resources, the other takes a repository URI to access resource descriptors and file contents.
+This service provides greater performance and more consistent handling of resource descriptors for all repository resource types. The service has two formats, one takes search parameters to find resources, the other takes a repository URI to access resource descriptors and file contents.
 
 ### Searching the Repository
 The resources service, when `resources()` method used without specifying any repository URI, is used to search the repository. The various parameters let you refine the search and specify how you receive search results.
@@ -1522,7 +1529,7 @@ ClientResourceListWrapper resourceListWrapper = result.getEntity();
 The response of a search is a set of shortened descriptors showing only the common attributes of each resource. One additional attribute specifies the type of the resource. This allows you to quickly receive a list of resources for display or further processing.
 
 ### Viewing Resource Details
-Use the `resource()` method and a resource URI with `details()` method to request the resource's complete descriptor.
+Use the `resource(uri)` method and a resource URI with `details()` method to request the file resource's complete descriptor.
 ```java
 OperationResult<ClientResource> result = client
         .authenticate("jasperadmin", "jasperadmin")
@@ -1530,6 +1537,15 @@ OperationResult<ClientResource> result = client
         .resource("/properties/GlobalPropertiesList")
         .details();
 ```
+To get details of resource with particular type, use `detailsForType(resourceClass)` method:
+```java
+OperationResult<ClientResource> result = client
+        .authenticate("jasperadmin", "jasperadmin")
+        .resourcesService()
+        .resource("/properties/GlobalPropertiesList")
+        .detailsForType();
+```
+
 
 ### Downloading File Resources
 There are two operations on file resources:
@@ -1550,32 +1566,73 @@ InputStream inputStream = result.getEntity();
 To get file MIME type yo can get `Content-Type` header from the `Response` instance.
 
 ### Creating a Resource
-The `createNew()` and `createOrUpdate()` methods offer alternative ways to create resources. Both take a resource descriptor but each handles the URL differently. With the `createNew()` method, specify a folder in the URL, and the new resource ID is created automatically from the label attribute in its descriptor. With the `createOrUpdate()` method, specify a unique new resource ID as part of the URL in `resource()` method.
+The `create()` and `createOrUpdate()` methods offer two alternative ways to create resources. Both take a resource descriptor but each handles the URL differently and use different HTTP methods. With the `create()` method, specify a folder in the URL, and the new resource ID is created automatically from the label attribute in its descriptor in body of  POST request. With the `createOrUpdate()` method, specify a unique new resource ID as part of the URL in `resource()` method and uses PUR method.
 ```java
-ClientFolder folder = new ClientFolder();
-String parentUri = "/reports";
-folder
-        .setUri("/reports/testFolder")
-        .setLabel("Test Folder")
-        .setDescription("Test folder description")
-        .setPermissionMask(0)
-        .setCreationDate("2014-01-24 16:27:47")
-        .setUpdateDate("2014-01-24 16:27:47")
-        .setVersion(0);
+        ClientFolder new Folder = new ClientFolder();
+        folder
+                .setLabel("testFolder")
+                .setDescription("Test folder");
 
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource(folder.getUri())
-        .createOrUpdate(folder);
+        final OperationResult<ClientResource> operationResult = session
+                .resourcesService()
+                .resource(newFolder)
+                .inFolder("/public")
+                .create();
 //OR
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource(parenUri)
-        .createNew(folder);
-```
+        ClientFolder folder = new ClientFolder();
+        folder
+                .setUri("/public/testFolder1")
+                .setLabel("testFolder1")
+                .setDescription("Test folder")
+                .setVersion(-1);
 
+        OperationResult<ClientResource> operationResult = session
+                .resourcesService()
+                .resource(folder.getUri())
+                .createOrUpdate(folder);
+```
+#### Creating File resource
+The REST client allows to create file resource in few ways:
+ - **as direct streaming** 
+ ```java
+ 	ClientFile fileResourceDescriptor = new ClientFile()
+                                .setLabel("testImage.jpg")
+                                .setDescription("test description")
+                                .setType(ClientFile.FileType.img);
+         OperationResult<ClientFile> result = session
+                .resourcesService()
+                .fileResource(new FileInputStream(pathToFile), fileResourceDescriptor)
+                .asInputStream()
+                .toFolder("/public")
+                .upload();
+ ```
+ - **as Base64** encoded content:
+ ```java
+         final ClientFile resourceDescriptor = new ClientFile().setLabel("testImage1.jpg")
+                .setDescription("test description")
+                .setType(ClientFile.FileType.img);
+        
+        OperationResult<ClientFile> result = session
+                .resourcesService()
+                .fileResource(new FileInputStream(pathToFile), resourceDescriptor)
+                .asBase64EncodedContent()
+                .toFolder("/public")
+                .upload();
+ ```
+  - **as multipart form** :
+  ```java
+          final ClientFile resourceDescriptor = new ClientFile()
+                .setLabel("testImage2.jpg")
+                .setDescription("test description")
+                .setType(ClientFile.FileType.img);
+        OperationResult<ClientFile> result = session
+                .resourcesService()
+                .fileResource(new FileInputStream(pathToFile),
+                        resourceDescriptor)
+                .asMultipartForm()
+                .toFolder("/public")
+                .upload();
+  ```
 ### Modifying a Resource
 Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual fields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.
 The `patchResource()` method updates individual descriptor fields on the target resource. It also accept expressions that modify the descriptor in the Spring Expression Language. This expression language lets you easily modify the structure and values of descriptors.
@@ -1593,89 +1650,193 @@ OperationResult<ClientFolder> result = client
 Note that you must explicitly set the type of resource to update because of server issue.
 
 ### Copying a Resource
-To copy a resource, specify in `copyFrom()` method its URI and in `resource()` method URI of destination location.
+To copy a resource, specify in `toFolder()` method its URI and in `resource()` method URI of destination location.
 ```java
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource("/reports")
-        .copyFrom("/datasources/testFolder");
+        OperationResult<ClientResource> clientResource = session.resourcesService()
+                .resource(testDomainUri)
+                .toFolder("/public/testFolder")
+                .copy();
 ```
 
 ### Moving a Resource
 To move a resource, specify in `moveFrom()` method its URI and in `resource()` method URI of destination location.
 ```java
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource("/datasources")
-        .moveFrom("/reports/testFolder");
+        OperationResult<ClientResource> clientResource = session.resourcesService()
+                .resource(testResourceUri)
+                .toFolder("/public/testFolder")
+                .move();
 ```
-
-### Uploading File Resources
-To upload file you must specify the MIME type that corresponds with the desired file type, you can take it from `ClientFile.FileType` enumeration.
-```java
-OperationResult<ClientFile> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource("/reports/testFolder")
-        .uploadFile(imageFile, ClientFile.FileType.img, "fileName", "fileDescription");
-```
-
+### Uploading complex resources
+RestClient also provides API that allows to create complex resources and their nested resources in a single multipart request. Supported resources are:
+	- SemanticLayerDataSource;
+	- Domain;
+	- ReportUnit;
+	- MondrianConnection;
+	- SecureMondrianConnection.
+	
 #### Uploading SemanticLayerDataSource
-RestClient also supports a way to create complex resources and their nested resources in a single multipart request. One of such resources is `SemanticLayerDataSource`.  
+SemanticLayerDataSource nested resources (schema, bundles and security file) might be specified as java.io.InputStream, java.io.File, content as java.lang.String or resource descriptor (with resource's URI or BASE64 encoded content). 
 ```java
-ClientSemanticLayerDataSource domainEntity = session
-        .resourcesService()
-            .resource(domain)
-                .withBundle(defBundle, newDefaultBundle)
-                .withBundle(enUSBundle, newEnUsBundle)
-                .withSecurityFile(securityFile, securityFile)
-                .withSchema(schemaFile, schema)
-            .inFolder("/my/new/folder/")
-                .create()
-                    .entity();        
+        OperationResult<ClientSemanticLayerDataSource> testResource =
+                session.resourcesService()
+                        .semanticLayerDataSourceResource()
+                        .withDataSource(new ClientReference().setUri(datasourceUri))
+                        .withSchema(schemaInputStream, schemaFilelabel, schemaFileDescription)
+			//OR .withSchema(schemaStringXmlContent, label, description)
+			//OR .withSchema(schemaUri)
+			.withSecurityFile(securityFileInputStream, label, description)
+			//OR .withSecurityFile(securityFile, label, description)
+			//OR .withSecurityFile(securityFileXmlStringCntent, label, description)
+			//OR .withSecurityFile(securityFileDecriptor)
+			.withBundle(bundleInputStream, label, description)
+			//OR .withBundle(bundleFile, label, description)
+			//OR .withBundle(bundleSringContent, label, description)
+			//OR .withBundle(bundleDescriptor)
+			//OR .withBundles(bundlesDescriptorsList)
+			.withLabel("testDomain")
+                        .withDescription("testDescription")
+                        .inFolder("/public")
+                        .create();        
+```
+The other way to create SemanticLayerDataSource is to decribe it in resourceDescriptor. In this case nested resources (schema, bundles and security file) can be specified as resource descriptors (with resource's URI or BASE64 encoded content). 
+```java
+        ClientSemanticLayerDataSource resourceDescriptor = new ClientSemanticLayerDataSource()
+                .setSchema(new ClientFile()
+				.setUri(schemaUri)
+				.setType(ClientFile.FileType.xml)
+				.setLabel("schema.Xml"))
+                .setDataSource(new ClientReference().setUri(domain.getDataSource().getUri()))
+                .setLabel("testDomain");
+		
+        OperationResult<ClientSemanticLayerDataSource> testResource =
+                session.resourcesService()
+                        .semanticLayerDataSourceResource(resourceDescriptor)
+                        .inFolder("/public")
+                        .create();        
 ```
 
 #### Uploading MondrianConnection
-REST Client allows you to create `MondrianConnection` Resource with mondrian schema XML file. You can specify the folder in which the resource will be placed. Provided API allows to add XML schema as `String` or `InputStream`.    
+REST Client allows you to create `MondrianConnection` resource with mondrian schema XML file specified as java.io.InputStream, java.io.File or as java.lang.String. 
+  
 ```java
-ClientMondrianConnection connection = session
-    .resourcesService()
-        .resource(mondrianConnection)
-            .withMondrianSchema(schema, schemaRef)
-        .createInFolder("my/olap/folder")
-            .entity();
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.mondrianConnection()
+            	.withMondrianSchema(schemaInputStream, label, description)
+	    	//OR .withMondrianSchema(schemaFile, label, description)
+	    	//OR .withMondrianSchema(schemaXmlStringContent, label, description)
+	    	.withDatasource(dataSource)
+	    	.withLabel(label)
+		.withDescription(description)
+		.inFolder(parentFolderUri)
+		.create()
+```
+or create `MondrianConnection` using resource descriptor:
+```java
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.mondrianConnection(respurceDescriptor)
+	    	.inFolder(parentFolder)
+		.create()
 ```
 
 #### Uploading SecureMondrianConnection
-To upload `SecureMondrianConnection` Resource with a bunch of support files such as Mondrian schema XML file and AccessGrantSchemas files you can use our new API
+REST Client allows you to create `MondrianConnection` resource with mondrian schema XML and AccessGrantSchemas specified as java.io.InputStream, java.io.File or as java.lang.String. 
+  
 ```java
-ClientSecureMondrianConnection entity = session.resourcesService()
-    .resource(secureMondrianConnection)
-        .withMondrianSchema(mondrianSchema)
-        .withAccessGrantSchemas(Arrays.asList(accessGrantSchema))
-    .createInFolder("/my/new/folder/")
-        .entity();
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.secureMondrianConnection()
+            	. withMondrianSchema(schemainputStream, label, description)
+	    	//OR .withMondrianSchema(schemaFile, label, description)
+	    	//OR .withMondrianSchema(schemaXmlStringContent, label, description) 
+	    	.withDatasource(dataSource)
+	    	.withLabel(label)
+		.withDescription(description)
+		.inFolder(parentFolderUri)
+		.create()
+```
+or create `MondrianConnection` using resource descriptor:
+```java
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.secureMondrianConnection(respurceDescriptor)
+	    	.inFolder(parentFolder)
+		.create()
 ```
 
 #### Uploading ReportUnit
-To upload `ReportUnit` resource to the server you can use next API, which allows you to do it in a very simple way. You can add JRXML file and a bunch of various files like images and others as well.
+To upload `ReportUnit` resource to the server you can use next API, where JRXML file can be added as java.lang.String, java.io.File,  java.io.InputStream or as resource URI in resource descriptor. A bunch of various additional files like images and others can be added as well.
 ```java
-ClientReportUnit entity = session.resourcesService()
-    .resource(reportUnit)
-        .withJrxml(file, descriptor)
-        .withNewFile(imgFile, "myFile", imgDescriptor)        
-            .createInFolder("/my/new/folder/")
-                .entity();
+        OperationResult<ClientReportUnit> repUnut =
+                session.resourcesService()
+                        .reportUnitResource()
+                        .withJrxml(inputStream, label, description)
+                        //OR .withJrxml(jrxmlStringContent, label, description)
+			//OR .withJrxml(jrxmlFile, label, description) 
+			//OR .withJrxml(resourceDescriptor)
+			.withFile(new ClientReference().setUri(fileUri), label)
+                        .withFile(new ClientReference().setUri(fileUri), label)
+                        //OR .withFile(InputStream fileData, String label, String description)
+			//OR .withFile(File fileData, String label, String description)
+			//OR .withFile(String fileData, String label, String description) 
+			//OR .withFile(ClientReferenceableFile fileUri, String name)
+			.withLabel("testReport")
+                        .withDescription("testDescription")
+                        .inFolder("/public")
+                        .create();
+```
+Also the API alloes to upload reportUnit  described in resource descriptor only:
+```java
+        final ClientReportUnit clientReportUnit = new ClientReportUnit()
+                .setLabel("testReport")
+                .setDescription("testDescription");
+        clientReportUnit.setFiles(new HashMap<String, ClientReferenceableFile>());
+        clientReportUnit.getFiles().put(label, new ClientFile()
+                .setUri(fileUri)
+                .setLabel(label)
+                .setType(ClientFile.FileType.img));
+
+        clientReportUnit.setJrxml(new ClientFile()
+                .setLabel(jrxmlLabel)
+                .setType(ClientFile.FileType.jrxml)
+                .setContent(base64EncodedContent);
+
+        OperationResult<ClientReportUnit> repUnut =
+                session.resourcesService()
+                        .reportUnitResource(clientReportUnit)
+                        .inFolder("/public")
+                        .create();
+```
+#### Uploading domain
+Domain's its nested resources (bundles and security file) might be specified as java.io.InputStream, java.io.File, content as java.lang.String or resource descriptor (with resource's URI or BASE64 encoded content). 
+Please, pay attention, unlike SemanticLayerDataSource the Domain resource doesn't reference external schema file, so schema can be specified only as Java object.  
+```java
+       OperationResult<ClientDomain> resDomain =
+                session.resourcesService()
+                        .domainResource()
+                        .withDataSource(new ClientReference().setUri(datasourceUri))
+                        .withSchema(schemaObject)
+                        .withLabel("testDomain")
+                        .withDescription("testDescription")
+                        .inFolder("/public")
+                        .create();
+        
+```
+The other way to create SemanticLayerDataSource is to decribe it in resourceDescriptor. In this case nested resources (schema, bundles and security file) can be specified as resource descriptors (with resource's URI or BASE64 encoded content). 
+```java
+        ClientDomain resDomain =
+                session.resourcesService()
+                        .domainResource(domain)
+                        .inFolder("/public")
+                        .create()       
 ```
 
 ### Deleting Resources
 You can delete resources in two ways, one for single resources and one for multiple resources. To delete multiple resources at once, specify multiple URIs with the `ResourceSearchParameter.RESOURCE_URI` parameter.
 ```java
 //multiple
-OperationResult result = client
-        .authenticate("jasperadmin", "jasperadmin")
+OperationResult result = session
         .resourcesService()
         .resources()
         .parameter(ResourceSearchParameter.RESOURCE_URI, "/some/resource/uri/1")
@@ -1683,8 +1844,7 @@ OperationResult result = client
         .delete();
 //OR
 //single
-OperationResult result = client
-        .authenticate("jasperadmin", "jasperadmin")
+OperationResult result = session
         .resourcesService()
         .resource("/reports/testFolder")
         .delete();
@@ -1700,22 +1860,27 @@ There are two qualities of a permission:
 
 ### Viewing Multiple Permissions
 ```java
-OperationResult<RepositoryPermissionListWrapper> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<RepositoryPermissionListWrapper> operationResult = session
                 .permissionsService()
-                .resource("/datasources")
+                .forResource(RESOURCE_URI)
+                .permissions()
                 .get();
 ```
+Also serch permissions with parameters is supported. Available parameters are:
+   **effectivePermissions** - when set to true shows all permissions who affect given uri, if false - only directly assigned. If recipient does not have any permission assigned or permission is not reacheable not uri will be returned. Default - false;
+   **recipientType** - type of recipient (e.g. user/role);
+   **recipientId** - Id of recipient, requires `recipientType`. For multitenant environment should be tenant qualified.
+   **resolveAll** - describes resolving of recipients. Default - false;
+   **offset** - pagination. Start index for requested pate;
+   **limit** - pagination, resources count per page;
 
 ### Viewing a Single Permission
 Specify the recipient in the URL to see a specific assigned permission.
 ```java
-OperationResult<RepositoryPermission> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<RepositoryPermission> operationResult = session
                 .permissionsService()
-                .resource("/datasources")
+                .forResource(RESOURCE_URI)
+                .permission()
                 .permissionRecipient(PermissionRecipient.ROLE, "ROLE_USER")
                 .get();
 
@@ -1723,51 +1888,41 @@ RepositoryPermission permission = operationResult.getEntity();
 ```
 
 ### Setting Multiple Permissions
-The `createNew()` method assigns any number of permissions to any number of resources specified in the body of the request. All permissions must be newly assigned, and the request will fail if a recipient already has an assigned (not inherited) permission. Use the `createOrUpdate()` method to update assigned permissions. The `createOrUpdate()` method modifies exiting permissions (already assigned).
+The `create()` method assigns any number of permissions to any number of resources specified in the body of the request. All permissions must be newly assigned, and the request will fail if a recipient already has an assigned (not inherited) permission. Use the `createOrUpdate()` method to update assigned permissions. The `createOrUpdate()` method modifies exiting permissions (already assigned).
 ```java
-List<RepositoryPermission> permissionList = new ArrayList<RepositoryPermission>();
-permissionList.add(new RepositoryPermission("/themes", "user:/joeuser", 30));
+        RepositoryPermissionListWrapper permissions = new RepositoryPermissionListWrapper();
+        final RepositoryPermission repositoryPermission = new RepositoryPermission().setUri(RESOURCE_URI).setRecipient("role:/ROLE_USER").setMask(1);
+        final RepositoryPermission repositoryPermission1 = new RepositoryPermission().setUri(RESOURCE_URI).setRecipient("role:/ROLE_ADMIN").setMask(1);
+        permissions.setPermissions(asList(repositoryPermission, repositoryPermission1));
 
-RepositoryPermissionListWrapper permissionListWrapper = new RepositoryPermissionListWrapper(permissionList);
-
-OperationResult operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<RepositoryPermissionListWrapper> operationResult = session
                 .permissionsService()
-                .createNew(permissionListWrapper);
-
-Response response = operationResult.getResponse();
+                .permissions(permissions)
+                .create();
 ```
 
 ### Setting a Single Permission
 The `createNew()` method accepts a single permission descriptor.
 ```java
-RepositoryPermission permission = new RepositoryPermission();
-permission
-        .setUri("/")
-        .setRecipient("user:/joeuser")
-        .setMask(PermissionMask.READ_WRITE_DELETE);
+        final RepositoryPermission repositoryPermission = new RepositoryPermission()
+                .setUri(RESOURCE_URI)
+                .setRecipient("role:/ROLE_USER")
+                .setMask(1);
 
-OperationResult operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult operationResult = session
                 .permissionsService()
-                .createNew(permission);
-
-Response response = operationResult.getResponse();
+                .permission(repositoryPermission)
+                .create();
 ```
 
 ### Deleting Permissions in Bulk
 The `delete()` method removes all assigned permissions from the designated resource. After returning successfully, all effective permissions for the resource are inherited.
 ```java
-OperationResult operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult operationResult = session
                 .permissionsService()
-                .resource("/themes")
+                .forResource(RESOURCE_URI)
+                .permissions()
                 .delete();
-
-Response response = operationResult.getResponse();
 ```
 
 ### Deleting a Single Permission
@@ -1777,7 +1932,8 @@ OperationResult operationResult =
         client
                 .authenticate("jasperadmin", "jasperadmin")
                 .permissionsService()
-                .resource("/")
+                .forResource(RESOURCE_URI)
+		.permission()
                 .permissionRecipient(PermissionRecipient.USER, "joeuser")
                 .delete();
 
@@ -2008,6 +2164,8 @@ Import/Export
 
 Export service
 --------------
+
+### Strat export
 The export service works asynchronously: first you request the export with the desired options, then you monitor the state of the export, and finally you request the output file. You must be authenticated as the system admin (superuser)or jasperadmin for the export services.
 ```java
 OperationResult<State> operationResult =
@@ -2046,8 +2204,8 @@ The export parameters you can specify are:
 `skip-suborganizations `- if the parameter is set to true, the system will omit all the items(e.g. resources, user, roles, organizations) which belong to "sub organizations" even they are directly specified using corresponding options (default value is false).
 
 `skip-dependent-resources `- skip dependent resources (domain, datasource etc.) to be exported (default value is false). 
-//TODO task
-Also you can specify:
+
+In sent tas DTO you can specify:
 `uris` - list of folder or resource URIs in the repository  to export.
 `scheduledJobs` - list of repository report unit and folder URIs for which report unit jobs should be exported. For a folder URI, this option exports the scheduled jobs of all reports in the folder and all subfolders.	
 `roles` - list of roles to export.
@@ -2056,56 +2214,73 @@ Also you can specify:
 `organization` - identifier of organization to export together with its sub organizations. If it is specified it also will be the root organization, starting from it system will export all resources, users, roles e.t.c.
 
 ```java
+        ExportTask exportTask = new ExportTask()
+				.setUris(asList(TEST_URI))
+				.setUsers(asList("superuser"))
+				.setRoles(asList("ROLE_USER"));
         OperationResult<State> stateOperationResult = session
                 .exportService()
-                .newTask()
-                .uri("/temp/supermartDomain")
-                .user("jasperadmin")
-                .role("ROLE_USER")
-                .resourceTypes(asList("jdbcDataSource", "reportUnit", "file"))
-                .parameter(ExportParameter.EVERYTHING)
+                .newTask(exportTask)
                 .create();
+		
+	State stateDto = stateOperationResult.getEntity();
+        taskId = stateDto.getId();
 ```
 
-### Checking the Export State
+### Check the export state
 After receiving the export ID, you can check the state of the export operation.
 ```java
-OperationResult<State> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<State> stateOperationResult = session
                 .exportService()
-                .task(state.getId())
+                .task(taskId)
                 .state();
 
-State state = operationResult.getEntity();
+	State stateOperationResult = operationResult.getEntity();
 ```
 The body of the response contains the current state of the export operation.
 
-### Fetching the Export Output
+### Fetching the export output
 When the export state is ready, you can download the zip file containing the export catalog.
 ```java
-OperationResult<InputStream> operationResult1 =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
-                .exportService()
-                .task(state.getId())
-                .fetch();
+        String state = "inprogres";
+        while (!"finished".equals(state)) {
+            state = session.exportService().task(taskId).state().getEntity().getPhase();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
 
-InputStream inputStream = operationResult1.getEntity();
+            }
+        }
+
+        OperationResult<InputStream> operationResult = session
+                .exportService()
+                .task(taskId)
+                .fetchToFile("export.zip");
+
+        InputStream inputStream = operationResult.getEntity();
+```
+Please, pay attention, only export with "finished" state can be fetched.
+
+### Cancel the export task
+Only `stateDto.getPhase() = "inprogress"` export can be cancelled: 
+```java
+        OperationResult OperationResult = session
+                .exportService()
+                .task(taskId)
+                .cancel();
 ```
 
 Import service
 --------------
+### Strat import
 Use the following service to upload a catalog as a zip file and import it with the given options. Specify options as arguments from `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportParameter`. Arguments that are omitted are assumed to be false. You must be authenticated as the system admin (superuser) or jasperadmin for the import service. Jaspersoft does not recommend uploading files greater than 2 gigabytes.
 ```java
-URL url = ImportService.class.getClassLoader().getResource("testExportArchive.zip");
-OperationResult<State> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<State> operationResult = session
                 .importService()
-                .newTask()
-                .parameter(ImportParameter.INCLUDE_ACCESS_EVENTS, true)
-                .create(new File(url.toURI()));
+                .newImport(pathToFile)
+                .parameter(ImportParameter.UPDATE, true)
+                .create();
+
 
 State state = operationResult.getEntity();
 ```
@@ -2117,47 +2292,39 @@ Available parameters are:
 `includeMonitoringEvents` - include monitoring events (default value is false).
 `includeServerSettings` - include server settings  (default value is false).
 `mergeOrganization` - allows merging of exported organization/resource into organization with different identifier. In the case if it is false, then system will throw an exception, if exportedOrganizationId != organizationId_we_import_Into (default value is false).
-`brokenDependencies` - defines strategy with broken dependencies. Available values are - fail, skip, include (default value is fail). 
-
-Also you can set:
 `brokenDependencies` - defines strategy with broken dependencies. Available values are:
-
-    fail - server will give an error (errorCode=import.broken.dependencies) if import archive contain broken dependent resources.
-    skip - import will skip from import broken resources.
+    	fail - server will give an error (errorCode=import.broken.dependencies) if import archive contain broken dependent resources.
+    	skip - import will skip from import broken resources.
 	include - import will proceed with broken dependencies. In this case server will try to import broken dependent resources. a) In the case when in target environment there are already dependent resources import of target resource will be success, and resource will be skipped from import if there are no dependent resources to recover dependency chain.
-`parameters` - list of import parameters. 
 `organization` - organization identifier we import into.
-```java
 
+#### Import using mulpipart form
+```java
+        State state = session
+                .importService()
+                .newMultiPartImport(new File(pathToFile))
+                .parameter(ImportParameter.UPDATE, true)
+                .create()
+		.getEntity();
 ```
 
-### Checking the Import State
+### Check the Import State
 After receiving the import ID, you can check the state of the import operation.
 ```java
-OperationResult<State> operationResult =
-        client
-                .authenticate("jasperadmin", "jasperadmin")
+        OperationResult<State> operationResult = session
                 .importService()
-                .task(state.getId())
+                .task(taskId)
                 .state();
 
-State state = operationResult.getEntity();
+        State stateDto = operationResult.getEntity();
 ```
 
 ### Getting and restarting import task
 To get import task metadata you can use next code example:
 ```java
-        OperationResult<State> operationResult = session
-                .importService()
-                .newTask()
-                .parameter(ImportParameter.INCLUDE_ACCESS_EVENTS, true)
-                .parameter(ImportParameter.UPDATE, true)
-                .create(new File("\\import.zip"));
-        State state = operationResult.getEntity();
-
         ImportTask task = session
                 .importService()
-                .task(state.getId())
+                .task(taskId)
                 .getTask()
                 .getEntity();
 ```
@@ -2169,7 +2336,25 @@ Also you can restart import task:
                 .restartTask(new ImportTask().setBrokenDependencies("false"))
                 .getEntity();
 ```
+Notice, only task in phase "pending" can be restarted. Pending will happen if import task failed with error codes: import.organizations.not.match or import.broken.dependencies.
 
+### Check import state
+```java
+        OperationResult<State> operationResult = session
+                .importService()
+                .task(taskId)
+                .state();
+
+        State state = operationResult.getEntity();
+```
+
+### Cancel import task
+```java
+        OperationResult operationResult = session
+                .importService()
+                .task(taskId)
+                .cancel();
+```
 Metadata 
 ========
 

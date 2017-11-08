@@ -38,6 +38,7 @@ import java.io.InputStream;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
+@Deprecated
 public class ImportTaskRequestAdapter extends AbstractAdapter {
 
     public static final String SERVICE_URI = "import";
