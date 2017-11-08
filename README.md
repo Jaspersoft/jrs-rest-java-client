@@ -1670,8 +1670,8 @@ To move a resource, specify in `moveFrom()` method its URI and in `resource()` m
 ```java
         OperationResult<ClientSemanticLayerDataSource> testResource =
                 session.resourcesService()
-                        .clientSemanticLayerDataSourceResource()
-                        .withDataSource(new ClientReference().setUri(dsUri))
+                        .semanticLayerDataSourceResource()
+                        .withDataSource(new ClientReference().setUri(datasourceUri))
                         .withSchema(schemaInputStream, schemaFilelabel, schemaFileDescription)
 			//OR .withSchema(schemaStringXmlContent, label, description)
 			//OR .withSchema(schemaUri)
@@ -1693,19 +1693,21 @@ The other way to create SemanticLayerDataSource is to decribe it in resourceDesc
 ```java
         ClientSemanticLayerDataSource resourceDescriptor = new ClientSemanticLayerDataSource()
                 .setSchema(new ClientFile()
-		.setUpdateDate(domain.getSchema().getUri()).setType(ClientFile.FileType.xml).setLabel("schema.Xml"))
+				.setUri(schemaUri)
+				.setType(ClientFile.FileType.xml)
+				.setLabel("schema.Xml"))
                 .setDataSource(new ClientReference().setUri(domain.getDataSource().getUri()))
                 .setLabel("testDomain");
 		
         OperationResult<ClientSemanticLayerDataSource> testResource =
                 session.resourcesService()
-                        .clientSemanticLayerDataSourceResource(resourceDescriptor)
+                        .semanticLayerDataSourceResource(resourceDescriptor)
                         .inFolder("/public")
                         .create();        
 ```
 
 #### Uploading MondrianConnection
-REST Client allows you to create `MondrianConnection` resource with mondrian schema XML file specified as java.io.InputStream, java.io.File are content as java.lang.String. 
+REST Client allows you to create `MondrianConnection` resource with mondrian schema XML file specified as java.io.InputStream, java.io.File or as java.lang.String. 
   
 ```java
 	ClientMondrianConnection connection = session
@@ -1730,7 +1732,7 @@ or create `MondrianConnection` using resource descriptor:
 ```
 
 #### Uploading SecureMondrianConnection
-REST Client allows you to create `MondrianConnection` resource with mondrian schema XML and AccessGrantSchemas specified as java.io.InputStream, java.io.File are content as java.lang.String. 
+REST Client allows you to create `MondrianConnection` resource with mondrian schema XML and AccessGrantSchemas specified as java.io.InputStream, java.io.File or as java.lang.String. 
   
 ```java
 	ClientMondrianConnection connection = session
@@ -1755,14 +1757,70 @@ or create `MondrianConnection` using resource descriptor:
 ```
 
 #### Uploading ReportUnit
-To upload `ReportUnit` resource to the server you can use next API, which allows you to do it in a very simple way. You can add JRXML file and a bunch of various files like images and others as well.
+To upload `ReportUnit` resource to the server you can use next API, where JRXML file can be added as java.lang.String, java.io.File,  java.io.InputStream or as resource URI in resource descriptor. A bunch of various additional files like images and others can be added as well.
 ```java
-ClientReportUnit entity = session.resourcesService()
-    .resource(reportUnit)
-        .withJrxml(file, descriptor)
-        .withNewFile(imgFile, "myFile", imgDescriptor)        
-            .createInFolder("/my/new/folder/")
-                .entity();
+        OperationResult<ClientReportUnit> repUnut =
+                session.resourcesService()
+                        .reportUnitResource()
+                        .withJrxml(inputStream, label, description)
+                        //OR .withJrxml(jrxmlStringContent, label, description)
+			//OR .withJrxml(jrxmlFile, label, description) 
+			//OR .withJrxml(resourceDescriptor)
+			.withFile(new ClientReference().setUri(fileUri), label)
+                        .withFile(new ClientReference().setUri(fileUri), label)
+                        //OR .withFile(InputStream fileData, String label, String description)
+			//OR .withFile(File fileData, String label, String description)
+			//OR .withFile(String fileData, String label, String description) 
+			//OR .withFile(ClientReferenceableFile fileUri, String name)
+			.withLabel("testReport")
+                        .withDescription("testDescription")
+                        .inFolder("/public")
+                        .create();
+```
+Also the API alloes to upload reportUnit  described in resource descriptor only:
+```java
+        final ClientReportUnit clientReportUnit = new ClientReportUnit()
+                .setLabel("testReport")
+                .setDescription("testDescription");
+        clientReportUnit.setFiles(new HashMap<String, ClientReferenceableFile>());
+        clientReportUnit.getFiles().put(label, new ClientFile()
+                .setUri(fileUri)
+                .setLabel(label)
+                .setType(ClientFile.FileType.img));
+
+        clientReportUnit.setJrxml(new ClientFile()
+                .setLabel(jrxmlLabel)
+                .setType(ClientFile.FileType.jrxml)
+                .setContent(base64EncodedContent);
+
+        OperationResult<ClientReportUnit> repUnut =
+                session.resourcesService()
+                        .reportUnitResource(clientReportUnit)
+                        .inFolder("/public")
+                        .create();
+```
+#### Uploading domain
+	Domain's its nested resources (bundles and security file) might be specified as java.io.InputStream, java.io.File, content as java.lang.String or resource descriptor (with resource's URI or BASE64 encoded content). 
+	Please, pay attention, unlike SemanticLayerDataSource the Domain resource doesn't reference external schema file, so schema can be specified only as Java object.  
+```java
+       OperationResult<ClientDomain> resDomain =
+                session.resourcesService()
+                        .domainResource()
+                        .withDataSource(new ClientReference().setUri(datasourceUri))
+                        .withSchema(schemaObject)
+                        .withLabel("testDomain")
+                        .withDescription("testDescription")
+                        .inFolder("/public")
+                        .create();
+        
+```
+The other way to create SemanticLayerDataSource is to decribe it in resourceDescriptor. In this case nested resources (schema, bundles and security file) can be specified as resource descriptors (with resource's URI or BASE64 encoded content). 
+```java
+        ClientDomain resDomain =
+                session.resourcesService()
+                        .domainResource(domain)
+                        .inFolder("/public")
+                        .create()       
 ```
 
 ### Deleting Resources
