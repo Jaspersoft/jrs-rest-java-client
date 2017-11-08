@@ -1505,7 +1505,7 @@ Repository Services
 
 Resources Service
 -----------------
-This new service provides greater performance and more consistent handling of resource descriptors for all repository resource types. The service has two formats, one takes search parameters to find resources, the other takes a repository URI to access resource descriptors and file contents.
+This service provides greater performance and more consistent handling of resource descriptors for all repository resource types. The service has two formats, one takes search parameters to find resources, the other takes a repository URI to access resource descriptors and file contents.
 
 ### Searching the Repository
 The resources service, when `resources()` method used without specifying any repository URI, is used to search the repository. The various parameters let you refine the search and specify how you receive search results.
@@ -1557,32 +1557,73 @@ InputStream inputStream = result.getEntity();
 To get file MIME type yo can get `Content-Type` header from the `Response` instance.
 
 ### Creating a Resource
-The `createNew()` and `createOrUpdate()` methods offer alternative ways to create resources. Both take a resource descriptor but each handles the URL differently. With the `createNew()` method, specify a folder in the URL, and the new resource ID is created automatically from the label attribute in its descriptor. With the `createOrUpdate()` method, specify a unique new resource ID as part of the URL in `resource()` method.
+The `create()` and `createOrUpdate()` methods offer two alternative ways to create resources. Both take a resource descriptor but each handles the URL differently and use different HTTP methods. With the `create()` method, specify a folder in the URL, and the new resource ID is created automatically from the label attribute in its descriptor in body of  POST request. With the `createOrUpdate()` method, specify a unique new resource ID as part of the URL in `resource()` method and uses PUR method.
 ```java
-ClientFolder folder = new ClientFolder();
-String parentUri = "/reports";
-folder
-        .setUri("/reports/testFolder")
-        .setLabel("Test Folder")
-        .setDescription("Test folder description")
-        .setPermissionMask(0)
-        .setCreationDate("2014-01-24 16:27:47")
-        .setUpdateDate("2014-01-24 16:27:47")
-        .setVersion(0);
+        ClientFolder new Folder = new ClientFolder();
+        folder
+                .setLabel("testFolder")
+                .setDescription("Test folder");
 
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource(folder.getUri())
-        .createOrUpdate(folder);
+        final OperationResult<ClientResource> operationResult = session
+                .resourcesService()
+                .resource(newFolder)
+                .inFolder("/public")
+                .create();
 //OR
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource(parenUri)
-        .createNew(folder);
-```
+        ClientFolder folder = new ClientFolder();
+        folder
+                .setUri("/public/testFolder1")
+                .setLabel("testFolder1")
+                .setDescription("Test folder")
+                .setVersion(-1);
 
+        OperationResult<ClientResource> operationResult = session
+                .resourcesService()
+                .resource(folder.getUri())
+                .createOrUpdate(folder);
+```
+### Creating File resource
+The REST client allows to create file resource in few ways:
+ - **as direct streaming** 
+ ```java
+ 	ClientFile fileResourceDescriptor = new ClientFile()
+                                .setLabel("testImage.jpg")
+                                .setDescription("test description")
+                                .setType(ClientFile.FileType.img);
+         OperationResult<ClientFile> result = session
+                .resourcesService()
+                .fileResource(new FileInputStream(pathToFile), fileResourceDescriptor)
+                .asInputStream()
+                .toFolder("/public")
+                .upload();
+ ```
+ - **as Base64** encoded content:
+ ```java
+         final ClientFile resourceDescriptor = new ClientFile().setLabel("testImage1.jpg")
+                .setDescription("test description")
+                .setType(ClientFile.FileType.img);
+        
+        OperationResult<ClientFile> result = session
+                .resourcesService()
+                .fileResource(new FileInputStream(pathToFile), resourceDescriptor)
+                .asBase64EncodedContent()
+                .toFolder("/public")
+                .upload();
+ ```
+  - **as multipart form** :
+  ```java
+          final ClientFile resourceDescriptor = new ClientFile()
+                .setLabel("testImage2.jpg")
+                .setDescription("test description")
+                .setType(ClientFile.FileType.img);
+        OperationResult<ClientFile> result = session
+                .resourcesService()
+                .fileResource(new FileInputStream(pathToFile),
+                        resourceDescriptor)
+                .asMultipartForm()
+                .toFolder("/public")
+                .upload();
+  ```
 ### Modifying a Resource
 Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual fields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.
 The `patchResource()` method updates individual descriptor fields on the target resource. It also accept expressions that modify the descriptor in the Spring Expression Language. This expression language lets you easily modify the structure and values of descriptors.
@@ -1600,48 +1641,45 @@ OperationResult<ClientFolder> result = client
 Note that you must explicitly set the type of resource to update because of server issue.
 
 ### Copying a Resource
-To copy a resource, specify in `copyFrom()` method its URI and in `resource()` method URI of destination location.
+To copy a resource, specify in `toFolder()` method its URI and in `resource()` method URI of destination location.
 ```java
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource("/reports")
-        .copyFrom("/datasources/testFolder");
+        OperationResult<ClientResource> clientResource = session.resourcesService()
+                .resource(testDomainUri)
+                .toFolder("/public/testFolder")
+                .copy();
 ```
 
 ### Moving a Resource
 To move a resource, specify in `moveFrom()` method its URI and in `resource()` method URI of destination location.
 ```java
-OperationResult<ClientResource> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource("/datasources")
-        .moveFrom("/reports/testFolder");
-```
-
-### Uploading File Resources
-To upload file you must specify the MIME type that corresponds with the desired file type, you can take it from `ClientFile.FileType` enumeration.
-```java
-OperationResult<ClientFile> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .resourcesService()
-        .resource("/reports/testFolder")
-        .uploadFile(imageFile, ClientFile.FileType.img, "fileName", "fileDescription");
+        OperationResult<ClientResource> clientResource = session.resourcesService()
+                .resource(testResourceUri)
+                .toFolder("/public/testFolder")
+                .move();
 ```
 
 #### Uploading SemanticLayerDataSource
 RestClient also supports a way to create complex resources and their nested resources in a single multipart request. One of such resources is `SemanticLayerDataSource`.  
 ```java
-ClientSemanticLayerDataSource domainEntity = session
-        .resourcesService()
-            .resource(domain)
-                .withBundle(defBundle, newDefaultBundle)
-                .withBundle(enUSBundle, newEnUsBundle)
-                .withSecurityFile(securityFile, securityFile)
-                .withSchema(schemaFile, schema)
-            .inFolder("/my/new/folder/")
-                .create()
-                    .entity();        
+        OperationResult<ClientSemanticLayerDataSource> testResource =
+                session.resourcesService()
+                        .clientSemanticLayerDataSourceResource()
+                        .withDataSource(new ClientReference().setUri(dsUri))
+                        .withSchema(schemaInputStream, schemaFilelabel, schemaFileDescription)
+			//.withSchema(schemaStringContent, label, description)
+			//.withSchema(schemaUri)
+			//.withSchemaBase64Encoded(schemaStringContent)
+			.withLabel("testDomain")
+                        .withDescription("testDescription")
+                        .inFolder("/public")
+                        .create();        
+```
+```java
+        OperationResult<ClientSemanticLayerDataSource> testResource =
+                session.resourcesService()
+                        .clientSemanticLayerDataSourceResource(resourceDescriptor)
+                        .inFolder("/public")
+                        .create();        
 ```
 
 #### Uploading MondrianConnection
@@ -1681,8 +1719,7 @@ ClientReportUnit entity = session.resourcesService()
 You can delete resources in two ways, one for single resources and one for multiple resources. To delete multiple resources at once, specify multiple URIs with the `ResourceSearchParameter.RESOURCE_URI` parameter.
 ```java
 //multiple
-OperationResult result = client
-        .authenticate("jasperadmin", "jasperadmin")
+OperationResult result = session
         .resourcesService()
         .resources()
         .parameter(ResourceSearchParameter.RESOURCE_URI, "/some/resource/uri/1")
@@ -1690,8 +1727,7 @@ OperationResult result = client
         .delete();
 //OR
 //single
-OperationResult result = client
-        .authenticate("jasperadmin", "jasperadmin")
+OperationResult result = session
         .resourcesService()
         .resource("/reports/testFolder")
         .delete();
