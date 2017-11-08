@@ -18,49 +18,50 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.decorator;
 
-import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.WrongResourceFormatException;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.processor.CommonOperationProcessorImpl;
+import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.WrongResourceFormatException;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.processor.CommonOperationProcessorImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.sun.jersey.multipart.FormDataMultiPart;
 import javax.ws.rs.core.MediaType;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 /**
  * @author Alexander Krasnyanskiy
  */
-public class DomainOperationProcessorDecorator {
-    protected CommonOperationProcessorImpl<ClientDomain> processor;
-    protected ClientDomain domain;
+public abstract class DomainResourceOperationProcessorDecorator {
+    protected CommonOperationProcessorImpl<ClientSemanticLayerDataSource> processor;
+    protected ClientSemanticLayerDataSource domain;
     protected FormDataMultiPart multipart;
-    protected String path;
 
-    public DomainOperationProcessorDecorator(SessionStorage sessionStorage, ClientDomain domain) {
+    public DomainResourceOperationProcessorDecorator(SessionStorage sessionStorage, ClientSemanticLayerDataSource domain) {
         this.processor = new CommonOperationProcessorImpl(domain, domain.getClass(), sessionStorage);
         this.multipart = new FormDataMultiPart();
         this.domain = domain;
     }
 
-    public OperationResult<ClientDomain> get() {
+    public OperationResult<ClientSemanticLayerDataSource> get() {
         if (domain.getUri() == null) {
             throw new WrongResourceFormatException("Can't find uri!");
         }
         return processor.get(domain.getUri());
     }
-@Deprecated
-    public OperationResult<ClientDomain> createInFolder(String path) {
-        return processor.create(multipart, new MediaType("application", "repository.domain+json"), path);
+
+    public OperationResult<ClientSemanticLayerDataSource> createInFolder(String path) {
+        return processor.create(multipart, new MediaType("application", "repository.semanticlayerdatasource+json"), path);
     }
 
-
-    public DomainOperationProcessorDecorator inFolder(String parentFolder) {
-        this.path = parentFolder;
-        return this;
+    public CommonOperationProcessorImpl<ClientSemanticLayerDataSource> getProcessor() {
+        return processor;
     }
 
-    public OperationResult<ClientDomain> create() {
-        return processor.create(multipart, new MediaType("application", "repository.domain+json"), path);
+    public ClientSemanticLayerDataSource getDomain() {
+        return domain;
+    }
+
+    public FormDataMultiPart getMultipart() {
+        return multipart;
     }
 }

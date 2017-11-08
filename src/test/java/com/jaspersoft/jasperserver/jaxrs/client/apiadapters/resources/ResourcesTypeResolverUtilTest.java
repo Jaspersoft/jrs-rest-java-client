@@ -4,7 +4,6 @@ import com.jaspersoft.jasperserver.dto.resources.ClientFolder;
 import com.jaspersoft.jasperserver.dto.resources.ClientOlapUnit;
 import com.jaspersoft.jasperserver.dto.resources.ClientQuery;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourcesTypeResolverUtil;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

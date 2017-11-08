@@ -18,41 +18,31 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.decorator;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.processor.CommonOperationProcessorImpl;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.processor.CommonOperationProcessorImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.sun.jersey.multipart.FormDataMultiPart;
 import javax.ws.rs.core.MediaType;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 /**
  * @author Alexander Krasnyanskiy
  */
-public class ReportUnitResourceOperationProcessorDecorator {
+public abstract class ReportUnitResourceOperationProcessorDecorator {
 
     protected CommonOperationProcessorImpl<ClientReportUnit> processor;
     protected ClientReportUnit reportUnit;
     protected FormDataMultiPart multipart;
-    protected String path;
 
     public ReportUnitResourceOperationProcessorDecorator(ClientReportUnit reportUnit, SessionStorage sessionStorage) {
         this.processor = new CommonOperationProcessorImpl(reportUnit, reportUnit.getClass(), sessionStorage);
         this.multipart = new FormDataMultiPart();
         this.reportUnit = reportUnit;
     }
-@Deprecated
+
     public OperationResult<ClientReportUnit> createInFolder(String path) {
-        return processor.create(multipart, new MediaType("application", "repository.reportUnit+json"), path);
-    }
-
-    public ReportUnitResourceOperationProcessorDecorator inFolder(String parentFolder) {
-        this.path = parentFolder;
-        return this;
-    }
-
-    public OperationResult<ClientReportUnit> create() {
         return processor.create(multipart, new MediaType("application", "repository.reportUnit+json"), path);
     }
 }

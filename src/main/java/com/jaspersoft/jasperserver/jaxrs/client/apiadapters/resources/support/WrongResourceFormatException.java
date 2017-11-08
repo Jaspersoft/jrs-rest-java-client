@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support;
 
 /**
  * @author Alexander Krasnyanskiy

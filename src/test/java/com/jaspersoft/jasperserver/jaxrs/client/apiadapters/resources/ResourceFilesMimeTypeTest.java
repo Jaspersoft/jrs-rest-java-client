@@ -1,6 +1,5 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceFilesMimeType;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

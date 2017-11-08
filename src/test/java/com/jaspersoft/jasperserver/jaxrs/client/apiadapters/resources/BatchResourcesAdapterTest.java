@@ -1,7 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientResourceListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceSearchParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -74,7 +73,7 @@ public class BatchResourcesAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.BatchResourcesAdapter#parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceSearchParameter, String)}
+     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.BatchResourcesAdapter#parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourceSearchParameter, String)}
      */
     @SuppressWarnings("unchecked")
     public void should_set_parameter_of_adapter() {

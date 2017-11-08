@@ -18,42 +18,42 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.decorator;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.processor.CommonOperationProcessorImpl;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.processor.CommonOperationProcessorImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.sun.jersey.multipart.FormDataMultiPart;
 import javax.ws.rs.core.MediaType;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 /**
  * @author Alexander Krasnyanskiy
  */
-public class SecureMondrianConnectionResourceOperationProcessorDecorator {
+public abstract class SecureMondrianConnectionResourceOperationProcessorDecorator {
     protected CommonOperationProcessorImpl<ClientSecureMondrianConnection> processor;
     protected ClientSecureMondrianConnection connection;
     protected FormDataMultiPart multipart;
-    protected String path;
 
     public SecureMondrianConnectionResourceOperationProcessorDecorator(SessionStorage sessionStorage, ClientSecureMondrianConnection connection) {
         this.processor = new CommonOperationProcessorImpl(connection, connection.getClass(), sessionStorage);
         this.multipart = new FormDataMultiPart();
         this.connection = connection;
     }
-@Deprecated
+
     public OperationResult<ClientSecureMondrianConnection> createInFolder(String path) {
         return processor.create(multipart, new MediaType("application", "repository.secureMondrianConnection+xml"), path);
     }
 
-
-    public SecureMondrianConnectionResourceOperationProcessorDecorator inFolder(String parentFolder) {
-        this.path = parentFolder;
-        return this;
+    public CommonOperationProcessorImpl<ClientSecureMondrianConnection> getProcessor() {
+        return processor;
     }
 
-    public OperationResult<ClientSecureMondrianConnection> create() {
-        return processor.create(multipart, new MediaType("application", "repository.secureMondrianConnection+xml"), path);
+    public ClientSecureMondrianConnection getConnection() {
+        return connection;
     }
 
+    public FormDataMultiPart getMultipart() {
+        return multipart;
+    }
 }
