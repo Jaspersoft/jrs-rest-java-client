@@ -1,6 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
+import com.sun.jersey.multipart.impl.MultiPartWriter;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -116,6 +117,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(null).when(configurationMock).getReadTimeout();
         doReturn(targetMock).when(clientMock).target(anyString());
         doReturn(targetMock).when(targetMock).register(JacksonFeature.class);
+        doReturn(targetMock).when(targetMock).register(MultiPartWriter.class);
         doReturn(targetMock).when(targetMock).register(MultiPartFeature.class);
         doReturn(targetMock).when(targetMock).register(any(JacksonJsonProvider.class));
         doReturn(false).when(configurationMock).getLogHttp();
@@ -133,6 +135,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         verify(clientMock).target("http://54.83.98.156/jasperserver-pro");
         verify(targetMock).register(JacksonFeature.class);
         verify(targetMock, times(1)).register(isA(JacksonJsonProvider.class));
+        verify(targetMock).register(MultiPartWriter.class);
         verify(configurationMock).getLogHttp();
         verify(targetMock, never()).register(LoggingFilter.class);
     }
@@ -151,6 +154,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(clientMock).when(clientMock).property("jersey.config.client.readTimeout", 200);
         doReturn(targetMock).when(clientMock).target(anyString());
         doReturn(targetMock).when(targetMock).register(JacksonFeature.class);
+        doReturn(targetMock).when(targetMock).register(MultiPartWriter.class);
         doReturn(targetMock).when(targetMock).register(MultiPartFeature.class);
         doReturn(targetMock).when(targetMock).register(any(JacksonJsonProvider.class));
         doReturn(true).when(configurationMock).getLogHttp();
@@ -171,6 +175,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         verify(clientMock).target("http://54.83.98.156/jasperserver-pro");
         verify(targetMock).register(JacksonFeature.class);
         verify(targetMock, times(1)).register(isA(JacksonJsonProvider.class));
+        verify(targetMock).register(MultiPartWriter.class);
         verify(configurationMock).getLogHttp();
         verify(targetMock).register(isA(LoggingFilter.class));
     }
@@ -205,6 +210,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(targetMock).when(clientMock).target(anyString());
         doReturn(targetMock).when(targetMock).register(JacksonFeature.class);
         doReturn(targetMock).when(targetMock).register(MultiPartFeature.class);
+        doReturn(targetMock).when(targetMock).register(MultiPartWriter.class);
         doReturn(targetMock).when(targetMock).register(any(JacksonJsonProvider.class));
         doReturn(targetMock).when(targetMock).register(any(SessionOutputFilter.class));
         doReturn(true).when(configurationMock).getLogHttp();
