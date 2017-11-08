@@ -8,7 +8,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import com.sun.jersey.multipart.FormDataMultiPart;
 import java.io.File;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
