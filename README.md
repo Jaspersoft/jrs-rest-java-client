@@ -1582,7 +1582,7 @@ The `create()` and `createOrUpdate()` methods offer two alternative ways to crea
                 .resource(folder.getUri())
                 .createOrUpdate(folder);
 ```
-### Creating File resource
+#### Creating File resource
 The REST client allows to create file resource in few ways:
  - **as direct streaming** 
  ```java
@@ -1657,24 +1657,46 @@ To move a resource, specify in `moveFrom()` method its URI and in `resource()` m
                 .toFolder("/public/testFolder")
                 .move();
 ```
-
+### Uploading complex resources
+	RestClient also provides API that allows to create complex resources and their nested resources in a single multipart request. Supported resources are:
+	- SemanticLayerDataSource;
+	- Domain;
+	- ReportUnit;
+	- MondrianConnection;
+	- SecureMondrianConnection.
+	
 #### Uploading SemanticLayerDataSource
-RestClient also supports a way to create complex resources and their nested resources in a single multipart request. One of such resources is `SemanticLayerDataSource`.  
+	SemanticLayerDataSource nested resources (schema, bundles and security file) might be specified as java.io.InputStream, java.io.File, content as java.lang.String or resource descriptor (with resource's URI or BASE64 encoded content). 
 ```java
         OperationResult<ClientSemanticLayerDataSource> testResource =
                 session.resourcesService()
                         .clientSemanticLayerDataSourceResource()
                         .withDataSource(new ClientReference().setUri(dsUri))
                         .withSchema(schemaInputStream, schemaFilelabel, schemaFileDescription)
-			//.withSchema(schemaStringContent, label, description)
-			//.withSchema(schemaUri)
-			//.withSchemaBase64Encoded(schemaStringContent)
+			//OR .withSchema(schemaStringXmlContent, label, description)
+			//OR .withSchema(schemaUri)
+			.withSecurityFile(securityFileInputStream, label, description)
+			//.withSecurityFile(securityFile, label, description)
+			//.withSecurityFile(securityFileXmlStringCntent, label, description)
+			//.withSecurityFile(securityFileDecriptor)
+			.withBundle(bundleInputStream, label, description)
+			//.withBundle(bundleFile, label, description)
+			//.withBundle(bundleSringContent, label, description)
+			//.withBundle(bundleDescriptor)
+			//.withBundles(bundlesDescriptorsList)
 			.withLabel("testDomain")
                         .withDescription("testDescription")
                         .inFolder("/public")
                         .create();        
 ```
+The other way to create SemanticLayerDataSource is to decribe it in resourceDescriptor. In this case nested resources (schema, bundles and security file) can be specified as resource descriptors (with resource's URI or BASE64 encoded content). 
 ```java
+        ClientSemanticLayerDataSource resourceDescriptor = new ClientSemanticLayerDataSource()
+                .setSchema(new ClientFile()
+		.setUpdateDate(domain.getSchema().getUri()).setType(ClientFile.FileType.xml).setLabel("schema.Xml"))
+                .setDataSource(new ClientReference().setUri(domain.getDataSource().getUri()))
+                .setLabel("testDomain");
+		
         OperationResult<ClientSemanticLayerDataSource> testResource =
                 session.resourcesService()
                         .clientSemanticLayerDataSourceResource(resourceDescriptor)
@@ -1683,25 +1705,53 @@ RestClient also supports a way to create complex resources and their nested reso
 ```
 
 #### Uploading MondrianConnection
-REST Client allows you to create `MondrianConnection` Resource with mondrian schema XML file. You can specify the folder in which the resource will be placed. Provided API allows to add XML schema as `String` or `InputStream`.    
+REST Client allows you to create `MondrianConnection` resource with mondrian schema XML file specified as java.io.InputStream, java.io.File are content as java.lang.String. 
+  
 ```java
-ClientMondrianConnection connection = session
-    .resourcesService()
-        .resource(mondrianConnection)
-            .withMondrianSchema(schema, schemaRef)
-        .createInFolder("my/olap/folder")
-            .entity();
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.mondrianConnection()
+            	.withMondrianSchema(schemaInputStream, label, description)
+	    	//OR .withMondrianSchema(schemaFile, label, description)
+	    	//OR .withMondrianSchema(schemaXmlStringContent, label, description)
+	    	.withDatasource(dataSource)
+	    	.withLabel(label)
+		.withDescription(description)
+		.inFolder(parentFolderUri)
+		.create()
+```
+or create `MondrianConnection` using resource descriptor:
+```java
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.mondrianConnection(respurceDescriptor)
+	    	.inFolder(parentFolder)
+		.create()
 ```
 
 #### Uploading SecureMondrianConnection
-To upload `SecureMondrianConnection` Resource with a bunch of support files such as Mondrian schema XML file and AccessGrantSchemas files you can use our new API
+REST Client allows you to create `MondrianConnection` resource with mondrian schema XML and AccessGrantSchemas specified as java.io.InputStream, java.io.File are content as java.lang.String. 
+  
 ```java
-ClientSecureMondrianConnection entity = session.resourcesService()
-    .resource(secureMondrianConnection)
-        .withMondrianSchema(mondrianSchema)
-        .withAccessGrantSchemas(Arrays.asList(accessGrantSchema))
-    .createInFolder("/my/new/folder/")
-        .entity();
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.secureMondrianConnection()
+            	. withMondrianSchema(schemainputStream, label, description)
+	    	//OR .withMondrianSchema(schemaFile, label, description)
+	    	//OR .withMondrianSchema(schemaXmlStringContent, label, description) 
+	    	.withDatasource(dataSource)
+	    	.withLabel(label)
+		.withDescription(description)
+		.inFolder(parentFolderUri)
+		.create()
+```
+or create `MondrianConnection` using resource descriptor:
+```java
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.secureMondrianConnection(respurceDescriptor)
+	    	.inFolder(parentFolder)
+		.create()
 ```
 
 #### Uploading ReportUnit
