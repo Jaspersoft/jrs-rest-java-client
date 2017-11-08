@@ -34,6 +34,11 @@ import java.util.List;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
+/**
+ * @Deprecated use @Link {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportRequestAdapter}
+ * and setters of @Link {@link com.jaspersoft.jasperserver.dto.importexport.ExportTask}
+ * */
+@Deprecated
 public class ExportTaskAdapter extends AbstractAdapter {
 
     public static final String SERVICE_URI = "export";

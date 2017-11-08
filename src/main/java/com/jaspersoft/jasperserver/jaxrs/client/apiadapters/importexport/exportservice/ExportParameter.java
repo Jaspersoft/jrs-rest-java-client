@@ -88,7 +88,16 @@ public enum ExportParameter {
      * and enabled skip-dependent-resources - in this case just report without dependent resources(like domain,
      * datasource) will be exported.
      */
-    SKIP_DEPENDENT_RESOURCES("skip-dependent-resources");
+    SKIP_DEPENDENT_RESOURCES("skip-dependent-resources"),
+    /**
+     * Pagination. Start index for requested pate.
+     */
+    OFFSET("offset"),
+
+    /**
+     * 	Pagination. Resources count per page
+     */
+    LIMIT("limit");
 
 
     private String paramName;
