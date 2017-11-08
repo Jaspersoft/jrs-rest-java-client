@@ -18,30 +18,39 @@
  * You should have received a copy of the GNU Affero General Public  License
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.decorator;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.processor.CommonOperationProcessorImpl;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.processor.CommonOperationProcessorImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.sun.jersey.multipart.FormDataMultiPart;
 import javax.ws.rs.core.MediaType;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 /**
  * @author Alexander Krasnyanskiy
  */
-public abstract class MondrianConnectionResourceOperationProcessorDecorator {
+public class MondrianConnectionResourceOperationProcessorDecorator {
     protected CommonOperationProcessorImpl<ClientMondrianConnection> processor;
     protected ClientMondrianConnection connection;
     protected FormDataMultiPart multipart;
+    protected String path;
 
     public MondrianConnectionResourceOperationProcessorDecorator(SessionStorage sessionStorage, ClientMondrianConnection connection) {
         this.processor = new CommonOperationProcessorImpl(connection, connection.getClass(), sessionStorage);
         this.multipart = new FormDataMultiPart();
         this.connection = connection;
     }
-
+@Deprecated
     public OperationResult<ClientMondrianConnection> createInFolder(String path) {
+        return processor.create(multipart, new MediaType("application", "repository.mondrianConnection+xml"), path);
+    }
+
+    public MondrianConnectionResourceOperationProcessorDecorator inFolder(String parentFolder) {
+        this.path = parentFolder;
+        return this;
+    }
+    public OperationResult<ClientMondrianConnection> create() {
         return processor.create(multipart, new MediaType("application", "repository.mondrianConnection+xml"), path);
     }
 
