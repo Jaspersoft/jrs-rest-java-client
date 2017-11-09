@@ -6,7 +6,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityO
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
-import com.sun.jersey.multipart.impl.MultiPartWriter;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.MediaType;
@@ -82,7 +81,6 @@ public class JerseyRequestTest extends PowerMockTestCase {
         when(webTarget.path(Mockito.anyString())).thenReturn(webTarget);
         when(webTarget.register(CustomRepresentationTypeProvider.class)).thenReturn(webTarget);
         when(webTarget.register(JacksonFeature.class)).thenReturn(webTarget);
-        when(webTarget.register(MultiPartWriter.class)).thenReturn(webTarget);
     }
 
     /**
