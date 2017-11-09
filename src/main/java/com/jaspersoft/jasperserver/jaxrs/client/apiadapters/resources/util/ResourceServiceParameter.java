@@ -19,8 +19,8 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
-@Deprecated
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util;
+
 public enum ResourceServiceParameter {
 
     /**

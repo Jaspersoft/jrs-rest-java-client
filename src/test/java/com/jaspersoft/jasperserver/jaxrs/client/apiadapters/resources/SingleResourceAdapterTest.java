@@ -6,6 +6,8 @@ import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceValidationErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceServiceParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -14,8 +16,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.sun.jersey.multipart.FormDataBodyPart;
-import com.sun.jersey.multipart.FormDataMultiPart;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -218,7 +220,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter#parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourceServiceParameter, String)}
+     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter#parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceServiceParameter, String)}
      */
     @SuppressWarnings("unchecked")
     public void should_set_parameter() {
@@ -359,7 +361,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.details();
+        OperationResult<? extends ClientResource> retrieved = adapter.details();
 
         /** Then **/
         assertNotNull(retrieved);
@@ -389,7 +391,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.details();
+        OperationResult<? extends ClientResource> retrieved = adapter.details();
 
         /** Then **/
         assertNotNull(retrieved);
@@ -617,10 +619,10 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        final Callback<OperationResult<ClientResource>, Void> callback =
-                spy(new Callback<OperationResult<ClientResource>, Void>() {
+        final Callback<OperationResult<? extends ClientResource>, Void> callback =
+                spy(new Callback<OperationResult<? extends ClientResource>, Void>() {
                     @Override
-                    public Void execute(OperationResult<ClientResource> data) {
+                    public Void execute(OperationResult<? extends ClientResource> data) {
                         newThreadId.set((int) Thread.currentThread().getId());
                         synchronized (this) {
                             this.notify();
@@ -667,9 +669,9 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                 eq(new String[]{"resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).put("");
 
-        final Callback<OperationResult<ClientResource>, Void> callback = Mockito.spy(new Callback<OperationResult<ClientResource>, Void>() {
+        final Callback<OperationResult<? extends ClientResource>, Void> callback = Mockito.spy(new Callback<OperationResult<? extends ClientResource>, Void>() {
             @Override
-            public Void execute(OperationResult<ClientResource> data) {
+            public Void execute(OperationResult<? extends ClientResource> data) {
                 newThreadId.set((int) Thread.currentThread().getId());
                 synchronized (this) {
                     this.notify();
@@ -718,9 +720,9 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).post(null);
 
-        final Callback<OperationResult<ClientResource>, Void> callback = Mockito.spy(new Callback<OperationResult<ClientResource>, Void>() {
+        final Callback<OperationResult<? extends ClientResource>, Void> callback = Mockito.spy(new Callback<OperationResult<? extends ClientResource>, Void>() {
             @Override
-            public Void execute(OperationResult<ClientResource> data) {
+            public Void execute(OperationResult<? extends ClientResource> data) {
                 newThreadId.set((int) Thread.currentThread().getId());
                 synchronized (this) {
                     this.notify();
@@ -776,10 +778,10 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        final Callback<OperationResult<ClientResource>, Void> callback =
-                spy(new Callback<OperationResult<ClientResource>, Void>() {
+        final Callback<OperationResult<? extends ClientResource>, Void> callback =
+                spy(new Callback<OperationResult<? extends ClientResource>, Void>() {
                     @Override
-                    public Void execute(OperationResult<ClientResource> data) {
+                    public Void execute(OperationResult<? extends ClientResource> data) {
                         newThreadId.set((int) Thread.currentThread().getId());
                         synchronized (this) {
                             this.notify();
@@ -833,7 +835,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.createNew(source);
+        OperationResult<? extends ClientResource> retrieved = adapter.createNew(source);
 
 
         /** Then **/
@@ -868,7 +870,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.createOrUpdate(source);
+        OperationResult<? extends ClientResource> retrieved = adapter.createOrUpdate(source);
 
 
         /** Then **/
@@ -931,7 +933,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.moveFrom("fromUri");
+        OperationResult<? extends ClientResource> retrieved = adapter.moveFrom("fromUri");
 
 
         /** Then **/
@@ -960,7 +962,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.copyFrom("fromUri");
+        OperationResult<? extends ClientResource> retrieved = adapter.copyFrom("fromUri");
 
 
         /** Then **/
