@@ -60,6 +60,11 @@ public class SingleResourceUploadBase64Adapter extends AbstractAdapter{
         return this;
     }
 
+    public SingleResourceUploadBase64Adapter withParameter(String name, String value) {
+        this.params.add(name, value);
+        return this;
+    }
+
     public OperationResult<ClientFile> upload() {
 
         final ClientFile entity = new ClientFile().

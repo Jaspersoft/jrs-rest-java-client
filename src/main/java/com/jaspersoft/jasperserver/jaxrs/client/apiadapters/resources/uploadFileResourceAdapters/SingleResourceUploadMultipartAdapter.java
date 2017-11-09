@@ -61,6 +61,11 @@ public class SingleResourceUploadMultipartAdapter extends AbstractAdapter{
         return this;
     }
 
+    public SingleResourceUploadMultipartAdapter withParameter(String name, String value) {
+        this.params.add(name, value);
+        return this;
+    }
+
     public OperationResult<ClientFile> upload() {
 
         FormDataMultiPart formDataMultiPart = buildMultiPartForm();
@@ -100,6 +105,7 @@ public class SingleResourceUploadMultipartAdapter extends AbstractAdapter{
                 ClientFile.class,
                 path.toArray(new String[path.size()]));
         request.setContentType("multipart/form-data");
+        request.addParams(params);
         return request;
     }
 
