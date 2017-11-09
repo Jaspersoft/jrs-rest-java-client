@@ -7,7 +7,7 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>6.3.12-SNAPSHOT</version>
+    <version>6.3.11-SNAPSHOT</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
@@ -48,12 +48,6 @@
             <groupId>com.jaspersoft.jasperserver</groupId>
             <artifactId>jasperserver-dto</artifactId>
             <version>${jasperserver-dto.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>jackson-annotations</artifactId>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- Jersey-->
