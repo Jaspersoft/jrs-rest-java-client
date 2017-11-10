@@ -9,6 +9,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.AfterMethod;
@@ -27,14 +28,11 @@ import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaTyp
 import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_AXES_DATA_XML;
 import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_LEVEL_DATA_JSON;
 import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_LEVEL_DATA_XML;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
@@ -47,7 +45,7 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest(QueryExecutionService.class)
+@PrepareForTest({QueryExecutionAdapter.class, QueryExecutionService.class})
 public class QueryExecutionServiceTest extends PowerMockTestCase {
     @Mock
     private SessionStorage sessionStorageMock;
@@ -337,16 +335,16 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
     public void should_return_proper_adapter_for_delete_builder() throws Exception {
         // Given
         QueryExecutionService executionService = new QueryExecutionService(sessionStorageMock);
-        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
-        whenNew(QueryExecutionAdapter.class).withArguments(eq(sessionStorageMock), anyString()).thenReturn(executionAdapterMock);
+        PowerMockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
+        PowerMockito.doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
+        PowerMockito.whenNew(QueryExecutionAdapter.class).withAnyArguments().thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.execution("testUuid");
 
         // Then
         assertEquals(adapter, executionAdapterMock);
-        verifyNew(QueryExecutionAdapter.class, times(1)).withArguments(sessionStorageMock, "testUuid");
+        PowerMockito.verifyNew(QueryExecutionAdapter.class, times(1)).withArguments(sessionStorageMock, "testUuid");
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
