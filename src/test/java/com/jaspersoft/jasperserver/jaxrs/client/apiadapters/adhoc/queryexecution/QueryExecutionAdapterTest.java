@@ -57,7 +57,7 @@ import static org.testng.AssertJUnit.assertNotNull;
  * @version $Id$
  * @see
  */
-@PrepareForTest(JerseyRequest.class)
+@PrepareForTest({QueryExecutionService.class, JerseyRequest.class})
 public class QueryExecutionAdapterTest extends PowerMockTestCase {
     public static final String QUERY_EXECUTIONS_URI = "queryExecutions";
     public static final String CONTENT_TYPE = "someContentType";
@@ -100,10 +100,8 @@ public class QueryExecutionAdapterTest extends PowerMockTestCase {
     @AfterMethod
     public void after() {
         reset(storageMock,
-                requestMock,
                 multiLevelRequestMock,
                 multiLevelOperationResultMock,
-                operationResultMock,
                 flatRequestMock,
                 flatOperationResultMock,
                 multiAxesRequestMock,
