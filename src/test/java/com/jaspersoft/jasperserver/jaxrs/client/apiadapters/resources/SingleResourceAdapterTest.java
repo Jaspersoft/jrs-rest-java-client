@@ -6,8 +6,8 @@ import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceValidationErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceServiceParameter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceValidationErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -64,52 +64,36 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
     @Captor
     private ArgumentCaptor<FormDataMultiPart> captor;
-
-
     @Mock
     private SessionStorage sessionStorageMock;
     @Mock
     private RestClientConfiguration configurationMock;
     @Mock
     private PatchDescriptor descriptorMock;
-
-
     @Mock
     private JerseyRequest<ClientResource> jerseyRequestMock;
     @Mock
     private OperationResult<ClientResource> operationResultMock;
-
-
     @Mock
     private JerseyRequest<Object> objectJerseyRequestMock;
     @Mock
     private OperationResult<Object> objectOperationResultMock;
-
-
     @Mock
     private JerseyRequest<ClientFile> clientFileJerseyRequestMock;
     @Mock
     private OperationResult<ClientFile> clientFileOperationResultMock;
-
-
     @Mock
     private JerseyRequest<ClientAdhocDataView> adhocDataViewJerseyRequestMock;
     @Mock
     private OperationResult<ClientAdhocDataView> adhocDataViewOperationResultMock;
-
-
     @Mock
     private JerseyRequest<InputStream> inputStreamJerseyRequestMock;
     @Mock
     private OperationResult<InputStream> inputStreamOperationResultMock;
-
-
     @Mock
     private JerseyRequest<ClientVirtualDataSource> virtualDataSourceJerseyRequestMock;
     @Mock
     private OperationResult<ClientVirtualDataSource> virtualDataSourceOperationResultMock;
-
-
     @Mock
     private File fileMock;
 
@@ -117,6 +101,16 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
     @BeforeMethod
     public void before() {
         initMocks(this);
+    }
+
+    @AfterMethod
+    public void after() {
+        reset(sessionStorageMock, configurationMock, jerseyRequestMock, operationResultMock, objectJerseyRequestMock,
+                objectOperationResultMock, clientFileJerseyRequestMock,
+                clientFileOperationResultMock, fileMock, adhocDataViewJerseyRequestMock,
+                adhocDataViewOperationResultMock, configurationMock, descriptorMock,
+                inputStreamJerseyRequestMock, inputStreamOperationResultMock,
+                virtualDataSourceJerseyRequestMock, virtualDataSourceOperationResultMock);
     }
 
     @Test
@@ -974,13 +968,4 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(jerseyRequestMock).addHeader("Content-Location", "fromUri");
     }
 
-    @AfterMethod
-    public void after() {
-        reset(configurationMock, jerseyRequestMock, operationResultMock, objectJerseyRequestMock,
-                objectOperationResultMock, clientFileJerseyRequestMock,
-                clientFileOperationResultMock, fileMock, adhocDataViewJerseyRequestMock,
-                adhocDataViewOperationResultMock, configurationMock, descriptorMock,
-                inputStreamJerseyRequestMock, inputStreamOperationResultMock,
-                virtualDataSourceJerseyRequestMock, virtualDataSourceOperationResultMock);
-    }
 }
