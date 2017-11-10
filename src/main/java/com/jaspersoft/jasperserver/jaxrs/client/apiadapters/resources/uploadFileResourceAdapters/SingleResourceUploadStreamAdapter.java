@@ -59,6 +59,11 @@ public class SingleResourceUploadStreamAdapter extends AbstractAdapter{
         return this;
     }
 
+    public SingleResourceUploadStreamAdapter withParameter(String name, String value) {
+        this.params.add(name, value);
+        return this;
+    }
+
     private boolean isRootFolder(String resourceUri) {
         return "/".equals(resourceUri) || "".equals(resourceUri);
     }
