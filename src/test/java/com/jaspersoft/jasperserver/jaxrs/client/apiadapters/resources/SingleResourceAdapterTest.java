@@ -6,7 +6,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.*;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceValidationErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -63,52 +63,36 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
     @Captor
     private ArgumentCaptor<FormDataMultiPart> captor;
-
-
     @Mock
     private SessionStorage sessionStorageMock;
     @Mock
     private RestClientConfiguration configurationMock;
     @Mock
     private PatchDescriptor descriptorMock;
-
-
     @Mock
     private JerseyRequest<ClientResource> jerseyRequestMock;
     @Mock
     private OperationResult<ClientResource> operationResultMock;
-
-
     @Mock
     private JerseyRequest<Object> objectJerseyRequestMock;
     @Mock
     private OperationResult<Object> objectOperationResultMock;
-
-
     @Mock
     private JerseyRequest<ClientFile> clientFileJerseyRequestMock;
     @Mock
     private OperationResult<ClientFile> clientFileOperationResultMock;
-
-
     @Mock
     private JerseyRequest<ClientAdhocDataView> adhocDataViewJerseyRequestMock;
     @Mock
     private OperationResult<ClientAdhocDataView> adhocDataViewOperationResultMock;
-
-
     @Mock
     private JerseyRequest<InputStream> inputStreamJerseyRequestMock;
     @Mock
     private OperationResult<InputStream> inputStreamOperationResultMock;
-
-
     @Mock
     private JerseyRequest<ClientVirtualDataSource> virtualDataSourceJerseyRequestMock;
     @Mock
     private OperationResult<ClientVirtualDataSource> virtualDataSourceOperationResultMock;
-
-
     @Mock
     private File fileMock;
 
@@ -116,6 +100,16 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
     @BeforeMethod
     public void before() {
         initMocks(this);
+    }
+
+    @AfterMethod
+    public void after() {
+        reset(sessionStorageMock, configurationMock, jerseyRequestMock, operationResultMock, objectJerseyRequestMock,
+                objectOperationResultMock, clientFileJerseyRequestMock,
+                clientFileOperationResultMock, fileMock, adhocDataViewJerseyRequestMock,
+                adhocDataViewOperationResultMock, configurationMock, descriptorMock,
+                inputStreamJerseyRequestMock, inputStreamOperationResultMock,
+                virtualDataSourceJerseyRequestMock, virtualDataSourceOperationResultMock);
     }
 
     @Test
@@ -360,13 +354,13 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.details();
+        OperationResult<? extends ClientResource> retrieved = adapter.details();
 
         /** Then **/
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
 
-        Mockito.verify(jerseyRequestMock).addParams(any(MultivaluedHashMap.class));
+        Mockito.verify(jerseyRequestMock, times(1)).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(jerseyRequestMock).setAccept(ResourceMediaType.FOLDER_JSON);
         Mockito.verify(jerseyRequestMock).get();
     }
@@ -390,13 +384,13 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.details();
+        OperationResult<? extends ClientResource> retrieved = adapter.details();
 
         /** Then **/
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
 
-        Mockito.verify(jerseyRequestMock).addParams(any(MultivaluedHashMap.class));
+        Mockito.verify(jerseyRequestMock, times(1)).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(jerseyRequestMock).setAccept(ResourceMediaType.FOLDER_XML);
         Mockito.verify(jerseyRequestMock).get();
     }
@@ -499,7 +493,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(adhocDataViewJerseyRequestMock).post(descriptorMock);
         Mockito.verify(adhocDataViewJerseyRequestMock).setAccept("application/repository.adhocDataView+json");
         Mockito.verify(adhocDataViewJerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
-        Mockito.verifyNoMoreInteractions(adhocDataViewJerseyRequestMock);
+        Mockito.verify(adhocDataViewJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
     }
 
     @Test
@@ -618,10 +612,10 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        final Callback<OperationResult<ClientResource>, Void> callback =
-                spy(new Callback<OperationResult<ClientResource>, Void>() {
+        final Callback<OperationResult<? extends ClientResource>, Void> callback =
+                spy(new Callback<OperationResult<? extends ClientResource>, Void>() {
                     @Override
-                    public Void execute(OperationResult<ClientResource> data) {
+                    public Void execute(OperationResult<? extends ClientResource> data) {
                         newThreadId.set((int) Thread.currentThread().getId());
                         synchronized (this) {
                             this.notify();
@@ -668,9 +662,9 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                 eq(new String[]{"resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).put("");
 
-        final Callback<OperationResult<ClientResource>, Void> callback = Mockito.spy(new Callback<OperationResult<ClientResource>, Void>() {
+        final Callback<OperationResult<? extends ClientResource>, Void> callback = Mockito.spy(new Callback<OperationResult<? extends ClientResource>, Void>() {
             @Override
-            public Void execute(OperationResult<ClientResource> data) {
+            public Void execute(OperationResult<? extends ClientResource> data) {
                 newThreadId.set((int) Thread.currentThread().getId());
                 synchronized (this) {
                     this.notify();
@@ -719,9 +713,9 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                 any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
         doReturn(operationResultMock).when(jerseyRequestMock).post(null);
 
-        final Callback<OperationResult<ClientResource>, Void> callback = Mockito.spy(new Callback<OperationResult<ClientResource>, Void>() {
+        final Callback<OperationResult<? extends ClientResource>, Void> callback = Mockito.spy(new Callback<OperationResult<? extends ClientResource>, Void>() {
             @Override
-            public Void execute(OperationResult<ClientResource> data) {
+            public Void execute(OperationResult<? extends ClientResource> data) {
                 newThreadId.set((int) Thread.currentThread().getId());
                 synchronized (this) {
                     this.notify();
@@ -777,10 +771,10 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        final Callback<OperationResult<ClientResource>, Void> callback =
-                spy(new Callback<OperationResult<ClientResource>, Void>() {
+        final Callback<OperationResult<? extends ClientResource>, Void> callback =
+                spy(new Callback<OperationResult<? extends ClientResource>, Void>() {
                     @Override
-                    public Void execute(OperationResult<ClientResource> data) {
+                    public Void execute(OperationResult<? extends ClientResource> data) {
                         newThreadId.set((int) Thread.currentThread().getId());
                         synchronized (this) {
                             this.notify();
@@ -834,7 +828,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.createNew(source);
+        OperationResult<? extends ClientResource> retrieved = adapter.createNew(source);
 
 
         /** Then **/
@@ -869,7 +863,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.createOrUpdate(source);
+        OperationResult<? extends ClientResource> retrieved = adapter.createOrUpdate(source);
 
 
         /** Then **/
@@ -932,7 +926,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.moveFrom("fromUri");
+        OperationResult<? extends ClientResource> retrieved = adapter.moveFrom("fromUri");
 
 
         /** Then **/
@@ -961,7 +955,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.copyFrom("fromUri");
+        OperationResult<? extends ClientResource> retrieved = adapter.copyFrom("fromUri");
 
 
         /** Then **/
@@ -973,13 +967,4 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(jerseyRequestMock).addHeader("Content-Location", "fromUri");
     }
 
-    @AfterMethod
-    public void after() {
-        reset(configurationMock, jerseyRequestMock, operationResultMock, objectJerseyRequestMock,
-                objectOperationResultMock, clientFileJerseyRequestMock,
-                clientFileOperationResultMock, fileMock, adhocDataViewJerseyRequestMock,
-                adhocDataViewOperationResultMock, configurationMock, descriptorMock,
-                inputStreamJerseyRequestMock, inputStreamOperationResultMock,
-                virtualDataSourceJerseyRequestMock, virtualDataSourceOperationResultMock);
-    }
 }
