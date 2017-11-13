@@ -29,7 +29,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityO
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactory;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
-import com.sun.jersey.api.uri.UriComponent;
+import org.glassfish.jersey.uri.UriComponent;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.client.Entity;
