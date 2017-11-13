@@ -223,12 +223,12 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, "resourceUri");
 
         /** When **/
-        SingleResourceAdapter retrieved = adapter.parameter(ResourceServiceParameter.CREATE_FOLDERS, "true");
+        SingleResourceAdapter retrieved = adapter.parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceServiceParameter.CREATE_FOLDERS, "true");
 
         /** Then **/
         assertSame(adapter, retrieved);
         MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) Whitebox.getInternalState(retrieved, "params");
-        String param = retrievedParams.get(ResourceServiceParameter.CREATE_FOLDERS.getName()).get(0);
+        String param = retrievedParams.get(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceServiceParameter.CREATE_FOLDERS.getName()).get(0);
         assertEquals(param, "true");
     }
 

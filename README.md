@@ -2966,20 +2966,20 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
 Maven dependency to add jasperserver-rest-client to your app:
 =============================================================
 ```xml
-    <dependencies>
+ <dependencies>
         <dependency>
             <groupId>com.jaspersoft</groupId>
             <artifactId>jrs-rest-java-client</artifactId>
-            <version>6.1.4T</version>
+            <version>${current.version}</version>
         </dependency>
     </dependencies>
 
     <repositories>
-
+        
         <repository>
             <id>jaspersoft-clients-snapshots</id>
             <name>Jaspersoft clients snapshots</name>
-            <url>http://jaspersoft.artifactoryonline.com/jaspersoft/jaspersoft-clients-snapshots</url>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/jaspersoft-clients-releases</url>
         </repository>
 
     </repositories>

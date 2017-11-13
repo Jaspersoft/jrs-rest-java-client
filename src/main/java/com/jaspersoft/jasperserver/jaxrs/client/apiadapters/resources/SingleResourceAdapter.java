@@ -53,7 +53,6 @@ public class SingleResourceAdapter extends AbstractAdapter {
     private String resourceUri;
     private String parentUri;
     private MultivaluedMap<String, String> params = new MultivaluedHashMap<String, String>();
-    ;
     private ArrayList<String> path = new ArrayList<String>();
 
     private ClientResource resource;
