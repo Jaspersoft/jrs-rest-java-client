@@ -36,16 +36,18 @@ public class ReportExecutionStatus {
         return requestId;
     }
 
-    public void setRequestId(String requestId) {
+    public ReportExecutionStatus setRequestId(String requestId) {
         this.requestId = requestId;
+        return this;
     }
 
     public String getReportURI() {
         return reportURI;
     }
 
-    public void setReportURI(String reportURI) {
+    public ReportExecutionStatus setReportURI(String reportURI) {
         this.reportURI = reportURI;
+        return this;
     }
 
     @Override

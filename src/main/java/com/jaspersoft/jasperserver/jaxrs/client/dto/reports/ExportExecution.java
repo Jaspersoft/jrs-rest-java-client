@@ -24,6 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 import com.jaspersoft.jasperserver.dto.executions.ExecutionStatus;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -62,45 +63,54 @@ public class ExportExecution {
         return id;
     }
 
-    public void setId(String id) {
+    public ExportExecution setId(String id) {
         this.id = id;
+    return this;
     }
 
     public ExportExecutionOptions getOptions() {
         return options;
     }
 
-    public void setOptions(ExportExecutionOptions options) {
+    public ExportExecution setOptions(ExportExecutionOptions options) {
         this.options = options;
+        return this;
     }
 
     public ExecutionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ExecutionStatus status) {
+    public ExportExecution setStatus(ExecutionStatus status) {
         this.status = status;
+        return this;
     }
 
     public ErrorDescriptor getErrorDescriptor() {
         return errorDescriptor;
     }
 
-    public void setErrorDescriptor(ErrorDescriptor errorDescriptor) {
+    public ExportExecution setErrorDescriptor(ErrorDescriptor errorDescriptor) {
         this.status = ExecutionStatus.failed;
         this.errorDescriptor = errorDescriptor;
+        return this;
     }
 
     public OutputResourceDescriptor getOutputResource() {
         return outputResource;
     }
 
-    public void setOutputResource(OutputResourceDescriptor outputResource) {
+    public ExportExecution setOutputResource(OutputResourceDescriptor outputResource) {
         this.outputResource = outputResource;
+        return this;
     }
 
-    public void setAttachments(Map<String, OutputResourceDescriptor> attachments) {
-        this.attachments = attachments;
+    public ExportExecution setAttachments(List<OutputResourceDescriptor> attachments) {
+        this.attachments = new HashMap<>();
+        for (OutputResourceDescriptor attachment : attachments) {
+            this.attachments.put(attachment.getFileName(), attachment);
+        }
+        return this;
     }
 
     @XmlElementWrapper(name = "attachments")

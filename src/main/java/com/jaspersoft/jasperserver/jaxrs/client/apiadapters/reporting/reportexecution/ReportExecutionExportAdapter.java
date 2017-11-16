@@ -31,6 +31,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportExecutionOptions;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.OutputResourceDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionStatusEntity;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -76,33 +77,40 @@ public class ReportExecutionExportAdapter extends AbstractAdapter {
     }
 
     public ReportExecutionExportAdapter outputFormat(ReportOutputFormat outputFormat) {
-        this.executionOptions.setOutputFormat(outputFormat.name());
+        this.executionOptions.setOutputFormat(outputFormat.name().toLowerCase());
         return this;
     }
+
     public ReportExecutionExportAdapter outputFormat(String outputFormat) {
         this.executionOptions.setOutputFormat(outputFormat);
         return this;
     }
+
     public ReportExecutionExportAdapter attachmentsPrefix(String attachmentPrefix) {
         this.executionOptions.setAttachmentsPrefix(attachmentPrefix);
         return this;
     }
+
     public ReportExecutionExportAdapter pages(String pages) {
         this.executionOptions.setPages(pages);
         return this;
     }
+
     public ReportExecutionExportAdapter pages(Integer... pages) {
         this.executionOptions.setPages(StringUtils.join(asList(pages), ","));
         return this;
     }
+
     public ReportExecutionExportAdapter pages(PageRange pages) {
         this.executionOptions.setPages(pages.getRange());
         return this;
     }
+
     public ReportExecutionExportAdapter baseUrl(String uri) {
         this.executionOptions.setBaseUrl(uri);
         return this;
     }
+
     public ReportExecutionExportAdapter allowInlineScripts(Boolean value) {
         this.executionOptions.setAllowInlineScripts(value);
         return this;
@@ -144,7 +152,8 @@ public class ReportExecutionExportAdapter extends AbstractAdapter {
                 ReportExecutionStatusEntity.class,
                 path.toArray(new String[path.size()]),
                 new RunReportErrorHandler());
-        if (withErrorDescriptor) jerseyRequest.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/status+{mime}"));
+        if (withErrorDescriptor)
+            jerseyRequest.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/status+{mime}"));
         return jerseyRequest.get();
     }
 
@@ -152,6 +161,7 @@ public class ReportExecutionExportAdapter extends AbstractAdapter {
         this.params.add("suppressContentDisposition", value.toString());
         return this;
     }
+
     public OperationResult<InputStream> getOutputResource() {
         path.add(executionId);
         path.add(EXPORTS_URI);
@@ -178,19 +188,23 @@ public class ReportExecutionExportAdapter extends AbstractAdapter {
         return jerseyRequest.get();
     }
 
-    public OperationResult<InputStream> getOutputResourceAttachment(String atachmentName, String mediaType) {
+    public OperationResult<InputStream> getOutputResourceAttachment(OutputResourceDescriptor attachmentDescriptor) {
         path.add(executionId);
         path.add(EXPORTS_URI);
         path.add(exportId);
         path.add(ATTACHMENTS_URI);
+        path.add(attachmentDescriptor.getFileName());
         JerseyRequest<InputStream> jerseyRequest = buildRequest(sessionStorage,
                 InputStream.class,
                 path.toArray(new String[path.size()]),
                 new RunReportErrorHandler());
         jerseyRequest.addParams(params);
-        jerseyRequest.setAccept(mediaType);
+        jerseyRequest.setAccept(attachmentDescriptor.getContentType());
         return jerseyRequest.get();
     }
 
+    public OperationResult<InputStream> getOutputResourceAttachment(String atachmentName, String mediaType) {
+        return  this.getOutputResourceAttachment(new OutputResourceDescriptor().setFileName(atachmentName).setContentType(mediaType));
+    }
 
 }

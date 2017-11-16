@@ -71,6 +71,7 @@ public class ReportExecutionAdapter extends AbstractAdapter {
     public ReportExecutionAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
         this.path.add(REPORT_EXECUTIONS_URI);
+        this.executionRequest = new ReportExecutionRequest();
     }
 
     public ReportExecutionAdapter queryParameter(ReportSearchParameter name, String value) {
@@ -95,7 +96,12 @@ public class ReportExecutionAdapter extends AbstractAdapter {
     }
 
     public ReportExecutionAdapter outputFormat(ReportOutputFormat outputFormat) {
-        this.executionRequest.setOutputFormat(outputFormat.toString().toLowerCase());
+        this.executionRequest.setOutputFormat(outputFormat.name().toLowerCase());
+        return this;
+    }
+
+    public ReportExecutionAdapter reportUri(String reportUri) {
+        this.executionRequest.setReportUnitUri(reportUri);
         return this;
     }
 

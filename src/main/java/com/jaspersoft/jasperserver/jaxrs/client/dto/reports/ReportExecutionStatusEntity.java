@@ -40,8 +40,9 @@ public class ReportExecutionStatusEntity {
         return value;
     }
 
-    public void setValue(String value) {
+    public ReportExecutionStatusEntity setValue(String value) {
         this.value = value;
+        return this;
     }
 
     @Override

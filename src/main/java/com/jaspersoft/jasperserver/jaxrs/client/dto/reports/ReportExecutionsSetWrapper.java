@@ -34,7 +34,8 @@ public class ReportExecutionsSetWrapper {
         return reportExecutionStatuses;
     }
 
-    public void setReportExecutionStatuses(Set<ReportExecutionStatus> reportExecutionStatuses) {
+    public ReportExecutionsSetWrapper setReportExecutionStatuses(Set<ReportExecutionStatus> reportExecutionStatuses) {
         this.reportExecutionStatuses = reportExecutionStatuses;
+        return this;
     }
 }
