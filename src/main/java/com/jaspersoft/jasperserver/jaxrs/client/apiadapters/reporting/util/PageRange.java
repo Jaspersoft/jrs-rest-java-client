@@ -19,25 +19,21 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util;
 
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+public class PageRange {
 
-import javax.ws.rs.core.Response;
-/***
- * @deprecated  use @Link {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.RunReportErrorHandler}
- * */
-@Deprecated
-public class RunReportErrorHandler extends DefaultErrorHandler {
+    private final long startIndex;
+    private final long endIndex;
 
-    @Override
-    protected void handleBodyError(Response response) {
-        String jasperServerError = response.getHeaderString("JasperServerError");
-        if (jasperServerError != null && jasperServerError.equals("true")){
-            String errorMessage = readBody(response, String.class);
-            handleStatusCodeError(response, errorMessage);
-        }
+    public PageRange(long startIndex, long endIndex){
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+    }
 
-        super.handleBodyError(response);
+    public String getRange(){
+        if (startIndex == endIndex)
+            return String.valueOf(startIndex);
+        return startIndex + "-" + endIndex;
     }
 }

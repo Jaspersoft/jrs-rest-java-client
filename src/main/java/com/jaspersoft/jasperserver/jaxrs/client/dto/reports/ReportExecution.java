@@ -22,15 +22,15 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
-
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
-@Deprecated
-//@XmlAccessorType(XmlAccessType.FIELD)
+
 @XmlRootElement(name = "reportExecution")
-public class ReportExecutionDescriptor {
+public class ReportExecution {
 
     private Integer currentPage;
     private String reportURI;
@@ -38,83 +38,117 @@ public class ReportExecutionDescriptor {
     private String status;
     private Integer totalPages;
     private ErrorDescriptor errorDescriptor;
-    private List<ExportDescriptor> exports;
+    private ExportsContainer exports = new ExportsContainer();
+    private ReportExecutionOptions options;
 
-
-    public ErrorDescriptor getErrorDescriptor() {
-        return errorDescriptor;
+    public ReportExecution() {
     }
 
-    public void setErrorDescriptor(ErrorDescriptor errorDescriptor) {
-        this.errorDescriptor = errorDescriptor;
+    public ReportExecution(ReportExecution other) {
+        this.currentPage = new Integer(other.currentPage);
+        this.reportURI = other.reportURI;
+        this.requestId = other.requestId;
+        this.status = other.status;
+        this.totalPages = new Integer(other.totalPages);
+        this.errorDescriptor = new ErrorDescriptor(other.errorDescriptor);
+        this.exports = new ExportsContainer(other.exports);
+        this.options = new ReportExecutionOptions(other.options);
     }
 
     public Integer getCurrentPage() {
         return currentPage;
     }
 
-    public void setCurrentPage(Integer currentPage) {
+    public ReportExecution setCurrentPage(Integer currentPage) {
         this.currentPage = currentPage;
+        return this;
     }
 
     public String getReportURI() {
         return reportURI;
     }
 
-    public void setReportURI(String reportURI) {
+    public ReportExecution setReportURI(String reportURI) {
         this.reportURI = reportURI;
+        return this;
     }
 
     public String getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(String requestId) {
+    public ReportExecution setRequestId(String requestId) {
         this.requestId = requestId;
+        return this;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public ReportExecution setStatus(String status) {
         this.status = status;
+        return this;
     }
 
     public Integer getTotalPages() {
         return totalPages;
     }
 
-    public void setTotalPages(Integer totalPages) {
+    public ReportExecution setTotalPages(Integer totalPages) {
         this.totalPages = totalPages;
+        return this;
     }
 
+    public ErrorDescriptor getErrorDescriptor() {
+        return errorDescriptor;
+    }
+
+    public ReportExecution setErrorDescriptor(ErrorDescriptor errorDescriptor) {
+        this.errorDescriptor = errorDescriptor;
+        return this;
+    }
+
+    public ReportExecution setExports(Set<ExportExecution> exports) {
+        this.exports = new ExportsContainer();
+        final HashMap<String, ExportExecution> executions = new HashMap<>();
+        for (ExportExecution export : exports) {
+            executions.put(export.getId(), export);
+        }
+        this.exports.setExecutions(executions);
+        return this;
+    }
+
+    public ReportExecutionOptions getOptions() {
+        return options;
+    }
+
+    public ReportExecution setOptions(ReportExecutionOptions options) {
+        this.options = options;
+        return this;
+    }
+    @XmlElement(name = "export")
     @XmlElementWrapper(name = "exports")
-    @XmlElement(name = "export", type = ExportDescriptor.class)
-    //@XmlJavaTypeAdapter(ExportDescriptorsAdapter.class)
-    public List<ExportDescriptor> getExports() {
-        return exports;
-    }
-
-    public void setExports(List<ExportDescriptor> exports) {
-        this.exports = exports;
+    public Set<ExportExecution> getExports() {
+        return new HashSet<ExportExecution>(exports.getExecutions().values());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ReportExecution)) return false;
 
-        ReportExecutionDescriptor that = (ReportExecutionDescriptor) o;
+        ReportExecution that = (ReportExecution) o;
 
         if (currentPage != null ? !currentPage.equals(that.currentPage) : that.currentPage != null) return false;
-        if (exports != null ? !exports.equals(that.exports) : that.exports != null) return false;
         if (reportURI != null ? !reportURI.equals(that.reportURI) : that.reportURI != null) return false;
         if (requestId != null ? !requestId.equals(that.requestId) : that.requestId != null) return false;
         if (status != null ? !status.equals(that.status) : that.status != null) return false;
         if (totalPages != null ? !totalPages.equals(that.totalPages) : that.totalPages != null) return false;
-
-        return true;
+        if (errorDescriptor != null ? !errorDescriptor.equals(that.errorDescriptor) : that.errorDescriptor != null)
+            return false;
+        if (exports != null ? !exports.equals(that.exports) : that.exports != null) return false;
+        return options != null ? options.equals(that.options) : that.options == null;
     }
 
     @Override
@@ -124,19 +158,23 @@ public class ReportExecutionDescriptor {
         result = 31 * result + (requestId != null ? requestId.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (totalPages != null ? totalPages.hashCode() : 0);
+        result = 31 * result + (errorDescriptor != null ? errorDescriptor.hashCode() : 0);
         result = 31 * result + (exports != null ? exports.hashCode() : 0);
+        result = 31 * result + (options != null ? options.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "ReportExecutionDescriptor{" +
+        return "ReportExecution{" +
                 "currentPage=" + currentPage +
                 ", reportURI='" + reportURI + '\'' +
                 ", requestId='" + requestId + '\'' +
                 ", status='" + status + '\'' +
                 ", totalPages=" + totalPages +
+                ", errorDescriptor=" + errorDescriptor +
                 ", exports=" + exports +
+                ", options=" + options +
                 '}';
     }
 }

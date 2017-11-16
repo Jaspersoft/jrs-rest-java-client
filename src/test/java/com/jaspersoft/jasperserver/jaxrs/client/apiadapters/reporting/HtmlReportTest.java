@@ -1,5 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.Attachment;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.HtmlReport;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -10,13 +12,13 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.HtmlReport}
+ * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.dto.reports.HtmlReport}
  */
 public class HtmlReportTest {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.HtmlReport#HtmlReport(String)}
+     * for {@link com.jaspersoft.jasperserver.jaxrs.client.dto.reports.HtmlReport#HtmlReport(String)}
      */
     public void should_create_object_with_proper_params() {
 
@@ -31,7 +33,7 @@ public class HtmlReportTest {
 
     @Test
     /**
-     * for getters and setters of {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.HtmlReport} class
+     * for getters and setters of {@link com.jaspersoft.jasperserver.jaxrs.client.dto.reports.HtmlReport} class
      */
     public void should_set_fields_and_get_proper_values() {
 

@@ -19,12 +19,9 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
-/***
- * @deprecated  use @Link {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportSearchParameter}
- * */
-@Deprecated
-public enum ReportAndJobSearchParameter {
+package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util;
+
+public enum ReportSearchParameter {
 
     /**
      *  This string matches the repository URI of the running thumbnail, relative the
@@ -63,13 +60,30 @@ public enum ReportAndJobSearchParameter {
      *  You can specify either or both of the arguments. Specify the date and time
      *  in the following pattern: fireTimeTo yyyy-MM-dd'T'HH:mmZ.
      */
-    FIRE_TIME_TO("fireTimeTo")
+    FIRE_TIME_TO("fireTimeTo"),
+
+    /**
+     * Used for pagination inFolder specify the maximum number of resources inFolder return in
+     * each response. This is equivalent inFolder the number of results per page. The
+     * default limit is 100.
+     *
+     * Type/Value: integer
+     */
+    LIMIT("limit"),
+
+    /**
+     * Used for pagination inFolder request an offset in the set of results. This is
+     * equivalent inFolder a specific page number. The default offset is 1 (first page).
+     *
+     * Type/Value: integer
+     */
+    OFFSET("offset"),
 
     ;
 
     private String name;
 
-    private ReportAndJobSearchParameter(String name){
+    private ReportSearchParameter(String name){
         this.name = name;
     }
 

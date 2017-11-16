@@ -23,13 +23,14 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportexecution.ReportExecutionAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReorderingReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,9 +44,13 @@ public class ReportsAdapter extends AbstractAdapter {
         super(sessionStorage);
         this.reportUnitUri = reportUnitUri;
     }
-
+@Deprecated
     public ReorderingReportParametersAdapter reportParameters() {
         return new ReorderingReportParametersAdapter(sessionStorage, reportUnitUri);
+    }
+
+    public ReportExecutionAdapter reportExecutions() {
+        return new ReportExecutionAdapter(sessionStorage, new ReportExecutionRequest().setReportUnitUri(reportUnitUri));
     }
 
     public ReportOptionsAdapter reportOptions() {
@@ -64,6 +69,7 @@ public class ReportsAdapter extends AbstractAdapter {
         return new ReportOptionsAdapter(sessionStorage, reportUnitUri, ReportOptionsUtil.toMap(options));
     }
 
+    @Deprecated
     public ReportParametersAdapter reportParameters(String mandatoryId, String... otherIds) {
         List<String> ids = new ArrayList<String>(Arrays.asList(otherIds));
         ids.add(0, mandatoryId);
@@ -73,22 +79,18 @@ public class ReportsAdapter extends AbstractAdapter {
     public RunReportAdapter prepareForRun(ReportOutputFormat format, Integer... pages) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format.toString().toLowerCase(), pages);
     }
-
     public RunReportAdapter prepareForRun(ReportOutputFormat format, PageRange range) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format.toString().toLowerCase(), range);
     }
-
     public RunReportAdapter prepareForRun(ReportOutputFormat format) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format.toString().toLowerCase());
     }
     public RunReportAdapter prepareForRun(String format, Integer... pages) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format, pages);
     }
-
     public RunReportAdapter prepareForRun(String format, PageRange range) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format, range);
     }
-
     public RunReportAdapter prepareForRun(String format) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format);
     }

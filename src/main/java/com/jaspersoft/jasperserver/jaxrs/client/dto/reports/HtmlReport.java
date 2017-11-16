@@ -19,11 +19,11 @@
  * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Deprecated
 public class HtmlReport {
 
     private String id;
