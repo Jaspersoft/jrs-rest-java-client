@@ -23,10 +23,11 @@ Table of Contents
   * [Requesting report execution details](#requesting-report-execution-details).
   * [Requesting Report Output](#requesting-report-output).
   * [Download file attachments for report output](#download-file-attachments-for-report-output).
-  * [Exporting a Report Asynchronously](#exporting-a-report-asynchronously).
+  * [Updating report execution parameters](#updating-report-execution-parameters).
+  * [Running new export](#running-new-export).
   * [Polling Export Execution](#polling-export-execution).
   * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
-  * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
+  * [Stopping Running Reports](#stopping-running-reports-and-jobs).
   * [Report options service](#report-options-service).
     * [Listing report options](#listing-report-options).
     * [Creating report options](#creating-report-options).
