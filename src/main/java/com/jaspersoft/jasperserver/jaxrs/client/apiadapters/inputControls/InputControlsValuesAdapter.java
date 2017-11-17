@@ -1,10 +1,10 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls;
 
+import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
 import java.util.ArrayList;
@@ -49,17 +49,27 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
         includeFullStructure = value;
         return this;
     }
-
+@Deprecated
     public InputControlsValuesAdapter parameter(String name, String value) {
         this.inputControlsValues.add(name, value);
         return this;
     }
-
+@Deprecated
     public InputControlsValuesAdapter parameter(String name, String... values) {
         this.inputControlsValues.addAll(name, values);
         return this;
     }
 
+    public InputControlsValuesAdapter forInputConrol(String name, String value) {
+        this.inputControlsValues.add(name, value);
+        return this;
+    }
+
+    public InputControlsValuesAdapter forInputConrol(String name, String... values) {
+        this.inputControlsValues.addAll(name, values);
+        return this;
+    }
+@Deprecated
     public OperationResult<InputControlStateListWrapper> run() {
         if (inputControlsValues.size() == 0) {
             throw new MandatoryParameterNotFoundException();
@@ -72,6 +82,34 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
         return buildRequest().post(valuesToArrays());
     }
 
+    public OperationResult<InputControlStateListWrapper> update(MultivaluedHashMap<String, String> inputControlsValues) {
+        this.inputControlsValues = inputControlsValues;
+        return this.update();
+    }
+
+    public OperationResult<ReportInputControlsListWrapper> updateAndReorder(MultivaluedHashMap<String, String> inputControlsValues) {
+        this.inputControlsValues = inputControlsValues;
+        path.add(REPORTS_URI);
+        path.addAll(Arrays.asList(containerUri.split("/")));
+        path.add(INPUT_CONTROLS_URI);
+        JerseyRequest<ReportInputControlsListWrapper> request = JerseyRequest.buildRequest(sessionStorage,
+                ReportInputControlsListWrapper.class,
+                path.toArray(new String[path.size()]));
+        return request.post(inputControlsValues);
+    }
+
+    public OperationResult<InputControlStateListWrapper> update() {
+        if (inputControlsValues.size() == 0) {
+            throw new MandatoryParameterNotFoundException();
+        }
+        if (!includeFullStructure) {
+            Set<String> keySet = inputControlsValues.keySet();
+            String[] idsArray = keySet.toArray(new String[keySet.size()]);
+            ids.append(StringUtils.join(idsArray, ";"));
+        }
+        return buildRequest().post(inputControlsValues);
+    }
+
     public OperationResult<InputControlStateListWrapper> get(){
         return buildRequest().get();
     }
@@ -80,12 +118,13 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
         path.add(REPORTS_URI);
         path.addAll(Arrays.asList(containerUri.split("/")));
         path.add(INPUT_CONTROLS_URI);
-        path.add(ids.toString());
+        if (!ids.toString().isEmpty()) {
+            path.add(ids.toString());
+        }
         path.add(VALUES_URI);
         JerseyRequest<InputControlStateListWrapper> request = JerseyRequest.buildRequest(sessionStorage,
                 InputControlStateListWrapper.class,
-                path.toArray(new String[path.size()]),
-                new DefaultErrorHandler());
+                path.toArray(new String[path.size()]));
         if (useFreshData) {
             request.addParam("freshData", useFreshData.toString());
         }

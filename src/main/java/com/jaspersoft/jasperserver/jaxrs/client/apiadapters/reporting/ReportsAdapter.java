@@ -23,6 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportexecution.ReportExecutionAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsUtil;
@@ -67,6 +68,10 @@ public class ReportsAdapter extends AbstractAdapter {
 
     public ReportOptionsAdapter reportOptions(List<ReportParameter> options) {
         return new ReportOptionsAdapter(sessionStorage, reportUnitUri, ReportOptionsUtil.toMap(options));
+    }
+
+    public InputControlsAdapter inputControls() {
+        return new InputControlsAdapter(sessionStorage, reportUnitUri);
     }
 
     @Deprecated
