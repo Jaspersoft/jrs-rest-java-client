@@ -333,7 +333,6 @@ Not to store session on server you can invalidate it with `logout()` method.
 session.logout();
 ```
 
-
 Report services
 ===============
 This service allows to start report execution(export with certain options) and get report execution metadata (i.e. execution status, total pages count, errors occured during execution, attachments names etc.). 
@@ -649,16 +648,24 @@ To delete a given report option you can use  followingcode:
 
 Input controls service:
 =======================
-The reports service includes methods for reading and setting input controls of any input controls container, i.e. reportUnit, reportOptions, dashboard, adhocDataView
+The reports service includes methods for reading and setting input controls of any input controls container, i.e. reportUnit, reportOptions, dashboard, adhocDataView. JRS Rest client allows to work with report input controls as part of ReportService or as independent InputControlService.
 
 Listing Report Parameters Structure
 -----------------------------------
 The following code returns a description of the structure of the input controls for a given container.
 ```java
+        OperationResult<ReportInputControlsListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .get();
+		
+		// or
+		
  OperationResult<ReportInputControlsListWrapper> operationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport(REPORT_URI)
                 .get();
  ReportInputControlsListWrapper result = operationResult.getEntity();
 ```
@@ -668,10 +675,19 @@ The structure includes a set of validation rules for each report parameter. Thes
 * dateTimeFormatValidation – This input must have a data time format and your client should ensure the user enters a valid date and time.
 To skip input controls state generation use `excludeState(true)` setting:
 ```java
+        OperationResult<ReportInputControlsListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .excludeState(Boolean.TRUE)
+                .get();
+		
+		// or
+		
 OperationResult<ReportInputControlsListWrapper> operationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport(REPORT_URI)
                 .excludeState(true)
                 .get();
 ReportInputControlsListWrapper result = operationResult.getEntity();
@@ -681,10 +697,19 @@ Reordering input controls structure
 -----------------------------------
 You can change structure of input controls according to client demands using the next code:
 ```java
+        OperationResult<ReportInputControlsListWrapper> reorderedOperationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .reorder(inputParameters);
+		
+		//or
+		
+		
 OperationResult<ReportInputControlsListWrapper> reorderedOperationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport(REPORT_URI)
                 .reorder(inputParameters);
 ```
 It is impossible to change input controls except change of theirs order. Sent to server structure MUST be the same as it received
@@ -695,10 +720,17 @@ Listing input controls values
 -----------------------------
 The following code returns a description of the possible values of all report parameters for the report. Among these choices, it shows which ones are selected.
 ```java
+        OperationResult<InputControlStateListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .values()
+                .get();
+		
 OperationResult<InputControlStateListWrapper> operationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport(REPORT_URI)
                 .values()
                 .get();
  InputControlStateListWrapper result = operationResult.getEntity();
@@ -721,30 +753,88 @@ Setting input controls values
 -----------------------------
 The following code updates the state of specified input controls values, so they are set for the next run of the report.
 ```java
+        OperationResult<InputControlStateListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .values()
+                .forInputConrol(id, value1, value2)
+                .forInputConrol(id1, value3)
+                .update();
+		
+		//or
+		
+	MultivaluedHashMap inputControls = new NullableMultivaluedHashMap();
+        inputControls.addAll("Country_multi_select", "Mexico");
+        inputControls.addAll("Cascading_state_multi_select", "Guerrero", "Sinaloa");
+
+        OperationResult<InputControlStateListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .values()
+                .update(inputControls);
+		
+		// or
+				
 OperationResult<InputControlStateListWrapper> operationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport("/reports/samples/Cascading_multi_select_report")
                 .values()
-                .parameter("Country_multi_select", "Mexico")
-                .parameter("Cascading_state_multi_select", "Guerrero", "Sinaloa")
+                .forInputControl(id, value)
+                .forInputControl(id, value1, value2)
                 .run();
 InputControlStateListWrapper result = operationResult.getEntity();
 ```
 In response you get updated values for specified input controls. If you want to get updated values with full structure of input controls, you should use `includeFullStructure(true)` setting:
 ```java
+        OperationResult<InputControlStateListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .values()
+                .forInputConrol(id, value1, value2)
+                .forInputConrol(id1, value3)
+		.includeFullStructure(true)
+                .update();
+		
+		// or
+		
+		
 OperationResult<InputControlStateListWrapper> operationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport("/reports/samples/Cascading_multi_select_report")
                 .values()
-                .parameter("Country_multi_select", "USA")
-                .parameter("Cascading_state_multi_select", "CA", "OR", "WA")
-                .includeFullStructure(true)
+                .forInputControl(id, value)
+                .forInputControl(id, value1, value2)
+		.includeFullStructure(true)
                 .run();
 InputControlStateListWrapper result = operationResult.getEntity();
 ```
+To uptate values of input controls with their structure in the same request: 
+```java
+        MultivaluedHashMap<String, String> inputControls = new NullableMultivaluedHashMap();
+        inputControls.addAll("Cascading_state_multi_select", "OR", "CA", "WA");
+        inputControls.addAll("Country_multi_select", "USA", "Canada");
 
+        final OperationResult<ReportInputControlsListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .values()
+                .updateAndReorder(inputControls);
+		
+		// or
+		
+        final OperationResult<ReportInputControlsListWrapper> operationResult = session
+                .inputControlsService()
+                .inputControls()
+                .forReport("/reports/samples/Cascading_multi_select_report")
+                .values()
+                .updateAndReorder(inputControls);
+```
 Administration services:
 ========================
 Only administrative users may access the REST services for administration.
