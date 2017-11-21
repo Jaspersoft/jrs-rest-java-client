@@ -64,11 +64,18 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     public static final String RESUME = "resume";
     public static final String RESTART = "restart";
 
-    private final MultivaluedMap<String, String> params;
+    private MultivaluedMap<String, String> params;
+    private Long[] ids;
+
 
     public BatchJobsOperationsAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
         params = new MultivaluedHashMap<String, String>();
+    }
+
+    public BatchJobsOperationsAdapter(SessionStorage sessionStorage, Long... ids) {
+        super(sessionStorage);
+        this.ids = ids;
     }
 
     public BatchJobsOperationsAdapter parameter(JobsParameter parameter, String value) {
@@ -162,6 +169,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
      */
     public OperationResult<ClientJobIdListWrapper> update(ClientReportJobModel jobModel) {
         JerseyRequest<ClientJobIdListWrapper> request = buildRequest(sessionStorage, ClientJobIdListWrapper.class, new String[]{SERVICE_URI});
+        addIdsToQueryParams();
         request.addParams(params);
         String content;
 
@@ -189,6 +197,12 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     private List<Long> getIds() {
         List<Long> ids = new ArrayList<Long>();
+        if (this.ids != null && this.ids.length > 0) {
+            for (Long id : ids) {
+                ids.add(id);
+            }
+        }
+
         List<String> idsTemp = params.get(JobsParameter.JOB_ID.getName());
 
         if (idsTemp != null) {
@@ -415,8 +429,17 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     public OperationResult<ClientJobIdListWrapper> delete() {
         JerseyRequest<ClientJobIdListWrapper> jerseyRequest = buildRequest(sessionStorage, ClientJobIdListWrapper.class, new String[]{SERVICE_URI});
+        addIdsToQueryParams();
         jerseyRequest.addParams(params);
         return jerseyRequest.delete();
+    }
+
+    protected void addIdsToQueryParams() {
+        if (ids != null && ids.length > 0) {
+            for (Long id : ids) {
+                this.params.add(JobsParameter.JOB_ID.getName(), id.toString());
+            }
+        }
     }
 
 }
