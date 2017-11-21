@@ -422,7 +422,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
     private void buildPath() {
         path.add(SERVICE_URI);
         String targetUri = (parentUri != null) ? parentUri : resourceUri;
-        if (!targetUri.equals(REGEX)) {
+        if (!REGEX.equals(targetUri)) {
             path.addAll(Arrays.asList(targetUri.split(REGEX)));
         }
     }
