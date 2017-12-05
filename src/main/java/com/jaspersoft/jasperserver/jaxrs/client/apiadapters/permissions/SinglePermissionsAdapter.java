@@ -23,7 +23,6 @@ public class SinglePermissionsAdapter  extends AbstractAdapter {
 
     public static final String PERMISSIONS_SERVICE_URI = "permissions";
     private ArrayList<String> path = new ArrayList<String>();
-    private String resourceUri;
     private String recipientUri;
     private RepositoryPermission permission;
 
@@ -35,14 +34,14 @@ public class SinglePermissionsAdapter  extends AbstractAdapter {
 
     public SinglePermissionsAdapter(SessionStorage sessionStorage, String resourceUri) {
         super(sessionStorage);
-        this.resourceUri = resourceUri;
+        this.recipientUri = resourceUri;
         path.add(PERMISSIONS_SERVICE_URI);
         path.addAll(Arrays.asList(resourceUri.split("/")));
     }
 
     public SinglePermissionsAdapter permissionRecipient(PermissionRecipient recipient, String name) {
         String protocol = recipient.getProtocol();
-        this.resourceUri = protocol + ":%2F" + name;
+        this.recipientUri = protocol + ":%2F" + name;
         return this;
     }
 

@@ -93,11 +93,11 @@ public class ReportsAdapter extends AbstractAdapter {
     public RunReportAdapter prepareForRun(String format, Integer... pages) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format, pages);
     }
-    @Deprecated
+
     public RunReportAdapter prepareForRun(String format, PageRange range) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format, range);
     }
-    @Deprecated
+
     public RunReportAdapter prepareForRun(String format) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format);
     }
