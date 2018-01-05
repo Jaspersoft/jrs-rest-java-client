@@ -28,7 +28,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionListW
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
-
+@Deprecated
 public class ReportsAndJobsSearchAdapter extends AbstractAdapter {
 
     public static final String REPORT_EXECUTIONS_URI = "reportExecutions";

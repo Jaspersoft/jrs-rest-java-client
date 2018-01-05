@@ -1,5 +1,5 @@
-package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
-
+package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
+@Deprecated
 public class Attachment {
 
     private String name;

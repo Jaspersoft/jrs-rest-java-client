@@ -37,6 +37,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientMondrianXmlaDefinition;
 import com.jaspersoft.jasperserver.dto.resources.ClientOlapUnit;
 import com.jaspersoft.jasperserver.dto.resources.ClientQuery;
+import com.jaspersoft.jasperserver.dto.resources.ClientReportOptions;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ClientResourceLookup;
@@ -86,6 +87,7 @@ public class ResourcesTypeResolverUtil {
             put(ClientDomainTopic.class, ResourceMediaType.DOMAIN_TOPIC_CLIENT_TYPE);
             put(ClientDomain.class, ResourceMediaType.DOMAIN_CLIENT_TYPE);
             put(ClientDomainSchema.class, "domainSchema");
+            put(ClientReportOptions.class, "reportOptions");
         }};
 
         for (Map.Entry<Class<? extends ClientResource>, String> entry : classToMimeMap.entrySet()) {

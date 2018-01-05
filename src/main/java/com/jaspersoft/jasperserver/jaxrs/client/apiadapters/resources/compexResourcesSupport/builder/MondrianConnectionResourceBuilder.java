@@ -22,6 +22,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexRes
 
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
+import com.jaspersoft.jasperserver.dto.resources.ClientReference;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableDataSource;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.MondrianConnectionResourceOperationProcessorDecorator;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
@@ -58,25 +59,30 @@ public class MondrianConnectionResourceBuilder extends MondrianConnectionResourc
     public MondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, String label, String description) {
         StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("schema", schema, label, new MediaType("application", "olapMondrianSchema+xml"));
         super.multipart.bodyPart(streamDataBodyPart);
-        super.connection.setLabel(label).setDescription(description);
+        super.connection.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.olapMondrianSchema));
         return this;
     }
 
     public MondrianConnectionResourceBuilder withMondrianSchema(File schema, String label, String description) {
         FileDataBodyPart streamDataBodyPart = new FileDataBodyPart("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
         super.multipart.bodyPart(streamDataBodyPart);
-        super.connection.setLabel(label).setDescription(description);
+        super.connection.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.olapMondrianSchema));
         return this;
     }
 
     public MondrianConnectionResourceBuilder withMondrianSchema(String schema, String label, String description) {
         multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
-        super.connection.setLabel(label).setDescription(description);
+        super.connection.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.olapMondrianSchema));
         return this;
     }
 
-    public MondrianConnectionResourceBuilder withDatasource(ClientReferenceableDataSource dataSource) {
+    public MondrianConnectionResourceBuilder withDataSource(ClientReferenceableDataSource dataSource) {
         super.connection.setDataSource(dataSource);
+        return this;
+    }
+
+    public MondrianConnectionResourceBuilder withDataSource(String dataSourceUri) {
+        super.connection.setDataSource(new ClientReference().setUri(dataSourceUri));
         return this;
     }
 

@@ -40,11 +40,17 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 public class SingleJobOperationsAdapter extends AbstractAdapter {
     public static final String SERVICE_URI = "jobs";
     public static final String STATE = "state";
-    private final String jobId;
+    private String jobId;
+    private ClientReportJob reportJob;
 
     public SingleJobOperationsAdapter(SessionStorage sessionStorage, String jobId) {
         super(sessionStorage);
         this.jobId = jobId;
+    }
+
+    public SingleJobOperationsAdapter(SessionStorage sessionStorage, ClientReportJob reportJob) {
+        super(sessionStorage);
+        this.reportJob = reportJob;
     }
 
     public OperationResult<ClientReportJob> getJob() {
@@ -68,6 +74,36 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
             @Override
             public void run() {
                 callback.execute(request.get());
+            }
+        });
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
+    public OperationResult<ClientReportJob> create() {
+        JerseyRequest<ClientReportJob> request = buildRequest(sessionStorage, ClientReportJob.class, new String[]{SERVICE_URI}, new JobValidationErrorHandler());
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
+            request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+        } else {
+            request.setContentType("application/job+json");
+            request.setAccept("application/job+json");
+        }
+        return request.put(reportJob);
+    }
+    public <R> RequestExecution asyncCreate(final Callback<OperationResult<ClientReportJob>, R> callback) {
+        final JerseyRequest<ClientReportJob> request = buildRequest(sessionStorage, ClientReportJob.class, new String[]{SERVICE_URI}, new JobValidationErrorHandler());
+        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
+            request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
+        } else {
+            request.setContentType("application/job+json");
+            request.setAccept("application/job+json");
+        }
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.put(reportJob));
             }
         });
         ThreadPoolUtil.runAsynchronously(task);

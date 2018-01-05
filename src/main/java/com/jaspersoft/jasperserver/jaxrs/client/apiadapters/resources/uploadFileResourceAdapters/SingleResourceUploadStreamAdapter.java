@@ -44,7 +44,7 @@ public class SingleResourceUploadStreamAdapter extends AbstractAdapter{
         this.targetResourceUri = resourceUri;
     }
 
-    public SingleResourceUploadStreamAdapter toFolder(String parentUri) {
+    public SingleResourceUploadStreamAdapter inFolder(String parentUri) {
         this.targetResourceUri = parentUri;
         return this;
     }
@@ -68,7 +68,7 @@ public class SingleResourceUploadStreamAdapter extends AbstractAdapter{
         return "/".equals(resourceUri) || "".equals(resourceUri);
     }
 
-    public OperationResult<ClientFile> upload() {
+    public OperationResult<ClientFile> create() {
         return prepareCreateBinaryRequest().post(inputStream);
     }
 

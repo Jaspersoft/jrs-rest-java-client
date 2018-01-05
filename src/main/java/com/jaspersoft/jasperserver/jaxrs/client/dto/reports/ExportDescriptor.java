@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
-
+@Deprecated
 //@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "export")
 public class ExportDescriptor {
@@ -44,48 +44,54 @@ public class ExportDescriptor {
         return errorDescriptor;
     }
 
-    public void setErrorDescriptor(ErrorDescriptor errorDescriptor) {
+    public ExportDescriptor setErrorDescriptor(ErrorDescriptor errorDescriptor) {
         this.errorDescriptor = errorDescriptor;
+        return this;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public ExportDescriptor setId(String id) {
         this.id = id;
+        return this;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public ExportDescriptor setStatus(String status) {
         this.status = status;
+        return this;
     }
 
     public String getPages() {
         return pages;
     }
 
-    public void setPages(String pages) {
+    public ExportDescriptor setPages(String pages) {
         this.pages = pages;
+        return this;
     }
 
     public String getAttachmentsPrefix() {
         return attachmentsPrefix;
     }
 
-    public void setAttachmentsPrefix(String attachmentsPrefix) {
+    public ExportDescriptor setAttachmentsPrefix(String attachmentsPrefix) {
         this.attachmentsPrefix = attachmentsPrefix;
+        return this;
     }
 
     public OutputResourceDescriptor getOutputResource() {
         return outputResource;
     }
 
-    public void setOutputResource(OutputResourceDescriptor outputResource) {
+    public ExportDescriptor setOutputResource(OutputResourceDescriptor outputResource) {
         this.outputResource = outputResource;
+        return this;
     }
 
     @XmlElementWrapper(name = "attachments")
@@ -94,8 +100,9 @@ public class ExportDescriptor {
         return attachments;
     }
 
-    public void setAttachments(List<AttachmentDescriptor> attachments) {
+    public ExportDescriptor setAttachments(List<AttachmentDescriptor> attachments) {
         this.attachments = attachments;
+        return this;
     }
 
     @Override

@@ -21,6 +21,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
+import com.jaspersoft.jasperserver.dto.resources.ClientReference;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
@@ -84,25 +85,30 @@ public class SecureMondrianConnectionResourceBuilder extends SecureMondrianConne
     public SecureMondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, String label, String description) {
         StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("schema", schema, label, new MediaType("application", "olapMondrianSchema+xml"));
         super.multipart.bodyPart(streamDataBodyPart);
-        super.connection.setLabel(label).setDescription(description);
+        super.connection.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.olapMondrianSchema));
         return this;
     }
 
     public SecureMondrianConnectionResourceBuilder withMondrianSchema(File schema, String label, String description) {
         FileDataBodyPart streamDataBodyPart = new FileDataBodyPart("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
         super.multipart.bodyPart(streamDataBodyPart);
-        super.connection.setLabel(label).setDescription(description);
+        super.connection.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.olapMondrianSchema));
         return this;
     }
 
     public SecureMondrianConnectionResourceBuilder withMondrianSchema(String schema, String label, String description) {
         multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
-        super.connection.setLabel(label).setDescription(description);
+        super.connection.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.olapMondrianSchema));
         return this;
     }
 
-    public SecureMondrianConnectionResourceBuilder withDatasource(ClientReferenceableDataSource dataSource) {
+    public SecureMondrianConnectionResourceBuilder withDataSource(ClientReferenceableDataSource dataSource) {
         super.connection.setDataSource(dataSource);
+        return this;
+    }
+
+    public SecureMondrianConnectionResourceBuilder withDataSource(String dataSourceUri) {
+        super.connection.setDataSource(new ClientReference().setUri(dataSourceUri));
         return this;
     }
 
@@ -116,19 +122,19 @@ public class SecureMondrianConnectionResourceBuilder extends SecureMondrianConne
         return this;
     }
 
-    public SecureMondrianConnectionResourceBuilder withAccessGrantSchemaAsStream(InputStream schema, String label, String description) {
+    public SecureMondrianConnectionResourceBuilder withAccessGrantSchema(InputStream schema, String label, String description) {
         StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("accessGrantSchemas.accessGrantSchema[" + schemaCounter++ + "]", schema, label, new MediaType("application", "accessGrantSchema+xml"));
         if(super.connection.getAccessGrants() == null)super.connection.setAccessGrants(new ArrayList<ClientReferenceableFile>());
         super.multipart.bodyPart(streamDataBodyPart);
-        super.connection.getAccessGrants().add(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.xml));
+        super.connection.getAccessGrants().add(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.accessGrantSchema));
         return this;
     }
 
-    public SecureMondrianConnectionResourceBuilder withAccessGrantSchemaAsStream(File schema, String label, String description) {
+    public SecureMondrianConnectionResourceBuilder withAccessGrantSchema(File schema, String label, String description) {
         FileDataBodyPart streamDataBodyPart = new FileDataBodyPart("accessGrantSchemas.accessGrantSchema[" + schemaCounter++ + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
         super.multipart.bodyPart(streamDataBodyPart);
         if(super.connection.getAccessGrants() == null)super.connection.setAccessGrants(new ArrayList<ClientReferenceableFile>());
-        super.connection.getAccessGrants().add(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.xml));
+        super.connection.getAccessGrants().add(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.accessGrantSchema));
         return this;
     }
 

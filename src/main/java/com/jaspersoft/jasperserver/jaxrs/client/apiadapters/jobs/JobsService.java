@@ -53,10 +53,18 @@ public class JobsService extends AbstractAdapter {
         return new BatchJobsOperationsAdapter(sessionStorage);
     }
 
+    public BatchJobsOperationsAdapter jobs(Long... ids) {
+        return new BatchJobsOperationsAdapter(sessionStorage, ids);
+    }
+
     public SingleJobOperationsAdapter job(long jobId) {
         return new SingleJobOperationsAdapter(sessionStorage, String.valueOf(jobId));
     }
 
+    public SingleJobOperationsAdapter job(ClientReportJob reportJob) {
+        return new SingleJobOperationsAdapter(sessionStorage, reportJob);
+    }
+@Deprecated
     public OperationResult<ClientReportJob> scheduleReport(ClientReportJob report) {
         JerseyRequest<ClientReportJob> request = buildRequest(sessionStorage, ClientReportJob.class, new String[]{SERVICE_URI}, new JobValidationErrorHandler());
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
@@ -68,7 +76,7 @@ public class JobsService extends AbstractAdapter {
         }
         return request.put(report);
     }
-
+@Deprecated
     public <R> RequestExecution asyncScheduleReport(final ClientReportJob report, final Callback<OperationResult<ClientReportJob>, R> callback) {
         final JerseyRequest<ClientReportJob> request = buildRequest(sessionStorage, ClientReportJob.class, new String[]{SERVICE_URI}, new JobValidationErrorHandler());
         if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {

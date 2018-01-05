@@ -20,6 +20,7 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
+import com.jaspersoft.jasperserver.dto.resources.ClientDomainTopic;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
@@ -29,20 +30,15 @@ import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.DomainResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.DomainTopicResourceBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.MondrianConnectionResourceBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.ReportUnitResourceBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.SecureMondrianConnectionResourceBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.SemanticLayerResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.DomainOperationProcessorDecorator;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.MondrianConnectionResourceOperationProcessorDecorator;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.ReportUnitResourceOperationProcessorDecorator;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.SecureMondrianConnectionResourceOperationProcessorDecorator;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.SemanticLayerResourceOperationProcessorDecorator;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import java.io.InputStream;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.ResourceBuilderFactory.getBuilder;
-import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.ResourceBuilderFactory.getDecorator;
 
 public class ResourcesService extends AbstractAdapter {
 
@@ -87,39 +83,47 @@ public class ResourcesService extends AbstractAdapter {
         return getBuilder(new ClientSemanticLayerDataSource(), sessionStorage);
     }
 
-    public SemanticLayerResourceOperationProcessorDecorator semanticLayerDataSourceResource(ClientSemanticLayerDataSource resourceDescriptor) {
-        return getDecorator(resourceDescriptor, sessionStorage);
+    public SemanticLayerResourceBuilder semanticLayerDataSourceResource(ClientSemanticLayerDataSource resourceDescriptor) {
+        return getBuilder(resourceDescriptor, sessionStorage);
     }
 
     public DomainResourceBuilder domainResource() {
         return getBuilder(new ClientDomain(), sessionStorage);
     }
 
-    public DomainOperationProcessorDecorator domainResource(ClientDomain resourceDescriptor) {
-        return getDecorator(resourceDescriptor, sessionStorage);
+    public DomainResourceBuilder domainResource(ClientDomain resourceDescriptor) {
+        return getBuilder(resourceDescriptor, sessionStorage);
     }
 
     public ReportUnitResourceBuilder reportUnitResource() {
         return getBuilder(new ClientReportUnit(), sessionStorage);
     }
 
-    public ReportUnitResourceOperationProcessorDecorator reportUnitResource(ClientReportUnit resourceDescriptor) {
-        return getDecorator(resourceDescriptor, sessionStorage);
+    public ReportUnitResourceBuilder reportUnitResource(ClientReportUnit resourceDescriptor) {
+        return getBuilder(resourceDescriptor, sessionStorage);
+    }
+
+    public DomainTopicResourceBuilder domainTopicResource() {
+        return getBuilder(new ClientDomainTopic(), sessionStorage);
+    }
+
+    public DomainTopicResourceBuilder domainTopicResource(ClientDomainTopic resourceDescriptor) {
+        return getBuilder(resourceDescriptor, sessionStorage);
     }
 
     public MondrianConnectionResourceBuilder mondrianConnection() {
         return getBuilder(new ClientMondrianConnection(), sessionStorage);
     }
 
-    public MondrianConnectionResourceOperationProcessorDecorator mondrianConnection(ClientMondrianConnection mondrianConnectionDescriptor) {
-        return getDecorator(mondrianConnectionDescriptor, sessionStorage);
+    public MondrianConnectionResourceBuilder mondrianConnection(ClientMondrianConnection mondrianConnectionDescriptor) {
+        return getBuilder(mondrianConnectionDescriptor, sessionStorage);
     }
     public SecureMondrianConnectionResourceBuilder secureMondrianConnection() {
         return getBuilder(new ClientSecureMondrianConnection(), sessionStorage);
     }
 
-    public SecureMondrianConnectionResourceOperationProcessorDecorator secureMondrianConnection(ClientSecureMondrianConnection mondrianConnectionDescriptor) {
-        return getDecorator(mondrianConnectionDescriptor, sessionStorage);
+    public SecureMondrianConnectionResourceBuilder secureMondrianConnection(ClientSecureMondrianConnection mondrianConnectionDescriptor) {
+        return getBuilder(mondrianConnectionDescriptor, sessionStorage);
     }
 
     @Deprecated

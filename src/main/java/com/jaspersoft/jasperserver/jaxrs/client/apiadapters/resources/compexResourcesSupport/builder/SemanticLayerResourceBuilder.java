@@ -22,6 +22,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexRes
 
 import com.jaspersoft.jasperserver.dto.resources.ClientBundle;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
+import com.jaspersoft.jasperserver.dto.resources.ClientReference;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
@@ -31,6 +32,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
@@ -152,26 +154,41 @@ public class SemanticLayerResourceBuilder extends SemanticLayerResourceOperation
         return this;
     }
 
-    public SemanticLayerResourceBuilder withBundle(InputStream bundle, String label, String description) {
+    public SemanticLayerResourceBuilder withBundle(InputStream bundle, String label, String description, Locale locale) {
         StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("bundles.bundle[" + bundleCounter++ + "]", bundle, label,  MediaType.TEXT_PLAIN_TYPE);
         super.multipart.bodyPart(streamDataBodyPart);
         if (domain.getBundles() == null)domain.setBundles(new ArrayList<ClientBundle>());
-        super.domain.getBundles().add(new ClientBundle().setFile(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.prop)));
+        super.domain.getBundles().add(new ClientBundle()
+                .setFile(new ClientFile()
+                        .setLabel(label)
+                        .setDescription(description)
+                        .setType(ClientFile.FileType.prop))
+        .setLocale(locale.toString()));
         return this;
     }
 
-    public SemanticLayerResourceBuilder withBundle(File bundle, String label, String description) {
+    public SemanticLayerResourceBuilder withBundle(File bundle, String label, String description, Locale locale) {
         FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
         super.multipart.bodyPart(fileDataBodyPart);
         if (domain.getBundles() == null)domain.setBundles(new ArrayList<ClientBundle>());
-        super.domain.getBundles().add(new ClientBundle().setFile(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.prop)));
+        super.domain.getBundles().add(new ClientBundle()
+                .setFile(new ClientFile()
+                        .setLabel(label)
+                        .setDescription(description)
+                        .setType(ClientFile.FileType.prop))
+        .setLocale(locale.toString()));
         return this;
     }
 
-    public SemanticLayerResourceBuilder withBundle(String bundle, String label, String description) {
+    public SemanticLayerResourceBuilder withBundle(String bundle, String label, String description, Locale locale) {
         super.multipart.field("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
         if (domain.getBundles() == null)domain.setBundles(new ArrayList<ClientBundle>());
-        super.domain.getBundles().add(new ClientBundle().setFile(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.prop)));
+        super.domain.getBundles().add(new ClientBundle()
+                .setFile(new ClientFile()
+                        .setLabel(label)
+                        .setDescription(description)
+                        .setType(ClientFile.FileType.prop))
+        .setLocale(locale.toString()));
         return this;
     }
 
@@ -192,6 +209,11 @@ public class SemanticLayerResourceBuilder extends SemanticLayerResourceOperation
 
     public SemanticLayerResourceBuilder withDataSource(ClientReferenceableDataSource dataSource) {
         super.domain.setDataSource(dataSource);
+        return this;
+    }
+
+    public SemanticLayerResourceBuilder withDataSource(String dataSourceUri) {
+        super.domain.setDataSource(new ClientReference().setUri(dataSourceUri));
         return this;
     }
 

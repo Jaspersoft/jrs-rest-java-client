@@ -23,10 +23,11 @@ Table of Contents
   * [Requesting report execution details](#requesting-report-execution-details).
   * [Requesting Report Output](#requesting-report-output).
   * [Download file attachments for report output](#download-file-attachments-for-report-output).
-  * [Exporting a Report Asynchronously](#exporting-a-report-asynchronously).
+  * [Updating report execution parameters](#updating-report-execution-parameters).
+  * [Running new export](#running-new-export).
   * [Polling Export Execution](#polling-export-execution).
   * [Finding Running Reports and Jobs](#finding-running-reports-and-jobs).
-  * [Stopping Running Reports and Jobs](#stopping-running-reports-and-jobs).
+  * [Stopping Running Reports](#stopping-running-reports).
   * [Report options service](#report-options-service).
     * [Listing report options](#listing-report-options).
     * [Creating report options](#creating-report-options).
@@ -332,197 +333,195 @@ Not to store session on server you can invalidate it with `logout()` method.
 session.logout();
 ```
 
-
 Report services
 ===============
-After you've configured the client you can easily use any of available services. For reporting service there is one feature that should be noted - when you are running a report all subsequent operations must be executed in the same session. Here's the code:
-```java
-Session session = client.authenticate("jasperadmin", "password");
-```
-We've authenticated as `jasperadmin` user an got a session for this user, all subsequent operations must be done through this session instance.
+This service allows to start report execution(export with certain options) and get report execution metadata (i.e. execution status, total pages count, errors occured during execution, attachments names etc.). 
+Another major feature is possibility to run/export report asynchronously.
+For reporting service there is one feature that should be noted - when you are running a report all subsequent operations must be executed **in the same session**. Here's the code:
 
 Running a report:
 -----------------
-There are two approaches to run a report - in synchronous and asynchronous modes.
-To run report in synchronous mode you can use the code below:
+jaserserver REST API allows to run report execution in synchronous and asynchronous modes. The `async` mode is set in ReportExecutionRequest or as part of builer chain:
 ```java
-OperationResult<InputStream> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .reportingService()
-        .report("/reports/samples/Cascading_multi_select_report")
-        .prepareForRun(ReportOutputFormat.HTML, 1)
-        .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
-        .run();
-InputStream report = result.getEntity();
-```
-You can set format of report as String as well(name of format is case insensitive):
-```java
-OperationResult<InputStream> result = client
-        .authenticate("jasperadmin", "jasperadmin")
-        .reportingService()
-        .report("/reports/samples/Cascading_multi_select_report")
-        .prepareForRun("HTML", 1)
-        .parameter("Cascading_name_single_select", "A & U Stalker Telecommunications, Inc")
-        .run();
-```
-Also you can use this method to run report with several values for the same parameter. In this case new values of the parameter are added to the previous ones (new values do not replace previous values of the parameter): 
-```java
-OperationResult<InputStream> result = client
-        .authenticate("superuser", "superuser")
-        .reportingService()
-        .report("/reports/samples/Cascading_multi_select_report")
-        .prepareForRun(ReportOutputFormat.PDF, 1)
-        .parameter("Cascading_state_multi_select", "CA")
-        .parameter("Cascading_state_multi_select",  "OR", "WA")
-        .parameter("Cascading_name_single_select", "Adams-Steen Transportation Holdings")
-        .parameter("Country_multi_select", "USA")
-        .run();
+        OperationResult<ReportExecution> result = session
+                .reportingService()
+                .report(reportUnitUri)
+                .reportExecutions()
+                .outputFormat(ReportOutputFormat.PDF)
+                .pages(1)
+                .reportParameter("Cascading_state_multi_select", "CA")
+                .reportParameter("Cascading_state_multi_select", "OR", "WA")
+                .reportParameter("Country_multi_select", "USA")
+                .async(Boolean.FALSE)
+                .run();
+
+        ReportExecution entity = result.getEntity();
+	
+	// OR set parameters as ReportEecutionrequest
+	
+	 final ReportParameter reportParameter1 = new ReportParameter().setName(name).setValues(asList(value1, Value2));
+        reportParameters.setReportParameters(asList(reportParameter1));
+
+        final ReportExecutionRequest reportExecutionRequest = new ReportExecutionRequest()
+                .setReportUnitUri(reportUnitUri)
+                .setPages("1")
+                .setParameters(reportParameters)
+                .setOutputFormat("pdf")
+		.setAsync(Boolean.TRUE);
+        
+        OperationResult<ReportExecution> result = session
+                .reportingService()
+                .reportExecution(reportExecutionRequest)
+                .run();
+
+        ReportExecution entity = result.getEntity();
 ```
 Please notice, if you pass zero as number of page, you  will get all  pages of report.
-In this mode you don't need to work in one session. In the above code we specified report URI, format in which we want to get a report and some report parameters. As we a result we got `InputStream` instance. In synchronous mode as a response you get a report itself while in asynchronous you get just a descriptor with report ID which you can use to download report afer it will be ready.
-If you need run report in another time zone specify it using `forTimeZone()` method:
-```java
-OperationResult<InputStream> result = session
-                .reportingService()
-                .report("/public/Samples/Reports/12g.PromotionDetailsReport")
-                .prepareForRun(ReportOutputFormat.PDF, 1)
-                .forTimeZone(TimeZone.getTimeZone("America/Los_Angeles"))
-                .run();
-InputStream report = result.getEntity();
 
- // or set time zones as string
-
-OperationResult<InputStream> result = session
-                .reportingService()
-                .report("/public/Samples/Reports/12g.PromotionDetailsReport")
-                .prepareForRun(ReportOutputFormat.PDF, 1)
-                .forTimeZone("America/Los_Angeles")
-                .run();
-```
-In order to run a report in asynchronous mode, you need firstly build `ReportExecutionRequest` instance and specify all the parameters needed to launch a report. The response from the server is the `ReportExecutionDescriptor` instance which contains the request ID needed to track the execution until completion and others report parameters. Here's the code to run a report:
-```java
-//instantiating request and specifying report parameters
-ReportExecutionRequest request = new ReportExecutionRequest();
-request.setReportUnitUri("/reports/samples/StandardChartsReport");
-request
-        .setAsync(true)                         //this means that report will be run on server asynchronously
-        .setOutputFormat(ReportOutputFormat.HTML);               //report can be requested in different formats e.g. html, pdf, etc.
-
-OperationResult<ReportExecutionDescriptor> operationResult =
-        session                                 //pay attention to this, all requests are in the same session!!!
-                .reportingService()
-                .newReportExecutionRequest(request);
-
-reportExecutionDescriptor = operationResult.getEntity();
-```
-In the above code we've created `ReportExecutionRequest` instance and sent it to JR server through the `newReportExecutionRequest` method. As a response we've got `OperationResult` instance which contains HTTP response wrapper and instance of `ReportExecutionDescriptor` which we can get with `operationResult.getEntity()`.
-Also you can set output format as String:
-```java
-ReportExecutionRequest request = new ReportExecutionRequest();
-request.setReportUnitUri("/reports/samples/StandardChartsReport");
-request
-        .setAsync(true)                         
-        .setOutputFormat("html");               
-```
-As in sync mode you can set report time zone:
-```java
-ReportExecutionRequest request = new ReportExecutionRequest();
-request
-                .setOutputFormat(ReportOutputFormat.PDF)
-                .setPages("1")
-                .setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"))
-                .setReportUnitUri("/public/Samples/Reports/12g.PromotionDetailsReport")
-                .setAsync(true);            
-```
+In order to run a report, you need firstly build `ReportExecutionRequest` instance and specify all the parameters needed to launch a report. The response from the server is the `ReportExecution`, the edscriptor of execution, contains the request ID needed to track the execution until completion and others report parameters. 
 
 Requesting report execution status:
 -----------------------------------
 After you've got `ReportExecutionDescriptor` you can request for the report execution status:
 ```java
-OperationResult<ReportExecutionStatusEntity> operationResult =
-        session                                 //pay attention to this, all requests are in the same session!!!
+        final OperationResult<ReportExecutionStatusObject> operationResult = session
                 .reportingService()
-                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
+                .reportExecution(executionId)
                 .status();
+        final ReportExecutionStatusObject entity = operationResult.getEntity();
 
-ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
 ```
-In the above code we've just specified request ID and got its status as a `ReportExecutionStatusEntity` instance.
+To get report execution status with error descriptor from server just specify `.withErrorDescriptor(Boolean.TRUE)` setting:
+```java
+        final OperationResult<ReportExecutionStatusEntity> statusOperationResult = session
+                .reportingService()
+                .reportExecution(executionId)
+                .export(exportId)
+                .withErrordescriptor(Boolean.TRUE)
+                .status();
+```
 
 Requesting report execution details:
 ------------------------------------
 Once the report is ready, your client must determine the names of the files to download by requesting the
 reportExecution descriptor again.
 ```java
-OperationResult<ReportExecutionDescriptor> operationResult =
-        session                                 //pay attention to this, all requests are in the same session!!!
+        final OperationResult<ReportExecution> operationResult = session
                 .reportingService()
-                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                .executionDetails();
-
-ReportExecutionDescriptor descriptor = operationResult.getEntity();
+                .reportExecution(executionId)
+                .details();
+		
+	ReportExecution details = operationResult.getEntity();
 ```
 
 Requesting Report Output
 ------------------------
 After requesting a report execution and waiting synchronously or asynchronously for it to finish, you are ready to download the report output. Every export format of the report has an ID that is used to retrieve it. For example, the HTML export has the ID html. To download the main report output, specify this export ID in the `export` method. For example, to download the main HTML of the report execution response above, use the following code:
 ```java
-OperationResult<InputStream> operationResult =
-        session                                 //pay attention to this, all requests are in the same session!!!
+        OperationResult<ReportExecution> runOperationResult = session
                 .reportingService()
-                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                .export(exportId)
-                .outputResource();
+                .report(reportUri)
+                .reportExecutions()
+                .outputFormat(ReportOutputFormat.HTML)
+                .pages(1)
+                .async(Boolean.FALSE)
+                .run();
 
-InputStream file = operationResult.getEntity();
+        final ReportExecution entity = runOperationResult.getEntity();
+	
+        String executionId = entity.getRequestId();
+	
+        final ExportExecution export = entity.getExports().iterator().next();
+	
+        final String exportId = export.getId();
+	
+	OperationResult<InputStream> outputResourceOperationResult = session
+                .reportingService()
+                .reportExecution(executionId)
+                .export(exportId)
+		.getOutputResource();
 ```
-As a response you'll get an `InputStream` instance.
+As a response you'll get an `InputStream` instance. If the output resourse is one of test formats(txt, html, csv etc), resource output is sent as String, so to get output,  use  
+```java
+	OperationResult<String> outputResourceOperationResult = session
+                .reportingService()
+                .reportExecution(executionId)
+                .export(exportId)
+		.getOutputResourceAsText();
+	String output = outputResourceOperationResult.getEntity();
+```
+There is a shorter way to get report output, but you sould take into account that it works onlly in asynchronous way, allows set limited set od settings and retuns report parametest in deprecated format:
+```java
+OperationResult<InputStream> result = session
+                .reportingService()
+                .report(reportUri)
+                .prepareForRun(ReportOutputFormat.PDF, 1)
+                .forTimeZone(TimeZone.getTimeZone("America/Los_Angeles"))//if the time zone is defferent from session time zone
+                .run();
+InputStream report = result.getEntity();
+```
 
 Download file attachments for report output:
 --------------------------------------------
 To download file attachments for HTML output, use the following code. You must download all attachments to display the HMTL content properly.
 ```java
-ExportDescriptor htmlExportDescriptor = ... //retrieving htmlExportDescriptor from reportExecutionDescriptor
+      OperationResult<ReportExecution> runOperationResult = session
+                .reportingService()
+                .report(reportUri)
+                .reportExecutions()
+                .outputFormat(ReportOutputFormat.HTML)
+                .pages(1)
+                .async(Boolean.FALSE)
+                .run();
 
-for(AttachmentDescriptor attDescriptor : htmlExportDescriptor.getAttachments()){
-    OperationResult<InputStream> operationResult =
-            session                             //pay attention to this, all requests are in the same session!!!
-                    .reportingService()
-                    .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                    .export(htmlExportDescriptor.getId())
-                    .attachment(attDescriptor.getFileName());
+        final ReportExecution entity = runOperationResult.getEntity();
+        String executionId = entity.getRequestId();
+        final ExportExecution export = entity.getExports().iterator().next();
+        final OutputResourceDescriptor attachment = export.getAttachments().entrySet().iterator().next().getValue();
 
-    InputStream file = operationResult.getEntity();
-    //doing something with file
-}
+        final String exportId = export.getId();
+
+        final OperationResult<InputStream> outputResourceOperationResult = session
+                .reportingService()
+                .reportExecution(executionId)
+                .export(exportId)
+                .getOutputResourceAttachment(attacment);
 ```
-
-Exporting a Report Asynchronously
----------------------------------
-After running a report and downloading its content in a given format, you can request the same report in other formats. As with exporting report formats through the user interface, the report does not run again because the export process is independent of the report.
+Updating report execution parameters
+------------------------------------
+Use the next code to change report execution parameters (e.g. input controls values) without change of report execution ID and to keep exports set. Report is executed again on this request but with updated parameters.
 ```java
-ExportExecutionOptions exportExecutionOptions = new ExportExecutionOptions()
-        .setOutputFormat(ReportOutputFormat.PDF)
-        .setPages("3");
-
-OperationResult<ExportExecutionDescriptor> operationResult =
         session
                 .reportingService()
-                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                .runExport(exportExecutionOptions);
+                .reportExecution(executionId)
+                .updateParameters(reportParameters);
+```
 
-ExportExecutionDescriptor statusEntity = operationResult.getEntity();
+Running new export
+------------------
+After running a report and downloading its content in a given format, you can request the same report in other formats (or with other options) without restaring export execution. As with exporting report formats through the user interface, the report does not run again because the export process is independent of the report.
+```java
+         ExportExecutionOptions executionOptions = new ExportExecutionOptions();
+        executionOptions.setBaseUrl(jasperserverUri);
+        executionOptions.setOutputFormat(ReportOutputFormat.PDF.name());
+        executionOptions.setPages("1");
+        executionOptions.setIgnorePagination(Boolean.FALSE);
+        final OperationResult<ExportExecution> expoirtExecutionOpertaionResult = session
+                .reportingService()
+                .reportExecution(executionId)
+                .export()
+                .withOptions(executionOptions)
+                .run();
 ```
 Polling Export Execution
 ------------------------
 As with the execution of the main report, you can also poll the execution of the export process.
-For example, to get the status of the HTML export in the previous example, use the following code:
+For example, to get the status export use the following code:
 ```java
-OperationResult<ReportExecutionStatusEntity> operationResult =
-        session                                 //pay attention to this, all requests are in the same session!!!
+        final OperationResult<ReportExecutionStatusEntity> statusOperationResult = session
                 .reportingService()
-                .reportExecutionRequest(reportExecutionDescriptor.getRequestId())
-                .export("html")
+                .reportExecution(executionId)
+                .export(exportId)
                 .status();
 
 ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
@@ -530,31 +529,31 @@ ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
 
 Finding Running Reports and Jobs
 --------------------------------
-You can search for reports that are running on the server, including
-report jobs triggered by the scheduler.
-To search for running reports, use the search arguments from `ReportAndJobSearchParameter` enumeration.
+You can search for reports that are running on the server, including report jobs triggered by the scheduler. To search for running reports, use the search arguments from `ReportSearchParameter` enumeration.
 ```java
-OperationResult<ReportExecutionListWrapper> operationResult =
-        session
+        final OperationResult<ReportExecutionsSetWrapper> operationResult = session
                 .reportingService()
-                .runningReportsAndJobs()
-                .parameter(ReportAndJobSearchParameter.REPORT_URI, "/reports/samples/AllAccounts")
-                .find();
-
-ReportExecutionListWrapper entity = operationResult1.getEntity();
+                .reportExecutions()
+                .queryParameter(ReportSearchParameter.REPORT_URI, reportUnitUri)
+                .search();
+        final ReportExecutionsSetWrapper entity = operationResult.getEntity();
 ```
 
-Stopping Running Reports and Jobs
+Stopping Running Reports
 ---------------------------------
 To stop a report that is running and cancel its output, use the code below:
 ```java
-OperationResult<ReportExecutionStatusEntity> operationResult1 =
-        session
+        final OperationResult<ReportExecutionStatusEntity> operationResult = session
                 .reportingService()
-                .reportExecutionRequest(executionDescriptor.getRequestId())
-                .cancelExecution();
-
-ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
+                .reportExecution(executionId)
+                .cancel();
+```
+To delete report execution: 
+```java
+        final OperationResult deleteOperationresult = session
+                .reportingService()
+                .reportExecution(executionId)
+                .delete();
 ```
 
 Report options service
@@ -649,16 +648,24 @@ To delete a given report option you can use  followingcode:
 
 Input controls service:
 =======================
-The reports service includes methods for reading and setting input controls of any input controls container, i.e. reportUnit, reportOptions, dashboard, adhocDataView
+The reports service includes methods for reading and setting input controls of any input controls container, i.e. reportUnit, reportOptions, dashboard, adhocDataView. JRS Rest client allows to work with report input controls as part of ReportService or as independent InputControlService.
 
 Listing Report Parameters Structure
 -----------------------------------
 The following code returns a description of the structure of the input controls for a given container.
 ```java
+        OperationResult<ReportInputControlsListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .get();
+		
+		// or
+		
  OperationResult<ReportInputControlsListWrapper> operationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport(REPORT_URI)
                 .get();
  ReportInputControlsListWrapper result = operationResult.getEntity();
 ```
@@ -668,10 +675,19 @@ The structure includes a set of validation rules for each report parameter. Thes
 * dateTimeFormatValidation – This input must have a data time format and your client should ensure the user enters a valid date and time.
 To skip input controls state generation use `excludeState(true)` setting:
 ```java
+        OperationResult<ReportInputControlsListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .excludeState(Boolean.TRUE)
+                .get();
+		
+		// or
+		
 OperationResult<ReportInputControlsListWrapper> operationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport(REPORT_URI)
                 .excludeState(true)
                 .get();
 ReportInputControlsListWrapper result = operationResult.getEntity();
@@ -681,10 +697,19 @@ Reordering input controls structure
 -----------------------------------
 You can change structure of input controls according to client demands using the next code:
 ```java
+        OperationResult<ReportInputControlsListWrapper> reorderedOperationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .reorder(inputParameters);
+		
+		//or
+		
+		
 OperationResult<ReportInputControlsListWrapper> reorderedOperationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport(REPORT_URI)
                 .reorder(inputParameters);
 ```
 It is impossible to change input controls except change of theirs order. Sent to server structure MUST be the same as it received
@@ -695,10 +720,17 @@ Listing input controls values
 -----------------------------
 The following code returns a description of the possible values of all report parameters for the report. Among these choices, it shows which ones are selected.
 ```java
+        OperationResult<InputControlStateListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .values()
+                .get();
+		
 OperationResult<InputControlStateListWrapper> operationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport(REPORT_URI)
                 .values()
                 .get();
  InputControlStateListWrapper result = operationResult.getEntity();
@@ -721,30 +753,88 @@ Setting input controls values
 -----------------------------
 The following code updates the state of specified input controls values, so they are set for the next run of the report.
 ```java
+        OperationResult<InputControlStateListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .values()
+                .forInputConrol(id, value1, value2)
+                .forInputConrol(id1, value3)
+                .update();
+		
+		//or
+		
+	MultivaluedHashMap inputControls = new NullableMultivaluedHashMap();
+        inputControls.addAll("Country_multi_select", "Mexico");
+        inputControls.addAll("Cascading_state_multi_select", "Guerrero", "Sinaloa");
+
+        OperationResult<InputControlStateListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .values()
+                .update(inputControls);
+		
+		// or
+				
 OperationResult<InputControlStateListWrapper> operationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport("/reports/samples/Cascading_multi_select_report")
                 .values()
-                .parameter("Country_multi_select", "Mexico")
-                .parameter("Cascading_state_multi_select", "Guerrero", "Sinaloa")
+                .forInputControl(id, value)
+                .forInputControl(id, value1, value2)
                 .run();
 InputControlStateListWrapper result = operationResult.getEntity();
 ```
 In response you get updated values for specified input controls. If you want to get updated values with full structure of input controls, you should use `includeFullStructure(true)` setting:
 ```java
+        OperationResult<InputControlStateListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .values()
+                .forInputConrol(id, value1, value2)
+                .forInputConrol(id1, value3)
+		.includeFullStructure(true)
+                .update();
+		
+		// or
+		
+		
 OperationResult<InputControlStateListWrapper> operationResult = session
                 .inputControlsService()
                 .inputControls()
-                .container("/reports/samples/Cascading_multi_select_report")
+                .forReport("/reports/samples/Cascading_multi_select_report")
                 .values()
-                .parameter("Country_multi_select", "USA")
-                .parameter("Cascading_state_multi_select", "CA", "OR", "WA")
-                .includeFullStructure(true)
+                .forInputControl(id, value)
+                .forInputControl(id, value1, value2)
+		.includeFullStructure(true)
                 .run();
 InputControlStateListWrapper result = operationResult.getEntity();
 ```
+To uptate values of input controls with their structure in the same request: 
+```java
+        MultivaluedHashMap<String, String> inputControls = new NullableMultivaluedHashMap();
+        inputControls.addAll("Cascading_state_multi_select", "OR", "CA", "WA");
+        inputControls.addAll("Country_multi_select", "USA", "Canada");
 
+        final OperationResult<ReportInputControlsListWrapper> operationResult = session
+                .reportingService()
+                .report(REPORT_URI)
+                .inputControls()
+                .values()
+                .updateAndReorder(inputControls);
+		
+		// or
+		
+        final OperationResult<ReportInputControlsListWrapper> operationResult = session
+                .inputControlsService()
+                .inputControls()
+                .forReport("/reports/samples/Cascading_multi_select_report")
+                .values()
+                .updateAndReorder(inputControls);
+```
 Administration services:
 ========================
 Only administrative users may access the REST services for administration.

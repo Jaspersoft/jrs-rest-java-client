@@ -50,7 +50,7 @@ public class SingleResourceUploadBase64Adapter extends AbstractAdapter{
         this.targetResourceUri = resourceUri;
     }
 
-    public SingleResourceUploadBase64Adapter toFolder(String parentUri) {
+    public SingleResourceUploadBase64Adapter inFolder(String parentUri) {
         this.targetResourceUri = parentUri;
         return this;
     }
@@ -65,7 +65,7 @@ public class SingleResourceUploadBase64Adapter extends AbstractAdapter{
         return this;
     }
 
-    public OperationResult<ClientFile> upload() {
+    public OperationResult<ClientFile> create() {
 
         final ClientFile entity = new ClientFile().
                 setLabel(resource.getLabel()).
@@ -77,15 +77,8 @@ public class SingleResourceUploadBase64Adapter extends AbstractAdapter{
     }
 
     public OperationResult<ClientFile> createOrUpdate(InputStream inputStream, ClientFile resourceDescriptor) {
-        this.targetResourceUri = resource.getUri();
-        resourceDescriptor.setUri(resource.getUri()).setContent(ResourceUtil.toBase64EncodedContent(inputStream));
+        resourceDescriptor.setContent(ResourceUtil.toBase64EncodedContent(inputStream));
         resource = resourceDescriptor;
-        return  prepareCreateBase64Request().put(resourceDescriptor);
-    }
-
-    public OperationResult<ClientFile> createOrUpdate(ClientFile resourceDescriptor) {
-        this.targetResourceUri = resource.getUri();
-        resourceDescriptor.setUri(resource.getUri());
         return  prepareCreateBase64Request().put(resourceDescriptor);
     }
 
