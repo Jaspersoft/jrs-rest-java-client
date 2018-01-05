@@ -72,11 +72,6 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return this;
     }
 
-    public SingleResourceAdapter toFolder(String destinationUri) {
-        this.parentUri = destinationUri;
-        return this;
-    }
-
     public SingleResourceAdapter parameter(ResourceServiceParameter param, String value) {
         params.add(param.getName(), value);
         return this;

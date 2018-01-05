@@ -22,6 +22,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexRes
 
 import com.jaspersoft.jasperserver.dto.resources.ClientBundle;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
+import com.jaspersoft.jasperserver.dto.resources.ClientReference;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableFile;
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
@@ -108,9 +109,13 @@ public class DomainResourceBuilder extends DomainOperationProcessorDecorator {
         return this;
     }
 
-
     public DomainResourceBuilder withDataSource(ClientReferenceableDataSource dataSource) {
         super.domain.setDataSource(dataSource);
+        return this;
+    }
+
+    public DomainResourceBuilder withDataSource(String dataSourceUri) {
+        super.domain.setDataSource(new ClientReference().setUri(dataSourceUri));
         return this;
     }
 
