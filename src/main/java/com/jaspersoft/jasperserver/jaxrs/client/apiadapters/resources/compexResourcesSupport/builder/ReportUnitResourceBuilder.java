@@ -25,6 +25,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientReference;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.ReportUnitResourceOperationProcessorDecorator;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.MediaTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import java.io.File;
 import java.io.InputStream;
@@ -117,26 +118,33 @@ public class ReportUnitResourceBuilder extends ReportUnitResourceOperationProces
         return this;
     }
 
-    public ReportUnitResourceBuilder withFile(InputStream fileData, String label, String description) {
-        StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("file." + label, fileData);
+    public ReportUnitResourceBuilder withFile(InputStream fileData, String label, String description, ClientFile.FileType fileType) {
+        StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("files." + label,
+                fileData,
+                label,
+                MediaTypeUtil.stringToMediaType(fileType.getMimeType()));
         super.multipart.bodyPart(streamDataBodyPart);
         if (super.reportUnit.getFiles() == null) super.reportUnit.setFiles(new HashMap<String, ClientReferenceableFile>());
-        super.reportUnit.getFiles().put(label, new ClientFile().setLabel(label).setDescription(description));
+        super.reportUnit.getFiles().put(label, new ClientFile().setLabel(label).setDescription(description).setType(fileType));
         return this;
     }
 
-    public ReportUnitResourceBuilder withFile(File fileData, String label, String description) {
-        FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("file." + label, fileData);
+    public ReportUnitResourceBuilder withFile(File fileData, String label, String description, ClientFile.FileType fileType) {
+        FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("files." + label,
+                fileData,
+                MediaTypeUtil.stringToMediaType(fileType.getMimeType()));
         super.multipart.bodyPart(fileDataBodyPart);
         if (super.reportUnit.getFiles() == null) super.reportUnit.setFiles(new HashMap<String, ClientReferenceableFile>());
-        super.reportUnit.getFiles().put(label, new ClientFile().setLabel(label).setDescription(description));
+        super.reportUnit.getFiles().put(label, new ClientFile().setLabel(label).setDescription(description).setType(fileType));
         return this;
     }
 
-    public ReportUnitResourceBuilder withFile(String fileData, String label, String description) {
-        super.multipart.field("file." + label, fileData);
+    public ReportUnitResourceBuilder withFile(String fileData, String label, String description, ClientFile.FileType fileType) {
+        super.multipart.field("file." + label,
+                fileData,
+                MediaTypeUtil.stringToMediaType(fileType.getMimeType()));
         if (super.reportUnit.getFiles() == null) super.reportUnit.setFiles(new HashMap<String, ClientReferenceableFile>());
-        super.reportUnit.getFiles().put(label, new ClientFile().setLabel(label).setDescription(description));
+        super.reportUnit.getFiles().put(label, new ClientFile().setLabel(label).setDescription(description).setType(fileType));
         return this;
     }
 
@@ -149,6 +157,16 @@ public class ReportUnitResourceBuilder extends ReportUnitResourceOperationProces
 
     public ReportUnitResourceBuilder withLabel(String label) {
         this.reportUnit.setLabel(label);
+        return this;
+    }
+
+    public ReportUnitResourceBuilder withDataSource(String datasourceUri) {
+        this.reportUnit.setDataSource(new ClientReference().setUri(datasourceUri));
+        return this;
+    }
+
+    public ReportUnitResourceBuilder withDataSource(ClientReference datasource) {
+        this.reportUnit.setDataSource(datasource);
         return this;
     }
 

@@ -46,7 +46,7 @@ public class SingleResourceUploadMultipartAdapter extends AbstractAdapter{
         this.targetResourceUri = resourceUri;
     }
 
-    public SingleResourceUploadMultipartAdapter toFolder(String destinationUri) {
+    public SingleResourceUploadMultipartAdapter inFolder(String destinationUri) {
         this.targetResourceUri = destinationUri;
         return this;
     }
@@ -66,12 +66,11 @@ public class SingleResourceUploadMultipartAdapter extends AbstractAdapter{
         return this;
     }
 
-    public OperationResult<ClientFile> upload() {
+    public OperationResult<ClientFile> create() {
 
         FormDataMultiPart formDataMultiPart = buildMultiPartForm();
         JerseyRequest<ClientFile> request = buildRequest();
-        request.addHeader("Content-Version", "-1");
-        return  (predefinedName != null)? request.put(formDataMultiPart): request.post(formDataMultiPart);
+        return request.post(formDataMultiPart);
     }
 
     public OperationResult<ClientFile> createOrUpdate(InputStream inputStream, ClientFile resourceDescriptor) {
@@ -81,18 +80,20 @@ public class SingleResourceUploadMultipartAdapter extends AbstractAdapter{
         final JerseyRequest<ClientFile> request = buildRequest();
         final Integer version = resourceDescriptor.getVersion();
         if (version != null) {
-            request.addHeader("Content-Version", version.toString());
+            request.addHeader("Content-Version", "-1");
         }
         return  request.put(formDataMultiPart);
     }
 
     protected FormDataMultiPart buildMultiPartForm() {
         FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
-        StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("data", inputStream);
+        String resourceType = (resource.getType() != null) ? resource.getType().toString() : ClientFile.FileType.unspecified.toString();
+        final String mimeType = (resource.getType() != null) ? resource.getType().getMimeType() : ClientFile.FileType.unspecified.getMimeType();
+        StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("data", inputStream, mimeType);
         formDataMultiPart.bodyPart(streamDataBodyPart);
         formDataMultiPart.field("label", resource.getLabel());
         formDataMultiPart.field("description", resource.getDescription());
-        formDataMultiPart.field("type", resource.getType().toString());
+        formDataMultiPart.field("type", resourceType);
         return formDataMultiPart;
     }
     private JerseyRequest<ClientFile> buildRequest() {
