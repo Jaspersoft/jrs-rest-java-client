@@ -93,8 +93,10 @@ public class SingleResourceUploadMultipartAdapter extends AbstractAdapter{
         StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("data", inputStream, resource.getLabel(), MediaTypeUtil.stringToMediaType(mimeType));
         formDataMultiPart.bodyPart(streamDataBodyPart);
         formDataMultiPart.field("label", resource.getLabel());
-        formDataMultiPart.field("description", resource.getDescription());
         formDataMultiPart.field("type", resourceType);
+        if (resource.getDescription() != null) {
+            formDataMultiPart.field("description", resource.getDescription());
+        }
         return formDataMultiPart;
     }
     private JerseyRequest<ClientFile> buildRequest() {
