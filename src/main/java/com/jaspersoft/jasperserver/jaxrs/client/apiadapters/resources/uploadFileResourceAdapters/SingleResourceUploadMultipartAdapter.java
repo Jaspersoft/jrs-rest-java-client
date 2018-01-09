@@ -2,6 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.uploadFil
 
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.MediaTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceServiceParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
@@ -89,7 +90,7 @@ public class SingleResourceUploadMultipartAdapter extends AbstractAdapter{
         FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
         String resourceType = (resource.getType() != null) ? resource.getType().toString() : ClientFile.FileType.unspecified.toString();
         final String mimeType = (resource.getType() != null) ? resource.getType().getMimeType() : ClientFile.FileType.unspecified.getMimeType();
-        StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("data", inputStream, mimeType);
+        StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("data", inputStream, resource.getLabel(), MediaTypeUtil.stringToMediaType(mimeType));
         formDataMultiPart.bodyPart(streamDataBodyPart);
         formDataMultiPart.field("label", resource.getLabel());
         formDataMultiPart.field("description", resource.getDescription());
