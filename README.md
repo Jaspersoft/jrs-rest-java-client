@@ -1693,8 +1693,8 @@ The REST client allows to create file resource in few ways:
                 .resourcesService()
                 .fileResource(new FileInputStream(pathToFile), fileResourceDescriptor)
                 .asInputStream()
-                .toFolder("/public")
-                .upload();
+                .inFolder("/public")
+                .create();
  ```
  - **as Base64** encoded content:
  ```java
@@ -1706,8 +1706,8 @@ The REST client allows to create file resource in few ways:
                 .resourcesService()
                 .fileResource(new FileInputStream(pathToFile), resourceDescriptor)
                 .asBase64EncodedContent()
-                .toFolder("/public")
-                .upload();
+                .inFolder("/public")
+                .create();
  ```
   - **as multipart form** :
   ```java
@@ -1720,11 +1720,17 @@ The REST client allows to create file resource in few ways:
                 .fileResource(new FileInputStream(pathToFile),
                         resourceDescriptor)
                 .asMultipartForm()
-                .toFolder("/public")
-                .upload();
+                .inFolder("/public")
+                .create();
   ```
 ### Modifying a Resource
 Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual fields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.
+```java
+        OperationResult<ClientResource> result = session
+                .resourcesService()
+                .resource(testResourceUri)
+                .createOrUpdate(testResource.setLabel("New test label").setDescription("new test description"));
+```
 The `patchResource()` method updates individual descriptor fields on the target resource. It also accept expressions that modify the descriptor in the Spring Expression Language. This expression language lets you easily modify the structure and values of descriptors.
 ```java
 PatchDescriptor patchDescriptor = new PatchDescriptor();
@@ -1744,7 +1750,7 @@ To copy a resource, specify in `toFolder()` method its URI and in `resource()` m
 ```java
         OperationResult<ClientResource> clientResource = session.resourcesService()
                 .resource(testDomainUri)
-                .toFolder("/public/testFolder")
+                .inFolder("/public/testFolder")
                 .copy();
 ```
 
@@ -1753,7 +1759,7 @@ To move a resource, specify in `moveFrom()` method its URI and in `resource()` m
 ```java
         OperationResult<ClientResource> clientResource = session.resourcesService()
                 .resource(testResourceUri)
-                .toFolder("/public/testFolder")
+                .inFolder("/public/testFolder")
                 .move();
 ```
 ### Uploading complex resources
@@ -1779,8 +1785,8 @@ SemanticLayerDataSource nested resources (schema, bundles and security file) mig
 			//OR .withSecurityFile(securityFileXmlStringCntent, label, description)
 			//OR .withSecurityFile(securityFileDecriptor)
 			.withBundle(bundleInputStream, label, description)
-			//OR .withBundle(bundleFile, label, description)
-			//OR .withBundle(bundleSringContent, label, description)
+			//OR .withBundle(bundleFile, label, description, locale)
+			//OR .withBundle(bundleSringContent, label, description, locale)
 			//OR .withBundle(bundleDescriptor)
 			//OR .withBundles(bundlesDescriptorsList)
 			.withLabel("testDomain")
@@ -1804,6 +1810,30 @@ The other way to create SemanticLayerDataSource is to decribe it in resourceDesc
                         .inFolder("/public")
                         .create();        
 ```
+or
+```java
+ ClientSemanticLayerDataSource resourceDescriptor = new ClientSemanticLayerDataSource()
+                .setDataSource(new ClientReference().setUri(domain.getDataSource().getUri()))
+                .setLabel("testDomain")
+		.setDescription("testDescription");
+        OperationResult<ClientSemanticLayerDataSource> testResource =
+                session.resourcesService()
+                        .semanticLayerDataSourceResource(resourceDescriptor)
+                        .withSchema(schemaInputStream, schemaFilelabel, schemaFileDescription)
+			//OR .withSchema(schemaStringXmlContent, label, description)
+			//OR .withSchema(schemaUri)
+			.withSecurityFile(securityFileInputStream, label, description)
+			//OR .withSecurityFile(securityFile, label, description)
+			//OR .withSecurityFile(securityFileXmlStringCntent, label, description)
+			//OR .withSecurityFile(securityFileDecriptor)
+			.withBundle(bundleInputStream, label, description)
+			//OR .withBundle(bundleFile, label, description, locale)
+			//OR .withBundle(bundleSringContent, label, description, locale)
+			//OR .withBundle(bundleDescriptor)
+			//OR .withBundles(bundlesDescriptorsList)
+			.inFolder("/public")
+                        .create();        
+```
 
 #### Uploading MondrianConnection
 REST Client allows you to create `MondrianConnection` resource with mondrian schema XML file specified as java.io.InputStream, java.io.File or as java.lang.String. 
@@ -1819,6 +1849,21 @@ REST Client allows you to create `MondrianConnection` resource with mondrian sch
 	    	.withLabel(label)
 		.withDescription(description)
 		.inFolder(parentFolderUri)
+		.create()
+```
+or
+```java
+ClientMondrianConnection resourceDescriptor = new ClientMondrianConnection()
+		.setDatasource(dataSource)
+	    	.setLabel(label)
+		.setDescription(description)
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.mondrianConnection(resourceDescriptor)
+            	.withMondrianSchema(schemaInputStream, label, description)
+	    	//OR .withMondrianSchema(schemaFile, label, description)
+	    	//OR .withMondrianSchema(schemaXmlStringContent, label, description)
+	    	.inFolder(parentFolderUri)
 		.create()
 ```
 or create `MondrianConnection` using resource descriptor:
@@ -1837,6 +1882,24 @@ REST Client allows you to create `MondrianConnection` resource with mondrian sch
 	ClientMondrianConnection connection = session
     		.resourcesService()
         	.secureMondrianConnection()
+            	. withMondrianSchema(schemainputStream, label, description)
+	    	//OR .withMondrianSchema(schemaFile, label, description)
+	    	//OR .withMondrianSchema(schemaXmlStringContent, label, description) 
+	    	.withDatasource(dataSource)
+	    	.withLabel(label)
+		.withDescription(description)
+		.inFolder(parentFolderUri)
+		.create()
+```
+or
+```java
+	ClientMondrianConnection resourceDescriptor = new ClientMondrianConnection()
+		.setDatasource(dataSource)
+	    	.setLabel(label)
+		.setDescription(description)
+	ClientMondrianConnection connection = session
+    		.resourcesService()
+        	.secureMondrianConnection(respurceDescriptor)
             	. withMondrianSchema(schemainputStream, label, description)
 	    	//OR .withMondrianSchema(schemaFile, label, description)
 	    	//OR .withMondrianSchema(schemaXmlStringContent, label, description) 
@@ -1865,18 +1928,40 @@ To upload `ReportUnit` resource to the server you can use next API, where JRXML 
                         //OR .withJrxml(jrxmlStringContent, label, description)
 			//OR .withJrxml(jrxmlFile, label, description) 
 			//OR .withJrxml(resourceDescriptor)
-			.withFile(new ClientReference().setUri(fileUri), label)
-                        .withFile(new ClientReference().setUri(fileUri), label)
-                        //OR .withFile(InputStream fileData, String label, String description)
-			//OR .withFile(File fileData, String label, String description)
-			//OR .withFile(String fileData, String label, String description) 
-			//OR .withFile(ClientReferenceableFile fileUri, String name)
+			.withFile(new ClientReference().setUri(fileUri), label, fileType)
+                        .withFile(new ClientReference().setUri(fileUri), label, fileType)
+                        //OR .withFile(InputStream fileData, String label, String description, fileType)
+			//OR .withFile(File fileData, String label, String description, fileType)
+			//OR .withFile(String fileData, String label, String description, fileType) 
+			//OR .withFile(ClientReferenceableFile fileUri, String name, fileType)
 			.withLabel("testReport")
                         .withDescription("testDescription")
                         .inFolder("/public")
                         .create();
 ```
-Also the API alloes to upload reportUnit  described in resource descriptor only:
+or
+```java
+	ClientReportUnit resourceDescriptor = new ClientReportUnit()
+                .setLabel("testReport")
+                .setDescription("testDescription");
+		
+        OperationResult<ClientReportUnit> repUnut =
+                session.resourcesService()
+                        .reportUnitResource(resourceDescriptor)
+                        .withJrxml(inputStream, label, description)
+                        //OR .withJrxml(jrxmlStringContent, label, description)
+			//OR .withJrxml(jrxmlFile, label, description) 
+			//OR .withJrxml(resourceDescriptor)
+			.withFile(new ClientReference().setUri(fileUri), label, fileType)
+                        .withFile(new ClientReference().setUri(fileUri), label, fileType)
+                        //OR .withFile(InputStream fileData, String label, String description, fileType)
+			//OR .withFile(File fileData, String label, String description, fileType)
+			//OR .withFile(String fileData, String label, String description, fileType) 
+			//OR .withFile(ClientReferenceableFile fileUri, String name, fileType)
+                        .inFolder("/public")
+                        .create();
+```
+Also the API allows to upload reportUnit  described in resource descriptor only:
 ```java
         final ClientReportUnit clientReportUnit = new ClientReportUnit()
                 .setLabel("testReport")
@@ -1909,6 +1994,21 @@ Please, pay attention, unlike SemanticLayerDataSource the Domain resource doesn'
                         .withSchema(schemaObject)
                         .withLabel("testDomain")
                         .withDescription("testDescription")
+                        .inFolder("/public")
+                        .create();
+        
+```
+or
+```java
+	ClientDomain resourceDescriptor = new ClientDomain ()
+	                .setDataSource(new ClientReference().setUri(datasourceUri))
+                        .setSchema(schemaObject)
+                        .setLabel("testDomain")
+                        .setDescription("testDescription")
+       OperationResult<ClientDomain> resDomain =
+                session.resourcesService()
+                        .domainResource()
+                        .withSchema(schemaObject)
                         .inFolder("/public")
                         .create();
         
