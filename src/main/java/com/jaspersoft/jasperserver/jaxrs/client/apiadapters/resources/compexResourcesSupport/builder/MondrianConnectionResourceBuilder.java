@@ -22,15 +22,14 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexRes
 
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
-import com.jaspersoft.jasperserver.dto.resources.ClientReference;
-import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableDataSource;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.MondrianConnectionResourceOperationProcessorDecorator;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import java.io.File;
-import java.io.InputStream;
-import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
+
+import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.InputStream;
 
 /**
  * @author Alexander Krasnyanskiy
@@ -39,60 +38,40 @@ public class MondrianConnectionResourceBuilder extends MondrianConnectionResourc
     public MondrianConnectionResourceBuilder(ClientMondrianConnection entity, SessionStorage storage) {
         super(storage, entity);
     }
-@Deprecated
+
+    @Deprecated
     public MondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, ClientFile schemaRef) {
         multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
         super.connection.setSchema(schemaRef);
         return this;
     }
-@Deprecated
+
+    @Deprecated
     public MondrianConnectionResourceBuilder withMondrianSchema(InputStream schema) {
         multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
         return this;
     }
-@Deprecated
+
+    @Deprecated
     public MondrianConnectionResourceBuilder withUri(String uri) {
         super.connection.setUri(uri);
         return this;
     }
 
-    public MondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, String label, String description) {
+    public MondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, String label) {
         StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("schema", schema, label, new MediaType("application", "olapMondrianSchema+xml"));
         super.multipart.bodyPart(streamDataBodyPart);
-        super.connection.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.olapMondrianSchema));
         return this;
     }
 
-    public MondrianConnectionResourceBuilder withMondrianSchema(File schema, String label, String description) {
+    public MondrianConnectionResourceBuilder withMondrianSchema(File schema) {
         FileDataBodyPart streamDataBodyPart = new FileDataBodyPart("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
         super.multipart.bodyPart(streamDataBodyPart);
-        super.connection.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.olapMondrianSchema));
         return this;
     }
 
-    public MondrianConnectionResourceBuilder withMondrianSchema(String schema, String label, String description) {
+    public MondrianConnectionResourceBuilder withMondrianSchema(String schema) {
         multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
-        super.connection.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.olapMondrianSchema));
-        return this;
-    }
-
-    public MondrianConnectionResourceBuilder withDataSource(ClientReferenceableDataSource dataSource) {
-        super.connection.setDataSource(dataSource);
-        return this;
-    }
-
-    public MondrianConnectionResourceBuilder withDataSource(String dataSourceUri) {
-        super.connection.setDataSource(new ClientReference().setUri(dataSourceUri));
-        return this;
-    }
-
-    public MondrianConnectionResourceBuilder withLabel(String label) {
-        super.connection.setLabel(label);
-        return this;
-    }
-
-    public MondrianConnectionResourceBuilder withDescription(String description) {
-        super.connection.setDescription(description);
         return this;
     }
 

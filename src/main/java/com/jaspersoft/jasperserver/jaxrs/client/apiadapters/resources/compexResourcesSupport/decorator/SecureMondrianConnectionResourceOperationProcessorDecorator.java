@@ -24,8 +24,9 @@ import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.processor.CommonOperationProcessorImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+
+import javax.ws.rs.core.MediaType;
 
 /**
  * @author Alexander Krasnyanskiy
@@ -41,7 +42,8 @@ public class SecureMondrianConnectionResourceOperationProcessorDecorator {
         this.multipart = new FormDataMultiPart();
         this.connection = connection;
     }
-@Deprecated
+
+    @Deprecated
     public OperationResult<ClientSecureMondrianConnection> createInFolder(String path) {
         return processor.create(multipart, new MediaType("application", "repository.secureMondrianConnection+xml"), path);
     }

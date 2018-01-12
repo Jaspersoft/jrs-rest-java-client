@@ -22,20 +22,17 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexRes
 
 import com.jaspersoft.jasperserver.dto.resources.ClientBundle;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile;
-import com.jaspersoft.jasperserver.dto.resources.ClientReference;
-import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableDataSource;
-import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.decorator.SemanticLayerResourceOperationProcessorDecorator;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
+
+import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import javax.ws.rs.core.MediaType;
-import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
-import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 
 /**
  * @author Alexander Krasnyanskiy
@@ -62,31 +59,22 @@ public class SemanticLayerResourceBuilder extends SemanticLayerResourceOperation
         return this;
     }
 
-    public SemanticLayerResourceBuilder withSchema(String schemaContent, String label, String description) {
+    public SemanticLayerResourceBuilder withSchema(String schemaContent) {
         super.multipart.field("schema", schemaContent, MediaType.APPLICATION_XML_TYPE);
-        super.domain.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.xml));
         return this;
     }
 
-    public SemanticLayerResourceBuilder withSchema(InputStream schema, String label, String description) {
+    public SemanticLayerResourceBuilder withSchema(InputStream schema, String label) {
         StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("schema", schema, label, MediaType.APPLICATION_XML_TYPE);
-        super.domain.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.xml));
         super.multipart.bodyPart(streamDataBodyPart);
         return this;
     }
 
-    public SemanticLayerResourceBuilder withSchema(File schema, String label, String description) {
+    public SemanticLayerResourceBuilder withSchema(File schema) {
         FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("schema", schema, MediaType.APPLICATION_XML_TYPE);
         super.multipart.bodyPart(fileDataBodyPart);
-        super.domain.setSchema(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.xml));
         return this;
     }
-
-    public SemanticLayerResourceBuilder withSchema(ClientReferenceableFile schemaUri) {
-        this.domain.setSchema(schemaUri);
-        return this;
-    }
-
 
     @Deprecated
     public SemanticLayerResourceBuilder withSecurityFile(InputStream securityFile, ClientFile securityFileRef) {
@@ -102,28 +90,20 @@ public class SemanticLayerResourceBuilder extends SemanticLayerResourceOperation
         return this;
     }
 
-    public SemanticLayerResourceBuilder withSecurityFile(InputStream securityFile, String label, String description) {
-        StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("securityFile", securityFile, label,  MediaType.APPLICATION_XML_TYPE);
+    public SemanticLayerResourceBuilder withSecurityFile(InputStream securityFile, String label) {
+        StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("securityFile", securityFile, label, MediaType.APPLICATION_XML_TYPE);
         super.multipart.bodyPart(streamDataBodyPart);
-        super.domain.setSecurityFile(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.xml));
         return this;
     }
 
-    public SemanticLayerResourceBuilder withSecurityFile(File securityFile, String label, String description) {
-        FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("securityFile", securityFile,  MediaType.APPLICATION_XML_TYPE);
+    public SemanticLayerResourceBuilder withSecurityFile(File securityFile) {
+        FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("securityFile", securityFile, MediaType.APPLICATION_XML_TYPE);
         super.multipart.bodyPart(fileDataBodyPart);
-        super.domain.setSecurityFile(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.xml));
         return this;
     }
 
-    public SemanticLayerResourceBuilder withSecurityFile(String securityFile, String label, String description) {
+    public SemanticLayerResourceBuilder withSecurityFile(String securityFile) {
         super.multipart.field("securityFile", securityFile, MediaType.APPLICATION_XML_TYPE);
-        super.domain.setSecurityFile(new ClientFile().setLabel(label).setDescription(description).setType(ClientFile.FileType.xml));
-        return this;
-    }
-
-    public SemanticLayerResourceBuilder withSecurityFile(ClientReferenceableFile securityFile) {
-        this.domain.setSecurityFile(securityFile);
         return this;
     }
 
@@ -154,76 +134,20 @@ public class SemanticLayerResourceBuilder extends SemanticLayerResourceOperation
         return this;
     }
 
-    public SemanticLayerResourceBuilder withBundle(InputStream bundle, String label, String description, Locale locale) {
-        StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("bundles.bundle[" + bundleCounter++ + "]", bundle, label,  MediaType.TEXT_PLAIN_TYPE);
+    public SemanticLayerResourceBuilder withBundle(InputStream bundle, String label) {
+        StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("bundles.bundle[" + bundleCounter++ + "]", bundle, label, MediaType.TEXT_PLAIN_TYPE);
         super.multipart.bodyPart(streamDataBodyPart);
-        if (domain.getBundles() == null)domain.setBundles(new ArrayList<ClientBundle>());
-        super.domain.getBundles().add(new ClientBundle()
-                .setFile(new ClientFile()
-                        .setLabel(label)
-                        .setDescription(description)
-                        .setType(ClientFile.FileType.prop))
-        .setLocale(locale.toString()));
         return this;
     }
 
-    public SemanticLayerResourceBuilder withBundle(File bundle, String label, String description, Locale locale) {
+    public SemanticLayerResourceBuilder withBundle(File bundle) {
         FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
         super.multipart.bodyPart(fileDataBodyPart);
-        if (domain.getBundles() == null)domain.setBundles(new ArrayList<ClientBundle>());
-        super.domain.getBundles().add(new ClientBundle()
-                .setFile(new ClientFile()
-                        .setLabel(label)
-                        .setDescription(description)
-                        .setType(ClientFile.FileType.prop))
-        .setLocale(locale.toString()));
         return this;
     }
 
-    public SemanticLayerResourceBuilder withBundle(String bundle, String label, String description, Locale locale) {
+    public SemanticLayerResourceBuilder withBundle(String bundle) {
         super.multipart.field("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
-        if (domain.getBundles() == null)domain.setBundles(new ArrayList<ClientBundle>());
-        super.domain.getBundles().add(new ClientBundle()
-                .setFile(new ClientFile()
-                        .setLabel(label)
-                        .setDescription(description)
-                        .setType(ClientFile.FileType.prop))
-        .setLocale(locale.toString()));
-        return this;
-    }
-
-    public SemanticLayerResourceBuilder withBundle(ClientBundle bundle) {
-        if (domain.getBundles() == null) domain.setBundles(new ArrayList<ClientBundle>());
-        this.domain.getBundles().add(bundle);
-        return this;
-    }
-
-    public SemanticLayerResourceBuilder withBundles(List<ClientBundle> bundles) {
-        if (domain.getBundles() == null) {
-            domain.setBundles(bundles);
-        } else {
-            this.domain.getBundles().addAll(bundles);
-        }
-        return this;
-    }
-
-    public SemanticLayerResourceBuilder withDataSource(ClientReferenceableDataSource dataSource) {
-        super.domain.setDataSource(dataSource);
-        return this;
-    }
-
-    public SemanticLayerResourceBuilder withDataSource(String dataSourceUri) {
-        super.domain.setDataSource(new ClientReference().setUri(dataSourceUri));
-        return this;
-    }
-
-    public SemanticLayerResourceBuilder withLabel(String label) {
-        super.domain.setLabel(label);
-        return this;
-    }
-
-    public SemanticLayerResourceBuilder withDescription(String description) {
-        super.domain.setDescription(description);
         return this;
     }
 

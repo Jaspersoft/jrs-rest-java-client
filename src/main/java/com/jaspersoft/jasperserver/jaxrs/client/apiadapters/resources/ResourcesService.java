@@ -36,6 +36,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexReso
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.SecureMondrianConnectionResourceBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.SemanticLayerResourceBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+
 import java.io.InputStream;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.ResourceBuilderFactory.getBuilder;
@@ -79,47 +80,24 @@ public class ResourcesService extends AbstractAdapter {
         return getBuilder(copy, sessionStorage);
     }
 
-    public SemanticLayerResourceBuilder semanticLayerDataSourceResource() {
-        return getBuilder(new ClientSemanticLayerDataSource(), sessionStorage);
-    }
-
     public SemanticLayerResourceBuilder semanticLayerDataSourceResource(ClientSemanticLayerDataSource resourceDescriptor) {
         return getBuilder(resourceDescriptor, sessionStorage);
-    }
-
-    public DomainResourceBuilder domainResource() {
-        return getBuilder(new ClientDomain(), sessionStorage);
     }
 
     public DomainResourceBuilder domainResource(ClientDomain resourceDescriptor) {
         return getBuilder(resourceDescriptor, sessionStorage);
     }
 
-    public ReportUnitResourceBuilder reportUnitResource() {
-        return getBuilder(new ClientReportUnit(), sessionStorage);
-    }
-
     public ReportUnitResourceBuilder reportUnitResource(ClientReportUnit resourceDescriptor) {
         return getBuilder(resourceDescriptor, sessionStorage);
-    }
-
-    public DomainTopicResourceBuilder domainTopicResource() {
-        return getBuilder(new ClientDomainTopic(), sessionStorage);
     }
 
     public DomainTopicResourceBuilder domainTopicResource(ClientDomainTopic resourceDescriptor) {
         return getBuilder(resourceDescriptor, sessionStorage);
     }
 
-    public MondrianConnectionResourceBuilder mondrianConnection() {
-        return getBuilder(new ClientMondrianConnection(), sessionStorage);
-    }
-
     public MondrianConnectionResourceBuilder mondrianConnection(ClientMondrianConnection mondrianConnectionDescriptor) {
         return getBuilder(mondrianConnectionDescriptor, sessionStorage);
-    }
-    public SecureMondrianConnectionResourceBuilder secureMondrianConnection() {
-        return getBuilder(new ClientSecureMondrianConnection(), sessionStorage);
     }
 
     public SecureMondrianConnectionResourceBuilder secureMondrianConnection(ClientSecureMondrianConnection mondrianConnectionDescriptor) {
