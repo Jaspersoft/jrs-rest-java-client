@@ -115,7 +115,43 @@ public enum ResourceSearchParameter {
      *
      * Type/Value: String
      */
-    RESOURCE_URI("resourceUri")
+    RESOURCE_URI("resourceUri"),
+
+    /**
+     * Pagination. Setting this parameter to true enables full page pagination.
+     * Depending on the type of search and user permissions, this parameter can cause significant performance delays.
+     *
+     * In case of forceFullPage=true client should use value of "Next-Offset" HTTP response header for next pagination request.
+     *
+     * Type/Value: true|false
+     * Default: false
+     */
+    FORCE_FULL_PAGE("forceFullPage"),
+
+    /**
+     * Resource type to exclude. Multiple Resource types allowed.
+     * If type parameter is specified, then this parameter is ignored.
+     *
+     * Type/Value: String
+     */
+    EXCLUDE_TYPE("excludeType"),
+
+    /**
+     * Folder, results of which should be omitted. In multitenant context works as relative,
+     * i.e. value "/tmp" will exclude results from /tmp, /organizations/organization_1/tmp etc. Multiple allowed.
+     *
+     * Type/Value: String
+     */
+    EXCLUDE_FOLDER("excludeFolder"),
+
+    /**
+     * Since 6.0
+     * Search for all resources depending on specific resource.
+     * If this parameter is specified, then all the other parameters except pagination are ignored.
+     *
+     * Type/Value: String
+     */
+    DEPENDS_ON("dependsOn")
 
     ;
 
