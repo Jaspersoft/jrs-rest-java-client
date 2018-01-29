@@ -30,6 +30,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ExportFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+
 import java.io.InputStream;
 import java.util.Arrays;
 
@@ -100,14 +101,14 @@ public class ExportRequestAdapter extends AbstractAdapter {
 
     /**
      * @deprecated Replaced by {@link ExportRequestAdapter#fetch(long)}
-     * */
+     */
     @Deprecated
     public OperationResult<InputStream> fetch() {
 
         return fetch(500);
     }
 
-@Deprecated
+    @Deprecated
     public OperationResult<InputStream> fetch(long interval) {
         State state;
         while (!"finished".equals((state = state().getEntity()).getPhase())) {

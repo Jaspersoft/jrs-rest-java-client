@@ -22,9 +22,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportParameters;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
-import java.util.TimeZone;
+
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.TimeZone;
 
 /**
  * <p></p>
@@ -151,7 +151,7 @@ public class ReportExecutionRequest {
         return outputFormat;
     }
 
-    public ReportExecutionRequest setOutputFormat(ReportOutputFormat outputFormat) {
+    public ReportExecutionRequest setOutputFormat(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportOutputFormat outputFormat) {
         this.outputFormat = outputFormat.toString().toLowerCase();
         return this;
     }

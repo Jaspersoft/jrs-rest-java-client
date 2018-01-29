@@ -25,7 +25,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel;
  * Definition model of a thumbnail execution job. Model is used in search/ update only.
  *
  * <p>
- * A thumbnail job definition specifies wich thumbnail inFolder execute and when,
+ * A thumbnail job definition specifies which thumbnail inFolder execute and when,
  * what output inFolder generate and where inFolder send the output.
  * </p>
  *

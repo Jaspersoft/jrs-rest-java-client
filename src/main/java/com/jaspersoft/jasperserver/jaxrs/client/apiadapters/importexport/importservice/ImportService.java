@@ -22,6 +22,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.import
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+
 import java.io.File;
 
 public class ImportService extends AbstractAdapter {
@@ -29,7 +30,8 @@ public class ImportService extends AbstractAdapter {
     public ImportService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
-@Deprecated
+
+    @Deprecated
     public ImportTaskRequestAdapter newTask() {
         return new ImportTaskRequestAdapter(sessionStorage);
     }

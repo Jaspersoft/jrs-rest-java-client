@@ -5,10 +5,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportopti
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReorderingReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportOutputFormat;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import java.util.LinkedList;
-import java.util.List;
-import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -17,6 +15,10 @@ import org.powermock.reflect.Whitebox;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.ws.rs.core.MultivaluedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -188,7 +190,7 @@ public class ReportsAdapterTest extends PowerMockTestCase {
         ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, REPORT_UNIT_URI);
 
         /* When */
-        RunReportAdapter retrieved = adapterSpy.prepareForRun(ReportOutputFormat.PDF, new PageRange(1, 10));
+        RunReportAdapter retrieved = adapterSpy.prepareForRun(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportOutputFormat.PDF, new com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.PageRange(1, 10));
 
         /* Then */
         assertSame(retrieved.getSessionStorage(), sessionStorageMock);
@@ -250,7 +252,7 @@ public class ReportsAdapterTest extends PowerMockTestCase {
         ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, REPORT_UNIT_URI);
 
         /* When */
-        RunReportAdapter retrieved = adapterSpy.prepareForRun("pdf", new PageRange(1, 10));
+        RunReportAdapter retrieved = adapterSpy.prepareForRun("pdf", new com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.PageRange(1, 10));
 
         /* Then */
         assertSame(retrieved.getSessionStorage(), sessionStorageMock);

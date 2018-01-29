@@ -28,6 +28,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,8 +40,6 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
 
 import static java.util.regex.Pattern.compile;
 
@@ -50,11 +51,11 @@ public class RunReportAdapter extends AbstractAdapter {
     private final String format;
     private  TimeZone timeZone;
     private String[] pages = new String[0];
-    private ArrayList<String> path = new ArrayList<String>();
+    private ArrayList<String> path = new ArrayList<>();
 
     public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, String format) {
         super(sessionStorage);
-        this.params = new MultivaluedHashMap<String, String>();
+        this.params = new MultivaluedHashMap<>();
         this.reportUnitUri = reportUnitUri;
         this.format = format.toLowerCase();
     }
@@ -80,7 +81,7 @@ public class RunReportAdapter extends AbstractAdapter {
     }
 
     public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, String format,
-                            PageRange range) {
+                            com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.PageRange range) {
         this(sessionStorage, reportUnitUri, format);
         this.pages = new String[]{range.getRange()};
     }
