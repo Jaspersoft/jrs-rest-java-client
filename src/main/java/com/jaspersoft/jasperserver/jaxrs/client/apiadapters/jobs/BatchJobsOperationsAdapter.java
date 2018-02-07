@@ -30,22 +30,13 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobIdListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.JobSummaryListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.AnnotationIntrospector;
@@ -53,6 +44,17 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
+
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
@@ -70,7 +72,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
     public BatchJobsOperationsAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
-        params = new MultivaluedHashMap<String, String>();
+        params = new MultivaluedHashMap<>();
     }
 
     public BatchJobsOperationsAdapter(SessionStorage sessionStorage, Long... ids) {
@@ -79,13 +81,13 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     }
 
     public BatchJobsOperationsAdapter parameter(JobsParameter parameter, String value) {
-        params.add(parameter.getName(), value);
+        params.add(parameter.getName(), UrlUtils.encode(value));
         return this;
     }
 
     public BatchJobsOperationsAdapter parameters(JobsParameter parameter, String... values) {
         for (String value : values) {
-            params.add(parameter.getName(), value);
+            params.add(parameter.getName(), UrlUtils.encode(value));
         }
         return this;
     }
@@ -123,7 +125,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
         request.addParams(params);
         if (searchCriteria != null) {
             String criteriaJson = buildJson(searchCriteria);
-            request.addParam("example", URLEncoder.encode(criteriaJson), "UTF-8");
+            request.addParam("example", UrlUtils.encode(criteriaJson));
         }
         return request;
     }
@@ -273,6 +275,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     public OperationResult<JobSummaryListWrapper> search() {
         return search(null);
     }
+
     /**
      * @deprecated Replaced by {@link BatchJobsOperationsAdapter#searchJobs(com.jaspersoft.jasperserver.dto.job.ClientReportJob)}.
      */
@@ -280,6 +283,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
         JerseyRequest<JobSummaryListWrapper> request = prepareSearchRequest(searchCriteria);
         return request.get();
     }
+
     /**
      * @deprecated Replaced by {@link BatchJobsOperationsAdapter#asyncSearchJobs(com.jaspersoft.jasperserver.dto.job.ClientReportJob, com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}.
      */
@@ -294,6 +298,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
+
     /**
      * @deprecated Replaced by {@link BatchJobsOperationsAdapter#prepareSearchRequest(com.jaspersoft.jasperserver.dto.job.ClientReportJob)}.
      */
@@ -356,6 +361,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
+
     /**
      * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.BatchJobsOperationsAdapter#pauseJobs()}.
      */
@@ -411,6 +417,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
         JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
         return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, RESTART}).post(jobIdListWrapper);
     }
+
     /**
      * @deprecated Replaced by {@link BatchJobsOperationsAdapter#asyncRestartJobs(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}.
      */

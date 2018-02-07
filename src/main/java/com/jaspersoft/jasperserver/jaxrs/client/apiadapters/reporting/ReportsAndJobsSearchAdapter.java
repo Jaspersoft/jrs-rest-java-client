@@ -40,7 +40,7 @@ public class ReportsAndJobsSearchAdapter extends AbstractAdapter {
     }
 
     public ReportsAndJobsSearchAdapter parameter(ReportAndJobSearchParameter param, String value) {
-        params.add(param.getName(), value);
+        params.add(param.getName(), UrlUtils.encode(value));
         return this;
     }
 

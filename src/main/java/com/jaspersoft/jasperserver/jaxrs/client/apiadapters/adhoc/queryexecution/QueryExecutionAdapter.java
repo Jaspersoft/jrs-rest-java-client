@@ -9,10 +9,11 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.ws.rs.core.MultivaluedHashMap;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.core.MultivaluedHashMap;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p/>
@@ -38,14 +39,14 @@ public class QueryExecutionAdapter extends AbstractAdapter {
         this.contentType = contentType;
         this.acceptType = acceptType;
         this.dataSetClass = dataSetClass;
-        params = new MultivaluedHashMap<String, String>();
-        uri = new ArrayList<String>();
+        params = new MultivaluedHashMap<>();
+        uri = new ArrayList<>();
         uri.add(serviceURI);
     }
 
     public QueryExecutionAdapter(SessionStorage sessionStorage, String executionId) {
         super(sessionStorage);
-        uri = new ArrayList<String>();
+        uri = new ArrayList<>();
         uri.add(serviceURI);
         uri.add(executionId);
 

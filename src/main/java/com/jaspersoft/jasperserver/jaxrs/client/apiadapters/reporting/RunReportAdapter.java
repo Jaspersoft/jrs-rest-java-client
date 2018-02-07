@@ -27,6 +27,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -99,13 +100,13 @@ public class RunReportAdapter extends AbstractAdapter {
     }
 
     public RunReportAdapter parameter(String name, String... value) {
-        params.addAll(name, Arrays.asList(value));
+        params.addAll(name, UrlUtils.encode(Arrays.asList(value)));
         return this;
     }
 
     public RunReportAdapter parameter(String name, List<String> values) {
 
-        params.addAll(name, values);
+        params.addAll(name, UrlUtils.encode(values));
         return this;
 
     }

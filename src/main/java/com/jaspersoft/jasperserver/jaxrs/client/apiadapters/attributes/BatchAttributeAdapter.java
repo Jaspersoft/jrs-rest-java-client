@@ -32,12 +32,13 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
 
 import static java.util.Arrays.asList;
 
@@ -59,7 +60,7 @@ public class BatchAttributeAdapter extends AbstractAdapter {
     public BatchAttributeAdapter(String organizationId, String userName, SessionStorage sessionStorage) {
         super(sessionStorage);
 
-        if (!"/" .equals(organizationId) && organizationId != null) {
+        if (!"/".equals(organizationId) && organizationId != null) {
             path.add("organizations");
             path.add(organizationId);
         }
@@ -230,7 +231,8 @@ public class BatchAttributeAdapter extends AbstractAdapter {
             if (userName != null) {
                 holderId.append(SEPARATOR);
                 holderId.append(userName);
-            };
+            }
+            ;
             request.addParam("holder", holderId.toString());
         }
         return request;

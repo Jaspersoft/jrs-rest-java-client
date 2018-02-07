@@ -27,6 +27,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.WithEntityOperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.ReportJobCalendar;
@@ -49,7 +50,7 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
     }
 
     public SingleCalendarOperationsAdapter parameter(CalendarParameter parameter, String value) {
-        params.add(parameter.getName(), value);
+        params.add(parameter.getName(), UrlUtils.encode(value));
         return this;
     }
 

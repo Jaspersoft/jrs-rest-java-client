@@ -28,6 +28,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
@@ -44,12 +45,12 @@ public class BatchResourcesAdapter extends AbstractAdapter {
     }
 
     public BatchResourcesAdapter parameter(ResourceSearchParameter param, String value) {
-        params.add(param.getName(), value);
+        params.add(param.getName(), UrlUtils.encode(value));
         return this;
     }
 
     public BatchResourcesAdapter parameter(String name, String value) {
-        params.add(name, value);
+        params.add(name, UrlUtils.encode(value));
         return this;
     }
 

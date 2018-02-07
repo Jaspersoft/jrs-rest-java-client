@@ -5,13 +5,15 @@ import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultDat
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.List;
-import javax.ws.rs.core.MultivaluedHashMap;
 
-import static java.util.Arrays.asList;
+import javax.ws.rs.core.MultivaluedHashMap;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p/>
@@ -73,22 +75,24 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
     }
 
     public SingleContextAdapter<C, M> addParameter(String key, String value) {
-        params.add(key, value);
+        params.add(key, UrlUtils.encode(value));
         return this;
     }
 
     public SingleContextAdapter<C, M> addParameter(String key, String... value) {
-        params.addAll(key, asList(value));
+        params.addAll(key, UrlUtils.encode(Arrays.asList(value)));
         return this;
     }
 
     public SingleContextAdapter<C, M> addParameters(MultivaluedHashMap<String, String> values) {
-        params.putAll(values);
+        for (Map.Entry<String, List<String>> entry : values.entrySet()) {
+            params.addAll(entry.getKey(), UrlUtils.encode(entry.getValue()));
+        }
         return this;
     }
 
     public SingleContextAdapter<C, M> addParameter(String key, List<String> value) {
-        params.addAll(key, value);
+        params.addAll(key, UrlUtils.encode(value));
         return this;
     }
 

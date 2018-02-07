@@ -35,6 +35,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
@@ -74,7 +75,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     public SingleResourceAdapter parameter(ResourceServiceParameter param, String value) {
-        params.add(param.getName(), value);
+        params.add(param.getName(), UrlUtils.encode(value));
         return this;
     }
 
@@ -84,7 +85,7 @@ public class SingleResourceAdapter extends AbstractAdapter {
     }
 
     public SingleResourceAdapter parameter(String param, String value) {
-        params.add(param, value);
+        params.add(param, UrlUtils.encode(value));
         return this;
     }
 

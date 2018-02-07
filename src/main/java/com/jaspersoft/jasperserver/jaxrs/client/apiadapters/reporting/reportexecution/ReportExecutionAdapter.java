@@ -30,18 +30,20 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.Repor
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.RunReportErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionStatusEntity;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionStatusObject;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionsSetWrapper;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import org.apache.commons.lang3.StringUtils;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static java.util.Arrays.asList;
@@ -75,22 +77,22 @@ public class ReportExecutionAdapter extends AbstractAdapter {
     }
 
     public ReportExecutionAdapter queryParameter(ReportSearchParameter name, String value) {
-        params.add(name.getName(), value);
+        params.add(name.getName(), UrlUtils.encode(value));
         return this;
     }
 
     public ReportExecutionAdapter queryParameter(ReportSearchParameter name, String... value) {
-        params.addAll(name.getName(), asList(value));
+        params.addAll(name.getName(), UrlUtils.encode(asList(value)));
         return this;
     }
 
     public ReportExecutionAdapter queryParameter(ReportSearchParameter name, List<String> value) {
-        params.addAll(name.getName(), value);
+        params.addAll(name.getName(), UrlUtils.encode(value));
         return this;
 
     }
     public ReportExecutionAdapter queryParameter(String name, String value) {
-        params.add(name, value);
+        params.add(name, UrlUtils.encode(value));
         return this;
 
     }

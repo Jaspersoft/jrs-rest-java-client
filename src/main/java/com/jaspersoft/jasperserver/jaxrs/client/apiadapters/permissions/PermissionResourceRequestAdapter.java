@@ -28,11 +28,13 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @deprecated Replaced with @Link {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.BatchPermissionsAdapter}
@@ -80,7 +82,7 @@ public class PermissionResourceRequestAdapter extends AbstractAdapter {
 
 
     public PermissionResourceRequestAdapter param(PermissionResourceParameter resourceParam, String value) {
-        params.add(resourceParam.getParamName(), value);
+        params.add(resourceParam.getParamName(), UrlUtils.encode(value));
         return this;
     }
 
