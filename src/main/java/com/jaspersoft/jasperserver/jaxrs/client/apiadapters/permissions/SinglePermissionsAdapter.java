@@ -12,17 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * <p>
- * <p>
  *
  * @author tetiana.iefimenko
  * @version $Id$
- * @see
- */
+\ */
 public class SinglePermissionsAdapter  extends AbstractAdapter {
 
     public static final String PERMISSIONS_SERVICE_URI = "permissions";
-    private ArrayList<String> path = new ArrayList<String>();
+    private ArrayList<String> path = new ArrayList<>();
     private String recipientUri;
     private RepositoryPermission permission;
 
@@ -61,8 +58,8 @@ public class SinglePermissionsAdapter  extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult create() {
-        return JerseyRequest.buildRequest(sessionStorage, Object.class, new String[]{PERMISSIONS_SERVICE_URI})
+    public OperationResult<RepositoryPermission> create() {
+        return JerseyRequest.buildRequest(sessionStorage, RepositoryPermission.class, new String[]{PERMISSIONS_SERVICE_URI})
                 .post(permission);
     }
 
@@ -79,8 +76,8 @@ public class SinglePermissionsAdapter  extends AbstractAdapter {
     }
 
 
-    public OperationResult createOrUpdate(RepositoryPermission permission) {
-        return buildRequest(Object.class).put(permission);
+    public OperationResult<RepositoryPermission> createOrUpdate(RepositoryPermission permission) {
+        return buildRequest(RepositoryPermission.class).put(permission);
     }
 
     public <R> RequestExecution asyncCreateOrUpdate(final RepositoryPermission permission, final Callback<OperationResult, R> callback) {
