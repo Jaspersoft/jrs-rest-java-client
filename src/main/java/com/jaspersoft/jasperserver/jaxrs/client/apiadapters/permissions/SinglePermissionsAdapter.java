@@ -42,6 +42,11 @@ public class SinglePermissionsAdapter  extends AbstractAdapter {
         return this;
     }
 
+    public SinglePermissionsAdapter permissionRecipient(String recipient) {
+        this.recipientUri = recipient.replaceAll("/", "%2F");
+        return this;
+    }
+
     public OperationResult<RepositoryPermission> get(){
         return buildRequest(RepositoryPermission.class).get();
     }

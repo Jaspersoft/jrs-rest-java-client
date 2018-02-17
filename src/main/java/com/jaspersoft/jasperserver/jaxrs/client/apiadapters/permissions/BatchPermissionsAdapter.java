@@ -7,11 +7,13 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * <p>
@@ -24,7 +26,7 @@ import javax.ws.rs.core.MultivaluedMap;
 public class BatchPermissionsAdapter  extends AbstractAdapter {
 
     public static final String PERMISSIONS_SERVICE_URI = "permissions";
-    private ArrayList<String> path = new ArrayList<String>();
+    private ArrayList<String> path = new ArrayList<>();
     private String resourceUri;
     private RepositoryPermissionListWrapper permissions;
     private MultivaluedMap<String, String> params;
@@ -37,13 +39,13 @@ public class BatchPermissionsAdapter  extends AbstractAdapter {
 
     public BatchPermissionsAdapter(SessionStorage sessionStorage, String resourceUri) {
         super(sessionStorage);
-        params = new MultivaluedHashMap<String, String>();
+        params = new MultivaluedHashMap<>();
         path.add(PERMISSIONS_SERVICE_URI);
         path.addAll(Arrays.asList(resourceUri.split("/")));
     }
 
     public BatchPermissionsAdapter param(PermissionResourceParameter resourceParam, String value) {
-        params.add(resourceParam.getParamName(), value);
+        params.add(resourceParam.getParamName(), UrlUtils.encode(value));
         return this;
     }
 
@@ -80,8 +82,8 @@ public class BatchPermissionsAdapter  extends AbstractAdapter {
         return task;
     }
 
-    public OperationResult createOrUpdate(RepositoryPermissionListWrapper permissions) {
-        return buildRequest(Object.class).put(permissions);
+    public OperationResult<RepositoryPermissionListWrapper> createOrUpdate(RepositoryPermissionListWrapper permissions) {
+        return buildRequest(RepositoryPermissionListWrapper.class).put(permissions);
     }
 
     public <R> RequestExecution asyncCreateOrUpdate(final RepositoryPermissionListWrapper permissions, final Callback<OperationResult, R> callback) {
@@ -116,6 +118,7 @@ public class BatchPermissionsAdapter  extends AbstractAdapter {
         final JerseyRequest<T> jerseyRequest = JerseyRequest.buildRequest(sessionStorage,
                 responceEntityClass,
                 path.toArray(new String[path.size()]));
+        jerseyRequest.addParams(params);
         return jerseyRequest;
     }
 }
