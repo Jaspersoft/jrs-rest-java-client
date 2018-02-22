@@ -31,7 +31,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.Iterator;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
@@ -45,7 +44,7 @@ public class PermissionsService extends AbstractAdapter {
     }
 
     public PermissionsService forResource(String resourceUri) {
-        if ("".equals(resourceUri)) {
+        if (resourceUri.isEmpty()) {
             throw new IllegalArgumentException("'resourceUri' mustn't be an empty string");
         }
         this.resourceUri = resourceUri;
@@ -74,19 +73,12 @@ public class PermissionsService extends AbstractAdapter {
     }
 
     public SinglePermissionsAdapter permission(RepositoryPermission permission) {
-        if (this.resourceUri != null || !this.resourceUri.isEmpty()) permission.setUri(this.resourceUri);
-            return new SinglePermissionsAdapter(sessionStorage, permission);
+        return new SinglePermissionsAdapter(sessionStorage, permission);
     }
 
 
     public BatchPermissionsAdapter permissions(RepositoryPermissionListWrapper permissions) {
-        if (this.resourceUri != null || !this.resourceUri.isEmpty()) {
-            final Iterator<RepositoryPermission> iterator = permissions.getPermissions().iterator();
-            while (iterator.hasNext()) {
-                iterator.next().setUri(this.resourceUri);
-            }
-        }
-            return new BatchPermissionsAdapter(sessionStorage, permissions);
+        return new BatchPermissionsAdapter(sessionStorage, permissions);
     }
 
     /**

@@ -27,7 +27,6 @@ public class BatchPermissionsAdapter  extends AbstractAdapter {
 
     public static final String PERMISSIONS_SERVICE_URI = "permissions";
     private ArrayList<String> path = new ArrayList<>();
-    private String resourceUri;
     private RepositoryPermissionListWrapper permissions;
     private MultivaluedMap<String, String> params;
 
