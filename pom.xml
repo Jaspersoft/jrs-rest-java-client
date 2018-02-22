@@ -209,7 +209,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12</version>
                 <configuration>
-                    <skipTests>true</skipTests>
+                    <skipTests>false</skipTests>
                     <testFailureIgnore>false</testFailureIgnore>
                     <excludes>
                         <exclude>**/IT.java</exclude>
