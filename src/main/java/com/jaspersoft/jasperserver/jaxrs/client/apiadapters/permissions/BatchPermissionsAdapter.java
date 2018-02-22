@@ -32,13 +32,14 @@ public class BatchPermissionsAdapter  extends AbstractAdapter {
 
     public BatchPermissionsAdapter(SessionStorage sessionStorage, RepositoryPermissionListWrapper permissions) {
         super(sessionStorage);
+        this.params = new MultivaluedHashMap<>();
         this.permissions = permissions;
         path.add(PERMISSIONS_SERVICE_URI);
     }
 
     public BatchPermissionsAdapter(SessionStorage sessionStorage, String resourceUri) {
         super(sessionStorage);
-        params = new MultivaluedHashMap<>();
+        this.params = new MultivaluedHashMap<>();
         path.add(PERMISSIONS_SERVICE_URI);
         path.addAll(Arrays.asList(resourceUri.split("/")));
     }
