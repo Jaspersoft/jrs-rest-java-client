@@ -67,12 +67,15 @@ public class BatchPermissionsAdapter  extends AbstractAdapter {
     }
 
     public OperationResult<RepositoryPermissionListWrapper> create() {
-        return JerseyRequest.buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{PERMISSIONS_SERVICE_URI})
+        JerseyRequest<RepositoryPermissionListWrapper> request = JerseyRequest.buildRequest(sessionStorage, RepositoryPermissionListWrapper.class, new String[]{PERMISSIONS_SERVICE_URI});
+        request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
+        return request
                 .post(permissions);
     }
 
     public <R> RequestExecution asyncCreate(final Callback<OperationResult, R> callback) {
         final JerseyRequest request = JerseyRequest.buildRequest(sessionStorage, Object.class, new String[]{PERMISSIONS_SERVICE_URI});
+        request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
