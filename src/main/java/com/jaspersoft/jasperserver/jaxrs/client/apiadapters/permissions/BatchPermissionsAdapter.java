@@ -4,6 +4,7 @@ import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapp
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
@@ -118,6 +119,7 @@ public class BatchPermissionsAdapter  extends AbstractAdapter {
         final JerseyRequest<T> jerseyRequest = JerseyRequest.buildRequest(sessionStorage,
                 responceEntityClass,
                 path.toArray(new String[path.size()]));
+        jerseyRequest.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
         jerseyRequest.addParams(params);
         return jerseyRequest;
     }
