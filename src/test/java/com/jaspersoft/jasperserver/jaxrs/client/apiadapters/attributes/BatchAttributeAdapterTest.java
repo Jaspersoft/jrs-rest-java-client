@@ -495,7 +495,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verify(jerseyRequestMock, times(1)).addParams(map);
         verify(jerseyRequestMock, times(1)).get();
         verify(jerseyRequestMock, times(1)).addParam("_embedded", "permission");
-       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection+json");
+       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection.hal+json");
        verifyNoMoreInteractions(jerseyRequestMock);
     }
 
