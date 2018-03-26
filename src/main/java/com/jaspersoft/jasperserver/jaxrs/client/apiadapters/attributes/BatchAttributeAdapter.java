@@ -213,10 +213,11 @@ public class BatchAttributeAdapter extends AbstractAdapter {
                 sessionStorage,
                 HypermediaAttributesListWrapper.class,
                 new String[]{SERVICE_URI}, new DefaultErrorHandler());
-        request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/attributes.collection+{mime}"));
         if (includePermissions) {
             request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/attributes.collection.hal+{mime}"));
             request.addParam("_embedded", "permission");
+        } else {
+            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/attributes.collection+{mime}"));
         }
         request.addParams(params);
 
