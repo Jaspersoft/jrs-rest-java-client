@@ -15,6 +15,11 @@ public enum AttributesSearchParameter {
     HOLDER("holder"),
 
     /**
+     * name of the attribute
+     */
+    NAME("name"),
+
+    /**
      * Attribute group:
      *
      * custom - custom attributes(doesn't affect on server)
