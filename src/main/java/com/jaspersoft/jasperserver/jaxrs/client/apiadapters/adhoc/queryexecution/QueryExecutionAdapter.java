@@ -1,7 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution;
 
 import com.jaspersoft.jasperserver.dto.executions.AbstractClientExecution;
-import com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
@@ -64,7 +63,7 @@ public class QueryExecutionAdapter extends AbstractAdapter {
 
     public QueryExecutionAdapter asResultDataSet(String resultMimeType) {
         acceptType = new String[]{resultMimeType};
-        dataSetClass = QueryResultDataMediaType.getResultDataType(resultMimeType);
+        dataSetClass = QueryResultDataHelper.getResultDataType(resultMimeType);
         return this;
     }
 

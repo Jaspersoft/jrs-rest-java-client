@@ -21,8 +21,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
-import com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryResultDataHelper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourcesTypeResolverUtil;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
@@ -83,6 +83,6 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
 
 
     private Class<? extends ClientQueryResultData> getSpecificQueryResultDataType(Response response) {
-        return QueryResultDataMediaType.getResultDataType(response.getHeaderString("Content-Type"));
+        return QueryResultDataHelper.getResultDataType(response.getHeaderString("Content-Type"));
     }
 }
