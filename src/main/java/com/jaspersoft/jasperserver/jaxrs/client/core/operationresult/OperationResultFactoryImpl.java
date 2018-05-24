@@ -20,8 +20,10 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
+import com.jaspersoft.jasperserver.dto.executions.AbstractClientExecution;
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryExecutionHelper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryResultDataHelper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourcesTypeResolverUtil;
 import javax.ws.rs.core.GenericType;
@@ -37,6 +39,9 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
         }
         if (isQueryDataSet(responseClass)) {
             responseClass = (Class<T>) getSpecificQueryResultDataType(response);
+        }
+        if (isQueryExecution(responseClass)) {
+            responseClass = (Class<T>) getSpecificQueryExecutionType(response);
         }
         return getAppropriateOperationResultInstance(response, responseClass);
     }
@@ -77,6 +82,10 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
         return clazz != Object.class && clazz.isAssignableFrom(ClientQueryResultData.class);
     }
 
+    private boolean isQueryExecution(Class<?> clazz) {
+        return clazz != Object.class && clazz.isAssignableFrom(AbstractClientExecution.class);
+    }
+
     private Class<? extends ClientResource> getSpecificResourceType(Response response) {
         return ResourcesTypeResolverUtil.getClassForMime(response.getHeaderString("Content-Type"));
     }
@@ -85,4 +94,9 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
     private Class<? extends ClientQueryResultData> getSpecificQueryResultDataType(Response response) {
         return QueryResultDataHelper.getResultDataType(response.getHeaderString("Content-Type"));
     }
+
+    private Class<? extends AbstractClientExecution> getSpecificQueryExecutionType(Response response) {
+        return QueryExecutionHelper.getClassForMime(response.getHeaderString("Content-Type"));
+    }
+
 }

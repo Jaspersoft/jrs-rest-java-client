@@ -67,6 +67,12 @@ public class QueryExecutionAdapter extends AbstractAdapter {
         return this;
     }
 
+    public QueryExecutionAdapter asResultExecution(String resultMimeType) {
+        acceptType = new String[]{resultMimeType};
+        dataSetClass = QueryExecutionHelper.getClassForMime(resultMimeType);
+        return this;
+    }
+
     public QueryExecutionAdapter offset(Integer offset) {
         params.add("offset", offset.toString());
         return this;
