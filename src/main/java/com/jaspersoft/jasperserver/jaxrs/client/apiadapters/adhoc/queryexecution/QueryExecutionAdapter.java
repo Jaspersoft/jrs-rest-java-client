@@ -14,6 +14,8 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 /**
  * <p/>
  * <p/>
@@ -70,6 +72,11 @@ public class QueryExecutionAdapter extends AbstractAdapter {
     public QueryExecutionAdapter asResultExecution(String resultMimeType) {
         acceptType = new String[]{resultMimeType};
         dataSetClass = QueryExecutionHelper.getClassForMime(resultMimeType);
+        return this;
+    }
+
+    public QueryExecutionAdapter asDefaultAccept() {
+        acceptType = new String[]{APPLICATION_JSON};
         return this;
     }
 
