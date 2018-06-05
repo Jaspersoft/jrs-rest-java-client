@@ -77,6 +77,7 @@ public class QueryExecutionAdapter extends AbstractAdapter {
 
     public QueryExecutionAdapter asDefaultAccept() {
         acceptType = new String[]{APPLICATION_JSON};
+        dataSetClass = QueryExecutionHelper.getClassForMime(contentType);
         return this;
     }
 
