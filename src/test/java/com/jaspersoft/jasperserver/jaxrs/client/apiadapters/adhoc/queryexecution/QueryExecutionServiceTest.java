@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution;
 
 import com.jaspersoft.jasperserver.dto.executions.ClientFlatQueryResultData;
-import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxesQueryResultData;
+import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxisQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
@@ -98,7 +98,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_adapter_for_multi_axes_query() throws Exception {
+    public void should_return_proper_adapter_for_multi_axis_query() throws Exception {
         // Given
         QueryExecutionService executionService = new QueryExecutionService(sessionStorageMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -106,11 +106,11 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
         doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         whenNew(QueryExecutionAdapter.class).withArguments(sessionStorageMock,
                 EXECUTION_MULTI_AXES_QUERY_JSON,
-                ClientMultiAxesQueryResultData.class,
+                ClientMultiAxisQueryResultData.class,
                 MULTI_AXES_DATA_JSON).thenReturn(executionAdapterMock);
 
         // When
-        QueryExecutionAdapter adapter = executionService.multiAxesQuery();
+        QueryExecutionAdapter adapter = executionService.multiAxisQuery();
 
         // Then
         assertEquals(adapter, executionAdapterMock);
@@ -191,7 +191,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
 
 
     @Test
-    public void should_return_proper_adapter_for_provided_multi_axes_query() throws Exception {
+    public void should_return_proper_adapter_for_provided_multi_axis_query() throws Exception {
         // Given
         QueryExecutionService executionService = new QueryExecutionService(sessionStorageMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -215,7 +215,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_adapter_for_multi_axes_query_for_xml() throws Exception {
+    public void should_return_proper_adapter_for_multi_axis_query_for_xml() throws Exception {
         // Given
         QueryExecutionService executionService = new QueryExecutionService(sessionStorageMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -223,11 +223,11 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
         doReturn(MimeType.XML).when(configurationMock).getAcceptMimeType();
         whenNew(QueryExecutionAdapter.class).withArguments(sessionStorageMock,
                 EXECUTION_MULTI_AXES_QUERY_XML,
-                ClientMultiAxesQueryResultData.class,
+                ClientMultiAxisQueryResultData.class,
                 MULTI_AXES_DATA_XML).thenReturn(executionAdapterMock);
 
         // When
-        QueryExecutionAdapter adapter = executionService.multiAxesQuery();
+        QueryExecutionAdapter adapter = executionService.multiAxisQuery();
 
         // Then
         assertEquals(adapter, executionAdapterMock);
@@ -308,7 +308,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
 
 
     @Test
-    public void should_return_proper_adapter_for_provided_multi_axes_query_for_xml() throws Exception {
+    public void should_return_proper_adapter_for_provided_multi_axis_query_for_xml() throws Exception {
         // Given
         QueryExecutionService executionService = new QueryExecutionService(sessionStorageMock);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();

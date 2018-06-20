@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution;
 
 import com.jaspersoft.jasperserver.dto.executions.ClientFlatQueryResultData;
-import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxesQueryResultData;
+import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxisQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
@@ -53,11 +53,11 @@ public class QueryExecutionService extends AbstractAdapter {
                         MULTI_LEVEL_DATA_JSON : MULTI_LEVEL_DATA_XML);
     }
 
-    public QueryExecutionAdapter multiAxesQuery() {
+    public QueryExecutionAdapter multiAxisQuery() {
         return this.adapter(sessionStorage,
                 (sessionStorage.getConfiguration().getContentMimeType().equals(MimeType.JSON)) ?
                         EXECUTION_MULTI_AXES_QUERY_JSON : EXECUTION_MULTI_AXES_QUERY_XML,
-                ClientMultiAxesQueryResultData.class,
+                ClientMultiAxisQueryResultData.class,
                 (sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON)) ?
                         MULTI_AXES_DATA_JSON : MULTI_AXES_DATA_XML);
     }

@@ -1,8 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution;
 
 import com.jaspersoft.jasperserver.dto.executions.ClientFlatQueryResultData;
-import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxesQueryExecution;
-import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxesQueryResultData;
+import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxisQueryExecution;
+import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxisQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryExecution;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientProvidedQueryExecution;
@@ -15,7 +15,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -23,6 +22,8 @@ import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.ws.rs.core.MultivaluedHashMap;
 
 import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_AXES_QUERY_JSON;
 import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_LEVEL_QUERY_JSON;
@@ -79,9 +80,9 @@ public class QueryExecutionAdapterTest extends PowerMockTestCase {
     @Mock
     private OperationResult<ClientFlatQueryResultData> flatOperationResultMock;
     @Mock
-    private JerseyRequest<ClientMultiAxesQueryResultData> multiAxesRequestMock;
+    private JerseyRequest<ClientMultiAxisQueryResultData> multiAxisRequestMock;
     @Mock
-    private OperationResult<ClientMultiAxesQueryResultData> multiAxesOperationResultMock;
+    private OperationResult<ClientMultiAxisQueryResultData> multiAxisOperationResultMock;
     @Mock
     private JerseyRequest<ClientQueryResultData> clientQueryRequestMock;
     @Mock
@@ -106,8 +107,8 @@ public class QueryExecutionAdapterTest extends PowerMockTestCase {
                 multiLevelOperationResultMock,
                 flatRequestMock,
                 flatOperationResultMock,
-                multiAxesRequestMock,
-                multiAxesOperationResultMock,
+                multiAxisRequestMock,
+                multiAxisOperationResultMock,
                 clientQueryRequestMock,
                 clientQueryOperationResultMock,
                 configurationMock);
@@ -268,82 +269,82 @@ public class QueryExecutionAdapterTest extends PowerMockTestCase {
 
 
     @Test
-    public void should_return_proper_operation_result_when_execute_multi_axes_query() {
+    public void should_return_proper_operation_result_when_execute_multi_axis_query() {
         // Given
         mockStatic(JerseyRequest.class);
         when(buildRequest(
                 eq(storageMock),
-                eq(ClientMultiAxesQueryResultData.class),
+                eq(ClientMultiAxisQueryResultData.class),
                 eq(new String[]{QUERY_EXECUTIONS_URI}),
-                any(DefaultErrorHandler.class))).thenReturn(multiAxesRequestMock);
-        doReturn(multiAxesRequestMock).when(multiAxesRequestMock).
+                any(DefaultErrorHandler.class))).thenReturn(multiAxisRequestMock);
+        doReturn(multiAxisRequestMock).when(multiAxisRequestMock).
                 setContentType(EXECUTION_MULTI_AXES_QUERY_JSON);
-        doReturn(multiAxesRequestMock).when(multiAxesRequestMock).
+        doReturn(multiAxisRequestMock).when(multiAxisRequestMock).
                 setAccept(MULTI_AXES_DATA_JSON);
-        doReturn(multiAxesOperationResultMock).when(multiAxesRequestMock).post(any(ClientMultiAxesQueryExecution.class));
+        doReturn(multiAxisOperationResultMock).when(multiAxisRequestMock).post(any(ClientMultiAxisQueryExecution.class));
 
         QueryExecutionAdapter adapter = new QueryExecutionAdapter(storageMock,
                 EXECUTION_MULTI_AXES_QUERY_JSON,
-                ClientMultiAxesQueryResultData.class,
+                ClientMultiAxisQueryResultData.class,
                 MULTI_AXES_DATA_JSON);
 
         // When /
-        OperationResult<ClientMultiAxesQueryResultData> retrieved = adapter.execute(new ClientMultiAxesQueryExecution());
+        OperationResult<ClientMultiAxisQueryResultData> retrieved = adapter.execute(new ClientMultiAxisQueryExecution());
 
         // Then /
         assertNotNull(retrieved);
-        assertSame(retrieved, multiAxesOperationResultMock);
-        verify(multiAxesRequestMock).
+        assertSame(retrieved, multiAxisOperationResultMock);
+        verify(multiAxisRequestMock).
                 setContentType(EXECUTION_MULTI_AXES_QUERY_JSON);
-        verify(multiAxesRequestMock).
+        verify(multiAxisRequestMock).
                 setAccept(MULTI_AXES_DATA_JSON);
-        verify(multiAxesRequestMock).post(any(ClientMultiAxesQueryExecution.class));
+        verify(multiAxisRequestMock).post(any(ClientMultiAxisQueryExecution.class));
 
         verifyStatic(times(1));
         buildRequest(
                 eq(storageMock),
-                eq(ClientMultiAxesQueryResultData.class),
+                eq(ClientMultiAxisQueryResultData.class),
                 eq(new String[]{QUERY_EXECUTIONS_URI}),
                 any(DefaultErrorHandler.class));
 
     }
 
     @Test
-    public void should_return_proper_operation_result_when_execute_provided_multi_axes_query() {
+    public void should_return_proper_operation_result_when_execute_provided_multi_axis_query() {
         // Given
         mockStatic(JerseyRequest.class);
         when(buildRequest(
                 eq(storageMock),
-                eq(ClientMultiAxesQueryResultData.class),
+                eq(ClientMultiAxisQueryResultData.class),
                 eq(new String[]{QUERY_EXECUTIONS_URI}),
-                any(DefaultErrorHandler.class))).thenReturn(multiAxesRequestMock);
-        doReturn(multiAxesRequestMock).when(multiAxesRequestMock).
+                any(DefaultErrorHandler.class))).thenReturn(multiAxisRequestMock);
+        doReturn(multiAxisRequestMock).when(multiAxisRequestMock).
                 setContentType(EXECUTION_PROVIDED_QUERY_JSON);
-        doReturn(multiAxesRequestMock).when(multiAxesRequestMock).
+        doReturn(multiAxisRequestMock).when(multiAxisRequestMock).
                 setAccept(MULTI_AXES_DATA_JSON);
-        doReturn(multiAxesOperationResultMock).when(multiAxesRequestMock).post(any(ClientProvidedQueryExecution.class));
+        doReturn(multiAxisOperationResultMock).when(multiAxisRequestMock).post(any(ClientProvidedQueryExecution.class));
 
         QueryExecutionAdapter adapter = new QueryExecutionAdapter(storageMock,
                 EXECUTION_PROVIDED_QUERY_JSON,
-                ClientMultiAxesQueryResultData.class,
+                ClientMultiAxisQueryResultData.class,
                 MULTI_AXES_DATA_JSON);
 
         // When /
-        OperationResult<ClientMultiAxesQueryResultData> retrieved = adapter.execute(new ClientProvidedQueryExecution());
+        OperationResult<ClientMultiAxisQueryResultData> retrieved = adapter.execute(new ClientProvidedQueryExecution());
 
         // Then /
         assertNotNull(retrieved);
-        assertSame(retrieved, multiAxesOperationResultMock);
-        verify(multiAxesRequestMock).
+        assertSame(retrieved, multiAxisOperationResultMock);
+        verify(multiAxisRequestMock).
                 setContentType(EXECUTION_PROVIDED_QUERY_JSON);
-        verify(multiAxesRequestMock).
+        verify(multiAxisRequestMock).
                 setAccept(MULTI_AXES_DATA_JSON);
-        verify(multiAxesRequestMock).post(any(ClientProvidedQueryExecution.class));
+        verify(multiAxisRequestMock).post(any(ClientProvidedQueryExecution.class));
 
         verifyStatic(times(1));
         buildRequest(
                 eq(storageMock),
-                eq(ClientMultiAxesQueryResultData.class),
+                eq(ClientMultiAxisQueryResultData.class),
                 eq(new String[]{QUERY_EXECUTIONS_URI}),
                 any(DefaultErrorHandler.class));
 

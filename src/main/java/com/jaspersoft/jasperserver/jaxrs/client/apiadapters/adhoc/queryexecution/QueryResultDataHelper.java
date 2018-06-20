@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution;
 
 import com.jaspersoft.jasperserver.dto.executions.ClientFlatQueryResultData;
-import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxesQueryResultData;
+import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxisQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
 
@@ -18,7 +18,7 @@ public class QueryResultDataHelper {
             new HashMap<String, Class<? extends ClientQueryResultData>>(){{
                 put(FLAT_DATA_JSON, ClientFlatQueryResultData.class);
                 put(MULTI_LEVEL_DATA_JSON, ClientMultiLevelQueryResultData.class);
-                put(MULTI_AXES_DATA_JSON, ClientMultiAxesQueryResultData.class);
+                put(MULTI_AXES_DATA_JSON, ClientMultiAxisQueryResultData.class);
             }};
 
     public static Class<? extends ClientQueryResultData> getResultDataType(String access) {

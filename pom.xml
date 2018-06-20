@@ -7,14 +7,14 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>6.3.19-SNAPSHOT</version>
+    <version>6.3.20-SNAPSHOT</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <jasperserver-dto.version>develop-SNAPSHOT</jasperserver-dto.version>
+        <jasperserver-dto.version>epic-JRS-17145-refactor-queryExecutions-bundles-SNAPSHOT</jasperserver-dto.version>
     </properties>
 
     <scm>

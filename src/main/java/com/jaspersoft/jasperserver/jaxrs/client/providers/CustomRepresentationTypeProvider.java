@@ -23,13 +23,14 @@ package com.jaspersoft.jasperserver.jaxrs.client.providers;
 
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
-import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 
 @Provider
@@ -126,17 +127,17 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/repository.reportUnit.metadata+xml",
         "application/repository.domain+json",
         "application/execution.multiLevelQuery+json",
-        "application/execution.multiAxesQuery+json",
+        "application/execution.multiAxisQuery+json",
         "application/execution.providedQuery+json",
         "application/execution.multiLevelQuery+xml",
-        "application/execution.multiAxesQuery+xml",
+        "application/execution.multiAxisQuery+xml",
         "application/execution.providedQuery+xml",
         "application/flatData+json",
         "application/multiLevelData+json",
-        "application/multiAxesData+json",
+        "application/multiAxisData+json",
         "application/flatData+xml",
         "application/multiLevelData+xml",
-        "application/multiAxesData+xml",
+        "application/multiAxisData+xml",
         "application/contexts.partialMetadataOptions+json",
         "application/adhoc.multiLevelQuery+json"
 })
@@ -233,17 +234,17 @@ import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
         "application/repository.reportUnit.metadata+xml",
         "application/repository.domain+json",
         "application/execution.multiLevelQuery+json",
-        "application/execution.multiAxesQuery+json",
+        "application/execution.multiAxisQuery+json",
         "application/execution.providedQuery+json",
         "application/execution.multiLevelQuery+xml",
-        "application/execution.multiAxesQuery+xml",
+        "application/execution.multiAxisQuery+xml",
         "application/execution.providedQuery+xml",
         "application/flatData+json",
         "application/multiLevelData+json",
-        "application/multiAxesData+json",
+        "application/multiAxisData+json",
         "application/flatData+xml",
         "application/multiLevelData+xml",
-        "application/multiAxesData+xml",
+        "application/multiAxisData+xml",
         "application/contexts.partialMetadataOptions+json",
         "application/adhoc.multiLevelQuery+json"
 })
