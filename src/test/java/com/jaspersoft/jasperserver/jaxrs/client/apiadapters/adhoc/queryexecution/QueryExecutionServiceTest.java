@@ -16,16 +16,16 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_AXES_QUERY_JSON;
-import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_AXES_QUERY_XML;
+import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_AXIS_QUERY_JSON;
+import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_AXIS_QUERY_XML;
 import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_LEVEL_QUERY_JSON;
 import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_LEVEL_QUERY_XML;
 import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_PROVIDED_QUERY_JSON;
 import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_PROVIDED_QUERY_XML;
 import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.FLAT_DATA_JSON;
 import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.FLAT_DATA_XML;
-import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_AXES_DATA_JSON;
-import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_AXES_DATA_XML;
+import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_AXIS_DATA_JSON;
+import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_AXIS_DATA_XML;
 import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_LEVEL_DATA_JSON;
 import static com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType.MULTI_LEVEL_DATA_XML;
 import static org.mockito.Mockito.doReturn;
@@ -105,9 +105,9 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
         doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         whenNew(QueryExecutionAdapter.class).withArguments(sessionStorageMock,
-                EXECUTION_MULTI_AXES_QUERY_JSON,
+                EXECUTION_MULTI_AXIS_QUERY_JSON,
                 ClientMultiAxisQueryResultData.class,
-                MULTI_AXES_DATA_JSON).thenReturn(executionAdapterMock);
+                MULTI_AXIS_DATA_JSON).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.multiAxisQuery();
@@ -153,7 +153,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_JSON,
                 MULTI_LEVEL_DATA_JSON,
-                MULTI_AXES_DATA_JSON).thenReturn(executionAdapterMock);
+                MULTI_AXIS_DATA_JSON).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();
@@ -177,7 +177,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_JSON,
                 MULTI_LEVEL_DATA_JSON,
-                MULTI_AXES_DATA_JSON).thenReturn(executionAdapterMock);
+                MULTI_AXIS_DATA_JSON).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();
@@ -202,7 +202,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_JSON,
                 MULTI_LEVEL_DATA_JSON,
-                MULTI_AXES_DATA_JSON).thenReturn(executionAdapterMock);
+                MULTI_AXIS_DATA_JSON).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();
@@ -222,9 +222,9 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
         doReturn(MimeType.XML).when(configurationMock).getContentMimeType();
         doReturn(MimeType.XML).when(configurationMock).getAcceptMimeType();
         whenNew(QueryExecutionAdapter.class).withArguments(sessionStorageMock,
-                EXECUTION_MULTI_AXES_QUERY_XML,
+                EXECUTION_MULTI_AXIS_QUERY_XML,
                 ClientMultiAxisQueryResultData.class,
-                MULTI_AXES_DATA_XML).thenReturn(executionAdapterMock);
+                MULTI_AXIS_DATA_XML).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.multiAxisQuery();
@@ -270,7 +270,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_XML,
                 MULTI_LEVEL_DATA_XML,
-                MULTI_AXES_DATA_XML).thenReturn(executionAdapterMock);
+                MULTI_AXIS_DATA_XML).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();
@@ -294,7 +294,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_XML,
                 MULTI_LEVEL_DATA_XML,
-                MULTI_AXES_DATA_XML).thenReturn(executionAdapterMock);
+                MULTI_AXIS_DATA_XML).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();
@@ -319,7 +319,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
                 ClientQueryResultData.class,
                 FLAT_DATA_XML,
                 MULTI_LEVEL_DATA_XML,
-                MULTI_AXES_DATA_XML).thenReturn(executionAdapterMock);
+                MULTI_AXIS_DATA_XML).thenReturn(executionAdapterMock);
 
         // When
         QueryExecutionAdapter adapter = executionService.providedQuery();

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_LEVEL_QUERY_JSON;
-import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_AXES_QUERY_JSON;
+import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_AXIS_QUERY_JSON;
 import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_PROVIDED_QUERY_JSON;
 
 public class QueryExecutionHelper {
@@ -17,7 +17,7 @@ public class QueryExecutionHelper {
     private static Map<String, Class<? extends AbstractClientExecution>> mediaTypeWithExecutionClassInfo =
             new HashMap<String, Class<? extends AbstractClientExecution>>(){{
                 put(EXECUTION_MULTI_LEVEL_QUERY_JSON, ClientMultiLevelQueryExecution.class);
-                put(EXECUTION_MULTI_AXES_QUERY_JSON, ClientMultiAxisQueryExecution.class);
+                put(EXECUTION_MULTI_AXIS_QUERY_JSON, ClientMultiAxisQueryExecution.class);
                 put(EXECUTION_PROVIDED_QUERY_JSON, ClientProvidedQueryExecution.class);
             }};
 
