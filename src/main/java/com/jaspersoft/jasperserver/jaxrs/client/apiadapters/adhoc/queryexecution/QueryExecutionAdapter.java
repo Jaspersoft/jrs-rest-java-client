@@ -134,7 +134,7 @@ public class QueryExecutionAdapter extends AbstractAdapter {
         return request.get();
     }
 
-    public OperationResult<AbstractClientExecution> get() {
+    public <T extends AbstractClientExecution> OperationResult<T> get() {
         JerseyRequest request = buildRequest(AbstractClientExecution.class);
         return request.get();
     }
