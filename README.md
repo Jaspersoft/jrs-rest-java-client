@@ -3011,6 +3011,23 @@ Also you can get fragment of result data:
                 retrieveData(uuId);
      // where uuId   - is Id of query execution, that you can obtain from "Content-Location" header of server's response after execution query.
 ```
+
+To see all submitted query executions you can use:
+```java
+        OperationResult<QueryExecutionsListWrapper> result = seesion
+                        .queryExecutionService()
+                        .get()
+```
+
+To see just one specific query execution you should use:
+
+```java
+        OperationResult<? extends AbstractClientExecution> result = seesion
+                        .queryExecutionService()
+                        .execution(uuid) // where uuId - is Id of query execution
+                        .get()
+``` 
+
 And you can delete execution using the following code:
 ```java
         OperationResult execute = session.
