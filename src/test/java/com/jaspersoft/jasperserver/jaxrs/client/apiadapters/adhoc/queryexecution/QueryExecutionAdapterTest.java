@@ -7,6 +7,8 @@ import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryExecution
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientProvidedQueryExecution;
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
+import com.jaspersoft.jasperserver.dto.executions.AbstractClientExecution;
+import com.jaspersoft.jasperserver.dto.executions.ClientExecutionListWrapper;
 import com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
@@ -120,7 +122,7 @@ public class QueryExecutionAdapterTest extends PowerMockTestCase {
         QueryExecutionAdapter adapter = new QueryExecutionAdapter(storageMock, CONTENT_TYPE, Object.class, ACCEPT_TYPE);
 
         //Then
-        assertEquals(Whitebox.getInternalState(adapter, "dataSetClass"), Object.class);
+        assertEquals(Whitebox.getInternalState(adapter, "responseClass"), Object.class);
         assertEquals(Whitebox.getInternalState(adapter, "contentType"), CONTENT_TYPE);
         assertEquals(Whitebox.getInternalState(adapter, "acceptType"), new String[]{ACCEPT_TYPE});
     }
@@ -782,6 +784,61 @@ public class QueryExecutionAdapterTest extends PowerMockTestCase {
                 eq(storageMock),
                 eq(Object.class),
                 eq(new String[]{QUERY_EXECUTIONS_URI, SOME_UUID}),
+                any(DefaultErrorHandler.class));
+    }
+
+    @Test
+    public void should_return_proper_operation_result_when_get_execution() {
+        // Given
+        QueryExecutionAdapter adapter = spy(new QueryExecutionAdapter(storageMock,
+                SOME_UUID));
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(
+                eq(storageMock),
+                eq(AbstractClientExecution.class),
+                eq(new String[]{QUERY_EXECUTIONS_URI, SOME_UUID}),
+                any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        doReturn(operationResultMock).when(requestMock).get();
+
+        // When /
+        OperationResult<AbstractClientExecution> retrieved = adapter.get();
+
+        // Then /
+        assertNotNull(retrieved);
+        assertSame(retrieved, operationResultMock);
+        verify(requestMock).get();
+        verifyStatic(times(1));
+        buildRequest(
+                eq(storageMock),
+                eq(AbstractClientExecution.class),
+                eq(new String[]{QUERY_EXECUTIONS_URI, SOME_UUID}),
+                any(DefaultErrorHandler.class));
+    }
+
+    @Test
+    public void should_return_proper_operation_result_when_get_all_executions() {
+        // Given
+        QueryExecutionAdapter adapter = spy(new QueryExecutionAdapter(storageMock));
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(
+                eq(storageMock),
+                eq(ClientExecutionListWrapper.class),
+                eq(new String[]{QUERY_EXECUTIONS_URI}),
+                any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        doReturn(operationResultMock).when(requestMock).get();
+
+        // When /
+        OperationResult<ClientExecutionListWrapper> retrieved = adapter.getExecutions();
+
+        // Then /
+        assertNotNull(retrieved);
+        assertSame(retrieved, operationResultMock);
+        verify(requestMock).get();
+        verifyStatic(times(1));
+        buildRequest(
+                eq(storageMock),
+                eq(ClientExecutionListWrapper.class),
+                eq(new String[]{QUERY_EXECUTIONS_URI}),
                 any(DefaultErrorHandler.class));
     }
 }

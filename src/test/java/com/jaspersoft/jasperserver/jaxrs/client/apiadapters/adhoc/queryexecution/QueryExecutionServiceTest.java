@@ -4,10 +4,13 @@ import com.jaspersoft.jasperserver.dto.executions.ClientFlatQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxisQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
+import com.jaspersoft.jasperserver.dto.executions.ClientExecutionListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -332,7 +335,7 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
     }
 
     @Test
-    public void should_return_proper_adapter_for_delete_builder() throws Exception {
+    public void should_return_proper_adapter_for_execution_by_UUID_builder() throws Exception {
         // Given
         QueryExecutionService executionService = new QueryExecutionService(sessionStorageMock);
         PowerMockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -345,6 +348,23 @@ public class QueryExecutionServiceTest extends PowerMockTestCase {
         // Then
         assertEquals(adapter, executionAdapterMock);
         PowerMockito.verifyNew(QueryExecutionAdapter.class, times(1)).withArguments(sessionStorageMock, "testUuid");
+    }
+
+    @Test
+    public void should_return_query_executions_for_get_builder() throws Exception {
+        // Given
+        OperationResult<ClientExecutionListWrapper> operationResult = Mockito.mock(OperationResult.class);
+        QueryExecutionService executionService = new QueryExecutionService(sessionStorageMock);
+        PowerMockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
+        PowerMockito.whenNew(QueryExecutionAdapter.class).withAnyArguments().thenReturn(executionAdapterMock);
+        doReturn(operationResult).when(executionAdapterMock).getExecutions();
+
+        // When
+        OperationResult<ClientExecutionListWrapper> adapter = executionService.get();
+
+        // Then
+        assertEquals(adapter, operationResult);
+        PowerMockito.verifyNew(QueryExecutionAdapter.class, times(1)).withArguments(sessionStorageMock);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)

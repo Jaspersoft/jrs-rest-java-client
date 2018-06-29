@@ -4,9 +4,11 @@ import com.jaspersoft.jasperserver.dto.executions.ClientFlatQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiAxisQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
+import com.jaspersoft.jasperserver.dto.executions.ClientExecutionListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
 import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_AXIS_QUERY_JSON;
 import static com.jaspersoft.jasperserver.dto.executions.QueryExecutionsMediaType.EXECUTION_MULTI_AXIS_QUERY_XML;
@@ -72,6 +74,10 @@ public class QueryExecutionService extends AbstractAdapter {
                 (sessionStorage.getConfiguration().getAcceptMimeType().equals(MimeType.JSON)) ?
                         new String[]{FLAT_DATA_JSON, MULTI_LEVEL_DATA_JSON, MULTI_AXIS_DATA_JSON} :
                         new String[]{FLAT_DATA_XML, MULTI_LEVEL_DATA_XML, MULTI_AXIS_DATA_XML});
+    }
+
+    public OperationResult<ClientExecutionListWrapper> get() {
+        return new QueryExecutionAdapter(sessionStorage).getExecutions();
     }
 
     public QueryExecutionAdapter execution(String uuIUd) {
