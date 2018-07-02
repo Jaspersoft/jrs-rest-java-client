@@ -3028,6 +3028,14 @@ To see just one specific query execution you should use:
                         .get()
 ``` 
 
+Also, you can see the status of any query execution using the following piece of code:
+```java
+     OperationResult<? extends AbstractClientExecution> result = seesion
+                             .queryExecutionService()
+                             .execution(uuid) // where uuId - is Id of query execution
+                             .status()   
+```
+
 And you can delete execution using the following code:
 ```java
         OperationResult execute = session.

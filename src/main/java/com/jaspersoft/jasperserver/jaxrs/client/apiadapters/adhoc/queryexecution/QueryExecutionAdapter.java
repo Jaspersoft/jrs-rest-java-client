@@ -2,6 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecutio
 
 import com.jaspersoft.jasperserver.dto.executions.AbstractClientExecution;
 import com.jaspersoft.jasperserver.dto.executions.ClientExecutionListWrapper;
+import com.jaspersoft.jasperserver.dto.executions.ExecutionStatusObject;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
@@ -136,6 +137,13 @@ public class QueryExecutionAdapter extends AbstractAdapter {
 
     public <T extends AbstractClientExecution> OperationResult<T> get() {
         JerseyRequest request = buildRequest(AbstractClientExecution.class);
+        return request.get();
+    }
+
+    public OperationResult<ExecutionStatusObject> status() {
+        uri.add("status");
+
+        JerseyRequest request = buildRequest(ExecutionStatusObject.class);
         return request.get();
     }
 
