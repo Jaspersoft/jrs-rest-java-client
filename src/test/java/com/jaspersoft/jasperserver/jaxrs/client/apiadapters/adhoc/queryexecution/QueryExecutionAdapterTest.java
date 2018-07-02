@@ -7,6 +7,7 @@ import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryExecution
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.dto.executions.ClientProvidedQueryExecution;
 import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
+import com.jaspersoft.jasperserver.dto.executions.ExecutionStatusObject;
 import com.jaspersoft.jasperserver.dto.executions.AbstractClientExecution;
 import com.jaspersoft.jasperserver.dto.executions.ClientExecutionListWrapper;
 import com.jaspersoft.jasperserver.dto.executions.QueryResultDataMediaType;
@@ -846,4 +847,31 @@ public class QueryExecutionAdapterTest extends PowerMockTestCase {
                 eq(new String[]{QUERY_EXECUTIONS_URI}),
                 any(DefaultErrorHandler.class));
     }
+
+    @Test
+    public void should_return_proper_operation_result_when_get_status_of_execution() {
+        // Given
+        QueryExecutionAdapter adapter = spy(new QueryExecutionAdapter(storageMock));
+        mockStatic(JerseyRequest.class);
+        when(buildRequest(
+                eq(storageMock),
+                eq(ExecutionStatusObject.class),
+                eq(new String[]{QUERY_EXECUTIONS_URI, "status"}),
+                any(DefaultErrorHandler.class))).thenReturn(requestMock);
+        doReturn(operationResultMock).when(requestMock).get();
+
+        // When /
+        OperationResult<ExecutionStatusObject> retrieved = adapter.status();
+
+        // Then /
+        assertSame(retrieved, operationResultMock);
+        verify(requestMock).get();
+        verifyStatic(times(1));
+        buildRequest(
+                eq(storageMock),
+                eq(ExecutionStatusObject.class),
+                eq(new String[]{QUERY_EXECUTIONS_URI, "status"}),
+                any(DefaultErrorHandler.class));
+    }
+
 }
