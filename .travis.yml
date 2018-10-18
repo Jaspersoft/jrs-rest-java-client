@@ -5,8 +5,7 @@ jdk:
 
 notifications:
   email:
-    - o.krasnianskyi@globallogic.com
-    - igor.nesterenko@globallogic.com
+    - adammblinderman@gmail.com
 
 branches:
   only:

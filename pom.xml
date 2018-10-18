@@ -14,7 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <jasperserver-dto.version>epic-JRS-17145-refactor-queryExecutions-bundles-SNAPSHOT</jasperserver-dto.version>
+        <jasperserver-dto.version>7.1.0</jasperserver-dto.version>
     </properties>
 
     <scm>
