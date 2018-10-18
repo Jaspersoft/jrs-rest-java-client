@@ -9,17 +9,17 @@
     <artifactId>jrs-rest-java-client</artifactId>
     <version>6.3.20-SNAPSHOT</version>
     <name>REST client for JasperReports server</name>
-    <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
+    <url>http://github.com/Oboros/jrs-rest-java-client</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <jasperserver-dto.version>6.4.0</jasperserver-dto.version>
+        <jasperserver-dto.version>epic-JRS-17145-refactor-queryExecutions-bundles-SNAPSHOT</jasperserver-dto.version>
     </properties>
 
     <scm>
-        <connection>scm:git:http://github.com/Jaspersoft/jrs-rest-java-client</connection>
-        <developerConnection>scm:git:https://github.com/Jaspersoft/jrs-rest-java-client</developerConnection>
+        <connection>scm:git:http://github.com/oboros/jrs-rest-java-client</connection>
+        <developerConnection>scm:git:https://github.com/Oboros/jrs-rest-java-client</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
@@ -291,6 +291,15 @@
                 <role>developer</role>
             </roles>
             <timezone>+3</timezone>
+        </developer>
+        <developer>
+            <id>oboros</id>
+            <name>Adam Blinderman</name>
+            <email>adammblinderman@gmail.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>-5</timezone>
         </developer>
     </developers>
 </project>
