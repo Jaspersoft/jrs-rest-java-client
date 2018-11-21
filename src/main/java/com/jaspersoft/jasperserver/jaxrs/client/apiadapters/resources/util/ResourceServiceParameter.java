@@ -47,7 +47,14 @@ public enum ResourceServiceParameter {
      *
      * Type/Value: true|false
      */
-    OVERWRITE("overwrite");
+    OVERWRITE("overwrite"),
+
+    /**
+     * Used for domain resource validation. True value means that no domain would be created.
+     *
+     * Type/Value: true|false
+     */
+    DRY_RUN("dry-run");
 
     private String name;
 
