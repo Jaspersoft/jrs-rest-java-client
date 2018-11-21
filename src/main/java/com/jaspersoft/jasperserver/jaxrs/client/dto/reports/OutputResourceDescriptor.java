@@ -22,8 +22,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.dto.common.DeepCloneable;
-import java.util.Arrays;
+
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Arrays;
 
 @XmlRootElement(name = "outputResource")
 public class OutputResourceDescriptor implements DeepCloneable{
@@ -131,7 +132,7 @@ public class OutputResourceDescriptor implements DeepCloneable{
     }
 
     @Override
-    public Object deepClone() {
+    public OutputResourceDescriptor deepClone() {
         return new OutputResourceDescriptor(this);
     }
 }
