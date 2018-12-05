@@ -35,7 +35,7 @@ public class JrioSession {
         return getService(ServerInfoService.class);
     }
 
-    public ReportingService settingsService() {
+    public ReportingService reportingService() {
         return getService(ReportingService.class);
     }
 
