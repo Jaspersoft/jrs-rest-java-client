@@ -25,6 +25,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportexecution.ReportExecutionAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.*;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.AbstractReportExecutionRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
 
@@ -77,7 +78,7 @@ public class ReportingService extends AbstractAdapter {
         return new ReportExecutionAdapter(sessionStorage);
     }
 
-    public ReportExecutionAdapter reportExecution(ReportExecutionRequest reportExecution) {
+    public ReportExecutionAdapter reportExecution(AbstractReportExecutionRequest reportExecution) {
         return new ReportExecutionAdapter(sessionStorage, reportExecution);
     }
 

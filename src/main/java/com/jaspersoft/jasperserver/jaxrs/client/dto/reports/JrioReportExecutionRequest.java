@@ -2,9 +2,7 @@
  * Copyright © 2014-2018. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.reports.jrio;
-
-import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.AbstractReportExecutionRequest;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -14,14 +12,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class ReportExecutionRequest extends AbstractReportExecutionRequest<ReportExecutionRequest> {
+public class JrioReportExecutionRequest extends AbstractReportExecutionRequest<JrioReportExecutionRequest> {
     private String reportTimeZone;
     private String reportLocale;
 
-    public ReportExecutionRequest() {
+    public JrioReportExecutionRequest() {
     }
 
-    public ReportExecutionRequest(ReportExecutionRequest other) {
+    public JrioReportExecutionRequest(JrioReportExecutionRequest other) {
         this.reportUnitUri = other.reportUnitUri;
         this.freshData = other.freshData;
         this.saveDataSnapshot = other.saveDataSnapshot;
@@ -45,7 +43,7 @@ public class ReportExecutionRequest extends AbstractReportExecutionRequest<Repor
         return reportTimeZone;
     }
 
-    public ReportExecutionRequest setReportTimeZone(String reportTimeZone) {
+    public JrioReportExecutionRequest setReportTimeZone(String reportTimeZone) {
         this.reportTimeZone = reportTimeZone;
         return this;
     }
@@ -54,7 +52,7 @@ public class ReportExecutionRequest extends AbstractReportExecutionRequest<Repor
         return reportLocale;
     }
 
-    public ReportExecutionRequest setReportLocale(String reportLocale) {
+    public JrioReportExecutionRequest setReportLocale(String reportLocale) {
         this.reportLocale = reportLocale;
         return this;
     }
@@ -62,9 +60,9 @@ public class ReportExecutionRequest extends AbstractReportExecutionRequest<Repor
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ReportExecutionRequest)) return false;
+        if (!(o instanceof JrioReportExecutionRequest)) return false;
 
-        ReportExecutionRequest that = (ReportExecutionRequest) o;
+        JrioReportExecutionRequest that = (JrioReportExecutionRequest) o;
 
         if (reportUnitUri != null ? !reportUnitUri.equals(that.reportUnitUri) : that.reportUnitUri != null)
             return false;
@@ -137,7 +135,7 @@ public class ReportExecutionRequest extends AbstractReportExecutionRequest<Repor
     }
 
     @Override
-    protected ReportExecutionRequest getThis() {
+    protected JrioReportExecutionRequest getThis() {
         return this;
     }
 }

@@ -32,6 +32,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.AbstractReportExecutionRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.JrioReportExecutionRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionStatusEntity;
@@ -54,16 +56,17 @@ public class ReportExecutionAdapter extends AbstractAdapter {
     public static final String STATUS_URI = "status";
     public static final String PARAMETERS_URI = "parameters";
 
-    private ReportExecutionRequest executionRequest;
+    private AbstractReportExecutionRequest executionRequest;
     private String executionId;
     private ArrayList<String> path = new ArrayList<String>();
     private final MultivaluedMap<String, String> params = new MultivaluedHashMap<>();
 
-    public ReportExecutionAdapter(SessionStorage sessionStorage, ReportExecutionRequest executionRequest) {
+    public ReportExecutionAdapter(SessionStorage sessionStorage, AbstractReportExecutionRequest executionRequest) {
         super(sessionStorage);
         this.executionRequest = executionRequest;
         this.path.add(REPORT_EXECUTIONS_URI);
     }
+
     public ReportExecutionAdapter(SessionStorage sessionStorage, String executionId) {
         super(sessionStorage);
         this.executionId = executionId;
@@ -91,6 +94,7 @@ public class ReportExecutionAdapter extends AbstractAdapter {
         return this;
 
     }
+
     public ReportExecutionAdapter queryParameter(String name, String value) {
         params.add(name, UrlUtils.encode(value));
         return this;
@@ -111,54 +115,67 @@ public class ReportExecutionAdapter extends AbstractAdapter {
         this.executionRequest.setAsync(value);
         return this;
     }
+
     public ReportExecutionAdapter interactive(boolean value) {
         this.executionRequest.setInteractive(value);
         return this;
     }
+
     public ReportExecutionAdapter freshData(boolean value) {
         this.executionRequest.setFreshData(value);
         return this;
     }
+
     public ReportExecutionAdapter saveDataSnapshot(boolean value) {
         this.executionRequest.setSaveDataSnapshot(value);
         return this;
     }
+
     public ReportExecutionAdapter ignorePagination(boolean value) {
         this.executionRequest.setIgnorePagination(value);
         return this;
     }
+
     public ReportExecutionAdapter allowInlineScripts(Boolean value) {
         this.executionRequest.setAllowInlineScripts(value);
         return this;
     }
+
     public ReportExecutionAdapter transformerKey(String transformerKey) {
         this.executionRequest.setTransformerKey(transformerKey);
         return this;
     }
+
     public ReportExecutionAdapter baseUrl(String baseUri) {
         this.executionRequest.setBaseUrl(baseUri);
         return this;
     }
+
     public ReportExecutionAdapter markupType(String markupType) {
         this.executionRequest.setMarkupType(markupType);
         return this;
     }
+
     public ReportExecutionAdapter anchor(String anchor) {
         this.executionRequest.setAnchor(anchor);
         return this;
     }
+
     public ReportExecutionAdapter pages(String pages) {
         this.executionRequest.setPages(pages);
         return this;
     }
+
     public ReportExecutionAdapter pages(Integer... pages) {
         this.executionRequest.setPages(StringUtils.join(asList(pages), ","));
         return this;
     }
+
     public ReportExecutionAdapter pages(PageRange pages) {
         this.executionRequest.setPages(pages.getRange());
         return this;
     }
+
     public ReportExecutionAdapter attachmentsPrefix(String attachmentsPrefix) {
         this.executionRequest.setAttachmentsPrefix(attachmentsPrefix);
         return this;
@@ -168,27 +185,36 @@ public class ReportExecutionAdapter extends AbstractAdapter {
         this.executionRequest.setParameters(reportParameters);
         return this;
     }
+
     public ReportExecutionAdapter reportParameter(String name, String... values) {
         this.reportParameter(new ReportParameter().setName(name).setValues(asList(values)));
         return this;
     }
+
     public ReportExecutionAdapter reportParameter(ReportParameter reportParameter) {
-        if(executionRequest.getParameters() == null) executionRequest.setParameters(new ReportParameters(new ArrayList<ReportParameter>()));
+        if (executionRequest.getParameters() == null)
+            executionRequest.setParameters(new ReportParameters(new ArrayList<ReportParameter>()));
         final ReportParameters parameters = executionRequest.getParameters();
         final List<ReportParameter> reportParametersList = parameters.getReportParameters();
-        if(reportParametersList == null) parameters.setReportParameters(new ArrayList<ReportParameter>());
+        if (reportParametersList == null) parameters.setReportParameters(new ArrayList<ReportParameter>());
         reportParametersList.add(reportParameter);
         return this;
     }
 
     public ReportExecutionAdapter timeZone(TimeZone timeZone) {
-        this.executionRequest.setTimeZone(timeZone);
+        if (executionRequest instanceof ReportExecutionRequest) {
+            ((ReportExecutionRequest) this.executionRequest).setTimeZone(timeZone);
+        }
+        if (executionRequest instanceof JrioReportExecutionRequest) {
+            ((JrioReportExecutionRequest) this.executionRequest).setReportTimeZone(timeZone.getID());
+        }
         return this;
     }
 
     public ReportExecutionExportAdapter export() {
         return new ReportExecutionExportAdapter(sessionStorage, executionId);
     }
+
     public ReportExecutionExportAdapter export(String exportId) {
         return new ReportExecutionExportAdapter(sessionStorage, executionId, exportId);
     }
@@ -267,8 +293,8 @@ public class ReportExecutionAdapter extends AbstractAdapter {
                 ReportExecution.class,
                 new String[]{REPORT_EXECUTIONS_URI},
                 new RunReportErrorHandler());
-        if (executionRequest.getTimeZone() != null) {
-            jerseyRequest.addHeader("Accept-Timezone", executionRequest.getTimeZone().getID());
+        if (executionRequest instanceof ReportExecutionRequest && ((ReportExecutionRequest) executionRequest).getTimeZone() != null) {
+            jerseyRequest.addHeader("Accept-Timezone", ((ReportExecutionRequest) executionRequest).getTimeZone().getID());
         }
         return jerseyRequest
                 .post(executionRequest);
