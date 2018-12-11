@@ -1,39 +1,22 @@
 /*
- * Copyright (C) 2005 - 2014 Jaspersoft Corporation. All rights  reserved.
- * http://www.jaspersoft.com.
- *
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- *
- * This program is free software: you can redistribute it and/or  modify
- * it under the terms of the GNU Affero General Public License  as
- * published by the Free Software Foundation, either version 3 of  the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero  General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public  License
- * along with this program.&nbsp; If not, see <http://www.gnu.org/licenses/>.
+ * Copyright © 2014-2018. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
  */
 
-package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
+package com.jaspersoft.jasperserver.jaxrs.client.dto.reports.jrio;
+
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.AbstractReportExecutionRequest;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.TimeZone;
 
 /**
- * <p></p>
  *
- * @author Yaroslav.Kovalchyk
- * @version $Id: ReportExecutionRequest.java 26599 2012-12-10 13:04:23Z ykovalchyk $
+ * @author Tetyana Matveyeva
  */
 
 @XmlRootElement
 public class ReportExecutionRequest extends AbstractReportExecutionRequest<ReportExecutionRequest> {
-    private TimeZone timeZone;
+    private String reportTimeZone;
+    private String reportLocale;
 
     public ReportExecutionRequest() {
     }
@@ -50,19 +33,29 @@ public class ReportExecutionRequest extends AbstractReportExecutionRequest<Repor
         this.attachmentsPrefix = other.attachmentsPrefix;
         this.pages = other.pages;
         this.parameters = other.parameters;
-        this.timeZone = TimeZone.getTimeZone(timeZone.getID());
+        this.reportTimeZone = other.reportTimeZone;
+        this.reportLocale = other.reportLocale;
         this.allowInlineScripts = other.allowInlineScripts;
         this.baseUrl = other.baseUrl;
         this.markupType = other.markupType;
         this.anchor = other.anchor;
     }
 
-    public TimeZone getTimeZone() {
-        return timeZone;
+    public String getReportTimeZone() {
+        return reportTimeZone;
     }
 
-    public ReportExecutionRequest setTimeZone(TimeZone timeZone) {
-        this.timeZone = timeZone;
+    public ReportExecutionRequest setReportTimeZone(String reportTimeZone) {
+        this.reportTimeZone = reportTimeZone;
+        return this;
+    }
+
+    public String getReportLocale() {
+        return reportLocale;
+    }
+
+    public ReportExecutionRequest setReportLocale(String reportLocale) {
+        this.reportLocale = reportLocale;
         return this;
     }
 
@@ -89,7 +82,8 @@ public class ReportExecutionRequest extends AbstractReportExecutionRequest<Repor
             return false;
         if (pages != null ? !pages.equals(that.pages) : that.pages != null) return false;
         if (parameters != null ? !parameters.equals(that.parameters) : that.parameters != null) return false;
-        if (timeZone != null ? !timeZone.equals(that.timeZone) : that.timeZone != null) return false;
+        if (reportTimeZone != null ? !reportTimeZone.equals(that.reportTimeZone) : that.reportTimeZone != null) return false;
+        if (reportLocale != null ? !reportLocale.equals(that.reportLocale) : that.reportLocale != null) return false;
         if (allowInlineScripts != null ? !allowInlineScripts.equals(that.allowInlineScripts) : that.allowInlineScripts != null)
             return false;
         if (baseUrl != null ? !baseUrl.equals(that.baseUrl) : that.baseUrl != null) return false;
@@ -110,7 +104,8 @@ public class ReportExecutionRequest extends AbstractReportExecutionRequest<Repor
         result = 31 * result + (attachmentsPrefix != null ? attachmentsPrefix.hashCode() : 0);
         result = 31 * result + (pages != null ? pages.hashCode() : 0);
         result = 31 * result + (parameters != null ? parameters.hashCode() : 0);
-        result = 31 * result + (timeZone != null ? timeZone.hashCode() : 0);
+        result = 31 * result + (reportTimeZone != null ? reportTimeZone.hashCode() : 0);
+        result = 31 * result + (reportLocale != null ? reportLocale.hashCode() : 0);
         result = 31 * result + (allowInlineScripts != null ? allowInlineScripts.hashCode() : 0);
         result = 31 * result + (baseUrl != null ? baseUrl.hashCode() : 0);
         result = 31 * result + (markupType != null ? markupType.hashCode() : 0);
@@ -132,7 +127,8 @@ public class ReportExecutionRequest extends AbstractReportExecutionRequest<Repor
                 ", attachmentsPrefix='" + attachmentsPrefix + '\'' +
                 ", pages='" + pages + '\'' +
                 ", parameters=" + parameters +
-                ", timeZone=" + timeZone +
+                ", reportTimeZone=" + reportTimeZone +
+                ", reportLocale=" + reportLocale +
                 ", allowInlineScripts=" + allowInlineScripts +
                 ", baseUrl='" + baseUrl + '\'' +
                 ", markupType='" + markupType + '\'' +
