@@ -50,7 +50,9 @@ public class ReportExecutionRequest extends AbstractReportExecutionRequest<Repor
         this.attachmentsPrefix = other.attachmentsPrefix;
         this.pages = other.pages;
         this.parameters = other.parameters;
-        this.timeZone = TimeZone.getTimeZone(timeZone.getID());
+        if (other.timeZone != null) {
+            this.timeZone = TimeZone.getTimeZone(other.timeZone.getID());
+        }
         this.allowInlineScripts = other.allowInlineScripts;
         this.baseUrl = other.baseUrl;
         this.markupType = other.markupType;
