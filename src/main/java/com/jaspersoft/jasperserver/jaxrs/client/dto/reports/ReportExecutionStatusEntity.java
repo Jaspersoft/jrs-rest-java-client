@@ -65,19 +65,24 @@ public class ReportExecutionStatusEntity {
         ReportExecutionStatusEntity that = (ReportExecutionStatusEntity) o;
 
         if (value != null ? !value.equals(that.value) : that.value != null) return false;
+        if (errorDescriptor != null ? !errorDescriptor.equals(that.errorDescriptor) : that.errorDescriptor != null)
+            return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return value != null ? value.hashCode() : 0;
+        int result = value != null ? value.hashCode() : 0;
+        result = 31 * result + (errorDescriptor != null ? errorDescriptor.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "ReportExecutionStatusEntity{" +
                 "value='" + value + '\'' +
+                ", errorDescriptor=" + errorDescriptor +
                 '}';
     }
 }

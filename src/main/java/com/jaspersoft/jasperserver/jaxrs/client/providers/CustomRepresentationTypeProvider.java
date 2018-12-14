@@ -139,7 +139,8 @@ import java.lang.reflect.Type;
         "application/multiLevelData+xml",
         "application/multiAxisData+xml",
         "application/contexts.partialMetadataOptions+json",
-        "application/adhoc.multiLevelQuery+json"
+        "application/adhoc.multiLevelQuery+json",
+        "application/status+json"
 })
 @Produces({
         "application/collection+json",
@@ -246,7 +247,8 @@ import java.lang.reflect.Type;
         "application/multiLevelData+xml",
         "application/multiAxisData+xml",
         "application/contexts.partialMetadataOptions+json",
-        "application/adhoc.multiLevelQuery+json"
+        "application/adhoc.multiLevelQuery+json",
+        "application/status+json"
 })
 public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
 
