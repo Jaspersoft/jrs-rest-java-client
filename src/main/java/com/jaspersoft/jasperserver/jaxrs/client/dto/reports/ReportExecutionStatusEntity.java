@@ -21,6 +21,8 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
+import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
@@ -34,6 +36,7 @@ public class ReportExecutionStatusEntity {
     public static final String VALUE_CANCELLED = "cancelled";
 
     private String value = VALUE_CANCELLED;
+    private ErrorDescriptor errorDescriptor;
 
     @XmlValue
     public String getValue() {
@@ -42,6 +45,15 @@ public class ReportExecutionStatusEntity {
 
     public ReportExecutionStatusEntity setValue(String value) {
         this.value = value;
+        return this;
+    }
+
+    public ErrorDescriptor getErrorDescriptor() {
+        return errorDescriptor;
+    }
+
+    public ReportExecutionStatusEntity setErrorDescriptor(ErrorDescriptor errorDescriptor) {
+        this.errorDescriptor = errorDescriptor;
         return this;
     }
 
