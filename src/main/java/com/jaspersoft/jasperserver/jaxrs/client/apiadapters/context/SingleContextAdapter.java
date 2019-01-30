@@ -1,6 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context;
 
 import com.jaspersoft.jasperserver.dto.adhoc.query.ClientMultiLevelQuery;
+import com.jaspersoft.jasperserver.dto.connection.metadata.PartialMetadataOptions;
 import com.jaspersoft.jasperserver.dto.executions.ClientMultiLevelQueryResultData;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
@@ -168,6 +169,21 @@ public class SingleContextAdapter<C, M> extends AbstractAdapter {
         );
         jerseyRequest.setContentType(metadataMimeType);
         return jerseyRequest.post(params);
+    }
+
+    public OperationResult<M> partialMetadata(PartialMetadataOptions options) {
+        if (uuId == null || uuId.isEmpty()) {
+            throw new MandatoryParameterNotFoundException("Uuid of the context must be specified");
+        }
+
+        JerseyRequest<M> jerseyRequest = JerseyRequest.buildRequest(
+                sessionStorage,
+                metadataClass,
+                new String[]{SERVICE_URI, uuId, "metadata"},
+                new DefaultErrorHandler()
+        );
+        jerseyRequest.setContentType(metadataMimeType);
+        return jerseyRequest.post(options);
     }
 
     public OperationResult<M> createAndGetMetadata(C context) {
