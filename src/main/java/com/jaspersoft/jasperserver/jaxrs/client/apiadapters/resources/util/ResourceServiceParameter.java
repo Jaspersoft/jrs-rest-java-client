@@ -54,7 +54,14 @@ public enum ResourceServiceParameter {
      *
      * Type/Value: true|false
      */
-    DRY_RUN("dry-run");
+    DRY_RUN("dry-run"),
+
+    /**
+     * Used to specify resource types that should be expanded for resource sub-resources
+     *
+     * Type/Value: resource type (query, reportUnit, etc)
+     */
+    EXPAND_TYPE("expandType");
 
     private String name;
 
