@@ -95,11 +95,6 @@ public class RestClientConfiguration {
         return loadConfiguration(properties);
     }
 
-    private static Boolean isStringValid(String string) {
-        return (string != null && string.length() > 0);
-    }
-
-
     public static RestClientConfiguration loadConfiguration(Properties properties) {
 
         RestClientConfiguration configuration = new RestClientConfiguration();
@@ -187,6 +182,11 @@ public class RestClientConfiguration {
             return null;
         }
         return properties;
+    }
+
+
+    private static Boolean isStringValid(String string) {
+        return (string != null && string.length() > 0);
     }
 
     public Boolean getLogHttp() {

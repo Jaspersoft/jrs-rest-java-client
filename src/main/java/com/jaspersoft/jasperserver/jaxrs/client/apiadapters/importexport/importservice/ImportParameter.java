@@ -74,16 +74,7 @@ public enum ImportParameter {
     /**
      * Defines strategy with broken dependencies
      */
-    BROKEN_DEPENDENCIES("brokenDependencies"),
-    /**
-     * Pagination. Start index for requested pate.
-     */
-    OFFSET("offset"),
-
-    /**
-     * 	Pagination. Resources count per page
-     */
-    LIMIT("limit");;
+    BROKEN_DEPENDENCIES("brokenDependencies");
 
     private String paramName;
 

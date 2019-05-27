@@ -20,10 +20,7 @@
  */
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
-/***
- * @deprecated  use @Link {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportSearchParameter}
- * */
-@Deprecated
+
 public enum ReportAndJobSearchParameter {
 
     /**

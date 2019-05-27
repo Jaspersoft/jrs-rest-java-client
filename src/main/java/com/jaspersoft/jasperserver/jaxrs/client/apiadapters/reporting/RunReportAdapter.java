@@ -27,11 +27,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
-import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +37,8 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 
 import static java.util.regex.Pattern.compile;
 
@@ -52,11 +50,11 @@ public class RunReportAdapter extends AbstractAdapter {
     private final String format;
     private  TimeZone timeZone;
     private String[] pages = new String[0];
-    private ArrayList<String> path = new ArrayList<>();
+    private ArrayList<String> path = new ArrayList<String>();
 
     public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, String format) {
         super(sessionStorage);
-        this.params = new MultivaluedHashMap<>();
+        this.params = new MultivaluedHashMap<String, String>();
         this.reportUnitUri = reportUnitUri;
         this.format = format.toLowerCase();
     }
@@ -82,7 +80,7 @@ public class RunReportAdapter extends AbstractAdapter {
     }
 
     public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, String format,
-                            com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.PageRange range) {
+                            PageRange range) {
         this(sessionStorage, reportUnitUri, format);
         this.pages = new String[]{range.getRange()};
     }
@@ -100,13 +98,13 @@ public class RunReportAdapter extends AbstractAdapter {
     }
 
     public RunReportAdapter parameter(String name, String... value) {
-        params.addAll(name, UrlUtils.encode(Arrays.asList(value)));
+        params.addAll(name, Arrays.asList(value));
         return this;
     }
 
     public RunReportAdapter parameter(String name, List<String> values) {
 
-        params.addAll(name, UrlUtils.encode(values));
+        params.addAll(name, values);
         return this;
 
     }

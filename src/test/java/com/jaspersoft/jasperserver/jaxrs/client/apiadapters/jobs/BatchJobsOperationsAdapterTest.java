@@ -28,7 +28,6 @@ import static org.testng.Assert.assertSame;
 
 /**
  * @author Tetiana Iefimenko
- * @deprecated
  */
 @PrepareForTest({JerseyRequest.class})
 public class BatchJobsOperationsAdapterTest extends PowerMockTestCase {

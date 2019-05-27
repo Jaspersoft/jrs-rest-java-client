@@ -21,9 +21,6 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
 
-/**
- * @deprecated (use server DTO).
- */
 public enum CalendarDaysType {
     ALL,
     WEEK,

@@ -29,9 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Map;
-/**
- * @deprecated (use server DTO).
- */
+
 @XmlRootElement(name = "source")
 @XmlSeeAlso(ValuesCollection.class)
 public class JobSource {

@@ -24,7 +24,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobValidationErrorHandler}
- * @deprecated
  */
 @PrepareForTest({DefaultErrorHandler.class, JobValidationErrorHandler.class})
 public class JobValidationErrorHandlerTest extends PowerMockTestCase {

@@ -20,7 +20,6 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice;
 
-import com.jaspersoft.jasperserver.dto.importexport.ExportTask;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
@@ -30,16 +29,8 @@ public class ExportService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    /***
-     * @deprecated use {@link #newTask(ExportTask)}
-     */
-    @Deprecated
     public ExportTaskAdapter newTask() {
         return new ExportTaskAdapter(sessionStorage);
-    }
-
-    public ExportRequestAdapter newTask(ExportTask exportTask) {
-        return new ExportRequestAdapter(sessionStorage, exportTask);
     }
 
     public ExportRequestAdapter task(String taskId) {

@@ -44,7 +44,6 @@ import static org.testng.Assert.assertSame;
 
 /**
  * Unit tests for {@link JobsService}
- * @deprecated
  */
 @PrepareForTest({JerseyRequest.class, JobsService.class})
 public class JobsServiceTest extends PowerMockTestCase {
