@@ -29,10 +29,16 @@ import com.jaspersoft.jasperserver.dto.importexport.ExportTask;
 import com.jaspersoft.jasperserver.dto.importexport.State;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
+/**
+ * @Deprecated use @Link {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportRequestAdapter}
+ * and setters of @Link {@link com.jaspersoft.jasperserver.dto.importexport.ExportTask}
+ * */
+@Deprecated
 public class ExportTaskAdapter extends AbstractAdapter {
 
     public static final String SERVICE_URI = "export";
@@ -41,65 +47,119 @@ public class ExportTaskAdapter extends AbstractAdapter {
     public ExportTaskAdapter(SessionStorage sessionStorage) {
         super(sessionStorage);
         this.exportTask = new ExportTask();
-        this.exportTask.setParameters(new ArrayList<String>());
-        this.exportTask.setRoles(new ArrayList<String>());
-        this.exportTask.setUsers(new ArrayList<String>());
-        this.exportTask.setUris(new ArrayList<String>());
-        this.exportTask.setResourceTypes(new ArrayList<String>());
-        this.exportTask.setScheduledJobs(new ArrayList<String>());
     }
 
     public ExportTaskAdapter role(String role) {
-        exportTask.getRoles().add(role);
+        if (role != null && !role.isEmpty()) {
+            if (exportTask.getRoles() == null) {
+                exportTask.setRoles(new ArrayList<String>());
+            }
+            exportTask.getRoles().add(role);
+        }
         return this;
     }
 
     public ExportTaskAdapter roles(List<String> roles) {
-        exportTask.getRoles().addAll(roles);
+        if (roles != null && !roles.isEmpty()) {
+            for (String singleRole : roles) {
+                this.role(singleRole);
+            }
+        }
+        return this;
+    }
+
+
+    public ExportTaskAdapter allRoles() {
+        exportTask.setRoles(Collections.<String>emptyList());
         return this;
     }
 
     public ExportTaskAdapter user(String user) {
-        exportTask.getUsers().add(user);
+        if (user != null && !user.isEmpty()) {
+            if (exportTask.getUsers() == null) {
+                exportTask.setUsers(new ArrayList<String>());
+            }
+            exportTask.getUsers().add(user);
+        }
         return this;
     }
 
     public ExportTaskAdapter users(List<String> users) {
-        exportTask.getUsers().addAll(users);
+        if (users != null && !users.isEmpty()) {
+            for (String singleUser : users) {
+                this.user(singleUser);
+            }
+        }
+        return this;
+    }
+
+    public ExportTaskAdapter allUsers() {
+        exportTask.setUsers(new ArrayList<String>());
         return this;
     }
 
     public ExportTaskAdapter uri(String uri) {
-        exportTask.getUris().add(uri);
+        if (uri != null && !uri.isEmpty()) {
+            if (exportTask.getUris() == null) {
+                exportTask.setUris(new ArrayList<String>());
+            }
+            exportTask.getUris().add(uri);
+        }
         return this;
     }
 
     public ExportTaskAdapter uris(List<String> uris) {
-        exportTask.getUris().addAll(uris);
+        if (uris != null && !uris.isEmpty() ) {
+            for (String singleUri : uris) {
+                this.uri(singleUri);
+            }
+        }
         return this;
     }
 
-    public ExportTaskAdapter scheduledJob(String uri) {
-        exportTask.getScheduledJobs().add(uri);
+    public ExportTaskAdapter scheduledJob(String scheduledJob) {
+
+        if (scheduledJob != null && !scheduledJob.isEmpty()) {
+            if (exportTask.getScheduledJobs() == null) {
+                exportTask.setScheduledJobs(new ArrayList<String>());
+            }
+            exportTask.getScheduledJobs().add(scheduledJob);
+        }
         return this;
     }
 
-    public ExportTaskAdapter scheduledJobs(List<String> uris) {
-        exportTask.getScheduledJobs().addAll(uris);
+    public ExportTaskAdapter scheduledJobs(List<String> scheduledJobs) {
+        if (scheduledJobs != null && !scheduledJobs.isEmpty()) {
+            for (String singleJob : scheduledJobs) {
+                this.scheduledJob(singleJob);
+            }
+        }
         return this;
     }
 
-    public ExportTaskAdapter resourceType(String uri) {
-        exportTask.getResourceTypes().add(uri);
+    public ExportTaskAdapter resourceType(String resourceType) {
+        if (resourceType != null && !resourceType.isEmpty()) {
+            if (exportTask.getResourceTypes() == null) {
+                exportTask.setResourceTypes(new ArrayList<String>());
+            }
+            exportTask.getResourceTypes().add(resourceType);
+        }
         return this;
     }
 
-    public ExportTaskAdapter resourceTypes(List<String> uris) {
-        exportTask.getResourceTypes().addAll(uris);
+    public ExportTaskAdapter resourceTypes(List<String> resourceTypes) {
+        if (resourceTypes != null && !resourceTypes.isEmpty()) {
+            for (String singleResourceType : resourceTypes) {
+                this.resourceType(singleResourceType);
+            }
+        }
         return this;
     }
 
     public ExportTaskAdapter parameter(ExportParameter parameter) {
+        if (exportTask.getParameters() == null) {
+            exportTask.setParameters(new ArrayList<String>());
+        }
         exportTask.getParameters().add(parameter.getParamName());
         return this;
     }

@@ -20,8 +20,12 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
+import com.jaspersoft.jasperserver.dto.executions.AbstractClientExecution;
+import com.jaspersoft.jasperserver.dto.executions.ClientQueryResultData;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesTypeResolverUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryExecutionHelper;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryResultDataHelper;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourcesTypeResolverUtil;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -32,6 +36,12 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
     public <T> OperationResult<T> getOperationResult(Response response, Class<T> responseClass) {
         if (isClientResource(responseClass)) {
             responseClass = (Class<T>) getSpecificResourceType(response);
+        }
+        if (isQueryDataSet(responseClass)) {
+            responseClass = (Class<T>) getSpecificQueryResultDataType(response);
+        }
+        if (isQueryExecution(responseClass)) {
+            responseClass = (Class<T>) getSpecificQueryExecutionType(response);
         }
         return getAppropriateOperationResultInstance(response, responseClass);
     }
@@ -64,13 +74,29 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
         return result;
     }
 
-
-
     private boolean isClientResource(Class<?> clazz) {
         return clazz != Object.class && clazz.isAssignableFrom(ClientResource.class);
+    }
+
+    private boolean isQueryDataSet(Class<?> clazz) {
+        return clazz != Object.class && clazz.isAssignableFrom(ClientQueryResultData.class);
+    }
+
+    private boolean isQueryExecution(Class<?> clazz) {
+        return clazz != Object.class && clazz.isAssignableFrom(AbstractClientExecution.class);
     }
 
     private Class<? extends ClientResource> getSpecificResourceType(Response response) {
         return ResourcesTypeResolverUtil.getClassForMime(response.getHeaderString("Content-Type"));
     }
+
+
+    private Class<? extends ClientQueryResultData> getSpecificQueryResultDataType(Response response) {
+        return QueryResultDataHelper.getResultDataType(response.getHeaderString("Content-Type"));
+    }
+
+    private Class<? extends AbstractClientExecution> getSpecificQueryExecutionType(Response response) {
+        return QueryExecutionHelper.getClassForMime(response.getHeaderString("Content-Type"));
+    }
+
 }

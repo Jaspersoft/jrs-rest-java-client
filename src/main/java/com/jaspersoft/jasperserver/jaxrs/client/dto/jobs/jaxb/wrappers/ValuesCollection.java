@@ -30,6 +30,7 @@ import java.util.Collection;
  *
  * @author Yaroslav.Kovalchyk
  * @version $Id$
+ * @deprecated (use server adapter).
  */
 @XmlType(name = "collection")
 public class ValuesCollection {

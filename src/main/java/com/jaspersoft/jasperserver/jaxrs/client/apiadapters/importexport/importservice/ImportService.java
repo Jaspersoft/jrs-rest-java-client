@@ -23,14 +23,30 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.import
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
+import java.io.File;
+
 public class ImportService extends AbstractAdapter {
 
     public ImportService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
+    @Deprecated
     public ImportTaskRequestAdapter newTask() {
         return new ImportTaskRequestAdapter(sessionStorage);
+    }
+
+
+    public ImportRequestAdapter newImport(File file) {
+        return new ImportRequestAdapter(sessionStorage, file, false);
+    }
+
+    public ImportRequestAdapter newImport(String pathToFile) {
+        return new ImportRequestAdapter(sessionStorage, new File(pathToFile), false);
+    }
+
+    public ImportRequestAdapter newMultiPartImport(File file) {
+        return new ImportRequestAdapter(sessionStorage, file, true);
     }
 
     public ImportRequestAdapter task(String taskId) {

@@ -7,14 +7,14 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>6.3.1</version>
+    <version>6.3.20-SNAPSHOT</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <jasperserver-dto.version>6.3.0</jasperserver-dto.version>
+        <jasperserver-dto.version>7.2.0</jasperserver-dto.version>
     </properties>
 
     <scm>
@@ -23,7 +23,7 @@
         <tag>HEAD</tag>
     </scm>
 
-    <repositories>      
+    <repositories>
         <repository>
           <id>jaspersoft-clients-snapshots</id>
           <name>Jaspersoft clients snapshots</name>
@@ -33,14 +33,20 @@
           <id>central</id>
           <name>jaspersoft-releases</name>
           <url>https://jaspersoft.jfrog.io/jaspersoft/jrs-ce-releases</url>
-        </repository>        
-    </repositories>
+        </repository>
+</repositories>
 
     <dependencies>
         <dependency>
             <groupId>com.jaspersoft.jasperserver</groupId>
             <artifactId>jasperserver-dto</artifactId>
             <version>${jasperserver-dto.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jackson-annotations</artifactId>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Jersey-->
@@ -50,13 +56,13 @@
             <version>2.22.1</version>
         </dependency>
         <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-json</artifactId>
-            <version>1.19</version>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>2.22.1</version>
         </dependency>
         <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-multipart</artifactId>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
             <version>1.19</version>
         </dependency>
         <dependency>
@@ -162,8 +168,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -182,6 +188,7 @@
                             </exclude>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/exceptions/**</exclude>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/enums/**</exclude>
+                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/adhoc/queryexecution/enums/**</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
@@ -203,6 +210,7 @@
                 <version>2.12</version>
                 <configuration>
                     <skipTests>false</skipTests>
+                    <testFailureIgnore>false</testFailureIgnore>
                     <excludes>
                         <exclude>**/IT.java</exclude>
                     </excludes>

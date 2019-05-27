@@ -21,25 +21,40 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
 
 @XmlRootElement(name = "export")
 public class ExportExecutionOptions {
-
-    public static final String PARAM_NAME_PAGES = "pages";
-    public static final String PARAM_NAME_ATTACHMENTS_PREFIX = "attachmentsPrefix";
 
     private String outputFormat;
     private String attachmentsPrefix;
     private String pages;
     private String baseUrl;
+    private String anchor;
     private boolean allowInlineScripts = true;
+    private String markupType;
+    private Boolean ignorePagination;
 
-    public ExportExecutionOptions setPages(String pages) {
-        this.pages = pages;
+    public ExportExecutionOptions() {
+    }
+
+    public ExportExecutionOptions(ExportExecutionOptions other) {
+        this.outputFormat = other.outputFormat;
+        this.attachmentsPrefix = other.attachmentsPrefix;
+        this.pages = other.pages;
+        this.baseUrl = other.baseUrl;
+        this.anchor = other.anchor;
+        this.allowInlineScripts = other.allowInlineScripts;
+        this.markupType = other.markupType;
+        this.ignorePagination = other.ignorePagination;
+    }
+
+    public String getOutputFormat() {
+        return outputFormat;
+    }
+
+    public ExportExecutionOptions setOutputFormat(String outputFormat) {
+        this.outputFormat = outputFormat;
         return this;
     }
 
@@ -52,22 +67,12 @@ public class ExportExecutionOptions {
         return this;
     }
 
-    @XmlTransient
-    public String getPages(){
+    public String getPages() {
         return pages;
     }
 
-    public String getOutputFormat() {
-        return outputFormat;
-    }
-
-    public ExportExecutionOptions setOutputFormat(ReportOutputFormat outputFormat) {
-        this.outputFormat = outputFormat.toString().toLowerCase();
-        return this;
-    }
-
-    public ExportExecutionOptions setOutputFormat(String outputFormat) {
-        this.outputFormat = outputFormat.toLowerCase();
+    public ExportExecutionOptions setPages(String pages) {
+        this.pages = pages;
         return this;
     }
 
@@ -75,44 +80,89 @@ public class ExportExecutionOptions {
         return baseUrl;
     }
 
-    public void setBaseUrl(String baseUrl) {
+    public ExportExecutionOptions setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+        return this;
+    }
+
+    public String getAnchor() {
+        return anchor;
+    }
+
+    public ExportExecutionOptions setAnchor(String anchor) {
+        this.anchor = anchor;
+        return this;
     }
 
     public boolean isAllowInlineScripts() {
         return allowInlineScripts;
     }
 
-    public void setAllowInlineScripts(boolean allowInlineScripts) {
+    public ExportExecutionOptions setAllowInlineScripts(boolean allowInlineScripts) {
         this.allowInlineScripts = allowInlineScripts;
+        return this;
+    }
+
+    public String getMarkupType() {
+        return markupType;
+    }
+
+    public ExportExecutionOptions setMarkupType(String markupType) {
+        this.markupType = markupType;
+        return this;
+    }
+
+    public Boolean getIgnorePagination() {
+        return ignorePagination;
+    }
+
+    public ExportExecutionOptions setIgnorePagination(Boolean ignorePagination) {
+        this.ignorePagination = ignorePagination;
+        return this;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ExportExecutionOptions)) return false;
 
         ExportExecutionOptions that = (ExportExecutionOptions) o;
 
+        if (allowInlineScripts != that.allowInlineScripts) return false;
+        if (outputFormat != null ? !outputFormat.equals(that.outputFormat) : that.outputFormat != null) return false;
+        if (attachmentsPrefix != null ? !attachmentsPrefix.equals(that.attachmentsPrefix) : that.attachmentsPrefix != null)
+            return false;
         if (pages != null ? !pages.equals(that.pages) : that.pages != null) return false;
-        if (!outputFormat.equals(that.outputFormat)) return false;
-        if (attachmentsPrefix != null ? !attachmentsPrefix.equals(that.attachmentsPrefix) : that.attachmentsPrefix != null) return false;
-
-        return true;
+        if (baseUrl != null ? !baseUrl.equals(that.baseUrl) : that.baseUrl != null) return false;
+        if (anchor != null ? !anchor.equals(that.anchor) : that.anchor != null) return false;
+        if (markupType != null ? !markupType.equals(that.markupType) : that.markupType != null) return false;
+        return ignorePagination != null ? ignorePagination.equals(that.ignorePagination) : that.ignorePagination == null;
     }
 
     @Override
     public int hashCode() {
-        int result = outputFormat.hashCode();
-        result = 31 * result + (pages != null ? pages.hashCode() : 0);
+        int result = outputFormat != null ? outputFormat.hashCode() : 0;
         result = 31 * result + (attachmentsPrefix != null ? attachmentsPrefix.hashCode() : 0);
+        result = 31 * result + (pages != null ? pages.hashCode() : 0);
+        result = 31 * result + (baseUrl != null ? baseUrl.hashCode() : 0);
+        result = 31 * result + (anchor != null ? anchor.hashCode() : 0);
+        result = 31 * result + (allowInlineScripts ? 1 : 0);
+        result = 31 * result + (markupType != null ? markupType.hashCode() : 0);
+        result = 31 * result + (ignorePagination != null ? ignorePagination.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return outputFormat +
-                (pages != null ? ";" + PARAM_NAME_PAGES + "=" + pages.toString() : "") +
-                (attachmentsPrefix != null ? ";" + PARAM_NAME_ATTACHMENTS_PREFIX + "=" + attachmentsPrefix : "");
+        return "ExportExecutionOptions{" +
+                "outputFormat='" + outputFormat + '\'' +
+                ", attachmentsPrefix='" + attachmentsPrefix + '\'' +
+                ", pages='" + pages + '\'' +
+                ", baseUrl='" + baseUrl + '\'' +
+                ", anchor='" + anchor + '\'' +
+                ", allowInlineScripts=" + allowInlineScripts +
+                ", markupType='" + markupType + '\'' +
+                ", ignorePagination=" + ignorePagination +
+                '}';
     }
 }

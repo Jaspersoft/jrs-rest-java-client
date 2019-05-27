@@ -29,18 +29,30 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class ImportRequestAdapter extends AbstractAdapter {
 
     private static final String STATE_URI = "state";
-    public static final String IMPORT_URI = "import";
+    public static final String IMPORT_SERVICE_URI = "import";
+    private Boolean useMultiPart;
+    private MultivaluedMap<String, String> params;
     private String taskId;
+    private File file;
     private ImportTask importTask;
 
     public ImportRequestAdapter(SessionStorage sessionStorage, String taskId) {
@@ -50,54 +62,137 @@ public class ImportRequestAdapter extends AbstractAdapter {
         importTask.setParameters(new LinkedList<String>());
     }
 
+    public ImportRequestAdapter(SessionStorage sessionStorage, File file, Boolean useMultiPart) {
+        super(sessionStorage);
+        this.file = file;
+        this.params = new MultivaluedHashMap<>();
+        this.useMultiPart = useMultiPart;
+    }
+    public ImportRequestAdapter parameter(ImportParameter parameter, boolean value) {
+        params.add(parameter.getParamName(), Boolean.toString(value));
+        return this;
+    }
+
+    public ImportRequestAdapter parameter(ImportParameter parameter, String value) {
+        params.add(parameter.getParamName(), UrlUtils.encode(value));
+        return this;
+    }
+
+    public ImportRequestAdapter parameter(ImportParameter parameter, BrokenDependenciesParameter value) {
+        params.add(parameter.getParamName(), value.getValueName());
+        return this;
+    }
+
+    /**
+     * @Deprecated use setters {@link com.jaspersoft.jasperserver.dto.importexport.ImportTask}
+     * */
+    @Deprecated
     public ImportRequestAdapter parameter(String parameter) {
         importTask.getParameters().add(parameter);
         return this;
     }
 
+    /**
+     * @Deprecated use setters {@link com.jaspersoft.jasperserver.dto.importexport.ImportTask}
+     * */
+    @Deprecated
     public ImportRequestAdapter parameters(List<String> parameters) {
         importTask.getParameters().addAll(parameters);
         return this;
     }
 
+    /**
+     * @Deprecated use setters {@link com.jaspersoft.jasperserver.dto.importexport.ImportTask}
+     * */
+    @Deprecated
     public ImportRequestAdapter organization(String organizationId) {
         importTask.setOrganization(organizationId);
         return this;
     }
 
+    /**
+     * @Deprecated use setters {@link com.jaspersoft.jasperserver.dto.importexport.ImportTask}
+     * */
+    @Deprecated
     public ImportRequestAdapter brokenDependensies(BrokenDependenciesParameter parameter) {
         importTask.setBrokenDependencies(parameter.getValueName());
         return this;
     }
 
+    public OperationResult<State> create() {
+        return (useMultiPart) ? buildMultiPartRequest().post(prepareForm()): buildCreateRequest().post(file);
+    }
+
+    private FormDataMultiPart prepareForm() {
+        FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+        FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("file", file);
+        for (Map.Entry<String, List<String>> param : params.entrySet()) {
+            formDataMultiPart.field(param.getKey(), param.getValue().get(0));
+        }
+        formDataMultiPart.bodyPart(fileDataBodyPart);
+        return formDataMultiPart;
+    }
+
+    public <R> RequestExecution asyncCreate(final Callback<OperationResult<State>, R> callback) {
+        final JerseyRequest<State> request = buildCreateRequest();
+        RequestExecution task = new RequestExecution(new Runnable() {
+            @Override
+            public void run() {
+                callback.execute(request.post(file));
+            }
+        });
+
+        ThreadPoolUtil.runAsynchronously(task);
+        return task;
+    }
+
+    private JerseyRequest<State> buildCreateRequest() {
+        JerseyRequest<State> request = buildRequest(sessionStorage, State.class, new String[]{IMPORT_SERVICE_URI});
+        request.setContentType("application/zip").addParams(params);
+        return request;
+    }
+
+    private JerseyRequest<State> buildMultiPartRequest() {
+        JerseyRequest<State> request = JerseyRequest.buildRequest(sessionStorage,
+                State.class,
+                new String[]{IMPORT_SERVICE_URI});
+        request.setContentType(MediaType.MULTIPART_FORM_DATA);
+        return request;
+    }
+
+
     public OperationResult<State> state() {
         return buildRequest(sessionStorage, State.class,
-                new String[]{IMPORT_URI, taskId, STATE_URI}, new DefaultErrorHandler())
+                new String[]{IMPORT_SERVICE_URI, taskId, STATE_URI}, new DefaultErrorHandler())
                 .get();
     }
 
     public OperationResult<ImportTask> getTask() {
-        return buildTaskRequest()
-                .get();
+        return buildTaskRequest().get();
     }
 
     protected JerseyRequest<ImportTask> buildTaskRequest() {
         return buildRequest(sessionStorage, ImportTask.class,
-                new String[]{IMPORT_URI, taskId}, new DefaultErrorHandler());
+                new String[]{IMPORT_SERVICE_URI, taskId});
     }
 
     public OperationResult<ImportTask> restartTask(ImportTask task) {
-        return buildTaskRequest()
-                .put(task);
+        return buildTaskRequest().put(task);
     }
 
-    public OperationResult<ImportTask> cancelTask() {
-        return buildTaskRequest()
-                .delete();
+    /**
+     * @Deprecated use {@link #cancel()}
+     * */
+@Deprecated
+    public OperationResult cancelTask() {
+        return buildRequest(sessionStorage, Object.class, new String[]{IMPORT_SERVICE_URI, taskId}).delete();
+    }
+    public OperationResult cancel() {
+        return buildRequest(sessionStorage, Object.class, new String[]{IMPORT_SERVICE_URI, taskId}).delete();
     }
 
     public <R> RequestExecution asyncState(final Callback<OperationResult<State>, R> callback) {
-        final JerseyRequest<State> request = buildRequest(sessionStorage, State.class, new String[]{IMPORT_URI, taskId, STATE_URI});
+        final JerseyRequest<State> request = buildRequest(sessionStorage, State.class, new String[]{IMPORT_SERVICE_URI, taskId, STATE_URI});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {

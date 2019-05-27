@@ -4,7 +4,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientDashboard;
 import com.jaspersoft.jasperserver.dto.resources.ClientQuery;
 import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
 import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnail;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesTypeResolverUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourcesTypeResolverUtil;
 import com.jaspersoft.jasperserver.dto.thumbnails.ResourceThumbnailsListWrapper;
 import javax.ws.rs.core.Response;
 import org.mockito.Mockito;

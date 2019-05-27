@@ -6,10 +6,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.io.InputStream;
-import java.util.TimeZone;
-import java.util.concurrent.atomic.AtomicInteger;
-import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -18,6 +14,11 @@ import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.ws.rs.core.MultivaluedHashMap;
+import java.io.InputStream;
+import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.mockito.Matchers.any;
@@ -68,7 +69,7 @@ public class RunReportAdapterTest extends PowerMockTestCase {
         final AtomicInteger newThreadId = new AtomicInteger();
         int currentThreadId = (int) Thread.currentThread().getId();
 
-        RunReportAdapter adapterSpy = spy(new RunReportAdapter(sessionStorageMock, "fakeReportUnitUri", ReportOutputFormat.PDF.toString().toLowerCase(), new PageRange(1L, 100L)));
+        RunReportAdapter adapterSpy = spy(new RunReportAdapter(sessionStorageMock, "fakeReportUnitUri", com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportOutputFormat.PDF.toString().toLowerCase(), new com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.PageRange(1L, 100L)));
 
         Callback<OperationResult<InputStream>, Void> callbackSpy =
                 spy(new Callback<OperationResult<InputStream>, Void>() {
@@ -115,7 +116,7 @@ public class RunReportAdapterTest extends PowerMockTestCase {
         when(buildRequest(eq(sessionStorageMock), eq(InputStream.class), eq(new String[]{"reports", "uri" + "." + ReportOutputFormat.CSV.toString().toLowerCase()}), any(RunReportErrorHandler.class))).thenReturn(requestMock);
         doReturn(resultMock).when(requestMock).get();
 
-        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", ReportOutputFormat.CSV.toString().toLowerCase(), new PageRange(1, 10));
+        RunReportAdapter adapter = new RunReportAdapter(sessionStorageMock, "uri", ReportOutputFormat.CSV.toString().toLowerCase(), new com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.PageRange(1, 10));
         adapter.parameter("key", "val");
 
         // When

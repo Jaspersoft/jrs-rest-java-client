@@ -20,7 +20,7 @@
  */
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
-
+@Deprecated
 public enum ResourceServiceParameter {
 
     /**

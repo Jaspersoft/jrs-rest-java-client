@@ -6,7 +6,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +22,20 @@ public class InputControlsAdapter extends AbstractAdapter{
     private String containerUri;
     private Boolean excludeState = false;
 
+    public InputControlsAdapter(SessionStorage sessionStorage, String reportUnitUri) {
+        super(sessionStorage);
+        this.container(reportUnitUri);
+    }
+@Deprecated
     public InputControlsAdapter container(String uri) {
+        if (uri == null) {
+            throw new MandatoryParameterNotFoundException("Uri of container should be specified");
+        }
+        this.containerUri = uri;
+        return  this;
+    }
+
+    public InputControlsAdapter forReport(String uri) {
         if (uri == null) {
             throw new MandatoryParameterNotFoundException("Uri of container should be specified");
         }
@@ -53,14 +65,17 @@ public class InputControlsAdapter extends AbstractAdapter{
         return buildRequest().put(wrapper);
     }
 
+    public OperationResult<ReportInputControlsListWrapper> reorder(ReportInputControlsListWrapper inputControls){
+        return buildRequest().put(inputControls);
+    }
+
     private JerseyRequest<ReportInputControlsListWrapper> buildRequest(){
         path.add(REPORTS_URI);
         path.addAll(Arrays.asList(containerUri.split("/")));
         path.add(INPUT_CONTROLS_URI);
         JerseyRequest<ReportInputControlsListWrapper> request = JerseyRequest.buildRequest(sessionStorage,
                 ReportInputControlsListWrapper.class,
-                path.toArray(new String[path.size()]),
-                new DefaultErrorHandler());
+                path.toArray(new String[path.size()]));
         if (excludeState) {
             request.addParam("exclude", "state");
         }

@@ -29,6 +29,7 @@ import java.util.Calendar;
 /**
  * @author Yaroslav.Kovalchyk
  * @version $Id: TimestampToStringXmlAdapter.java 38348 2013-09-30 04:57:18Z carbiv $
+ * @deprecated (use server adapter).
  */
 public class TimestampToStringXmlAdapter extends XmlAdapter<String, Timestamp>{
     @Override
