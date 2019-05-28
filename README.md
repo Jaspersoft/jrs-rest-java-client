@@ -138,7 +138,7 @@ To do this you should create instance of `RestClientConfiguration`. It can be do
 - loading configuration from file;
 - creation of manual configuration in java code.
 
-###Loading configuration from file:
+### Loading configuration from file:
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("configuration.properties");
 ```
@@ -161,13 +161,13 @@ acceptMimeType=JSON
 File must contain at least URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}`.
 Please notice, configuration settings may be changed after loading manually in java code.
 
-###Creation of manual configuration
+### Creation of manual configuration
 To configure `JasperserverRestClient` manually, use the constructor of `RestClientConfiguration` and properties:
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
 configuration.setAcceptMimeType(MimeType.JSON).setContentMimeType(MimeType.JSON).setJrsVersion(JRSVersion.v6_0_0).setLogHttp(true);
 ```
-####HTTPS configuration
+#### HTTPS configuration
 **To use HTTPS you need:**
  1. Configure your server to support HTTPS
  2. Download [InstallCert](http://miteff.com/files/InstallCert-bin.zip) util and follow  [InstallCert-Guide](http://www.mkyong.com/webservices/jax-ws/suncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target/) instructions.
@@ -181,7 +181,7 @@ TrustManager[] trustManagers = new TrustManager[1];
 trustManagers[0] = x509TrustManager;
 configuration.setTrustManagers(trustManagers);
 ```
-####X-HTTP-Method override
+#### X-HTTP-Method override
 To avoid situation, when your proxies or web services do not support arbitrary HTTP methods or newer HTTP methods, you can use “restricted mode”. In this mode `JaperserverRestClient` sends requests through POST method and set the `X-HTTP-Method-Override` header with value of intended HTTP method. To use this mode you should set flag `RestrictedHttpMethods`:
 ```java
 configuration.setRestrictedHttpMethods(true);
@@ -191,7 +191,7 @@ Or in configuration file:
 restrictedHttpMethods=false
 ````
 If you do not use the "restricted mode", POST or GET methods and server returns  the response with 411 error code, `JaperserverRestClient` resend this request through POST method with the X-HTTP-Method-Override header automatically.
-####Switching authentication type
+#### Switching authentication type
 `JasperserverRestClient` supports two authentication types: SPRING and BASIC. 
 `SPRING` type of authentication means that your credentials are sent as a form  to `/j_security_check directly/` uri. Using these types you obtain JSESSIONID cookie of authenticated session after sending credentials.
 In the `BASIC` mode `JasperserverRestClient` uses basic authentication (sends encrypted credentials with each request).
@@ -206,7 +206,7 @@ Or set authentication type in configuration file:
  authenticationType=BASIC
  ```
 Please notice, the basic authentication is not stateless and it is valid till method logout() is called or the application is restarted and you can not use this authentication type for Report Service, because all operations must be executed in the same session (for details, read section [Report services](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#report-services)).
-####Exception handling
+#### Exception handling
 You can choose strategy of errors that are specified by status code of server response:
 1. handling of errors directly. This mode is allowed by default.
 2. getting operation result in any case with null entity and handling error after calling `getEntity()` method:
@@ -235,7 +235,7 @@ JRS REST client exception handling system is based on `com.jaspersoft.jasperserv
  2. You can create your own handler by implementing `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler`.
  3. You can extend `com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultExceptionHandler` or any other handler and override its methods `void handleBodyError(Response response)` and/or `void handleStatusCodeError(Response response, String overridingMessage)`.
 
-####Logging
+#### Logging
 It is possible to log outgoing requests and incoming responses using `logHttp` property of `RestCleintConfiguration`:
 ```java
 config.setLogHttp(true);
@@ -249,7 +249,7 @@ In configuration file:
 logHttp=true
 logHttpEntity=true
 ```
-####Switching between JSON and XML
+#### Switching between JSON and XML
 You can configure a client to make request either with JSON or XML content.
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:4444/jasperserver");
@@ -264,7 +264,7 @@ or
 contentMimeType=XML
 acceptMimeType=XML
 ```
-####Client instantiation:
+#### Client instantiation:
 After configuration you need just to pass `configuration` instance to `JasperserverRestClient` constructor.
 ```java
 JasperserverRestClient client = new JasperserverRestClient(configuration);
@@ -290,12 +290,12 @@ Session session = client.authenticate("jasperadmin", "jasperadmin", new Locale("
 // or
 Session session = client.authenticate("jasperadmin", "jasperadmin", "de", America/Los_Angeles");
 ```
-###Anonymous session
+### Anonymous session
 For some Jasperserver services authentication is not required (for example, settings service, bundles service or server info service), so you can use anonymous session:
  ```java
 AnonymousSession session = client.getAnonymousSession();
 ```
-####Invalidating session
+#### Invalidating session
 Not to store session on server you can invalidate it with `logout()` method.
 ```java
 session.logout();
@@ -309,7 +309,7 @@ After you've configured the client you can easily use any of available services.
 Session session = client.authenticate("jasperadmin", "password");
 ```
 We've authenticated as `jasperadmin` user an got a session for this user, all subsequent operations must be done through this session instance.
-####Running a report:
+#### Running a report:
 There are two approaches to run a report - in synchronous and asynchronous modes.
 To run report in synchronous mode you can use the code below:
 ```java
@@ -401,7 +401,7 @@ request
                 .setReportUnitUri("/public/Samples/Reports/12g.PromotionDetailsReport")
                 .setAsync(true);            
 ```
-####Requesting report execution status:
+#### Requesting report execution status:
 After you've got `ReportExecutionDescriptor` you can request for the report execution status:
 ```java
 OperationResult<ReportExecutionStatusEntity> operationResult =
@@ -413,7 +413,7 @@ OperationResult<ReportExecutionStatusEntity> operationResult =
 ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
 ```
 In the above code we've just specified request ID and got its status as a `ReportExecutionStatusEntity` instance.
-####Requesting report execution details:
+#### Requesting report execution details:
 Once the report is ready, your client must determine the names of the files to download by requesting the
 reportExecution descriptor again.
 ```java
@@ -425,7 +425,7 @@ OperationResult<ReportExecutionDescriptor> operationResult =
 
 ReportExecutionDescriptor descriptor = operationResult.getEntity();
 ```
-####Requesting Report Output
+#### Requesting Report Output
 After requesting a report execution and waiting synchronously or asynchronously for it to finish, you are ready to download the report output. Every export format of the report has an ID that is used to retrieve it. For example, the HTML export has the ID html. To download the main report output, specify this export ID in the `export` method. For example, to download the main HTML of the report execution response above, use the following code:
 ```java
 OperationResult<InputStream> operationResult =
@@ -438,7 +438,7 @@ OperationResult<InputStream> operationResult =
 InputStream file = operationResult.getEntity();
 ```
 As a response you'll get an `InputStream` instance.
-####Download file attachments for report output:
+#### Download file attachments for report output:
 To download file attachments for HTML output, use the following code. You must download all attachments to display the HMTL content properly.
 ```java
 ExportDescriptor htmlExportDescriptor = ... //retrieving htmlExportDescriptor from reportExecutionDescriptor
@@ -455,7 +455,7 @@ for(AttachmentDescriptor attDescriptor : htmlExportDescriptor.getAttachments()){
     //doing something with file
 }
 ```
-####Exporting a Report Asynchronously
+#### Exporting a Report Asynchronously
 After running a report and downloading its content in a given format, you can request the same report in other formats. As with exporting report formats through the user interface, the report does not run again because the export process is independent of the report.
 ```java
 ExportExecutionOptions exportExecutionOptions = new ExportExecutionOptions()
@@ -470,7 +470,7 @@ OperationResult<ExportExecutionDescriptor> operationResult =
 
 ExportExecutionDescriptor statusEntity = operationResult.getEntity();
 ```
-####Polling Export Execution
+#### Polling Export Execution
 As with the execution of the main report, you can also poll the execution of the export process.
 For example, to get the status of the HTML export in the previous example, use the following code:
 ```java
@@ -483,7 +483,7 @@ OperationResult<ReportExecutionStatusEntity> operationResult =
 
 ReportExecutionStatusEntity statusEntity = operationResult.getEntity();
 ```
-####Finding Running Reports and Jobs
+#### Finding Running Reports and Jobs
 You can search for reports that are running on the server, including
 report jobs triggered by the scheduler.
 To search for running reports, use the search arguments from `ReportAndJobSearchParameter` enumeration.
@@ -497,7 +497,7 @@ OperationResult<ReportExecutionListWrapper> operationResult =
 
 ReportExecutionListWrapper entity = operationResult1.getEntity();
 ```
-####Stopping Running Reports and Jobs
+#### Stopping Running Reports and Jobs
 To stop a report that is running and cancel its output, use the code below:
 ```java
 OperationResult<ReportExecutionStatusEntity> operationResult1 =
@@ -509,9 +509,9 @@ OperationResult<ReportExecutionStatusEntity> operationResult1 =
 ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
 ```
 
-###Input controls service:
+### Input controls service:
 The reports service includes methods for reading and setting input controls of any input controls container, i.e. reportUnit, reportOptions, dashboard, adhocDataView
-####Listing Report Parameters Structure
+#### Listing Report Parameters Structure
 The following code returns a description of the structure of the input controls for a given container.
 ```java
  OperationResult<ReportInputControlsListWrapper> operationResult = session
@@ -535,7 +535,7 @@ OperationResult<ReportInputControlsListWrapper> operationResult = session
                 .get();
 ReportInputControlsListWrapper result = operationResult.getEntity();
 ```
-####Reordering input controls structure
+#### Reordering input controls structure
 You can change structure of input controls according to client demands using the next code:
 ```java
 OperationResult<ReportInputControlsListWrapper> reorderedOperationResult = session
@@ -547,7 +547,7 @@ OperationResult<ReportInputControlsListWrapper> reorderedOperationResult = sessi
 It is impossible to change input controls except change of theirs order. Sent to server structure MUST be the same as it received
 from there, except order.
 You cannot modify some values, add or remove control, etc.
-####Listing input controls values
+#### Listing input controls values
 The following code returns a description of the possible values of all report parameters for the report. Among these choices, it shows which ones are selected.
 ```java
 OperationResult<InputControlStateListWrapper> operationResult = session
@@ -571,7 +571,7 @@ Use setting `useCashedData(false)` to avoid getting cashed data:
                 .get();
 InputControlStateListWrapper result = operationResult.getEntity();
 ```
-####Setting input controls values
+#### Setting input controls values
 The following code updates the state of specified input controls values, so they are set for the next run of the report.
 ```java
 OperationResult<InputControlStateListWrapper> operationResult = session
@@ -601,9 +601,9 @@ Administration services:
 ========================
 Only administrative users may access the REST services for administration.
 
-###Organizations service
+### Organizations service
 It provides methods that allow you to list, view, create, modify, and delete organizations (also known as tenants). Because the organization ID is used in the URL, this service can operate only on organizations whose ID is less than 100 characters long and does not contain spaces or special symbols. As with resource IDs, the organization ID is permanent and cannot be modified for the life of the organization.
-####Searching for Organizations
+#### Searching for Organizations
 The service searches for organizations by ID, alias, or display name. If no search is specified, it returns a list of all organizations. Searches and listings start from but do not include the
 logged-in user’s organization or the specified base.
 ```java
@@ -613,7 +613,7 @@ OperationResult<OrganizationsListWrapper> result = session
         .parameter(OrganizationParameter.INCLUDE_PARENTS, "true")
         .get();
 ```
-####Viewing an Organization
+#### Viewing an Organization
 The `organization()` method with an organization ID retrieves a single descriptor containing the list of properties for the organization. When you specify an organization, use its unique ID, not its path.
 ```java
 OperationResult<ClientTenant> result = session
@@ -631,7 +631,7 @@ OperationResult<ClientTenant> result = session
         .organization(organization)
         .get();
 ```
-####Creating an Organization
+#### Creating an Organization
 To create an organization, put all information in an organization descriptor, and include it in a request to the `rest_v2/organizations` service, with no ID specified. The organization is created in the organization specified by the `parentId` value of the descriptor.
 ```java
 OperationResult<Organization> result = session
@@ -649,7 +649,7 @@ OperationResult<Organization> result = session
 Be carefully using this method because you can damage existing organization if the `organizationId` of new organization is already used.
 The descriptor is sent in the request should contain all the properties you want to set on the new organization. Specify the `parentId` value to set the parent of the organization, not the `tenantUri` or `tenantFolderUri` properties.
 However, all properties have defaults or can be determined based on the alias value. The minimal descriptor necessary to create an organization is simply the alias property. In this case, the organization is created as child of the logged-in user’s home organization.
-####Modifying Organization Properties
+#### Modifying Organization Properties
 To modify the properties of an organization, use the `update` method and specify the organization ID in the URL. The request must include an organization descriptor with the values you want to change. You cannot change the ID of an organization, only its name (used for display) and its alias (used for logging in).
 ```java
 Organization organization = new Organization();
@@ -660,7 +660,7 @@ OperationResult<ClientTenant> result = session
         .organization("myOrg1")
         .createOrUpdate(organization);
 ```
-####Deleting an Organization
+#### Deleting an Organization
 To delete an organization, use the `delete()` method and specify the organization ID in the `organization()` method. When deleting an organization, all of its resources in the repository, all of its sub-organizations, all of its users, and all of its roles are permanently deleted.
 ```java
 OperationResult<ClientTenant> result = session
@@ -668,10 +668,10 @@ OperationResult<ClientTenant> result = session
         .organization("myOrg1")
         .delete();
 ```
-###Users service
+### Users service
 It provides methods that allow you to list, view, create, modify, and delete user accounts, including setting role membership.
 Because the user ID is used in the URL, this service can operate only on users whose ID is less than 100 characters long and does not contain spaces or special symbols. As with resource IDs, the user ID is permanent and cannot be modified for the life of the user account.
-####Searching for Users
+#### Searching for Users
 You can search for users by name or by role. If no search is specified, service returns all users.
 ```java
 OperationResult<UsersListWrapper> operationResult =
@@ -683,7 +683,7 @@ OperationResult<UsersListWrapper> operationResult =
 
 UsersListWrapper usersListWrapper = operationResult.getEntity();
 ```
-####Viewing a User
+#### Viewing a User
 Method `username()` with a user ID (username) retrieves a single descriptor containing the full list of user properties and roles.
 ```java
 OperationResult<ClientUser> operationResult =
@@ -714,7 +714,7 @@ OperationResult<ClientUser> operationResult =
 ClientUser user = operationResult.getEntity();
 ```
 The full user descriptor includes detailed information about the user account, including any roles.
-####Creating a User
+#### Creating a User
 To create a user account, put all required information in a user descriptor `ClientUser`, and include it in a request to the users service (`createOrUpdate()` method), with the intended user ID (username) specified in the `username()` method. To create a user, the user ID in the `username()` method must be unique on the server. If the user ID already exists, that user account will be modified. The descriptor sent in the request should contain all the properties you want to set on the new user, except for the username that is specified in the `username()` method. To set roles on the user, specify them as a list of roles.
 ```java
 //Creating a user
@@ -750,7 +750,7 @@ client
     .user(user.getUsername())
     .createOrUpdate(user);
 ```
-####Modifying User Properties
+#### Modifying User Properties
 To modify the properties of a user account, put all desired information in a user descriptor (`ClientUser`), and include it in a request to the users service (`createOrUpdate()` method), with the existing user ID (username) specified in the `username()` method. To modify a user, the user ID must already exist on the server. If the user ID doesn’t exist, a user account will be created. To add a role to the user, specify the entire list of roles with the desired role added. To remove a role from a user, specify the entire list of roles without the desired role removed.
 ```java
 ClientUser user = new ClientUser()
@@ -767,7 +767,7 @@ client
     .user("john.doe")
     .createOrUpdate(user);
 ```
-####Deleting a User
+#### Deleting a User
 To delete a user, call the `delete()` method and specify the user ID in the `username()` method.
 ```java
 client
@@ -777,11 +777,11 @@ client
     .delete();
 ```
 
-###Attributes service
+### Attributes service
 Attributes, also called profile attributes, are name-value pairs associated with a user, organization or server. Certain advanced features such as Domain security and OLAP access grants use profile attributes in addition to roles to grant certain permissions. Unlike roles, attributes are not pre-defined, and thus any attribute name can be assigned any value at any time.
 Attributes service provides methods for reading, writing, and deleting attributes on any given holder (server, organization or user account). All attribute operations apply to a single specific holder; there are no operations for reading or searching attributes from multiple holders.
 As the holder's id is used in the URL, this service can operate only on holders whose ID is less than 100 characters long and does not contain spaces or special symbols. In addition, both attribute names and attribute values being written with this service are limited to 255 characters and may not be empty (null) or not contain only whitespace characters.
-####Viewing User Attributes
+#### Viewing User Attributes
 The code below allow you to retrieve single attribute defined for the user:
 ```java
    HypermediaAttribute userAttribute = session
@@ -856,7 +856,7 @@ You can get the list of all attributes that includes the name and value of each 
 ```
  Each attribute may only have one value, however that value may contain a comma-separated list that is interpreted by the server as being multi-valued.
 
-####Setting User Attributes
+#### Setting User Attributes
 The `createOrUpdate()` method of the attributes service adds or replaces attributes on the specified user. The list of attributes defines the name and value of each attribute. Each attribute may only have one value, however, that value may contain a comma separated list that is interpreted by the server as being multi-valued.
 There are two syntaxes, the following one is for adding or replacing all attributes
 ```java
@@ -899,7 +899,7 @@ The second way of using the attributes service is adding or replacing individual
                         .createOrUpdate(attribute)
                         .getEntity();
 ```
-####Deleting User Attributes
+#### Deleting User Attributes
 The `delete()` method of the attributes service removes attributes from the specified user. When attributes are
 removed, both the name and the value of the attribute are removed, not only the value.
 There are two syntaxes, the following one is for deleting multiple attributes or all attributes at once.
@@ -930,7 +930,7 @@ session
                 .attribute("attributeName")
                 .delete();
 ```
-####Viewing Organization Attributes
+#### Viewing Organization Attributes
 The code below retrieves the list of attributes, if any, defined for the organization.
 ```java
 List<HypermediaAttribute> attributes = session
@@ -960,7 +960,7 @@ HypermediaAttribute attributes = session
         .get()
         .getEntity();
 ```
-####Setting Organization Attributes
+#### Setting Organization Attributes
 Service allows you to create new organization attributes. See code below:
 ```java
 HypermediaAttributesListWrapper attributes = new HypermediaAttributesListWrapper();
@@ -993,7 +993,7 @@ OperationResult<HypermediaAttribute> retrieved = session
         .createOrUpdate(attribute);
 ```
 Attribute name should not exist on the server and match with `name` field of `attribute` object, otherwise the attribute will be deleted. 
-####Deleting Organization Attributes
+#### Deleting Organization Attributes
 You can also delete a single organization attribute.
 ```java
 OperationResult<HypermediaAttribute> operationResult = session
@@ -1010,7 +1010,7 @@ OperationResult<HypermediaAttributesListWrapper> operationResult = session
                 .attributes("number_of_employees", "country_code")
                 .delete();
 ```
-####Viewing Server Attributes
+#### Viewing Server Attributes
 We have also provided service to get server attributes. Code below return available server attributes. 
 ```java
 List<HypermediaAttribute> attributes = session
@@ -1028,7 +1028,7 @@ HypermediaAttribute entity = session
                 .get()
                 .getEntity();
 ```
-####Setting Server Attributes
+#### Setting Server Attributes
 It is possible to create new server attributes.
 ```java
 HypermediaAttributesListWrapper serverAttributes = new HypermediaAttributesListWrapper();
@@ -1059,7 +1059,7 @@ HypermediaAttribute attribute = new HypermediaAttribute(new ClientUserAttribute(
                 .createOrUpdate(attribute);
 ```
 Attribute name should not exist on the server and match with `name` field of `attribute` object, otherwise the attribute will be deleted. 
-####Deleting Server Attributes
+#### Deleting Server Attributes
 You can also delete all server attribute.
 ```java
         session
@@ -1082,7 +1082,7 @@ session
                 .attributes("max_threads", "admin_cell_phone")
                 .delete();
 ```
-###Getting attributes permissions
+### Getting attributes permissions
 Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with permissions using additional parameter `setIncludePermissions()`:
 ```java
 
@@ -1094,7 +1094,7 @@ Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with p
                  .getEntity();
 ```
 Pay attention, the setting `setIncludePermission()` specify only the **server response format**, you can not set any permissions with this setting.
-####Seasching Attributes
+#### Seasching Attributes
 To get full list of attributes with specified parameters use the next code:
 ```java
         session
@@ -1150,7 +1150,7 @@ To specify the holder you can use the existing API:
             .search();
     HypermediaAttributesListWrapper attributes = operationResult.getEntity();
 ```
-###Getting attributes permissions
+### Getting attributes permissions
 Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with permissions using additional parameter `setIncludePermissions()`:
 ```java
 
@@ -1163,9 +1163,9 @@ Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with p
 ```
 Pay attention, the setting `setIncludePermission()` specify only the **server response format**, you can not set any permissions with this setting.
 
-###The Roles Service
+### The Roles Service
 It provides similar methods that allow you to list, view, create, modify, and delete roles. The new service provides improved search functionality, including user-based role searches. Because the role ID is used in the URL, this service can operate only on roles whose ID is less than 100 characters long and does not contain spaces or special symbols. Unlike resource IDs, the role ID is the role name and can be modified.
-####Searching for Roles
+#### Searching for Roles
 The `allRoles()` method searches for and lists role definitions. It has options to search for roles by
 name or by user (`param()` method) that belong to the role. If no search is specified, it returns all roles.
 ```java
@@ -1179,7 +1179,7 @@ OperationResult<RolesListWrapper> operationResult =
 
 RolesListWrapper rolesListWrapper = operationResult.getEntity();
 ```
-####Viewing a Role
+#### Viewing a Role
 The `rolename()` method with a role ID retrieves a single role descriptor containing the role properties.
 ```java
 OperationResult<ClientRole> operationResult =
@@ -1191,7 +1191,7 @@ OperationResult<ClientRole> operationResult =
 
 ClientRole role = operationResult.getEntity();
 ```
-####Creating a Role
+#### Creating a Role
 To create a role, send the request via `createOrUpdate()` method to the roles service with the intended role ID (name) specified in the URL. Roles do not have any properties to specify other than the role ID, but the request must include a descriptor that
 can be empty.
 ```java
@@ -1207,7 +1207,7 @@ OperationResult<ClientRole> operationResult =
 
 Response response = operationResult.getResponse();
 ```
-####Modifying a Role
+#### Modifying a Role
 To change the name of a role, send a request via `createOrUpdate()` to the roles service and specify the new name in the role descriptor. The only property of a role that you can modify is the role’s name. After the update, all members of the role are members of the new role name, and all permissions associated with the old role name are updated to the new role name.
 ```java
 ClientRole roleHello = new ClientRole()
@@ -1222,10 +1222,10 @@ OperationResult<ClientRole> operationResult =
 
 Response response = operationResult.getResponse();
 ```
-####Setting Role Membership
+#### Setting Role Membership
 To assign role membership to a user, set the roles property on the user account with the PUT method of the rest_
 v2/users service. For details, see section [creating a user](https://github.com/Jaspersoft/jrs-rest-java-client/blob/master/README.md#creating-a-user).
-####Deleting a Role
+#### Deleting a Role
 To delete a role, send the DELETE method and specify the role ID (name) in the URL.
 When this method is successful, the role is permanently deleted.
 ```java
@@ -1242,7 +1242,7 @@ Settings Service
 
 It provides method that allow you to get server specific settings, required by UI to work with the server in sync. There can be formats and patterns, modes for some modules etc.
 
-####Getting server specific settings
+#### Getting server specific settings
 To get settings, use the `getEntity()` method and specify the group of settings in the `group()` method and class of entity as shown below. The method `getEntity()` returns instance of specified class:
 ```java 
 final Map settings = session
@@ -1262,27 +1262,27 @@ final List settings = session
 ```
 Supported groups of settings are: 
 
-1.	“request”. Settings related to current AJAX request configuration. Returned settings are: maxInactiveInterval, contextPath;
+1.  “request”. Settings related to current AJAX request configuration. Returned settings are: maxInactiveInterval, contextPath;
 
-2.	“dataSourcePatterns”. Validation patterns for data source UI. Returned settings are: dbHost, dbPort, dbPort, dbName, sName, driverType, schemaName, informixServerName, dynamicUrlPartPattern;
+2.  “dataSourcePatterns”. Validation patterns for data source UI. Returned settings are: dbHost, dbPort, dbPort, dbName, sName, driverType, schemaName, informixServerName, dynamicUrlPartPattern;
 
-3.	“userTimeZones”. Time zones of current user. Returned settings are pairs of code and description of time zone;
+3.  “userTimeZones”. Time zones of current user. Returned settings are pairs of code and description of time zone;
 
-4.	“globalConfiguration”. AWS specific settings. Returned settings are : paginatorItemsPerPage, paginatorPagesRange, reportLevelConfigurable, paginationForSinglePageReport, calendarInputJsp, userItemsPerPage, roleItemsPerPage, tenantItemsPerPage, userNameNotSupportedSymbols, roleNameNotSupportedSymbols, userNameSeparator, defaultRole, passwordMask, viewReportsFilterList, outputFolderFilterList, outputFolderFilterPatterns, tenantNameNotSupportedSymbols, tenantIdNotSupportedSymbols, resourceIdNotSupportedSymbols, publicFolderUri, themeDefaultName, themeFolderName, themeServletPrefix, dateFormat, currentYearDateFormat, timestampFormat, timeFormat, entitiesPerPage, tempFolderUri, organizationsFolderUri, jdbcDriversFolderUri, emailRegExpPattern, enableSaveToHostFS, allFileResourceTypes, dataSourceTypes;
+4.  “globalConfiguration”. AWS specific settings. Returned settings are : paginatorItemsPerPage, paginatorPagesRange, reportLevelConfigurable, paginationForSinglePageReport, calendarInputJsp, userItemsPerPage, roleItemsPerPage, tenantItemsPerPage, userNameNotSupportedSymbols, roleNameNotSupportedSymbols, userNameSeparator, defaultRole, passwordMask, viewReportsFilterList, outputFolderFilterList, outputFolderFilterPatterns, tenantNameNotSupportedSymbols, tenantIdNotSupportedSymbols, resourceIdNotSupportedSymbols, publicFolderUri, themeDefaultName, themeFolderName, themeServletPrefix, dateFormat, currentYearDateFormat, timestampFormat, timeFormat, entitiesPerPage, tempFolderUri, organizationsFolderUri, jdbcDriversFolderUri, emailRegExpPattern, enableSaveToHostFS, allFileResourceTypes, dataSourceTypes;
 
-5.	“awsSettings”. AWS specific settings. Returned settings are: productTypeIsEc2, isEc2Instance, productTypeIsJrsAmi, awsRegions, productTypeIsMpAmi, suppressEc2CredentialsWarnings;
+5.  “awsSettings”. AWS specific settings. Returned settings are: productTypeIsEc2, isEc2Instance, productTypeIsJrsAmi, awsRegions, productTypeIsMpAmi, suppressEc2CredentialsWarnings;
 
-6.	“decimalFormatSymbols”. Response is locale dependent;
+6.  “decimalFormatSymbols”. Response is locale dependent;
 
-7.	“dateTimeSettings”. All settings related to client date-time formatting. Response is locale dependent; 
+7.  “dateTimeSettings”. All settings related to client date-time formatting. Response is locale dependent; 
 
-8.	“dashboardSettings”. Settings depend on configuration of Jaspersoft server;
+8.  “dashboardSettings”. Settings depend on configuration of Jaspersoft server;
 
-9.	“inputControls”. Different settings for input controls. Configuration of settings depend on configuration of Jaspersoft server;
+9.  “inputControls”. Different settings for input controls. Configuration of settings depend on configuration of Jaspersoft server;
 
-10.	“metadata”. Configuration of settings depends on configuration of Jaspersoft server;
+10. “metadata”. Configuration of settings depends on configuration of Jaspersoft server;
 
-11.	“adhocview”.  Different configuration dictionary values and lists for ad hoc. Configuration of settings depends on configuration of Jaspersoft server.
+11. “adhocview”.  Different configuration dictionary values and lists for ad hoc. Configuration of settings depends on configuration of Jaspersoft server.
 
 There is another way to get settings using specified methods for groups of settings that return specific object of settings:
  ```java
@@ -1323,9 +1323,9 @@ OperationResult<InputControlsSettings> ofInputControlsGroup();
 
 Repository Services
 =====================
-###Resources Service
+### Resources Service
 This new service provides greater performance and more consistent handling of resource descriptors for all repository resource types. The service has two formats, one takes search parameters to find resources, the other takes a repository URI to access resource descriptors and file contents.
-####Searching the Repository
+#### Searching the Repository
 The resources service, when `resources()` method used without specifying any repository URI, is used to search the repository. The various parameters let you refine the search and specify how you receive search results.
 ```java
 OperationResult<ClientResourceListWrapper> result = client
@@ -1345,7 +1345,7 @@ OperationResult<ClientResourceListWrapper> result = client
 ClientResourceListWrapper resourceListWrapper = result.getEntity();
 ```
 The response of a search is a set of shortened descriptors showing only the common attributes of each resource. One additional attribute specifies the type of the resource. This allows you to quickly receive a list of resources for display or further processing.
-####Viewing Resource Details
+#### Viewing Resource Details
 Use the `resource()` method and a resource URI with `details()` method to request the resource's complete descriptor.
 ```java
 OperationResult<ClientResource> result = client
@@ -1354,7 +1354,7 @@ OperationResult<ClientResource> result = client
         .resource("/properties/GlobalPropertiesList")
         .details();
 ```
-####Downloading File Resources
+#### Downloading File Resources
 There are two operations on file resources:
 * Viewing the file resource details to determine the file format
 * Downloading the binary file contents
@@ -1371,7 +1371,7 @@ OperationResult<InputStream> result = client
 InputStream inputStream = result.getEntity();
 ```
 To get file MIME type yo can get `Content-Type` header from the `Response` instance.
-####Creating a Resource
+#### Creating a Resource
 The `createNew()` and `createOrUpdate()` methods offer alternative ways to create resources. Both take a resource descriptor but each handles the URL differently. With the `createNew()` method, specify a folder in the URL, and the new resource ID is created automatically from the label attribute in its descriptor. With the `createOrUpdate()` method, specify a unique new resource ID as part of the URL in `resource()` method.
 ```java
 ClientFolder folder = new ClientFolder();
@@ -1397,7 +1397,7 @@ OperationResult<ClientResource> result = client
         .resource(parenUri)
         .createNew(folder);
 ```
-####Modifying a Resource
+#### Modifying a Resource
 Use the `createOrUpdate()` method above to overwrite an entire resource. Specify the path of the target resource in the `resource()` method and specify resource of the same type. Use `parameter(ResourceServiceParameter.OVERWRITE, "true")` to replace a resource of a different type. The resource descriptor must completely describe the updated resource, not use individual fields. The descriptor must also use only references for nested resources, not other resources expanded inline. You can update the local resources using the hidden folder _file.
 The `patchResource()` method updates individual descriptor fields on the target resource. It also accept expressions that modify the descriptor in the Spring Expression Language. This expression language lets you easily modify the structure and values of descriptors.
 ```java
@@ -1412,7 +1412,7 @@ OperationResult<ClientFolder> result = client
         .patchResource(ClientFolder.class, patchDescriptor);
 ```
 Note that you must explicitly set the type of resource to update because of server issue.
-####Copying a Resource
+#### Copying a Resource
 To copy a resource, specify in `copyFrom()` method its URI and in `resource()` method URI of destination location.
 ```java
 OperationResult<ClientResource> result = client
@@ -1421,7 +1421,7 @@ OperationResult<ClientResource> result = client
         .resource("/reports")
         .copyFrom("/datasources/testFolder");
 ```
-####Moving a Resource
+#### Moving a Resource
 To move a resource, specify in `moveFrom()` method its URI and in `resource()` method URI of destination location.
 ```java
 OperationResult<ClientResource> result = client
@@ -1430,7 +1430,7 @@ OperationResult<ClientResource> result = client
         .resource("/datasources")
         .moveFrom("/reports/testFolder");
 ```
-####Uploading File Resources
+#### Uploading File Resources
 To upload file you must specify the MIME type that corresponds with the desired file type, you can take it from `ClientFile.FileType` enumeration.
 ```java
 OperationResult<ClientFile> result = client
@@ -1439,7 +1439,7 @@ OperationResult<ClientFile> result = client
         .resource("/reports/testFolder")
         .uploadFile(imageFile, ClientFile.FileType.img, "fileName", "fileDescription");
 ```
-####Uploading SemanticLayerDataSource
+#### Uploading SemanticLayerDataSource
 RestClient also supports a way to create complex resources and their nested resources in a single multipart request. One of such resources is `SemanticLayerDataSource`.  
 ```java
 ClientSemanticLayerDataSource domainEntity = session
@@ -1453,7 +1453,7 @@ ClientSemanticLayerDataSource domainEntity = session
                 .create()
                     .entity();        
 ```
-####Uploading MondrianConnection
+#### Uploading MondrianConnection
 REST Client allows you to create `MondrianConnection` Resource with mondrian schema XML file. You can specify the folder in which the resource will be placed. Provided API allows to add XML schema as `String` or `InputStream`.    
 ```java
 ClientMondrianConnection connection = session
@@ -1463,7 +1463,7 @@ ClientMondrianConnection connection = session
         .createInFolder("my/olap/folder")
             .entity();
 ```
-####Uploading SecureMondrianConnection
+#### Uploading SecureMondrianConnection
 To upload `SecureMondrianConnection` Resource with a bunch of support files such as Mondrian schema XML file and AccessGrantSchemas files you can use our new API
 ```java
 ClientSecureMondrianConnection entity = session.resourcesService()
@@ -1473,7 +1473,7 @@ ClientSecureMondrianConnection entity = session.resourcesService()
     .createInFolder("/my/new/folder/")
         .entity();
 ```
-####Uploading ReportUnit
+#### Uploading ReportUnit
 To upload `ReportUnit` resource to the server you can use next API, which allows you to do it in a very simple way. You can add JRXML file and a bunch of various files like images and others as well.
 ```java
 ClientReportUnit entity = session.resourcesService()
@@ -1483,7 +1483,7 @@ ClientReportUnit entity = session.resourcesService()
             .createInFolder("/my/new/folder/")
                 .entity();
 ```
-####Deleting Resources
+#### Deleting Resources
 You can delete resources in two ways, one for single resources and one for multiple resources. To delete multiple resources at once, specify multiple URIs with the `ResourceSearchParameter.RESOURCE_URI` parameter.
 ```java
 //multiple
@@ -1502,14 +1502,14 @@ OperationResult result = client
         .resource("/reports/testFolder")
         .delete();
 ```
-###The Permissions Service
+### The Permissions Service
 In the permissions service, the syntax is expanded so that you can specify the resource, the recipient (user name or role name) and the permission value within the URL. This makes it simpler to set permissions because you don’t need to send a resource descriptor to describe the permissions. In order to set, modify, or delete permissions, you must use credentials or login with a user that has “administer” permissions on the target resource.
 Because a permission can apply to either a user or a role, the permissions service uses the concept of a “recipient”. A recipient specifies whether the permission applies to a user or a role, and gives the ID of the user or role.
 There are two qualities of a permission:
 * The assigned permission is one that is set explicitly for a given resource and a given user or role. Not all permissions are assigned, in which case the permission is inherited from the parent folder.
 * The effective permission is the permission that is being enforced, whether it is assigned or inherited.
 
-####Viewing Multiple Permissions
+#### Viewing Multiple Permissions
 
 ```java
 OperationResult<RepositoryPermissionListWrapper> operationResult =
@@ -1519,7 +1519,7 @@ OperationResult<RepositoryPermissionListWrapper> operationResult =
                 .resource("/datasources")
                 .get();
 ```
-####Viewing a Single Permission
+#### Viewing a Single Permission
 Specify the recipient in the URL to see a specific assigned permission.
 ```java
 OperationResult<RepositoryPermission> operationResult =
@@ -1532,7 +1532,7 @@ OperationResult<RepositoryPermission> operationResult =
 
 RepositoryPermission permission = operationResult.getEntity();
 ```
-####Setting Multiple Permissions
+#### Setting Multiple Permissions
 The `createNew()` method assigns any number of permissions to any number of resources specified in the body of the request. All permissions must be newly assigned, and the request will fail if a recipient already has an assigned (not inherited) permission. Use the `createOrUpdate()` method to update assigned permissions. The `createOrUpdate()` method modifies exiting permissions (already assigned).
 ```java
 List<RepositoryPermission> permissionList = new ArrayList<RepositoryPermission>();
@@ -1548,7 +1548,7 @@ OperationResult operationResult =
 
 Response response = operationResult.getResponse();
 ```
-####Setting a Single Permission
+#### Setting a Single Permission
 The `createNew()` method accepts a single permission descriptor.
 ```java
 RepositoryPermission permission = new RepositoryPermission();
@@ -1565,7 +1565,7 @@ OperationResult operationResult =
 
 Response response = operationResult.getResponse();
 ```
-####Deleting Permissions in Bulk
+#### Deleting Permissions in Bulk
 The `delete()` method removes all assigned permissions from the designated resource. After returning successfully, all effective permissions for the resource are inherited.
 ```java
 OperationResult operationResult =
@@ -1577,7 +1577,7 @@ OperationResult operationResult =
 
 Response response = operationResult.getResponse();
 ```
-####Deleting a Single Permission
+#### Deleting a Single Permission
 Specify a recipient in the `permissionRecipient()` method and call the `delete()` method to remove only that permission.
 ```java
 OperationResult operationResult =
@@ -1593,7 +1593,7 @@ Response response = operationResult.getResponse();
 Jobs service
 ==================
 The jobs service provides the interface to schedule reports and manage scheduled reports (also called jobs). In addition, this service provides an API to scheduler features that were introduced in JasperReports Server 4.7, such as bulk updates, pausing jobs, FTP output and exclusion calendars.
-####Listing Report Jobs
+#### Listing Report Jobs
 Use the following method to list all jobs managed by the scheduler.
 ```java
 OperationResult<JobSummaryListWrapper> result = client
@@ -1605,7 +1605,7 @@ OperationResult<JobSummaryListWrapper> result = client
 JobSummaryListWrapper jobSummaryListWrapper = result.getEntity();
 ```
 The jobs are described in the `JobSummary` element.
-####Viewing a Job Definition
+#### Viewing a Job Definition
 The following piece of code with a specific job ID specified in `job()` method retrieves the detailed information about that scheduled job.
 ```java
 OperationResult<Job> result = client
@@ -1617,7 +1617,7 @@ OperationResult<Job> result = client
 Job job = result.getEntity();
 ```
 This code returns a job element that gives the output, scheduling, and parameter details, if any, for the job.
-####Extended Job Search
+#### Extended Job Search
 The `search()` method is used for more advanced job searches. Some field of the jobsummary descriptor can be used directly as parameters, and fields of the job descriptor can also be used as search criteria. You can also control the pagination and sorting order of the reply.
 ```java
 Job criteria = new Job);
@@ -1643,7 +1643,7 @@ JobExtension criteria = new JobExtension();
 criteria.setOutputFormats(wrapper);
 ```
 Currently the code is a little bit littered, in futere versions it will be eliminated.
-####Scheduling a Report
+#### Scheduling a Report
 To schedule a report, create its job descriptor similar to the one returned by the `job(id).get();` method, and use the `scheduleReport()` method of the jobs service. Specify the report being scheduled inside the job descriptor. You do not need to specify any job IDs in the descriptor, because the server will assign them.
 ```java
 job.setLabel("NewScheduledReport");
@@ -1659,7 +1659,7 @@ OperationResult<Job> result = client
 job = result.getEntity();
 ```
 The body contains the job descriptor of the newly created job. It is similar to the one that was sent but now contains the jobID for the new job.
-####Viewing Job Status
+#### Viewing Job Status
 The following method returns the current runtime state of a job:
 ```java
 OperationResult<JobState> result = client
@@ -1671,7 +1671,7 @@ OperationResult<JobState> result = client
 JobState jobState = result.getEntity();
 ```
 Response contains the `JobState` status descriptor.
-####Editing a Job Definition
+#### Editing a Job Definition
 To modify an existing job definition, use the `job(id).get()` method to read its job descriptor, modify the descriptor as required, and use the `update()` method of the jobs service. The `update()` method replaces the definition of the job with the given job ID.
 ```java
 String label = "updatedLabel";
@@ -1686,7 +1686,7 @@ OperationResult<Job> result = client
 
 Job job = result.getEntity();
 ```
-####Updating Jobs in Bulk
+#### Updating Jobs in Bulk
 To update several jobs at once you should specify jobs IDs as parameters, and send a descriptor with filled fields to update.
 ```java
 Job jobDescriptor = new Job();
@@ -1701,7 +1701,7 @@ OperationResult<JobIdListWrapper> result = client
         .update(jobDescriptor);
 ```
 The code above will update the `description` field of jobs with IDs `8600` and `8601`.
-####Pausing Jobs
+#### Pausing Jobs
 The following method pauses currently scheduled job execution. Pausing keeps the job schedule and all other details but prevents the job from running. It does not delete the job.
 ```java
 OperationResult<JobIdListWrapper> result = client
@@ -1711,7 +1711,7 @@ OperationResult<JobIdListWrapper> result = client
         .parameter(JobsParameter.JOB_ID, "8600")
         .pause();
 ```
-####Resuming Jobs
+#### Resuming Jobs
 Use the following method to resume any or all paused jobs in the scheduler. Resuming a job means that any defined trigger in the schedule that occurs after the time it is resumed will cause the report to run again. Missed schedule triggers that occur before the job is resumed are never run.
 ```java
 OperationResult<JobIdListWrapper> result = client
@@ -1721,7 +1721,7 @@ OperationResult<JobIdListWrapper> result = client
         .parameter(JobsParameter.JOB_ID, "8600")
         .resume();
 ```
-####Restarting Failed Jobs
+#### Restarting Failed Jobs
 Use the following method to rerun failed jobs in the scheduler. For each job to be restarted, the scheduler creates an immediate single-run copy of job, to replace the one that failed. Therefore, all jobs listed in the request body will run once immediately after issuing this command. The single-run copies have a misfire policy set so that they do not trigger any further failures (`MISFIRE_ INSTRUCTION_IGNORE_MISFIRE_POLICY`). If the single-run copies fail themselves, no further attempts are made automatically.
 ```java
 OperationResult<JobIdListWrapper> result = client
@@ -1731,9 +1731,9 @@ OperationResult<JobIdListWrapper> result = client
         .parameter(JobsParameter.JOB_ID, "8600")
         .restart();
 ```
-###Calendars service
+### Calendars service
 The scheduler allows a job to be defined with a list of excluded days or times when you do not want the job to run. For example, if you have a report scheduled to run every business day, you want to exclude holidays that change every year. The list for excluded days and times is defined as a calendar, and there are various ways to define the calendar.  The scheduler stores any number of exclusion calendars that you can reference by name. When scheduling a report, reference the name of the calendar to exclude, and the scheduler automatically calculates the correct days to trigger the report. The scheduler also allows you to update an exclusion calendar and update all of the report jobs that used it. Therefore, you can update the calendar of excluded holidays every year and not need to modify any report jobs.
-####Listing All Registered Calendar Names
+#### Listing All Registered Calendar Names
 The following method returns the list of all calendar names that were added to the scheduler.
 ```java
 OperationResult<CalendarNameListWrapper> result = client
@@ -1743,7 +1743,7 @@ OperationResult<CalendarNameListWrapper> result = client
 
 CalendarNameListWrapper calendarNameListWrapper = result.getEntity();
 ```
-####Viewing an Exclusion Calendar
+#### Viewing an Exclusion Calendar
 The following method takes the name of an exclusion calendar and returns the definition of the calendar:
 ```java
 OperationResult<Calendar> result = client
@@ -1755,7 +1755,7 @@ OperationResult<Calendar> result = client
 Calendar jobCalendar = result.getEntity();
 ```
 As a result we have common caledar descriptor `ReportJobCalendar`.
-####Adding or Updating an Exclusion Calendar
+#### Adding or Updating an Exclusion Calendar
 This method creates a named exclusion calendar that you can use when scheduling reports. If the calendar already exists, you have the option of replacing it and updating all the jobs that used it.
 ```java
 WeeklyCalendar calendar = new WeeklyCalendar();
@@ -1770,7 +1770,7 @@ OperationResult result = client
         .createOrUpdate(calendar);
 ```
 Unlike common `ReportJobCalendar` which we receive as result of GET operation here we need create the calendar instance of desired type and path it to the `createOrUpdate()` method.
-####Deleting an Exclusion Calendar
+#### Deleting an Exclusion Calendar
 Use the following method to delete a calendar by name.
 ```java
 OperationResult result = client
@@ -1781,7 +1781,7 @@ OperationResult result = client
 ```
 Import/Export
 =============
-###Export service
+### Export service
 The export service works asynchronously: first you request the export with the desired options, then you monitor the state of the export, and finally you request the output file. You must be authenticated as the system admin (superuser)or jasperadmin for the export services.
 ```java
 OperationResult<State> operationResult =
@@ -1795,7 +1795,7 @@ OperationResult<State> operationResult =
                 .create();
 
 State state = operationResult.getEntity();
-
+```
 The export parameters you can specify are:
 
 `everything `- export everything except audit data: all repository resources, permissions, report jobs, users, and roles. This option is equivalent to:--uris --repository-permissions --report-jobs --users --roles
@@ -1815,7 +1815,7 @@ The export parameters you can specify are:
 
 `skip-attribute-values `- skip attributes values to be exported (default value is false).
 
-`include-server-settings`	- include server settings in export(default value is false).
+`include-server-settings` - include server settings in export(default value is false).
 
 `skip-suborganizations `- if the parameter is set to true, the system will omit all the items(e.g. resources, user, roles, organizations) which belong to "sub organizations" even they are directly specified using corresponding options (default value is false).
 
@@ -1823,7 +1823,7 @@ The export parameters you can specify are:
 //TODO task
 Also you can specify:
 `uris` - list of folder or resource URIs in the repository  to export.
-`scheduledJobs` - list of repository report unit and folder URIs for which report unit jobs should be exported. For a folder URI, this option exports the scheduled jobs of all reports in the folder and all subfolders.	
+`scheduledJobs` - list of repository report unit and folder URIs for which report unit jobs should be exported. For a folder URI, this option exports the scheduled jobs of all reports in the folder and all subfolders. 
 `roles` - list of roles to export.
 `users` - list of users to export.
 `resourceTypes` - list of resource types, that will be included in export. If the parameter is null or empty then will include all resource types.
@@ -1840,8 +1840,7 @@ Also you can specify:
                 .parameter(ExportParameter.EVERYTHING)
                 .create();
 ```
-```
-####Checking the Export State
+#### Checking the Export State
 After receiving the export ID, you can check the state of the export operation.
 ```java
 OperationResult<State> operationResult =
@@ -1854,7 +1853,7 @@ OperationResult<State> operationResult =
 State state = operationResult.getEntity();
 ```
 The body of the response contains the current state of the export operation.
-####Fetching the Export Output
+#### Fetching the Export Output
 When the export state is ready, you can download the zip file containing the export catalog.
 ```java
 OperationResult<InputStream> operationResult1 =
@@ -1866,7 +1865,7 @@ OperationResult<InputStream> operationResult1 =
 
 InputStream inputStream = operationResult1.getEntity();
 ```
-###Import service
+### Import service
 Use the following service to upload a catalog as a zip file and import it with the given options. Specify options as arguments from `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportParameter`. Arguments that are omitted are assumed to be false. You must be authenticated as the system admin (superuser) or jasperadmin for the import service. Jaspersoft does not recommend uploading files greater than 2 gigabytes.
 ```java
 URL url = ImportService.class.getClassLoader().getResource("testExportArchive.zip");
@@ -1895,13 +1894,13 @@ Also you can set:
 
     fail - server will give an error (errorCode=import.broken.dependencies) if import archive contain broken dependent resources.
     skip - import will skip from import broken resources.
-	include - import will proceed with broken dependencies. In this case server will try to import broken dependent resources. a) In the case when in target environment there are already dependent resources import of target resource will be success, and resource will be skipped from import if there are no dependent resources to recover dependency chain.
+  include - import will proceed with broken dependencies. In this case server will try to import broken dependent resources. a) In the case when in target environment there are already dependent resources import of target resource will be success, and resource will be skipped from import if there are no dependent resources to recover dependency chain.
 `parameters` - list of import parameters. 
 `organization` - organization identifier we import into.
 ```java
 
 ```
-####Checking the Import State
+#### Checking the Import State
 After receiving the import ID, you can check the state of the import operation.
 ```java
 OperationResult<State> operationResult =
@@ -1913,7 +1912,7 @@ OperationResult<State> operationResult =
 
 State state = operationResult.getEntity();
 ```
-####Getting and restarting import task
+#### Getting and restarting import task
 
 To get import task metadata you can use next code example:
 ```java
@@ -1940,7 +1939,7 @@ Also you can restart import task:
                 .getEntity();
 ```
 
-####DomainMetadata Service
+#### DomainMetadata Service
 The DomainMetadata Service gives access to the sets and items exposed by a Domain for use in Ad
 Hoc reports. Items are database fields exposed by the Domain, after all joins, filters, and calculated fields have
 been applied to the database tables selected in the Domain. Sets are groups of items, arranged by the Domain
@@ -1957,7 +1956,7 @@ DomainMetaData domainMetaData = session.domainService()
         .retrieve()
         .getEntity();
 ```
-####Thumbnail Search Service
+#### Thumbnail Search Service
 This service is used for requesting a thumbnail image of an existing resource. You can get a single resource. See code below.
 ```java
 InputStream entity = session.thumbnailsService()
@@ -1991,8 +1990,8 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
                 .getThumbnails();
                 ```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
-
-###Diagnostic Service
+```
+### Diagnostic Service
 
 The service is used to create, update, stop log collectors and get logs and data snapshots.
 To create log collector use the code below:
@@ -2098,7 +2097,7 @@ OperationResult<CollectorSettingsList> operationResult = session
                                 .delete();
 ```
 
-###Query Executor Service
+### Query Executor Service
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
 For now the only resource that supports queries is a Domain.
 
@@ -2110,7 +2109,7 @@ QueryResult queryResult = session.queryExecutorService()
         .getEntity();
 ```
 
-###Server Information Service
+### Server Information Service
 Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
 ```java
 OperationResult<ServerInfo> result = client
@@ -2138,7 +2137,7 @@ OperationResult<String> result = client
 
 String edition = result.getEntity();
 ```
-###Bundles service
+### Bundles service
 Use bundles service to get bundles of internalization properties for particular or default user’s locale as JSON. 
 By default service use default system locale where the application was stared.
 If user specified locale at authentication, the service will use it as default locale.
@@ -2181,7 +2180,7 @@ final Map<String, String> bundle = session
         .getEntity();
 ```
 
-###Asynchronous API
+### Asynchronous API
 Each operation which requests server has its asynchronous brother which has same name with `async` prefix, e. g. `get() -> asyncGet()`. Each of these operations take a `com.jaspersoft.jasperserver.jaxrs.client.core.Callback` implementation with `execute()` method implemented. `execute()` takes an `OperationResult` instance as a parameter. The `execute` method is called when the response from server came.
 Each of these `async` operations returns `com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution` instance which gives you ability to cancel execution.
 Example:
@@ -2200,14 +2199,14 @@ RequestExecution requestExecution = session
         requestExecution.cancel();
 ```
 
-###Getting serialized content from response
+### Getting serialized content from response
 If you need to get a plain response body, either JSON, XML, HTML or plain text, you gen get it it with code below:
 ```java
 OperationResult<UsersListWrapper> result = ...
 result.getSerializedContent();
 ```
 
-###Possible issues
+### Possible issues
 1. <strong>Deploying jrs-rest-client within web app to any Appplication Server, e.g. JBoss, Glassfish, WebSphere etc.</strong>
 jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your application server does not support this version you will get an error. To solve this problem you need to add to your application a deployment configuration specific for your AS where you need to exclude modules with old JAX-RS API version. Example of such descriptor for JBoss AS you can find below:
 
@@ -2238,7 +2237,7 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
 </jboss-deployment-structure>
 ```
 
-###Maven dependency to add jasperserver-rest-client to your app:
+### Maven dependency to add jasperserver-rest-client to your app:
 ```xml
     <dependencies>
         <dependency>
