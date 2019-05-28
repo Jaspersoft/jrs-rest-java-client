@@ -138,7 +138,7 @@ To do this you should create instance of `RestClientConfiguration`. It can be do
 - loading configuration from file;
 - creation of manual configuration in java code.
 
-###Loading configuration from file:
+### Loading configuration from file:
 ```java
 RestClientConfiguration configuration = RestClientConfiguration.loadConfiguration("configuration.properties");
 ```
@@ -161,7 +161,7 @@ acceptMimeType=JSON
 File must contain at least URL which is entry point to your server's REST services and it is needed to URL  corresponds to this pattern `{protocol}://{host}:{port}/{contextPath}`.
 Please notice, configuration settings may be changed after loading manually in java code.
 
-###Creation of manual configuration
+### Creation of manual configuration
 To configure `JasperserverRestClient` manually, use the constructor of `RestClientConfiguration` and properties:
 ```java
 RestClientConfiguration configuration = new RestClientConfiguration("http://localhost:8080/jasperserver");
@@ -290,7 +290,7 @@ Session session = client.authenticate("jasperadmin", "jasperadmin", new Locale("
 // or
 Session session = client.authenticate("jasperadmin", "jasperadmin", "de", America/Los_Angeles");
 ```
-###Anonymous session
+### Anonymous session
 For some Jasperserver services authentication is not required (for example, settings service, bundles service or server info service), so you can use anonymous session:
  ```java
 AnonymousSession session = client.getAnonymousSession();
@@ -509,7 +509,7 @@ OperationResult<ReportExecutionStatusEntity> operationResult1 =
 ReportExecutionStatusEntity statusEntity = operationResult1.getEntity();
 ```
 
-###Input controls service:
+### Input controls service:
 The reports service includes methods for reading and setting input controls of any input controls container, i.e. reportUnit, reportOptions, dashboard, adhocDataView
 #### Listing Report Parameters Structure
 The following code returns a description of the structure of the input controls for a given container.
@@ -601,7 +601,7 @@ Administration services:
 ========================
 Only administrative users may access the REST services for administration.
 
-###Organizations service
+### Organizations service
 It provides methods that allow you to list, view, create, modify, and delete organizations (also known as tenants). Because the organization ID is used in the URL, this service can operate only on organizations whose ID is less than 100 characters long and does not contain spaces or special symbols. As with resource IDs, the organization ID is permanent and cannot be modified for the life of the organization.
 #### Searching for Organizations
 The service searches for organizations by ID, alias, or display name. If no search is specified, it returns a list of all organizations. Searches and listings start from but do not include the
@@ -668,7 +668,7 @@ OperationResult<ClientTenant> result = session
         .organization("myOrg1")
         .delete();
 ```
-###Users service
+### Users service
 It provides methods that allow you to list, view, create, modify, and delete user accounts, including setting role membership.
 Because the user ID is used in the URL, this service can operate only on users whose ID is less than 100 characters long and does not contain spaces or special symbols. As with resource IDs, the user ID is permanent and cannot be modified for the life of the user account.
 #### Searching for Users
@@ -777,7 +777,7 @@ client
     .delete();
 ```
 
-###Attributes service
+### Attributes service
 Attributes, also called profile attributes, are name-value pairs associated with a user, organization or server. Certain advanced features such as Domain security and OLAP access grants use profile attributes in addition to roles to grant certain permissions. Unlike roles, attributes are not pre-defined, and thus any attribute name can be assigned any value at any time.
 Attributes service provides methods for reading, writing, and deleting attributes on any given holder (server, organization or user account). All attribute operations apply to a single specific holder; there are no operations for reading or searching attributes from multiple holders.
 As the holder's id is used in the URL, this service can operate only on holders whose ID is less than 100 characters long and does not contain spaces or special symbols. In addition, both attribute names and attribute values being written with this service are limited to 255 characters and may not be empty (null) or not contain only whitespace characters.
@@ -1082,7 +1082,7 @@ session
                 .attributes("max_threads", "admin_cell_phone")
                 .delete();
 ```
-###Getting attributes permissions
+### Getting attributes permissions
 Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with permissions using additional parameter `setIncludePermissions()`:
 ```java
 
@@ -1150,7 +1150,7 @@ To specify the holder you can use the existing API:
             .search();
     HypermediaAttributesListWrapper attributes = operationResult.getEntity();
 ```
-###Getting attributes permissions
+### Getting attributes permissions
 Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with permissions using additional parameter `setIncludePermissions()`:
 ```java
 
@@ -1163,7 +1163,7 @@ Since `6.1` version of `JaspersoftReportServer` you can obtain attributes with p
 ```
 Pay attention, the setting `setIncludePermission()` specify only the **server response format**, you can not set any permissions with this setting.
 
-###The Roles Service
+### The Roles Service
 It provides similar methods that allow you to list, view, create, modify, and delete roles. The new service provides improved search functionality, including user-based role searches. Because the role ID is used in the URL, this service can operate only on roles whose ID is less than 100 characters long and does not contain spaces or special symbols. Unlike resource IDs, the role ID is the role name and can be modified.
 #### Searching for Roles
 The `allRoles()` method searches for and lists role definitions. It has options to search for roles by
@@ -1262,27 +1262,27 @@ final List settings = session
 ```
 Supported groups of settings are: 
 
-1.	“request”. Settings related to current AJAX request configuration. Returned settings are: maxInactiveInterval, contextPath;
+1.  “request”. Settings related to current AJAX request configuration. Returned settings are: maxInactiveInterval, contextPath;
 
-2.	“dataSourcePatterns”. Validation patterns for data source UI. Returned settings are: dbHost, dbPort, dbPort, dbName, sName, driverType, schemaName, informixServerName, dynamicUrlPartPattern;
+2.  “dataSourcePatterns”. Validation patterns for data source UI. Returned settings are: dbHost, dbPort, dbPort, dbName, sName, driverType, schemaName, informixServerName, dynamicUrlPartPattern;
 
-3.	“userTimeZones”. Time zones of current user. Returned settings are pairs of code and description of time zone;
+3.  “userTimeZones”. Time zones of current user. Returned settings are pairs of code and description of time zone;
 
-4.	“globalConfiguration”. AWS specific settings. Returned settings are : paginatorItemsPerPage, paginatorPagesRange, reportLevelConfigurable, paginationForSinglePageReport, calendarInputJsp, userItemsPerPage, roleItemsPerPage, tenantItemsPerPage, userNameNotSupportedSymbols, roleNameNotSupportedSymbols, userNameSeparator, defaultRole, passwordMask, viewReportsFilterList, outputFolderFilterList, outputFolderFilterPatterns, tenantNameNotSupportedSymbols, tenantIdNotSupportedSymbols, resourceIdNotSupportedSymbols, publicFolderUri, themeDefaultName, themeFolderName, themeServletPrefix, dateFormat, currentYearDateFormat, timestampFormat, timeFormat, entitiesPerPage, tempFolderUri, organizationsFolderUri, jdbcDriversFolderUri, emailRegExpPattern, enableSaveToHostFS, allFileResourceTypes, dataSourceTypes;
+4.  “globalConfiguration”. AWS specific settings. Returned settings are : paginatorItemsPerPage, paginatorPagesRange, reportLevelConfigurable, paginationForSinglePageReport, calendarInputJsp, userItemsPerPage, roleItemsPerPage, tenantItemsPerPage, userNameNotSupportedSymbols, roleNameNotSupportedSymbols, userNameSeparator, defaultRole, passwordMask, viewReportsFilterList, outputFolderFilterList, outputFolderFilterPatterns, tenantNameNotSupportedSymbols, tenantIdNotSupportedSymbols, resourceIdNotSupportedSymbols, publicFolderUri, themeDefaultName, themeFolderName, themeServletPrefix, dateFormat, currentYearDateFormat, timestampFormat, timeFormat, entitiesPerPage, tempFolderUri, organizationsFolderUri, jdbcDriversFolderUri, emailRegExpPattern, enableSaveToHostFS, allFileResourceTypes, dataSourceTypes;
 
-5.	“awsSettings”. AWS specific settings. Returned settings are: productTypeIsEc2, isEc2Instance, productTypeIsJrsAmi, awsRegions, productTypeIsMpAmi, suppressEc2CredentialsWarnings;
+5.  “awsSettings”. AWS specific settings. Returned settings are: productTypeIsEc2, isEc2Instance, productTypeIsJrsAmi, awsRegions, productTypeIsMpAmi, suppressEc2CredentialsWarnings;
 
-6.	“decimalFormatSymbols”. Response is locale dependent;
+6.  “decimalFormatSymbols”. Response is locale dependent;
 
-7.	“dateTimeSettings”. All settings related to client date-time formatting. Response is locale dependent; 
+7.  “dateTimeSettings”. All settings related to client date-time formatting. Response is locale dependent; 
 
-8.	“dashboardSettings”. Settings depend on configuration of Jaspersoft server;
+8.  “dashboardSettings”. Settings depend on configuration of Jaspersoft server;
 
-9.	“inputControls”. Different settings for input controls. Configuration of settings depend on configuration of Jaspersoft server;
+9.  “inputControls”. Different settings for input controls. Configuration of settings depend on configuration of Jaspersoft server;
 
-10.	“metadata”. Configuration of settings depends on configuration of Jaspersoft server;
+10. “metadata”. Configuration of settings depends on configuration of Jaspersoft server;
 
-11.	“adhocview”.  Different configuration dictionary values and lists for ad hoc. Configuration of settings depends on configuration of Jaspersoft server.
+11. “adhocview”.  Different configuration dictionary values and lists for ad hoc. Configuration of settings depends on configuration of Jaspersoft server.
 
 There is another way to get settings using specified methods for groups of settings that return specific object of settings:
  ```java
@@ -1323,7 +1323,7 @@ OperationResult<InputControlsSettings> ofInputControlsGroup();
 
 Repository Services
 =====================
-###Resources Service
+### Resources Service
 This new service provides greater performance and more consistent handling of resource descriptors for all repository resource types. The service has two formats, one takes search parameters to find resources, the other takes a repository URI to access resource descriptors and file contents.
 #### Searching the Repository
 The resources service, when `resources()` method used without specifying any repository URI, is used to search the repository. The various parameters let you refine the search and specify how you receive search results.
@@ -1502,7 +1502,7 @@ OperationResult result = client
         .resource("/reports/testFolder")
         .delete();
 ```
-###The Permissions Service
+### The Permissions Service
 In the permissions service, the syntax is expanded so that you can specify the resource, the recipient (user name or role name) and the permission value within the URL. This makes it simpler to set permissions because you don’t need to send a resource descriptor to describe the permissions. In order to set, modify, or delete permissions, you must use credentials or login with a user that has “administer” permissions on the target resource.
 Because a permission can apply to either a user or a role, the permissions service uses the concept of a “recipient”. A recipient specifies whether the permission applies to a user or a role, and gives the ID of the user or role.
 There are two qualities of a permission:
@@ -1731,7 +1731,7 @@ OperationResult<JobIdListWrapper> result = client
         .parameter(JobsParameter.JOB_ID, "8600")
         .restart();
 ```
-###Calendars service
+### Calendars service
 The scheduler allows a job to be defined with a list of excluded days or times when you do not want the job to run. For example, if you have a report scheduled to run every business day, you want to exclude holidays that change every year. The list for excluded days and times is defined as a calendar, and there are various ways to define the calendar.  The scheduler stores any number of exclusion calendars that you can reference by name. When scheduling a report, reference the name of the calendar to exclude, and the scheduler automatically calculates the correct days to trigger the report. The scheduler also allows you to update an exclusion calendar and update all of the report jobs that used it. Therefore, you can update the calendar of excluded holidays every year and not need to modify any report jobs.
 #### Listing All Registered Calendar Names
 The following method returns the list of all calendar names that were added to the scheduler.
@@ -1781,7 +1781,7 @@ OperationResult result = client
 ```
 Import/Export
 =============
-###Export service
+### Export service
 The export service works asynchronously: first you request the export with the desired options, then you monitor the state of the export, and finally you request the output file. You must be authenticated as the system admin (superuser)or jasperadmin for the export services.
 ```java
 OperationResult<State> operationResult =
@@ -1815,7 +1815,7 @@ The export parameters you can specify are:
 
 `skip-attribute-values `- skip attributes values to be exported (default value is false).
 
-`include-server-settings`	- include server settings in export(default value is false).
+`include-server-settings` - include server settings in export(default value is false).
 
 `skip-suborganizations `- if the parameter is set to true, the system will omit all the items(e.g. resources, user, roles, organizations) which belong to "sub organizations" even they are directly specified using corresponding options (default value is false).
 
@@ -1823,7 +1823,7 @@ The export parameters you can specify are:
 //TODO task
 Also you can specify:
 `uris` - list of folder or resource URIs in the repository  to export.
-`scheduledJobs` - list of repository report unit and folder URIs for which report unit jobs should be exported. For a folder URI, this option exports the scheduled jobs of all reports in the folder and all subfolders.	
+`scheduledJobs` - list of repository report unit and folder URIs for which report unit jobs should be exported. For a folder URI, this option exports the scheduled jobs of all reports in the folder and all subfolders. 
 `roles` - list of roles to export.
 `users` - list of users to export.
 `resourceTypes` - list of resource types, that will be included in export. If the parameter is null or empty then will include all resource types.
@@ -1866,7 +1866,7 @@ OperationResult<InputStream> operationResult1 =
 
 InputStream inputStream = operationResult1.getEntity();
 ```
-###Import service
+### Import service
 Use the following service to upload a catalog as a zip file and import it with the given options. Specify options as arguments from `com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportParameter`. Arguments that are omitted are assumed to be false. You must be authenticated as the system admin (superuser) or jasperadmin for the import service. Jaspersoft does not recommend uploading files greater than 2 gigabytes.
 ```java
 URL url = ImportService.class.getClassLoader().getResource("testExportArchive.zip");
@@ -1895,7 +1895,7 @@ Also you can set:
 
     fail - server will give an error (errorCode=import.broken.dependencies) if import archive contain broken dependent resources.
     skip - import will skip from import broken resources.
-	include - import will proceed with broken dependencies. In this case server will try to import broken dependent resources. a) In the case when in target environment there are already dependent resources import of target resource will be success, and resource will be skipped from import if there are no dependent resources to recover dependency chain.
+  include - import will proceed with broken dependencies. In this case server will try to import broken dependent resources. a) In the case when in target environment there are already dependent resources import of target resource will be success, and resource will be skipped from import if there are no dependent resources to recover dependency chain.
 `parameters` - list of import parameters. 
 `organization` - organization identifier we import into.
 ```java
@@ -1992,7 +1992,7 @@ List<ResourceThumbnail> entity = session.thumbnailsService()
                 ```
 Please notice that ResourceThumbnail class (DTO) contains the content in Base64 string format (not InputStream).
 
-###Diagnostic Service
+### Diagnostic Service
 
 The service is used to create, update, stop log collectors and get logs and data snapshots.
 To create log collector use the code below:
@@ -2098,7 +2098,7 @@ OperationResult<CollectorSettingsList> operationResult = session
                                 .delete();
 ```
 
-###Query Executor Service
+### Query Executor Service
 In addition to running reports, JasperReports Server exposes queries that you can run through the QueryExecutor service.
 For now the only resource that supports queries is a Domain.
 
@@ -2110,7 +2110,7 @@ QueryResult queryResult = session.queryExecutorService()
         .getEntity();
 ```
 
-###Server Information Service
+### Server Information Service
 Use the following service to verify the server information, the same as the `About JasperReports Server` link in the user interface.
 ```java
 OperationResult<ServerInfo> result = client
@@ -2138,7 +2138,7 @@ OperationResult<String> result = client
 
 String edition = result.getEntity();
 ```
-###Bundles service
+### Bundles service
 Use bundles service to get bundles of internalization properties for particular or default user’s locale as JSON. 
 By default service use default system locale where the application was stared.
 If user specified locale at authentication, the service will use it as default locale.
@@ -2181,7 +2181,7 @@ final Map<String, String> bundle = session
         .getEntity();
 ```
 
-###Asynchronous API
+### Asynchronous API
 Each operation which requests server has its asynchronous brother which has same name with `async` prefix, e. g. `get() -> asyncGet()`. Each of these operations take a `com.jaspersoft.jasperserver.jaxrs.client.core.Callback` implementation with `execute()` method implemented. `execute()` takes an `OperationResult` instance as a parameter. The `execute` method is called when the response from server came.
 Each of these `async` operations returns `com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution` instance which gives you ability to cancel execution.
 Example:
@@ -2200,14 +2200,14 @@ RequestExecution requestExecution = session
         requestExecution.cancel();
 ```
 
-###Getting serialized content from response
+### Getting serialized content from response
 If you need to get a plain response body, either JSON, XML, HTML or plain text, you gen get it it with code below:
 ```java
 OperationResult<UsersListWrapper> result = ...
 result.getSerializedContent();
 ```
 
-###Possible issues
+### Possible issues
 1. <strong>Deploying jrs-rest-client within web app to any Appplication Server, e.g. JBoss, Glassfish, WebSphere etc.</strong>
 jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your application server does not support this version you will get an error. To solve this problem you need to add to your application a deployment configuration specific for your AS where you need to exclude modules with old JAX-RS API version. Example of such descriptor for JBoss AS you can find below:
 
@@ -2238,7 +2238,7 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
 </jboss-deployment-structure>
 ```
 
-###Maven dependency to add jasperserver-rest-client to your app:
+### Maven dependency to add jasperserver-rest-client to your app:
 ```xml
     <dependencies>
         <dependency>
