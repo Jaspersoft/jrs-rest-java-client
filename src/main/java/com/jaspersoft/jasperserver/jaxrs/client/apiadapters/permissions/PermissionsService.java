@@ -31,7 +31,7 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class PermissionsService extends AbstractAdapter {
 
-    public static final String SERVICE_URI = "/permissions";
+    public static final String SERVICE_URI = "permissions";
 
     public PermissionsService(SessionStorage sessionStorage) {
         super(sessionStorage);
