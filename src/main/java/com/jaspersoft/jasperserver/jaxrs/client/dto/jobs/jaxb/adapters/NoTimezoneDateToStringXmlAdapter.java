@@ -28,7 +28,6 @@ import java.util.Date;
 /**
  * @author Yaroslav.Kovalchyk
  * @version $Id: NoTimezoneDateToStringXmlAdapter.java 38348 2013-09-30 04:57:18Z carbiv $
- * @deprecated (use server adapter).
  */
 public class NoTimezoneDateToStringXmlAdapter extends XmlAdapter<String, Date>{
 

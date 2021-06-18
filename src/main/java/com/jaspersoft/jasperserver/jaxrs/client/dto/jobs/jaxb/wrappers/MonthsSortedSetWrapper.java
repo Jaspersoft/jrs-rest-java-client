@@ -31,7 +31,6 @@ import java.util.SortedSet;
  *
  * @author Yaroslav.Kovalchyk
  * @version $Id: MonthsSortedSetWrapper.java 22756 2012-03-23 10:39:15Z sergey.prilukin $
- * @deprecated (use server adapter).
  */
 @XmlRootElement(name = "months")
 public class MonthsSortedSetWrapper {

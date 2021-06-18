@@ -31,7 +31,6 @@ import java.util.TreeSet;
  *
  * @author Yaroslav.Kovalchyk
  * @version $Id: MonthsByteXmlAdapter.java 22756 2012-03-23 10:39:15Z sergey.prilukin $
- * @deprecated (use server adapter).
  */
 public class MonthsByteXmlAdapter extends XmlAdapter<MonthsSortedSetWrapper, SortedSet<Byte>>{
     @Override

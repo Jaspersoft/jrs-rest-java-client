@@ -28,7 +28,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
-import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -43,7 +42,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
     public SingleOrganizationAdapter(SessionStorage sessionStorage, ClientTenant clientTenant) {
         super(sessionStorage);
         this.clientTenant = clientTenant;
-        this.params = new MultivaluedHashMap<>();
+        this.params = new MultivaluedHashMap<String, String>();
     }
 
     public OperationResult<ClientTenant> get() {
@@ -105,7 +104,7 @@ public class SingleOrganizationAdapter extends AbstractAdapter {
     }
 
     public SingleOrganizationAdapter parameter(OrganizationParameter parameter, String value) {
-        params.add(parameter.getParamName(), UrlUtils.encode(value));
+        params.add(parameter.getParamName(), value);
         return this;
     }
 

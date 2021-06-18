@@ -21,9 +21,6 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
-/**
- * @deprecated  Use Server DTO**/
-@Deprecated
 public enum ExecutionStatus {
     execution, ready, cancelled, failed, queued
 }

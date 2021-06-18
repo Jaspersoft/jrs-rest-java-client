@@ -20,9 +20,7 @@
  */
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs;
-/**
- * @deprecated (use server DTO).
- */
+
 public enum JobStateType {
 
     UNKNOWN,

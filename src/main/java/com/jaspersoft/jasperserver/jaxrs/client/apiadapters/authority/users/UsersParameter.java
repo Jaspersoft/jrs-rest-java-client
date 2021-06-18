@@ -59,25 +59,7 @@ public enum UsersParameter {
     /**
      * is true by default
      */
-    INCLUDE_SUB_ORGS("includeSubOrgs"),
-
-    /**
-     * Search for user having the specified text in the name.
-     * Note that the search string does not match in the ID of resources.
-     *
-     * Type/Value: String
-     */
-    Q("q"),
-
-    /**
-     * Specifies the maximum number of users return in
-     * each response.
-     *
-     * Type/Value: integer
-     */
-    LIMIT("limit"),
-
-    OFFSET("offset")
+    INCLUDE_SUB_ORGS("includeSubOrgs")
     ;
 
     private String paramName;
