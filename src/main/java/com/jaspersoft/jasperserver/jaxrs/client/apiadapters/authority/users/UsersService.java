@@ -53,11 +53,9 @@ public class UsersService extends AbstractAdapter {
         if (user == null || user.getUsername() == null || user.getUsername().equals("")) {
             throw new IllegalArgumentException("User is not valid.");
         }
-        if (organizationId != null && user.getTenantId() == null) {
-            user.setTenantId(organizationId);
-        }
-
-        return new SingleUserRequestAdapter(sessionStorage, user);
+        return new SingleUserRequestAdapter(sessionStorage,
+                (organizationId != null && user.getTenantId() == null) ?
+                        new ClientUser(user).setTenantId(organizationId) : user);
     }
 
     public SingleUserRequestAdapter user(String userName)

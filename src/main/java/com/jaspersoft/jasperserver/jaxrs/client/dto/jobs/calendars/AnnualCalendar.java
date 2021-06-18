@@ -27,7 +27,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.ExcludeDa
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.ArrayList;
-
+/**
+ * @deprecated (use com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendar.* pakage).
+ */
 @XmlRootElement(name = "reportJobCalendar")
 public class AnnualCalendar extends Calendar {
 

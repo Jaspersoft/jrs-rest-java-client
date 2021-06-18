@@ -23,7 +23,12 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.MimeTypeUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
@@ -32,11 +37,24 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 public class PermissionsService extends AbstractAdapter {
 
     public static final String SERVICE_URI = "/permissions";
+    public String resourceUri;
 
     public PermissionsService(SessionStorage sessionStorage) {
         super(sessionStorage);
     }
 
+    public PermissionsService forResource(String resourceUri) {
+        if (resourceUri.isEmpty()) {
+            throw new IllegalArgumentException("'resourceUri' mustn't be an empty string");
+        }
+        this.resourceUri = resourceUri;
+        return this;
+    }
+
+    /**
+     * @deprecated Use forResource(resourceUri).permission(permission) API
+     */
+    @Deprecated
     public PermissionResourceRequestAdapter resource(String resourceUri) {
         if ("".equals(resourceUri)) {
             throw new IllegalArgumentException("'resourceUri' mustn't be an empty string");
@@ -44,10 +62,37 @@ public class PermissionsService extends AbstractAdapter {
         return new PermissionResourceRequestAdapter(sessionStorage, resourceUri);
     }
 
+    public SinglePermissionsAdapter permission() {
+
+        return new SinglePermissionsAdapter(sessionStorage, resourceUri);
+    }
+
+    public BatchPermissionsAdapter permissions() {
+
+        return new BatchPermissionsAdapter(sessionStorage, resourceUri);
+    }
+
+    public SinglePermissionsAdapter permission(RepositoryPermission permission) {
+        return new SinglePermissionsAdapter(sessionStorage, permission);
+    }
+
+
+    public BatchPermissionsAdapter permissions(RepositoryPermissionListWrapper permissions) {
+        return new BatchPermissionsAdapter(sessionStorage, permissions);
+    }
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public OperationResult createNew(RepositoryPermission permission) {
         return buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI}, new DefaultErrorHandler()).post(permission);
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public <R> RequestExecution asyncCreateNew(final RepositoryPermission permission, final Callback<OperationResult, R> callback) {
         final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI});
         RequestExecution task = new RequestExecution(new Runnable() {
@@ -60,12 +105,20 @@ public class PermissionsService extends AbstractAdapter {
         return task;
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public OperationResult createNew(RepositoryPermissionListWrapper permissions) {
         JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI});
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
         return request.post(permissions);
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public <R> RequestExecution asyncCreateNew(final RepositoryPermissionListWrapper permissions, final Callback<OperationResult, R> callback) {
         final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI});
         request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));

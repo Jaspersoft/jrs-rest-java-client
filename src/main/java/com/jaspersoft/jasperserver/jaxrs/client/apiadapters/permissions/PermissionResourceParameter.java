@@ -50,7 +50,16 @@ public enum PermissionResourceParameter {
      *  dialog) If recipient does not have any permission assigned or
      *  permission is not reachable not uri will be returned.
      */
-    RESOLVE_ALL("resolveAll");
+    RESOLVE_ALL("resolveAll"),
+    /**
+     * Pagination. Start index for requested pate.
+     */
+    OFFSET("offset"),
+
+    /**
+     * 	Pagination. Resources count per page
+     */
+    LIMIT("limit");
 
     private String paramName;
 

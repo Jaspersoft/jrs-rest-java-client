@@ -24,7 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
-
+@Deprecated
 @XmlRootElement(name = "reportExecutions")
 public class ReportExecutionListWrapper {
 

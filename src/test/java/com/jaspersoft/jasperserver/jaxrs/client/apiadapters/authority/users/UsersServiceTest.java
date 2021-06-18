@@ -4,6 +4,7 @@ import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -14,12 +15,15 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
-import static org.testng.AssertJUnit.assertNotNull;
 
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService}
@@ -27,11 +31,15 @@ import static org.testng.AssertJUnit.assertNotNull;
 @PrepareForTest({SingleUserRequestAdapter.class, BatchUsersRequestAdapter.class, UsersService.class})
 public class UsersServiceTest extends PowerMockTestCase {
 
+    private static final String ORGANIZATION_ID = "MyCoolOrg";
     @Mock
     private SessionStorage sessionStorageMock;
 
     @Mock
     private SingleUserRequestAdapter singleUserRequestAdapterMock;
+
+    @Mock
+    private ClientUser clientUserMock;
 
     @Mock
     private BatchUsersRequestAdapter batchUsersRequestAdapterMock;
@@ -45,20 +53,20 @@ public class UsersServiceTest extends PowerMockTestCase {
     public void should_set_organization_id() {
         // When
         UsersService service = new UsersService(sessionStorageMock);
-        UsersService retrieved = service.forOrganization("MyCoolOrg");
+        UsersService retrieved = service.forOrganization(ORGANIZATION_ID);
         // Then
         assertSame(retrieved, service);
-        assertEquals(Whitebox.getInternalState(service, "organizationId"), "MyCoolOrg");
+        assertEquals(Whitebox.getInternalState(service, "organizationId"), ORGANIZATION_ID);
     }
 
     @Test
     public void should_set_organization_id_as_object() {
         // When
         UsersService service = new UsersService(sessionStorageMock);
-        UsersService retrieved = service.forOrganization(new ClientTenant().setId("MyCoolOrg"));
+        UsersService retrieved = service.forOrganization(new ClientTenant().setId(ORGANIZATION_ID));
         // Then
         assertSame(retrieved, service);
-        assertEquals(Whitebox.getInternalState(service, "organizationId"), "MyCoolOrg");
+        assertEquals(Whitebox.getInternalState(service, "organizationId"), ORGANIZATION_ID);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -143,6 +151,27 @@ public class UsersServiceTest extends PowerMockTestCase {
     }
 
     @Test
+    public void should_return_proper_user_adapter_with_organization_id_source_obj_not_modified() throws Exception {
+        // Given
+        UsersService service = new UsersService(sessionStorageMock);
+        ClientUser clientUser = new ClientUser().setUsername("Simon");
+        whenNew(ClientUser.class).withArguments(clientUser)
+                .thenReturn(clientUserMock);
+        whenNew(SingleUserRequestAdapter.class).withArguments(sessionStorageMock, clientUserMock)
+                .thenReturn(singleUserRequestAdapterMock);
+        doReturn(clientUserMock).when(clientUserMock).setTenantId(ORGANIZATION_ID);
+        // When
+        SingleUserRequestAdapter retrieved = service.
+                forOrganization(ORGANIZATION_ID).
+                user(clientUser);
+        // Then
+        assertSame(retrieved, singleUserRequestAdapterMock);
+        assertNull(clientUser.getTenantId());
+        verifyNew(ClientUser.class).withArguments(clientUser);
+        Mockito.verify(clientUserMock).setTenantId(ORGANIZATION_ID);
+    }
+
+    @Test
     public void should_return_BatchUsersRequestAdapter() throws Exception {
         // Given
         UsersService service = new UsersService(sessionStorageMock);
@@ -162,10 +191,10 @@ public class UsersServiceTest extends PowerMockTestCase {
     @Test
     public void should_set_org_id (){
         UsersService service = new UsersService(sessionStorageMock);
-        UsersService retrieved = service.organization("MyCoolOrg");
+        UsersService retrieved = service.organization(ORGANIZATION_ID);
 
         assertSame(retrieved, service);
-        assertEquals(Whitebox.getInternalState(service, "organizationId"), "MyCoolOrg");
+        assertEquals(Whitebox.getInternalState(service, "organizationId"), ORGANIZATION_ID);
     }
 
     /**
@@ -215,6 +244,6 @@ public class UsersServiceTest extends PowerMockTestCase {
 
     @AfterMethod
     public void after() {
-        reset(sessionStorageMock, singleUserRequestAdapterMock, batchUsersRequestAdapterMock);
+        reset(sessionStorageMock, singleUserRequestAdapterMock, clientUserMock, batchUsersRequestAdapterMock);
     }
 }

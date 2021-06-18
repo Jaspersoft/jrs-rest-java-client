@@ -1,25 +1,25 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls;
 
+import com.jaspersoft.jasperserver.dto.reports.inputcontrols.ReportInputControlsListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
-import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.ws.rs.core.MultivaluedHashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javax.ws.rs.core.MultivaluedHashMap;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Tetiana Iefimenko
  */
-public class InputControlsValuesAdapter extends AbstractAdapter{
+public class InputControlsValuesAdapter extends AbstractAdapter {
 
     public static final String REPORTS_URI = "reports";
     public static final String INPUT_CONTROLS_URI = "inputControls";
@@ -27,9 +27,9 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
     private String containerUri;
     private Boolean useFreshData = false;
     private Boolean includeFullStructure = false;
-    private MultivaluedHashMap<String, String> inputControlsValues = new MultivaluedHashMap<String, String>();
+    private MultivaluedHashMap<String, String> inputControlsValues = new MultivaluedHashMap<>();
     private StringBuilder ids = new StringBuilder("");
-    private ArrayList<String> path = new ArrayList<String>();
+    private ArrayList<String> path = new ArrayList<>();
 
 
     public InputControlsValuesAdapter(SessionStorage sessionStorage, String containerUri) {
@@ -40,7 +40,7 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
         this.containerUri = containerUri;
     }
 
-    public InputControlsValuesAdapter useCashedData(Boolean value) {
+    public InputControlsValuesAdapter useCachedData(Boolean value) {
         useFreshData = !value;
         return this;
     }
@@ -50,42 +50,90 @@ public class InputControlsValuesAdapter extends AbstractAdapter{
         return this;
     }
 
+    @Deprecated
     public InputControlsValuesAdapter parameter(String name, String value) {
         this.inputControlsValues.add(name, value);
         return this;
     }
 
+    @Deprecated
     public InputControlsValuesAdapter parameter(String name, String... values) {
         this.inputControlsValues.addAll(name, values);
         return this;
     }
 
+    public InputControlsValuesAdapter forInputControl(String name) {
+        this.inputControlsValues.add(name, null);
+        return this;
+    }
+
+    public InputControlsValuesAdapter forInputControl(String name, String value) {
+        this.inputControlsValues.add(name, value);
+        return this;
+    }
+
+    public InputControlsValuesAdapter forInputControl(String name, String... values) {
+        this.inputControlsValues.addAll(name, values);
+        return this;
+    }
+
+    public InputControlsPaginationValuesAdapter pagination() {
+        ids.append(StringUtils.join(inputControlsValues.keySet(), ";"));
+        return new InputControlsPaginationValuesAdapter(sessionStorage, containerUri, ids.toString());
+    }
+
+    @Deprecated
     public OperationResult<InputControlStateListWrapper> run() {
         if (inputControlsValues.size() == 0) {
             throw new MandatoryParameterNotFoundException();
         }
         if (!includeFullStructure) {
-            Set<String> keySet = inputControlsValues.keySet();
-            String[] idsArray = keySet.toArray(new String[keySet.size()]);
-            ids.append(StringUtils.join(idsArray, ";"));
+            ids.append(StringUtils.join(inputControlsValues.keySet(), ";"));
         }
         return buildRequest().post(valuesToArrays());
     }
 
-    public OperationResult<InputControlStateListWrapper> get(){
-        return buildRequest().get();
+    public OperationResult<InputControlStateListWrapper> update(MultivaluedHashMap<String, String> inputControlsValues) {
+        this.inputControlsValues = inputControlsValues;
+        return this.update();
     }
 
-    private JerseyRequest<InputControlStateListWrapper> buildRequest(){
+    public OperationResult<ReportInputControlsListWrapper> updateAndReorder(MultivaluedHashMap<String, String> inputControlsValues) {
+        this.inputControlsValues = inputControlsValues;
         path.add(REPORTS_URI);
         path.addAll(Arrays.asList(containerUri.split("/")));
         path.add(INPUT_CONTROLS_URI);
-        path.add(ids.toString());
+        JerseyRequest<ReportInputControlsListWrapper> request = JerseyRequest.buildRequest(sessionStorage,
+                ReportInputControlsListWrapper.class,
+                path.toArray(new String[0]));
+        return request.post(inputControlsValues);
+    }
+
+    public OperationResult<InputControlStateListWrapper> update() {
+        if (inputControlsValues.size() == 0) {
+            throw new MandatoryParameterNotFoundException();
+        }
+        if (!includeFullStructure) {
+            ids.append(StringUtils.join(inputControlsValues.keySet(), ";"));
+        }
+        return buildRequest().post(inputControlsValues);
+    }
+
+    public OperationResult<InputControlStateListWrapper> get() {
+        return buildRequest().get();
+    }
+
+    private JerseyRequest<InputControlStateListWrapper> buildRequest() {
+        path.add(REPORTS_URI);
+        path.addAll(Arrays.asList(containerUri.split("/")));
+        path.add(INPUT_CONTROLS_URI);
+        if (!ids.toString().isEmpty()) {
+            path.add(ids.toString());
+        }
         path.add(VALUES_URI);
         JerseyRequest<InputControlStateListWrapper> request = JerseyRequest.buildRequest(sessionStorage,
                 InputControlStateListWrapper.class,
-                path.toArray(new String[path.size()]),
-                new DefaultErrorHandler());
+                path.toArray(new String[0]));
         if (useFreshData) {
             request.addParam("freshData", useFreshData.toString());
         }

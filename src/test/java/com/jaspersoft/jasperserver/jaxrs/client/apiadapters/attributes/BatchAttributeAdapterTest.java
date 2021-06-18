@@ -12,11 +12,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.powermock.reflect.Whitebox;
@@ -24,6 +19,12 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static java.util.Arrays.asList;
@@ -380,7 +381,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verify(jerseyRequestMock, times(1)).addParams(map);
         verify(jerseyRequestMock, times(1)).get();
         verify(jerseyRequestMock, times(1)).addParam("_embedded", "permission");
-        verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection+json");
+        verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection.hal+json");
         verifyNoMoreInteractions(jerseyRequestMock);
     }
 
@@ -439,7 +440,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verify(jerseyRequestMock, times(1)).addParams(map);
         verify(jerseyRequestMock, times(1)).get();
         verify(jerseyRequestMock, times(1)).addParam("_embedded", "permission");
-       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection+json");
+       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection.hal+json");
        verifyNoMoreInteractions(jerseyRequestMock);
     }
 
@@ -494,7 +495,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verify(jerseyRequestMock, times(1)).addParams(map);
         verify(jerseyRequestMock, times(1)).get();
         verify(jerseyRequestMock, times(1)).addParam("_embedded", "permission");
-       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection+json");
+       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection.hal+json");
        verifyNoMoreInteractions(jerseyRequestMock);
     }
 
@@ -551,7 +552,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verify(jerseyRequestMock, times(1)).get();
         verify(jerseyRequestMock, times(1)).addParam("_embedded", "permission");
         verify(jerseyRequestMock, times(1)).addParam("holder", "tenant:/myOrg");
-       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection+json");
+       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection.hal+json");
        verifyNoMoreInteractions(jerseyRequestMock);
     }
   @Test
@@ -608,7 +609,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verify(jerseyRequestMock, times(1)).get();
         verify(jerseyRequestMock, times(1)).addParam("_embedded", "permission");
         verify(jerseyRequestMock, times(1)).addParam("holder", "user:/myOrg/myUser");
-       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection+json");
+       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection.hal+json");
        verifyNoMoreInteractions(jerseyRequestMock);
     }
 
@@ -665,7 +666,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         verify(jerseyRequestMock, times(1)).get();
         verify(jerseyRequestMock, times(1)).addParam("_embedded", "permission");
         verify(jerseyRequestMock, times(1)).addParam("holder", "user:/myUser");
-       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection+json");
+       verify(jerseyRequestMock, times(1)).setAccept("application/attributes.collection.hal+json");
        verifyNoMoreInteractions(jerseyRequestMock);
     }
 

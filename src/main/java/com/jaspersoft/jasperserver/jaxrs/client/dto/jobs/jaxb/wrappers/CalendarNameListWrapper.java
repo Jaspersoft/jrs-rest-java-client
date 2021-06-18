@@ -28,6 +28,7 @@ import java.util.List;
 /**
  * @author Yaroslav.Kovalchyk
  * @version $Id: CalendarNameListWrapper.java 22656 2012-03-20 13:43:39Z ykovalchyk $
+ * @deprecated (use server adapter).
  */
 @XmlRootElement(name = "calendarNameList")
 public class CalendarNameListWrapper {

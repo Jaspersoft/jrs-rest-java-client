@@ -26,7 +26,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.DateToStr
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
-
+/**
+ * @deprecated (use server DTO).
+ */
 //@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "state")
 public class JobState {

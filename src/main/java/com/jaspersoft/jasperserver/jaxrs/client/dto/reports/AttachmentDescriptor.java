@@ -22,7 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
+@Deprecated
 @XmlRootElement(name = "attachment")
 public class AttachmentDescriptor {
 

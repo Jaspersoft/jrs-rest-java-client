@@ -6,6 +6,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ClientVirtualDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceValidationErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -14,15 +15,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.sun.jersey.multipart.FormDataBodyPart;
-import com.sun.jersey.multipart.FormDataMultiPart;
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -34,6 +28,14 @@ import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import java.io.File;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.jaspersoft.jasperserver.dto.resources.ClientFile.FileType;
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
@@ -62,52 +64,36 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
     @Captor
     private ArgumentCaptor<FormDataMultiPart> captor;
-
-
     @Mock
     private SessionStorage sessionStorageMock;
     @Mock
     private RestClientConfiguration configurationMock;
     @Mock
     private PatchDescriptor descriptorMock;
-
-
     @Mock
     private JerseyRequest<ClientResource> jerseyRequestMock;
     @Mock
     private OperationResult<ClientResource> operationResultMock;
-
-
     @Mock
     private JerseyRequest<Object> objectJerseyRequestMock;
     @Mock
     private OperationResult<Object> objectOperationResultMock;
-
-
     @Mock
     private JerseyRequest<ClientFile> clientFileJerseyRequestMock;
     @Mock
     private OperationResult<ClientFile> clientFileOperationResultMock;
-
-
     @Mock
     private JerseyRequest<ClientAdhocDataView> adhocDataViewJerseyRequestMock;
     @Mock
     private OperationResult<ClientAdhocDataView> adhocDataViewOperationResultMock;
-
-
     @Mock
     private JerseyRequest<InputStream> inputStreamJerseyRequestMock;
     @Mock
     private OperationResult<InputStream> inputStreamOperationResultMock;
-
-
     @Mock
     private JerseyRequest<ClientVirtualDataSource> virtualDataSourceJerseyRequestMock;
     @Mock
     private OperationResult<ClientVirtualDataSource> virtualDataSourceOperationResultMock;
-
-
     @Mock
     private File fileMock;
 
@@ -115,6 +101,16 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
     @BeforeMethod
     public void before() {
         initMocks(this);
+    }
+
+    @AfterMethod
+    public void after() {
+        reset(sessionStorageMock, configurationMock, jerseyRequestMock, operationResultMock, objectJerseyRequestMock,
+                objectOperationResultMock, clientFileJerseyRequestMock,
+                clientFileOperationResultMock, fileMock, adhocDataViewJerseyRequestMock,
+                adhocDataViewOperationResultMock, configurationMock, descriptorMock,
+                inputStreamJerseyRequestMock, inputStreamOperationResultMock,
+                virtualDataSourceJerseyRequestMock, virtualDataSourceOperationResultMock);
     }
 
     @Test
@@ -218,7 +214,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
     @Test
     /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter#parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourceServiceParameter, String)}
+     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter#parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceServiceParameter, String)}
      */
     @SuppressWarnings("unchecked")
     public void should_set_parameter() {
@@ -227,12 +223,12 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, "resourceUri");
 
         /** When **/
-        SingleResourceAdapter retrieved = adapter.parameter(ResourceServiceParameter.CREATE_FOLDERS, "true");
+        SingleResourceAdapter retrieved = adapter.parameter(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceServiceParameter.CREATE_FOLDERS, "true");
 
         /** Then **/
         assertSame(adapter, retrieved);
         MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) Whitebox.getInternalState(retrieved, "params");
-        String param = retrievedParams.get(ResourceServiceParameter.CREATE_FOLDERS.getName()).get(0);
+        String param = retrievedParams.get(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourceServiceParameter.CREATE_FOLDERS.getName()).get(0);
         assertEquals(param, "true");
     }
 
@@ -365,7 +361,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
 
-        Mockito.verify(jerseyRequestMock).addParams(any(MultivaluedHashMap.class));
+        Mockito.verify(jerseyRequestMock, times(1)).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(jerseyRequestMock).setAccept(ResourceMediaType.FOLDER_JSON);
         Mockito.verify(jerseyRequestMock).get();
     }
@@ -395,7 +391,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
 
-        Mockito.verify(jerseyRequestMock).addParams(any(MultivaluedHashMap.class));
+        Mockito.verify(jerseyRequestMock, times(1)).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(jerseyRequestMock).setAccept(ResourceMediaType.FOLDER_XML);
         Mockito.verify(jerseyRequestMock).get();
     }
@@ -498,7 +494,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(adhocDataViewJerseyRequestMock).post(descriptorMock);
         Mockito.verify(adhocDataViewJerseyRequestMock).setAccept("application/repository.adhocDataView+json");
         Mockito.verify(adhocDataViewJerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
-        Mockito.verifyNoMoreInteractions(adhocDataViewJerseyRequestMock);
+        Mockito.verify(adhocDataViewJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
     }
 
     @Test
@@ -611,6 +607,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
 
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -647,7 +644,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(callback).execute(operationResultMock);
         Mockito.verify(virtualDataSourceJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(virtualDataSourceJerseyRequestMock).setContentType("application/repository.virtualDataSource+json");
-        Mockito.verifyNoMoreInteractions(virtualDataSourceJerseyRequestMock);
+        Mockito.verify(virtualDataSourceJerseyRequestMock).setAccept("application/repository.virtualDataSource+json");
     }
 
     @Test
@@ -769,6 +766,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
 
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
         final AtomicInteger newThreadId = new AtomicInteger();
@@ -805,7 +803,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(callback).execute(operationResultMock);
         Mockito.verify(virtualDataSourceJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(virtualDataSourceJerseyRequestMock).setContentType("application/repository.virtualDataSource+json");
-        Mockito.verifyNoMoreInteractions(virtualDataSourceJerseyRequestMock);
+        Mockito.verify(virtualDataSourceJerseyRequestMock).setAccept("application/repository.virtualDataSource+json");
     }
 
     @Test
@@ -826,6 +824,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
 
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
 
@@ -839,7 +838,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(virtualDataSourceJerseyRequestMock).post(source);
         Mockito.verify(virtualDataSourceJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(virtualDataSourceJerseyRequestMock).setContentType("application/repository.virtualDataSource+json");
-        Mockito.verifyNoMoreInteractions(virtualDataSourceJerseyRequestMock);
+        Mockito.verify(virtualDataSourceJerseyRequestMock).setAccept("application/repository.virtualDataSource+json");
     }
 
     @Test
@@ -860,11 +859,12 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
 
         doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
 
         /** When **/
-        OperationResult<ClientResource> retrieved = adapter.createOrUpdate(source);
+        OperationResult<ClientVirtualDataSource> retrieved = adapter.createOrUpdate(source);
 
 
         /** Then **/
@@ -873,7 +873,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(virtualDataSourceJerseyRequestMock).put(source);
         Mockito.verify(virtualDataSourceJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(virtualDataSourceJerseyRequestMock).setContentType("application/repository.virtualDataSource+json");
-        Mockito.verifyNoMoreInteractions(virtualDataSourceJerseyRequestMock);
+        Mockito.verify(virtualDataSourceJerseyRequestMock).setAccept("application/repository.virtualDataSource+json");
     }
 
 
@@ -968,13 +968,4 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(jerseyRequestMock).addHeader("Content-Location", "fromUri");
     }
 
-    @AfterMethod
-    public void after() {
-        reset(configurationMock, jerseyRequestMock, operationResultMock, objectJerseyRequestMock,
-                objectOperationResultMock, clientFileJerseyRequestMock,
-                clientFileOperationResultMock, fileMock, adhocDataViewJerseyRequestMock,
-                adhocDataViewOperationResultMock, configurationMock, descriptorMock,
-                inputStreamJerseyRequestMock, inputStreamOperationResultMock,
-                virtualDataSourceJerseyRequestMock, virtualDataSourceOperationResultMock);
-    }
 }
