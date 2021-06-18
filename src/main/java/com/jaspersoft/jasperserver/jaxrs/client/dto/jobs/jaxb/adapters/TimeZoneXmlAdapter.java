@@ -27,7 +27,6 @@ import java.util.TimeZone;
 /**
  * @author Yaroslav.Kovalchyk
  * @version $Id$
- * @deprecated (use server adapter).
  */
 public class TimeZoneXmlAdapter extends XmlAdapter<String, TimeZone>{
     @Override

@@ -22,13 +22,11 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
-import com.jaspersoft.jasperserver.dto.executions.ExecutionStatus;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Map;
 
 @XmlRootElement(name = "exportExecution")
 public class ExportExecution {
@@ -40,77 +38,50 @@ public class ExportExecution {
     private OutputResourceDescriptor outputResource;
     private Map<String, OutputResourceDescriptor> attachments;
 
-    public ExportExecution() {
-    }
-
-    public ExportExecution(ExportExecution other) {
-        this.id = other.id;
-        this.options = new ExportExecutionOptions(other.options);
-        this.status = other.status;
-        this.errorDescriptor = new ErrorDescriptor(other.errorDescriptor);
-        this.outputResource = new OutputResourceDescriptor(other.outputResource);
-        final Map<String, OutputResourceDescriptor> otherAttachments = other.attachments;
-        this.attachments = new HashMap<>();
-        if (otherAttachments != null) {
-            for (String attachment : otherAttachments.keySet()) {
-                this.attachments.put(attachment, new OutputResourceDescriptor(attachments.get(attachment)));
-            }
-        }
-    }
-
     @XmlElement
     public String getId() {
         return id;
     }
 
-    public ExportExecution setId(String id) {
+    public void setId(String id) {
         this.id = id;
-    return this;
     }
 
     public ExportExecutionOptions getOptions() {
         return options;
     }
 
-    public ExportExecution setOptions(ExportExecutionOptions options) {
+    public void setOptions(ExportExecutionOptions options) {
         this.options = options;
-        return this;
     }
 
     public ExecutionStatus getStatus() {
         return status;
     }
 
-    public ExportExecution setStatus(ExecutionStatus status) {
+    public void setStatus(ExecutionStatus status) {
         this.status = status;
-        return this;
     }
 
     public ErrorDescriptor getErrorDescriptor() {
         return errorDescriptor;
     }
 
-    public ExportExecution setErrorDescriptor(ErrorDescriptor errorDescriptor) {
+    public void setErrorDescriptor(ErrorDescriptor errorDescriptor) {
         this.status = ExecutionStatus.failed;
         this.errorDescriptor = errorDescriptor;
-        return this;
     }
 
     public OutputResourceDescriptor getOutputResource() {
         return outputResource;
     }
 
-    public ExportExecution setOutputResource(OutputResourceDescriptor outputResource) {
+    public void setOutputResource(OutputResourceDescriptor outputResource) {
         this.outputResource = outputResource;
-        return this;
     }
 
-    public ExportExecution setAttachments(List<OutputResourceDescriptor> attachments) {
-        this.attachments = new HashMap<>();
-        for (OutputResourceDescriptor attachment : attachments) {
-            this.attachments.put(attachment.getFileName(), attachment);
-        }
-        return this;
+    public void setAttachments(Map<String, OutputResourceDescriptor> attachments) {
+        this.attachments = attachments;
     }
 
     @XmlElementWrapper(name = "attachments")

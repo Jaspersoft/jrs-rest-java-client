@@ -28,9 +28,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
-/**
- * @deprecated (use server DTO).
- */
+
 @XmlRootElement(name = "reportJobAlert")
 public class JobAlert {
 

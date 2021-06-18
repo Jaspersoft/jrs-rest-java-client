@@ -15,11 +15,6 @@ public enum AttributesSearchParameter {
     HOLDER("holder"),
 
     /**
-     * name of the attribute
-     */
-    NAME("name"),
-
-    /**
      * Attribute group:
      *
      * custom - custom attributes(doesn't affect on server)
@@ -55,7 +50,7 @@ public enum AttributesSearchParameter {
     /**
      * 	Pagination. Resources count per page
      */
-    LIMIT("limit");// @QueryParam("_embedded") String embedded,
+    LIMIT("limit");
 
     private String name;
 

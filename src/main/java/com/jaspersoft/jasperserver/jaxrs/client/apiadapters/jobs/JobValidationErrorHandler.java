@@ -54,7 +54,7 @@ public class JobValidationErrorHandler extends DefaultErrorHandler {
             ErrorDescriptor errorDescriptor = new ErrorDescriptor();
             errorDescriptor.setMessage(error.toString() + " (field: " + error.getField() + ")");
             errorDescriptor.setErrorCode(error.getErrorCode());
-            errorDescriptor.addParameters(error.getErrorArguments());
+            errorDescriptor.setParameters(error.getErrorArguments());
             errorDescriptors.add(errorDescriptor);
         }
         return errorDescriptors;

@@ -31,9 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.sql.Timestamp;
 import java.util.Set;
-/**
- * @deprecated (use server DTO).
- */
+
 @XmlRootElement(name = "job")
 public class Job {
 

@@ -23,6 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
+import com.sun.jersey.multipart.impl.MultiPartWriter;
 import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -38,7 +39,6 @@ import org.codehaus.jackson.map.DeserializationConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 
@@ -117,6 +117,7 @@ public class SessionStorage {
         if (configuration.getJasperReportsServerUrl().startsWith("https")) {
             initSSL(clientBuilder);
         }
+
         client = clientBuilder.build();
 
         Integer connectionTimeout = configuration.getConnectionTimeout();
@@ -137,13 +138,11 @@ public class SessionStorage {
     protected WebTarget configClient() {
         JacksonJsonProvider customRepresentationTypeProvider = new CustomRepresentationTypeProvider()
                 .configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         rootTarget
                 .register(customRepresentationTypeProvider)
                 .register(JacksonFeature.class)
-                .register(MultiPartFeature.class);
+                .register(MultiPartWriter.class);
         if (sessionId != null) {
             rootTarget.register(new SessionOutputFilter(sessionId));
         }

@@ -41,7 +41,6 @@ import static org.testng.Assert.assertSame;
 
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.SingleJobOperationsAdapter}
- * @deprecated
  */
 @PrepareForTest({JerseyRequest.class})
 public class SingleJobOperationsAdapterTest extends PowerMockTestCase {

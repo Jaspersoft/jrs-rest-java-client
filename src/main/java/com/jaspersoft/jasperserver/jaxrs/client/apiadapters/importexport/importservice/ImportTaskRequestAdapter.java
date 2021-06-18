@@ -27,7 +27,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
-import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.dto.importexport.State;
@@ -39,7 +38,6 @@ import java.io.InputStream;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
-@Deprecated
 public class ImportTaskRequestAdapter extends AbstractAdapter {
 
     public static final String SERVICE_URI = "import";
@@ -56,7 +54,7 @@ public class ImportTaskRequestAdapter extends AbstractAdapter {
     }
 
     public ImportTaskRequestAdapter parameter(ImportParameter parameter, String value) {
-        params.add(parameter.getParamName(), UrlUtils.encode(value));
+        params.add(parameter.getParamName(), value);
         return this;
     }
 
