@@ -24,7 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
+@Deprecated
 @XmlRootElement(name = "exportExecution")
 public class ExportExecutionDescriptor {
 

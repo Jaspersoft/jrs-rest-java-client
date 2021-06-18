@@ -1,5 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.Attachment;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertSame;

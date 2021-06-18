@@ -31,6 +31,7 @@ import java.util.TreeSet;
  *
  * @author Yaroslav.Kovalchyk
  * @version $Id: DaysByteXmlAdapter.java 22756 2012-03-23 10:39:15Z sergey.prilukin $
+ * @deprecated (use server adapter).
  */
 public class DaysByteXmlAdapter extends XmlAdapter<DaysSortedSetWrapper, SortedSet<Byte>>{
     @Override

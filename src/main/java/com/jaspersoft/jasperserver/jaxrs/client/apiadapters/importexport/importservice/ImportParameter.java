@@ -26,63 +26,88 @@ public enum ImportParameter {
      *  Access events (date, time, and user name of last modification) are
      *  exported
      */
-    INCLUDE_ACCESS_EVENTS("includeAccessEvents"),
+    INCLUDE_ACCESS_EVENTS("includeAccessEvents", "include-access-events"),
 
     /**
      *  Include audit data for all resources and users in the export
      */
-    INCLUDE_AUDIT_EVENTS("includeAuditEvents"),
+    INCLUDE_AUDIT_EVENTS("includeAuditEvents", "include-audit-events"),
 
     /**
      *  Resources in the catalog replace those in the repository if their URIs
      *  and types match
      */
-    UPDATE("update"),
+    UPDATE("update", "update"),
 
     /**
      *  When used with --update, users in the catalog are not imported or
      *  updated. Use this
      *  option inFolder import catalogs without overwriting currently defined user
      */
-    SKIP_USER_UPDATE("skipUserUpdate"),
+    SKIP_USER_UPDATE("skipUserUpdate", "skip-user-update"),
 
     /**
      *  Include monitoring events
      */
-    INCLUDE_MONITORING_EVENTS("includeMonitoringEvents"),
+    INCLUDE_MONITORING_EVENTS("includeMonitoringEvents", "include-monitoring-events"),
 
     /**
      *  Include server settings
      */
-    INCLUDE_SERVER_SETTINGS("includeServerSettings"),
+    INCLUDE_SERVER_SETTINGS("includeServerSettings", "include-server-settings"),
 
     /**
      *  Allows merging of exported organization/resource into organization with different identifier.
      */
-    MERGE_ORGANIZATION("mergeOrganization"),
+    MERGE_ORGANIZATION("mergeOrganization", "merge-organization"),
 
     /**
      * Skips custom (not default themes) to be exported
      */
-    SKIP_THEMES("skipThemes"),
+    SKIP_THEMES("skipThemes", "skip-themes"),
 
     /**
      * Organization identifier we import into
      */
-    ORGANIZATION("organization"),
+    ORGANIZATION("organization", "organization"),
 
     /**
      * Defines strategy with broken dependencies
      */
-    BROKEN_DEPENDENCIES("brokenDependencies");
+    BROKEN_DEPENDENCIES("brokenDependencies", "broken-dependencies"),
+    /**
+     * Pagination. Start index for requested pate.
+     */
+    OFFSET("offset", "offset"),
+
+    /**
+     * 	Pagination. Resources count per page
+     */
+    LIMIT("limit", "limit"),
+
+    /**
+     * Secret key bytes in hex
+     */
+    SECRET_KEY("secret-key", "secret-key"),
+
+    /**
+     * Secret File repository location
+     */
+    SECRET_URI("secretUri", "secret-uri");
 
     private String paramName;
+    private String multiPartParamName;
 
-    private ImportParameter(String paramName){
+    private ImportParameter(String paramName, String multiPartParamName){
         this.paramName = paramName;
+        this.multiPartParamName = multiPartParamName;
     }
 
     public String getParamName() {
         return paramName;
+    }
+
+    public String getMultiPartParamName() {
+        return multiPartParamName;
     }
 }

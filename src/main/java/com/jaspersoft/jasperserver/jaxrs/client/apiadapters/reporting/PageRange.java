@@ -20,7 +20,10 @@
  */
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
-
+/***
+ * @deprecated  use @Link {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.PageRange}
+ * */
+@Deprecated
 public class PageRange {
 
     private final long startIndex;

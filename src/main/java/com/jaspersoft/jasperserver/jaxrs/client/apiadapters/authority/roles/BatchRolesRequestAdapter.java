@@ -28,22 +28,24 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.ArrayList;
+
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.ArrayList;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
 public class BatchRolesRequestAdapter extends AbstractAdapter {
 
     private final MultivaluedMap<String, String> params;
-    private final ArrayList<String> uri = new ArrayList<String>();
+    private final ArrayList<String> uri = new ArrayList<>();
 
     public BatchRolesRequestAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
-        params = new MultivaluedHashMap<String, String>();
+        params = new MultivaluedHashMap<>();
         if (organizationId != null) {
             uri.add("organizations");
             uri.add(organizationId);
@@ -54,7 +56,7 @@ public class BatchRolesRequestAdapter extends AbstractAdapter {
     }
 
     public BatchRolesRequestAdapter param(RolesParameter rolesParam, String value) {
-        params.add(rolesParam.getParamName(), value);
+        params.add(rolesParam.getParamName(), UrlUtils.encode(value));
         return this;
     }
 

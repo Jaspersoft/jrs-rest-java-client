@@ -53,12 +53,17 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
 
     @Mock
     private JerseyRequest<ImportTask> taskRequestMock;
+    @Mock
+    private JerseyRequest deleteRequestMock;
 
     @Mock
     private OperationResult<State> stateOperationResultMock;
 
     @Mock
     private OperationResult<ImportTask> taskOperationResultMock;
+
+    @Mock
+    private OperationResult deleteOperationResultMock;
 
     private String[] fakeArrayPathForState = new String[]{"import", TASK_ID, "state"};
     private String[] fakeArrayPathForTask= new String[]{"import", TASK_ID};
@@ -162,8 +167,7 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
         PowerMockito.mockStatic(JerseyRequest.class);
         PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock),
                 eq(ImportTask.class),
-                eq(fakeArrayPathForTask),
-                any(DefaultErrorHandler.class))).thenReturn(taskRequestMock);
+                eq(fakeArrayPathForTask))).thenReturn(taskRequestMock);
         PowerMockito.when(taskRequestMock.get()).thenReturn(taskOperationResultMock);
 
         // When
@@ -181,8 +185,7 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
         PowerMockito.mockStatic(JerseyRequest.class);
         PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock),
                 eq(ImportTask.class),
-                eq(fakeArrayPathForTask),
-                any(DefaultErrorHandler.class))).thenReturn(taskRequestMock);
+                eq(fakeArrayPathForTask))).thenReturn(taskRequestMock);
         PowerMockito.when(taskRequestMock.put(importTask)).thenReturn(taskOperationResultMock);
 
         // When
@@ -197,17 +200,16 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
         // Given
         PowerMockito.mockStatic(JerseyRequest.class);
         PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock),
-                eq(ImportTask.class),
-                eq(fakeArrayPathForTask),
-                any(DefaultErrorHandler.class))).thenReturn(taskRequestMock);
-        PowerMockito.when(taskRequestMock.delete()).thenReturn(taskOperationResultMock);
+                eq(Object.class),
+                eq(fakeArrayPathForTask))).thenReturn(deleteRequestMock);
+        PowerMockito.when(deleteRequestMock.delete()).thenReturn(deleteOperationResultMock);
 
         // When
         ImportRequestAdapter adapter = new ImportRequestAdapter(storageMock, TASK_ID);
         OperationResult<ImportTask> opResult = adapter.cancelTask();
 
         // Then
-        assertSame(opResult, taskOperationResultMock);
+        assertSame(opResult, deleteOperationResultMock);
     }
 
     @Test

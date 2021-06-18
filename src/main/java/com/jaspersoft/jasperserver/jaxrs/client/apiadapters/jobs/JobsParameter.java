@@ -100,7 +100,16 @@ public enum JobsParameter {
      * type is ignored. When false or omitted, the trigger is updated automatically
      * by the scheduler.
      */
-    UPDATE_REPLACE_TRIGGER_IGNORE_TYPE("replaceTriggerIgnoreType")
+    UPDATE_REPLACE_TRIGGER_IGNORE_TYPE("replaceTriggerIgnoreType"),
+    /**
+     * Pagination. Start index for requested pate.
+     */
+    OFFSET("offset"),
+
+    /**
+     * 	Pagination. Resources count per page
+     */
+    LIMIT("limit")
     ;
 
     private String name;

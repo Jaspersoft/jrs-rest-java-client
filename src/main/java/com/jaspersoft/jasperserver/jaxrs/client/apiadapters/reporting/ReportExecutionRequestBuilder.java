@@ -30,7 +30,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionDescr
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionStatusEntity;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-
+@Deprecated
 public class ReportExecutionRequestBuilder extends AbstractAdapter {
 
     public static final String REPORT_EXECUTIONS_URI = "reportExecutions";

@@ -20,18 +20,26 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources;
 
+import com.jaspersoft.jasperserver.dto.resources.ClientDomainTopic;
+import com.jaspersoft.jasperserver.dto.resources.ClientFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
+import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.dto.resources.ClientSecureMondrianConnection;
 import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
+import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.DomainResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.MondrianConnectionResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.ReportUnitResourceBuilder;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.builder.SecureMondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.DomainResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.DomainTopicResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.MondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.ReportUnitResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.SecureMondrianConnectionResourceBuilder;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.builder.SemanticLayerResourceBuilder;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.support.ResourceBuilderFactory.getBuilder;
+import java.io.InputStream;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.compexResourcesSupport.ResourceBuilderFactory.getBuilder;
 
 public class ResourcesService extends AbstractAdapter {
 
@@ -43,10 +51,21 @@ public class ResourcesService extends AbstractAdapter {
         return new BatchResourcesAdapter(sessionStorage);
     }
 
-    public SingleResourceAdapter resource(String uri) {
-        return new SingleResourceAdapter(sessionStorage, uri);
+    public SingleResourceAdapter resource(String resourceUri) {
+        return new SingleResourceAdapter(sessionStorage, resourceUri);
     }
 
+    public SingleResourceAdapter resource(ClientResource resourceDescriptor) {
+        return new SingleResourceAdapter(sessionStorage, resourceDescriptor);
+    }
+
+    public SingleFileResourceUploadAdapter fileResource(InputStream inputStream, ClientFile resourceDescriptor) {
+        return new SingleFileResourceUploadAdapter(sessionStorage, inputStream, resourceDescriptor);
+    }
+
+    public SingleFileResourceUploadAdapter fileResource(String fileResourceUri) {
+        return new SingleFileResourceUploadAdapter(sessionStorage, fileResourceUri);
+    }
 
     /**
      * Additional features to work with such resources as
@@ -55,24 +74,51 @@ public class ResourcesService extends AbstractAdapter {
      * - MondrianConnection
      * - SecureMondrianConnection
      */
-
-    public DomainResourceBuilder resource(ClientSemanticLayerDataSource resource) {
-        ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource(resource);
+    @Deprecated
+    public SemanticLayerResourceBuilder resource(ClientSemanticLayerDataSource resourceDescriptor) {
+        ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource(resourceDescriptor);
         return getBuilder(copy, sessionStorage);
     }
 
-    public ReportUnitResourceBuilder resource(ClientReportUnit resource) {
-        ClientReportUnit copy = new ClientReportUnit(resource);
+    public SemanticLayerResourceBuilder semanticLayerDataSourceResource(ClientSemanticLayerDataSource resourceDescriptor) {
+        return getBuilder(resourceDescriptor, sessionStorage);
+    }
+
+    public DomainResourceBuilder domainResource(ClientDomain resourceDescriptor) {
+        return getBuilder(resourceDescriptor, sessionStorage);
+    }
+
+    public ReportUnitResourceBuilder reportUnitResource(ClientReportUnit resourceDescriptor) {
+        return getBuilder(resourceDescriptor, sessionStorage);
+    }
+
+    public DomainTopicResourceBuilder domainTopicResource(ClientDomainTopic resourceDescriptor) {
+        return getBuilder(resourceDescriptor, sessionStorage);
+    }
+
+    public MondrianConnectionResourceBuilder mondrianConnection(ClientMondrianConnection mondrianConnectionDescriptor) {
+        return getBuilder(mondrianConnectionDescriptor, sessionStorage);
+    }
+
+    public SecureMondrianConnectionResourceBuilder secureMondrianConnection(ClientSecureMondrianConnection mondrianConnectionDescriptor) {
+        return getBuilder(mondrianConnectionDescriptor, sessionStorage);
+    }
+
+    @Deprecated
+    public ReportUnitResourceBuilder resource(ClientReportUnit resourceDescriptor) {
+        ClientReportUnit copy = new ClientReportUnit(resourceDescriptor);
         return getBuilder(copy, sessionStorage);
     }
 
-    public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resource) {
-        ClientMondrianConnection copy = new ClientMondrianConnection(resource);
+    @Deprecated
+    public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resourceDescriptor) {
+        ClientMondrianConnection copy = new ClientMondrianConnection(resourceDescriptor);
         return getBuilder(copy, sessionStorage);
     }
 
-    public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resource) {
-        ClientSecureMondrianConnection copy = new ClientSecureMondrianConnection(resource);
+    @Deprecated
+    public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resourceDescriptor) {
+        ClientSecureMondrianConnection copy = new ClientSecureMondrianConnection(resourceDescriptor);
         return getBuilder(copy, sessionStorage);
     }
 }

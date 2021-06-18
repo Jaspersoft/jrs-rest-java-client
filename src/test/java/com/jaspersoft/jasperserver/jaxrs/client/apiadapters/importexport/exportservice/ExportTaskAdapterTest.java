@@ -1,5 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice;
 
+import com.jaspersoft.jasperserver.dto.importexport.ExportTask;
+import com.jaspersoft.jasperserver.dto.importexport.State;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestBuilder;
@@ -7,8 +9,10 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.dto.importexport.ExportTask;
-import com.jaspersoft.jasperserver.dto.importexport.State;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.Mock;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
@@ -18,14 +22,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -41,6 +42,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertNull;
 
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportTaskAdapter}
@@ -94,10 +96,10 @@ public class ExportTaskAdapterTest extends PowerMockTestCase {
         assertNotNull(retrievedField);
         assertTrue(instanceOf(ExportTask.class).matches(retrievedField));
 
-        assertNotNull(((ExportTask) retrievedField).getParameters());
-        assertNotNull(((ExportTask) retrievedField).getRoles());
-        assertNotNull(((ExportTask) retrievedField).getUsers());
-        assertNotNull(((ExportTask) retrievedField).getUris());
+        assertNull(((ExportTask) retrievedField).getParameters());
+        assertNull(((ExportTask) retrievedField).getRoles());
+        assertNull(((ExportTask) retrievedField).getUsers());
+        assertNull(((ExportTask) retrievedField).getUris());
     }
 
     @Test(testName = "role")
@@ -113,6 +115,20 @@ public class ExportTaskAdapterTest extends PowerMockTestCase {
         assertNotNull(retrievedAdapter);
         assertTrue(retrieved.getRoles().size() == 1);
         assertTrue(retrieved.getRoles().contains(newRole));
+    }
+
+    @Test(testName = "allRoles")
+    public void should_add_emptyList_to_roles_of_ExportTaskDto() throws IllegalAccessException {
+        ExportTaskAdapter adapter = spy(new ExportTaskAdapter(sessionStorageMock));
+        ExportTaskAdapter retrievedAdapter = adapter.allRoles();
+
+        Field field = field(ExportTaskAdapter.class, EXPORT_TASK_DTO);
+        ExportTask retrieved = (ExportTask) field.get(adapter);
+
+        verify(adapter, never()).role(anyString());
+        assertNotNull(retrievedAdapter);
+        assertNotNull(retrieved.getRoles());
+        assertTrue(retrieved.getRoles().isEmpty());
     }
 
     @Test(testName = "roles")
@@ -177,6 +193,24 @@ public class ExportTaskAdapterTest extends PowerMockTestCase {
         assertTrue(exportTaskDto.getUsers().size() == 3);
         assertTrue(exportTaskDto.getUsers().contains("Catherine"));
         assertTrue(exportTaskDto.getUsers().contains("Angelina"));
+    }
+
+    @Test(testName = "users")
+    public void should_add_emptyList_to_userList_of_ExportTaskDto() throws IllegalAccessException {
+
+        // Given
+        ExportTaskAdapter adapter = spy(new ExportTaskAdapter(sessionStorageMock));
+
+        // When
+        ExportTaskAdapter retrievedAdapter = adapter.allUsers();
+        Field field = field(ExportTaskAdapter.class, EXPORT_TASK_DTO);
+        ExportTask exportTaskDto = (ExportTask) field.get(adapter);
+
+        // Then
+        verify(adapter, never()).user(anyString());
+        assertNotNull(retrievedAdapter);
+        assertNotNull(exportTaskDto.getUsers());
+        assertTrue(exportTaskDto.getUsers().isEmpty());
     }
 
     @Test(testName = "organization")
