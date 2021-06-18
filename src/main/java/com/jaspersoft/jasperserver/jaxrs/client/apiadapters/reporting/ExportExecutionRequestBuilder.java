@@ -29,8 +29,10 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.Attachment;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.AttachmentDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportDescriptor;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.HtmlReport;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionStatusEntity;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-
+@Deprecated
 public class ExportExecutionRequestBuilder extends AbstractAdapter {
 
     public static final String REPORT_EXECUTIONS = "reportExecutions";

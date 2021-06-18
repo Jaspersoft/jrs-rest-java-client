@@ -27,7 +27,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.adapters.NoTimezon
 import java.lang.reflect.Constructor;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
-
+/**
+ * @deprecated (use server DTO).
+ */
 public abstract class JobTrigger implements DeepCloneable<JobTrigger> {
 
     /**

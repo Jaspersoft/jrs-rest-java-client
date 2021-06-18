@@ -28,11 +28,13 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
+import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.ArrayList;
+
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.ArrayList;
 
 public class BatchUsersRequestAdapter extends AbstractAdapter {
 
@@ -41,7 +43,7 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
 
     public BatchUsersRequestAdapter(SessionStorage sessionStorage, String organizationId) {
         super(sessionStorage);
-        params = new MultivaluedHashMap<String, String>();
+        params = new MultivaluedHashMap<>();
         if (organizationId != null && !organizationId.equals("")) {
             uri.add("organizations");
             uri.add(organizationId);
@@ -50,7 +52,7 @@ public class BatchUsersRequestAdapter extends AbstractAdapter {
     }
 
     public BatchUsersRequestAdapter param(UsersParameter userParam, String value) {
-        params.add(userParam.getParamName(), value);
+        params.add(userParam.getParamName(), UrlUtils.encode(value));
         return this;
     }
 

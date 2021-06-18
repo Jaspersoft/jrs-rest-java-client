@@ -27,6 +27,7 @@ import java.util.HashMap;
 /**
  * @author Yaroslav.Kovalchyk
  * @version $Id$
+ * @deprecated (use server adapter).
  */
 @XmlRootElement(name = "parameters")
 public class ReportParametersMapWrapper {

@@ -8,6 +8,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientExceptio
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.AttachmentDescriptor;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ExportDescriptor;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.HtmlReport;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionStatusEntity;
 import org.apache.commons.io.IOUtils;
 import org.mockito.Mock;

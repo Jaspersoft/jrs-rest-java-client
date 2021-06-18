@@ -22,9 +22,9 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.dto.reports.ReportParameters;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportOutputFormat;
-import java.util.TimeZone;
+
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.TimeZone;
 
 /**
  * <p></p>
@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Yaroslav.Kovalchyk
  * @version $Id: ReportExecutionRequest.java 26599 2012-12-10 13:04:23Z ykovalchyk $
  */
+
 @XmlRootElement
 public class ReportExecutionRequest {
     private String reportUnitUri;
@@ -46,6 +47,33 @@ public class ReportExecutionRequest {
     private String attachmentsPrefix;
     private String pages;
     private ReportParameters parameters;
+    private TimeZone timeZone;
+    private Boolean allowInlineScripts = true;
+    private String baseUrl;
+    private String markupType;
+    private String anchor;
+
+    public ReportExecutionRequest() {
+    }
+
+    public ReportExecutionRequest(ReportExecutionRequest other) {
+        this.reportUnitUri = other.reportUnitUri;
+        this.freshData = other.freshData;
+        this.saveDataSnapshot = other.saveDataSnapshot;
+        this.interactive = other.interactive;
+        this.ignorePagination = other.ignorePagination;
+        this.async = other.async;
+        this.transformerKey = other.transformerKey;
+        this.outputFormat = other.outputFormat;
+        this.attachmentsPrefix = other.attachmentsPrefix;
+        this.pages = other.pages;
+        this.parameters = other.parameters;
+        this.timeZone = TimeZone.getTimeZone(timeZone.getID());
+        this.allowInlineScripts = other.allowInlineScripts;
+        this.baseUrl = other.baseUrl;
+        this.markupType = other.markupType;
+        this.anchor = other.anchor;
+    }
 
     public TimeZone getTimeZone() {
         return timeZone;
@@ -55,8 +83,6 @@ public class ReportExecutionRequest {
         this.timeZone = timeZone;
         return this;
     }
-
-    private TimeZone timeZone;
 
     public String getReportUnitUri() {
         return reportUnitUri;
@@ -125,7 +151,7 @@ public class ReportExecutionRequest {
         return outputFormat;
     }
 
-    public ReportExecutionRequest setOutputFormat(ReportOutputFormat outputFormat) {
+    public ReportExecutionRequest setOutputFormat(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportOutputFormat outputFormat) {
         this.outputFormat = outputFormat.toString().toLowerCase();
         return this;
     }
@@ -161,6 +187,42 @@ public class ReportExecutionRequest {
         return this;
     }
 
+    public Boolean getAllowInlineScripts() {
+        return allowInlineScripts;
+    }
+
+    public ReportExecutionRequest setAllowInlineScripts(Boolean allowInlineScripts) {
+        this.allowInlineScripts = allowInlineScripts;
+        return this;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public ReportExecutionRequest setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+        return this;
+    }
+
+    public String getMarkupType() {
+        return markupType;
+    }
+
+    public ReportExecutionRequest setMarkupType(String markupType) {
+        this.markupType = markupType;
+        return this;
+    }
+
+    public String getAnchor() {
+        return anchor;
+    }
+
+    public ReportExecutionRequest setAnchor(String anchor) {
+        this.anchor = anchor;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -168,44 +230,48 @@ public class ReportExecutionRequest {
 
         ReportExecutionRequest that = (ReportExecutionRequest) o;
 
-        if (getReportUnitUri() != null ? !getReportUnitUri().equals(that.getReportUnitUri()) : that.getReportUnitUri() != null)
+        if (reportUnitUri != null ? !reportUnitUri.equals(that.reportUnitUri) : that.reportUnitUri != null)
             return false;
-        if (getFreshData() != null ? !getFreshData().equals(that.getFreshData()) : that.getFreshData() != null)
+        if (freshData != null ? !freshData.equals(that.freshData) : that.freshData != null) return false;
+        if (saveDataSnapshot != null ? !saveDataSnapshot.equals(that.saveDataSnapshot) : that.saveDataSnapshot != null)
             return false;
-        if (getSaveDataSnapshot() != null ? !getSaveDataSnapshot().equals(that.getSaveDataSnapshot()) : that.getSaveDataSnapshot() != null)
+        if (interactive != null ? !interactive.equals(that.interactive) : that.interactive != null) return false;
+        if (ignorePagination != null ? !ignorePagination.equals(that.ignorePagination) : that.ignorePagination != null)
             return false;
-        if (getInteractive() != null ? !getInteractive().equals(that.getInteractive()) : that.getInteractive() != null)
+        if (async != null ? !async.equals(that.async) : that.async != null) return false;
+        if (transformerKey != null ? !transformerKey.equals(that.transformerKey) : that.transformerKey != null)
             return false;
-        if (getIgnorePagination() != null ? !getIgnorePagination().equals(that.getIgnorePagination()) : that.getIgnorePagination() != null)
+        if (outputFormat != null ? !outputFormat.equals(that.outputFormat) : that.outputFormat != null) return false;
+        if (attachmentsPrefix != null ? !attachmentsPrefix.equals(that.attachmentsPrefix) : that.attachmentsPrefix != null)
             return false;
-        if (getAsync() != null ? !getAsync().equals(that.getAsync()) : that.getAsync() != null) return false;
-        if (getTransformerKey() != null ? !getTransformerKey().equals(that.getTransformerKey()) : that.getTransformerKey() != null)
+        if (pages != null ? !pages.equals(that.pages) : that.pages != null) return false;
+        if (parameters != null ? !parameters.equals(that.parameters) : that.parameters != null) return false;
+        if (timeZone != null ? !timeZone.equals(that.timeZone) : that.timeZone != null) return false;
+        if (allowInlineScripts != null ? !allowInlineScripts.equals(that.allowInlineScripts) : that.allowInlineScripts != null)
             return false;
-        if (getOutputFormat() != null ? !getOutputFormat().equals(that.getOutputFormat()) : that.getOutputFormat() != null)
-            return false;
-        if (getAttachmentsPrefix() != null ? !getAttachmentsPrefix().equals(that.getAttachmentsPrefix()) : that.getAttachmentsPrefix() != null)
-            return false;
-        if (getPages() != null ? !getPages().equals(that.getPages()) : that.getPages() != null) return false;
-        if (getParameters() != null ? !getParameters().equals(that.getParameters()) : that.getParameters() != null)
-            return false;
-        return !(getTimeZone() != null ? !getTimeZone().equals(that.getTimeZone()) : that.getTimeZone() != null);
-
+        if (baseUrl != null ? !baseUrl.equals(that.baseUrl) : that.baseUrl != null) return false;
+        if (markupType != null ? !markupType.equals(that.markupType) : that.markupType != null) return false;
+        return anchor != null ? anchor.equals(that.anchor) : that.anchor == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getReportUnitUri() != null ? getReportUnitUri().hashCode() : 0;
-        result = 31 * result + (getFreshData() != null ? getFreshData().hashCode() : 0);
-        result = 31 * result + (getSaveDataSnapshot() != null ? getSaveDataSnapshot().hashCode() : 0);
-        result = 31 * result + (getInteractive() != null ? getInteractive().hashCode() : 0);
-        result = 31 * result + (getIgnorePagination() != null ? getIgnorePagination().hashCode() : 0);
-        result = 31 * result + (getAsync() != null ? getAsync().hashCode() : 0);
-        result = 31 * result + (getTransformerKey() != null ? getTransformerKey().hashCode() : 0);
-        result = 31 * result + (getOutputFormat() != null ? getOutputFormat().hashCode() : 0);
-        result = 31 * result + (getAttachmentsPrefix() != null ? getAttachmentsPrefix().hashCode() : 0);
-        result = 31 * result + (getPages() != null ? getPages().hashCode() : 0);
-        result = 31 * result + (getParameters() != null ? getParameters().hashCode() : 0);
-        result = 31 * result + (getTimeZone() != null ? getTimeZone().hashCode() : 0);
+        int result = reportUnitUri != null ? reportUnitUri.hashCode() : 0;
+        result = 31 * result + (freshData != null ? freshData.hashCode() : 0);
+        result = 31 * result + (saveDataSnapshot != null ? saveDataSnapshot.hashCode() : 0);
+        result = 31 * result + (interactive != null ? interactive.hashCode() : 0);
+        result = 31 * result + (ignorePagination != null ? ignorePagination.hashCode() : 0);
+        result = 31 * result + (async != null ? async.hashCode() : 0);
+        result = 31 * result + (transformerKey != null ? transformerKey.hashCode() : 0);
+        result = 31 * result + (outputFormat != null ? outputFormat.hashCode() : 0);
+        result = 31 * result + (attachmentsPrefix != null ? attachmentsPrefix.hashCode() : 0);
+        result = 31 * result + (pages != null ? pages.hashCode() : 0);
+        result = 31 * result + (parameters != null ? parameters.hashCode() : 0);
+        result = 31 * result + (timeZone != null ? timeZone.hashCode() : 0);
+        result = 31 * result + (allowInlineScripts != null ? allowInlineScripts.hashCode() : 0);
+        result = 31 * result + (baseUrl != null ? baseUrl.hashCode() : 0);
+        result = 31 * result + (markupType != null ? markupType.hashCode() : 0);
+        result = 31 * result + (anchor != null ? anchor.hashCode() : 0);
         return result;
     }
 
@@ -224,6 +290,10 @@ public class ReportExecutionRequest {
                 ", pages='" + pages + '\'' +
                 ", parameters=" + parameters +
                 ", timeZone=" + timeZone +
+                ", allowInlineScripts=" + allowInlineScripts +
+                ", baseUrl='" + baseUrl + '\'' +
+                ", markupType='" + markupType + '\'' +
+                ", anchor='" + anchor + '\'' +
                 '}';
     }
 }

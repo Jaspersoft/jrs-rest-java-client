@@ -29,6 +29,7 @@ import java.util.List;
 /**
  * @author Yaroslav.Kovalchyk
  * @version $Id: AddressesXmlAdapter.java 22756 2012-03-23 10:39:15Z sergey.prilukin $
+ * @deprecated (use server adapter).
  */
 public class AddressesXmlAdapter extends XmlAdapter<AddressesListWrapper, List<String>> {
     @Override

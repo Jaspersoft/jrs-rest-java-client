@@ -21,12 +21,19 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
+import com.jaspersoft.jasperserver.dto.reports.ReportParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportexecution.ReportExecutionAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReorderingReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionRequest;
 
+import javax.ws.rs.core.MultivaluedHashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,32 +47,59 @@ public class ReportsAdapter extends AbstractAdapter {
         this.reportUnitUri = reportUnitUri;
     }
 
+    @Deprecated
     public ReorderingReportParametersAdapter reportParameters() {
         return new ReorderingReportParametersAdapter(sessionStorage, reportUnitUri);
     }
 
+    public ReportExecutionAdapter reportExecutions() {
+        return new ReportExecutionAdapter(sessionStorage, new ReportExecutionRequest().setReportUnitUri(reportUnitUri));
+    }
+
+    public ReportOptionsAdapter reportOptions() {
+        return new ReportOptionsAdapter(sessionStorage, reportUnitUri);
+    }
+
+    public ReportOptionsAdapter reportOptions(String optionsId) {
+        return new ReportOptionsAdapter(sessionStorage, reportUnitUri, optionsId);
+    }
+
+    public ReportOptionsAdapter reportOptions(MultivaluedHashMap options) {
+        return new ReportOptionsAdapter(sessionStorage, reportUnitUri, options);
+    }
+
+    public ReportOptionsAdapter reportOptions(List<ReportParameter> options) {
+        return new ReportOptionsAdapter(sessionStorage, reportUnitUri, ReportOptionsUtil.toMap(options));
+    }
+
+    public InputControlsAdapter inputControls() {
+        return new InputControlsAdapter(sessionStorage, reportUnitUri);
+    }
+
+    @Deprecated
     public ReportParametersAdapter reportParameters(String mandatoryId, String... otherIds) {
         List<String> ids = new ArrayList<String>(Arrays.asList(otherIds));
         ids.add(0, mandatoryId);
         return new ReportParametersAdapter(sessionStorage, reportUnitUri, ReportParametersUtils.toPathSegment(ids));
     }
 
-    public RunReportAdapter prepareForRun(ReportOutputFormat format, Integer... pages) {
+    public RunReportAdapter prepareForRun(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportOutputFormat format, Integer... pages) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format.toString().toLowerCase(), pages);
     }
 
-    public RunReportAdapter prepareForRun(ReportOutputFormat format, PageRange range) {
+    public RunReportAdapter prepareForRun(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportOutputFormat format, com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.PageRange range) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format.toString().toLowerCase(), range);
     }
 
-    public RunReportAdapter prepareForRun(ReportOutputFormat format) {
+    public RunReportAdapter prepareForRun(com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportOutputFormat format) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format.toString().toLowerCase());
     }
+
     public RunReportAdapter prepareForRun(String format, Integer... pages) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format, pages);
     }
 
-    public RunReportAdapter prepareForRun(String format, PageRange range) {
+    public RunReportAdapter prepareForRun(String format, com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.PageRange range) {
         return new RunReportAdapter(sessionStorage, reportUnitUri, format, range);
     }
 

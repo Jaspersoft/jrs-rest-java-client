@@ -26,15 +26,16 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.JSClientWebExcep
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.BasicAuthenticationFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
-import java.util.Locale;
-import java.util.TimeZone;
+import org.glassfish.jersey.client.ClientProperties;
+
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import org.glassfish.jersey.client.ClientProperties;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class JasperserverRestClient {
     private final RestClientConfiguration configuration;
@@ -66,7 +67,7 @@ public class JasperserverRestClient {
 
     public Session authenticate(String username, String password, Locale userLocale, TimeZone userTimeZone) {
 
-        if (username != null && username.length() > 0 && password != null && password.length() > 0) {
+        if (username != null && username.length() > 0) {
             AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
             SessionStorage sessionStorage =
                     new SessionStorage(configuration,
@@ -81,6 +82,10 @@ public class JasperserverRestClient {
 
     public AnonymousSession getAnonymousSession() {
         return new AnonymousSession(new SessionStorage(configuration, null, Locale.getDefault(), TimeZone.getDefault()));
+    }
+
+    public AnonymousSession getAnonymousSession(Locale userLocale) {
+        return new AnonymousSession(new SessionStorage(configuration, null, userLocale, TimeZone.getDefault()));
     }
 
     protected void login(SessionStorage storage) throws JSClientWebException {

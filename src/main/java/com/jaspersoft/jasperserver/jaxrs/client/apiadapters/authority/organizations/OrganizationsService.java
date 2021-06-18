@@ -31,11 +31,11 @@ public class OrganizationsService extends AbstractAdapter {
     }
 
     public SingleOrganizationAdapter organization(ClientTenant organization) {
-        if (organization == null || (organization.getId() == null || organization.getId().equals("")
-                && (organization.getAlias() == null || organization.getAlias().equals("")))) {
-            throw new IllegalArgumentException("Organization is not valid.");
+        if (organization != null && ((organization.getAlias() != null && !organization.getAlias().isEmpty())
+                ||(organization.getId() != null && !organization.getId().isEmpty()) )) {
+            return new SingleOrganizationAdapter(sessionStorage, organization);
         }
-        return new SingleOrganizationAdapter(sessionStorage, organization);
+        throw new IllegalArgumentException("Organization is not valid.");
     }
 
     public SingleOrganizationAdapter organization(String organizationId) {

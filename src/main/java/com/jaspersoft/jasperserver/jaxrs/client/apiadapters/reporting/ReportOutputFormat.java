@@ -20,7 +20,10 @@
  */
 
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
-
+/***
+ * @deprecated  use @Link {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportOutputFormat}
+ * */
+@Deprecated
 public enum ReportOutputFormat {
 
     PDF, HTML, XLS, XLSX, RTF, CSV, XML, DOCX, ODT,

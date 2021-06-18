@@ -24,7 +24,10 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 
 import javax.ws.rs.core.Response;
-
+/***
+ * @deprecated  use @Link {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.RunReportErrorHandler}
+ * */
+@Deprecated
 public class RunReportErrorHandler extends DefaultErrorHandler {
 
     @Override

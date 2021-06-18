@@ -24,7 +24,9 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
+/**
+ * @deprecated (use com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendar.* pakage).
+ */
 @XmlRootElement(name = "reportJobCalendar")
 public class DailyCalendar extends Calendar {
 

@@ -32,7 +32,7 @@ import java.util.Arrays;
 
 public class QueryExecutorAdapter extends AbstractAdapter {
     public static final String QUERY_EXECUTOR_URI = "queryExecutor";
-    private ArrayList<String> path = new ArrayList<String>();
+    private ArrayList<String> path = new ArrayList<>();
     private final String resourceUri;
     private final Query query;
 

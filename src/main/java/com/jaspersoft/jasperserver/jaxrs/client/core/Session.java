@@ -20,13 +20,17 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryExecutionService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.domain.DomainContextService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery.DataDiscoveryService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.diagnostic.DiagnosticService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainMetadataService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsService;
@@ -107,8 +111,8 @@ public class Session extends AnonymousSession{
         return getService(JobsService.class);
     }
 
-    public DomainMetadataService domainService() {
-        return getService(DomainMetadataService.class);
+    public DomainService domainService() {
+        return getService(DomainService.class);
     }
 
     public QueryExecutorService queryExecutorService() {
@@ -127,6 +131,17 @@ public class Session extends AnonymousSession{
 
     public DiagnosticService diagnosticService() {return getService(DiagnosticService.class);}
 
+    /**
+     *
+     * @deprecated Replaced by {@link Session#contextService()}*/
     public ConnectionsService connectionsService() {return getService(ConnectionsService.class);}
+
+    public ContextService contextService() {return getService(ContextService.class);}
+
+    public DomainContextService domainContextService() {return getService(DomainContextService.class);}
+
+    public QueryExecutionService queryExecutionService() {return getService(QueryExecutionService.class);}
+
+    public DataDiscoveryService dataDiscoveryService() {return getService(DataDiscoveryService.class);}
 
 }

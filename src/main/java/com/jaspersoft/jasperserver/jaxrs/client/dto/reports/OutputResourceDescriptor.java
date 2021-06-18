@@ -21,37 +21,79 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
+import com.jaspersoft.jasperserver.dto.common.DeepCloneable;
+
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Arrays;
 
 @XmlRootElement(name = "outputResource")
-public class OutputResourceDescriptor {
+public class OutputResourceDescriptor implements DeepCloneable{
 
     private String contentType;
     private String fileName;
     private Boolean outputFinal;
+    private String pages;
+    private byte[] data;
+
+    public OutputResourceDescriptor() {
+    }
+
+    public OutputResourceDescriptor(OutputResourceDescriptor other) {
+        this.contentType = other.contentType;
+        this.fileName = other.fileName;
+        this.outputFinal = other.outputFinal;
+        this.pages = other.pages;
+        if (other.data != null) {
+            this.data = new byte[other.data.length];
+            for (int i=0; i < other.data.length; i++) {
+                this.data[i] = other.data[i];
+            }
+        }
+    }
 
     public String getContentType() {
         return contentType;
     }
 
-    public void setContentType(String contentType) {
+    public OutputResourceDescriptor setContentType(String contentType) {
         this.contentType = contentType;
+        return this;
     }
 
     public String getFileName() {
         return fileName;
     }
 
-    public void setFileName(String fileName) {
+    public OutputResourceDescriptor setFileName(String fileName) {
         this.fileName = fileName;
+        return this;
     }
 
     public Boolean getOutputFinal() {
         return outputFinal;
     }
 
-    public void setOutputFinal(Boolean outputFinal) {
+    public OutputResourceDescriptor setOutputFinal(Boolean outputFinal) {
         this.outputFinal = outputFinal;
+        return this;
+    }
+
+    public String getPages() {
+        return pages;
+    }
+
+    public OutputResourceDescriptor setPages(String pages) {
+        this.pages = pages;
+        return this;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public OutputResourceDescriptor setData(byte[] data) {
+        this.data = data;
+        return this;
     }
 
     @Override
@@ -64,8 +106,8 @@ public class OutputResourceDescriptor {
         if (contentType != null ? !contentType.equals(that.contentType) : that.contentType != null) return false;
         if (fileName != null ? !fileName.equals(that.fileName) : that.fileName != null) return false;
         if (outputFinal != null ? !outputFinal.equals(that.outputFinal) : that.outputFinal != null) return false;
-
-        return true;
+        if (pages != null ? !pages.equals(that.pages) : that.pages != null) return false;
+        return Arrays.equals(data, that.data);
     }
 
     @Override
@@ -73,6 +115,8 @@ public class OutputResourceDescriptor {
         int result = contentType != null ? contentType.hashCode() : 0;
         result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
         result = 31 * result + (outputFinal != null ? outputFinal.hashCode() : 0);
+        result = 31 * result + (pages != null ? pages.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(data);
         return result;
     }
 
@@ -82,6 +126,13 @@ public class OutputResourceDescriptor {
                 "contentType='" + contentType + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", outputFinal=" + outputFinal +
+                ", pages='" + pages + '\'' +
+                ", data=" + Arrays.toString(data) +
                 '}';
+    }
+
+    @Override
+    public OutputResourceDescriptor deepClone() {
+        return new OutputResourceDescriptor(this);
     }
 }
