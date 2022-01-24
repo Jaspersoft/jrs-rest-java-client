@@ -115,7 +115,14 @@ public enum ResourceSearchParameter {
      *
      * Type/Value: String
      */
-    RESOURCE_URI("resourceUri")
+    RESOURCE_URI("resourceUri"),
+    
+    
+    /**
+     * This should exclude any folder from the search result.
+     * Type/Value: String
+     */
+    EXCLUDE_FOLDER("excludeFolder")
 
     ;
 
