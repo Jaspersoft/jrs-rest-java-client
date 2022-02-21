@@ -214,6 +214,7 @@
                     <excludes>
                         <exclude>**/IT.java</exclude>
                     </excludes>
+                	<forkCount>1.5C</forkCount>
                 </configuration>
             </plugin>
 
