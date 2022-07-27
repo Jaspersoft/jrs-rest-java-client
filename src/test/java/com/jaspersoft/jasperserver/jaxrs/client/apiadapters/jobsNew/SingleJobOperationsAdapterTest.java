@@ -25,8 +25,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -109,7 +109,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         OperationResult<ClientReportJob> retrieved = adapter.getJob();
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientReportJob.class), eq(new String[]{"jobs", expectedJobId}));
         verify(jobRequestMock, times(1)).get();
         verify(jobRequestMock, times(1)).setAccept("application/job+xml");
@@ -134,7 +134,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         OperationResult<ClientReportJob> retrieved = adapter.getJob();
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientReportJob.class), eq(new String[]{"jobs", expectedJobId}));
         verify(jobRequestMock, times(1)).get();
         verify(jobRequestMock, times(1)).setAccept("application/job+json");
@@ -157,7 +157,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         OperationResult<ClientJobState> retrieved = adapter.jobState();
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientJobState.class),
                 eq(new String[]{"jobs", expectedJobId, "state"}));
         verify(jobStateJerseyRequestMock, times(1)).get();
@@ -181,7 +181,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         OperationResult<ClientReportJob> retrieved = adapter.update(jobMock);
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientReportJob.class), eq(new String[]{"jobs", expectedJobId}), any(JobValidationErrorHandler.class));
         verify(jobRequestMock, times(1)).post(jobMock);
         verify(jobRequestMock, times(1)).setContentType("application/job+xml");
@@ -208,7 +208,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         OperationResult<ClientReportJob> retrieved = adapter.update(jobMock);
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientReportJob.class), eq(new String[]{"jobs", expectedJobId}), any(JobValidationErrorHandler.class));
         verify(jobRequestMock, times(1)).post(jobMock);
         verify(jobRequestMock, times(1)).setContentType("application/job+json");
@@ -232,7 +232,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         OperationResult retrieved = adapter.delete();
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"jobs", expectedJobId}));
         verify(objectJerseyRequestMock, times(1)).delete();
         assertSame(retrieved, operationResultMock);
@@ -264,7 +264,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         });
 
         PowerMockito.doReturn(jobOperationResultMock).when(jobRequestMock).post(jobMock);
-        PowerMockito.doReturn(null).when(callback).execute(jobOperationResultMock);
+        PowerMockito.doNothing().when(callback).execute(jobOperationResultMock);
         PowerMockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         PowerMockito.doReturn(JRSVersion.v5_1_0).when(configurationMock).getJrsVersion();
 
@@ -314,7 +314,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         });
 
         PowerMockito.doReturn(jobOperationResultMock).when(jobRequestMock).post(jobMock);
-        PowerMockito.doReturn(null).when(callback).execute(jobOperationResultMock);
+        PowerMockito.doNothing().when(callback).execute(jobOperationResultMock);
         PowerMockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         PowerMockito.doReturn(JRSVersion.v5_6_1).when(configurationMock).getJrsVersion();
 
@@ -364,7 +364,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         });
 
         PowerMockito.doReturn(jobOperationResultMock).when(jobRequestMock).get();
-        PowerMockito.doReturn(null).when(callback).execute(jobOperationResultMock);
+        PowerMockito.doNothing().when(callback).execute(jobOperationResultMock);
         PowerMockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         PowerMockito.doReturn(JRSVersion.v5_6_1).when(configurationMock).getJrsVersion();
         PowerMockito.doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
@@ -415,7 +415,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         });
 
         PowerMockito.doReturn(jobOperationResultMock).when(jobRequestMock).get();
-        PowerMockito.doReturn(null).when(callback).execute(jobOperationResultMock);
+        PowerMockito.doNothing().when(callback).execute(jobOperationResultMock);
         PowerMockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
         PowerMockito.doReturn(JRSVersion.v4_7_0).when(configurationMock).getJrsVersion();
 
@@ -465,7 +465,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         });
 
         PowerMockito.doReturn(operationResultMock).when(objectJerseyRequestMock).delete();
-        PowerMockito.doReturn(null).when(callback).execute(operationResultMock);
+        PowerMockito.doNothing().when(callback).execute(operationResultMock);
 
         // When
         RequestExecution retrieved = adapterSpy.asyncDelete(callback);
@@ -508,7 +508,7 @@ public class SingleJobOperationsAdapterTest extends PowerMockTestCase {
         });
 
         PowerMockito.doReturn(jobStateOperationResultMock).when(jobStateJerseyRequestMock).get();
-        PowerMockito.doReturn(null).when(callback).execute(jobStateOperationResultMock);
+        PowerMockito.doNothing().when(callback).execute(jobStateOperationResultMock);
 
         // When
         RequestExecution retrieved = adapterSpy.asyncJobState(callback);

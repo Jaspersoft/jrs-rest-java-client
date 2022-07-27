@@ -21,14 +21,26 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.providers;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
-import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
@@ -249,6 +261,51 @@ import java.lang.reflect.Type;
         "application/adhoc.multiLevelQuery+json"
 })
 public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
+    private static volatile JsonMapper mapper;
+
+    public CustomRepresentationTypeProvider() {
+        super();
+        setMapper(getJsonMapper());
+    }
+
+    private JsonMapper getJsonMapper() {
+        if (mapper == null) {
+            synchronized (JacksonJaxbJsonProvider.class) {
+                if (mapper == null) {
+                    mapper = JsonMapper
+                            .builder()
+                            // Prevent exceptions from being thrown for unknown properties
+                            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                            // Use XML wrapper name as JSON property name
+                            .configure(MapperFeature.USE_WRAPPER_NAME_AS_PROPERTY_NAME, true)
+                            .configure(JsonParser.Feature.STRICT_DUPLICATE_DETECTION, true)
+                            .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true)
+                            .build();
+                    // Serialize dates using ISO8601 format
+                    // Jackson uses timestamps by default, so use StdDateFormat to get ISO8601
+                    mapper.setDateFormat(new StdDateFormat());
+                    // Deserialize dates using ISO8601 format
+                    mapper.getDeserializationConfig().with(new StdDateFormat());
+                    // ignore fields with null values
+                    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                    mapper.setDefaultPropertyInclusion(
+                            JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS));
+                    mapper.addHandler(new DeserializationProblemHandler() {
+                        @Override
+                        public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser jp,
+                                                             JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName) {
+                            return true;
+                        }
+                    });
+                    AnnotationIntrospector primary = new JaxbAnnotationIntrospector(mapper.getTypeFactory());
+                    AnnotationIntrospector secondary = new JacksonAnnotationIntrospector();
+                    AnnotationIntrospector pair = AnnotationIntrospector.pair(primary, secondary);
+                    mapper.setAnnotationIntrospector(pair);
+                }
+            }
+        }
+        return mapper;
+    }
 
     @Override
     public boolean isReadable(Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType) {

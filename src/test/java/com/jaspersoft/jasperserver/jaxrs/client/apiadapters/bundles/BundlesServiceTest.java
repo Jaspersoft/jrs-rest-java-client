@@ -11,17 +11,17 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import org.codehaus.jettison.json.JSONObject;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -73,7 +73,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock).addParam("expanded", "true");
         verify(requestMock).addHeader("Accept-Language", defaultLocale.replace('_', '-'));
         verify(requestMock).get();
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, Map<String, String>>>() {
         }), eq(new String[]{"bundles"}), any(DefaultErrorHandler.class));
         Locale locale = (Locale) Whitebox.getInternalState(service, "locale");
@@ -99,7 +99,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock).addParam("expanded", "true");
         verify(requestMock).addHeader("Accept-Language", "de");
         verify(requestMock).get();
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, Map<String, String>>>() {
         }), eq(new String[]{"bundles"}), any(DefaultErrorHandler.class));
         Locale locale = (Locale) Whitebox.getInternalState(service, "locale");
@@ -125,7 +125,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock).addParam("expanded", "true");
         verify(requestMock).addHeader("Accept-Language", "de");
         verify(requestMock).get();
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, Map<String, String>>>() {
         }), eq(new String[]{"bundles"}), any(DefaultErrorHandler.class));
         Locale locale = (Locale) Whitebox.getInternalState(service, "locale");
@@ -149,7 +149,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock,never()).addParam("expanded", "true");
         verify(requestMock).addHeader("Accept-Language", "de");
         verify(requestMock).get();
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, String>>() {
         }), eq(new String[]{"bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
     }
@@ -171,7 +171,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock,never()).addParam("expanded", "true");
         verify(requestMock).addHeader("Accept-Language", "en-US");
         verify(requestMock).get();
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),  eq(new GenericType<Map<String, String>>() {
         }), eq(new String[]{"bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
     }
@@ -195,7 +195,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock,never()).addParam("expanded", "true");
         verify(requestMock).addHeader("Accept-Language", Locale.getDefault().toString().replace('_', '-'));
         verify(requestMock).get();
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, String>>() {
         }), eq(new String[]{"bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
     }
@@ -217,7 +217,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
         verify(requestMock,never()).addParam("expanded", "true");
         verify(requestMock, never()).addHeader("Accept-Language", Locale.getDefault().toString().replace('_', '-'));
         verify(requestMock).get();
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(new GenericType<Map<String, String>>() {
         }), eq(new String[]{"bundles", "jasperserver_messages"}), any(DefaultErrorHandler.class));
     }
@@ -260,7 +260,7 @@ public class BundlesServiceTest extends PowerMockTestCase {
     }
 
     @AfterMethod
-    public void afetr() {
+    public void after() {
         reset(sessionStorageMock, requestMock, operationResultMock);
     }
 }

@@ -64,11 +64,6 @@ public class DomainTopicOperationProcessorDecorator {
         this.domainTopic = domainTopic;
     }
 
-    @Deprecated
-    public OperationResult<ClientDomainTopic> createInFolder(String path) {
-        return processor.create(multipart, new MediaType("application", "repository.domainTopic+json"), path, params);
-    }
-
     public DomainTopicOperationProcessorDecorator inFolder(String parentFolder) {
         this.path = parentFolder;
         return this;

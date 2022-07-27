@@ -18,15 +18,16 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.internal.util.reflection.Whitebox.getInternalState;
+import static org.powermock.reflect.Whitebox.getInternalState;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
@@ -110,7 +111,7 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
 
         // Then
         assertNotNull(retrieved);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientTenant.class), eq(new String[]{"organizations", "myOrg"}), any(DefaultErrorHandler.class));
         verify(requestMock, times(1)).put(clientTenantMock);
     }
@@ -189,7 +190,7 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
         }});
 
 
-        doReturn(null).when(callback).execute(resultMock);
+        doNothing().when(callback).execute(resultMock);
 
         // When
         RequestExecution retrieved = adapter.asyncGet(callback);
@@ -231,7 +232,7 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
             }
         });
 
-        doReturn(null).when(callback).execute(resultMock);
+        doNothing().when(callback).execute(resultMock);
 
         // When
         RequestExecution retrieved = adapter.asyncDelete(callback);
@@ -268,7 +269,7 @@ public class SingleOrganizationAdapterTest extends PowerMockTestCase {
 
         doReturn(requestMock).when(adapter, "buildRequest");
         doReturn(resultMock).when(requestMock).put(clientTenantMock);
-        doReturn(null).when(callback).execute(resultMock);
+        doNothing().when(callback).execute(resultMock);
 
         // When
         RequestExecution retrieved = adapter.asyncCreateOrUpdate(clientTenantMock, callback);

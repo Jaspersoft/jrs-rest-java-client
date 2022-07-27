@@ -24,21 +24,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users;
 public enum UsersParameter {
 
     /**
-     * max quantity of results
-     * @deprecated  Use common approach instead.
-     */
-    @Deprecated
-    MAX_RECORDS("maxRecords"),
-
-    /**
-     * Allows to search roles, may work in conjunction with any
-     * other param.
-     * @deprecated  Use common approach instead.
-     */
-    @Deprecated
-    SEARCH("search"),
-
-    /**
      *  If <b>hasAllRequiredRoles</b> is true then users should contain all
      *  <b>requiredRole</b> specified in query ( think as AND operation)
      *

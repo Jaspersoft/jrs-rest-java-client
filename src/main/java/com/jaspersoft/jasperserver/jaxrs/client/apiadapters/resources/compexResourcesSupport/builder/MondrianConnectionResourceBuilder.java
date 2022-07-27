@@ -39,25 +39,6 @@ public class MondrianConnectionResourceBuilder extends MondrianConnectionResourc
         super(storage, entity);
     }
 
-    @Deprecated
-    public MondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, ClientFile schemaRef) {
-        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
-        super.connection.setSchema(schemaRef);
-        return this;
-    }
-
-    @Deprecated
-    public MondrianConnectionResourceBuilder withMondrianSchema(InputStream schema) {
-        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
-        return this;
-    }
-
-    @Deprecated
-    public MondrianConnectionResourceBuilder withUri(String uri) {
-        super.connection.setUri(uri);
-        return this;
-    }
-
     public MondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, String label) {
         StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("schema", schema, label, new MediaType("application", "olapMondrianSchema+xml"));
         super.multipart.bodyPart(streamDataBodyPart);

@@ -19,8 +19,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.anyMap;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -87,7 +87,7 @@ public class ReportOptionsAdapterTest extends PowerMockTestCase {
         OperationResult<ReportOptionsSummaryList> result = adapter.get();
         //then
         assertSame(result, resultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(sessionStorageMock,
                 ReportOptionsSummaryList.class,
                 new String[]{REPORT_SERVICE_URI, REPORT_UNIT_URI, OPTIONS_SERVICE_URI});
@@ -107,7 +107,7 @@ public class ReportOptionsAdapterTest extends PowerMockTestCase {
         OperationResult<ReportOptionsSummary> result = adapter.create();
         //then
         assertSame(result, resultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(sessionStorageMock,
                 ReportOptionsSummary.class,
                 new String[]{REPORT_SERVICE_URI, REPORT_UNIT_URI, OPTIONS_SERVICE_URI});
@@ -129,7 +129,7 @@ public class ReportOptionsAdapterTest extends PowerMockTestCase {
         OperationResult<ReportOptionsSummary> result = adapter.label("label").overwrite(Boolean.TRUE).create();
         //then
         assertSame(result, resultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(sessionStorageMock,
                 ReportOptionsSummary.class,
                 new String[]{REPORT_SERVICE_URI, REPORT_UNIT_URI, OPTIONS_SERVICE_URI});
@@ -152,7 +152,7 @@ public class ReportOptionsAdapterTest extends PowerMockTestCase {
         OperationResult<ReportOptionsSummary> result = adapter.update(options);
         //then
         assertSame(result, resultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(sessionStorageMock,
                 ReportOptionsSummary.class,
                 new String[]{REPORT_SERVICE_URI, REPORT_UNIT_URI, OPTIONS_SERVICE_URI, OPTIONS_ID});
@@ -172,7 +172,7 @@ public class ReportOptionsAdapterTest extends PowerMockTestCase {
         OperationResult<ReportOptionsSummary> result = adapter.update(parameterList);
         //then
         assertSame(result, resultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(sessionStorageMock,
                 ReportOptionsSummary.class,
                 new String[]{REPORT_SERVICE_URI, REPORT_UNIT_URI, OPTIONS_SERVICE_URI, OPTIONS_ID});
@@ -191,7 +191,7 @@ public class ReportOptionsAdapterTest extends PowerMockTestCase {
         OperationResult<ReportOptionsSummary> result = adapter.delete();
         //then
         assertSame(result, resultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(sessionStorageMock,
                 Object.class,
                 new String[]{REPORT_SERVICE_URI, REPORT_UNIT_URI, OPTIONS_SERVICE_URI, OPTIONS_ID});

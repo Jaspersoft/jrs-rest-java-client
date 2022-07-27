@@ -63,12 +63,6 @@ public class SecureMondrianConnectionResourceOperationProcessorDecorator {
         this.connection = connection;
     }
 
-    @Deprecated
-    public OperationResult<ClientSecureMondrianConnection> createInFolder(String path) {
-        return processor.create(multipart, new MediaType("application", "repository.secureMondrianConnection+xml"), path, params);
-    }
-
-
     public SecureMondrianConnectionResourceOperationProcessorDecorator inFolder(String parentFolder) {
         this.path = parentFolder;
         return this;

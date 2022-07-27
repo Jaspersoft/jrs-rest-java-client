@@ -1,6 +1,8 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
+
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -14,22 +16,24 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
-import org.glassfish.jersey.filter.LoggingFilter;
+
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider;
+import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -44,13 +48,13 @@ import static org.powermock.reflect.internal.WhiteboxImpl.getInternalState;
 import static org.powermock.reflect.internal.WhiteboxImpl.setInternalState;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage}
  */
 @PrepareForTest({SessionStorage.class,
         SSLContext.class,
-        EncryptionUtils.class,
         ClientBuilder.class,
         Client.class,
         WebTarget.class})
@@ -116,6 +120,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(null).when(configurationMock).getReadTimeout();
         doReturn(targetMock).when(clientMock).target(anyString());
         doReturn(targetMock).when(targetMock).register(JacksonFeature.class);
+        doReturn(targetMock).when(targetMock).register(JaxbAnnotationModule.class);
         doReturn(targetMock).when(targetMock).register(MultiPartFeature.class);
         doReturn(targetMock).when(targetMock).register(any(JacksonJsonProvider.class));
         doReturn(false).when(configurationMock).getLogHttp();
@@ -132,9 +137,10 @@ public class SessionStorageTest extends PowerMockTestCase {
         verify(configurationMock).getReadTimeout();
         verify(clientMock).target("http://54.83.98.156/jasperserver-pro");
         verify(targetMock).register(JacksonFeature.class);
+        verify(targetMock).register(JaxbAnnotationModule.class);
         verify(targetMock, times(1)).register(isA(JacksonJsonProvider.class));
         verify(configurationMock).getLogHttp();
-        verify(targetMock, never()).register(LoggingFilter.class);
+        verify(targetMock, never()).register(LoggingFeature.class);
     }
 
     @Test
@@ -151,10 +157,11 @@ public class SessionStorageTest extends PowerMockTestCase {
         doReturn(clientMock).when(clientMock).property("jersey.config.client.readTimeout", 200);
         doReturn(targetMock).when(clientMock).target(anyString());
         doReturn(targetMock).when(targetMock).register(JacksonFeature.class);
+        doReturn(targetMock).when(targetMock).register(JaxbAnnotationModule.class);
         doReturn(targetMock).when(targetMock).register(MultiPartFeature.class);
         doReturn(targetMock).when(targetMock).register(any(JacksonJsonProvider.class));
         doReturn(true).when(configurationMock).getLogHttp();
-        doReturn(targetMock).when(targetMock).register(any(LoggingFilter.class));
+        doReturn(targetMock).when(targetMock).register(any(LoggingFeature.class));
 
         // When
         SessionStorage sessionStorage = new SessionStorage(configurationMock, credentialsMock, null, null);
@@ -170,9 +177,10 @@ public class SessionStorageTest extends PowerMockTestCase {
         verify(clientMock).property("jersey.config.client.readTimeout", 200);
         verify(clientMock).target("http://54.83.98.156/jasperserver-pro");
         verify(targetMock).register(JacksonFeature.class);
+        verify(targetMock).register(JaxbAnnotationModule.class);
         verify(targetMock, times(1)).register(isA(JacksonJsonProvider.class));
         verify(configurationMock).getLogHttp();
-        verify(targetMock).register(isA(LoggingFilter.class));
+        verify(targetMock).register(isA(LoggingFeature.class));
     }
 
     @Test
@@ -204,11 +212,12 @@ public class SessionStorageTest extends PowerMockTestCase {
         Whitebox.setInternalState(sessionStorage, "sessionId", "sessionId");
         doReturn(targetMock).when(clientMock).target(anyString());
         doReturn(targetMock).when(targetMock).register(JacksonFeature.class);
+        doReturn(targetMock).when(targetMock).register(JaxbAnnotationModule.class);
         doReturn(targetMock).when(targetMock).register(MultiPartFeature.class);
         doReturn(targetMock).when(targetMock).register(any(JacksonJsonProvider.class));
         doReturn(targetMock).when(targetMock).register(any(SessionOutputFilter.class));
         doReturn(true).when(configurationMock).getLogHttp();
-        doReturn(targetMock).when(targetMock).register(any(LoggingFilter.class));
+        doReturn(targetMock).when(targetMock).register(any(LoggingFeature.class));
         when(sessionStorage.getConfiguredClient()).thenReturn(targetMock);
 
         // When
@@ -234,46 +243,7 @@ public class SessionStorageTest extends PowerMockTestCase {
         assertNotNull(sessionStorageSpy);
         assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "configuration"));
         assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
-        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
-    }
-
-    /**
-     * @deprecated  test for derprecared constructor*/
-    @Test
-    public void should_create_new_instance_session_storage_by_user_name_password() throws Exception {
-
-        // Given
-        suppress(method(SessionStorage.class, "init"));
-        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
-
-        // When
-        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock);
-
-        // Then
-        assertNotNull(sessionStorageSpy);
-        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "configuration"));
-        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
-        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
-    }
-
-    /**
-     * @deprecated  test for derprecared constructor*/
-    @Test
-    public void should_create_new_instance_session_storage_by_user_name_password_time_zone() throws Exception {
-
-        // Given
-        suppress(method(SessionStorage.class, "init"));
-        doReturn("http").when(configurationMock).getJasperReportsServerUrl();
-
-        // When
-        SessionStorage sessionStorageSpy = new SessionStorage(configurationMock, credentialsMock, TimeZone.getTimeZone("America/Los_Angeles"));
-
-        // Then
-        assertNotNull(sessionStorageSpy);
-        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "configuration"));
-        assertNotNull(Whitebox.getInternalState(sessionStorageSpy, "credentials"));
-        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "sessionId"), null);
-        assertEquals(Whitebox.getInternalState(sessionStorageSpy, "userTimeZone"), TimeZone.getTimeZone("America/Los_Angeles"));
+        assertNull(Whitebox.getInternalState(sessionStorageSpy, "sessionId"));
     }
 
     @Test

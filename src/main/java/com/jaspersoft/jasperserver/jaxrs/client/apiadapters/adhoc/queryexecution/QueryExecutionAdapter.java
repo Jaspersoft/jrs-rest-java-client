@@ -115,16 +115,6 @@ public class QueryExecutionAdapter extends AbstractAdapter {
         return request.get();
     }
 
-    /**
-     * @deprecated Replaced by {@link QueryExecutionAdapter#delete()}
-     */
-    @Deprecated
-    public <T> OperationResult<T> deleteExecution(String executionId) {
-        uri.add(executionId);
-        JerseyRequest<T> request = buildRequest(responseClass);
-        return request.delete();
-    }
-
     public OperationResult delete() {
         JerseyRequest request = buildRequest(Object.class);
         return request.delete();

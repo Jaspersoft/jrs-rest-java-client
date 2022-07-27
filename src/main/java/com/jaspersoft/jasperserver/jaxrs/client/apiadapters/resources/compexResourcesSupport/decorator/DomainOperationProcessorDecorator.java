@@ -72,12 +72,6 @@ public class DomainOperationProcessorDecorator {
         return processor.get(domain.getUri());
     }
 
-    @Deprecated
-    public OperationResult<ClientDomain> createInFolder(String path) {
-        return processor.create(multipart, new MediaType("application", "repository.domain+json"), path, params);
-    }
-
-
     public DomainOperationProcessorDecorator inFolder(String parentFolder) {
         this.path = parentFolder;
         return this;

@@ -6,25 +6,25 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityO
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
-import javax.ws.rs.client.Entity;
+import org.glassfish.jersey.client.JerseyWebTarget;
+import org.glassfish.jersey.jackson.JacksonFeature;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.testng.PowerMockTestCase;
+import org.powermock.reflect.Whitebox;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import org.glassfish.jersey.client.JerseyWebTarget;
-import org.glassfish.jersey.jackson.JacksonFeature;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -97,7 +97,7 @@ public class JerseyRequestTest extends PowerMockTestCase {
         JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath); // invocation ot outer print
 
         // Then
-        PowerMockito.verifyStatic(times(1));
+        PowerMockito.verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath, null);
     }
 
@@ -150,7 +150,7 @@ public class JerseyRequestTest extends PowerMockTestCase {
         doReturn(Boolean.TRUE).when(clientConfiguration).getRestrictedHttpMethods();
         JerseyRequest<Class> jerseyRequestSpy = spy(new JerseyRequest<Class>(sessionStorage, Class.class));
         doReturn(builder).when(jerseyRequestSpy, "buildRequest");
-        Mockito.doReturn(responseMock).when(builder).post((Entity<?>) anyObject());
+        Mockito.doReturn(responseMock).when(builder).post(any());
 
         // When
         OperationResult<Class> retrieved = jerseyRequestSpy.put(dummyEntity);
@@ -158,7 +158,7 @@ public class JerseyRequestTest extends PowerMockTestCase {
         // Then
 //        assertEquals(retrieved, operationResult);
         Mockito.verify(builder).header("X-HTTP-Method-Override", "PUT");
-        Mockito.verify(builder).post((Entity<?>) anyObject());
+        Mockito.verify(builder).post(any());
         verifyPrivate(jerseyRequestSpy).invoke("buildRequest");
         verifyPrivate(jerseyRequestSpy).invoke("executeRequest", PUT, builder, dummyEntity);
     }

@@ -29,8 +29,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.WithEntityOperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.ReportJobCalendar;
+
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -46,7 +45,7 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
     public SingleCalendarOperationsAdapter(SessionStorage sessionStorage, String calendarName) {
         super(sessionStorage);
         this.calendarName = calendarName;
-        params = new MultivaluedHashMap<String, String>();
+        params = new MultivaluedHashMap<>();
     }
 
     public SingleCalendarOperationsAdapter parameter(CalendarParameter parameter, String value) {
@@ -105,127 +104,5 @@ public class SingleCalendarOperationsAdapter extends AbstractAdapter {
         ThreadPoolUtil.runAsynchronously(task);
         return task;
     }
-
-    /**
-     * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter#getCalendar()} .
-     */
-    public OperationResult<com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar> get() {
-        OperationResult<ReportJobCalendar> result = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{JOBS, CALENDARS, calendarName}).get();
-        return convertToLocalCalendarType(result);
-    }
-
-    /**
-     * @deprecated Replaced by {@link SingleCalendarOperationsAdapter#asyncGetCalendar(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)} .
-     */
-    public <R> RequestExecution asyncGet(final Callback<OperationResult<com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar>, R> callback) {
-        final JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{JOBS, CALENDARS, calendarName});
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(convertToLocalCalendarType(request.get()));
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-
-    /**
-     * @deprecated Replaced by {@link SingleCalendarOperationsAdapter#createNewCalendar(com.jaspersoft.jasperserver.dto.job.ClientJobCalendar)} .
-     */
-    public OperationResult<ReportJobCalendar> createNew(com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar calendarDescriptor) {
-        JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{JOBS, CALENDARS, calendarName});
-        request.addParams(params);
-        return request.put(calendarDescriptor);
-    }
-    /**
-     * @deprecated Replaced by {@link SingleCalendarOperationsAdapter#asyncCreateNewCalendar(com.jaspersoft.jasperserver.dto.job.ClientJobCalendar, com.jaspersoft.jasperserver.jaxrs.client.core.Callback)} .
-     */
-    public <R> RequestExecution asyncCreateNew(final com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar calendarDescriptor, final Callback<OperationResult<ReportJobCalendar>, R> callback) {
-        final JerseyRequest<ReportJobCalendar> request = buildRequest(sessionStorage, ReportJobCalendar.class, new String[]{JOBS, CALENDARS, calendarName});
-        request.addParams(params);
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.put(calendarDescriptor));
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-    /**
-     * @deprecated Use server DTO.
-     */
-    private void setCommonCalendarFields(com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar target, ReportJobCalendar src) {
-        target.setCalendarType(CalendarType.valueOf(src.getCalendarType()));
-        target.setDescription(src.getDescription());
-        target.setTimeZone(src.getTimeZone());
-    }
-    /**
-     * @deprecated Use server DTO.
-     */
-    private OperationResult<com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar> convertToLocalCalendarType(OperationResult<ReportJobCalendar> source) {
-            ReportJobCalendar reportJobCalendar = source.getEntity();
-            CalendarType calendarType = CalendarType.valueOf(reportJobCalendar.getCalendarType());
-            com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar localCalendar = null;
-            switch (calendarType) {
-                case annual: {
-                    com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.AnnualCalendar annualCalendar = new com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.AnnualCalendar();
-                    setCommonCalendarFields(annualCalendar, reportJobCalendar);
-                    annualCalendar.setDataSorted(reportJobCalendar.isDataSorted());
-                    annualCalendar.setExcludeDays(reportJobCalendar.getExcludeDays());
-                    localCalendar = annualCalendar;
-                    break;
-                }
-                case base: {
-                    com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.BaseCalendar baseCalendar = new com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.BaseCalendar();
-                    setCommonCalendarFields(baseCalendar, reportJobCalendar);
-                    localCalendar = baseCalendar;
-                    break;
-                }
-                case cron: {
-                    com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.CronCalendar cronCalendar = new com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.CronCalendar();
-                    setCommonCalendarFields(cronCalendar, reportJobCalendar);
-                    cronCalendar.setCronExpression(reportJobCalendar.getCronExpression());
-                    localCalendar = cronCalendar;
-                    break;
-                }
-                case daily: {
-                    com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.DailyCalendar dailyCalendar = new com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.DailyCalendar();
-                    setCommonCalendarFields(dailyCalendar, reportJobCalendar);
-                    dailyCalendar.setInvertTimeRange(reportJobCalendar.isInvertTimeRange());
-                    dailyCalendar.setRangeEndingCalendar(reportJobCalendar.getRangeEndingCalendar());
-                    dailyCalendar.setRangeStartingCalendar(reportJobCalendar.getRangeStartingCalendar());
-                    localCalendar = dailyCalendar;
-                    break;
-                }
-                case holiday: {
-                    com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.HolidayCalendar holidayCalendar = new com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.HolidayCalendar();
-                    setCommonCalendarFields(holidayCalendar, reportJobCalendar);
-                    holidayCalendar.setDataSorted(reportJobCalendar.isDataSorted());
-                    holidayCalendar.setExcludeDays(reportJobCalendar.getExcludeDays());
-                    localCalendar = holidayCalendar;
-                    break;
-                }
-                case monthly: {
-                    com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.MonthlyCalendar monthlyCalendar = new com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.MonthlyCalendar();
-                    setCommonCalendarFields(monthlyCalendar, reportJobCalendar);
-                    monthlyCalendar.setExcludeDaysFlags(reportJobCalendar.getExcludeDaysFlags());
-                    localCalendar = monthlyCalendar;
-                    break;
-                }
-                case weekly: {
-                    com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.WeeklyCalendar weeklyCalendar = new com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.WeeklyCalendar();
-                    setCommonCalendarFields(weeklyCalendar, reportJobCalendar);
-                    weeklyCalendar.setExcludeDaysFlags(reportJobCalendar.getExcludeDaysFlags());
-                    localCalendar = weeklyCalendar;
-                    break;
-                }
-            }
-            final com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar finalLocalCalendar = localCalendar;
-            return new WithEntityOperationResult<com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar>(source.getResponse(), com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendars.Calendar.class) {{
-                this.entity = finalLocalCalendar;
-            }};
-        }
-
 
 }

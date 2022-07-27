@@ -7,32 +7,31 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizati
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery.DataDiscoveryService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.ConnectionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.diagnostic.DiagnosticService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.DomainService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exportservice.ExportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionsService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.ResourcesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails.ThumbnailsService;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.RequestedRepresentationNotAvailableForResourceException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Invocation.Builder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.StatusType;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.anyString;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.StatusType;
+
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -227,7 +226,8 @@ public class SessionTest {
     @Test
     public void should_return_not_null_ImportService_instance() {
         // When
-        Session sessionSpy = Mockito.spy(new Session(storageMock));;
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        ;
         ImportService retrieved = sessionSpy.importService();
         // Then
         assertNotNull(retrieved);
@@ -275,16 +275,6 @@ public class SessionTest {
     }
 
     @Test
-    public void should_return_not_null_QueryExecutorService_instance() {
-        // When
-        Session sessionSpy = Mockito.spy(new Session(storageMock));
-        QueryExecutorService retrieved = sessionSpy.queryExecutorService();
-        // Then
-        assertNotNull(retrieved);
-        verify(sessionSpy, times(1)).getService(QueryExecutorService.class);
-    }
-
-    @Test
     public void should_return_not_null_ThumbnailsService_instance() {
         // When
         Session sessionSpy = Mockito.spy(new Session(storageMock));
@@ -326,16 +316,6 @@ public class SessionTest {
     }
 
     @Test
-    public void should_return_not_null_ConnectionsService_instance() {
-        // When
-        Session sessionSpy = Mockito.spy(new Session(storageMock));
-        ConnectionsService service = sessionSpy.connectionsService();
-        // Then
-        assertNotNull(service);
-        verify(sessionSpy, times(1)).getService(ConnectionsService.class);
-    }
-
-    @Test
     public void should_return_not_null_DataDiscoveryService_instance() {
         // When
         Session sessionSpy = Mockito.spy(new Session(storageMock));
@@ -349,7 +329,7 @@ public class SessionTest {
     public void should_return_not_null_QueryExecutionService_instance() {
         // When
         Session sessionSpy = Mockito.spy(new Session(storageMock));
-        QueryExecutionService  service = sessionSpy.queryExecutionService();
+        QueryExecutionService service = sessionSpy.queryExecutionService();
         // Then
         assertNotNull(service);
         verify(sessionSpy, times(1)).getService(QueryExecutionService.class);

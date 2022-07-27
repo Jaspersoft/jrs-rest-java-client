@@ -18,8 +18,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.easymock.EasyMock.mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -162,6 +163,7 @@ public class DomainContextOperationResultTest extends PowerMockTestCase {
     public void should_return_proper_operationResult_when_get_metadata_for_expired_context() throws Exception {
         //given
         doReturn("/test_uuId").when(responseMock).getHeaderString("Location");
+        doReturn(mock(ClientResourceLookup.class)).when(responseMock).readEntity(ClientResourceLookup.class);
         domainContextOperationResult = spy(new DomainContextOperationResult<ClientResourceLookup>(responseMock, ClientResourceLookup.class, contextServiceMock));
         doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString(),
                 any(Class.class), anyString());
@@ -201,6 +203,7 @@ public class DomainContextOperationResultTest extends PowerMockTestCase {
     public void should_return_proper_operationResult_when_execute_query_for_expired_context() throws Exception {
         //given
         doReturn("/test_uuId").when(responseMock).getHeaderString("Location");
+        doReturn(mock(ClientResourceLookup.class)).when(responseMock).readEntity(ClientResourceLookup.class);
         domainContextOperationResult = new DomainContextOperationResult<>(responseMock, ClientResourceLookup.class, contextServiceMock);
         doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString());
         doThrow(ResourceNotFoundException.class).when(singleContextAdapterMock).executeQuery(any(ClientMultiLevelQuery.class));
@@ -210,7 +213,7 @@ public class DomainContextOperationResultTest extends PowerMockTestCase {
         doReturn(responseMock).when(resourceLookupOperationResultMock).getResponse();
 
         //when
-        OperationResult<ClientMultiLevelQueryResultData> queryResultSet = domainContextOperationResult.executeQuery(new ClientMultiLevelQuery());
+        domainContextOperationResult.executeQuery(new ClientMultiLevelQuery());
 
         // then
         // an exception should be thrown

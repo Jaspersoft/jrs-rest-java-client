@@ -99,67 +99,6 @@ public class ExportRequestAdapter extends AbstractAdapter {
         return task;
     }
 
-    /**
-     * @deprecated Replaced by {@link ExportRequestAdapter#fetch(long)}
-     */
-    @Deprecated
-    public OperationResult<InputStream> fetch() {
-
-        return fetch(500);
-    }
-
-    @Deprecated
-    public OperationResult<InputStream> fetch(long interval) {
-        State state;
-        while (!"finished".equals((state = state().getEntity()).getPhase())) {
-            if ("failed".equals(state.getPhase())) {
-                if (state.getError() != null) {
-                    throw new ExportFailedException(state.getError().getMessage(), Arrays.asList(state.getError()));
-                } else {
-                    throw new ExportFailedException(state.getMessage());
-                }
-            }
-            try {
-                Thread.sleep(interval);
-            } catch (InterruptedException ignored) {
-                // NOP
-            }
-        }
-        JerseyRequest<InputStream> request = buildRequest(sessionStorage, InputStream.class, new String[]{SERVICE_URI, taskId, EXPORT_FILE});//eeeee
-        request.setAccept("application/zip");
-        return request.get();
-    }
-
-    @Deprecated
-    public <R> RequestExecution asyncFetch(final Callback<OperationResult<InputStream>, R> callback) {
-        final JerseyRequest<InputStream> request = buildRequest(sessionStorage, InputStream.class, new String[]{SERVICE_URI, taskId, EXPORT_FILE});
-        request.setAccept("application/zip");
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                State state;
-                while (!"finished".equals((state = state().getEntity()).getPhase())) {
-                    if ("failed".equals(state.getPhase())) {
-                        if (state.getError() != null) {
-                            throw new ExportFailedException(state.getError().getMessage(), Arrays.asList(state.getError()));
-                        } else {
-                            throw new ExportFailedException(state.getMessage());
-                        }
-                    }
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException ignored) {
-                        // NOP
-                    }
-                }
-                callback.execute(request.get());
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-
-
     public OperationResult<InputStream> fetchToFile(String fileName) {
 
         JerseyRequest<InputStream> request = buildRequest(sessionStorage, InputStream.class, new String[]{SERVICE_URI, taskId, fileName});//eeeee

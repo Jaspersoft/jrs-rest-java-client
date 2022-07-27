@@ -13,7 +13,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.support.membermodification.MemberMatcher.field;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
 /**
@@ -35,13 +34,6 @@ public class ExportServiceTest extends PowerMockTestCase {
     @Test
     public void should_pass_param_to_parent_constructor() {
         assertSame(service.getSessionStorage(), storageMock);
-    }
-
-    @Test
-    public void should_create_a_new_task_object_and_pass_session_into_the_constructor_of_task() {
-        ExportTaskAdapter task = service.newTask();
-        assertNotNull(task);
-        assertSame(task.getSessionStorage(), storageMock);
     }
 
     @Test

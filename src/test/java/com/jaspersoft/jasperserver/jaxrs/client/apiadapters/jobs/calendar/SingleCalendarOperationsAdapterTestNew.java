@@ -14,7 +14,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
@@ -25,8 +25,8 @@ import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -41,12 +41,6 @@ import static org.testng.AssertJUnit.assertNotNull;
 import static org.testng.AssertJUnit.assertSame;
 import static org.testng.AssertJUnit.assertTrue;
 
-//import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendar.Calendar;
-//import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendar.CronCalendar;
-//import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendar.DailyCalendar;
-//import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendar.HolidayCalendar;
-//import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendar.MonthlyCalendar;
-//import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendar.WeeklyCalendar;
 
 /**
  * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.SingleCalendarOperationsAdapter}
@@ -171,7 +165,7 @@ public class SingleCalendarOperationsAdapterTestNew extends PowerMockTestCase {
         OperationResult<ClientJobCalendar> retrieved = adapterSpy.getCalendar();
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientJobCalendar.class),
                 eq(new String[]{"jobs", "calendars", "testCalendarName"}));
         assertSame(retrieved, operationResultMock);
@@ -192,7 +186,7 @@ public class SingleCalendarOperationsAdapterTestNew extends PowerMockTestCase {
         OperationResult retrieved = adapterSpy.delete();
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"jobs", "calendars", "testCalendarName"}));
         assertSame(retrieved, delResultMock);
     }
@@ -213,7 +207,7 @@ public class SingleCalendarOperationsAdapterTestNew extends PowerMockTestCase {
         OperationResult<ClientJobCalendar> retrieved = adapterSpy.createNewCalendar(calendarEntityMock);
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(ClientJobCalendar.class),
                 eq(new String[]{"jobs", "calendars", "testCalendarName"}));
@@ -251,9 +245,8 @@ public class SingleCalendarOperationsAdapterTestNew extends PowerMockTestCase {
             }
         });
 
-        PowerMockito.doReturn(operationResultMock).when(adapterSpy, "convertToLocalCalendarType", operationResultMock);
         PowerMockito.doReturn(operationResultMock).when(requestMock).get();
-        PowerMockito.doReturn(null).when(callback).execute(operationResultMock);
+        PowerMockito.doNothing().when(callback).execute(operationResultMock);
 
         // When
         RequestExecution retrieved = adapterSpy.asyncGetCalendar(callback);
@@ -287,7 +280,7 @@ public class SingleCalendarOperationsAdapterTestNew extends PowerMockTestCase {
         adapterSpy.asyncDelete(resultObjectCallbackMock);
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(
                 eq(sessionStorageMock),
                 eq(Object.class),
@@ -316,7 +309,7 @@ public class SingleCalendarOperationsAdapterTestNew extends PowerMockTestCase {
         adapterSpy.asyncCreateNewCalendar(calendarEntityMock, callbackMock3);
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(
                 eq(sessionStorageMock),
                 eq(ClientJobCalendar.class),

@@ -23,8 +23,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -149,7 +149,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .get();
         //then
         assertSame(ftpConnectionOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(FtpConnection.class)
                 , eq(new String[]{CONTEXTS_URI, TEST_UUID})
@@ -174,7 +174,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .create(new FtpConnection());
         //then
         assertSame(ftpConnectionOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(FtpConnection.class)
                 , eq(new String[]{CONTEXTS_URI})
@@ -200,7 +200,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .update(new FtpConnection());
         //then
         assertSame(ftpConnectionOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(FtpConnection.class)
                 , eq(new String[]{CONTEXTS_URI, TEST_UUID})
@@ -225,7 +225,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .delete();
         //then
         assertSame(operationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(Object.class)
                 , eq(new String[]{CONTEXTS_URI, TEST_UUID})
@@ -249,7 +249,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .get();
         //then
         assertSame(lfsConnectionOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(LfsConnection.class)
                 , eq(new String[]{CONTEXTS_URI, TEST_UUID})
@@ -274,7 +274,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .create(new LfsConnection());
         //then
         assertSame(lfsConnectionOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(LfsConnection.class)
                 , eq(new String[]{CONTEXTS_URI})
@@ -300,7 +300,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .get();
         //then
         assertSame(customDataSourceOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientCustomDataSource.class)
                 , eq(new String[]{CONTEXTS_URI, TEST_UUID})
@@ -326,7 +326,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .create(new ClientCustomDataSource());
         //then
         assertSame(customDataSourceOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientCustomDataSource.class)
                 , eq(new String[]{CONTEXTS_URI})
@@ -352,7 +352,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .get();
         //then
         assertSame(jndiDataSourceOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJndiJdbcDataSource.class)
                 , eq(new String[]{CONTEXTS_URI, TEST_UUID})
@@ -377,7 +377,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .create(new ClientJndiJdbcDataSource());
         //then
         assertSame(jndiDataSourceOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJndiJdbcDataSource.class)
                 , eq(new String[]{CONTEXTS_URI})
@@ -403,7 +403,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .get();
         //then
         assertSame(jdbcDataSourceOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJdbcDataSource.class)
                 , eq(new String[]{CONTEXTS_URI, TEST_UUID})
@@ -428,7 +428,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .create(new ClientJdbcDataSource());
         //then
         assertSame(jdbcDataSourceOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(ClientJdbcDataSource.class)
                 , eq(new String[]{CONTEXTS_URI})
@@ -460,7 +460,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .createAndGetMetadata(new ClientDomain());
         //then
         assertSame(presentationGroupElementOperationResultMock, metadata);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(PresentationGroupElement.class)
                 , eq(new String[]{CONTEXTS_URI})
@@ -499,7 +499,7 @@ public class SingleContextAdapterTest extends PowerMockTestCase {
                 .metadata();
         //then
         assertSame(tableMetadataOperationResultMock, connection);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock)
                 , eq(TableMetadata.class)
                 , eq(new String[]{CONTEXTS_URI, TEST_UUID, "metadata"})

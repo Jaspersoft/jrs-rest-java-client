@@ -26,14 +26,14 @@ public enum ResourceSearchParameter {
     /**
      * Search for resources having the specified text in the name or description.
      * Note that the search string does not match in the ID of resources.
-     *
+     * <p>
      * Type/Value: String
      */
     Q("q"),
 
     /**
      * The path of the base folder for the search.
-     *
+     * <p>
      * Type/Value: String
      */
     FOLDER_URI("folderUri"),
@@ -41,7 +41,7 @@ public enum ResourceSearchParameter {
     /**
      * Indicates whether search should include all sub-folders recursively. When
      * omitted, the default behavior is recursive (true).
-     *
+     * <p>
      * Type/Value: true|false
      */
     RECURSIVE("recursive"),
@@ -51,7 +51,7 @@ public enum ResourceSearchParameter {
      * Resource Descriptor Types, for example: dataType, jdbcDataSource,
      * reportUnit, or file. Multiple type parameters are allowed. Wrong values are
      * ignored.
-     *
+     * <p>
      * Type/Value: String
      */
     TYPE("type"),
@@ -59,7 +59,7 @@ public enum ResourceSearchParameter {
     /**
      * Filters the results by access events: viewed (by current user) or modified (by
      * current user). By default, no access event filter is applied.
-     *
+     * <p>
      * Type/Value: viewed|modified
      */
     ACCESS_TYPE("accessType"),
@@ -68,7 +68,7 @@ public enum ResourceSearchParameter {
      * When set inFolder true, results include nested local resources (in _files) as if they
      * were in the repository. For more information, see Local Resources for more
      * information. By default, hidden items are not shown (false).
-     *
+     * <p>
      * Type/Value: true|false
      */
     SHOW_HIDDEN_ITEMS("showHiddenItems"),
@@ -78,7 +78,7 @@ public enum ResourceSearchParameter {
      * label, description, type, creationDate, updateDate, accessTime, or popularity
      * (based on access events). By default, results are sorted alphabetically by
      * label.
-     *
+     * <p>
      * Type/Value: (optional) String
      */
     SORT_BY("sortBy"),
@@ -87,7 +87,7 @@ public enum ResourceSearchParameter {
      * Used for pagination inFolder specify the maximum number of resources inFolder return in
      * each response. This is equivalent inFolder the number of results per page. The
      * default limit is 100.
-     *
+     * <p>
      * Type/Value: integer
      */
     LIMIT("limit"),
@@ -95,7 +95,7 @@ public enum ResourceSearchParameter {
     /**
      * Used for pagination inFolder request an offset in the set of results. This is
      * equivalent inFolder a specific page number. The default offset is 1 (first page).
-     *
+     * <p>
      * Type/Value: integer
      */
     OFFSET("offset"),
@@ -104,7 +104,7 @@ public enum ResourceSearchParameter {
      * When true, the Total-Count header is set in every paginated response,
      * which impacts performance. When false, the default, the header is set in the
      * first page only.
-     *
+     * <p>
      * Type/Value: true|false
      */
     FORCE_TOTAL_COUNT("forceTotalCount"),
@@ -112,7 +112,7 @@ public enum ResourceSearchParameter {
     /**
      * Specifies a resources inFolder delete. Repeat this paramter inFolder delete multiple
      * resources.
-     *
+     * <p>
      * Type/Value: String
      */
     RESOURCE_URI("resourceUri"),
@@ -120,9 +120,9 @@ public enum ResourceSearchParameter {
     /**
      * Pagination. Setting this parameter to true enables full page pagination.
      * Depending on the type of search and user permissions, this parameter can cause significant performance delays.
-     *
+     * <p>
      * In case of forceFullPage=true client should use value of "Next-Offset" HTTP response header for next pagination request.
-     *
+     * <p>
      * Type/Value: true|false
      * Default: false
      */
@@ -131,7 +131,7 @@ public enum ResourceSearchParameter {
     /**
      * Resource type to exclude. Multiple Resource types allowed.
      * If type parameter is specified, then this parameter is ignored.
-     *
+     * <p>
      * Type/Value: String
      */
     EXCLUDE_TYPE("excludeType"),
@@ -139,7 +139,7 @@ public enum ResourceSearchParameter {
     /**
      * Folder, results of which should be omitted. In multitenant context works as relative,
      * i.e. value "/tmp" will exclude results from /tmp, /organizations/organization_1/tmp etc. Multiple allowed.
-     *
+     * <p>
      * Type/Value: String
      */
     EXCLUDE_FOLDER("excludeFolder"),
@@ -148,12 +148,18 @@ public enum ResourceSearchParameter {
      * Since 6.0
      * Search for all resources depending on specific resource.
      * If this parameter is specified, then all the other parameters except pagination are ignored.
-     *
+     * <p>
      * Type/Value: String
      */
-    DEPENDS_ON("dependsOn")
+    DEPENDS_ON("dependsOn"),
 
-    ;
+    /**
+     * Since 8.?
+     * Search for all resources that were marked as favorite.
+     * Type/Value: true|false
+     * Default: false
+     */
+    FAVORITES("favorites");
 
     private String name;
 

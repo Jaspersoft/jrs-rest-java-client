@@ -24,8 +24,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -133,7 +133,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
         OperationResult<Map> settings = service.settings().group("awsSettings", Map.class);
         //then
         assertSame(settings, mapOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(Map.class),
                 eq(new String[]{"settings", "awsSettings"}),
@@ -153,7 +153,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
         //then
 
         assertSame(settings, awsSettingsOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(AwsSettings.class),
                 eq(new String[]{"settings", "awsSettings"}),
@@ -174,7 +174,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
 
         //then
         assertSame(settings, listOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(List.class),
                 eq(new String[]{"settings", "userTimeZones"}),
@@ -198,7 +198,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
 
         //then
         assertSame(settings, userTimeZonesListOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(new GenericType<List<UserTimeZone>>() {
                 }),
@@ -220,7 +220,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
 
         //then
         assertSame(settings, requestSettingsOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(RequestSettings.class),
                 eq(new String[]{"settings", "request"}),
@@ -242,7 +242,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
 
         //then
         assertSame(settings, dataSourcePatternsSettingsOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(DataSourcePatternsSettings.class),
                 eq(new String[]{"settings", "dataSourcePatterns"}),
@@ -265,7 +265,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
 
         //then
         assertSame(settings, userTimeZonesListOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(new GenericType<List<UserTimeZone>>() {
                 }),
@@ -287,7 +287,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
 
         //then
         assertSame(settings, awsSettingsOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(AwsSettings.class),
                 eq(new String[]{"settings", "awsSettings"}),
@@ -309,7 +309,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
 
         //then
         assertSame(settings, decimalFormatSymbolsSettingsOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(DecimalFormatSymbolsSettings.class),
                 eq(new String[]{"settings", "decimalFormatSymbols"}),
@@ -330,7 +330,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
 
         //then
         assertSame(settings, dashboardSettingsOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(DashboardSettings.class),
                 eq(new String[]{"settings", "dashboardSettings"}),
@@ -351,7 +351,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
 
         //then
         assertSame(settings, globalConfigurationSettingsOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(GlobalConfigurationSettings.class),
                 eq(new String[]{"settings", "globalConfiguration"}),
@@ -372,7 +372,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
 
         //then
         assertSame(settings, dateTimeSettingsOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(DateTimeSettings.class),
                 eq(new String[]{"settings", "dateTimeSettings"}),
@@ -393,7 +393,7 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
 
         //then
         assertSame(settings, inputControlsSettingsOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(InputControlsSettings.class),
                 eq(new String[]{"settings", "inputControls"}),
