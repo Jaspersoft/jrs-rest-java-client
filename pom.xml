@@ -7,14 +7,16 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>8.0.0</version>
+    <version>8.1.0</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <powermock.version>1.5.5</powermock.version>
-        <jasperserver-dto.version>8.0.0</jasperserver-dto.version>
+        <jasperserver-dto.version>8.1.0</jasperserver-dto.version>
+        <powermock.version>2.0.9</powermock.version>
+        <jersey.version>2.36</jersey.version>
+        <jackson.version>2.13.3</jackson.version>
     </properties>
 
     <scm>
@@ -25,16 +27,16 @@
 
     <repositories>
         <repository>
-          <id>jaspersoft-clients-snapshots</id>
-          <name>Jaspersoft clients snapshots</name>
-          <url>https://jaspersoft.jfrog.io/jaspersoft/jaspersoft-clients-releases</url>
+            <id>jaspersoft-clients-snapshots</id>
+            <name>Jaspersoft clients snapshots</name>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/jaspersoft-clients-releases</url>
         </repository>
         <repository>
-          <id>central</id>
-          <name>jaspersoft-releases</name>
-          <url>https://jaspersoft.jfrog.io/jaspersoft/jrs-ce-releases</url>
+            <id>central</id>
+            <name>jaspersoft-releases</name>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/jrs-ce-releases</url>
         </repository>
-</repositories>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -46,6 +48,10 @@
                     <artifactId>jackson-annotations</artifactId>
                     <groupId>com.fasterxml.jackson.core</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -53,47 +59,86 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>2.22.1</version>
+            <version>${jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-multipart</artifactId>
-            <version>2.22.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-json</artifactId>
-            <version>1.19</version>
+            <version>${jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
-            <version>2.22.1</version>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-processing</artifactId>
+            <version>${jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-jaxb</artifactId>
-            <version>2.22.1</version>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- TestNG -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.8.7</version>
+            <version>7.4.0</version>
             <scope>test</scope>
         </dependency>
 
         <!-- Mockito & extensions -->
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <!--  Cannot update to latest 4.x version, as powermock 2.0.9 has compatibility issue with it          -->
+            <version>3.12.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-testng</artifactId>
+            <artifactId>powermock-api-mockito2</artifactId>
             <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
+            <artifactId>powermock-module-testng</artifactId>
             <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
@@ -103,60 +148,46 @@
             <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- EasyMock -->
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <version>3.2</version>
+            <version>4.3</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.owlike</groupId>
-            <artifactId>genson</artifactId>
-            <version>0.99</version>
-        </dependency>
-        <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.51</version>
+            <version>1.70</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.0</version>
+            <version>3.12.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.0.4</version>
+            <version>2.11.0</version>
         </dependency>
         <!-- Logging -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.12</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.12</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.17.2</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>1.7.12</version>
+            <version>1.7.36</version>
         </dependency>
     </dependencies>
 
@@ -166,16 +197,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.5.2</version>
+                <version>2.7</version>
                 <configuration>
                     <format>xml</format>
                     <maxmem>256m</maxmem>
@@ -188,7 +219,9 @@
                             </exclude>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/exceptions/**</exclude>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/enums/**</exclude>
-                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/adhoc/queryexecution/enums/**</exclude>
+                            <exclude>
+                                **/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/adhoc/queryexecution/enums/**
+                            </exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
@@ -197,7 +230,7 @@
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
-                <version>2.0.0</version>
+                <version>4.3.0</version>
                 <configuration>
                     <branch>develop</branch>
                 </configuration>
@@ -207,7 +240,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12</version>
+                <version>2.22.2</version>
                 <configuration>
                     <skipTests>false</skipTests>
                     <testFailureIgnore>false</testFailureIgnore>
@@ -241,17 +274,17 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.0.5</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.4</version>
+                <version>3.15.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.14</version>
+                <version>3.1.2</version>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>
@@ -263,34 +296,4 @@
             </plugin>
         </plugins>
     </reporting>
-    <developers>
-        <developer>
-            <id>borys.kolesnykov</id>
-            <name>Borys Kolesnykov</name>
-            <email>borys.kolesnikov@gmail.com</email>
-            <roles>
-                <role>architect</role>
-                <role>developer</role>
-            </roles>
-            <timezone>+3</timezone>
-        </developer>
-        <developer>
-            <id>Krasnyanskiy</id>
-            <name>Alexander Krasnyanskiy</name>
-            <email>krasnyanskiy.alex@gmail.com</email>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <timezone>+3</timezone>
-        </developer>
-        <developer>
-            <id>tetiana.iefimenko</id>
-            <name>Tetiana Iefiemenko</name>
-            <email>efimenkot@gmail.com</email>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <timezone>+3</timezone>
-        </developer>
-    </developers>
 </project>

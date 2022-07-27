@@ -84,42 +84,6 @@ public class ImportRequestAdapter extends AbstractAdapter {
         return this;
     }
 
-    /**
-     * @Deprecated use setters {@link com.jaspersoft.jasperserver.dto.importexport.ImportTask}
-     */
-    @Deprecated
-    public ImportRequestAdapter parameter(String parameter) {
-        importTask.getParameters().add(parameter);
-        return this;
-    }
-
-    /**
-     * @Deprecated use setters {@link com.jaspersoft.jasperserver.dto.importexport.ImportTask}
-     */
-    @Deprecated
-    public ImportRequestAdapter parameters(List<String> parameters) {
-        importTask.getParameters().addAll(parameters);
-        return this;
-    }
-
-    /**
-     * @Deprecated use setters {@link com.jaspersoft.jasperserver.dto.importexport.ImportTask}
-     */
-    @Deprecated
-    public ImportRequestAdapter organization(String organizationId) {
-        importTask.setOrganization(organizationId);
-        return this;
-    }
-
-    /**
-     * @Deprecated use setters {@link com.jaspersoft.jasperserver.dto.importexport.ImportTask}
-     */
-    @Deprecated
-    public ImportRequestAdapter brokenDependensies(BrokenDependenciesParameter parameter) {
-        importTask.setBrokenDependencies(parameter.getValueName());
-        return this;
-    }
-
     public OperationResult<State> create() {
         return (useMultiPart) ? buildMultiPartRequest().post(prepareForm()) : buildCreateRequest().post(file);
     }
@@ -179,14 +143,6 @@ public class ImportRequestAdapter extends AbstractAdapter {
 
     public OperationResult<ImportTask> restartTask(ImportTask task) {
         return buildTaskRequest().put(task);
-    }
-
-    /**
-     * @Deprecated use {@link #cancel()}
-     */
-    @Deprecated
-    public OperationResult cancelTask() {
-        return buildRequest(sessionStorage, Object.class, new String[]{IMPORT_SERVICE_URI, taskId}).delete();
     }
 
     public OperationResult cancel() {

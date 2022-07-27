@@ -20,15 +20,16 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.internal.util.reflection.Whitebox.getInternalState;
+import static org.powermock.reflect.Whitebox.getInternalState;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
@@ -93,7 +94,7 @@ public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
             }
         });
 
-        doReturn(null).when(callback).execute(operationResultMock);
+        doNothing().when(callback).execute(operationResultMock);
 
         // When
         RequestExecution retrieved = adapterSpy.asyncGet(callback);

@@ -31,12 +31,6 @@ public class ImportService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    @Deprecated
-    public ImportTaskRequestAdapter newTask() {
-        return new ImportTaskRequestAdapter(sessionStorage);
-    }
-
-
     public ImportRequestAdapter newImport(File file) {
         return new ImportRequestAdapter(sessionStorage, file, false);
     }

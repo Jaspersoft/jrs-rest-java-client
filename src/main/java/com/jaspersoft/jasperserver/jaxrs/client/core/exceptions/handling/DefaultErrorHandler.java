@@ -21,7 +21,6 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling;
 
-import javax.ws.rs.core.Response.Status;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AccessDeniedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.AuthenticationFailedException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.BadRequestException;
@@ -48,15 +47,15 @@ public class DefaultErrorHandler implements ErrorHandler {
 
     protected static final Map<Response.Status, Class<? extends JSClientWebException>> httpErrorCodeToTypeMap =
             new HashMap<Response.Status, Class<? extends JSClientWebException>>() {{
-                put(Status.BAD_REQUEST, BadRequestException.class);
-                put(Status.FORBIDDEN, AccessDeniedException.class);
-                put(Status.NOT_ACCEPTABLE, HttpMethodNotAllowedException.class);
-                put(Status.INTERNAL_SERVER_ERROR, InternalServerErrorException.class);
-                put(Status.NOT_ACCEPTABLE, RequestedRepresentationNotAvailableForResourceException.class);
-                put(Status.NOT_FOUND, ResourceNotFoundException.class);
-                put(Status.UNAUTHORIZED, AuthenticationFailedException.class);
-                put(Status.CONFLICT, ConflictException.class);
-                put(Status.UNSUPPORTED_MEDIA_TYPE, RepresentationalTypeNotSupportedForResourceException.class);
+                put(Response.Status.BAD_REQUEST, BadRequestException.class);
+                put(Response.Status.FORBIDDEN, AccessDeniedException.class);
+                put(Response.Status.NOT_ACCEPTABLE, HttpMethodNotAllowedException.class);
+                put(Response.Status.INTERNAL_SERVER_ERROR, InternalServerErrorException.class);
+                put(Response.Status.NOT_ACCEPTABLE, RequestedRepresentationNotAvailableForResourceException.class);
+                put(Response.Status.NOT_FOUND, ResourceNotFoundException.class);
+                put(Response.Status.UNAUTHORIZED, AuthenticationFailedException.class);
+                put(Response.Status.CONFLICT, ConflictException.class);
+                put(Response.Status.UNSUPPORTED_MEDIA_TYPE, RepresentationalTypeNotSupportedForResourceException.class);
             }};
 
     @Override

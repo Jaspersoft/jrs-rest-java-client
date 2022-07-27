@@ -19,15 +19,16 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.internal.util.reflection.Whitebox.getInternalState;
+import static org.powermock.reflect.Whitebox.getInternalState;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -65,7 +66,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         // When
         SingleAttributeAdapter adapter = new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State");
-        ArrayList<String> uri = (ArrayList<String>) getInternalState(adapter, "path");
+        ArrayList<String> uri = getInternalState(adapter, "path");
 
         // Then
         assertNotNull(adapter);
@@ -115,7 +116,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
             }
         });
 
-        doReturn(null).when(callback).execute(resultMock);
+        doNothing().when(callback).execute(resultMock);
 
         // When
         RequestExecution retrieved = adapter.asyncGet(callback);
@@ -153,7 +154,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
             }
         });
 
-        doReturn(null).when(callback).execute(resultMock);
+        doNothing().when(callback).execute(resultMock);
 
         // When
         RequestExecution retrieved = adapter.asyncDelete(callback);
@@ -191,7 +192,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         doReturn(requestMock).when(adapter, "buildRequest");
         doReturn(resultMock).when(requestMock).put(userAttributeMock);
-        doReturn(null).when(callback).execute(resultMock);
+        doNothing().when(callback).execute(resultMock);
 
         // When
         RequestExecution retrieved = adapter.asyncCreateOrUpdate(userAttributeMock, callback);
@@ -228,7 +229,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         // Then
         assertNotNull(retrieved);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(HypermediaAttribute.class),
                 eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
@@ -257,7 +258,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         // Then
         assertNotNull(retrieved);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(HypermediaAttribute.class),
                 eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
@@ -290,7 +291,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         // Then
         assertNotNull(retrieved);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(HypermediaAttribute.class),
                 eq(new String[]{"users", "Simon", "attributes", "State"}),
@@ -326,7 +327,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         // Then
         assertNotNull(retrieved);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(HypermediaAttribute.class),
                 eq(new String[]{"users", "Simon", "attributes", "State"}),
@@ -355,7 +356,7 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         // Then
         assertNotNull(retrieved);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(HypermediaAttribute.class),
                 eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),

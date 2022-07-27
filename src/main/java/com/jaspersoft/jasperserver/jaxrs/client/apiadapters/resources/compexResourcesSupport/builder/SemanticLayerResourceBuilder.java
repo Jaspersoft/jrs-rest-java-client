@@ -45,20 +45,6 @@ public class SemanticLayerResourceBuilder extends SemanticLayerResourceOperation
         super(sessionStorage, domain);
     }
 
-    @Deprecated
-    public SemanticLayerResourceBuilder withSchema(String schema, ClientFile schemaRef) {
-        super.multipart.field("schema", schema, MediaType.APPLICATION_XML_TYPE);
-        super.domain.setSchema(schemaRef);
-        return this;
-    }
-
-    @Deprecated
-    public SemanticLayerResourceBuilder withSchema(InputStream schema, ClientFile schemaRef) {
-        super.multipart.field("schema", schema, MediaType.APPLICATION_XML_TYPE);
-        super.domain.setSchema(schemaRef);
-        return this;
-    }
-
     public SemanticLayerResourceBuilder withSchema(String schemaContent) {
         super.multipart.field("schema", schemaContent, MediaType.APPLICATION_XML_TYPE);
         return this;
@@ -73,20 +59,6 @@ public class SemanticLayerResourceBuilder extends SemanticLayerResourceOperation
     public SemanticLayerResourceBuilder withSchema(File schema) {
         FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("schema", schema, MediaType.APPLICATION_XML_TYPE);
         super.multipart.bodyPart(fileDataBodyPart);
-        return this;
-    }
-
-    @Deprecated
-    public SemanticLayerResourceBuilder withSecurityFile(InputStream securityFile, ClientFile securityFileRef) {
-        super.multipart.field("securityFile", securityFile, MediaType.APPLICATION_XML_TYPE);
-        super.domain.setSecurityFile(securityFileRef);
-        return this;
-    }
-
-    @Deprecated
-    public SemanticLayerResourceBuilder withSecurityFile(String securityFile, ClientFile securityFileRef) {
-        super.multipart.field("securityFile", securityFile, MediaType.APPLICATION_XML_TYPE);
-        super.domain.setSecurityFile(securityFileRef);
         return this;
     }
 
@@ -107,33 +79,6 @@ public class SemanticLayerResourceBuilder extends SemanticLayerResourceOperation
         return this;
     }
 
-    @Deprecated
-    public SemanticLayerResourceBuilder withBundle(InputStream bundle, ClientBundle bundleRef) {
-        super.multipart.field("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
-        List<ClientBundle> bundles = super.domain.getBundles();
-
-        if (bundles != null) {
-            int index = bundles.indexOf(bundleRef);
-            if (index >= 0) {
-                bundles.set(index, bundleRef);
-            } else {
-                bundles.add(bundleRef);
-            }
-        } else {
-            bundles = new ArrayList<ClientBundle>();
-            bundles.add(bundleRef);
-        }
-
-        super.domain.setBundles(bundles);
-        return this;
-    }
-
-    @Deprecated
-    public SemanticLayerResourceBuilder withBundle(String bundle, ClientBundle bundleRef) {
-        super.multipart.field("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
-        return this;
-    }
-
     public SemanticLayerResourceBuilder withBundle(InputStream bundle, String label) {
         StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("bundles.bundle[" + bundleCounter++ + "]", bundle, label, MediaType.TEXT_PLAIN_TYPE);
         super.multipart.bodyPart(streamDataBodyPart);
@@ -148,12 +93,6 @@ public class SemanticLayerResourceBuilder extends SemanticLayerResourceOperation
 
     public SemanticLayerResourceBuilder withBundle(String bundle) {
         super.multipart.field("bundles.bundle[" + bundleCounter++ + "]", bundle, MediaType.TEXT_PLAIN_TYPE);
-        return this;
-    }
-
-    @Deprecated
-    public SemanticLayerResourceBuilder withUri(String uri) {
-        super.domain.setUri(uri);
         return this;
     }
 

@@ -15,16 +15,15 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
+import org.powermock.reflect.Whitebox;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -33,15 +32,12 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.jaspersoft.jasperserver.dto.resources.ClientFile.FileType;
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -145,7 +141,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                 return null;
             }
         });
-        PowerMockito.doReturn(null).when(callback).execute(operationResultMock);
+        PowerMockito.doNothing().when(callback).execute(operationResultMock);
 
         /** When **/
         RequestExecution retrieved = adapterSpy.asyncDetails(callback);
@@ -195,7 +191,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                 return null;
             }
         });
-        PowerMockito.doReturn(null).when(callback).execute(operationResultMock);
+        PowerMockito.doNothing().when(callback).execute(operationResultMock);
 
         /** When **/
         RequestExecution retrieved = adapterSpy.asyncDetails(callback);
@@ -262,7 +258,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                 return null;
             }
         });
-        doReturn(null).when(callback).execute(objectOperationResultMock);
+        doNothing().when(callback).execute(objectOperationResultMock);
 
         /** When **/
         RequestExecution retrieved = adapter.asyncDelete(callback);
@@ -279,62 +275,6 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         verify(callback).execute(objectOperationResultMock);
     }
 
-    @Test
-    /**
-     * for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.SingleResourceAdapter#asyncUploadFile(java.io.File, com.jaspersoft.jasperserver.dto.resources.ClientFile.FileType, String, String, com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}
-     */
-    public void should_upload_file_asynchronously() throws InterruptedException {
-
-        /** Given **/
-        String resourceUri = "requestId";
-
-        final AtomicInteger newThreadId = new AtomicInteger();
-        final int currentThreadId = (int) Thread.currentThread().getId();
-
-        SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
-
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientFile.class),
-                eq(new String[]{"resources", resourceUri}), any(DefaultErrorHandler.class))).thenReturn(clientFileJerseyRequestMock);
-        doReturn(clientFileOperationResultMock).when(clientFileJerseyRequestMock).post(anyObject());
-
-        final Callback<OperationResult<ClientFile>, Void> callback =
-                spy(new Callback<OperationResult<ClientFile>, Void>() {
-                    @Override
-                    public Void execute(OperationResult<ClientFile> data) {
-                        newThreadId.set((int) Thread.currentThread().getId());
-                        synchronized (this) {
-                            this.notify();
-                        }
-                        return null;
-                    }
-                });
-        doReturn(null).when(callback).execute(clientFileOperationResultMock);
-
-
-        /** When **/
-        RequestExecution retrieved = adapter.asyncUploadFile(fileMock,
-                FileType.txt, "label_", "description_", callback);
-
-
-        /** Wait **/
-        synchronized (callback) {
-            callback.wait(1000);
-        }
-
-
-        /** Then **/
-        assertNotNull(retrieved);
-        assertNotSame(currentThreadId, newThreadId.get());
-        verify(clientFileJerseyRequestMock, times(1)).post(captor.capture());
-        verify(callback).execute(clientFileOperationResultMock);
-
-        FormDataMultiPart intercepted = captor.getValue();
-        Map<String, List<FormDataBodyPart>> recievedFields = intercepted.getFields();
-
-        assertSame(recievedFields.get("label").get(0).getValue(), "label_");
-        assertSame(recievedFields.get("description").get(0).getValue(), "description_");
-    }
 
     @Test
     /**
@@ -436,7 +376,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                     }
                 });
 
-        doReturn(null).when(callback).execute(adhocDataViewOperationResultMock);
+        doNothing().when(callback).execute(adhocDataViewOperationResultMock);
 
 
         /** When **/
@@ -482,7 +422,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         OperationResult<ClientAdhocDataView> retrieved = adapter.patchResource(ClientAdhocDataView.class, descriptorMock);
 
         /** Then **/
-        verifyStatic();
+        verifyStatic(JerseyRequest.class);
         buildRequest(eq(sessionStorageMock),
                 eq(ClientAdhocDataView.class),
                 eq(new String[]{"resources"}),
@@ -568,7 +508,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                     }
                 });
 
-        doReturn(null).when(callback).execute(inputStreamOperationResultMock);
+        doNothing().when(callback).execute(inputStreamOperationResultMock);
 
 
         /** When **/
@@ -601,7 +541,8 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         mockStatic(JerseyRequest.class);
         when(buildRequest(eq(sessionStorageMock),
                 eq(ClientVirtualDataSource.class),
-                eq(new String[]{"resources", resourceUri}), any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
+                eq(new String[]{"resources", resourceUri}),
+                any(DefaultErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
 
         doReturn(operationResultMock).when(virtualDataSourceJerseyRequestMock).put(source);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -625,7 +566,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                     }
                 });
 
-        doReturn(null).when(callback).execute(operationResultMock);
+        doNothing().when(callback).execute(operationResultMock);
 
 
         /** When **/
@@ -673,7 +614,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                 return null;
             }
         });
-        Mockito.doReturn(null).when(callback).execute(operationResultMock);
+        doNothing().when(callback).execute(operationResultMock);
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
 
@@ -724,7 +665,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
                 return null;
             }
         });
-        Mockito.doReturn(null).when(callback).execute(operationResultMock);
+        doNothing().when(callback).execute(operationResultMock);
         SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
 
 
@@ -750,99 +691,6 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_create_new_resource_asynchronously() throws InterruptedException {
-
-        /** Given **/
-        String resourceUri = "uri";
-        ClientVirtualDataSource source = new ClientVirtualDataSource();
-
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientVirtualDataSource.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
-
-        doReturn(operationResultMock).when(virtualDataSourceJerseyRequestMock).post(source);
-        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-
-        doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
-        SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
-
-        final AtomicInteger newThreadId = new AtomicInteger();
-        final int currentThreadId = (int) Thread.currentThread().getId();
-
-        final Callback<OperationResult<ClientResource>, Void> callback =
-                spy(new Callback<OperationResult<ClientResource>, Void>() {
-                    @Override
-                    public Void execute(OperationResult<ClientResource> data) {
-                        newThreadId.set((int) Thread.currentThread().getId());
-                        synchronized (this) {
-                            this.notify();
-                        }
-                        return null;
-                    }
-                });
-
-        doReturn(null).when(callback).execute(operationResultMock);
-
-
-        /** When **/
-        RequestExecution retrieved = adapter.asyncCreateNew(source, callback);
-
-        /** Wait **/
-        synchronized (callback) {
-            callback.wait(1000);
-        }
-
-        /** Then **/
-        assertNotNull(retrieved);
-        assertNotSame(currentThreadId, newThreadId.get());
-
-        Mockito.verify(virtualDataSourceJerseyRequestMock).post(source);
-        Mockito.verify(callback).execute(operationResultMock);
-        Mockito.verify(virtualDataSourceJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
-        Mockito.verify(virtualDataSourceJerseyRequestMock).setContentType("application/repository.virtualDataSource+json");
-        Mockito.verify(virtualDataSourceJerseyRequestMock).setAccept("application/repository.virtualDataSource+json");
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void should_create_new_resource() {
-
-        /** Given **/
-        String resourceUri = "uri";
-        ClientVirtualDataSource source = new ClientVirtualDataSource();
-
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientVirtualDataSource.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
-
-        doReturn(operationResultMock).when(virtualDataSourceJerseyRequestMock).post(source);
-        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-
-        doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
-        SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
-
-
-        /** When **/
-        OperationResult<ClientResource> retrieved = adapter.createNew(source);
-
-
-        /** Then **/
-        assertSame(retrieved, operationResultMock);
-
-        Mockito.verify(virtualDataSourceJerseyRequestMock).post(source);
-        Mockito.verify(virtualDataSourceJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
-        Mockito.verify(virtualDataSourceJerseyRequestMock).setContentType("application/repository.virtualDataSource+json");
-        Mockito.verify(virtualDataSourceJerseyRequestMock).setAccept("application/repository.virtualDataSource+json");
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
     public void should_update_resource() throws InterruptedException {
 
         /** Given **/
@@ -853,7 +701,7 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         when(buildRequest(eq(sessionStorageMock),
                 eq(ClientVirtualDataSource.class),
                 eq(new String[]{"resources", resourceUri}),
-                any(ResourceValidationErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
+                any(DefaultErrorHandler.class))).thenReturn(virtualDataSourceJerseyRequestMock);
 
         doReturn(operationResultMock).when(virtualDataSourceJerseyRequestMock).put(source);
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
@@ -874,98 +722,6 @@ public class SingleResourceAdapterTest extends PowerMockTestCase {
         Mockito.verify(virtualDataSourceJerseyRequestMock).addParams(any(MultivaluedHashMap.class));
         Mockito.verify(virtualDataSourceJerseyRequestMock).setContentType("application/repository.virtualDataSource+json");
         Mockito.verify(virtualDataSourceJerseyRequestMock).setAccept("application/repository.virtualDataSource+json");
-    }
-
-
-    @Test
-    public void should_upload_file() throws InterruptedException {
-
-        /** Given **/
-        String resourceUri = "requestId";
-
-        SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
-
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientFile.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(DefaultErrorHandler.class))).thenReturn(clientFileJerseyRequestMock);
-        doReturn(clientFileOperationResultMock).when(clientFileJerseyRequestMock).post(anyObject());
-
-
-        /** When **/
-        OperationResult<ClientFile> retrieved = adapter.uploadFile(fileMock, FileType.txt, "label_", "description_");
-
-
-        /** Then **/
-        assertNotNull(retrieved);
-        assertSame(retrieved, clientFileOperationResultMock);
-        verify(clientFileJerseyRequestMock, times(1)).post(captor.capture());
-
-        FormDataMultiPart intercepted = captor.getValue();
-        Map<String, List<FormDataBodyPart>> recievedFields = intercepted.getFields();
-
-        assertSame(recievedFields.get("label").get(0).getValue(), "label_");
-        assertSame(recievedFields.get("description").get(0).getValue(), "description_");
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void should_move_resource() throws InterruptedException {
-
-        /** Given **/
-        String resourceUri = "uri";
-
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientResource.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).put("");
-
-        SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
-
-
-        /** When **/
-        OperationResult<ClientResource> retrieved = adapter.moveFrom("fromUri");
-
-
-        /** Then **/
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-
-        Mockito.verify(jerseyRequestMock).put("");
-        Mockito.verify(jerseyRequestMock).addParams(any(MultivaluedHashMap.class));
-        Mockito.verify(jerseyRequestMock).addHeader("Content-Location", "fromUri");
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void should_copy_resource() throws InterruptedException {
-
-        /** Given **/
-        String resourceUri = "uri";
-
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientResource.class),
-                eq(new String[]{"resources", resourceUri}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).post(null);
-
-        SingleResourceAdapter adapter = new SingleResourceAdapter(sessionStorageMock, resourceUri);
-
-
-        /** When **/
-        OperationResult<ClientResource> retrieved = adapter.copyFrom("fromUri");
-
-
-        /** Then **/
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-
-        Mockito.verify(jerseyRequestMock).post(null);
-        Mockito.verify(jerseyRequestMock).addParams(any(MultivaluedHashMap.class));
-        Mockito.verify(jerseyRequestMock).addHeader("Content-Location", "fromUri");
     }
 
 }

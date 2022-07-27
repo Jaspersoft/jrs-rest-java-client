@@ -18,8 +18,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -139,7 +140,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
 
         // Then
         assertNotNull(retrieved);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUser.class),
                 eq(new String[]{"organizations", "myOrg", "users", "Simon"}), any(DefaultErrorHandler.class));
         verify(userJerseyRequestMock, times(1)).delete();
@@ -162,7 +163,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
 
         // Then
         assertNotNull(retrieved);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock), eq(ClientUser.class),
                 eq(new String[]{"users", "Simon"}), any(DefaultErrorHandler.class));
         verify(userJerseyRequestMock, times(1)).get();
@@ -190,7 +191,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
 
         doReturn(userJerseyRequestMock).when(adapterSpy, "buildRequest");
         doReturn(operationResultMock).when(userJerseyRequestMock).get();
-        doReturn(null).when(callback).execute(operationResultMock);
+        doNothing().when(callback).execute(operationResultMock);
 
         // When
         RequestExecution retrieved = adapterSpy.asyncGet(callback);
@@ -227,7 +228,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
 
         doReturn(userJerseyRequestMock).when(adapterSpy, "buildRequest");
         doReturn(operationResultMock).when(userJerseyRequestMock).put(userMock);
-        doReturn(null).when(callback).execute(operationResultMock);
+        doNothing().when(callback).execute(operationResultMock);
 
         // When
         RequestExecution retrieved = adapterSpy.asyncCreateOrUpdate(userMock, callback);
@@ -265,7 +266,7 @@ public class SingleUserRequestAdapterTest extends PowerMockTestCase {
 
         doReturn(userJerseyRequestMock).when(adapterSpy, "buildRequest");
         doReturn(operationResultMock).when(userJerseyRequestMock).delete();
-        doReturn(null).when(callback).execute(operationResultMock);
+        doNothing().when(callback).execute(operationResultMock);
 
         // When
         RequestExecution retrieved = adapterSpy.asyncDelete(callback);

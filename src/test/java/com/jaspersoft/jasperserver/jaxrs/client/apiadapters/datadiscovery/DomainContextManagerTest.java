@@ -2,13 +2,12 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.dto.resources.domain.PresentationGroupElement;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.connections.SingleConnectionsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.SingleContextAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
@@ -29,7 +28,7 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({ContextService.class, SessionStorage.class, SingleConnectionsAdapter.class, DomainContextManager.class})
+@PrepareForTest({ContextService.class, SessionStorage.class, DomainContextManager.class})
 public class DomainContextManagerTest extends PowerMockTestCase {
     private SessionStorage sessionStorageMock;
     private ContextService contextServiceMock;

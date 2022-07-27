@@ -72,11 +72,6 @@ public class SemanticLayerResourceOperationProcessorDecorator {
         return processor.get(domain.getUri());
     }
 
-    @Deprecated
-    public OperationResult<ClientSemanticLayerDataSource> createInFolder(String path) {
-        return processor.create(multipart, new MediaType("application", "repository.semanticLayerDataSource+json"), path, params);
-    }
-
     public SemanticLayerResourceOperationProcessorDecorator inFolder(String path) {
         this.path = path;
         return this;

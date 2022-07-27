@@ -6,7 +6,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.LinkedList;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -16,10 +15,12 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.LinkedList;
+
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
@@ -35,7 +36,7 @@ import static org.testng.Assert.assertSame;
 /**
  * @author Tetiana Iefimenko
  */
-@PrepareForTest({InputControlsAdapter.class, JerseyRequest.class, OperationResult.class})
+@PrepareForTest({InputControlsAdapter.class, InputControlsValuesAdapter.class, JerseyRequest.class, OperationResult.class})
 public class InputControlsAdapterTest extends PowerMockTestCase {
 
     @Mock
@@ -57,7 +58,7 @@ public class InputControlsAdapterTest extends PowerMockTestCase {
     @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
     public void should_throw_an_exception_when_uri_is_null() {
         // When
-        new InputControlsAdapter(sessionStorageMock).container(null).get();
+        new InputControlsAdapter(sessionStorageMock).forReport(null).get();
         // Then
         // should be thrown an exception
     }
@@ -80,7 +81,7 @@ public class InputControlsAdapterTest extends PowerMockTestCase {
         InputControlsAdapter adapter= new InputControlsAdapter(sessionStorageMock);
         whenNew(InputControlsValuesAdapter.class).withArguments(eq(sessionStorageMock), anyString()).thenReturn(inputControlsValuesAdapterMock);
         // When
-        InputControlsValuesAdapter retrieved = adapter.values();
+        InputControlsValuesAdapter retrieved = adapter.forReport("/uri").values();
         // Then
         assertSame(retrieved, inputControlsValuesAdapterMock);
     }
@@ -109,13 +110,13 @@ public class InputControlsAdapterTest extends PowerMockTestCase {
                 .get();
 
         InputControlsAdapter adapterSpy = spy(new InputControlsAdapter(sessionStorageMock));
-        adapterSpy.container(uri);
+        adapterSpy.forReport(uri);
 
         // When
         OperationResult<ReportInputControlsListWrapper> retrieved = adapterSpy.get();
 
         // Then
-        verifyStatic();
+        verifyStatic(JerseyRequest.class);
         buildRequest(
                 eq(sessionStorageMock),
                 eq(ReportInputControlsListWrapper.class),
@@ -140,23 +141,23 @@ public class InputControlsAdapterTest extends PowerMockTestCase {
 
         doReturn(operationResultMock)
                 .when(requestMock)
-                .put(anyObject());
+                .put(any());
 
         InputControlsAdapter adapterSpy = spy(new InputControlsAdapter(sessionStorageMock));
-        adapterSpy.container(uri);
+        adapterSpy.forReport(uri);
 
         // When
         OperationResult<ReportInputControlsListWrapper> retrieved = adapterSpy
                 .reorder(new LinkedList<ReportInputControl>());
 
         // Then
-        verifyStatic();
+        verifyStatic(JerseyRequest.class);
         buildRequest(
                 eq(sessionStorageMock),
                 eq(ReportInputControlsListWrapper.class),
                 eq(new String[]{"reports", uri, "inputControls"}));
 
-        Mockito.verify(requestMock).put(anyObject());
+        Mockito.verify(requestMock).put(any());
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
     }
@@ -180,13 +181,13 @@ public class InputControlsAdapterTest extends PowerMockTestCase {
                 .get();
 
         InputControlsAdapter adapterSpy = spy(new InputControlsAdapter(sessionStorageMock));
-        adapterSpy.container(uri).excludeState(true);
+        adapterSpy.forReport(uri).excludeState(true);
 
         // When
         OperationResult<ReportInputControlsListWrapper> retrieved = adapterSpy.get();
 
         // Then
-        verifyStatic();
+        verifyStatic(JerseyRequest.class);
         buildRequest(
                 eq(sessionStorageMock),
                 eq(ReportInputControlsListWrapper.class),

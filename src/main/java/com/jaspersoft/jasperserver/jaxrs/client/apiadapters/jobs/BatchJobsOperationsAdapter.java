@@ -20,6 +20,11 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.jaspersoft.jasperserver.dto.job.ClientReportJob;
 import com.jaspersoft.jasperserver.dto.job.model.ClientReportJobModel;
 import com.jaspersoft.jasperserver.dto.job.wrappers.ClientJobIdListWrapper;
@@ -33,26 +38,16 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobIdListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.jaxb.wrappers.JobSummaryListWrapper;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.reportjobmodel.ReportJobModel;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.map.AnnotationIntrospector;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
-
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +55,7 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class BatchJobsOperationsAdapter extends AbstractAdapter {
 
-    private static final Log log = LogFactory.getLog(BatchJobsOperationsAdapter.class);
+    private static final Logger log = LogManager.getLogger(BatchJobsOperationsAdapter.class);
     public static final String SERVICE_URI = "jobs";
     public static final String PAUSE = "pause";
     public static final String RESUME = "resume";
@@ -131,13 +126,11 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     }
 
     private String buildJson(Object object) {
-
         ObjectMapper mapper = new ObjectMapper();
-        SerializationConfig serializationConfig = mapper.getSerializationConfig();
-        serializationConfig = serializationConfig.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-        AnnotationIntrospector introspector = new JaxbAnnotationIntrospector();
-        mapper.setSerializationConfig(serializationConfig);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        AnnotationIntrospector introspector = new JaxbAnnotationIntrospector(TypeFactory.defaultInstance());
         mapper.setAnnotationIntrospector(introspector);
+
 
         try {
             return mapper.writeValueAsString(object);
@@ -159,11 +152,6 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
             log.warn("Can't marshal report job model.");
             throw new RuntimeException("Failed inFolder build report job model xml.", e);
         }
-    }
-
-    @Deprecated
-    public OperationResult<ClientJobIdListWrapper> updateWithProcessedParameters(ClientReportJobModel jobModel) {
-        throw new UnsupportedOperationException("Operation is not supported.");
     }
 
     /**
@@ -259,171 +247,6 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     public <R> RequestExecution asyncRestartJobs(final Callback<OperationResult<ClientJobIdListWrapper>, R> callback) {
         final ClientJobIdListWrapper jobIdListWrapper = new ClientJobIdListWrapper(getIds());
         final JerseyRequest<ClientJobIdListWrapper> request = buildRequest(sessionStorage, ClientJobIdListWrapper.class, new String[]{SERVICE_URI, RESTART});
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.post(jobIdListWrapper));
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-
-    /**
-     * @deprecated Replaced by {@link BatchJobsOperationsAdapter#searchJobs()}.
-     */
-    public OperationResult<JobSummaryListWrapper> search() {
-        return search(null);
-    }
-
-    /**
-     * @deprecated Replaced by {@link BatchJobsOperationsAdapter#searchJobs(com.jaspersoft.jasperserver.dto.job.ClientReportJob)}.
-     */
-    public OperationResult<JobSummaryListWrapper> search(Job searchCriteria) {
-        JerseyRequest<JobSummaryListWrapper> request = prepareSearchRequest(searchCriteria);
-        return request.get();
-    }
-
-    /**
-     * @deprecated Replaced by {@link BatchJobsOperationsAdapter#asyncSearchJobs(com.jaspersoft.jasperserver.dto.job.ClientReportJob, com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}.
-     */
-    public <R> RequestExecution asyncSearch(final Job searchCriteria, final Callback<OperationResult<JobSummaryListWrapper>, R> callback) {
-        final JerseyRequest<JobSummaryListWrapper> request = prepareSearchRequest(searchCriteria);
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.get());
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-
-    /**
-     * @deprecated Replaced by {@link BatchJobsOperationsAdapter#prepareSearchRequest(com.jaspersoft.jasperserver.dto.job.ClientReportJob)}.
-     */
-    private JerseyRequest<JobSummaryListWrapper> prepareSearchRequest(Job searchCriteria) {
-        JerseyRequest<JobSummaryListWrapper> request = buildRequest(sessionStorage, JobSummaryListWrapper.class, new String[]{SERVICE_URI});
-        request.addParams(params);
-        if (searchCriteria != null) {
-            String criteriaJson = buildJson(searchCriteria);
-            request.addParam("example", URLEncoder.encode(criteriaJson), "UTF-8");
-        }
-        return request;
-    }
-
-    /**
-     * @deprecated Replaced by {@link BatchJobsOperationsAdapter#update(com.jaspersoft.jasperserver.dto.job.model.ClientReportJobModel)}.
-     */
-    public OperationResult<JobIdListWrapper> update(ReportJobModel jobModel) {
-        JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI});
-        request.addParams(params);
-        String content;
-
-        if (sessionStorage.getConfiguration().getContentMimeType() == MimeType.JSON) {
-            content = buildJson(jobModel);
-        } else {
-            content = buildXml(jobModel);
-        }
-        return request.post(content);
-    }
-
-    /**
-     * @deprecated Replaced by {@link BatchJobsOperationsAdapter#buildXml(com.jaspersoft.jasperserver.dto.job.model.ClientReportJobModel)}.
-     */
-    private String buildXml(ReportJobModel reportJobModel) {
-        try {
-            StringWriter writer = new StringWriter();
-            JAXBContext jaxbContext = JAXBContext.newInstance(ReportJobModel.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.marshal(reportJobModel, writer);
-            return writer.toString();
-        } catch (JAXBException e) {
-            log.warn("Can't marshal report job model.");
-            throw new RuntimeException("Failed inFolder build report job model xml.", e);
-        }
-    }
-
-    /**
-     * @deprecated Replaced by {@link BatchJobsOperationsAdapter#asyncUpdate(com.jaspersoft.jasperserver.dto.job.model.ClientReportJobModel, com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}.
-     */
-    public <R> RequestExecution asyncUpdate(final ReportJobModel jobModel, final Callback<OperationResult<JobIdListWrapper>, R> callback) {
-        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI});
-        request.addParams(params);
-        final String jobJson = buildJson(jobModel);
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.post(jobJson));
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-
-    /**
-     * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.BatchJobsOperationsAdapter#pauseJobs()}.
-     */
-    public OperationResult<JobIdListWrapper> pause() {
-        JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, PAUSE}).post(jobIdListWrapper);
-    }
-
-    /**
-     * @deprecated Replaced by {@link BatchJobsOperationsAdapter#asyncPauseJobs(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}.
-     */
-    public <R> RequestExecution asyncPause(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
-        final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, PAUSE});
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.post(jobIdListWrapper));
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-
-    /**
-     * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.BatchJobsOperationsAdapter#resumeJobs()}.
-     */
-    public OperationResult<JobIdListWrapper> resume() {
-        JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, RESUME}).post(jobIdListWrapper);
-    }
-
-    /**
-     * @deprecated Replaced by {@link BatchJobsOperationsAdapter#asyncResumeJobs(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}.
-     */
-    public <R> RequestExecution asyncResume(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
-        final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, RESUME});
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.post(jobIdListWrapper));
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-
-    /**
-     * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.BatchJobsOperationsAdapter#restartJobs()}.
-     */
-    public OperationResult<JobIdListWrapper> restart() {
-        JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        return buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, RESTART}).post(jobIdListWrapper);
-    }
-
-    /**
-     * @deprecated Replaced by {@link BatchJobsOperationsAdapter#asyncRestartJobs(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}.
-     */
-    public <R> RequestExecution asyncRestart(final Callback<OperationResult<JobIdListWrapper>, R> callback) {
-        final JobIdListWrapper jobIdListWrapper = new JobIdListWrapper(getIds());
-        final JerseyRequest<JobIdListWrapper> request = buildRequest(sessionStorage, JobIdListWrapper.class, new String[]{SERVICE_URI, RESTART});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {

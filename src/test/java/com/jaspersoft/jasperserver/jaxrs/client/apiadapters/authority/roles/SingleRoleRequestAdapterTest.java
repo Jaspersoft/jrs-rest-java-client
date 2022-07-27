@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
@@ -22,8 +22,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -110,7 +111,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
 
         PowerMockito.doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest");
         Mockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).delete();
-        Mockito.doReturn(null).when(callback).execute(expectedOpResultMock);
+        doNothing().when(callback).execute(expectedOpResultMock);
 
         /* When */
         RequestExecution retrieved = adapterSpy.asyncDelete(callback);
@@ -152,7 +153,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
 
         doReturn(roleJerseyRequest).when(adapterSpy, "buildRequest");
         doReturn(roleOperationResult).when(roleJerseyRequest).put(roleMock);
-        doReturn(null).when(callback).execute(roleOperationResult);
+        doNothing().when(callback).execute(roleOperationResult);
 
         /* When */
         RequestExecution retrieved = adapterSpy.asyncCreateOrUpdate(roleMock, callback);
@@ -252,7 +253,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
         OperationResult retrieved = adapterSpy.delete();
 
         // Then
-        PowerMockito.verifyStatic(times(1));
+        PowerMockito.verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientRole.class), eq(roleUri.toArray(new String[roleUri.size()])),
                 any(DefaultErrorHandler.class));
         PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest");
@@ -284,7 +285,7 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
         });
 
         PowerMockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
-        PowerMockito.doReturn(null).when(callback).execute(expectedOpResultMock);
+        PowerMockito.doNothing().when(callback).execute(expectedOpResultMock);
 
         /* When */
         RequestExecution retrieved = adapterSpy.asyncGet(callback);

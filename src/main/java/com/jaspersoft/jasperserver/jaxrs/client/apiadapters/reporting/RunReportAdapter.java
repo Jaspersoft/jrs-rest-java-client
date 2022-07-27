@@ -22,6 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.RunReportErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -35,7 +36,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
@@ -50,9 +50,9 @@ public class RunReportAdapter extends AbstractAdapter {
     private final MultivaluedMap<String, String> params;
     private final String reportUnitUri;
     private final String format;
-    private  TimeZone timeZone;
+    private TimeZone timeZone;
     private String[] pages = new String[0];
-    private ArrayList<String> path = new ArrayList<>();
+    private final ArrayList<String> path = new ArrayList<>();
 
     public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, String format) {
         super(sessionStorage);
@@ -69,16 +69,10 @@ public class RunReportAdapter extends AbstractAdapter {
         }
     }
 
-    private Integer[] validArray (Integer[] pages) {
-        List<Integer> list = new LinkedList<Integer>(Arrays.asList(pages));
-        Iterator<Integer> iterator = list.iterator();
-        while (iterator.hasNext()) {
-            Integer next =  iterator.next();
-            if (next <= 0) {
-                iterator.remove();
-            }
-        }
-        return list.toArray(new Integer[list.size()]);
+    private Integer[] validArray(Integer[] pages) {
+        List<Integer> list = new LinkedList<>(Arrays.asList(pages));
+        list.removeIf(next -> next <= 0);
+        return list.toArray(new Integer[0]);
     }
 
     public RunReportAdapter(SessionStorage sessionStorage, String reportUnitUri, String format,
@@ -119,12 +113,7 @@ public class RunReportAdapter extends AbstractAdapter {
     public <R> RequestExecution asyncRun(final Callback<OperationResult<InputStream>, R> callback) {
         final JerseyRequest<InputStream> request = prepareRunRequest();
 
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.get());
-            }
-        });
+        RequestExecution task = new RequestExecution(() -> callback.execute(request.get()));
 
         ThreadPoolUtil.runAsynchronously(task);
         return task;
@@ -136,7 +125,7 @@ public class RunReportAdapter extends AbstractAdapter {
         JerseyRequest<InputStream> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 InputStream.class,
-                path.toArray(new String[path.size()]),
+                path.toArray(new String[0]),
                 new RunReportErrorHandler());
 
         request.addParams(params);

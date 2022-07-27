@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
@@ -22,8 +22,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static java.util.Arrays.asList;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -42,9 +42,6 @@ import static org.testng.Assert.assertTrue;
 public class ImportRequestAdapterTest extends PowerMockTestCase {
 
     public static final String TASK_ID = "taskId";
-    private static final String IMPORT_TASK = "importTask";
-    public static final String PARAM = "param";
-    public static final String PARAM1 = "param1";
     @Mock
     private SessionStorage storageMock;
 
@@ -53,8 +50,6 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
 
     @Mock
     private JerseyRequest<ImportTask> taskRequestMock;
-    @Mock
-    private JerseyRequest deleteRequestMock;
 
     @Mock
     private OperationResult<State> stateOperationResultMock;
@@ -62,8 +57,6 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
     @Mock
     private OperationResult<ImportTask> taskOperationResultMock;
 
-    @Mock
-    private OperationResult deleteOperationResultMock;
 
     private String[] fakeArrayPathForState = new String[]{"import", TASK_ID, "state"};
     private String[] fakeArrayPathForTask= new String[]{"import", TASK_ID};
@@ -86,62 +79,6 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
         // Then
         assertSame(retrievedField, TASK_ID);
         assertEquals(retrievedSessionStorage, storageMock);
-    }
-
-    @Test(testName = "parameter")
-    public void should_pass_param_to_the_importTask_object() throws IllegalAccessException {
-        ImportRequestAdapter adapter = spy(new ImportRequestAdapter(storageMock, TASK_ID));
-        ImportRequestAdapter retrievedAdapter = adapter.parameter(PARAM);
-
-        Field field = field(ImportRequestAdapter.class, IMPORT_TASK);
-        ImportTask retrieved = (ImportTask) field.get(adapter);
-
-        verify(adapter, times(1)).parameter(PARAM);
-        assertNotNull(retrievedAdapter);
-        assertTrue(retrieved.getParameters().size() == 1);
-
-    }
-
-    @Test(testName = "parameter")
-    public void should_pass_organization_to_the_importTask_object() throws IllegalAccessException {
-        String orgId = "orgId";
-        ImportRequestAdapter adapter = spy(new ImportRequestAdapter(storageMock, TASK_ID));
-        ImportRequestAdapter retrievedAdapter = adapter.organization(orgId);
-
-        Field field = field(ImportRequestAdapter.class, IMPORT_TASK);
-        ImportTask retrieved = (ImportTask) field.get(adapter);
-
-        verify(adapter, times(1)).organization(orgId);
-        assertNotNull(retrievedAdapter);
-        assertNotNull(retrieved);
-        assertEquals(orgId, Whitebox.getInternalState(retrieved, "organization"));
-    }
-
-    @Test(testName = "brokenDependencies")
-    public void should_pass_brokenDependencies_parameter_to_the_importTask_object() throws IllegalAccessException {
-        ImportRequestAdapter adapter = spy(new ImportRequestAdapter(storageMock, TASK_ID));
-        ImportRequestAdapter retrievedAdapter = adapter.brokenDependensies(BrokenDependenciesParameter.FAIL);
-
-        Field field = field(ImportRequestAdapter.class, IMPORT_TASK);
-        ImportTask retrieved = (ImportTask) field.get(adapter);
-
-        verify(adapter, times(1)).brokenDependensies(BrokenDependenciesParameter.FAIL);
-        assertNotNull(retrievedAdapter);
-        assertNotNull(retrieved);
-        assertEquals(BrokenDependenciesParameter.FAIL.getValueName(), Whitebox.getInternalState(retrieved, "brokenDependencies"));
-    }
-    @Test(testName = "parameters")
-    public void should_pass_params_to_the_importTask_object() throws IllegalAccessException {
-        ImportRequestAdapter adapter = spy(new ImportRequestAdapter(storageMock, TASK_ID));
-        List<String> parameters = asList(PARAM, PARAM1);
-        ImportRequestAdapter retrievedAdapter = adapter.parameters(parameters);
-
-        Field field = field(ImportRequestAdapter.class, IMPORT_TASK);
-        ImportTask retrieved = (ImportTask) field.get(adapter);
-
-        verify(adapter, times(1)).parameters(parameters);
-        assertNotNull(retrievedAdapter);
-        assertTrue(retrieved.getParameters().size() == 2);
     }
 
     @Test(testName = "state")
@@ -195,22 +132,6 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
         // Then
         assertSame(opResult, taskOperationResultMock);
     }
-    @Test(testName = "restartTask")
-    public void should_return_proper_OperationResult_object_when_cancel_task() {
-        // Given
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(storageMock),
-                eq(Object.class),
-                eq(fakeArrayPathForTask))).thenReturn(deleteRequestMock);
-        PowerMockito.when(deleteRequestMock.delete()).thenReturn(deleteOperationResultMock);
-
-        // When
-        ImportRequestAdapter adapter = new ImportRequestAdapter(storageMock, TASK_ID);
-        OperationResult<ImportTask> opResult = adapter.cancelTask();
-
-        // Then
-        assertSame(opResult, deleteOperationResultMock);
-    }
 
     @Test
     public void should_retrieve_state_asynchronously () throws InterruptedException {
@@ -238,7 +159,7 @@ public class ImportRequestAdapterTest extends PowerMockTestCase {
             }
         });
 
-        PowerMockito.doReturn(null).when(callback).execute(stateOperationResultMock);
+        PowerMockito.doNothing().when(callback).execute(stateOperationResultMock);
 
         /* When */
         RequestExecution retrieved = adapterSpy.asyncState(callback);

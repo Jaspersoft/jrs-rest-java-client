@@ -36,7 +36,6 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildR
 
 public class PermissionsService extends AbstractAdapter {
 
-    public static final String SERVICE_URI = "/permissions";
     public String resourceUri;
 
     public PermissionsService(SessionStorage sessionStorage) {
@@ -49,17 +48,6 @@ public class PermissionsService extends AbstractAdapter {
         }
         this.resourceUri = resourceUri;
         return this;
-    }
-
-    /**
-     * @deprecated Use forResource(resourceUri).permission(permission) API
-     */
-    @Deprecated
-    public PermissionResourceRequestAdapter resource(String resourceUri) {
-        if ("".equals(resourceUri)) {
-            throw new IllegalArgumentException("'resourceUri' mustn't be an empty string");
-        }
-        return new PermissionResourceRequestAdapter(sessionStorage, resourceUri);
     }
 
     public SinglePermissionsAdapter permission() {
@@ -79,56 +67,5 @@ public class PermissionsService extends AbstractAdapter {
 
     public BatchPermissionsAdapter permissions(RepositoryPermissionListWrapper permissions) {
         return new BatchPermissionsAdapter(sessionStorage, permissions);
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public OperationResult createNew(RepositoryPermission permission) {
-        return buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI}, new DefaultErrorHandler()).post(permission);
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public <R> RequestExecution asyncCreateNew(final RepositoryPermission permission, final Callback<OperationResult, R> callback) {
-        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI});
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.post(permission));
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public OperationResult createNew(RepositoryPermissionListWrapper permissions) {
-        JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI});
-        request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
-        return request.post(permissions);
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public <R> RequestExecution asyncCreateNew(final RepositoryPermissionListWrapper permissions, final Callback<OperationResult, R> callback) {
-        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI});
-        request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/collection+{mime}"));
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.post(permissions));
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
     }
 }

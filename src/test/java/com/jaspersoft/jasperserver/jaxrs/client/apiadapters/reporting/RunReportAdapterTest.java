@@ -1,5 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportOutputFormat;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.RunReportErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
@@ -21,9 +23,10 @@ import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -85,7 +88,7 @@ public class RunReportAdapterTest extends PowerMockTestCase {
 
         doReturn(requestMock).when(adapterSpy, "prepareRunRequest"); // private method mock
         doReturn(resultMock).when(requestMock).get();
-        doReturn(null).when(callbackSpy).execute(resultMock);
+        doNothing().when(callbackSpy).execute(resultMock);
 
         // When
         RequestExecution retrieved = adapterSpy.asyncRun(callbackSpy);

@@ -24,12 +24,11 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-
 import java.io.InputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -39,7 +38,7 @@ import java.util.regex.Pattern;
 
 public class RestClientConfiguration {
 
-    private static final Log log = LogFactory.getLog(RestClientConfiguration.class);
+    private static final Logger log = LogManager.getLogger(RestClientConfiguration.class);
     private static final Pattern URL_PATTERN = Pattern.compile("\\b(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
     private static final Pattern VERSION_PATTERN = Pattern.compile("^v(\\d_){2}\\d$");
     private static final Pattern BOOLEAN_PATTERN = Pattern.compile("^(true|false)$", Pattern.CASE_INSENSITIVE);

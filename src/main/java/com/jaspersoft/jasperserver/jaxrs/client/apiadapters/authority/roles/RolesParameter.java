@@ -24,21 +24,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles;
 public enum  RolesParameter {
 
     /**
-     * max quantity of results
-     * @deprecated  Use common approach instead.
-     */
-    @Deprecated
-    MAX_RECORDS("maxRecords"),
-
-    /**
-     * Allows inFolder search roles, may work in conjunction with any
-     * other param.
-     * @deprecated  Use common approach instead.
-     */
-    @Deprecated
-    SEARCH("search"),
-
-    /**
      *  If false, returns all roles of users, set by "user" param,
      *  otherwise returns only roles, which owned by all set users.
      *

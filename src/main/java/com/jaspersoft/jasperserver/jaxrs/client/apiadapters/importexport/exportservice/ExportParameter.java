@@ -89,13 +89,19 @@ public enum ExportParameter {
      * datasource) will be exported.
      */
     SKIP_DEPENDENT_RESOURCES("skip-dependent-resources"),
+
+    /**
+     * Skip favorite resources
+     */
+    SKIP_FAVORITES("skip-favorite-resources"),
+
     /**
      * Pagination. Start index for requested pate.
      */
     OFFSET("offset"),
 
     /**
-     * 	Pagination. Resources count per page
+     * Pagination. Resources count per page
      */
     LIMIT("limit");
 

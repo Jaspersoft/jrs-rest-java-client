@@ -64,11 +64,6 @@ public class ReportUnitResourceOperationProcessorDecorator {
         this.reportUnit = reportUnit;
     }
 
-    @Deprecated
-    public OperationResult<ClientReportUnit> createInFolder(String path) {
-        return processor.create(multipart, new MediaType("application", "repository.reportUnit+json"), path, params);
-    }
-
     public ReportUnitResourceOperationProcessorDecorator inFolder(String parentFolder) {
         this.path = parentFolder;
         return this;
