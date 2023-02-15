@@ -7,7 +7,7 @@
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>7.9.0</version>
+    <version>7.9.1</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
@@ -15,6 +15,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
         <jasperserver-dto.version>7.9.0</jasperserver-dto.version>
+        <artifactory.url>https://bandwidth.jfrog.io/bandwidth/maven</artifactory.url>
+
     </properties>
 
     <scm>
@@ -30,11 +32,24 @@
           <url>https://jaspersoft.jfrog.io/jaspersoft/jaspersoft-clients-releases</url>
         </repository>
         <repository>
-          <id>central</id>
+          <id>jrs-ce</id>
           <name>jaspersoft-releases</name>
           <url>https://jaspersoft.jfrog.io/jaspersoft/jrs-ce-releases</url>
         </repository>
 </repositories>
+    <distributionManagement>
+        <repository>
+            <id>artifactory</id>
+            <name>artifactory-release</name>
+            <url>${artifactory.url}</url>
+        </repository>
+        <snapshotRepository>
+            <id>artifactory</id>
+            <name>artifactory-snapshot</name>
+            <url>${artifactory.url}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 
     <dependencies>
         <dependency>

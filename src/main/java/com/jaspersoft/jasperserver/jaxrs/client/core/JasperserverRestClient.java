@@ -107,12 +107,11 @@ public class JasperserverRestClient {
             String location = response.getLocation().toString();
             String sessionId;
             if (!location.matches("[^?]+\\?([^&]*&)*error=1(&[^&]*)*$")) {
-                sessionId = response.getCookies().get("JSESSIONID").getValue();
-                storage.setSessionId(sessionId);
+                storage.setCookies(response.getCookies());
+                rootTarget.register(new SessionOutputFilter(storage));
             } else {
                 throw new AuthenticationFailedException("Invalid credentials supplied. Could not login to JasperReports Server.");
             }
-            rootTarget.register(new SessionOutputFilter(sessionId));
         } else {
             throw  new ResourceNotFoundException("Server was not found");
         }

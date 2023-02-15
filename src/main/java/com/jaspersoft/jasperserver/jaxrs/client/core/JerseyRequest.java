@@ -63,6 +63,7 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
     private String acceptType;
     private Boolean handleErrors;
     private Locale userLocale;
+    private SessionStorage storage;
 
     protected JerseyRequest(SessionStorage sessionStorage, Class<ResponseType> responseClass) {
         operationResultFactory = new OperationResultFactoryImpl();
@@ -70,7 +71,8 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         this.responseGenericType = null;
         restrictedHttpMethods = sessionStorage.getConfiguration().getRestrictedHttpMethods();
         this.userLocale = sessionStorage.getUserLocale();
-        init(sessionStorage);
+        storage = sessionStorage;
+        init();
     }
 
 
@@ -80,17 +82,18 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
         this.responseClass = (Class<ResponseType>) genericType.getRawType();
         this.responseGenericType = genericType;
         restrictedHttpMethods = sessionStorage.getConfiguration().getRestrictedHttpMethods();
-        init(sessionStorage);
+        storage = sessionStorage;
+        init();
     }
 
-    private void init(SessionStorage sessionStorage) {
-        RestClientConfiguration configuration = sessionStorage.getConfiguration();
+    private void init() {
+        RestClientConfiguration configuration = storage.getConfiguration();
 
         contentType = configuration.getContentMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
         acceptType = configuration.getAcceptMimeType() == JSON ? APPLICATION_JSON : APPLICATION_XML;
         headers = new MultivaluedHashMap<String, String>();
 
-        usersWebTarget = sessionStorage.getRootTarget()
+        usersWebTarget = storage.getRootTarget()
                 .path("/rest_v2");
         handleErrors = configuration.getHandleErrors();
     }
@@ -199,6 +202,10 @@ public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType>
                 case PUT:
                     response = request.put(Entity.entity(entity, contentType));
                     break;
+            }
+
+            if(response != null){
+                storage.updateCookies(response.getCookies());
             }
 
             if (response != null && response.getStatus() == 411 && (httpMethod != POST || httpMethod != GET)) {
