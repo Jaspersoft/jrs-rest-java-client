@@ -9,13 +9,13 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -80,7 +80,7 @@ public class BatchJobsOperationsAdapterTest extends PowerMockTestCase {
         OperationResult<ClientJobSummariesListWrapper> retrieved = adapter.searchJobs();
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientJobSummariesListWrapper.class), eq(new String[]{"jobs"}));
         verify(jobSummaryListWrapperJerseyRequest, times(1)).get();
         assertNotNull(retrieved);

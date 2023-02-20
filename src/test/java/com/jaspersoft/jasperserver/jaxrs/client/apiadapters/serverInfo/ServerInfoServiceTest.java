@@ -14,7 +14,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -164,7 +164,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
         OperationResult<ServerInfo> details = service.details();
 
         assertSame(details, serverInfoOperationResult);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ServerInfo.class), eq(new String[]{"serverInfo"}));
     }
 
@@ -185,7 +185,7 @@ public class ServerInfoServiceTest extends PowerMockTestCase {
         OperationResult<String> edition = service.edition();
 
         // Then
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock), eq(String.class), eq(new String[]{"serverInfo", path}));
 
         assertSame(edition, operationResultMock);

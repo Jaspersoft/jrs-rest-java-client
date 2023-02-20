@@ -46,6 +46,7 @@ import static com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType.JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
+
 public class JerseyRequest<ResponseType> implements RequestBuilder<ResponseType> {
     private static final int GET = 0;
     private static final int DELETE = 1;

@@ -58,7 +58,7 @@ public class ReportExecutionAdapter extends AbstractAdapter {
 
     private ReportExecutionRequest executionRequest;
     private String executionId;
-    private ArrayList<String> path = new ArrayList<String>();
+    private final ArrayList<String> path = new ArrayList<>();
     private final MultivaluedMap<String, String> params = new MultivaluedHashMap<>();
 
     public ReportExecutionAdapter(SessionStorage sessionStorage, ReportExecutionRequest executionRequest) {
@@ -178,7 +178,7 @@ public class ReportExecutionAdapter extends AbstractAdapter {
         if(executionRequest.getParameters() == null) executionRequest.setParameters(new ReportParameters(new ArrayList<ReportParameter>()));
         final ReportParameters parameters = executionRequest.getParameters();
         final List<ReportParameter> reportParametersList = parameters.getReportParameters();
-        if(reportParametersList == null) parameters.setReportParameters(new ArrayList<ReportParameter>());
+        if(reportParametersList == null) parameters.setReportParameters(new ArrayList<>());
         reportParametersList.add(reportParameter);
         return this;
     }
@@ -199,7 +199,7 @@ public class ReportExecutionAdapter extends AbstractAdapter {
         JerseyRequest<ReportExecutionsSetWrapper> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 ReportExecutionsSetWrapper.class,
-                path.toArray(new String[path.size()]),
+                path.toArray(new String[0]),
                 new RunReportErrorHandler());
 
         request.addParams(params);
@@ -211,7 +211,7 @@ public class ReportExecutionAdapter extends AbstractAdapter {
         JerseyRequest<ReportExecution> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 ReportExecution.class,
-                path.toArray(new String[path.size()]),
+                path.toArray(new String[0]),
                 new RunReportErrorHandler());
 
         return request.get();
@@ -223,7 +223,7 @@ public class ReportExecutionAdapter extends AbstractAdapter {
         JerseyRequest<ReportExecutionStatusObject> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 ReportExecutionStatusObject.class,
-                path.toArray(new String[path.size()]),
+                path.toArray(new String[0]),
                 new RunReportErrorHandler());
 
         return request.get();
@@ -247,7 +247,7 @@ public class ReportExecutionAdapter extends AbstractAdapter {
         JerseyRequest<Object> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 Object.class,
-                path.toArray(new String[path.size()]),
+                path.toArray(new String[0]),
                 new RunReportErrorHandler());
         request.addParams(params);
         return request.post(reportParameters);
@@ -259,7 +259,7 @@ public class ReportExecutionAdapter extends AbstractAdapter {
         JerseyRequest<ReportExecutionStatusEntity> request = JerseyRequest.buildRequest(
                 sessionStorage,
                 ReportExecutionStatusEntity.class,
-                path.toArray(new String[path.size()]),
+                path.toArray(new String[0]),
                 new RunReportErrorHandler());
 
         return request.put(new ReportExecutionStatusEntity());
@@ -270,7 +270,7 @@ public class ReportExecutionAdapter extends AbstractAdapter {
         JerseyRequest request = JerseyRequest.buildRequest(
                 sessionStorage,
                 Object.class,
-                path.toArray(new String[path.size()]),
+                path.toArray(new String[0]),
                 new RunReportErrorHandler());
 
         return request.delete();

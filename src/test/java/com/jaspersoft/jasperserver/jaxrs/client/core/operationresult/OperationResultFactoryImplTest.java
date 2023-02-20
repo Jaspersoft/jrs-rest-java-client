@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.testng.Assert.assertNotNull;
 
@@ -112,7 +112,7 @@ public class OperationResultFactoryImplTest extends PowerMockTestCase {
 
         /* Then */
         assertNotNull(retrievedResult);
-        PowerMockito.verifyStatic(times(1));
+        PowerMockito.verifyStatic(ResourcesTypeResolverUtil.class, times(1));
         ResourcesTypeResolverUtil.getClassForMime(anyString());
     }
 

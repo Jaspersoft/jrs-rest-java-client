@@ -30,14 +30,6 @@ public class ExportService extends AbstractAdapter {
         super(sessionStorage);
     }
 
-    /***
-     * @deprecated use {@link #newTask(ExportTask)}
-     */
-    @Deprecated
-    public ExportTaskAdapter newTask() {
-        return new ExportTaskAdapter(sessionStorage);
-    }
-
     public ExportRequestAdapter newTask(ExportTask exportTask) {
         return new ExportRequestAdapter(sessionStorage, exportTask);
     }

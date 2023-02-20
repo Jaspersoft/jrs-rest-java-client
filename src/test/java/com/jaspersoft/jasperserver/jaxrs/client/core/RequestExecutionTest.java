@@ -1,7 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.Callable;

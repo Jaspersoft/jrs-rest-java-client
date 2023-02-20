@@ -32,8 +32,6 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.Job;
-import com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.JobState;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 
@@ -171,94 +169,5 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
         });
         ThreadPoolUtil.runAsynchronously(task);
         return task;
-    }
-
-    /**
-     * @deprecated Replaced by {@link SingleJobOperationsAdapter#update(com.jaspersoft.jasperserver.dto.job.ClientReportJob)}.
-     */
-    public OperationResult<Job> update(Job job) {
-        JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{SERVICE_URI, jobId}, new JobValidationErrorHandler());
-        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
-            request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-        } else {
-            request.setContentType("application/job+json");
-            request.setAccept("application/job+json");
-        }
-        return request.post(job);
-    }
-    /**
-     * @deprecated Replaced by {@link SingleJobOperationsAdapter#asyncUpdate(com.jaspersoft.jasperserver.dto.job.ClientReportJob, com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}.
-     */
-    public <R> RequestExecution asyncUpdate(final Job job, final Callback<OperationResult<Job>, R> callback) {
-        final JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{SERVICE_URI, jobId}, new JobValidationErrorHandler());
-        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
-            request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-        } else {
-            request.setContentType("application/job+json");
-            request.setAccept("application/job+json");
-        }
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.post(job));
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-
-    /**
-     * @deprecated Replaced by {@link SingleJobOperationsAdapter#asyncJobState(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}.
-     */
-    public <R> RequestExecution asyncState(final Callback<OperationResult<JobState>, R> callback) {
-        final JerseyRequest<JobState> request = buildRequest(sessionStorage, JobState.class, new String[]{SERVICE_URI, jobId, STATE});
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.get());
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-    /**
-     * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.SingleJobOperationsAdapter#jobState()}.
-     */
-    public OperationResult<JobState> state() {
-        return buildRequest(sessionStorage, JobState.class, new String[]{SERVICE_URI, jobId, STATE}).get();
-    }
-
-    /**
-     * @deprecated Replaced by {@link SingleJobOperationsAdapter#asyncGetJob(com.jaspersoft.jasperserver.jaxrs.client.core.Callback)}.
-     */
-    public <R> RequestExecution asyncGet(final Callback<OperationResult<Job>, R> callback) {
-        final JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{SERVICE_URI, jobId});
-        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
-            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-        } else {
-            request.setAccept("application/job+json");
-        }
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.get());
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-    /**
-     * @deprecated Replaced by {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.SingleJobOperationsAdapter#getJob()}.
-     */
-    public OperationResult<Job> get() {
-        JerseyRequest<Job> request = buildRequest(sessionStorage, Job.class, new String[]{SERVICE_URI, jobId});
-        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
-            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-        } else {
-            request.setAccept("application/job+json");
-        }
-        return request.get();
     }
 }

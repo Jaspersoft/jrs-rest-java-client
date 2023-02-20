@@ -11,7 +11,7 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
@@ -21,8 +21,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -126,7 +126,7 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
         // Then
         Assert.assertNotNull(retrieved);
         Assert.assertSame(retrieved, operationResultMock);
-        PowerMockito.verifyStatic(times(1));
+        PowerMockito.verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(ResourceThumbnailsListWrapper.class),
                 eq(new String[]{"thumbnails"}), any(DefaultErrorHandler.class));
@@ -167,7 +167,7 @@ public class BatchThumbnailAdapterTest extends PowerMockTestCase {
         // Then
         Assert.assertNotNull(retrieved);
         Assert.assertSame(retrieved, operationResultMock);
-        PowerMockito.verifyStatic(times(1));
+        PowerMockito.verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(ResourceThumbnailsListWrapper.class),
                 eq(new String[]{"thumbnails"}), any(DefaultErrorHandler.class));

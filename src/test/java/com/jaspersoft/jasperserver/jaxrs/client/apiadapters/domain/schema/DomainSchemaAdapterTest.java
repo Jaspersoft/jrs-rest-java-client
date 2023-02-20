@@ -21,14 +21,14 @@ import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static java.util.Arrays.asList;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.internal.util.reflection.Whitebox.getInternalState;
+import static org.powermock.reflect.Whitebox.getInternalState;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -193,7 +193,7 @@ public class DomainSchemaAdapterTest extends PowerMockTestCase {
 
         // Then
         assertNotNull(retrieved);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(eq(sessionStorageMock),
                 eq(Schema.class),
                 eq(new String[]{"resources", URI}),

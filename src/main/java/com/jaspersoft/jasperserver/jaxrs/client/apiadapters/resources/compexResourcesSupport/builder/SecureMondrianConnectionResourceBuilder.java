@@ -44,45 +44,6 @@ public class SecureMondrianConnectionResourceBuilder extends SecureMondrianConne
         super(storage, entity);
     }
 
-    @Deprecated
-    public SecureMondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, ClientFile schemaDescriptor) {
-        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
-        super.connection.setSchema(schemaDescriptor);
-        return this;
-    }
-
-    @Deprecated
-    public SecureMondrianConnectionResourceBuilder withMondrianSchema(String schema, ClientFile schemaDescriptor) {
-        multipart.field("schema", schema, new MediaType("application", "olapMondrianSchema+xml"));
-        super.connection.setSchema(schemaDescriptor);
-        return this;
-    }
-
-    @Deprecated
-    public SecureMondrianConnectionResourceBuilder withAccessGrantSchemasAsStream(List<InputStream> schemas, List<ClientReferenceableFile> schemaDescriptors) {
-        super.connection.setAccessGrants(schemaDescriptors);
-        for (InputStream schema : schemas) {
-            multipart.field("accessGrantSchemas.accessGrantSchema[" + schemaCounter + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
-        }
-        return this;
-    }
-
-    @Deprecated
-    public SecureMondrianConnectionResourceBuilder withAccessGrantSchemasAsString(List<String> schemas, List<ClientReferenceableFile> schemaDescriptors) {
-        super.connection.setAccessGrants(schemaDescriptors);
-        for (String schema : schemas) {
-            multipart.field("accessGrantSchemas.accessGrantSchema[" + schemaCounter + "]", schema, new MediaType("application", "accessGrantSchema+xml"));
-        }
-        return this;
-    }
-
-    @Deprecated
-    public SecureMondrianConnectionResourceBuilder withUri(String uri) {
-        super.connection.setUri(uri);
-        return this;
-    }
-
-
     public SecureMondrianConnectionResourceBuilder withMondrianSchema(InputStream schema, String label) {
         StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart("schema", schema, label, new MediaType("application", "olapMondrianSchema+xml"));
         super.multipart.bodyPart(streamDataBodyPart);

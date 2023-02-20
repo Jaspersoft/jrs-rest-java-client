@@ -63,11 +63,6 @@ public class MondrianConnectionResourceOperationProcessorDecorator {
         this.connection = connection;
     }
 
-    @Deprecated
-    public OperationResult<ClientMondrianConnection> createInFolder(String path) {
-        return processor.create(multipart, new MediaType("application", "repository.mondrianConnection+xml"), path, params);
-    }
-
     public MondrianConnectionResourceOperationProcessorDecorator inFolder(String parentFolder) {
         this.path = parentFolder;
         return this;

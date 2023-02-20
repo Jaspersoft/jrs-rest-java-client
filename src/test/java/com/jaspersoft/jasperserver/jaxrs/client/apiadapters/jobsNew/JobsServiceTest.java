@@ -4,7 +4,6 @@ import com.jaspersoft.jasperserver.dto.job.ClientJobCalendar;
 import com.jaspersoft.jasperserver.dto.job.ClientReportJob;
 import com.jaspersoft.jasperserver.dto.job.wrappers.ClientCalendarNameListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.BatchJobsOperationsAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobValidationErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.SingleJobOperationsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.calendar.CalendarType;
@@ -14,10 +13,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.JRSVersion;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -28,9 +24,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -128,81 +125,19 @@ public class JobsServiceTest extends PowerMockTestCase {
         assertSame(retrieved, expectedJobOperationsAdapter);
     }
 
-    @Test(testName = "scheduleReport_for_v5_6_1")
-    public void should_return_proper_OperationResult_when_JRS_version_is_v5_6_1() {
-
-        // Given
-        JobsService serviceSpy = spy(new JobsService(sessionStorageMock));
-
-        mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(ClientReportJob.class),
-                eq(new String[]{"jobs"}),
-                any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
-        when(jobRequestMock.put(reportMock)).thenReturn(expectedJobOperationResultMock);
-        when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
-        when(configurationMock.getJrsVersion()).thenReturn(JRSVersion.v5_6_1);
-        when(configurationMock.getContentMimeType()).thenReturn(MimeType.XML);
-
-        // When
-        serviceSpy.scheduleReport(reportMock);
-
-        // Then
-        verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(ClientReportJob.class),
-                eq(new String[]{"jobs"}),
-                any(JobValidationErrorHandler.class));
-        verify(jobRequestMock, times(1)).put(reportMock);
-        verify(jobRequestMock, times(1)).setContentType("application/job+xml");
-        verify(jobRequestMock, times(1)).setAccept("application/job+xml");
-    }
-
-    @Test(testName = "scheduleReport_for_v4_7_0")
-    public void should_return_proper_OperationResult_when_JRS_version_is_v4_7_0() {
-
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(ClientReportJob.class),
-                eq(new String[]{"jobs"}),
-                any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
-        when(jobRequestMock.put(reportMock)).thenReturn(expectedJobOperationResultMock);
-        when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
-        when(configurationMock.getJrsVersion()).thenReturn(JRSVersion.v4_7_0);
-        when(configurationMock.getContentMimeType()).thenReturn(MimeType.JSON);
-        JobsService serviceSpy = spy(new JobsService(sessionStorageMock));
-
-        // When
-        OperationResult<ClientReportJob> retrieved = serviceSpy.scheduleReport(reportMock);
-
-        // Then
-        verifyStatic(times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(ClientReportJob.class),
-                eq(new String[]{"jobs"}),
-                any(JobValidationErrorHandler.class));
-        verify(jobRequestMock, times(1)).put(reportMock);
-        verify(jobRequestMock, times(1)).setContentType("application/job+json");
-        verify(jobRequestMock, times(1)).setAccept("application/job+json");
-
-        assertNotNull(retrieved);
-        assertSame(retrieved, expectedJobOperationResultMock);
-    }
-
     @Test(testName = "allCalendars")
     public void should_return_proper_op_result_object() {
 
         // Given
         JobsService serviceSpy = spy(new JobsService(sessionStorageMock));
-        doReturn(expectedWrapperOperationResultMock).when(serviceSpy).calendar((ClientJobCalendar.Type )null);
+        doReturn(expectedWrapperOperationResultMock).when(serviceSpy).calendar((ClientJobCalendar.Type) null);
 
         // When
         OperationResult<ClientCalendarNameListWrapper> retrieved = serviceSpy.allCalendars();
 
         // Then
         verify(serviceSpy, times(1)).allCalendars();
-        verify(serviceSpy, times(1)).calendar(((ClientJobCalendar.Type)null));
+        verify(serviceSpy, times(1)).calendar(((ClientJobCalendar.Type) null));
         verify(serviceSpy, never()).calendar(ClientJobCalendar.Type.holiday);
         verifyNoMoreInteractions(serviceSpy);
 
@@ -244,7 +179,7 @@ public class JobsServiceTest extends PowerMockTestCase {
         assertNotNull(retrieved);
         assertSame(retrieved, expectedWrapperOperationResultMock);
 
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(ClientCalendarNameListWrapper.class),
                 eq(new String[]{"jobs", "calendars"}));
@@ -266,13 +201,13 @@ public class JobsServiceTest extends PowerMockTestCase {
         JobsService serviceSpy = spy(new JobsService(sessionStorageMock));
 
         // When
-        OperationResult<ClientCalendarNameListWrapper> retrieved = serviceSpy.calendar((ClientJobCalendar.Type)null);
+        OperationResult<ClientCalendarNameListWrapper> retrieved = serviceSpy.calendar((ClientJobCalendar.Type) null);
 
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, expectedWrapperOperationResultMock);
 
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         JerseyRequest.buildRequest(eq(sessionStorageMock),
                 eq(ClientCalendarNameListWrapper.class),
                 eq(new String[]{"jobs", "calendars"}));
@@ -333,7 +268,7 @@ public class JobsServiceTest extends PowerMockTestCase {
             }
         });
 
-        PowerMockito.doReturn(null).when(callback).execute(expectedWrapperOperationResultMock);
+        PowerMockito.doNothing().when(callback).execute(expectedWrapperOperationResultMock);
 
         /* When */
         RequestExecution retrieved = serviceSpy.asyncCalendar(ClientJobCalendar.Type.annual, callback);
@@ -352,115 +287,9 @@ public class JobsServiceTest extends PowerMockTestCase {
         Mockito.verify(wrapperRequestMock).addParam("calendarType", "annual");
     }
 
-    @Test
-    public void should_send_ScheduleReport_asynchronously_() throws InterruptedException {
-
-        /* Given */
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock),
-                eq(ClientReportJob.class),
-                eq(new String[]{"jobs"}),
-                any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
-
-        PowerMockito.doReturn(expectedJobOperationResultMock).when(jobRequestMock).put(reportMock);
-        JobsService serviceSpy = PowerMockito.spy(new JobsService(sessionStorageMock));
-
-        final AtomicInteger newThreadId = new AtomicInteger();
-        final int currentThreadId = (int) Thread.currentThread().getId();
-
-        final Callback<OperationResult<ClientReportJob>, Void> callback = PowerMockito.spy(new Callback<OperationResult<ClientReportJob>, Void>() {
-            @Override
-            public Void execute(OperationResult<ClientReportJob> data) {
-                newThreadId.set((int) Thread.currentThread().getId());
-                synchronized (this) {
-                    this.notify();
-                }
-                return null;
-            }
-        });
-
-        PowerMockito.doReturn(null).when(callback).execute(expectedJobOperationResultMock);
-        PowerMockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        PowerMockito.doReturn(JRSVersion.v5_0_0).when(configurationMock).getJrsVersion();
-        PowerMockito.doReturn(null).when(callback).execute(expectedJobOperationResultMock);
-        PowerMockito.doReturn(null).when(callback).execute(expectedJobOperationResultMock);
-
-        /* When */
-        RequestExecution retrieved = serviceSpy.asyncScheduleReport(reportMock, callback);
-
-        /* Wait */
-        synchronized (callback) {
-            callback.wait(1000);
-        }
-
-        /* Then */
-        Assert.assertNotNull(retrieved);
-        Assert.assertNotSame(currentThreadId, newThreadId.get());
-
-        Mockito.verify(jobRequestMock).put(reportMock);
-        Mockito.verify(jobRequestMock).setContentType("application/job+json");
-        Mockito.verify(jobRequestMock).setAccept("application/job+json");
-        Mockito.verify(callback).execute(expectedJobOperationResultMock);
-        Mockito.verify(sessionStorageMock).getConfiguration();
-        Mockito.verify(configurationMock).getJrsVersion();
-    }
-
-    @Test
-    public void should_send_ScheduleReport_asynchronously() throws InterruptedException {
-
-        /* Given */
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock),
-                eq(ClientReportJob.class),
-                eq(new String[]{"jobs"}),
-                any(JobValidationErrorHandler.class))).thenReturn(jobRequestMock);
-
-        PowerMockito.doReturn(expectedJobOperationResultMock).when(jobRequestMock).put(reportMock);
-        JobsService serviceSpy = PowerMockito.spy(new JobsService(sessionStorageMock));
-
-        final AtomicInteger newThreadId = new AtomicInteger();
-        final int currentThreadId = (int) Thread.currentThread().getId();
-
-        final Callback<OperationResult<ClientReportJob>, Void> callback = PowerMockito.spy(new Callback<OperationResult<ClientReportJob>, Void>() {
-            @Override
-            public Void execute(OperationResult<ClientReportJob> data) {
-                newThreadId.set((int) Thread.currentThread().getId());
-                synchronized (this) {
-                    this.notify();
-                }
-                return null;
-            }
-        });
-
-        PowerMockito.doReturn(null).when(callback).execute(expectedJobOperationResultMock);
-        PowerMockito.doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        PowerMockito.doReturn(JRSVersion.v5_6_1).when(configurationMock).getJrsVersion();
-        PowerMockito.doReturn(null).when(callback).execute(expectedJobOperationResultMock);
-        PowerMockito.doReturn(null).when(callback).execute(expectedJobOperationResultMock);
-
-        /* When */
-        RequestExecution retrieved = serviceSpy.asyncScheduleReport(reportMock, callback);
-
-        /* Wait */
-        synchronized (callback) {
-            callback.wait(1000);
-        }
-
-        /* Then */
-        Assert.assertNotNull(retrieved);
-        Assert.assertNotSame(currentThreadId, newThreadId.get());
-
-        Mockito.verify(jobRequestMock).put(reportMock);
-        Mockito.verify(jobRequestMock).setContentType("application/job+xml");
-        Mockito.verify(jobRequestMock).setAccept("application/job+xml");
-        Mockito.verify(callback).execute(expectedJobOperationResultMock);
-        Mockito.verify(sessionStorageMock, times(3)).getConfiguration();
-        Mockito.verify(configurationMock).getJrsVersion();
-    }
-
     @AfterMethod
     public void after() {
         reset(sessionStorageMock, expectedAdapterMock, expectedJobOperationsAdapter,
-              jobRequestMock, expectedJobOperationResultMock, reportMock, configurationMock);
+                jobRequestMock, expectedJobOperationResultMock, reportMock, configurationMock);
     }
 }

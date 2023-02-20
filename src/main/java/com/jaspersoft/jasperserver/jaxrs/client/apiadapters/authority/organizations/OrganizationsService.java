@@ -32,7 +32,7 @@ public class OrganizationsService extends AbstractAdapter {
 
     public SingleOrganizationAdapter organization(ClientTenant organization) {
         if (organization != null && ((organization.getAlias() != null && !organization.getAlias().isEmpty())
-                ||(organization.getId() != null && !organization.getId().isEmpty()) )) {
+                || (organization.getId() != null && !organization.getId().isEmpty()))) {
             return new SingleOrganizationAdapter(sessionStorage, organization);
         }
         throw new IllegalArgumentException("Organization is not valid.");
@@ -46,12 +46,5 @@ public class OrganizationsService extends AbstractAdapter {
         return new BatchOrganizationsAdapter(sessionStorage);
     }
 
-    /**
-     * @deprecated Replaced by {@link OrganizationsService#allOrganizations()}.
-     */
-@Deprecated
-    public BatchOrganizationsAdapter organizations() {
-        return new BatchOrganizationsAdapter(sessionStorage);
-    }
 
 }

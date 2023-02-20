@@ -164,30 +164,10 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return task;
     }
 
-    @Deprecated
-    public OperationResult<ClientResource> createNew(ClientResource resource) {
-        return prepareCreateOrUpdateRequest(resource).post(resource);
-    }
-
-
     @SuppressWarnings("unchecked")
     public <T extends ClientResource<T>> OperationResult<T> create() {
         return (OperationResult<T>) prepareCreateOrUpdateRequest(resource).post(resource);
     }
-
-    @Deprecated
-    public <R> RequestExecution asyncCreateNew(final ClientResource resource, final Callback<OperationResult<ClientResource>, R> callback) {
-        final JerseyRequest<ClientResource> request = prepareCreateOrUpdateRequest(resource);
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.post(resource));
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
-    }
-
 
     private <T extends ClientResource<T>> JerseyRequest<T> prepareCreateOrUpdateRequest(T resource) {
         Class resourceType = ResourcesTypeResolverUtil.getResourceType(resource);
@@ -197,11 +177,6 @@ public class SingleResourceAdapter extends AbstractAdapter {
         request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), resourceMimeType));
         request.addParams(params);
         return request;
-    }
-
-    @Deprecated
-    public OperationResult<ClientResource> copyFrom(String fromUri) {
-        return copyOrMove(false, fromUri);
     }
 
     public OperationResult<ClientResource> copy() {
@@ -216,13 +191,8 @@ public class SingleResourceAdapter extends AbstractAdapter {
         return buildCopyMovieRequest(clazz).post(null);
     }
 
-    public <T extends ClientResource<T>>OperationResult<T> move(Class<T> clazz) {
+    public <T extends ClientResource<T>> OperationResult<T> move(Class<T> clazz) {
         return buildCopyMovieRequest(clazz).put("");
-    }
-
-    @Deprecated
-    public OperationResult<ClientResource> moveFrom(String fromUri) {
-        return copyOrMove(true, fromUri);
     }
 
     private OperationResult<ClientResource> copyOrMove(boolean moving, String fromUri) {
@@ -289,65 +259,6 @@ public class SingleResourceAdapter extends AbstractAdapter {
         request.setContentType(MediaType.MULTIPART_FORM_DATA);
         request.addParams(params);
         return request.put(multipartResource);
-    }
-
-    /**
-     * @deprecated use @Link {@link #detailsForType(Class)}  (Class)}
-     */
-    @Deprecated
-    public <T extends ClientResource<T>> OperationResult<T> get(Class<T> clazz) {
-        JerseyRequest<T> request = buildRequest(clazz);
-        request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),
-                ResourcesTypeResolverUtil.extractClientType(clazz)));
-        request.addParams(params);
-        return request.get();
-    }
-
-    /**
-     * @deprecated use @Link {@link #details()}
-     */
-    @Deprecated
-    public <T extends ClientResource<T>> OperationResult<? extends ClientResource> get() {
-        JerseyRequest<? extends ClientResource> request;
-        if (isRootFolder(resourceUri)) {
-            request = buildRequest(ClientFolder.class);
-            request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),
-                    ResourcesTypeResolverUtil.extractClientType(ClientFolder.class)));
-        } else {
-            request = buildRequest(ClientFile.class);
-            request.setAccept(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(),
-                    ResourcesTypeResolverUtil.extractClientType(ClientFile.class)));
-        }
-        request.addParams(params);
-        return request.get();
-    }
-
-    @Deprecated
-    public OperationResult<ClientFile> uploadFile(File fileContent,
-                                                  ClientFile.FileType fileType,
-                                                  String label,
-                                                  String description) {
-        FormDataMultiPart form = prepareUploadForm(fileContent, fileType, label, description);
-        JerseyRequest<ClientFile> request = prepareUploadFileRequest();
-        return request.post(form);
-    }
-
-    @Deprecated
-    public <R> RequestExecution asyncUploadFile(final File fileContent,
-                                                final ClientFile.FileType fileType,
-                                                final String label,
-                                                final String description,
-                                                final Callback<OperationResult<ClientFile>, R> callback) {
-        final FormDataMultiPart form = prepareUploadForm(fileContent, fileType, label, description);
-        final JerseyRequest<ClientFile> request = prepareUploadFileRequest();
-        RequestExecution task = new RequestExecution(new Runnable() {
-            @Override
-            public void run() {
-                callback.execute(request.post(form));
-            }
-        });
-        ThreadPoolUtil.runAsynchronously(task);
-        return task;
     }
 
     private FormDataMultiPart prepareUploadForm(File fileContent,

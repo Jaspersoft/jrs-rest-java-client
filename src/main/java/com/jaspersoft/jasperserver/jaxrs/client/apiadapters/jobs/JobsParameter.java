@@ -42,7 +42,13 @@ public enum JobsParameter {
     SEARCH_LABEL("label"),
 
     /**
-     * Reserved, not implemented
+     * This argument defines the current state of a job.
+     * The parameter accepts multiple values:
+     * NORMAL
+     * EXECUTING
+     * PAUSED
+     * COMPLETE
+     * ERROR
      */
     SEARCH_STATE("state"),
 
@@ -80,6 +86,7 @@ public enum JobsParameter {
      * SORTBY_STATUS
      * SORTBY_LASTRUN
      * SORTBY_NEXTRUN
+     * SORTBY_RESOURCELABEL
      */
     SEARCH_SORT_TYPE("sortType"),
 
@@ -89,6 +96,50 @@ public enum JobsParameter {
      * false - descending
      */
     SEARCH_IS_ASCENDING("isAscending"),
+
+    /**
+     * This argument defines the job id; jobID should be integer/long
+     */
+    SEARCH_JOB_ID("jobID"),
+
+    /**
+     * This argument defines the start of a range of time that matches if the job was previously triggered during this time.
+     * Specify the date and time in the following pattern: `yyyy-MM-dd'T'HH:mm:ss.SSSZ`.
+     */
+    SEARCH_PREVIOUS_FIRE_TIME_FROM("previousFireTimeFrom"),
+
+    /**
+     * This argument defines the end of a range of time that matches if the job was previously triggered during this time.
+     * Specify the date and time in the following pattern: `yyyy-MM-dd'T'HH:mm:ss.SSSZ`.
+     */
+    SEARCH_PREVIOUS_FIRE_TIME_TO("previousFireTimeTo"),
+
+    /**
+     * This argument defines the start of a range of time that matches if the job that is currently running was triggered during this time.
+     * Specify the date and time in the following pattern: `yyyy-MM-dd'T'HH:mm:ss.SSSZ`.
+     */
+    SEARCH_NEST_FIRE_TIME_FROM("nextFireTimeFrom"),
+
+    /**
+     * This argument defines the end of a range of time that matches if the job that is currently running was triggered during this time.
+     * Specify the date and time in the following pattern: `yyyy-MM-dd'T'HH:mm:ss.SSSZ`.
+     */
+    SEARCH_NEST_FIRE_TIME_TO("nextFireTimeTo"),
+
+    /**
+     * This argument defines the job label.
+     */
+    SEARCH_JOB_LABEL("jobLabel"),
+
+    /**
+     * This argument defines the Resource label.
+     */
+    SEARCH_JOB_RESOURCE_LABEL("resourceLabel"),
+
+    /**
+     * This argument defines the job description.
+     */
+    SEARCH_JOB_DESCRIPTION("description"),
 
     /**
      * Can be used multiple times inFolder createInFolder a list of jobIDs inFolder update

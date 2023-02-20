@@ -67,19 +67,6 @@ public class ResourcesService extends AbstractAdapter {
         return new SingleFileResourceUploadAdapter(sessionStorage, fileResourceUri);
     }
 
-    /**
-     * Additional features to work with such resources as
-     * - SemanticLayerDataSource
-     * - ReportUnit
-     * - MondrianConnection
-     * - SecureMondrianConnection
-     */
-    @Deprecated
-    public SemanticLayerResourceBuilder resource(ClientSemanticLayerDataSource resourceDescriptor) {
-        ClientSemanticLayerDataSource copy = new ClientSemanticLayerDataSource(resourceDescriptor);
-        return getBuilder(copy, sessionStorage);
-    }
-
     public SemanticLayerResourceBuilder semanticLayerDataSourceResource(ClientSemanticLayerDataSource resourceDescriptor) {
         return getBuilder(resourceDescriptor, sessionStorage);
     }
@@ -104,21 +91,4 @@ public class ResourcesService extends AbstractAdapter {
         return getBuilder(mondrianConnectionDescriptor, sessionStorage);
     }
 
-    @Deprecated
-    public ReportUnitResourceBuilder resource(ClientReportUnit resourceDescriptor) {
-        ClientReportUnit copy = new ClientReportUnit(resourceDescriptor);
-        return getBuilder(copy, sessionStorage);
-    }
-
-    @Deprecated
-    public MondrianConnectionResourceBuilder resource(ClientMondrianConnection resourceDescriptor) {
-        ClientMondrianConnection copy = new ClientMondrianConnection(resourceDescriptor);
-        return getBuilder(copy, sessionStorage);
-    }
-
-    @Deprecated
-    public SecureMondrianConnectionResourceBuilder resource(ClientSecureMondrianConnection resourceDescriptor) {
-        ClientSecureMondrianConnection copy = new ClientSecureMondrianConnection(resourceDescriptor);
-        return getBuilder(copy, sessionStorage);
-    }
 }

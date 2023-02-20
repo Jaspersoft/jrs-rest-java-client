@@ -41,7 +41,7 @@ public class MimeTypeUtilTest extends PowerMockTestCase {
     public void test_invoke_toCorrectContentMime_method_only_once (){
         PowerMockito.mockStatic(MimeTypeUtil.class);
         MimeTypeUtil.toCorrectContentMime(configurationMock, "abc");
-        PowerMockito.verifyStatic(Mockito.times(1));
+        PowerMockito.verifyStatic(MimeTypeUtil.class, Mockito.times(1));
         MimeTypeUtil.toCorrectContentMime(configurationMock, "abc");
     }
 

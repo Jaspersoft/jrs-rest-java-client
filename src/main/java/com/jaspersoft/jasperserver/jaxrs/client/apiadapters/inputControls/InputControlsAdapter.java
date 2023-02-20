@@ -25,17 +25,9 @@ public class InputControlsAdapter extends AbstractAdapter {
 
     public InputControlsAdapter(SessionStorage sessionStorage, String reportUnitUri) {
         super(sessionStorage);
-        this.container(reportUnitUri);
+        this.forReport(reportUnitUri);
     }
 
-    @Deprecated
-    public InputControlsAdapter container(String uri) {
-        if (uri == null) {
-            throw new MandatoryParameterNotFoundException("Uri of container should be specified");
-        }
-        this.containerUri = uri;
-        return this;
-    }
 
     public InputControlsAdapter forReport(String uri) {
         if (uri == null) {

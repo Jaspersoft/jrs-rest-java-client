@@ -3,8 +3,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting;
 import com.jaspersoft.jasperserver.dto.reports.ReportParameter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsUtil;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReorderingReportParametersAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportparameters.ReportParametersAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util.ReportOutputFormat;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import org.mockito.Mock;
@@ -23,16 +21,14 @@ import java.util.List;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
-@PrepareForTest({ReorderingReportParametersAdapter.class, ReportParametersAdapter.class, /*RunReportAdapter.class,*/ ReportsAdapter.class, ReportOptionsUtil.class})
+@PrepareForTest({ReportsAdapter.class, ReportOptionsUtil.class})
 public class ReportsAdapterTest extends PowerMockTestCase {
 
     public static final String REPORT_UNIT_URI = "reportUnitUri";
@@ -40,17 +36,12 @@ public class ReportsAdapterTest extends PowerMockTestCase {
     @Mock
     private SessionStorage sessionStorageMock;
 
-    @Mock
-    private ReorderingReportParametersAdapter reportParametersAdapterMock;
 
     @Mock
     private ReportOptionsAdapter reportOptionsAdapterMock;
 
     @Mock
     private RunReportAdapter reportAdapterMock;
-
-    @Mock
-    private ReportParametersAdapter parametersAdapterMock;
 
     @BeforeMethod
     public void before() {
@@ -123,35 +114,6 @@ public class ReportsAdapterTest extends PowerMockTestCase {
 
         assertSame(retrieved, reportOptionsAdapterMock);
         verifyNew(ReportOptionsAdapter.class, times(1)).withArguments(sessionStorageMock, REPORT_UNIT_URI, map);
-    }
-
-    @Test
-    public void should_return_proper_ReorderingReportParametersAdapter_object() throws Exception {
-
-        /* When */
-        PowerMockito.whenNew(ReorderingReportParametersAdapter.class).withArguments(sessionStorageMock, REPORT_UNIT_URI).thenReturn(reportParametersAdapterMock);
-
-        ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, REPORT_UNIT_URI);
-        ReorderingReportParametersAdapter retrieved = adapterSpy.reportParameters();
-
-        assertSame(retrieved, reportParametersAdapterMock);
-        verifyNew(ReorderingReportParametersAdapter.class, times(1)).withArguments(sessionStorageMock, REPORT_UNIT_URI);
-    }
-
-    @Test
-    public void should_return_proper_ReportParametersAdapter_instance() throws Exception {
-
-        /* Given */
-        ReportParametersAdapter parametersAdapterMock = mock(ReportParametersAdapter.class);
-        whenNew(ReportParametersAdapter.class).withArguments(sessionStorageMock, REPORT_UNIT_URI, "1;2;3;4;5;").thenReturn(parametersAdapterMock);
-        ReportsAdapter adapterSpy = new ReportsAdapter(sessionStorageMock, REPORT_UNIT_URI);
-
-        /* When */
-        ReportParametersAdapter retrieved = adapterSpy.reportParameters("1", "2", "3", "4", "5");
-
-        /* Then */
-        assertSame(retrieved, parametersAdapterMock);
-        verifyNew(ReportParametersAdapter.class, times(1)).withArguments(sessionStorageMock, REPORT_UNIT_URI, "1;2;3;4;5;");
     }
 
     @Test
@@ -263,6 +225,6 @@ public class ReportsAdapterTest extends PowerMockTestCase {
 
     @AfterMethod
     public void after() {
-        reset(sessionStorageMock, /*formatMock, */reportAdapterMock, parametersAdapterMock, reportOptionsAdapterMock, reportParametersAdapterMock);
+        reset(sessionStorageMock, reportAdapterMock, reportOptionsAdapterMock);
     }
 }

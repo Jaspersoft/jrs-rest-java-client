@@ -57,7 +57,7 @@ public class ThreadPoolUtilTest extends PowerMockTestCase {
         ThreadPoolUtil.runAsynchronously(executionTaskMock);
 
         /* Then */
-        PowerMockito.verifyStatic(Mockito.times(1));
+        PowerMockito.verifyStatic(Executors.class, Mockito.times(1));
         Executors.newCachedThreadPool();
 
         inOrder.verify(executionTaskMock).getTask();

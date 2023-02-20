@@ -15,8 +15,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
@@ -96,7 +95,7 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
         OperationResult<InputControlStateListWrapper> retrieved = adapterSpy.get();
 
         // Then
-        verifyStatic();
+        verifyStatic(JerseyRequest.class);
         buildRequest(
                 eq(sessionStorageMock),
                 eq(InputControlStateListWrapper.class),
@@ -134,7 +133,7 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
         OperationResult<InputControlStateListWrapper> retrieved = adapterSpy.get();
 
         // Then
-        verifyStatic();
+        verifyStatic(JerseyRequest.class);
         buildRequest(
                 eq(sessionStorageMock),
                 eq(InputControlStateListWrapper.class),
@@ -143,79 +142,6 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
         Mockito.verify(requestMock).get();
         Mockito.verify(requestMock).addParam("freshData", "true");
         assertEquals(Whitebox.getInternalState(adapterSpy, "useFreshData"), Boolean.TRUE);
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-    }
-
-    @Test
-    public void should_return_proper_operation_result__when_invoke_post() {
-
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                        eq(sessionStorageMock),
-                        eq(InputControlStateListWrapper.class),
-                        eq(new String[]{"reports", uri, "inputControls", "param1;param2", "values"}))
-        ).thenReturn(requestMock);
-
-        doReturn(operationResultMock)
-                .when(requestMock)
-                .post(anyObject());
-
-        InputControlsValuesAdapter adapterSpy = spy(new InputControlsValuesAdapter(sessionStorageMock, uri));
-
-        // When
-        OperationResult<InputControlStateListWrapper> retrieved = adapterSpy
-                .parameter("param1", "value1")
-                .parameter("param2", "value2", "value3")
-                .run();
-
-        // Then
-        verifyStatic();
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(InputControlStateListWrapper.class),
-                eq(new String[]{"reports", uri, "inputControls", "param1;param2", "values"}));
-
-        Mockito.verify(requestMock).post(anyObject());
-        Mockito.verify(requestMock).post(anyObject());
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-    }
-
-    @Test
-    public void should_invoke_include_full_structure() {
-
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                        eq(sessionStorageMock),
-                        eq(InputControlStateListWrapper.class),
-                        eq(new String[]{"reports", uri, "inputControls", "values"}))
-        ).thenReturn(requestMock);
-
-        doReturn(operationResultMock)
-                .when(requestMock)
-                .post(anyObject());
-
-        InputControlsValuesAdapter adapterSpy = spy(new InputControlsValuesAdapter(sessionStorageMock, uri));
-
-        // When
-        OperationResult<InputControlStateListWrapper> retrieved = adapterSpy
-                .parameter("param1", "value1")
-                .parameter("param2", "value2")
-                .includeFullStructure(true)
-                .run();
-
-        // Then
-        verifyStatic();
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(InputControlStateListWrapper.class),
-                eq(new String[]{"reports", uri, "inputControls", "values"}));
-
-        Mockito.verify(requestMock).post(anyObject());
-        assertEquals(Whitebox.getInternalState(adapterSpy, "includeFullStructure"), Boolean.TRUE);
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
     }

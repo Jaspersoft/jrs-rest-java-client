@@ -28,9 +28,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static java.util.Arrays.asList;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -96,7 +97,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
@@ -167,7 +168,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
@@ -195,7 +196,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
@@ -224,7 +225,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
@@ -259,7 +260,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
@@ -372,7 +373,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
@@ -431,7 +432,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
@@ -486,7 +487,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
@@ -542,7 +543,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
@@ -599,7 +600,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
@@ -656,7 +657,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         // Then
         assertNotNull(retrieved);
         assertSame(retrieved, operationResultMock);
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(HypermediaAttributesListWrapper.class),
@@ -710,7 +711,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
             }
         });
 
-        doReturn(null).when(callback).execute(operationResultMock);
+        doNothing().when(callback).execute(operationResultMock);
 
         // When
         RequestExecution retrieved = adapter.asyncGet(callback);
@@ -747,7 +748,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
 
         doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest");
         doReturn(operationResultMock).when(jerseyRequestMock).delete();
-        doReturn(null).when(callback).execute(operationResultMock);
+        doNothing().when(callback).execute(operationResultMock);
 
         // When
         RequestExecution retrieved = adapterSpy.asyncDelete(callback);
@@ -787,7 +788,7 @@ public class BatchAttributeAdapterTest extends PowerMockTestCase {
         doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest");
         doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest");
         doReturn(operationResultMock).when(jerseyRequestMock).put(listWrapperMock);
-        doReturn(null).when(callback).execute(operationResultMock);
+        doNothing().when(callback).execute(operationResultMock);
 
         // When
         RequestExecution retrieved = adapterSpy.asyncCreateOrUpdate(listWrapperMock, callback);

@@ -20,6 +20,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientProperties;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -28,11 +30,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -45,6 +47,8 @@ import static org.powermock.api.support.membermodification.MemberMatcher.field;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertNotNull;
 
 /**
@@ -74,6 +78,8 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
     private Response responseMock;
     @Mock
     private DefaultErrorHandler errorHandler;
+    @Captor
+    private ArgumentCaptor<Entity<?>> entityArgumentCaptor;
 
 
     final String USER_NAME = "John";
@@ -492,7 +498,12 @@ public class JasperserverRestClientTest extends PowerMockTestCase {
         verify(rootTargetMock).path("/j_spring_security_check");
         verify(webTargetMock).property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
         verify(webTargetMock).request();
-        verify(invocationBuilderMock).post(Entity.entity(any(Form.class), MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+
+        verify(invocationBuilderMock).post(entityArgumentCaptor.capture());
+        Entity<?> entity = entityArgumentCaptor.getValue();
+        assertEquals(entity.getMediaType(), MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+        assertSame(entity.getEntity().getClass(), Form.class);
+
         verify(responseMock).getLocation();
         verify(responseMock).getCookies();
         verify(sessionStorageMock).setCookies(responseMock.getCookies());

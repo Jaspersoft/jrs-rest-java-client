@@ -110,25 +110,6 @@ public class OrganizationsServiceTest extends PowerMockTestCase {
         service.organization("");
     }
 
-    /**
-     * Test should be deleted after deleting appropriate method
-     * @deprecated Replaced by {@link OrganizationsServiceTest#should_return_proper_instance_of_BatchOrganizationsAdapter_deprecated}.
-     */
-    @Test
-    public void should_return_proper_instance_of_BatchOrganizationsAdapter_deprecated() throws Exception {
-
-        // Given
-        whenNew(BatchOrganizationsAdapter.class).withArguments(sessionStorageMock).thenReturn(batchOrganizationsAdapter);
-        OrganizationsService service = new OrganizationsService(sessionStorageMock);
-
-        // When
-        BatchOrganizationsAdapter retrieved = service.organizations();
-
-        // Then
-        assertSame(retrieved, batchOrganizationsAdapter);
-    }
-
-
     @AfterMethod
     public void after() {
         reset(sessionStorageMock, batchOrganizationsAdapter,operationResultMock, jerseyRequestMock, singleOrganizationAdapter);

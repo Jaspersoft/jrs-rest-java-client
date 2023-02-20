@@ -8,7 +8,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.io.InputStream;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.AfterMethod;
@@ -16,8 +16,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -203,7 +203,7 @@ public class SingleThumbnailAdapterTest extends PowerMockTestCase {
         assertSame(retrieved, operationResultMock);
         verify(jerseyRequestMock).setAccept(eq("image/jpeg"));
         verify(jerseyRequestMock).get();
-        verifyStatic(times(1));
+        verifyStatic(JerseyRequest.class, times(1));
         buildRequest(
                 eq(sessionStorageMock),
                 eq(InputStream.class),
