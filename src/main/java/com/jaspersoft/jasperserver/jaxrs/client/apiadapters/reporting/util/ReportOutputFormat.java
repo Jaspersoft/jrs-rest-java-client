@@ -23,6 +23,6 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.util;
 
 public enum ReportOutputFormat {
 
-    PDF, HTML, XLS, XLSX, RTF, CSV, XML, DOCX, ODT,
+    PDF, HTML, XLS, XLSX, RTF, CSV, XML, DOCX, ODT, PPTX,
     ODS, JRPRINT
 }

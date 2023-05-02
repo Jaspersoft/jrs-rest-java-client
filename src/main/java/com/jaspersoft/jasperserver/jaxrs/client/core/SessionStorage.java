@@ -120,7 +120,7 @@ public class SessionStorage {
         if (sessionId != null) {
             rootTarget.register(new SessionOutputFilter(sessionId));
         }
-        if (configuration.getLogHttp()) {
+        if (Boolean.TRUE.equals(configuration.getLogHttp())) {
             rootTarget.property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL, "INFO");
             rootTarget.register(initLoggingFilter());
         }
@@ -131,7 +131,7 @@ public class SessionStorage {
         Logger logger = Logger.getLogger(this.getClass().getName());
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
-        LoggingFeature.Verbosity verbosity = configuration.getLogHttpEntity() ? LoggingFeature.Verbosity.PAYLOAD_ANY : LoggingFeature.Verbosity.HEADERS_ONLY;
+        LoggingFeature.Verbosity verbosity = Boolean.TRUE.equals(configuration.getLogHttpEntity()) ? LoggingFeature.Verbosity.PAYLOAD_ANY : LoggingFeature.Verbosity.HEADERS_ONLY;
         return new LoggingFeature(logger, verbosity);
     }
 
