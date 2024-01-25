@@ -21,6 +21,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryExecutionService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.alerting.AlertsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
@@ -155,6 +156,11 @@ public class Session extends AnonymousSession {
     public FavoritesService favoritesService() {
         return getService(FavoritesService.class);
     }
+
+    public AlertsService alertsService() {
+        return getService(AlertsService.class);
+    }
+
 
     public DashboardsService dashboardsService() {
         return getService(DashboardsService.class);

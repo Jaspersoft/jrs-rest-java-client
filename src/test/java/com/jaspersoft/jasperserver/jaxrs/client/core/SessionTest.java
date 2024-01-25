@@ -2,6 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryExecutionService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.alerting.AlertsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations.OrganizationsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles.RolesService;
@@ -227,7 +228,6 @@ public class SessionTest {
     public void should_return_not_null_ImportService_instance() {
         // When
         Session sessionSpy = Mockito.spy(new Session(storageMock));
-        ;
         ImportService retrieved = sessionSpy.importService();
         // Then
         assertNotNull(retrieved);
@@ -264,6 +264,15 @@ public class SessionTest {
         verify(sessionSpy, times(1)).getService(JobsService.class);
     }
 
+    @Test
+    public void should_return_not_null_AlertsService_instance() {
+        // When
+        Session sessionSpy = Mockito.spy(new Session(storageMock));
+        AlertsService retrieved = sessionSpy.alertsService();
+        // Then
+        assertNotNull(retrieved);
+        verify(sessionSpy, times(1)).getService(AlertsService.class);
+    }
     @Test
     public void should_return_not_null_DomainMetadataService_instance() {
         // When
