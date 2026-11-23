@@ -28,7 +28,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;

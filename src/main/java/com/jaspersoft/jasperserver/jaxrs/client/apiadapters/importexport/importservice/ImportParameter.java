@@ -93,7 +93,12 @@ public enum ImportParameter {
     /**
      * Secret File repository location
      */
-    SECRET_URI("secretUri", "secret-uri");
+    SECRET_URI("secretUri", "secret-uri"),
+
+    /**
+     * Includes alerts attached to report units
+     */
+    INCLUDE_ALERTS("includeAlerts", "include-alerts");
 
     private String paramName;
     private String multiPartParamName;

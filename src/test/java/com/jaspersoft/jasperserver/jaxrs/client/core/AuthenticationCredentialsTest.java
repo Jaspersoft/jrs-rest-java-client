@@ -1,8 +1,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -10,9 +9,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-import static org.powermock.reflect.Whitebox.getInternalState;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNotSame;
@@ -20,8 +16,7 @@ import static org.testng.Assert.assertNotSame;
 /**
  * Unit tests for {@link AuthenticationCredentials}
  */
-@PrepareForTest(AuthenticationCredentials.class)
-public class AuthenticationCredentialsTest extends PowerMockTestCase {
+public class AuthenticationCredentialsTest {
 
     final private String USERNAME = "John";
     final private String PASSWORD = "John's_very_secret_password";
@@ -29,9 +24,11 @@ public class AuthenticationCredentialsTest extends PowerMockTestCase {
     @Mock
     private AuthenticationCredentials credentialsMock;
 
+    private AutoCloseable mockitoSession;
+
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -47,11 +44,6 @@ public class AuthenticationCredentialsTest extends PowerMockTestCase {
 
     @Test
     public void should_fire_username_getter_only_one_time() throws Exception {
-        // Given
-        whenNew(AuthenticationCredentials.class)
-                .withArguments(USERNAME, PASSWORD)
-                .thenReturn(credentialsMock);
-
         // When
         credentialsMock.getUsername();
 
@@ -61,11 +53,6 @@ public class AuthenticationCredentialsTest extends PowerMockTestCase {
 
     @Test
     public void should_fire_password_getter_only_one_time() throws Exception {
-        // Given
-        whenNew(AuthenticationCredentials.class)
-                .withArguments(USERNAME, PASSWORD)
-                .thenReturn(credentialsMock);
-
         // When
         credentialsMock.getPassword();
 
@@ -101,7 +88,19 @@ public class AuthenticationCredentialsTest extends PowerMockTestCase {
     }
 
     @AfterMethod
-    public void after() {
+    public void after() throws Exception {
         reset(credentialsMock);
+        mockitoSession.close();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T getInternalState(Object target, String fieldName) {
+        try {
+            java.lang.reflect.Field field = target.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return (T) field.get(target);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

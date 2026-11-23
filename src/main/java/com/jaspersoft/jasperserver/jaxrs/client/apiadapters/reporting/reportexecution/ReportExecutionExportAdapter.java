@@ -35,8 +35,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.OutputResourceDescri
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.ReportExecutionStatusEntity;
 import java.io.InputStream;
 import java.util.ArrayList;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;

@@ -4,188 +4,166 @@ import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
+import java.lang.reflect.Field;
+
 import static org.mockito.Mockito.reset;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.users.UsersService}
+ * Unit tests for {@link UsersService}
  */
-@PrepareForTest({SingleUserRequestAdapter.class, BatchUsersRequestAdapter.class, UsersService.class})
-public class UsersServiceTest extends PowerMockTestCase {
+public class UsersServiceTest {
 
     private static final String ORGANIZATION_ID = "MyCoolOrg";
+
     @Mock
     private SessionStorage sessionStorageMock;
 
-    @Mock
-    private SingleUserRequestAdapter singleUserRequestAdapterMock;
-
-    @Mock
-    private ClientUser clientUserMock;
-
-    @Mock
-    private BatchUsersRequestAdapter batchUsersRequestAdapterMock;
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
-    public void should_set_organization_id() {
-        // When
+    public void should_set_organization_id() throws Exception {
         UsersService service = new UsersService(sessionStorageMock);
         UsersService retrieved = service.forOrganization(ORGANIZATION_ID);
-        // Then
+
         assertSame(retrieved, service);
-        assertEquals(Whitebox.getInternalState(service, "organizationId"), ORGANIZATION_ID);
+        assertEquals(getInternalState(service, "organizationId"), ORGANIZATION_ID);
     }
 
     @Test
-    public void should_set_organization_id_as_object() {
-        // When
+    public void should_set_organization_id_as_object() throws Exception {
         UsersService service = new UsersService(sessionStorageMock);
         UsersService retrieved = service.forOrganization(new ClientTenant().setId(ORGANIZATION_ID));
-        // Then
+
         assertSame(retrieved, service);
-        assertEquals(Whitebox.getInternalState(service, "organizationId"), ORGANIZATION_ID);
+        assertEquals(getInternalState(service, "organizationId"), ORGANIZATION_ID);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_exception_when_organization_name_is_empty() {
-        // When
         UsersService service = new UsersService(sessionStorageMock);
         service.forOrganization("");
-        // Then
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_exception_when_organization_name_is_null() {
-        // When
         UsersService service = new UsersService(sessionStorageMock);
         service.forOrganization((String) null);
-        // Then
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_exception_when_users_organization_name_is_empty() {
-        // When
         UsersService service = new UsersService(sessionStorageMock);
         service.forOrganization(new ClientTenant().setId(""));
-        // Then
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_exception_when_organization_is_null() {
-        // When
         UsersService service = new UsersService(sessionStorageMock);
         service.forOrganization((ClientTenant) null);
-        // Then
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_exception_when_user_name_is_empty() {
-        // When
         UsersService service = new UsersService(sessionStorageMock);
         service.forOrganization("come org").user("");
-        // Then
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_exception_when_user_name_is_null() {
-        // When
         UsersService service = new UsersService(sessionStorageMock);
-        service.forOrganization("come org").user((String)null);
-        // Then
+        service.forOrganization("come org").user((String) null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_exception_when_users_is_null() {
-        // When
         UsersService service = new UsersService(sessionStorageMock);
         service.forOrganization("come org").user((ClientUser) null);
-        // Then
     }
 
     @Test
     public void should_return_proper_user_adapter_when_invoke_user_method_with_string() throws Exception {
-        // When
         UsersService service = new UsersService(sessionStorageMock);
-        whenNew(SingleUserRequestAdapter.class).withArguments(sessionStorageMock, new ClientUser().setUsername("Simon"))
-                .thenReturn(singleUserRequestAdapterMock);
 
         SingleUserRequestAdapter retrieved = service.user("Simon");
-        // Then
-        assertSame(retrieved, singleUserRequestAdapterMock);
+
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleUserRequestAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ClientUser internalUser = (ClientUser) getInternalState(retrieved, "user");
+        assertEquals(internalUser.getUsername(), "Simon");
     }
 
     @Test
     public void should_return_proper_user_adapter_when_invoke_user_method_with_object() throws Exception {
-        // Given
         UsersService service = new UsersService(sessionStorageMock);
         ClientUser clientUser = new ClientUser().setUsername("Simon");
-        whenNew(SingleUserRequestAdapter.class).withArguments(sessionStorageMock, clientUser)
-                .thenReturn(singleUserRequestAdapterMock);
-        // When
+
         SingleUserRequestAdapter retrieved = service.user(clientUser);
-        // Then
-        assertSame(retrieved, singleUserRequestAdapterMock);
+
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleUserRequestAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ClientUser internalUser = (ClientUser) getInternalState(retrieved, "user");
+        assertSame(internalUser, clientUser);
     }
 
     @Test
     public void should_return_proper_user_adapter_with_organization_id_source_obj_not_modified() throws Exception {
-        // Given
         UsersService service = new UsersService(sessionStorageMock);
         ClientUser clientUser = new ClientUser().setUsername("Simon");
-        whenNew(ClientUser.class).withArguments(clientUser)
-                .thenReturn(clientUserMock);
-        whenNew(SingleUserRequestAdapter.class).withArguments(sessionStorageMock, clientUserMock)
-                .thenReturn(singleUserRequestAdapterMock);
-        doReturn(clientUserMock).when(clientUserMock).setTenantId(ORGANIZATION_ID);
-        // When
-        SingleUserRequestAdapter retrieved = service.
-                forOrganization(ORGANIZATION_ID).
-                user(clientUser);
-        // Then
-        assertSame(retrieved, singleUserRequestAdapterMock);
+
+        SingleUserRequestAdapter retrieved = service.forOrganization(ORGANIZATION_ID).user(clientUser);
+
+        assertNotNull(retrieved);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
         assertNull(clientUser.getTenantId());
-        verifyNew(ClientUser.class).withArguments(clientUser);
-        Mockito.verify(clientUserMock).setTenantId(ORGANIZATION_ID);
+        ClientUser internalUser = (ClientUser) getInternalState(retrieved, "user");
+        assertEquals(internalUser.getTenantId(), ORGANIZATION_ID);
     }
 
     @Test
-    public void should_return_BatchUsersRequestAdapter() throws Exception {
-        // Given
+    public void should_return_BatchUsersRequestAdapter() {
         UsersService service = new UsersService(sessionStorageMock);
-        whenNew(BatchUsersRequestAdapter.class).withArguments(eq(sessionStorageMock),
-                anyString()).thenReturn(batchUsersRequestAdapterMock);
 
-        // When
         BatchUsersRequestAdapter retrieved = service.forOrganization(ORGANIZATION_ID).allUsers();
-        // Then
-        assertNotNull(retrieved);
-        assertSame(retrieved, batchUsersRequestAdapterMock);
-    }
 
-    @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, singleUserRequestAdapterMock, clientUserMock, batchUsersRequestAdapterMock);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof BatchUsersRequestAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
     }
 }

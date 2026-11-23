@@ -8,25 +8,23 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextServi
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.SingleContextAdapter;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.Response;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.mock;
+import java.lang.reflect.Field;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.testng.Assert.assertSame;
 
 /**
@@ -38,10 +36,10 @@ import static org.testng.Assert.assertSame;
  * @see
  */
 @SuppressWarnings("unchecked")
-@PrepareForTest({DomainContextOperationResult.class, Response.class, SingleContextAdapter.class})
-public class DomainContextOperationResultTest extends PowerMockTestCase {
+public class DomainContextOperationResultTest {
 
     DomainContextOperationResult<ClientResourceLookup> domainContextOperationResult;
+
     @Mock
     private SingleContextAdapter<Object, PresentationGroupElement> singleContextAdapterMock;
     @Mock
@@ -59,140 +57,128 @@ public class DomainContextOperationResultTest extends PowerMockTestCase {
     @Mock
     private ClientResourceLookup resourceLookupMock;
 
+    private AutoCloseable mockitoSession;
+
     @BeforeMethod
     public void before() {
-        initMocks(this);
-
+        mockitoSession = MockitoAnnotations.openMocks(this);
     }
 
     @AfterMethod
-    public void after() {
-        reset(contextServiceMock
-                , singleContextAdapterMock
-                , responseMock
-                , operationResultMock
-                , queryResultDataOperationResult
-                , singleContextForCreateAdapterMock
-                , resourceLookupOperationResultMock
-                , resourceLookupMock
-        );
-
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(contextServiceMock,
+                singleContextAdapterMock,
+                responseMock,
+                operationResultMock,
+                queryResultDataOperationResult,
+                singleContextForCreateAdapterMock,
+                resourceLookupOperationResultMock,
+                resourceLookupMock);
     }
 
+    private void setInternalState(Object obj, String fieldName, Object value) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                field.set(obj, value);
+                return;
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
+    }
 
     @Test
     public void should_return_proper_operationResult_when_get_metadata() throws Exception {
-        //given
         doReturn("/test_uuId").when(responseMock).getHeaderString("Location");
         domainContextOperationResult = new DomainContextOperationResult<>(responseMock, ClientResourceLookup.class, contextServiceMock);
-        doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString(),
-                any(Class.class), anyString());
+        doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString(), any(Class.class), anyString());
         doReturn(singleContextAdapterMock).when(singleContextAdapterMock).addParameters(any(MultivaluedHashMap.class));
         doReturn(operationResultMock).when(singleContextAdapterMock).metadata();
 
-        //when
         OperationResult<PresentationGroupElement> metadata = domainContextOperationResult.getMetadata();
 
-        //then
         assertSame(operationResultMock, metadata);
         verify(responseMock).getHeaderString("Location");
-        verify(contextServiceMock).context(anyString(),any(Class.class), anyString());
+        verify(contextServiceMock).context(anyString(), any(Class.class), anyString());
         verify(singleContextAdapterMock).addParameters(any(MultivaluedHashMap.class));
         verify(singleContextAdapterMock).metadata();
-
     }
 
     @Test
     public void should_return_proper_entity() throws Exception {
-        //given
         doReturn("/test_uuId").when(responseMock).getHeaderString("Location");
-        domainContextOperationResult = new DomainContextOperationResult<ClientResourceLookup>(responseMock, ClientResourceLookup.class, contextServiceMock);
-        Whitebox.setInternalState(domainContextOperationResult, "entity", resourceLookupMock);
+        domainContextOperationResult = new DomainContextOperationResult<>(responseMock, ClientResourceLookup.class, contextServiceMock);
+        setInternalState(domainContextOperationResult, "entity", resourceLookupMock);
 
-        //when
         ClientResourceLookup entity = domainContextOperationResult.getEntity();
 
-        //then
         assertSame(resourceLookupMock, entity);
         verify(responseMock).getHeaderString("Location");
     }
 
     @Test
     public void should_return_proper_operationResult_when_get_metadata_with_parameter() throws Exception {
-        //given
         doReturn("/test_uuId").when(responseMock).getHeaderString("Location");
         domainContextOperationResult = new DomainContextOperationResult<>(responseMock, ClientResourceLookup.class, contextServiceMock);
-        doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString(),
-                any(Class.class), anyString());
+        doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString(), any(Class.class), anyString());
         doReturn(singleContextAdapterMock).when(singleContextAdapterMock).addParameters(any(MultivaluedHashMap.class));
         doReturn(operationResultMock).when(singleContextAdapterMock).metadata();
 
-        //when
         OperationResult<PresentationGroupElement> metadata = domainContextOperationResult.addParam("key", "value").getMetadata();
 
-        //then
         assertSame(operationResultMock, metadata);
         verify(responseMock).getHeaderString("Location");
-        verify(contextServiceMock).context(anyString(),any(Class.class), anyString());
+        verify(contextServiceMock).context(anyString(), any(Class.class), anyString());
         verify(singleContextAdapterMock).addParameters(any(MultivaluedHashMap.class));
         verify(singleContextAdapterMock).metadata();
     }
 
     @Test
     public void should_return_proper_operationResult_when_get_metadata_with_parameters() throws Exception {
-        //given
         doReturn("/test_uuId").when(responseMock).getHeaderString("Location");
         domainContextOperationResult = new DomainContextOperationResult<>(responseMock, ClientResourceLookup.class, contextServiceMock);
-        doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString(),
-                any(Class.class), anyString());
+        doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString(), any(Class.class), anyString());
         doReturn(singleContextAdapterMock).when(singleContextAdapterMock).addParameters(any(MultivaluedHashMap.class));
         doReturn(operationResultMock).when(singleContextAdapterMock).metadata();
 
-        //when
         OperationResult<PresentationGroupElement> metadata = domainContextOperationResult.addParam("key", "value1", "value2").getMetadata();
 
-        //then
         assertSame(operationResultMock, metadata);
         verify(responseMock).getHeaderString("Location");
-        verify(contextServiceMock).context(anyString(),any(Class.class), anyString());
+        verify(contextServiceMock).context(anyString(), any(Class.class), anyString());
         verify(singleContextAdapterMock).addParameters(any(MultivaluedHashMap.class));
         verify(singleContextAdapterMock).metadata();
     }
 
     @Test(expectedExceptions = ResourceNotFoundException.class)
     public void should_return_proper_operationResult_when_get_metadata_for_expired_context() throws Exception {
-        //given
         doReturn("/test_uuId").when(responseMock).getHeaderString("Location");
         doReturn(mock(ClientResourceLookup.class)).when(responseMock).readEntity(ClientResourceLookup.class);
-        domainContextOperationResult = spy(new DomainContextOperationResult<ClientResourceLookup>(responseMock, ClientResourceLookup.class, contextServiceMock));
-        doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString(),
-                any(Class.class), anyString());
+        domainContextOperationResult = new DomainContextOperationResult<>(responseMock, ClientResourceLookup.class, contextServiceMock);
+        doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString(), any(Class.class), anyString());
         doReturn(singleContextAdapterMock).when(singleContextAdapterMock).addParameters(any(MultivaluedHashMap.class));
         doThrow(ResourceNotFoundException.class).when(singleContextAdapterMock).metadata();
         doReturn(singleContextForCreateAdapterMock).when(contextServiceMock).context(any(Class.class), anyString());
         doReturn(resourceLookupOperationResultMock).when(singleContextForCreateAdapterMock).create(any(ClientResourceLookup.class));
         doReturn(responseMock).when(resourceLookupOperationResultMock).getResponse();
 
-        //when
-        OperationResult<PresentationGroupElement> metadata = domainContextOperationResult.getMetadata();
-
-        //then
-        assertSame(operationResultMock, metadata);
-
+        domainContextOperationResult.getMetadata();
     }
 
     @Test
     public void should_return_proper_operationResult_when_execute_query() throws Exception {
-        //given
         doReturn("/test_uuId").when(responseMock).getHeaderString("Location");
         domainContextOperationResult = new DomainContextOperationResult<>(responseMock, ClientResourceLookup.class, contextServiceMock);
         doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString());
         doReturn(operationResultMock).when(singleContextAdapterMock).executeQuery(any(ClientMultiLevelQuery.class));
 
-        //when
         OperationResult<ClientMultiLevelQueryResultData> queryResultSet = domainContextOperationResult.executeQuery(new ClientMultiLevelQuery());
 
-        //then
         assertSame(operationResultMock, queryResultSet);
         verify(responseMock).getHeaderString("Location");
         verify(contextServiceMock).context(anyString());
@@ -201,22 +187,15 @@ public class DomainContextOperationResultTest extends PowerMockTestCase {
 
     @Test(expectedExceptions = ResourceNotFoundException.class)
     public void should_return_proper_operationResult_when_execute_query_for_expired_context() throws Exception {
-        //given
         doReturn("/test_uuId").when(responseMock).getHeaderString("Location");
         doReturn(mock(ClientResourceLookup.class)).when(responseMock).readEntity(ClientResourceLookup.class);
         domainContextOperationResult = new DomainContextOperationResult<>(responseMock, ClientResourceLookup.class, contextServiceMock);
         doReturn(singleContextAdapterMock).when(contextServiceMock).context(anyString());
         doThrow(ResourceNotFoundException.class).when(singleContextAdapterMock).executeQuery(any(ClientMultiLevelQuery.class));
-
         doReturn(singleContextForCreateAdapterMock).when(contextServiceMock).context(any(Class.class), anyString());
         doReturn(resourceLookupOperationResultMock).when(singleContextForCreateAdapterMock).create(any(ClientResourceLookup.class));
         doReturn(responseMock).when(resourceLookupOperationResultMock).getResponse();
 
-        //when
         domainContextOperationResult.executeQuery(new ClientMultiLevelQuery());
-
-        // then
-        // an exception should be thrown
-
     }
 }

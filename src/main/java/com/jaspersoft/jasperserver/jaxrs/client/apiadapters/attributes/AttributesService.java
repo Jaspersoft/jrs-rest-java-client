@@ -23,8 +23,16 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.AbstractAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
+import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 
@@ -33,6 +41,9 @@ import static java.util.Arrays.asList;
  * @since 6.0.1-ALPHA
  */
 public class AttributesService extends AbstractAdapter {
+
+    public static final String DASHBOARD_DOMAIN_WHITELIST_URI = "dashboardDomainWhitelistValues";
+    public static final String DASHBOARD_DOMAIN_WHITELIST_KEY = "dashboardWebpageDomainWhitelist";
 
     private String userName;
     private String organizationId;
@@ -92,5 +103,22 @@ public class AttributesService extends AbstractAdapter {
 
     public BatchAttributeAdapter attributes(String... attributesNames) {
         return this.attributes(asList(attributesNames));
+    }
+
+    /**
+     * Retrieves the approved domains for embedding web pages in dashboards of the current user.
+     * This is a server-level call: it ignores forOrganization() and forUser().
+     * The map holds the domains under the "dashboardWebpageDomainWhitelist" key;
+     * when nothing is configured the server returns a list with a single empty string.
+     */
+    public OperationResult<Map<String, List<String>>> dashboardDomainWhitelist() {
+        JerseyRequest<Map<String, List<String>>> request = JerseyRequest.buildRequest(
+                sessionStorage,
+                new GenericType<Map<String, List<String>>>() {
+                },
+                new String[]{"attributes", DASHBOARD_DOMAIN_WHITELIST_URI},
+                new DefaultErrorHandler());
+        request.setAccept(MediaType.APPLICATION_JSON);
+        return request.get();
     }
 }

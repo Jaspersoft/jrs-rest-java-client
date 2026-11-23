@@ -2,7 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.providers;
 
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 import java.lang.annotation.Annotation;
 
 import static org.testng.Assert.assertTrue;

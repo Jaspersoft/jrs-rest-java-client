@@ -26,7 +26,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.dto.serverinfo.ServerInfo;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 
 public class ServerInfoService extends AbstractAdapter {

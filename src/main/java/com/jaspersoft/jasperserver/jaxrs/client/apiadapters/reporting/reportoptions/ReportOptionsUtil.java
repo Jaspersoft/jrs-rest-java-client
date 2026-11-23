@@ -3,8 +3,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportopt
 import com.jaspersoft.jasperserver.dto.reports.ReportParameter;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 /**
  * <p>

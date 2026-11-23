@@ -136,6 +136,8 @@ Table of Contents
   * [Derived table data discovery](#derived-table-data-discovery).
 * [Query Execution Service](#query-execution-service).
 * [Server Information Service](#server-information-service).
+* [License Features Service](#license-features-service).
+* [Dashboard domain whitelist](#dashboard-domain-whitelist).
 * [Bundles service](#bundles-service).
 * [Asynchronous API](#asynchronous-api).
 * [Getting serialized content from response](#getting-serialized-content-from-response).
@@ -3074,6 +3076,43 @@ OperationResult<String> result = client
 String edition = result.getEntity();
 ```
 
+License Features Service
+========================
+Use the following service to check which license features are enabled or disabled on the server (the `/rest_v2/licenseFeatures` service).
+To get all enabled license features:
+```java
+OperationResult<Map> result = session
+        .licenseService()
+        .allFeatures();
+
+Map<String, Boolean> features = result.getEntity();
+```
+To check a single feature by its name (for example, `ef`, `aud`, `wl`):
+```java
+OperationResult<Map> result = session
+        .licenseService()
+        .feature("ef");
+
+Boolean enabled = (Boolean) result.getEntity().get("ef");
+```
+The service returns a map of feature name to a boolean value. 
+If the license is not accepted (all features request) or the feature name is unknown (single feature request), the server responds with `404 Not Found` and an error descriptor.
+Passing a `null` or empty feature name to `.feature()` throws `IllegalArgumentException`.
+
+Dashboard domain whitelist
+==========================
+To get the approved domains for embedding web pages in dashboards (used by the UI and Visualize.js) call the `attributes` service:
+```java
+OperationResult<Map<String, List<String>>> result = session
+        .attributesService()
+        .dashboardDomainWhitelist();
+
+List<String> domains = result.getEntity().get("dashboardWebpageDomainWhitelist");
+```
+This is a server-level call, `.forOrganization()` and `.forUser()` do not affect it. 
+If no whitelist is configured for the user, the server returns a list with a single empty string. 
+Access is allowed for `ROLE_USER` and `ROLE_ADMINISTRATOR`; other roles (for example, `ROLE_DEMO`) get `access.denied`.
+
 Bundles service
 ===============
 Use bundles service to get bundles of internalization properties for particular or default user’s locale as JSON. 
@@ -3156,10 +3195,10 @@ jrs-rest-client uses the implementation of JAX-RS API of version 2.0 and if your
     <deployment>
         <exclusions>
 
-            <!-- Exclude JAVA EE of JBOSS (javax.ws..) => Add dependency javax.annotation -->
+            <!-- Exclude JAVA EE of JBOSS (jakarta.ws..) => Add dependency jakarta.annotation -->
             <module name="javaee.api" />
-            <!-- Exclude RestEasy conflict (javax.ws.rs.ext.RunDelegate) -->
-            <module name="javax.ws.rs.api"/>
+            <!-- Exclude RestEasy conflict (jakarta.ws.rs.ext.RunDelegate) -->
+            <module name="jakarta.ws.rs.api"/>
             <module name="org.codehaus.jackson.jackson-core-asl" />
             <module name="org.jboss.resteasy.resteasy-atom-provider" />
             <module name="org.jboss.resteasy.resteasy-cdi" />

@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationIntrospector;
 import com.jaspersoft.jasperserver.dto.job.ClientReportJob;
 import com.jaspersoft.jasperserver.dto.job.model.ClientReportJobModel;
 import com.jaspersoft.jasperserver.dto.job.wrappers.ClientJobIdListWrapper;
@@ -38,14 +38,14 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -128,7 +128,7 @@ public class BatchJobsOperationsAdapter extends AbstractAdapter {
     private String buildJson(Object object) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        AnnotationIntrospector introspector = new JaxbAnnotationIntrospector(TypeFactory.defaultInstance());
+        AnnotationIntrospector introspector = new JakartaXmlBindAnnotationIntrospector(TypeFactory.defaultInstance());
         mapper.setAnnotationIntrospector(introspector);
 
 

@@ -131,9 +131,9 @@ public class SingleAttributeAdapter extends AbstractAdapter {
         return task;
     }
 
-    private JerseyRequest<HypermediaAttribute> buildRequest() {
+    protected JerseyRequest<HypermediaAttribute> buildRequest() {
 
-        String[] uri = path.toArray(new String[path.size()]);
+        String[] uri = path.toArray(new String[0]);
         JerseyRequest<HypermediaAttribute> request = JerseyRequest.buildRequest(sessionStorage,HypermediaAttribute.class,
                 uri, new DefaultErrorHandler());
         if (includePermissions) {

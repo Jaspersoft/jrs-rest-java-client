@@ -25,9 +25,9 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.alerting.calender;
 //import com.jaspersoft.jasperserver.dto.job.ClientJobCalendar;
 import com.jaspersoft.jasperserver.dto.alerting.ClientAlertCalendar;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Arrays;
 
 @XmlRootElement(name = "reportJobCalendar")

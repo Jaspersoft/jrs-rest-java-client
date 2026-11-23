@@ -21,12 +21,13 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
 import com.jaspersoft.jasperserver.jaxrs.client.filters.SessionOutputFilter;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider;
@@ -113,8 +114,8 @@ public class SessionStorage {
         JacksonJsonProvider customRepresentationTypeProvider = new CustomRepresentationTypeProvider();
         rootTarget = client.target(configuration.getJasperReportsServerUrl());
         rootTarget
-                .register(customRepresentationTypeProvider)
-                .register(JaxbAnnotationModule.class)
+                .register(customRepresentationTypeProvider, Priorities.USER)
+                .register(JakartaXmlBindAnnotationModule.class)
                 .register(JacksonFeature.class)
                 .register(MultiPartFeature.class);
         if (sessionId != null) {

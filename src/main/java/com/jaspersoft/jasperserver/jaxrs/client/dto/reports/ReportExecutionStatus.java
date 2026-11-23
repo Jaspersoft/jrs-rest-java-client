@@ -2,7 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>

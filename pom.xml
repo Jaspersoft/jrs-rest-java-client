@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.jaspersoft</groupId>
     <artifactId>jrs-rest-java-client</artifactId>
-    <version>9.0.0</version>
+    <version>10.0.0</version>
     <name>REST client for JasperReports server</name>
     <url>http://github.com/Jaspersoft/jrs-rest-java-client</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jasperserver-dto.version>9.0.0</jasperserver-dto.version>
-        <powermock.version>2.0.9</powermock.version>
-        <jersey.version>2.39</jersey.version>
+        <jasperserver-dto.version>10.0.0</jasperserver-dto.version>
+        <jersey.version>3.1.10</jersey.version>
         <jackson.version>2.13.5</jackson.version>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
     </properties>
 
     <scm>
@@ -63,6 +63,20 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- some things need jakarta.xml.bind -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <!-- runtime for javax -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>3.0.0</version>
         </dependency>
 
         <!-- Jersey-->
@@ -120,7 +134,7 @@
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-jaxb-annotations</artifactId>
+            <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
             <version>${jackson.version}</version>
         </dependency>
 
@@ -136,26 +150,13 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <!--  Cannot update to latest 4.x version, as powermock 2.0.9 has compatibility issue with it          -->
             <version>3.12.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-testng</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-easymock</artifactId>
-            <version>${powermock.version}</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>3.12.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -199,6 +200,8 @@
             <artifactId>jul-to-slf4j</artifactId>
             <version>1.7.36</version>
         </dependency>
+
+
     </dependencies>
 
 
@@ -209,8 +212,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -221,11 +224,12 @@
                     <format>xml</format>
                     <maxmem>256m</maxmem>
                     <aggregate>true</aggregate>
-                    <check/>
+                    <check />
                     <instrumentation>
                         <excludes>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/dto/**</exclude>
-                            <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/support/**
+                            <exclude>
+                                **/com/jaspersoft/jasperserver/jaxrs/client/apiadapters/resources/support/**
                             </exclude>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/exceptions/**</exclude>
                             <exclude>**/com/jaspersoft/jasperserver/jaxrs/client/core/enums/**</exclude>
@@ -251,6 +255,13 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-testng</artifactId>
+                        <version>3.0.0</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <skipTests>false</skipTests>
                     <testFailureIgnore>false</testFailureIgnore>

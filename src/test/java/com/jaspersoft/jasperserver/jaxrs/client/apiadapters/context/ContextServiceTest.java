@@ -6,18 +6,20 @@ import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.dto.resources.domain.ResourceGroupElement;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.mock;
+import java.lang.reflect.Field;
+
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 /**
  * <p/>
@@ -27,24 +29,40 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({ContextService.class})
-public class ContextServiceTest extends PowerMockTestCase {
+public class ContextServiceTest {
+
     public static final String SOME_UU_ID = "someUuId";
     public static final String SOME_MIME_TYPE = "someMimeType";
     public static final String METADATA_MIME_TYPE = "someMetadataMimeType";
+
+    @Mock
     private SessionStorage sessionStorageMock;
-    private SingleContextAdapter singleContextAdapterMock;
+
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        sessionStorageMock = mock(SessionStorage.class);
-        singleContextAdapterMock = mock(SingleContextAdapter.class);
-
+        mockitoSession = MockitoAnnotations.openMocks(this);
     }
 
     @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, singleContextAdapterMock);
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
@@ -56,119 +74,81 @@ public class ContextServiceTest extends PowerMockTestCase {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_sessionStorage_is_null() {
-        // When
         new ContextService(null);
-        // Then
-        // should be thrown an exception
     }
-
 
     @Test
     public void should_return_proper_SingleConnectionAdapter_instance_by_uuid() throws Exception {
-
-        // Given
-        whenNew(SingleContextAdapter.class)
-                .withArguments(sessionStorageMock, Object.class, SOME_MIME_TYPE, SOME_UU_ID)
-                .thenReturn(singleContextAdapterMock);
-
         ContextService contextService = new ContextService(sessionStorageMock);
 
-        // When
         SingleContextAdapter retrieved = contextService.context(Object.class, SOME_MIME_TYPE, SOME_UU_ID);
 
-        // Then
-        assertSame(singleContextAdapterMock, retrieved);
-        verifyNew(SingleContextAdapter.class, times(1))
-                .withArguments(sessionStorageMock, Object.class, SOME_MIME_TYPE, SOME_UU_ID);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleContextAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(getInternalState(retrieved, "contextClass"), Object.class);
+        assertEquals(getInternalState(retrieved, "contextContentMimeType"), SOME_MIME_TYPE);
+        assertEquals(getInternalState(retrieved, "uuId"), SOME_UU_ID);
     }
 
     @Test
     public void should_return_proper_SingleConnectionAdapter_instance_by_class_mimeType_uuid() throws Exception {
-
-        // Given
-        whenNew(SingleContextAdapter.class)
-                .withArguments(sessionStorageMock, ClientCustomDataSource.class, SOME_MIME_TYPE, SOME_UU_ID)
-                .thenReturn(singleContextAdapterMock);
-
         ContextService contextService = new ContextService(sessionStorageMock);
 
-        // When
         SingleContextAdapter retrieved = contextService.context(ClientCustomDataSource.class, SOME_MIME_TYPE, SOME_UU_ID);
 
-        // Then
-        assertSame(singleContextAdapterMock, retrieved);
-        verifyNew(SingleContextAdapter.class, times(1))
-                .withArguments(sessionStorageMock, ClientCustomDataSource.class, SOME_MIME_TYPE, SOME_UU_ID);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleContextAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(getInternalState(retrieved, "contextClass"), ClientCustomDataSource.class);
+        assertEquals(getInternalState(retrieved, "contextContentMimeType"), SOME_MIME_TYPE);
+        assertEquals(getInternalState(retrieved, "uuId"), SOME_UU_ID);
     }
 
-
- @Test
+    @Test
     public void should_return_proper_SingleConnectionAdapter_instance_by_class_mimeType() throws Exception {
-
-        // Given
-        whenNew(SingleContextAdapter.class)
-                .withArguments(sessionStorageMock, ClientCustomDataSource.class, SOME_MIME_TYPE)
-                .thenReturn(singleContextAdapterMock);
-
         ContextService contextService = new ContextService(sessionStorageMock);
 
-        // When
         SingleContextAdapter retrieved = contextService.context(ClientCustomDataSource.class, SOME_MIME_TYPE);
 
-        // Then
-        assertSame(singleContextAdapterMock, retrieved);
-        verifyNew(SingleContextAdapter.class, times(1))
-                .withArguments(sessionStorageMock, ClientCustomDataSource.class, SOME_MIME_TYPE);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleContextAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(getInternalState(retrieved, "contextClass"), ClientCustomDataSource.class);
+        assertEquals(getInternalState(retrieved, "contextContentMimeType"), SOME_MIME_TYPE);
+        assertNull(getInternalState(retrieved, "uuId"));
     }
 
     @Test
     public void should_return_proper_SingleConnectionAdapter_instance_by_connection_metadata_class_mimeType_uuid() throws Exception {
-
-        // Given
-        whenNew(SingleContextAdapter.class)
-                .withArguments(sessionStorageMock, SOME_UU_ID, TableMetadata.class, METADATA_MIME_TYPE)
-                .thenReturn(singleContextAdapterMock);
-
         ContextService contextService = new ContextService(sessionStorageMock);
 
-        // When
-        SingleContextAdapter retrieved = contextService.
-                context(SOME_UU_ID, TableMetadata.class, METADATA_MIME_TYPE);
+        SingleContextAdapter retrieved = contextService.context(SOME_UU_ID, TableMetadata.class, METADATA_MIME_TYPE);
 
-        // Then
-        assertSame(singleContextAdapterMock, retrieved);
-        verifyNew(SingleContextAdapter.class, times(1))
-                .withArguments(sessionStorageMock, SOME_UU_ID, TableMetadata.class, METADATA_MIME_TYPE);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleContextAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(getInternalState(retrieved, "uuId"), SOME_UU_ID);
+        assertEquals(getInternalState(retrieved, "metadataClass"), TableMetadata.class);
+        assertEquals(getInternalState(retrieved, "metadataMimeType"), METADATA_MIME_TYPE);
     }
 
     @Test
     public void should_return_proper_SingleConnectionAdapter_instance_by_class_mimeType_metadata_class_mimeType() throws Exception {
-
-        // Given
-        whenNew(SingleContextAdapter.class)
-                .withArguments(sessionStorageMock,
-                        ClientDomain.class,
-                        ContextMediaTypes.DOMAIN_JSON,
-                        ResourceGroupElement.class,
-                        ContextMediaTypes.DOMAIN_METADATA_JSON)
-                .thenReturn(singleContextAdapterMock);
-
         ContextService contextService = new ContextService(sessionStorageMock);
 
-        // When
-        SingleContextAdapter retrieved = contextService.
-                context(ClientDomain.class,
-                        ContextMediaTypes.DOMAIN_JSON,
-                        ResourceGroupElement.class,
-                        ContextMediaTypes.DOMAIN_METADATA_JSON);
+        SingleContextAdapter retrieved = contextService.context(
+                ClientDomain.class,
+                ContextMediaTypes.DOMAIN_JSON,
+                ResourceGroupElement.class,
+                ContextMediaTypes.DOMAIN_METADATA_JSON);
 
-        // Then
-        assertSame(singleContextAdapterMock, retrieved);
-        verifyNew(SingleContextAdapter.class, times(1))
-                .withArguments(sessionStorageMock,
-                        ClientDomain.class,
-                        ContextMediaTypes.DOMAIN_JSON,
-                        ResourceGroupElement.class,
-                        ContextMediaTypes.DOMAIN_METADATA_JSON);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleContextAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(getInternalState(retrieved, "contextClass"), ClientDomain.class);
+        assertEquals(getInternalState(retrieved, "contextContentMimeType"), ContextMediaTypes.DOMAIN_JSON);
+        assertEquals(getInternalState(retrieved, "metadataClass"), ResourceGroupElement.class);
+        assertEquals(getInternalState(retrieved, "metadataMimeType"), ContextMediaTypes.DOMAIN_METADATA_JSON);
     }
 }

@@ -2,22 +2,24 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
 import com.jaspersoft.jasperserver.dto.domain.DomElExpressionCollectionContext;
 import com.jaspersoft.jasperserver.dto.domain.DomElExpressionContext;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.SingleContextAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import org.powermock.reflect.Whitebox;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.mock;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.reset;
-import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertSame;
 
 /**
@@ -28,71 +30,75 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({ContextService.class, SessionStorage.class, SingleContextAdapter.class, DomElContextManager.class})
-public class DomElContextManagerTest extends PowerMockTestCase {
+@SuppressWarnings("unchecked")
+public class DomElContextManagerTest {
+
+    @Mock
     private SessionStorage sessionStorageMock;
-    private ContextService contextServiceMock;
-    private SingleContextAdapter contextAdapterMock;
+    @Mock
+    private JerseyRequest<DomElExpressionContext> domElRequestMock;
+    @Mock
+    private JerseyRequest<DomElExpressionCollectionContext> domElCollectionRequestMock;
+    @Mock
     private OperationResult<DomElExpressionContext> domElContextOperationResultMock;
+    @Mock
     private OperationResult<DomElExpressionCollectionContext> domElCollectionContextOperationResultMock;
 
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        sessionStorageMock = mock(SessionStorage.class);
-        contextServiceMock = mock(ContextService.class);
-        contextAdapterMock = mock(SingleContextAdapter.class);
-        domElContextOperationResultMock = mock(OperationResult.class);
+        mockitoSession = MockitoAnnotations.openMocks(this);
     }
 
     @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, contextAdapterMock, contextServiceMock, domElContextOperationResultMock);
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock, domElRequestMock, domElCollectionRequestMock,
+                domElContextOperationResultMock, domElCollectionContextOperationResultMock);
     }
-
 
     @Test
     public void should_set_proper_session_storage() {
-        // When
-        DomElContextManager domainContextManager = new DomElContextManager(sessionStorageMock);
-        //Then
-        assertSame(Whitebox.getInternalState(domainContextManager, "sessionStorage"), sessionStorageMock);
+        DomElContextManager manager = new DomElContextManager(sessionStorageMock);
+        assertSame(manager.getSessionStorage(), sessionStorageMock);
     }
 
     @Test
-    public void should_return_proper_operation_result_when_create_context() throws Exception {
-        // When
+    public void should_return_proper_operation_result_when_create_context() {
+        DomElExpressionContext context = new DomElExpressionContext();
 
-        DomElExpressionContext context = spy(new DomElExpressionContext());
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(DomElExpressionContext.class),
+                    eq(new String[]{"contexts"}), any(DefaultErrorHandler.class))).thenReturn(domElRequestMock);
+            doReturn(domElContextOperationResultMock).when(domElRequestMock).post(context);
 
-        PowerMockito.whenNew(ContextService.class).withArguments(sessionStorageMock).thenReturn(contextServiceMock);
-        PowerMockito.when(contextServiceMock.context(DomElExpressionContext.class,
-                ContextMediaTypes.DOM_EL_CONTEXT_JSON)).
-                thenReturn(contextAdapterMock);
-        PowerMockito.when(contextAdapterMock.create(context)).thenReturn(domElContextOperationResultMock);
+            OperationResult<DomElExpressionContext> retrieved =
+                    new DomElContextManager(sessionStorageMock).create(context);
 
-        OperationResult<DomElExpressionContext> retrievedOperationResult = new DomElContextManager(sessionStorageMock).create(context);
-        //Then
-        assertSame(domElContextOperationResultMock, retrievedOperationResult);
+            assertSame(domElContextOperationResultMock, retrieved);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(DomElExpressionContext.class),
+                    eq(new String[]{"contexts"}), any(DefaultErrorHandler.class)));
+            verify(domElRequestMock).post(context);
+        }
     }
-
 
     @Test
-    public void should_return_proper_operation_result_when_create_collection_context() throws Exception {
-        // When
+    public void should_return_proper_operation_result_when_create_collection_context() {
+        DomElExpressionCollectionContext context = new DomElExpressionCollectionContext();
 
-        DomElExpressionCollectionContext context = spy(new DomElExpressionCollectionContext());
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(DomElExpressionCollectionContext.class),
+                    eq(new String[]{"contexts"}), any(DefaultErrorHandler.class))).thenReturn(domElCollectionRequestMock);
+            doReturn(domElCollectionContextOperationResultMock).when(domElCollectionRequestMock).post(context);
 
-        PowerMockito.whenNew(ContextService.class).withArguments(sessionStorageMock).thenReturn(contextServiceMock);
-        PowerMockito.when(contextServiceMock.context(DomElExpressionCollectionContext.class,
-                ContextMediaTypes.DOM_EL_COLLECTION_CONTEXT_JSON)).
-                thenReturn(contextAdapterMock);
-        PowerMockito.when(contextAdapterMock.create(context)).thenReturn(domElCollectionContextOperationResultMock);
+            OperationResult<DomElExpressionCollectionContext> retrieved =
+                    new DomElContextManager(sessionStorageMock).create(context);
 
-        OperationResult<DomElExpressionCollectionContext> retrievedOperationResult =
-                new DomElContextManager(sessionStorageMock).create(context);
-        //Then
-        assertSame(domElCollectionContextOperationResultMock, retrievedOperationResult);
+            assertSame(domElCollectionContextOperationResultMock, retrieved);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(DomElExpressionCollectionContext.class),
+                    eq(new String[]{"contexts"}), any(DefaultErrorHandler.class)));
+            verify(domElCollectionRequestMock).post(context);
+        }
     }
-
 }

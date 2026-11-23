@@ -30,8 +30,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.ThreadPoolUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.UrlUtils;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 

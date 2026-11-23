@@ -1,7 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.Callable;
@@ -14,7 +13,7 @@ import static org.testng.Assert.assertSame;
  * Unit tests for {@link RequestExecution}
  */
 public class RequestExecutionTest {
-    
+
     @Test
     public void should_return_not_null_future_after_it_was_setted() {
 
@@ -25,14 +24,15 @@ public class RequestExecutionTest {
                 return null;
             }
         });
-        
+
         RequestExecution execution = Mockito.spy(new RequestExecution(new Runnable() {
             @Override
             public void run() {
                 // NOP
             }
         }));
-        Whitebox.setInternalState(execution, "future", future);
+
+        setInternalState(execution, "future", future);
 
         /* When */
         Future retrieved = execution.getFuture();
@@ -40,7 +40,6 @@ public class RequestExecutionTest {
         /* Then */
         assertSame(retrieved, future);
     }
-
 
     @Test
     public void should_return_not_null_task_after_setup_instance() {
@@ -75,5 +74,24 @@ public class RequestExecutionTest {
         /* When */
         execution.setFuture(future);
         execution.cancel();
+    }
+
+    private static void setInternalState(Object target, String fieldName, Object value) {
+        try {
+            Class<?> clazz = target.getClass();
+            while (clazz != null) {
+                try {
+                    java.lang.reflect.Field field = clazz.getDeclaredField(fieldName);
+                    field.setAccessible(true);
+                    field.set(target, value);
+                    return;
+                } catch (NoSuchFieldException e) {
+                    clazz = clazz.getSuperclass();
+                }
+            }
+            throw new NoSuchFieldException(fieldName);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

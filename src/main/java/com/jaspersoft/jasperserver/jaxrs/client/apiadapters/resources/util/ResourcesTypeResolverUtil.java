@@ -50,8 +50,8 @@ import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomainSchema;
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 public class ResourcesTypeResolverUtil {
 

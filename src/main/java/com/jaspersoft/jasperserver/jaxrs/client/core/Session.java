@@ -37,6 +37,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.exports
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.importexport.importservice.ImportService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.inputControls.InputControlsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.jobs.JobsService;
+import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.license.LicenseService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.permissions.PermissionsService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.query.QueryExecutorService;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.ReportingService;
@@ -45,9 +46,9 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails.Thumbnail
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.AuthenticationType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Response;
 
 
 public class Session extends AnonymousSession {
@@ -164,6 +165,10 @@ public class Session extends AnonymousSession {
 
     public DashboardsService dashboardsService() {
         return getService(DashboardsService.class);
+    }
+
+    public LicenseService licenseService() {
+        return getService(LicenseService.class);
     }
 
 }

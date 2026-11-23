@@ -2,22 +2,25 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
 import com.jaspersoft.jasperserver.dto.resources.SqlExecutionRequest;
 import com.jaspersoft.jasperserver.dto.resources.domain.PresentationGroupElement;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.SingleContextAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import org.powermock.reflect.Whitebox;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.mock;
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.reset;
-import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertSame;
 
 /**
@@ -28,55 +31,53 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({ContextService.class, SessionStorage.class, SingleContextAdapter.class, DerivedTableContextManager.class})
-public class DerivedTableContextManagerTest extends PowerMockTestCase {
+@SuppressWarnings("unchecked")
+public class DerivedTableContextManagerTest {
+
+    @Mock
     private SessionStorage sessionStorageMock;
-    private ContextService contextServiceMock;
-    private SingleContextAdapter contextAdapterMock;
+    @Mock
+    private JerseyRequest<PresentationGroupElement> metadataRequestMock;
+    @Mock
     private OperationResult<PresentationGroupElement> operationResultMock;
 
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        sessionStorageMock = mock(SessionStorage.class);
-        contextServiceMock = mock(ContextService.class);
-        contextAdapterMock = mock(SingleContextAdapter.class);
-        operationResultMock = mock(OperationResult.class);
+        mockitoSession = MockitoAnnotations.openMocks(this);
     }
 
     @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, contextAdapterMock, contextServiceMock, operationResultMock);
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock, metadataRequestMock, operationResultMock);
     }
-
 
     @Test
     public void should_set_proper_session_storage() {
-        // When
-        DomElContextManager domainContextManager = new DomElContextManager(sessionStorageMock);
-        //Then
-        assertSame(Whitebox.getInternalState(domainContextManager, "sessionStorage"), sessionStorageMock);
+        DerivedTableContextManager manager = new DerivedTableContextManager(sessionStorageMock);
+        assertSame(manager.getSessionStorage(), sessionStorageMock);
     }
 
     @Test
-    public void should_return_proper_operation_result_when_create_context() throws Exception {
-        // When
+    public void should_return_proper_operation_result_when_create_context() {
+        SqlExecutionRequest request = new SqlExecutionRequest();
 
-        SqlExecutionRequest request = spy(new SqlExecutionRequest());
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(PresentationGroupElement.class),
+                    eq(new String[]{"contexts"}), any(DefaultErrorHandler.class))).thenReturn(metadataRequestMock);
+            doReturn(operationResultMock).when(metadataRequestMock).post(request);
 
-        PowerMockito.whenNew(ContextService.class).withArguments(sessionStorageMock).thenReturn(contextServiceMock);
-        PowerMockito.when(contextServiceMock.context(SqlExecutionRequest.class,
-                ContextMediaTypes.SQL_EXECUTION_JSON,
-                PresentationGroupElement.class,
-                ContextMediaTypes.DATASET_METADATA_JSON)).
-                thenReturn(contextAdapterMock);
-        PowerMockito.when(contextAdapterMock.createAndGetMetadata(request)).thenReturn(operationResultMock);
+            OperationResult<PresentationGroupElement> retrieved =
+                    new DerivedTableContextManager(sessionStorageMock).execute(request);
 
-        OperationResult<PresentationGroupElement> retrievedOperationResult = new DerivedTableContextManager(sessionStorageMock).
-                execute(request);
-        //Then
-        assertSame(operationResultMock, retrievedOperationResult);
+            assertSame(operationResultMock, retrieved);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(PresentationGroupElement.class),
+                    eq(new String[]{"contexts"}), any(DefaultErrorHandler.class)));
+            verify(metadataRequestMock).setContentType(ContextMediaTypes.SQL_EXECUTION_JSON);
+            verify(metadataRequestMock).setAccept(ContextMediaTypes.DATASET_METADATA_JSON);
+            verify(metadataRequestMock).post(request);
+        }
     }
-
-
 }

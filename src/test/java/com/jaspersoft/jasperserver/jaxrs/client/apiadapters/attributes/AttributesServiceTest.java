@@ -3,37 +3,60 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes;
 import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import java.util.Collections;
-import java.util.List;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
-import org.testng.Assert;
+import jakarta.ws.rs.core.MultivaluedMap;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static java.util.Arrays.asList;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.mockito.Mockito.reset;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService}
+ * Unit tests for {@link AttributesService}
  */
-@PrepareForTest({AttributesService.class})
-public class AttributesServiceTest extends PowerMockTestCase {
+@SuppressWarnings("unchecked")
+public class AttributesServiceTest {
 
+    @Mock
     private SessionStorage sessionStorageMock;
-    private SingleAttributeAdapter singleAttributeAdapterMock;
-    private BatchAttributeAdapter batchAttributeAdapterMock;
+
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        sessionStorageMock = mock(SessionStorage.class);
-        singleAttributeAdapterMock = mock(SingleAttributeAdapter.class);
-        batchAttributeAdapterMock = mock(BatchAttributeAdapter.class);
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
@@ -45,313 +68,219 @@ public class AttributesServiceTest extends PowerMockTestCase {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_sessionStorage_is_null() {
-        // When
         new AttributesService(null);
-        // Then
-        // should be thrown an exception
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_organization_as_string_is_null() {
-        // When
-        new AttributesService(sessionStorageMock).forOrganization((String)null);
-        // Then
-        // should be thrown an exception
+        new AttributesService(sessionStorageMock).forOrganization((String) null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_organization_as_object_is_null() {
-        // When
-        new AttributesService(sessionStorageMock).forOrganization((ClientTenant)null);
-        // Then
-        // should be thrown an exception
+        new AttributesService(sessionStorageMock).forOrganization((ClientTenant) null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_organization__id_is_null() {
-        // When
         new AttributesService(sessionStorageMock).forOrganization(new ClientTenant().setId(null));
-        // Then
-        // should be thrown an exception
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_organization__id_is_empty() {
-        // When
         new AttributesService(sessionStorageMock).forOrganization(new ClientTenant().setId(""));
-        // Then
-        // should be thrown an exception
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_organization__name_is_empty() {
-        // When
         new AttributesService(sessionStorageMock).forOrganization("");
-        // Then
-        // should be thrown an exception
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_user_as_string_is_null() {
-        // When
         new AttributesService(sessionStorageMock).forUser((String) null);
-        // Then
-        // should be thrown an exception
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_user_as_object_is_null() {
-        // When
         new AttributesService(sessionStorageMock).forUser((ClientUser) null);
-        // Then
-        // should be thrown an exception
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_user_name_is_null() {
-        // When
         new AttributesService(sessionStorageMock).forUser(new ClientUser().setUsername(null));
-        // Then
-        // should be thrown an exception
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_user_name_is_empty() {
-        // When
         new AttributesService(sessionStorageMock).forUser(new ClientUser().setUsername(""));
-        // Then
-        // should be thrown an exception
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_user__name_is_empty() {
-        // When
         new AttributesService(sessionStorageMock).forUser("");
-        // Then
-        // should be thrown an exception
     }
 
     @Test
     public void should_return_proper_SingleAttributeAdapter_instance() throws Exception {
-
-        // Given
-        whenNew(SingleAttributeAdapter.class)
-                .withArguments(null, null, sessionStorageMock, "attrName")
-                .thenReturn(singleAttributeAdapterMock);
-
         AttributesService attributesService = new AttributesService(sessionStorageMock);
 
-        // When
         SingleAttributeAdapter retrieved = attributesService.attribute("attrName");
 
-        // Then
-        assertSame(retrieved, singleAttributeAdapterMock);
-        verifyNew(SingleAttributeAdapter.class, times(1))
-                .withArguments(null, null, sessionStorageMock, "attrName");
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleAttributeAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ArrayList<String> path = (ArrayList<String>) getInternalState(retrieved, "path");
+        assertEquals(path.size(), 2);
+        assertEquals(path.get(0), "attributes");
+        assertEquals(path.get(1), "attrName");
     }
 
     @Test
     public void should_return_proper_SingleAttributeAdapter_instance_for_organization() throws Exception {
+        SingleAttributeAdapter retrieved = new AttributesService(sessionStorageMock)
+                .forOrganization("orgName")
+                .attribute("attrName");
 
-        // Given
-        whenNew(SingleAttributeAdapter.class)
-                .withArguments("orgName", null, sessionStorageMock, "attrName")
-                .thenReturn(singleAttributeAdapterMock);
-
-        AttributesService attributesService = new AttributesService(sessionStorageMock);
-
-        // When
-        SingleAttributeAdapter retrieved = attributesService.forOrganization("orgName").attribute("attrName");
-
-        // Then
-        assertSame(retrieved, singleAttributeAdapterMock);
-        verifyNew(SingleAttributeAdapter.class, times(1))
-                .withArguments("orgName", null, sessionStorageMock, "attrName");
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleAttributeAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ArrayList<String> path = (ArrayList<String>) getInternalState(retrieved, "path");
+        assertEquals(path.size(), 4);
+        assertEquals(path.get(0), "organizations");
+        assertEquals(path.get(1), "orgName");
+        assertEquals(path.get(2), "attributes");
+        assertEquals(path.get(3), "attrName");
     }
 
     @Test
     public void should_return_proper_SingleAttributeAdapter_instance_for_organization_as_object() throws Exception {
+        SingleAttributeAdapter retrieved = new AttributesService(sessionStorageMock)
+                .forOrganization(new ClientTenant().setId("orgName"))
+                .attribute("attrName");
 
-        // Given
-        whenNew(SingleAttributeAdapter.class)
-                .withArguments("orgName", null, sessionStorageMock, "attrName")
-                .thenReturn(singleAttributeAdapterMock);
-
-        AttributesService attributesService = new AttributesService(sessionStorageMock);
-
-        // When
-        SingleAttributeAdapter retrieved = attributesService
-                        .forOrganization(new ClientTenant()
-                                .setId("orgName"))
-                        .attribute("attrName");
-
-        // Then
-        assertSame(retrieved, singleAttributeAdapterMock);
-        verifyNew(SingleAttributeAdapter.class, times(1))
-                .withArguments("orgName", null, sessionStorageMock, "attrName");
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleAttributeAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ArrayList<String> path = (ArrayList<String>) getInternalState(retrieved, "path");
+        assertEquals(path.size(), 4);
+        assertEquals(path.get(0), "organizations");
+        assertEquals(path.get(1), "orgName");
+        assertEquals(path.get(2), "attributes");
+        assertEquals(path.get(3), "attrName");
     }
 
     @Test
     public void should_return_proper_SingleAttributeAdapter_instance_for_user() throws Exception {
+        SingleAttributeAdapter retrieved = new AttributesService(sessionStorageMock)
+                .forUser("userName")
+                .attribute("attrName");
 
-        // Given
-        whenNew(SingleAttributeAdapter.class)
-                .withArguments(null, "userName", sessionStorageMock, "attrName")
-                .thenReturn(singleAttributeAdapterMock);
-
-        AttributesService attributesService = new AttributesService(sessionStorageMock);
-
-        // When
-        SingleAttributeAdapter retrieved = attributesService.forUser("userName").attribute("attrName");
-
-        // Then
-        assertSame(retrieved, singleAttributeAdapterMock);
-        verifyNew(SingleAttributeAdapter.class, times(1))
-                .withArguments(null, "userName", sessionStorageMock, "attrName");
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleAttributeAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ArrayList<String> path = (ArrayList<String>) getInternalState(retrieved, "path");
+        assertEquals(path.size(), 4);
+        assertEquals(path.get(0), "users");
+        assertEquals(path.get(1), "userName");
+        assertEquals(path.get(2), "attributes");
+        assertEquals(path.get(3), "attrName");
     }
-
 
     @Test
     public void should_return_proper_SingleAttributeAdapter_instance_for_user_as_object() throws Exception {
+        SingleAttributeAdapter retrieved = new AttributesService(sessionStorageMock)
+                .forUser(new ClientUser().setUsername("userName"))
+                .attribute("attrName");
 
-        // Given
-        whenNew(SingleAttributeAdapter.class)
-                .withArguments(null, "userName", sessionStorageMock, "attrName")
-                .thenReturn(singleAttributeAdapterMock);
-
-        AttributesService attributesService = new AttributesService(sessionStorageMock);
-
-        // When
-        SingleAttributeAdapter retrieved = attributesService
-                        .forUser(new ClientUser()
-                                .setUsername("userName"))
-                        .attribute("attrName");
-
-        // Then
-        assertSame(retrieved, singleAttributeAdapterMock);
-        verifyNew(SingleAttributeAdapter.class, times(1))
-                .withArguments(null, "userName", sessionStorageMock, "attrName");
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleAttributeAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ArrayList<String> path = (ArrayList<String>) getInternalState(retrieved, "path");
+        assertEquals(path.size(), 4);
+        assertEquals(path.get(0), "users");
+        assertEquals(path.get(1), "userName");
+        assertEquals(path.get(2), "attributes");
+        assertEquals(path.get(3), "attrName");
     }
 
     @Test
     public void should_return_proper_SingleAttributeAdapter_instance_for_organization_for_user() throws Exception {
+        SingleAttributeAdapter retrieved = new AttributesService(sessionStorageMock)
+                .forOrganization("orgName")
+                .forUser("userName")
+                .attribute("attrName");
 
-        // Given
-        whenNew(SingleAttributeAdapter.class)
-                .withArguments("orgName", "userName", sessionStorageMock, "attrName")
-                .thenReturn(singleAttributeAdapterMock);
-
-        AttributesService attributesService = new AttributesService(sessionStorageMock);
-
-        // When
-        SingleAttributeAdapter retrieved = attributesService.forOrganization("orgName").forUser("userName").attribute("attrName");
-
-        // Then
-        assertSame(retrieved, singleAttributeAdapterMock);
-        verifyNew(SingleAttributeAdapter.class, times(1))
-                .withArguments("orgName", "userName", sessionStorageMock, "attrName");
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleAttributeAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ArrayList<String> path = (ArrayList<String>) getInternalState(retrieved, "path");
+        assertEquals(path.size(), 6);
+        assertEquals(path.get(0), "organizations");
+        assertEquals(path.get(1), "orgName");
+        assertEquals(path.get(2), "users");
+        assertEquals(path.get(3), "userName");
+        assertEquals(path.get(4), "attributes");
+        assertEquals(path.get(5), "attrName");
     }
-
 
     @Test
     public void should_construct_an_object_with_proper_params() throws Exception {
-
-        // Given /
-        whenNew(SingleAttributeAdapter.class)
-                .withArguments(null, null, sessionStorageMock, "status")
-                .thenReturn(singleAttributeAdapterMock);
-
         AttributesService attributesService = new AttributesService(sessionStorageMock);
 
-        // When
         SingleAttributeAdapter retrieved = attributesService.attribute("status");
 
-        // Then
-        Assert.assertSame(retrieved, singleAttributeAdapterMock);
-        verifyNew(SingleAttributeAdapter.class, times(1))
-                .withArguments(null, null, sessionStorageMock, "status");
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleAttributeAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ArrayList<String> path = (ArrayList<String>) getInternalState(retrieved, "path");
+        assertEquals(path.size(), 2);
+        assertEquals(path.get(0), "attributes");
+        assertEquals(path.get(1), "status");
     }
 
     @Test
     public void should_return_proper_BatchAttributeAdapter_instance() throws Exception {
+        BatchAttributeAdapter retrieved = new AttributesService(sessionStorageMock).allAttributes();
 
-        // Given
-        whenNew(BatchAttributeAdapter.class)
-                .withArguments(null, null, sessionStorageMock)
-                .thenReturn(batchAttributeAdapterMock);
-
-        AttributesService attributesService = new AttributesService(sessionStorageMock);
-
-        // When
-        BatchAttributeAdapter retrieved = attributesService.allAttributes();
-
-        // Then
-        assertSame(retrieved, batchAttributeAdapterMock);
-        verifyNew(BatchAttributeAdapter.class, times(1))
-                .withArguments(null, null, sessionStorageMock);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof BatchAttributeAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertNull(getInternalState(retrieved, "organizationId"));
+        assertNull(getInternalState(retrieved, "userName"));
     }
 
     @Test
     public void should_instantiate_proper_BatchAttributeAdapter_instance() throws Exception {
-
-        // Given
         List<String> list = asList("attr1", "attr2", "attr3");
-        whenNew(BatchAttributeAdapter.class)
-                .withArguments(null, null, sessionStorageMock, list)
-                .thenReturn(batchAttributeAdapterMock);
 
-        AttributesService attributesService = new AttributesService(sessionStorageMock);
+        BatchAttributeAdapter retrieved = new AttributesService(sessionStorageMock).attributes(list);
 
-        // When
-        BatchAttributeAdapter retrieved = attributesService.attributes(list);
-
-        // Then
-        assertSame(retrieved, batchAttributeAdapterMock);
-        verifyNew(BatchAttributeAdapter.class, times(1))
-                .withArguments(null, null, sessionStorageMock, list);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof BatchAttributeAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertNull(getInternalState(retrieved, "organizationId"));
+        assertNull(getInternalState(retrieved, "userName"));
+        MultivaluedMap<String, String> params = (MultivaluedMap<String, String>) getInternalState(retrieved, "params");
+        assertEquals(params.get("name"), list);
     }
 
     @Test
     public void should_instantiate_proper_BatchAttributeAdapter_instance_when_pass_vararg() throws Exception {
+        BatchAttributeAdapter retrieved = new AttributesService(sessionStorageMock)
+                .attributes("attr1", "attr2", "attr3");
 
-        // Given
-        whenNew(BatchAttributeAdapter.class)
-                .withArguments(null, null, sessionStorageMock, asList("attr1", "attr2", "attr3"))
-                .thenReturn(batchAttributeAdapterMock);
-
-        AttributesService attributesService = new AttributesService(sessionStorageMock);
-
-        // When
-        BatchAttributeAdapter retrieved = attributesService.attributes("attr1", "attr2", "attr3");
-
-        // Then
-        assertSame(retrieved, batchAttributeAdapterMock);
-        verifyNew(BatchAttributeAdapter.class, times(1))
-                .withArguments(null, null, sessionStorageMock, asList("attr1", "attr2", "attr3"));
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof BatchAttributeAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertNull(getInternalState(retrieved, "organizationId"));
+        assertNull(getInternalState(retrieved, "userName"));
+        MultivaluedMap<String, String> params = (MultivaluedMap<String, String>) getInternalState(retrieved, "params");
+        assertEquals(params.get("name"), asList("attr1", "attr2", "attr3"));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exceptopn_when_attributes_list_is_empty() throws Exception {
-
-        // Given
-        List<String> list = Collections.EMPTY_LIST;
-        whenNew(BatchAttributeAdapter.class)
-                .withArguments(null, null, sessionStorageMock, list)
-                .thenReturn(batchAttributeAdapterMock);
-
-        AttributesService attributesService = new AttributesService(sessionStorageMock);
-
-        // When
-        attributesService.attributes(list);
-
-        // Then
-        // an exception should be thrown
-    }
-
-    @AfterMethod
-    public void after() {
-        sessionStorageMock = null;
-        singleAttributeAdapterMock = null;
-        batchAttributeAdapterMock = null;
+    public void should_throw_exceptopn_when_attributes_list_is_empty() {
+        new AttributesService(sessionStorageMock).attributes(Collections.EMPTY_LIST);
     }
 }

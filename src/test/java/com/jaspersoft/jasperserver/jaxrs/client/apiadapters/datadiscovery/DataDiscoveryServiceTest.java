@@ -1,19 +1,18 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextService;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.mock;
+import java.lang.reflect.Field;
+
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 /**
  * <p/>
@@ -23,124 +22,91 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({DataDiscoveryService.class})
-public class DataDiscoveryServiceTest extends PowerMockTestCase {
+public class DataDiscoveryServiceTest {
+
+    @Mock
     private SessionStorage sessionStorageMock;
-    private DomainContextManager domainContextManager;
-    private TopicContextManager topicContextManager;
-    private DomElContextManager domElContextManager;
-    private DerivedTableContextManager derivedTableContextManager;
+
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        sessionStorageMock = mock(SessionStorage.class);
-        domainContextManager = mock(DomainContextManager.class);
-        topicContextManager = mock(TopicContextManager.class);
-        domElContextManager= mock(DomElContextManager.class);
-        derivedTableContextManager = mock(DerivedTableContextManager.class);
-
+        mockitoSession = MockitoAnnotations.openMocks(this);
     }
 
     @AfterMethod
-    public void after() {
-        reset(sessionStorageMock,
-                domainContextManager,
-                domElContextManager,
-                topicContextManager,
-                derivedTableContextManager);
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
     public void should_pass_session_storage_to_parent_adapter() {
-        ContextService attributesService = new ContextService(sessionStorageMock);
-        SessionStorage retrieved = attributesService.getSessionStorage();
+        DataDiscoveryService service = new DataDiscoveryService(sessionStorageMock);
+        SessionStorage retrieved = service.getSessionStorage();
         assertSame(retrieved, sessionStorageMock);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_sessionStorage_is_null() {
-        // When
-        new ContextService(null);
-        // Then
-        // should be thrown an exception
+        new DataDiscoveryService(null);
     }
-
 
     @Test
     public void should_return_proper_DomainContextManager() throws Exception {
+        DataDiscoveryService service = new DataDiscoveryService(sessionStorageMock);
 
-        // Given
-        whenNew(DomainContextManager.class)
-                .withArguments(sessionStorageMock)
-                .thenReturn(domainContextManager);
+        DomainContextManager retrieved = service.domainContext();
 
-        DataDiscoveryService dataDiscoveryService = new DataDiscoveryService(sessionStorageMock);
-
-        // When
-        DomainContextManager retrieved = dataDiscoveryService.domainContext();
-
-        // Then
-        assertSame(domainContextManager, retrieved);
-        verifyNew(DomainContextManager.class, times(1))
-                .withArguments(sessionStorageMock);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof DomainContextManager);
+        assertSame(getInternalState(retrieved, "sessionStorage"), sessionStorageMock);
     }
 
     @Test
     public void should_return_proper_TopicContextManager() throws Exception {
+        DataDiscoveryService service = new DataDiscoveryService(sessionStorageMock);
 
-        // Given
-        whenNew(TopicContextManager.class)
-                .withArguments(sessionStorageMock)
-                .thenReturn(topicContextManager);
+        TopicContextManager retrieved = service.topicContext();
 
-        DataDiscoveryService dataDiscoveryService = new DataDiscoveryService(sessionStorageMock);
-
-        // When
-        TopicContextManager retrieved = dataDiscoveryService.topicContext();
-
-        // Then
-        assertSame(topicContextManager, retrieved);
-        verifyNew(TopicContextManager.class, times(1))
-                .withArguments(sessionStorageMock);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof TopicContextManager);
+        assertSame(getInternalState(retrieved, "sessionStorage"), sessionStorageMock);
     }
 
     @Test
     public void should_return_proper_DomElContextManager() throws Exception {
+        DataDiscoveryService service = new DataDiscoveryService(sessionStorageMock);
 
-        // Given
-        whenNew(DomElContextManager.class)
-                .withArguments(sessionStorageMock)
-                .thenReturn(domElContextManager);
+        DomElContextManager retrieved = service.domElContext();
 
-        DataDiscoveryService dataDiscoveryService = new DataDiscoveryService(sessionStorageMock);
-
-        // When
-        DomElContextManager retrieved = dataDiscoveryService.domElContext();
-
-        // Then
-        assertSame(domElContextManager, retrieved);
-        verifyNew(DomElContextManager.class, times(1))
-                .withArguments(sessionStorageMock);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof DomElContextManager);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
     }
 
     @Test
     public void should_return_proper_deridved_table_context_manager() throws Exception {
+        DataDiscoveryService service = new DataDiscoveryService(sessionStorageMock);
 
-        // Given
-        whenNew(DerivedTableContextManager.class)
-                .withArguments(sessionStorageMock)
-                .thenReturn(derivedTableContextManager);
+        DerivedTableContextManager retrieved = service.derivedTableContext();
 
-        DataDiscoveryService dataDiscoveryService = new DataDiscoveryService(sessionStorageMock);
-
-        // When
-        DerivedTableContextManager retrieved = dataDiscoveryService.derivedTableContext();
-
-        // Then
-        assertSame(derivedTableContextManager, retrieved);
-        verifyNew(DerivedTableContextManager.class, times(1))
-                .withArguments(sessionStorageMock);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof DerivedTableContextManager);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
     }
-
-
 }

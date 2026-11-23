@@ -9,43 +9,23 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.reflect.Whitebox.getInternalState;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyNoMoreInteractions;
-import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertSame;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Unit tests for {@link SingleAttributeAdapter}
- */
-@PrepareForTest({SingleAttributeAdapter.class, JerseyRequest.class})
-public class SingleAttributeAdapterTest extends PowerMockTestCase {
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
+
+public class SingleAttributeAdapterTest {
 
     @Mock
     private SessionStorage sessionStorageMock;
@@ -56,19 +36,21 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
     @Mock
     private OperationResult<HypermediaAttribute> resultMock;
 
+    private AutoCloseable mocks;
+
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mocks = MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void should_pass_proper_session_storage_to_parent_class_and_set_own_fields() {
-
-        // When
+    public void should_pass_proper_session_storage_to_parent_class_and_set_own_fields() throws Exception {
         SingleAttributeAdapter adapter = new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State");
-        ArrayList<String> uri = getInternalState(adapter, "path");
 
-        // Then
+        Field field = SingleAttributeAdapter.class.getDeclaredField("path");
+        field.setAccessible(true);
+        ArrayList<String> uri = (ArrayList<String>) field.get(adapter);
+
         assertNotNull(adapter);
         assertEquals(uri.get(0), "organizations");
         assertEquals(uri.get(1), "MyCoolOrg");
@@ -79,33 +61,29 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
     @Test
     public void should_invoke_private_method_and_return_a_mock() throws Exception {
-
         // Given
         SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
-        doReturn(requestMock).when(adapter, "buildRequest");
-        doReturn(resultMock).when(requestMock).get();
-
+        doReturn(requestMock).when(adapter).buildRequest();
+        when(requestMock.get()).thenReturn(resultMock);
         // When
         adapter.get();
-
         // Then
-        verifyPrivate(adapter, times(1)).invoke("buildRequest");
+        verify(adapter, times(1)).buildRequest();
         verify(requestMock, times(1)).get();
         verifyNoMoreInteractions(requestMock);
     }
 
     @Test
     public void should_return_attribute_asynchronously() throws Exception {
-
-        // Given
         SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
-        doReturn(requestMock).when(adapter, "buildRequest");
-        doReturn(resultMock).when(requestMock).get();
 
-        final AtomicInteger newThreadId = new AtomicInteger();
-        final int currentThreadId = (int) Thread.currentThread().getId();
+        doReturn(requestMock).when(adapter).buildRequest();
+        when(requestMock.get()).thenReturn(resultMock);
 
-        final Callback<OperationResult<HypermediaAttribute>, Void> callback = spy(new Callback<OperationResult<HypermediaAttribute>, Void>() {
+        AtomicInteger newThreadId = new AtomicInteger();
+        int currentThreadId = (int) Thread.currentThread().getId();
+
+        Callback<OperationResult<HypermediaAttribute>, Void> callback = spy(new Callback<>() {
             @Override
             public Void execute(OperationResult<HypermediaAttribute> data) {
                 newThreadId.set((int) Thread.currentThread().getId());
@@ -118,32 +96,29 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         doNothing().when(callback).execute(resultMock);
 
-        // When
         RequestExecution retrieved = adapter.asyncGet(callback);
 
         synchronized (callback) {
             callback.wait(1000);
         }
 
-        // Then
         verify(requestMock).get();
         verify(callback).execute(resultMock);
         assertNotNull(retrieved);
-        assertNotSame(currentThreadId, newThreadId.get());
+        assertNotEquals(currentThreadId, newThreadId.get());
     }
 
     @Test
     public void should_delete_attribute_asynchronously() throws Exception {
-
-        // Given
         SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
-        doReturn(requestMock).when(adapter, "buildRequest");
-        doReturn(resultMock).when(requestMock).delete();
 
-        final AtomicInteger newThreadId = new AtomicInteger();
-        final int currentThreadId = (int) Thread.currentThread().getId();
+        doReturn(requestMock).when(adapter).buildRequest();
+        when(requestMock.delete()).thenReturn(resultMock);
 
-        final Callback<OperationResult<HypermediaAttribute>, Void> callback = spy(new Callback<OperationResult<HypermediaAttribute>, Void>() {
+        AtomicInteger newThreadId = new AtomicInteger();
+        int currentThreadId = (int) Thread.currentThread().getId();
+
+        Callback<OperationResult<HypermediaAttribute>, Void> callback = spy(new Callback<>() {
             @Override
             public Void execute(OperationResult<HypermediaAttribute> data) {
                 newThreadId.set((int) Thread.currentThread().getId());
@@ -156,30 +131,30 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
 
         doNothing().when(callback).execute(resultMock);
 
-        // When
         RequestExecution retrieved = adapter.asyncDelete(callback);
 
         synchronized (callback) {
             callback.wait(1000);
         }
 
-        // Then
         verify(requestMock).delete();
         verify(callback).execute(resultMock);
         assertNotNull(retrieved);
-        assertNotSame(currentThreadId, newThreadId.get());
+        assertNotEquals(currentThreadId, newThreadId.get());
     }
 
     @Test
     public void should_create_or_update_attribute_for_user_asynchronously() throws Exception {
-
-        // Given
         SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
-        final HypermediaAttribute userAttributeMock = mock(HypermediaAttribute.class);
-        final AtomicInteger newThreadId = new AtomicInteger();
-        final int currentThreadId = (int) Thread.currentThread().getId();
+        HypermediaAttribute userAttributeMock = mock(HypermediaAttribute.class);
 
-        final Callback<OperationResult<HypermediaAttribute>, Void> callback = spy(new Callback<OperationResult<HypermediaAttribute>, Void>() {
+        doReturn(requestMock).when(adapter).buildRequest();
+        when(requestMock.put(userAttributeMock)).thenReturn(resultMock);
+
+        AtomicInteger newThreadId = new AtomicInteger();
+        int currentThreadId = (int) Thread.currentThread().getId();
+
+        Callback<OperationResult<HypermediaAttribute>, Void> callback = spy(new Callback<>() {
             @Override
             public Void execute(OperationResult<HypermediaAttribute> data) {
                 newThreadId.set((int) Thread.currentThread().getId());
@@ -190,221 +165,222 @@ public class SingleAttributeAdapterTest extends PowerMockTestCase {
             }
         });
 
-        doReturn(requestMock).when(adapter, "buildRequest");
-        doReturn(resultMock).when(requestMock).put(userAttributeMock);
         doNothing().when(callback).execute(resultMock);
 
-        // When
         RequestExecution retrieved = adapter.asyncCreateOrUpdate(userAttributeMock, callback);
 
         synchronized (callback) {
             callback.wait(1000);
         }
 
-        // Then
         verify(requestMock).put(userAttributeMock);
         verify(callback).execute(resultMock);
         assertNotNull(retrieved);
-        assertNotSame(currentThreadId, newThreadId.get());
+        assertNotEquals(currentThreadId, newThreadId.get());
     }
 
     @Test
     public void should_invoke_private_method() {
-
         // Given
         final HypermediaAttribute userAttributeMock = mock(HypermediaAttribute.class);
         final SingleAttributeAdapter adapter = new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State");
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}), any(DefaultErrorHandler.class)))
-                .thenReturn(requestMock);
-        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(requestMock).when(requestMock).setContentType(anyString());
-        doReturn(resultMock).when(requestMock).put(userAttributeMock);
-
-        // When
-        OperationResult<HypermediaAttribute> retrieved = adapter.createOrUpdate(userAttributeMock);
-
-        // Then
-        assertNotNull(retrieved);
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(eq(sessionStorageMock),
-                eq(HypermediaAttribute.class),
-                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
-                any(DefaultErrorHandler.class));
-        verify(requestMock, times(1)).put(userAttributeMock);
+        try (MockedStatic<JerseyRequest> jerseyRequestMock = mockStatic(JerseyRequest.class)) {
+            jerseyRequestMock.when(() -> JerseyRequest.buildRequest(
+                    eq(sessionStorageMock),
+                    eq(HypermediaAttribute.class),
+                    eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class)
+            )).thenReturn(requestMock);
+            when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+            when(configurationMock.getContentMimeType()).thenReturn(MimeType.JSON);
+            when(requestMock.setContentType(anyString())).thenReturn(requestMock);
+            when(requestMock.put(userAttributeMock)).thenReturn(resultMock);
+            // When
+            OperationResult<HypermediaAttribute> retrieved = adapter.createOrUpdate(userAttributeMock);
+            // Then
+            assertNotNull(retrieved);
+            jerseyRequestMock.verify(() -> JerseyRequest.buildRequest(
+                    eq(sessionStorageMock),
+                    eq(HypermediaAttribute.class),
+                    eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class)
+            ), times(1));
+            verify(requestMock, times(1)).put(userAttributeMock);
+        }
     }
+
     @Test
     public void should_set_headers_and_invoke_private_method() {
-
         // Given
         final SingleAttributeAdapter adapter = new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State");
-
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}), any(DefaultErrorHandler.class)))
-                .thenReturn(requestMock);
-        doReturn(requestMock).when(requestMock).setAccept(anyString());
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
-        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
-        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        doReturn(requestMock).when(requestMock).addParam(anyString(), anyString());
-        doReturn(resultMock).when(requestMock).get();
-
-        // When
-        OperationResult<HypermediaAttribute> retrieved = adapter.setIncludePermissions(true).get();
-
-        // Then
-        assertNotNull(retrieved);
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(eq(sessionStorageMock),
-                eq(HypermediaAttribute.class),
-                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
-                any(DefaultErrorHandler.class));
-        verify(requestMock, times(1)).get();
-        verify(requestMock, times(1)).setAccept("application/hal+json");
-        verify(requestMock, times(1)).addParam("_embedded", "permission");
-
+        try (MockedStatic<JerseyRequest> jerseyRequestMock = mockStatic(JerseyRequest.class)) {
+            jerseyRequestMock.when(() -> JerseyRequest.buildRequest(
+                    eq(sessionStorageMock),
+                    eq(HypermediaAttribute.class),
+                    eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class)
+            )).thenReturn(requestMock);
+            when(requestMock.setAccept(anyString())).thenReturn(requestMock);
+            when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+            when(configurationMock.getAcceptMimeType()).thenReturn(MimeType.JSON);
+            when(requestMock.addParam(anyString(), anyString())).thenReturn(requestMock);
+            when(requestMock.get()).thenReturn(resultMock);
+            // When
+            OperationResult<HypermediaAttribute> retrieved = adapter.setIncludePermissions(true).get();
+            // Then
+            assertNotNull(retrieved);
+            jerseyRequestMock.verify(() -> JerseyRequest.buildRequest(
+                    eq(sessionStorageMock),
+                    eq(HypermediaAttribute.class),
+                    eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class)
+            ), times(1));
+            verify(requestMock, times(1)).get();
+            verify(requestMock, times(1)).setAccept("application/hal+json");
+            verify(requestMock, times(1)).addParam("_embedded", "permission");
+        }
     }
 
     @Test
     public void should_set_headers_and_invoke_private_method_for_user_in_root_by_default() {
-
         // Given
         final SingleAttributeAdapter adapter = new SingleAttributeAdapter(null, "Simon", sessionStorageMock, "State");
-
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"users", "Simon", "attributes", "State"}), any(DefaultErrorHandler.class)))
-                .thenReturn(requestMock);
-        doReturn(requestMock).when(requestMock).setAccept(anyString());
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
-        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
-        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        doReturn(requestMock).when(requestMock).addParam(anyString(), anyString());
-        doReturn(resultMock).when(requestMock).get();
-
-        // When
-        OperationResult<HypermediaAttribute> retrieved = adapter.setIncludePermissions(true).get();
-
-        // Then
-        assertNotNull(retrieved);
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(eq(sessionStorageMock),
-                eq(HypermediaAttribute.class),
-                eq(new String[]{"users", "Simon", "attributes", "State"}),
-                any(DefaultErrorHandler.class));
-        verify(requestMock, times(1)).get();
-        verify(requestMock, times(1)).setAccept("application/hal+json");
-        verify(requestMock, times(1)).addParam("_embedded", "permission");
-
+        try (MockedStatic<JerseyRequest> jerseyRequestMock = mockStatic(JerseyRequest.class)) {
+            jerseyRequestMock.when(() -> JerseyRequest.buildRequest(
+                    eq(sessionStorageMock),
+                    eq(HypermediaAttribute.class),
+                    eq(new String[]{"users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class)
+            )).thenReturn(requestMock);
+            when(requestMock.setAccept(anyString())).thenReturn(requestMock);
+            when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+            when(configurationMock.getAcceptMimeType()).thenReturn(MimeType.JSON);
+            when(requestMock.addParam(anyString(), anyString())).thenReturn(requestMock);
+            when(requestMock.get()).thenReturn(resultMock);
+            // When
+            OperationResult<HypermediaAttribute> retrieved = adapter.setIncludePermissions(true).get();
+            // Then
+            assertNotNull(retrieved);
+            jerseyRequestMock.verify(() -> JerseyRequest.buildRequest(
+                    eq(sessionStorageMock),
+                    eq(HypermediaAttribute.class),
+                    eq(new String[]{"users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class)
+            ), times(1));
+            verify(requestMock, times(1)).get();
+            verify(requestMock, times(1)).setAccept("application/hal+json");
+            verify(requestMock, times(1)).addParam("_embedded", "permission");
+        }
     }
 
     @Test
     public void should_set_headers_and_invoke_private_method_for_user_in_root() {
-
         // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"users", "Simon", "attributes", "State"}), any(DefaultErrorHandler.class)))
-                .thenReturn(requestMock);
-        doReturn(requestMock).when(requestMock).setAccept(anyString());
         RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
-        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
-        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        doReturn(requestMock).when(requestMock).addParam(anyString(), anyString());
-        doReturn(resultMock).when(requestMock).get();
-
-        // When
-        AttributesService service = new AttributesService(sessionStorageMock);
-        OperationResult<HypermediaAttribute> retrieved = service
-                .forOrganization("/")
-                .forUser("Simon")
-                .attribute("State")
-                .setIncludePermissions(true).get();
-
-        // Then
-        assertNotNull(retrieved);
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(eq(sessionStorageMock),
-                eq(HypermediaAttribute.class),
-                eq(new String[]{"users", "Simon", "attributes", "State"}),
-                any(DefaultErrorHandler.class));
-        verify(requestMock, times(1)).get();
-        verify(requestMock, times(1)).setAccept("application/hal+json");
-        verify(requestMock, times(1)).addParam("_embedded", "permission");
-
+        try (MockedStatic<JerseyRequest> jerseyRequestMock = mockStatic(JerseyRequest.class)) {
+            jerseyRequestMock.when(() -> JerseyRequest.buildRequest(
+                    eq(sessionStorageMock),
+                    eq(HypermediaAttribute.class),
+                    eq(new String[]{"users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class)
+            )).thenReturn(requestMock);
+            when(requestMock.setAccept(anyString())).thenReturn(requestMock);
+            when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+            when(configurationMock.getAcceptMimeType()).thenReturn(MimeType.JSON);
+            when(requestMock.addParam(anyString(), anyString())).thenReturn(requestMock);
+            when(requestMock.get()).thenReturn(resultMock);
+            // When
+            AttributesService service = new AttributesService(sessionStorageMock);
+            OperationResult<HypermediaAttribute> retrieved = service
+                    .forOrganization("/") // org = "/"
+                    .forUser("Simon")
+                    .attribute("State")
+                    .setIncludePermissions(true).get();
+            // Then
+            assertNotNull(retrieved);
+            jerseyRequestMock.verify(() -> JerseyRequest.buildRequest(
+                    eq(sessionStorageMock),
+                    eq(HypermediaAttribute.class),
+                    eq(new String[]{"users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class)
+            ), times(1));
+            verify(requestMock, times(1)).get();
+            verify(requestMock, times(1)).setAccept("application/hal+json");
+            verify(requestMock, times(1)).addParam("_embedded", "permission");
+        }
     }
 
     @Test
     public void should_invoke_private_method_for_delete_method() {
-
         // Given
         final SingleAttributeAdapter adapter = new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State");
+        try (MockedStatic<JerseyRequest> jerseyRequestMock = mockStatic(JerseyRequest.class)) {
+            jerseyRequestMock.when(() -> JerseyRequest.buildRequest(
+                    eq(sessionStorageMock),
+                    eq(HypermediaAttribute.class),
+                    eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class)
+            )).thenReturn(requestMock);
+            when(requestMock.delete()).thenReturn(resultMock);
+            // When
+            OperationResult<HypermediaAttribute> retrieved = adapter.delete();
+            // Then
+            assertNotNull(retrieved);
+            jerseyRequestMock.verify(() -> JerseyRequest.buildRequest(
+                    eq(sessionStorageMock),
+                    eq(HypermediaAttribute.class),
+                    eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class)
+            ), times(1));
+            verify(requestMock, times(1)).delete();
+        }
+    }
 
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
-                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
-                any(DefaultErrorHandler.class)))
-                .thenReturn(requestMock);
-        doReturn(resultMock).when(requestMock).delete();
+    @Test
+    public void should_delete_user_attribute() {
+        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
 
-        // When
+        doReturn(requestMock).when(adapter).buildRequest();
+        when(requestMock.delete()).thenReturn(resultMock);
+
         OperationResult<HypermediaAttribute> retrieved = adapter.delete();
 
-        // Then
         assertNotNull(retrieved);
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(eq(sessionStorageMock),
-                eq(HypermediaAttribute.class),
-                eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
-                any(DefaultErrorHandler.class));
-        verify(requestMock, times(1)).delete();
+        verify(requestMock).delete();
     }
 
     @Test
-    public void should_delete_user_attribute() throws Exception {
+    public void should_create_or_update_attribute_for_user() {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            HypermediaAttribute userAttributeMock = mock(HypermediaAttribute.class);
+            RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
+            SingleAttributeAdapter adapter = new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State");
 
-        // Given
-        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
-        doReturn(requestMock).when(adapter, "buildRequest");
-        doReturn(resultMock).when(requestMock).delete();
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
+                    eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class))).thenReturn(requestMock);
 
-        // When
-        OperationResult retrieved = adapter.delete();
+            when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+            when(configurationMock.getContentMimeType()).thenReturn(MimeType.JSON);
+            when(requestMock.setContentType(anyString())).thenReturn(requestMock);
+            when(requestMock.put(userAttributeMock)).thenReturn(resultMock);
 
-        // Then
-        assertSame(retrieved, resultMock);
-        verifyPrivate(adapter, times(1)).invoke("buildRequest");
-    }
+            OperationResult<HypermediaAttribute> retrieved = adapter.createOrUpdate(userAttributeMock);
 
-
-    @Test
-    public void should_create_or_update_attribute_for_user() throws Exception {
-
-        // Given
-        final HypermediaAttribute userAttributeMock = mock(HypermediaAttribute.class);
-        RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
-        SingleAttributeAdapter adapter = spy(new SingleAttributeAdapter("MyCoolOrg", "Simon", sessionStorageMock, "State"));
-        doReturn(requestMock).when(adapter, "buildRequest");
-        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        doReturn(MimeType.JSON).when(configurationMock).getContentMimeType();
-        doReturn(requestMock).when(requestMock).setContentType(anyString());
-        doReturn(resultMock).when(requestMock).put(userAttributeMock);
-
-        // When
-        OperationResult retrieved = adapter.createOrUpdate(userAttributeMock);
-
-        // Then
-
-        assertSame(retrieved, resultMock);
-        verifyPrivate(adapter, times(1)).invoke("buildRequest");
+            assertNotNull(retrieved);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(HypermediaAttribute.class),
+                    eq(new String[]{"organizations", "MyCoolOrg", "users", "Simon", "attributes", "State"}),
+                    any(DefaultErrorHandler.class)), times(1));
+            verify(requestMock, times(1)).put(userAttributeMock);
+        }
     }
 
     @AfterMethod
-    public void after() {
+    public void after() throws Exception {
+        mocks.close();
         reset(sessionStorageMock, requestMock, resultMock);
     }
 }

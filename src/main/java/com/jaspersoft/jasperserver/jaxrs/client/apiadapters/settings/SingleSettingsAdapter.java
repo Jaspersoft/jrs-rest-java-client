@@ -7,7 +7,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.*;
 
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.GenericType;
 import java.util.List;
 
 /**

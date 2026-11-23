@@ -2,39 +2,53 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.roles;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import org.mockito.Mock;
-import org.powermock.reflect.Whitebox;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.never;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Unit tests for {@link RolesService}
  */
-@PrepareForTest({SingleRoleRequestAdapter.class, RolesService.class})
-public class RolesServiceTest extends PowerMockTestCase {
+public class RolesServiceTest {
 
     @Mock
     private SessionStorage sessionStorageMock;
 
-    @Mock
-    private SingleRoleRequestAdapter singleRoleRequestAdapterMock;
-
-    @Mock
-    private BatchRolesRequestAdapter batchRolesRequestAdapterMock;
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
@@ -46,81 +60,51 @@ public class RolesServiceTest extends PowerMockTestCase {
 
     @Test
     public void should_return_proper_SingleRoleRequestAdapter_instance() throws Exception {
-
-        // Given
-        PowerMockito.whenNew(SingleRoleRequestAdapter.class)
-                .withArguments(sessionStorageMock, null, "Admin").thenReturn(singleRoleRequestAdapterMock);
         RolesService rolesService = new RolesService(sessionStorageMock);
 
-        // When
         SingleRoleRequestAdapter retrieved = rolesService.roleName("Admin");
 
-        // Then
-        assertSame(retrieved, singleRoleRequestAdapterMock);
-        PowerMockito.verifyNew(SingleRoleRequestAdapter.class, never()).withNoArguments();
-        PowerMockito.verifyNew(SingleRoleRequestAdapter.class, times(1))
-                .withArguments(sessionStorageMock, null, "Admin");
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleRoleRequestAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ArrayList<String> roleUri = (ArrayList<String>) getInternalState(retrieved, "roleUri");
+        assertEquals(roleUri.get(0), "roles");
+        assertEquals(roleUri.get(1), "Admin");
     }
 
-    @Test (expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_an_exception_when_role_name_is_empty() throws Exception {
-
-        // Given
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void should_throw_an_exception_when_role_name_is_empty() {
         RolesService rolesService = new RolesService(sessionStorageMock);
-
-        // When
         rolesService.roleName("");
-
-        // Then throw an exception
     }
 
     @Test
     public void should_return_proper_instance_of_BatchRolesRequestAdapter() throws Exception {
-
-        // Given
-        PowerMockito.whenNew(BatchRolesRequestAdapter.class)
-                .withArguments(sessionStorageMock, "MyCoolOrg").thenReturn(batchRolesRequestAdapterMock);
         RolesService rolesService = new RolesService(sessionStorageMock).organization("MyCoolOrg");
 
-        // When
         BatchRolesRequestAdapter retrieved = rolesService.allRoles();
 
-        // Then
-        assertSame(retrieved, batchRolesRequestAdapterMock);
-        PowerMockito.verifyNew(BatchRolesRequestAdapter.class, never()).withNoArguments();
-        PowerMockito.verifyNew(BatchRolesRequestAdapter.class, times(1))
-                .withArguments(sessionStorageMock, "MyCoolOrg");
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof BatchRolesRequestAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ArrayList<String> uri = (ArrayList<String>) getInternalState(retrieved, "uri");
+        assertEquals(uri.get(0), "organizations");
+        assertEquals(uri.get(1), "MyCoolOrg");
     }
 
     @Test
-    public void should_set_proper_field_value_to_instance() {
-
-        // Given
+    public void should_set_proper_field_value_to_instance() throws Exception {
         RolesService rolesService = new RolesService(sessionStorageMock);
 
-        // When
         RolesService retrieved = rolesService.organization("MyCoolOrg");
 
-        // Then
         assertSame(retrieved, rolesService);
-        assertEquals(Whitebox.getInternalState(rolesService, "organizationId"), "MyCoolOrg");
+        assertEquals(getInternalState(rolesService, "organizationId"), "MyCoolOrg");
     }
-
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_arg_is_empty() {
-
-        // Given
         RolesService rolesService = new RolesService(sessionStorageMock);
-
-        // When
         rolesService.organization("");
-
-        // Then throw an exception
-    }
-
-    @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, singleRoleRequestAdapterMock, batchRolesRequestAdapterMock);
     }
 }

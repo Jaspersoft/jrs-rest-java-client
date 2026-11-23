@@ -5,21 +5,19 @@ import com.jaspersoft.jasperserver.dto.resources.ClientSemanticLayerDataSource;
 import com.jaspersoft.jasperserver.dto.resources.domain.ClientDomain;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
+import java.lang.reflect.Field;
+
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 /**
  * <p/>
@@ -29,102 +27,92 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({DomainContextService.class})
-public class DomainContextServiceTest extends PowerMockTestCase {
+public class DomainContextServiceTest {
+
+    @Mock
     private SessionStorage sessionStorageMock;
-    private SingleDomainContextAdapter adapter;
+
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        sessionStorageMock = mock(SessionStorage.class);
-        adapter = mock(SingleDomainContextAdapter.class);
+        mockitoSession = MockitoAnnotations.openMocks(this);
     }
 
     @AfterMethod
-    public void after() {
-        reset(sessionStorageMock,
-                adapter
-        );
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
     public void should_pass_session_storage_to_parent_adapter() {
-        // When
         DomainContextService service = new DomainContextService(sessionStorageMock);
         SessionStorage retrieved = service.getSessionStorage();
-        // Then
         assertSame(retrieved, sessionStorageMock);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_sessionStorage_is_null() {
-        // When
         new DomainContextService(null);
-        // Then
-        // should be thrown an exception
     }
 
     @Test
     public void should_return_proper_DomainContextManager_for_string_uri() throws Exception {
-
-        // Given
-        whenNew(SingleDomainContextAdapter.class)
-                .withArguments(eq(sessionStorageMock), any(ClientResourceLookup.class), any(Class.class), anyString())
-                .thenReturn(adapter);
-
         DomainContextService service = new DomainContextService(sessionStorageMock);
 
-        // When
         SingleDomainContextAdapter retrieved = service.context("URI");
 
-        // Then
-        assertSame(adapter, retrieved);
-        verifyNew(SingleDomainContextAdapter.class, times(1))
-                .withArguments(eq(sessionStorageMock),
-                        any(ClientResourceLookup.class),
-                        eq(ClientResourceLookup.class),
-                        eq(ContextMediaTypes.RESOURCE_LOOKUP_JSON));
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleDomainContextAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(getInternalState(retrieved, "contextClass"), ClientResourceLookup.class);
+        assertEquals(getInternalState(retrieved, "contextMimeType"), ContextMediaTypes.RESOURCE_LOOKUP_JSON);
+        ClientResourceLookup contextObj = (ClientResourceLookup) getInternalState(retrieved, "context");
+        assertEquals(contextObj.getUri(), "URI");
     }
+
     @Test
     public void should_return_proper_DomainContextManager_for_clientDomain() throws Exception {
-
-        // Given
-        whenNew(SingleDomainContextAdapter.class)
-                .withArguments(eq(sessionStorageMock), any(ClientDomain.class), any(Class.class), anyString())
-                .thenReturn(adapter);
-
         DomainContextService service = new DomainContextService(sessionStorageMock);
+        ClientDomain clientDomain = new ClientDomain();
 
-        // When
-        SingleDomainContextAdapter retrieved = service.context(new ClientDomain());
+        SingleDomainContextAdapter retrieved = service.context(clientDomain);
 
-        // Then
-        assertSame(adapter, retrieved);
-        verifyNew(SingleDomainContextAdapter.class, times(1))
-                .withArguments(eq(sessionStorageMock),
-                        any(ClientDomain.class),
-                        eq(ClientDomain.class),
-                        eq(ContextMediaTypes.DOMAIN_JSON));
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleDomainContextAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(getInternalState(retrieved, "contextClass"), ClientDomain.class);
+        assertEquals(getInternalState(retrieved, "contextMimeType"), ContextMediaTypes.DOMAIN_JSON);
+        assertSame(getInternalState(retrieved, "context"), clientDomain);
     }
+
     @Test
     public void should_return_proper_DomainContextManager_for_clientSemanticLayerDataSource() throws Exception {
-
-        // Given
-        whenNew(SingleDomainContextAdapter.class)
-                .withArguments(eq(sessionStorageMock), any(ClientSemanticLayerDataSource.class), any(Class.class), anyString())
-                .thenReturn(adapter);
-
         DomainContextService service = new DomainContextService(sessionStorageMock);
+        ClientSemanticLayerDataSource dataSource = new ClientSemanticLayerDataSource();
 
-        // When
-        SingleDomainContextAdapter retrieved = service.context(new ClientSemanticLayerDataSource());
+        SingleDomainContextAdapter retrieved = service.context(dataSource);
 
-        // Then
-        assertSame(adapter, retrieved);
-        verifyNew(SingleDomainContextAdapter.class, times(1))
-                .withArguments(eq(sessionStorageMock),
-                        any(ClientSemanticLayerDataSource.class),
-                        eq(ClientSemanticLayerDataSource.class),
-                        eq(ContextMediaTypes.DOMAIN_DATA_SOURCE_JSON));
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleDomainContextAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        assertEquals(getInternalState(retrieved, "contextClass"), ClientSemanticLayerDataSource.class);
+        assertEquals(getInternalState(retrieved, "contextMimeType"), ContextMediaTypes.DOMAIN_DATA_SOURCE_JSON);
+        assertSame(getInternalState(retrieved, "context"), dataSource);
     }
 }

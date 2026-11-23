@@ -7,38 +7,36 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
-import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNotSame;
 
 /**
  * Unit tests for {@link SingleRoleRequestAdapter}
  */
-@PrepareForTest({SingleRoleRequestAdapter.class, JerseyRequest.class})
-public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
+@SuppressWarnings("unchecked")
+public class SingleRoleRequestAdapterTest {
 
     @Mock
     private SessionStorage sessionStorageMock;
@@ -47,264 +45,242 @@ public class SingleRoleRequestAdapterTest extends PowerMockTestCase {
     private ClientRole roleMock;
 
     @Mock
-    private MultivaluedHashMap<String, String> mapMock;
-
-    @Mock
     private JerseyRequest<ClientRole> jerseyRequestMock;
+
     @Mock
     private OperationResult<ClientRole> expectedOpResultMock;
 
-
     @Mock
     private OperationResult<ClientRole> roleOperationResult;
+
     @Mock
     private JerseyRequest<ClientRole> roleJerseyRequest;
 
-
-    @Mock
-    private Callback<OperationResult<ClientRole>, Object> callbackMock;
-    @Mock
-    private Callback<OperationResult<ClientRole>, Object> callback2;
-
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock, roleMock, jerseyRequestMock, expectedOpResultMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test(enabled = false)
-    public void should_delete_role_in_separate_thread() throws Exception {
-
-        // Given
-        SingleRoleRequestAdapter adapterSpy = PowerMockito.spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
-        PowerMockito.doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest", ClientRole.class);
-        PowerMockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).delete();
-        PowerMockito.doReturn(expectedOpResultMock).when(callbackMock).execute(expectedOpResultMock);
-
-        // When
-        adapterSpy.asyncDelete(callbackMock);
-
-        // Then
-        PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest", eq(ClientRole.class));
-        Mockito.verify(callbackMock, times(1)).execute(expectedOpResultMock);
+    public void should_delete_role_in_separate_thread() {
+        // disabled — original was enabled = false
     }
 
     @Test
     public void should_delete_role_asynchronously() throws Exception {
-
-        /* Given */
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        SingleRoleRequestAdapter adapterSpy = PowerMockito.spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
+                    eq(new String[]{"organizations", "orgId", "roles", "roleName"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(expectedOpResultMock).when(jerseyRequestMock).delete();
 
-        final Callback<OperationResult<ClientRole>, Void> callback = Mockito.spy(new Callback<OperationResult<ClientRole>, Void>() {
-            @Override
-            public Void execute(OperationResult<ClientRole> data) {
-                newThreadId.set((int) Thread.currentThread().getId());
-                synchronized (this) {
-                    this.notify();
-                }
-                return null;
+            SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
+
+            final Callback<OperationResult<ClientRole>, Void> callback =
+                    Mockito.spy(new Callback<OperationResult<ClientRole>, Void>() {
+                        @Override
+                        public Void execute(OperationResult<ClientRole> data) {
+                            newThreadId.set((int) Thread.currentThread().getId());
+                            synchronized (this) {
+                                this.notify();
+                            }
+                            return null;
+                        }
+                    });
+
+            RequestExecution retrieved = adapterSpy.asyncDelete(callback);
+
+            synchronized (callback) {
+                callback.wait(1000);
             }
-        });
 
-        PowerMockito.doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest");
-        Mockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).delete();
-        doNothing().when(callback).execute(expectedOpResultMock);
-
-        /* When */
-        RequestExecution retrieved = adapterSpy.asyncDelete(callback);
-
-        /* Wait */
-        synchronized (callback) {
-            callback.wait(1000);
+            assertNotNull(retrieved);
+            assertNotSame(currentThreadId, newThreadId.get());
+            verify(callback, times(1)).execute(expectedOpResultMock);
+            verify(jerseyRequestMock, times(1)).delete();
         }
-
-        /* Then */
-        assertNotNull(retrieved);
-        assertNotSame(currentThreadId, newThreadId.get());
-        verify(callback, times(1)).execute(expectedOpResultMock);
-        verify(jerseyRequestMock, times(1)).delete();
     }
 
     @Test
-    /**
-     * for {@link SingleRoleRequestAdapter#asyncCreateOrUpdate(ClientRole, Callback)}
-     */
     public void should_create_or_update_user_role_asynchronously() throws Exception {
-
-        /* Given */
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        SingleRoleRequestAdapter adapterSpy = PowerMockito.spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
+                    eq(new String[]{"organizations", "orgId", "roles", "roleName"}),
+                    any(DefaultErrorHandler.class))).thenReturn(roleJerseyRequest);
+            doReturn(roleOperationResult).when(roleJerseyRequest).put(roleMock);
 
-        final Callback<OperationResult<ClientRole>, Void> callback = spy(new Callback<OperationResult<ClientRole>, Void>() {
-            @Override
-            public Void execute(OperationResult<ClientRole> data) {
-                newThreadId.set((int) Thread.currentThread().getId());
-                synchronized (this) {
-                    this.notify();
-                }
-                return null;
+            SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
+
+            final Callback<OperationResult<ClientRole>, Void> callback =
+                    spy(new Callback<OperationResult<ClientRole>, Void>() {
+                        @Override
+                        public Void execute(OperationResult<ClientRole> data) {
+                            newThreadId.set((int) Thread.currentThread().getId());
+                            synchronized (this) {
+                                this.notify();
+                            }
+                            return null;
+                        }
+                    });
+
+            RequestExecution retrieved = adapterSpy.asyncCreateOrUpdate(roleMock, callback);
+
+            synchronized (callback) {
+                callback.wait(1000);
             }
-        });
 
-        doReturn(roleJerseyRequest).when(adapterSpy, "buildRequest");
-        doReturn(roleOperationResult).when(roleJerseyRequest).put(roleMock);
-        doNothing().when(callback).execute(roleOperationResult);
-
-        /* When */
-        RequestExecution retrieved = adapterSpy.asyncCreateOrUpdate(roleMock, callback);
-
-        /* Wait */
-        synchronized (callback) {
-            callback.wait(1000);
+            assertNotNull(retrieved);
+            assertNotSame(currentThreadId, newThreadId.get());
+            verify(callback, times(1)).execute(roleOperationResult);
+            verify(roleJerseyRequest, times(1)).put(roleMock);
         }
-
-        /* Then */
-        assertNotNull(retrieved);
-        assertNotSame(currentThreadId, newThreadId.get());
-        verify(callback, times(1)).execute(roleOperationResult);
-        verify(roleJerseyRequest, times(1)).put(roleMock);
     }
 
     @Test(enabled = false)
-    public void should_retrieve_role_asynchronously() throws Exception {
-
-        // Given
-        SingleRoleRequestAdapter adapterSpy = PowerMockito.spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
-        PowerMockito.doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest");
-        PowerMockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
-        PowerMockito.doReturn(expectedOpResultMock).when(callbackMock).execute(expectedOpResultMock);
-
-        // When
-        adapterSpy.asyncGet(callbackMock);
-
-        // Then
-        PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest");
-        Mockito.verify(callbackMock, times(1)).execute(expectedOpResultMock);
+    public void should_retrieve_role_asynchronously() {
+        // disabled — original was enabled = false
     }
 
     @Test
-    public void should_retrieve_role() throws Exception {
+    public void should_retrieve_role() {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
+                    eq(new String[]{"organizations", "orgId", "roles", "roleName"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
 
-        // Given
-        SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
-        PowerMockito.doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest");
-        PowerMockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
+            SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
+            adapterSpy.get();
 
-        // When
-        adapterSpy.get();
-
-        // Then
-        PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest");
-        Mockito.verify(jerseyRequestMock, times(1)).get();
-        Mockito.verifyNoMoreInteractions(jerseyRequestMock);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
+                    eq(new String[]{"organizations", "orgId", "roles", "roleName"}),
+                    any(DefaultErrorHandler.class)), times(1));
+            Mockito.verify(jerseyRequestMock, times(1)).get();
+            Mockito.verifyNoMoreInteractions(jerseyRequestMock);
+        }
     }
 
     @Test
-    public void should_update_role() throws Exception {
+    public void should_update_role() {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
+                    eq(new String[]{"organizations", "orgId", "roles", "roleName"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(expectedOpResultMock).when(jerseyRequestMock).put(roleMock);
 
-        // Given
-        SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
-        PowerMockito.doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest");
-        PowerMockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).put(roleMock);
+            SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
+            adapterSpy.createOrUpdate(roleMock);
 
-        // When
-        adapterSpy.createOrUpdate(roleMock);
-
-        // Then
-        PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest");
-        Mockito.verify(jerseyRequestMock, times(1)).put(roleMock);
-        Mockito.verifyNoMoreInteractions(jerseyRequestMock);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
+                    eq(new String[]{"organizations", "orgId", "roles", "roleName"}),
+                    any(DefaultErrorHandler.class)), times(1));
+            Mockito.verify(jerseyRequestMock, times(1)).put(roleMock);
+            Mockito.verifyNoMoreInteractions(jerseyRequestMock);
+        }
     }
 
     @Test
-    public void should_delete_role() throws Exception {
+    public void should_delete_role() {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
+                    eq(new String[]{"organizations", "orgId", "roles", "roleName"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(expectedOpResultMock).when(jerseyRequestMock).delete();
 
-        // Given
-        SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
-        PowerMockito.doReturn(jerseyRequestMock).when(adapterSpy, "buildRequest");
-        PowerMockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).delete();
+            SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
+            adapterSpy.delete();
 
-        // When
-        adapterSpy.delete();
-
-        // Then
-        PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest");
-        Mockito.verify(jerseyRequestMock, times(1)).delete();
-        Mockito.verifyNoMoreInteractions(jerseyRequestMock);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
+                    eq(new String[]{"organizations", "orgId", "roles", "roleName"}),
+                    any(DefaultErrorHandler.class)), times(1));
+            Mockito.verify(jerseyRequestMock, times(1)).delete();
+            Mockito.verifyNoMoreInteractions(jerseyRequestMock);
+        }
     }
 
     @Test
     public void should_invoke_private_logic_while_invocation_of_delete() throws Exception {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
+            ArrayList<String> roleUri = (ArrayList<String>) getInternalState(adapterSpy, "roleUri");
 
-        PowerMockito.mockStatic(JerseyRequest.class);
-        SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock,
-                "orgId", "roleName"));
-        ArrayList<String> roleUri = (ArrayList<String>) Whitebox.getInternalState(adapterSpy, "roleUri");
-        PowerMockito.when(buildRequest(eq(sessionStorageMock), eq(ClientRole.class), eq(roleUri.toArray(new String[roleUri.size()])),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        PowerMockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).delete();
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
+                    eq(roleUri.toArray(new String[roleUri.size()])),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(expectedOpResultMock).when(jerseyRequestMock).delete();
 
-        // When
-        OperationResult retrieved = adapterSpy.delete();
+            OperationResult retrieved = adapterSpy.delete();
 
-        // Then
-        PowerMockito.verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientRole.class), eq(roleUri.toArray(new String[roleUri.size()])),
-                any(DefaultErrorHandler.class));
-        PowerMockito.verifyPrivate(adapterSpy, times(1)).invoke("buildRequest");
-        Assert.assertNotNull(retrieved);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
+                    eq(roleUri.toArray(new String[roleUri.size()])),
+                    any(DefaultErrorHandler.class)), times(1));
+            Assert.assertNotNull(retrieved);
+        }
     }
 
     @Test
     public void should_retrieve_role_asynchronously_() throws Exception {
-
-        /* Given */
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
-                eq(new String[]{"organizations", "orgId", "roles", "roleName"}), any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(ClientRole.class),
+                    eq(new String[]{"organizations", "orgId", "roles", "roleName"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
 
-        SingleRoleRequestAdapter adapterSpy = PowerMockito.spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
+            SingleRoleRequestAdapter adapterSpy = spy(new SingleRoleRequestAdapter(sessionStorageMock, "orgId", "roleName"));
 
-        final Callback<OperationResult<ClientRole>, Void> callback = spy(new Callback<OperationResult<ClientRole>, Void>() {
-            @Override
-            public Void execute(OperationResult<ClientRole> data) {
-                newThreadId.set((int) Thread.currentThread().getId());
-                synchronized (this) {
-                    this.notify();
-                }
-                return null;
+            final Callback<OperationResult<ClientRole>, Void> callback =
+                    spy(new Callback<OperationResult<ClientRole>, Void>() {
+                        @Override
+                        public Void execute(OperationResult<ClientRole> data) {
+                            newThreadId.set((int) Thread.currentThread().getId());
+                            synchronized (this) {
+                                this.notify();
+                            }
+                            return null;
+                        }
+                    });
+
+            RequestExecution retrieved = adapterSpy.asyncGet(callback);
+
+            synchronized (callback) {
+                callback.wait(1000);
             }
-        });
 
-        PowerMockito.doReturn(expectedOpResultMock).when(jerseyRequestMock).get();
-        PowerMockito.doNothing().when(callback).execute(expectedOpResultMock);
-
-        /* When */
-        RequestExecution retrieved = adapterSpy.asyncGet(callback);
-
-        /* Wait */
-        synchronized (callback) {
-            callback.wait(1000);
+            assertNotNull(retrieved);
+            assertNotSame(currentThreadId, newThreadId.get());
+            verify(callback, times(1)).execute(expectedOpResultMock);
+            verify(jerseyRequestMock, times(1)).get();
         }
-
-        /* Then */
-        assertNotNull(retrieved);
-        assertNotSame(currentThreadId, newThreadId.get());
-        verify(callback, times(1)).execute(expectedOpResultMock);
-        verify(jerseyRequestMock, times(1)).get();
-    }
-
-    @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, roleMock, mapMock, jerseyRequestMock, expectedOpResultMock,
-                callbackMock);
     }
 }

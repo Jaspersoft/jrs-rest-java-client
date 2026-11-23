@@ -1,24 +1,20 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.thumbnails;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockedConstruction;
+import org.mockito.Mockito;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 
 /**
-* Unit tests for {@link ThumbnailsService}
-*/
-@PrepareForTest({BatchThumbnailAdapter.class, ThumbnailsService.class})
-public class ThumbnailsServiceTest extends PowerMockTestCase {
+ * Unit tests for {@link ThumbnailsService}
+ */
+public class ThumbnailsServiceTest {
 
     private SessionStorage sessionStorageMock;
     private BatchThumbnailAdapter batchThumbnailAdapterMock;
@@ -31,10 +27,10 @@ public class ThumbnailsServiceTest extends PowerMockTestCase {
         batchThumbnailAdapterMock = mock(BatchThumbnailAdapter.class);
     }
 
-    @Test
     /**
      * for {@link ThumbnailsService#ThumbnailsService(SessionStorage)}
      */
+    @Test
     public void should_pass_session_storage_to_parent_adapter() {
         // When
         ThumbnailsService thumbnailsService = new ThumbnailsService(sessionStorageMock);
@@ -43,42 +39,42 @@ public class ThumbnailsServiceTest extends PowerMockTestCase {
         assertSame(retrieved, sessionStorageMock);
     }
 
-    @Test
     /**
      * for {@link ThumbnailsService#thumbnail()}
      */
+    @Test
     public void should_invoke_proper_single_thumbnail_adapter_constructor_and_pass_proper_session_storage_instance() throws Exception {
 
-        // Given
-        whenNew(SingleThumbnailAdapter.class).withArguments(sessionStorageMock).thenReturn(singleThumbnailAdapterMock);
+        try (MockedConstruction<SingleThumbnailAdapter> mockedAdapter =
+                     Mockito.mockConstruction(SingleThumbnailAdapter.class)) {
 
-        // When
-        ThumbnailsService thumbnailsService = new ThumbnailsService(sessionStorageMock);
-        SingleThumbnailAdapter retrieved = thumbnailsService.thumbnail();
+            // When
+            ThumbnailsService thumbnailsService = new ThumbnailsService(sessionStorageMock);
+            SingleThumbnailAdapter retrieved = thumbnailsService.thumbnail();
 
-        // Then
-        assertNotNull(retrieved);
-        assertSame(retrieved, singleThumbnailAdapterMock);
-        verifyNew(SingleThumbnailAdapter.class, times(1)).withArguments(sessionStorageMock);
+            // Then
+            assertNotNull(retrieved);
+            assertSame(retrieved, mockedAdapter.constructed().get(0));
+        }
     }
 
-    @Test
     /**
      * for {@link ThumbnailsService#thumbnails()}
      */
+    @Test
     public void should_invoke_proper_batch_thumbnail_adapter_constructor_and_pass_proper_session_storage_instance() throws Exception {
 
-        // Given
-        whenNew(BatchThumbnailAdapter.class).withArguments(sessionStorageMock).thenReturn(batchThumbnailAdapterMock);
+        try (MockedConstruction<BatchThumbnailAdapter> mockedAdapter =
+                     Mockito.mockConstruction(BatchThumbnailAdapter.class)) {
 
-        // When
-        ThumbnailsService thumbnailsService = new ThumbnailsService(sessionStorageMock);
-        BatchThumbnailAdapter retrieved = thumbnailsService.thumbnails();
+            // When
+            ThumbnailsService thumbnailsService = new ThumbnailsService(sessionStorageMock);
+            BatchThumbnailAdapter retrieved = thumbnailsService.thumbnails();
 
-        // Then
-        assertNotNull(retrieved);
-        assertSame(retrieved, batchThumbnailAdapterMock);
-        verifyNew(BatchThumbnailAdapter.class, times(1)).withArguments(sessionStorageMock);
+            // Then
+            assertNotNull(retrieved);
+            assertSame(retrieved, mockedAdapter.constructed().get(0));
+        }
     }
 
     @AfterMethod

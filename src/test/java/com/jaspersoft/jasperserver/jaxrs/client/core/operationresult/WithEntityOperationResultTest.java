@@ -5,7 +5,7 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Unit test for {@link WithEntityOperationResult}
@@ -16,8 +16,8 @@ public class WithEntityOperationResultTest {
     @Test
     public void should_pass_params_to_parent_class() {
         Response responseMock = Mockito.mock(Response.class);
-        WithEntityOperationResult operationResult = 
-                new WithEntityOperationResult(responseMock, ClientUser.class);
+        WithEntityOperationResult<ClientUser> operationResult =
+                new WithEntityOperationResult<>(responseMock, ClientUser.class);
         Assert.assertEquals(ClientUser.class, operationResult.getEntityClass());
         Assert.assertEquals(responseMock, operationResult.getResponse());
     }

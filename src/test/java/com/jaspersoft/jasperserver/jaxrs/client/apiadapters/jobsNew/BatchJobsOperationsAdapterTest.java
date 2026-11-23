@@ -7,22 +7,21 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.RestClientConfiguration;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import javax.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedHashMap;
 import org.mockito.Mock;
-import org.powermock.reflect.Whitebox;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
@@ -30,8 +29,7 @@ import static org.testng.Assert.assertSame;
 /**
  * @author Tetiana Iefimenko
  */
-@PrepareForTest({JerseyRequest.class})
-public class BatchJobsOperationsAdapterTest extends PowerMockTestCase {
+public class BatchJobsOperationsAdapterTest {
 
     @Mock
     private SessionStorage sessionStorageMock;
@@ -48,9 +46,18 @@ public class BatchJobsOperationsAdapterTest extends PowerMockTestCase {
     @Mock
     private ClientReportJob jobMock;
 
+    private AutoCloseable mockitoSession;
+
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        reset(sessionStorageMock, jobSummaryListWrapperJerseyRequest, jobSummaryListWrapperOperationResult,
+                configurationMock, jobMock);
+        mockitoSession.close();
     }
 
     @Test(testName = "constructor")
@@ -60,32 +67,51 @@ public class BatchJobsOperationsAdapterTest extends PowerMockTestCase {
         BatchJobsOperationsAdapter adapter = new BatchJobsOperationsAdapter(sessionStorageMock);
 
         // Then
-        assertEquals(Whitebox.getInternalState(adapter, "sessionStorage"), sessionStorageMock);
-        assertEquals(Whitebox.getInternalState(adapter, "params"), new MultivaluedHashMap<String, String>());
+        assertEquals(getInternalState(adapter, "sessionStorage"), sessionStorageMock);
+        assertEquals(getInternalState(adapter, "params"), new MultivaluedHashMap<String, String>());
     }
 
     @Test
     public void should_return_all_jobs() {
 
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(ClientJobSummariesListWrapper.class),
-                eq(new String[]{"jobs"}))).thenReturn(jobSummaryListWrapperJerseyRequest);
-        when(jobSummaryListWrapperJerseyRequest.get()).thenReturn(jobSummaryListWrapperOperationResult);
-        when(sessionStorageMock.getConfiguration()).thenReturn(configurationMock);
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            // Given
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(ClientJobSummariesListWrapper.class),
+                    eq(new String[]{"jobs"}))).thenReturn(jobSummaryListWrapperJerseyRequest);
+            doReturn(jobSummaryListWrapperOperationResult).when(jobSummaryListWrapperJerseyRequest).get();
+            doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
 
-        // When
-        BatchJobsOperationsAdapter adapter = spy(new BatchJobsOperationsAdapter(sessionStorageMock));
-        OperationResult<ClientJobSummariesListWrapper> retrieved = adapter.searchJobs();
+            // When
+            BatchJobsOperationsAdapter adapter = spy(new BatchJobsOperationsAdapter(sessionStorageMock));
+            OperationResult<ClientJobSummariesListWrapper> retrieved = adapter.searchJobs();
 
-        // Then
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock), eq(ClientJobSummariesListWrapper.class), eq(new String[]{"jobs"}));
-        verify(jobSummaryListWrapperJerseyRequest, times(1)).get();
-        assertNotNull(retrieved);
-        assertSame(retrieved, jobSummaryListWrapperOperationResult);
-
+            // Then
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(ClientJobSummariesListWrapper.class),
+                    eq(new String[]{"jobs"})), times(1));
+            verify(jobSummaryListWrapperJerseyRequest, times(1)).get();
+            assertNotNull(retrieved);
+            assertSame(retrieved, jobSummaryListWrapperOperationResult);
+        }
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T> T getInternalState(Object target, String fieldName) {
+        try {
+            Class<?> clazz = target.getClass();
+            while (clazz != null) {
+                try {
+                    java.lang.reflect.Field field = clazz.getDeclaredField(fieldName);
+                    field.setAccessible(true);
+                    return (T) field.get(target);
+                } catch (NoSuchFieldException e) {
+                    clazz = clazz.getSuperclass();
+                }
+            }
+            throw new NoSuchFieldException(fieldName);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

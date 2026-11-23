@@ -1,6 +1,5 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
-import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
 import com.jaspersoft.jasperserver.dto.authority.OrganizationsListWrapper;
 import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
@@ -8,164 +7,155 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.util.concurrent.atomic.AtomicInteger;
-import javax.ws.rs.core.MultivaluedHashMap;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import java.lang.reflect.Field;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.reflect.Whitebox.getInternalState;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
-import static org.testng.AssertJUnit.assertNotSame;
 import static org.testng.AssertJUnit.assertSame;
 
 /**
  * Unit tests for {@link BatchOrganizationsAdapter}
  */
 @SuppressWarnings("unchecked")
-@PrepareForTest({BatchOrganizationsAdapter.class, JerseyRequest.class})
-public class BatchOrganizationsAdapterTest extends PowerMockTestCase {
+public class BatchOrganizationsAdapterTest {
+
     @Mock
     private SessionStorage sessionStorageMock;
     @Mock
     private JerseyRequest<OrganizationsListWrapper> requestMock;
     @Mock
     private OperationResult<OrganizationsListWrapper> operationResultMock;
-    @Mock
-    public ClientTenant tenantMock;
+
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        mockitoSession.close();
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
-    public void should_pass_proper_session_storage_to_parent_class_and_set_own_fields() {
-
-        // When
+    public void should_pass_proper_session_storage_to_parent_class_and_set_own_fields() throws Exception {
         BatchOrganizationsAdapter adapter = spy(new BatchOrganizationsAdapter(sessionStorageMock));
 
-        // Then
         Assert.assertNotNull(adapter);
         assertEquals(sessionStorageMock, getInternalState(adapter, "sessionStorage"));
     }
 
-
     @Test
-    /**
-     * for {@link BatchOrganizationsAdapter#asyncGet(Callback)}
-     */
     public void should_run_get_method_asynchronously() throws Exception {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class),
+                    eq(new String[]{"organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+            doReturn(operationResultMock).when(requestMock).get();
+            BatchOrganizationsAdapter adapterSpy = spy(new BatchOrganizationsAdapter(sessionStorageMock));
 
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class), eq(new String[]{"organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
-        doReturn(operationResultMock).when(requestMock).get();
-        BatchOrganizationsAdapter adapterSpy = spy(new BatchOrganizationsAdapter(sessionStorageMock));
+            final AtomicInteger newThreadId = new AtomicInteger();
+            final int currentThreadId = (int) Thread.currentThread().getId();
 
-        final AtomicInteger newThreadId = new AtomicInteger();
-        final int currentThreadId = (int) Thread.currentThread().getId();
+            final Callback<OperationResult<OrganizationsListWrapper>, Void> callback =
+                    spy(new Callback<OperationResult<OrganizationsListWrapper>, Void>() {
+                        @Override
+                        public Void execute(OperationResult<OrganizationsListWrapper> data) {
+                            newThreadId.set((int) Thread.currentThread().getId());
+                            synchronized (this) {
+                                this.notifyAll();
+                            }
+                            return null;
+                        }
+                    });
 
-        final Callback<OperationResult<OrganizationsListWrapper>, Void> callback = spy(new Callback<OperationResult<OrganizationsListWrapper>, Void>() {
-            @Override
-            public Void execute(OperationResult<OrganizationsListWrapper> data) {
-                newThreadId.set((int) Thread.currentThread().getId());
-                synchronized (this) {
-                    this.notifyAll();
-                }
-                return null;
+            RequestExecution retrieved = adapterSpy.asyncGet(callback);
+
+            synchronized (callback) {
+                callback.wait(1000);
             }
-        });
 
-        doNothing().when(callback).execute(operationResultMock);
-
-        // When
-        RequestExecution retrieved = adapterSpy.asyncGet(callback);
-
-        synchronized (callback) {
-            callback.wait(1000);
+            verify(requestMock).get();
+            verify(callback).execute(operationResultMock);
+            assertNotNull(retrieved);
+            Assert.assertNotEquals(newThreadId.get(), currentThreadId);
         }
-
-        // Then
-        verify(requestMock).get();
-        verify(callback).execute(operationResultMock);
-        assertNotNull(retrieved);
-        assertNotSame(currentThreadId, newThreadId.get());
     }
 
     @Test
-    /**
-     * for {@link BatchOrganizationsAdapter#parameter(OrganizationParameter, String)}
-     */
     public void should_add_parameter_to_map() throws Exception {
-
-        // Given
         BatchOrganizationsAdapter adapter = new BatchOrganizationsAdapter(sessionStorageMock);
 
-        // When
         BatchOrganizationsAdapter retrieved = adapter.parameter(OrganizationParameter.CREATE_DEFAULT_USERS, "true");
-        MultivaluedHashMap<String, String> params = Whitebox.getInternalState(adapter, "params");
+        MultivaluedHashMap<String, String> params =
+                (MultivaluedHashMap<String, String>) getInternalState(adapter, "params");
 
-        // Then
         assertSame(retrieved, adapter);
         Assert.assertTrue(params.size() == 1);
         Assert.assertEquals(params.getFirst(OrganizationParameter.CREATE_DEFAULT_USERS.getParamName()), "true");
     }
 
-
     @Test
     public void should_get_resource() {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class),
+                    eq(new String[]{"organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+            doReturn(operationResultMock).when(requestMock).get();
+            BatchOrganizationsAdapter adapterSpy = spy(new BatchOrganizationsAdapter(sessionStorageMock));
 
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class), eq(new String[]{"organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
-        doReturn(operationResultMock).when(requestMock).get();
-        BatchOrganizationsAdapter adapterSpy = spy(new BatchOrganizationsAdapter(sessionStorageMock));
+            OperationResult<OrganizationsListWrapper> retrievedResult = adapterSpy.get();
 
-        OperationResult<OrganizationsListWrapper> retrievedResult = adapterSpy.get();
-
-        assertSame(retrievedResult, operationResultMock);
-        verify(requestMock, times(1)).get();
-        verify(requestMock, times(1)).addParams(any(MultivaluedHashMap.class));
+            assertSame(retrievedResult, operationResultMock);
+            verify(requestMock, times(1)).get();
+            verify(requestMock, times(1)).addParams(any(MultivaluedHashMap.class));
+        }
     }
 
     @Test
     public void should_get_resource_with_params() {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            BatchOrganizationsAdapter adapterSpy = spy(new BatchOrganizationsAdapter(sessionStorageMock));
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class),
+                    eq(new String[]{"organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+            doReturn(operationResultMock).when(requestMock).get();
 
-        BatchOrganizationsAdapter adapterSpy = spy(new BatchOrganizationsAdapter(sessionStorageMock));
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(OrganizationsListWrapper.class), eq(new String[]{"organizations"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
-        doReturn(adapterSpy).when(adapterSpy).parameter(OrganizationParameter.INCLUDE_PARENTS, true);
-        doReturn(operationResultMock).when(requestMock).get();
+            OperationResult<OrganizationsListWrapper> retrievedResult = adapterSpy.get();
 
-        OperationResult<OrganizationsListWrapper> retrievedResult = adapterSpy.get();
-
-        assertSame(retrievedResult, operationResultMock);
-        verify(requestMock, times(1)).get();
-        verify(requestMock, times(1)).addParams(any(MultivaluedHashMap.class));
-    }
-
-    @AfterMethod
-    public void after() {
-        sessionStorageMock = null;
-        requestMock = null;
-        operationResultMock = null;
-        tenantMock = null;
+            assertSame(retrievedResult, operationResultMock);
+            verify(requestMock, times(1)).get();
+            verify(requestMock, times(1)).addParams(any(MultivaluedHashMap.class));
+        }
     }
 }

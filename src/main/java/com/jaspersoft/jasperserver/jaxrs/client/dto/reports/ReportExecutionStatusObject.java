@@ -2,7 +2,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 import com.jaspersoft.jasperserver.dto.executions.ExecutionStatus;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>

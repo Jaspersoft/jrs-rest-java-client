@@ -21,10 +21,14 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class OperationResult<T> {
+
+    private static final Logger log = LogManager.getLogger(OperationResult.class);
 
     protected Response response;
     protected Class<? extends T> entityClass;
@@ -58,6 +62,13 @@ public abstract class OperationResult<T> {
             }
             return entity;
         } catch (Exception e) {
+            // Behaviour is unchanged (null is still returned), but a body that cannot be read is
+            // logged, so a deserialization problem does not surface only as an NPE in the caller.
+            // 204 No Content is expected to have no entity, so it is not logged.
+            if (response.getStatus() != Response.Status.NO_CONTENT.getStatusCode()) {
+                log.warn("Could not read {} response entity as {}: {}", response.getStatus(),
+                        genericEntity != null ? genericEntity.getType() : entityClass, e.toString());
+            }
             return null;
         }
     }

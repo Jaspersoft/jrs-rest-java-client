@@ -1,6 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * <p>

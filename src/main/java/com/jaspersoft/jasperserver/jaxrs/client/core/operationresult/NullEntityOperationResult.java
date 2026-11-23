@@ -23,8 +23,8 @@ package com.jaspersoft.jasperserver.jaxrs.client.core.operationresult;
 
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.ErrorHandler;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 
 public class NullEntityOperationResult<T> extends OperationResult<T> {
     private ErrorHandler defaultErrorHandler;

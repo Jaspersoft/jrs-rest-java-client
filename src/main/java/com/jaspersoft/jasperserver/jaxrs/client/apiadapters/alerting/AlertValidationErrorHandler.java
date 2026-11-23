@@ -26,7 +26,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.Default
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ValidationError;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.common.ValidationErrorsListWrapper;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 

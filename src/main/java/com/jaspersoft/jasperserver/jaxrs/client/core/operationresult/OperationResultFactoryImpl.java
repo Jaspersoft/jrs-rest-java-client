@@ -26,8 +26,8 @@ import com.jaspersoft.jasperserver.dto.resources.ClientResource;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryExecutionHelper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.adhoc.queryexecution.QueryResultDataHelper;
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.resources.util.ResourcesTypeResolverUtil;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 
 @SuppressWarnings("unchecked")
 public class OperationResultFactoryImpl implements OperationResultFactory {
@@ -58,7 +58,7 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
             if (response.hasEntity()) {
                 result = new WithEntityOperationResult<T>(response, responseClass);
             } else {
-                result = new NullEntityOperationResult(response, responseClass);
+                result = new NullEntityOperationResult<>(response, responseClass);
             }
         return result;
     }
@@ -69,7 +69,7 @@ public class OperationResultFactoryImpl implements OperationResultFactory {
             if (response.hasEntity()) {
                 result = new WithEntityOperationResult<T>(response, genericType);
             } else {
-                result = new NullEntityOperationResult(response, genericType);
+                result = new NullEntityOperationResult<>(response, genericType);
             }
         return result;
     }

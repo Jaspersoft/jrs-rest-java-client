@@ -20,9 +20,9 @@
  */
 package com.jaspersoft.jasperserver.jaxrs.client.dto.query;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class QueryField {

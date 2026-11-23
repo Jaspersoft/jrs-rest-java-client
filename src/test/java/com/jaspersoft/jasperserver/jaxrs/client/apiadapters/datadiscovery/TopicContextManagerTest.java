@@ -2,22 +2,26 @@ package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.datadiscovery;
 
 import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 import com.jaspersoft.jasperserver.dto.resources.domain.ResourceGroupElement;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.ContextService;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.context.SingleContextAdapter;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
+import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import org.powermock.reflect.Whitebox;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.mock;
+import java.lang.reflect.Field;
+
+import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.reset;
-import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertSame;
 
 /**
@@ -28,88 +32,109 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({ContextService.class, SessionStorage.class, TopicContextManager.class})
-public class TopicContextManagerTest extends PowerMockTestCase {
+@SuppressWarnings("unchecked")
+public class TopicContextManagerTest {
+
+    @Mock
     private SessionStorage sessionStorageMock;
-    private ContextService contextServiceMock;
-    private SingleContextAdapter contextAdapterMock;
+    @Mock
+    private JerseyRequest<ClientReportUnit> reportUnitRequestMock;
+    @Mock
+    private JerseyRequest<ResourceGroupElement> metadataRequestMock;
+    @Mock
     private OperationResult<ClientReportUnit> operationResultMock;
+    @Mock
     private OperationResult<ResourceGroupElement> resourceGroupElementOperationResult;
 
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        sessionStorageMock = mock(SessionStorage.class);
-        contextServiceMock = mock(ContextService.class);
-        contextAdapterMock = mock(SingleContextAdapter.class);
-        operationResultMock = mock(OperationResult.class);
-        resourceGroupElementOperationResult = mock(OperationResult.class);
+        mockitoSession = MockitoAnnotations.openMocks(this);
     }
 
     @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, contextAdapterMock, contextServiceMock, operationResultMock, resourceGroupElementOperationResult);
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock, reportUnitRequestMock, metadataRequestMock,
+                operationResultMock, resourceGroupElementOperationResult);
     }
 
-
-    @Test
-    public void should_set_proper_session_storage() {
-        // When
-        TopicContextManager domainContextManager = new TopicContextManager(sessionStorageMock);
-        //Then
-        assertSame(Whitebox.getInternalState(domainContextManager, "sessionStorage"), sessionStorageMock);
-    }
-
-    @Test
-    public void should_return_proper_domain_when_create_context() throws Exception {
-        // When
-
-        ClientReportUnit reportUnit = spy(new ClientReportUnit());
-        PowerMockito.whenNew(ContextService.class).withArguments(sessionStorageMock).thenReturn(contextServiceMock);
-        PowerMockito.when(contextServiceMock.context(ClientReportUnit.class,
-                ContextMediaTypes.REPORT_UNIT_JSON)).thenReturn(contextAdapterMock);
-        PowerMockito.when(contextAdapterMock.create(reportUnit)).thenReturn(operationResultMock);
-
-        OperationResult<ClientReportUnit> retrievedOperationResult = new TopicContextManager(sessionStorageMock).create(reportUnit);
-        //Then
-        assertSame(operationResultMock, retrievedOperationResult);
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
-    public void should_return_proper_domain_when_get_metadata() throws Exception {
-        // When
+    public void should_set_proper_session_storage() throws Exception {
+        TopicContextManager manager = new TopicContextManager(sessionStorageMock);
+        assertSame(getInternalState(manager, "sessionStorage"), sessionStorageMock);
+    }
 
+    @Test
+    public void should_return_proper_domain_when_create_context() {
+        ClientReportUnit reportUnit = new ClientReportUnit();
+
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(ClientReportUnit.class),
+                    eq(new String[]{"contexts"}), any(DefaultErrorHandler.class))).thenReturn(reportUnitRequestMock);
+            doReturn(operationResultMock).when(reportUnitRequestMock).post(reportUnit);
+
+            OperationResult<ClientReportUnit> retrieved =
+                    new TopicContextManager(sessionStorageMock).create(reportUnit);
+
+            assertSame(operationResultMock, retrieved);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(ClientReportUnit.class),
+                    eq(new String[]{"contexts"}), any(DefaultErrorHandler.class)));
+            verify(reportUnitRequestMock).post(reportUnit);
+        }
+    }
+
+    @Test
+    public void should_return_proper_domain_when_get_metadata() {
         String someId = "someId";
-        PowerMockito.whenNew(ContextService.class).withArguments(sessionStorageMock).thenReturn(contextServiceMock);
-        PowerMockito.when(contextServiceMock.context(someId,
-                ResourceGroupElement.class,
-                ContextMediaTypes.REPORT_UNIT_METADATA_JSON)).
-                thenReturn(contextAdapterMock);
-        PowerMockito.when(contextAdapterMock.metadata()).thenReturn(resourceGroupElementOperationResult);
 
-        OperationResult<ResourceGroupElement> retrievedOperationResult = new TopicContextManager(sessionStorageMock).
-                fetchMetadataById(someId);
-        //Then
-        assertSame(resourceGroupElementOperationResult, retrievedOperationResult);
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(ResourceGroupElement.class),
+                    eq(new String[]{"contexts", someId, "metadata"}),
+                    any(DefaultErrorHandler.class))).thenReturn(metadataRequestMock);
+            doReturn(resourceGroupElementOperationResult).when(metadataRequestMock).get();
+
+            OperationResult<ResourceGroupElement> retrieved =
+                    new TopicContextManager(sessionStorageMock).fetchMetadataById(someId);
+
+            assertSame(resourceGroupElementOperationResult, retrieved);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(ResourceGroupElement.class),
+                    eq(new String[]{"contexts", someId, "metadata"}), any(DefaultErrorHandler.class)));
+            verify(metadataRequestMock).get();
+        }
     }
-
 
     @Test
-    public void should_return_proper_domain_when_create_context_and_get_metadata() throws Exception {
-        // When
+    public void should_return_proper_domain_when_create_context_and_get_metadata() {
+        ClientReportUnit reportUnit = new ClientReportUnit();
 
-        ClientReportUnit reportUnit = spy(new ClientReportUnit());
-        PowerMockito.whenNew(ContextService.class).withArguments(sessionStorageMock).thenReturn(contextServiceMock);
-        PowerMockito.when(contextServiceMock.context(ClientReportUnit.class,
-                ContextMediaTypes.REPORT_UNIT_JSON,
-                ResourceGroupElement.class,
-                ContextMediaTypes.REPORT_UNIT_METADATA_JSON
-                )).thenReturn(contextAdapterMock);
-        PowerMockito.when(contextAdapterMock.createAndGetMetadata(reportUnit)).thenReturn(resourceGroupElementOperationResult);
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(ResourceGroupElement.class),
+                    eq(new String[]{"contexts"}), any(DefaultErrorHandler.class))).thenReturn(metadataRequestMock);
+            doReturn(resourceGroupElementOperationResult).when(metadataRequestMock).post(reportUnit);
 
-        OperationResult<ResourceGroupElement> retrievedOperationResult = new TopicContextManager(sessionStorageMock).fetchMetadataByContext(reportUnit);
-        //Then
-        assertSame(resourceGroupElementOperationResult, retrievedOperationResult);
+            OperationResult<ResourceGroupElement> retrieved =
+                    new TopicContextManager(sessionStorageMock).fetchMetadataByContext(reportUnit);
+
+            assertSame(resourceGroupElementOperationResult, retrieved);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(ResourceGroupElement.class),
+                    eq(new String[]{"contexts"}), any(DefaultErrorHandler.class)));
+            verify(metadataRequestMock).post(reportUnit);
+        }
     }
-
 }

@@ -62,16 +62,10 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncGetJob(final Callback<OperationResult<ClientReportJob>, R> callback) {
-        final JerseyRequest<ClientReportJob> request = buildRequest(sessionStorage, ClientReportJob.class, new String[]{SERVICE_URI, jobId});
-        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
-            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-        } else {
-            request.setAccept("application/job+json");
-        }
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(request.get());
+                callback.execute(getJob());
             }
         });
         ThreadPoolUtil.runAsynchronously(task);
@@ -90,18 +84,10 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
         return request.put(reportJob);
     }
     public <R> RequestExecution asyncCreate(final Callback<OperationResult<ClientReportJob>, R> callback) {
-        final JerseyRequest<ClientReportJob> request = buildRequest(sessionStorage, ClientReportJob.class, new String[]{SERVICE_URI}, new JobValidationErrorHandler());
-        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
-            request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-        } else {
-            request.setContentType("application/job+json");
-            request.setAccept("application/job+json");
-        }
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(request.put(reportJob));
+                callback.execute(create());
             }
         });
         ThreadPoolUtil.runAsynchronously(task);
@@ -113,11 +99,10 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncJobState(final Callback<OperationResult<ClientJobState>, R> callback) {
-        final JerseyRequest<ClientJobState> request = buildRequest(sessionStorage, ClientJobState.class, new String[]{SERVICE_URI, jobId, STATE});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(request.get());
+                callback.execute(jobState());
             }
         });
         ThreadPoolUtil.runAsynchronously(task);
@@ -137,18 +122,10 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncUpdate(final ClientReportJob job, final Callback<OperationResult<ClientReportJob>, R> callback) {
-        final JerseyRequest<ClientReportJob> request = buildRequest(sessionStorage, ClientReportJob.class, new String[]{SERVICE_URI, jobId}, new JobValidationErrorHandler());
-        if (sessionStorage.getConfiguration().getJrsVersion().compareTo(JRSVersion.v5_5_0) > 0) {
-            request.setContentType(MimeTypeUtil.toCorrectContentMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-            request.setAccept(MimeTypeUtil.toCorrectAcceptMime(sessionStorage.getConfiguration(), "application/job+{mime}"));
-        } else {
-            request.setContentType("application/job+json");
-            request.setAccept("application/job+json");
-        }
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(request.post(job));
+                callback.execute(update(job));
             }
         });
         ThreadPoolUtil.runAsynchronously(task);
@@ -160,11 +137,10 @@ public class SingleJobOperationsAdapter extends AbstractAdapter {
     }
 
     public <R> RequestExecution asyncDelete(final Callback<OperationResult, R> callback) {
-        final JerseyRequest request = buildRequest(sessionStorage, Object.class, new String[]{SERVICE_URI, jobId});
         RequestExecution task = new RequestExecution(new Runnable() {
             @Override
             public void run() {
-                callback.execute(request.delete());
+                callback.execute(delete());
             }
         });
         ThreadPoolUtil.runAsynchronously(task);

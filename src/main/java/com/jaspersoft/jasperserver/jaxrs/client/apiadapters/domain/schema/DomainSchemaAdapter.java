@@ -32,7 +32,7 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import static java.util.Arrays.asList;
 

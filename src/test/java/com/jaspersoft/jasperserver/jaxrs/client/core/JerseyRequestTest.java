@@ -6,35 +6,29 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.NullEntityO
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResultFactoryImpl;
 import com.jaspersoft.jasperserver.jaxrs.client.providers.CustomRepresentationTypeProvider;
-import org.glassfish.jersey.client.JerseyWebTarget;
+import jakarta.ws.rs.client.WebTarget;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.mockito.Mock;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
@@ -43,8 +37,7 @@ import static org.testng.Assert.assertSame;
 /**
  * Unit tests for {@link JerseyRequest}
  */
-@PrepareForTest({SessionStorage.class, RestClientConfiguration.class, JerseyRequest.class})
-public class JerseyRequestTest extends PowerMockTestCase {
+public class JerseyRequestTest {
 
     @Mock
     private SessionStorage sessionStorage;
@@ -53,7 +46,7 @@ public class JerseyRequestTest extends PowerMockTestCase {
     @Mock
     private JerseyRequest<Class> expected;
     @Mock
-    private JerseyWebTarget webTarget;
+    private WebTarget webTarget;
     @Mock
     private RestClientConfiguration clientConfiguration;
     @Mock
@@ -67,14 +60,14 @@ public class JerseyRequestTest extends PowerMockTestCase {
     @Mock
     private Object dummyEntity;
 
+    private AutoCloseable mockitoSession;
+
     private String[] fakeArrayPath = new String[]{"this/is/an/array/with/fakePath"};
 
     @BeforeMethod
     public void setUp() throws Exception {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
 
-        whenNew(OperationResultFactoryImpl.class).withNoArguments().thenReturn(operationResultFactory);
-        whenNew(NullEntityOperationResult.class).withArguments(Response.class, Class.class , ErrorHandler.class).thenReturn(nullEntityOperationResultMock);
         when(sessionStorage.getConfiguration()).thenReturn(clientConfiguration);
         when(clientConfiguration.getContentMimeType()).thenReturn(MimeType.JSON);
         when(sessionStorage.getRootTarget()).thenReturn(webTarget);
@@ -84,88 +77,81 @@ public class JerseyRequestTest extends PowerMockTestCase {
     }
 
     /**
-     * The print under test is {@link JerseyRequest#buildRequest(SessionStorage, Class, String[])}
+     * The method under test is {@link JerseyRequest#buildRequest(SessionStorage, Class, String[])}
      */
     @Test(testName = "buildRequest")
     public void should_invoke_overloaded_buildRequest_method() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath)).thenCallRealMethod();
 
-        // Given
-        PowerMockito.mockStatic(JerseyRequest.class);
-        when(JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath)).thenCallRealMethod();
+            // When
+            JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath);
 
-        // When
-        JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath); // invocation ot outer print
-
-        // Then
-        PowerMockito.verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath, null);
+            // Then
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath, null), times(1));
+        }
     }
 
     /**
-     * The print under test is {@link JerseyRequest#buildRequest(SessionStorage, Class, String[], ErrorHandler)}
+     * The method under test is {@link JerseyRequest#buildRequest(SessionStorage, Class, String[], ErrorHandler)}
      */
     @Test(testName = "buildRequest")
     public void should_return_initialized_JerseyRequest_object() throws Exception {
+        try (MockedConstruction<JerseyRequest> mockedConstruction = Mockito.mockConstruction(JerseyRequest.class)) {
+            // When
+            JerseyRequest<Class> retrieved =
+                    JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath, dummyErrorHandler);
 
-        // Given
-        whenNew(JerseyRequest.class)
-                .withArguments(sessionStorage, Class.class)
-                .thenReturn(expected);
-
-        // When
-        JerseyRequest<Class> retrieved =
-                JerseyRequest.buildRequest(sessionStorage, Class.class, fakeArrayPath, dummyErrorHandler);
-
-        // Then
-        assertNotNull(retrieved);
-        assertEquals(retrieved, expected);
+            // Then
+            assertNotNull(retrieved);
+            assertEquals(retrieved, mockedConstruction.constructed().get(0));
+        }
     }
 
     @Test(testName = "post")
     public void should_send_Jersey_request_with_proper_HTTP_POST_method() throws Exception {
-
         // Given
-        int POST = 2;
-        JerseyRequest<Class> jerseyRequestSpy = spy(new JerseyRequest<Class>(sessionStorage, Class.class));
-        doReturn(builder).when(jerseyRequestSpy, "buildRequest");
-        doReturn(operationResult).when(jerseyRequestSpy, "executeRequest", POST, builder, dummyEntity);
+        Response responseMock = Mockito.mock(Response.class);
+        Mockito.doReturn(200).when(responseMock).getStatus();
+        Mockito.doReturn(Boolean.FALSE).when(clientConfiguration).getRestrictedHttpMethods();
+        Mockito.doReturn(Boolean.TRUE).when(clientConfiguration).getHandleErrors();
+        Mockito.doReturn(builder).when(webTarget).request();
+        Mockito.doReturn(builder).when(builder).accept(anyString());
+        Mockito.doReturn(responseMock).when(builder).post(any(jakarta.ws.rs.client.Entity.class));
+
+        JerseyRequest<Class> jerseyRequest = new JerseyRequest<>(sessionStorage, Class.class);
 
         // When
-        OperationResult<Class> retrieved = jerseyRequestSpy.post(dummyEntity);
+        jerseyRequest.post(dummyEntity);
 
         // Then
-        assertEquals(retrieved, operationResult);
-        verifyPrivate(jerseyRequestSpy).invoke("buildRequest");
-        verifyPrivate(jerseyRequestSpy).invoke("executeRequest", POST, builder, dummyEntity);
+        verify(builder).post(any(jakarta.ws.rs.client.Entity.class));
     }
 
-
     @Test
-    public void should_() throws Exception {
-
+    public void should_send_Jersey_request_with_PUT_using_override_header_when_restricted() throws Exception {
         // Given
-        int PUT = 3;
-        Response responseMock = mock(Response.class);
-        doReturn(clientConfiguration).when(sessionStorage).getConfiguration();
-        doReturn(Boolean.TRUE).when(clientConfiguration).getRestrictedHttpMethods();
-        JerseyRequest<Class> jerseyRequestSpy = spy(new JerseyRequest<Class>(sessionStorage, Class.class));
-        doReturn(builder).when(jerseyRequestSpy, "buildRequest");
+        Response responseMock = Mockito.mock(Response.class);
+        Mockito.doReturn(200).when(responseMock).getStatus();
+        Mockito.doReturn(Boolean.TRUE).when(clientConfiguration).getRestrictedHttpMethods();
+        Mockito.doReturn(Boolean.TRUE).when(clientConfiguration).getHandleErrors();
+        Mockito.doReturn(builder).when(webTarget).request();
+        Mockito.doReturn(builder).when(builder).accept(anyString());
+        Mockito.doReturn(builder).when(builder).header(anyString(), any());
         Mockito.doReturn(responseMock).when(builder).post(any());
 
+        JerseyRequest<Class> jerseyRequest = new JerseyRequest<>(sessionStorage, Class.class);
+
         // When
-        OperationResult<Class> retrieved = jerseyRequestSpy.put(dummyEntity);
+        jerseyRequest.put(dummyEntity);
 
         // Then
-//        assertEquals(retrieved, operationResult);
-        Mockito.verify(builder).header("X-HTTP-Method-Override", "PUT");
-        Mockito.verify(builder).post(any());
-        verifyPrivate(jerseyRequestSpy).invoke("buildRequest");
-        verifyPrivate(jerseyRequestSpy).invoke("executeRequest", PUT, builder, dummyEntity);
+        verify(builder).header("X-HTTP-Method-Override", "PUT");
+        verify(builder).post(any());
     }
 
     @Test(testName = "addParam")
     public void should_pass_proper_param_to_queryParam_method_and_return_RequestBuilder_object() {
-
         // When
         JerseyRequest<Class> expected = new JerseyRequest<Class>(sessionStorage, Class.class);
         RequestBuilder<Class> retrieved = expected.addParam("name", "a", "b", "c");
@@ -193,7 +179,6 @@ public class JerseyRequestTest extends PowerMockTestCase {
 
     @Test(testName = "addMatrixParam")
     public void should_add_proper_param_to_WebTarget_and_return_RequestBuilder_object() {
-
         // When
         JerseyRequest<Class> expected = new JerseyRequest<Class>(sessionStorage, Class.class);
         RequestBuilder<Class> retrieved = expected.addMatrixParam("name", "a", "b", "c");
@@ -201,7 +186,6 @@ public class JerseyRequestTest extends PowerMockTestCase {
         // Then
         assertSame(expected, retrieved);
         verify(webTarget, times(1)).matrixParam("name", "a", "b", "c");
-
     }
 
     @Test(testName = "addMatrixParams")
@@ -222,33 +206,51 @@ public class JerseyRequestTest extends PowerMockTestCase {
 
     @Test(testName = "setContentType")
     public void should_set_ContentType_and_return_RequestBuilder_object() {
-
         // When
         JerseyRequest<Class> expected = new JerseyRequest<Class>(sessionStorage, Class.class);
         RequestBuilder<Class> retrieved = expected.setContentType(MediaType.APPLICATION_JSON);
 
         // Then
         assertSame(expected, retrieved);
-        assertEquals(Whitebox.getInternalState(retrieved, "contentType"), MediaType.APPLICATION_JSON);
-        assertNotEquals(Whitebox.getInternalState(retrieved, "contentType"), MediaType.APPLICATION_XML);
+        assertEquals(getInternalState(retrieved, "contentType"), MediaType.APPLICATION_JSON);
+        assertNotEquals(getInternalState(retrieved, "contentType"), MediaType.APPLICATION_XML);
     }
 
     @Test(testName = "setAccept")
     public void should_set_proper_AcceptMime_and_return_RequestBuilder_object() {
-
         // When
         JerseyRequest<Class> expected = new JerseyRequest<Class>(sessionStorage, Class.class);
         RequestBuilder<Class> retrieved = expected.setAccept(MediaType.APPLICATION_JSON);
 
         // Then
         assertSame(expected, retrieved);
-        assertEquals(Whitebox.getInternalState(retrieved, "acceptType"), MediaType.APPLICATION_JSON);
-        assertNotEquals(Whitebox.getInternalState(retrieved, "acceptType"), MediaType.APPLICATION_XML);
+        assertEquals(getInternalState(retrieved, "acceptType"), MediaType.APPLICATION_JSON);
+        assertNotEquals(getInternalState(retrieved, "acceptType"), MediaType.APPLICATION_XML);
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown() throws Exception {
         reset(sessionStorage, dummyErrorHandler, expected, webTarget, clientConfiguration,
                 operationResultFactory, dummyEntity);
+        mockitoSession.close();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T getInternalState(Object target, String fieldName) {
+        try {
+            Class<?> clazz = target.getClass();
+            while (clazz != null) {
+                try {
+                    java.lang.reflect.Field field = clazz.getDeclaredField(fieldName);
+                    field.setAccessible(true);
+                    return (T) field.get(target);
+                } catch (NoSuchFieldException e) {
+                    clazz = clazz.getSuperclass();
+                }
+            }
+            throw new NoSuchFieldException(fieldName);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

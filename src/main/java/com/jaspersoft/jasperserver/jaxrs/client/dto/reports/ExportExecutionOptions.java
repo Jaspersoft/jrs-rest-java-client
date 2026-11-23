@@ -21,7 +21,7 @@
 
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "export")
 public class ExportExecutionOptions {

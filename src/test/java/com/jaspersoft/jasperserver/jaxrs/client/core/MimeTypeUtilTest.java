@@ -2,29 +2,20 @@ package com.jaspersoft.jasperserver.jaxrs.client.core;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.expect;
 import static org.mockito.Mockito.reset;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
  * Unit tests for {@link MimeTypeUtil}
  */
-@PrepareForTest({MimeTypeUtil.class, MimeType.class, RestClientConfiguration.class})
-public class MimeTypeUtilTest extends PowerMockTestCase {
+public class MimeTypeUtilTest {
 
     @Mock
     private RestClientConfiguration configurationMock;
@@ -32,27 +23,31 @@ public class MimeTypeUtilTest extends PowerMockTestCase {
     private final String collectionMime = "application/collection+{mime}";
     private final String jobMime = "application/job+{mime}";
 
+    private AutoCloseable mockitoSession;
+
     @BeforeMethod
     public void before() throws IllegalAccessException {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void test_invoke_toCorrectContentMime_method_only_once (){
-        PowerMockito.mockStatic(MimeTypeUtil.class);
-        MimeTypeUtil.toCorrectContentMime(configurationMock, "abc");
-        PowerMockito.verifyStatic(MimeTypeUtil.class, Mockito.times(1));
-        MimeTypeUtil.toCorrectContentMime(configurationMock, "abc");
+    public void test_invoke_toCorrectContentMime_method_only_once() {
+        // Given
+        when(configurationMock.getContentMimeType()).thenReturn(MimeType.JSON);
+        // When
+        String result = MimeTypeUtil.toCorrectContentMime(configurationMock, "abc");
+        // Then
+        assertNotNull(result);
     }
 
     @Test
     public void should_return_correct_content_mime() {
-        mockStatic(MimeTypeUtil.class);
-        expect(MimeTypeUtil.toCorrectContentMime(configurationMock, collectionMime)).andReturn("application/collection+json");
-        replay(MimeTypeUtil.class);
-
-        MimeTypeUtil.toCorrectContentMime(configurationMock, collectionMime);
-        verify(MimeTypeUtil.class);
+        // Given
+        when(configurationMock.getContentMimeType()).thenReturn(MimeType.JSON);
+        // When
+        String result = MimeTypeUtil.toCorrectContentMime(configurationMock, collectionMime);
+        // Then
+        assertEquals(result, "application/collection+json");
     }
 
     @Test
@@ -87,9 +82,9 @@ public class MimeTypeUtilTest extends PowerMockTestCase {
         assertNotNull(util);
     }
 
-
     @AfterMethod
-    public void after() {
+    public void after() throws Exception {
         reset(configurationMock);
+        mockitoSession.close();
     }
 }

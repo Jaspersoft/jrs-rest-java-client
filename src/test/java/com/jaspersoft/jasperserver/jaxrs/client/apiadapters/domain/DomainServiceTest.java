@@ -4,82 +4,82 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.domain.metadata.Doma
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParameterNotFoundException;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import java.lang.reflect.Field;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.mockito.Mockito.reset;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 /**
- * Unit tests for {@link com.jaspersoft.jasperserver.jaxrs.client.apiadapters.attributes.AttributesService}
+ * Unit tests for {@link DomainService}
  */
-@PrepareForTest({DomainService.class})
-public class DomainServiceTest extends PowerMockTestCase {
+public class DomainServiceTest {
 
     public static final String URI = "uri";
+
     @Mock
     private SessionStorage sessionStorageMock;
-    @Mock
-    private DomainMetadataAdapter domainMetadataAdapterMock;
 
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
     public void should_pass_session_storage_to_parent_adapter() {
         DomainService domainService = new DomainService(sessionStorageMock);
-        SessionStorage retrieved = domainService.getSessionStorage();
-        assertSame(retrieved, sessionStorageMock);
+        assertSame(domainService.getSessionStorage(), sessionStorageMock);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void should_throw_an_exception_when_sessionStorage_is_null() {
-        // When
         new DomainService(null);
-        // Then
-        // should be thrown an exception
     }
 
     @Test(expectedExceptions = MandatoryParameterNotFoundException.class)
     public void should_throw_an_exception_when_domain_uri_is_null() {
-        // When
         new DomainService(sessionStorageMock).forDomain((String) null);
-        // Then
-        // should be thrown an exception
     }
-
 
     @Test
     public void should_return_proper_DomainMetadataAdapter_instance() throws Exception {
+        DomainMetadataAdapter retrieved = new DomainService(sessionStorageMock).forDomain(URI).metadata();
 
-        // Given
-        whenNew(DomainMetadataAdapter.class)
-                .withArguments(sessionStorageMock, URI)
-                .thenReturn(domainMetadataAdapterMock);
-
-        DomainService domainService = new DomainService(sessionStorageMock);
-
-        // When
-        DomainMetadataAdapter retrieved = domainService.forDomain(URI).metadata();
-
-        // Then
-        assertSame(retrieved, domainMetadataAdapterMock);
-        verifyNew(DomainMetadataAdapter.class, times(1))
-                .withArguments(sessionStorageMock, URI);
-    }
-
-    @AfterMethod
-    public void after() {
-        sessionStorageMock = null;
-        domainMetadataAdapterMock = null;
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof DomainMetadataAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        List<String> path = (List<String>) getInternalState(retrieved, "path");
+        assertEquals(path, asList("domains", URI, "metadata"));
     }
 }

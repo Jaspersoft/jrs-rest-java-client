@@ -9,7 +9,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedHashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;

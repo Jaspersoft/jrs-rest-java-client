@@ -6,23 +6,18 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.MandatoryParamet
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.reports.inputcontrols.InputControlStateListWrapper;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.spy;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
@@ -30,8 +25,7 @@ import static org.testng.Assert.assertSame;
 /**
  * @author Tetiana Iefimenko
  */
-@PrepareForTest({InputControlsValuesAdapter.class, JerseyRequest.class, OperationResult.class})
-public class InputControlsValuesAdapterTest extends PowerMockTestCase {
+public class InputControlsValuesAdapterTest {
 
     @Mock
     private SessionStorage sessionStorageMock;
@@ -42,9 +36,11 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
 
     private String uri = "uri";
 
+    private AutoCloseable mockitoSession;
+
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -77,78 +73,97 @@ public class InputControlsValuesAdapterTest extends PowerMockTestCase {
     @Test
     public void should_return_proper_operation_result_when_invoke_get() {
 
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                        eq(sessionStorageMock),
-                        eq(InputControlStateListWrapper.class),
-                        eq(new String[]{"reports", uri, "inputControls", "values"}))
-        ).thenReturn(requestMock);
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            // Given
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(InputControlStateListWrapper.class),
+                    eq(new String[]{"reports", uri, "inputControls", "values"}))
+            ).thenReturn(requestMock);
 
-        doReturn(operationResultMock)
-                .when(requestMock)
-                .get();
+            doReturn(operationResultMock)
+                    .when(requestMock)
+                    .get();
 
-        InputControlsValuesAdapter adapterSpy = spy(new InputControlsValuesAdapter(sessionStorageMock, uri));
+            InputControlsValuesAdapter adapterSpy = spy(new InputControlsValuesAdapter(sessionStorageMock, uri));
 
-        // When
-        OperationResult<InputControlStateListWrapper> retrieved = adapterSpy.get();
+            // When
+            OperationResult<InputControlStateListWrapper> retrieved = adapterSpy.get();
 
-        // Then
-        verifyStatic(JerseyRequest.class);
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(InputControlStateListWrapper.class),
-                eq(new String[]{"reports", uri, "inputControls", "values"}));
+            // Then
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(InputControlStateListWrapper.class),
+                    eq(new String[]{"reports", uri, "inputControls", "values"})));
 
-        Mockito.verify(requestMock).get();
-        assertEquals(Whitebox.getInternalState(adapterSpy, "containerUri"), uri);
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
+            Mockito.verify(requestMock).get();
+            assertEquals(getInternalState(adapterSpy, "containerUri"), uri);
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultMock);
+        }
     }
 
     @Test
     public void should_invoke_use_cashed_data() {
 
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                        eq(sessionStorageMock),
-                        eq(InputControlStateListWrapper.class),
-                        eq(new String[]{"reports", uri, "inputControls", "values"}))
-        ).thenReturn(requestMock);
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            // Given
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(InputControlStateListWrapper.class),
+                    eq(new String[]{"reports", uri, "inputControls", "values"}))
+            ).thenReturn(requestMock);
 
-        doReturn(requestMock)
-                .when(requestMock)
-                .addParam("freshData", "true");
+            doReturn(requestMock)
+                    .when(requestMock)
+                    .addParam("freshData", "true");
 
-        doReturn(operationResultMock)
-                .when(requestMock)
-                .get();
+            doReturn(operationResultMock)
+                    .when(requestMock)
+                    .get();
 
-        InputControlsValuesAdapter adapterSpy = spy(new InputControlsValuesAdapter(sessionStorageMock, uri));
-        adapterSpy.useCachedData(false);
+            InputControlsValuesAdapter adapterSpy = spy(new InputControlsValuesAdapter(sessionStorageMock, uri));
+            adapterSpy.useCachedData(false);
 
-        // When
-        OperationResult<InputControlStateListWrapper> retrieved = adapterSpy.get();
+            // When
+            OperationResult<InputControlStateListWrapper> retrieved = adapterSpy.get();
 
-        // Then
-        verifyStatic(JerseyRequest.class);
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(InputControlStateListWrapper.class),
-                eq(new String[]{"reports", uri, "inputControls", "values"}));
+            // Then
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(InputControlStateListWrapper.class),
+                    eq(new String[]{"reports", uri, "inputControls", "values"})));
 
-        Mockito.verify(requestMock).get();
-        Mockito.verify(requestMock).addParam("freshData", "true");
-        assertEquals(Whitebox.getInternalState(adapterSpy, "useFreshData"), Boolean.TRUE);
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
+            Mockito.verify(requestMock).get();
+            Mockito.verify(requestMock).addParam("freshData", "true");
+            assertEquals(getInternalState(adapterSpy, "useFreshData"), Boolean.TRUE);
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultMock);
+        }
     }
 
     @AfterMethod
-    public void after() {
+    public void after() throws Exception {
         reset(sessionStorageMock, requestMock, operationResultMock);
+        mockitoSession.close();
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T> T getInternalState(Object target, String fieldName) {
+        try {
+            Class<?> clazz = target.getClass();
+            while (clazz != null) {
+                try {
+                    java.lang.reflect.Field field = clazz.getDeclaredField(fieldName);
+                    field.setAccessible(true);
+                    return (T) field.get(target);
+                } catch (NoSuchFieldException e) {
+                    clazz = clazz.getSuperclass();
+                }
+            }
+            throw new NoSuchFieldException(fieldName);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

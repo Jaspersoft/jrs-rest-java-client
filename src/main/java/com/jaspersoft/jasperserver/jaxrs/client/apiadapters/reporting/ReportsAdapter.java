@@ -28,7 +28,7 @@ import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportopti
 import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.reporting.reportoptions.ReportOptionsUtil;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 
-import javax.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedHashMap;
 import java.util.List;
 
 public class ReportsAdapter extends AbstractAdapter {

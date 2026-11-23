@@ -1,6 +1,6 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.reports.reportinfo;
 
-import javax.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElement;
 import java.util.Objects;
 
 /**

@@ -13,8 +13,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationRe
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 /**
  * <p>

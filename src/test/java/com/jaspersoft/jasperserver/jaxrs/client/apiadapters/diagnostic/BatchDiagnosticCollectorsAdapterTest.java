@@ -1,34 +1,29 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.diagnostic;
 
-
 import com.jaspersoft.jasperserver.dto.common.PatchDescriptor;
 import com.jaspersoft.jasperserver.dto.logcapture.CollectorSettingsList;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.io.InputStream;
 import org.mockito.Mock;
-import org.powermock.reflect.Whitebox;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.InputStream;
+
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
-import static org.testng.AssertJUnit.assertNotNull;
 
 /**
  * <p/>
@@ -38,8 +33,9 @@ import static org.testng.AssertJUnit.assertNotNull;
  * @version $Id$
  * @see
  */
-@PrepareForTest(JerseyRequest.class)
-public class BatchDiagnosticCollectorsAdapterTest extends PowerMockTestCase {
+@SuppressWarnings("unchecked")
+public class BatchDiagnosticCollectorsAdapterTest {
+
     @Mock
     private SessionStorage sessionStorageMock;
     @Mock
@@ -51,143 +47,122 @@ public class BatchDiagnosticCollectorsAdapterTest extends PowerMockTestCase {
     @Mock
     private OperationResult<InputStream> operationResultContentMock;
 
+    private AutoCloseable mockitoSession;
+
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock, jerseyRequestMock, jerseyRequestContentMock,
+                operationResultMock, operationResultContentMock);
     }
 
     @Test
     public void should_set_proper_session_storage() {
-        // When
         BatchDiagnosticCollectorsAdapter adapter = new BatchDiagnosticCollectorsAdapter(sessionStorageMock);
-        //Then
-        assertSame(Whitebox.getInternalState(adapter, "sessionStorage"), sessionStorageMock);
+        assertSame(adapter.getSessionStorage(), sessionStorageMock);
     }
 
     @Test
     public void should_return_proper_operation_result_when_get_collectors_metadata() {
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).get();
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettingsList.class),
+                    eq(new String[]{"diagnostic", "collectors"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(operationResultMock).when(jerseyRequestMock).get();
 
-        BatchDiagnosticCollectorsAdapter adapter = new BatchDiagnosticCollectorsAdapter(sessionStorageMock);
+            OperationResult<CollectorSettingsList> retrieved =
+                    new BatchDiagnosticCollectorsAdapter(sessionStorageMock).collectorsSettings();
 
-        // When
-        OperationResult<CollectorSettingsList> retrieved = adapter.collectorsSettings();
-
-        // Then /
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-        verify(jerseyRequestMock).get();
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
-                any(DefaultErrorHandler.class));
-
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettingsList.class),
+                    eq(new String[]{"diagnostic", "collectors"}),
+                    any(DefaultErrorHandler.class)));
+            verify(jerseyRequestMock).get();
+        }
     }
 
     @Test
     public void should_return_proper_operation_result_when_delete_collectors() {
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).delete();
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettingsList.class),
+                    eq(new String[]{"diagnostic", "collectors"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(operationResultMock).when(jerseyRequestMock).delete();
 
-        BatchDiagnosticCollectorsAdapter adapter = new BatchDiagnosticCollectorsAdapter(sessionStorageMock);
+            OperationResult<CollectorSettingsList> retrieved =
+                    new BatchDiagnosticCollectorsAdapter(sessionStorageMock).delete();
 
-        // When /
-        OperationResult<CollectorSettingsList> retrieved = adapter.delete();
-
-        // Then /
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-        verify(jerseyRequestMock).delete();
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
-                any(DefaultErrorHandler.class));
-
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettingsList.class),
+                    eq(new String[]{"diagnostic", "collectors"}),
+                    any(DefaultErrorHandler.class)));
+            verify(jerseyRequestMock).delete();
+        }
     }
 
     @Test
     public void should_return_proper_operation_result_when_update_collectors_settings() {
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(jerseyRequestMock).when(jerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
-        doReturn(operationResultMock).when(jerseyRequestMock).post(any(PatchDescriptor.class));
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettingsList.class),
+                    eq(new String[]{"diagnostic", "collectors"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(jerseyRequestMock).when(jerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
+            doReturn(operationResultMock).when(jerseyRequestMock).post(any(PatchDescriptor.class));
 
-        BatchDiagnosticCollectorsAdapter adapter = new BatchDiagnosticCollectorsAdapter(sessionStorageMock);
+            OperationResult<CollectorSettingsList> retrieved =
+                    new BatchDiagnosticCollectorsAdapter(sessionStorageMock).updateCollectorsSettings(new PatchDescriptor());
 
-        // When /
-        OperationResult<CollectorSettingsList> retrieved = adapter.updateCollectorsSettings(new PatchDescriptor());
-
-        // Then /
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-        verify(jerseyRequestMock).post(any(PatchDescriptor.class));
-        verify(jerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettingsList.class),
-                eq(new String[]{"diagnostic", "collectors"}),
-                any(DefaultErrorHandler.class));
-
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettingsList.class),
+                    eq(new String[]{"diagnostic", "collectors"}),
+                    any(DefaultErrorHandler.class)));
+            verify(jerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
+            verify(jerseyRequestMock).post(any(PatchDescriptor.class));
+        }
     }
-
 
     @Test
     public void should_return_proper_operation_result_when_get_collector_content() {
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                eq(sessionStorageMock),
-                eq(InputStream.class),
-                eq(new String[]{"diagnostic", "collectors", "content"}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestContentMock);
-        doReturn(jerseyRequestContentMock).when(jerseyRequestContentMock).setAccept("application/zip");
-        doReturn(operationResultContentMock).when(jerseyRequestContentMock).get();
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(InputStream.class),
+                    eq(new String[]{"diagnostic", "collectors", "content"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestContentMock);
+            doReturn(operationResultContentMock).when(jerseyRequestContentMock).get();
 
-        BatchDiagnosticCollectorsAdapter adapter = new BatchDiagnosticCollectorsAdapter(sessionStorageMock);
+            OperationResult<InputStream> retrieved =
+                    new BatchDiagnosticCollectorsAdapter(sessionStorageMock).collectorsContent();
 
-        // When /
-        OperationResult<InputStream> retrieved = adapter.collectorsContent();
-
-        // Then /
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultContentMock);
-        verify(jerseyRequestContentMock).setAccept("application/zip");
-        verify(jerseyRequestContentMock).get();
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(InputStream.class),
-                eq(new String[]{"diagnostic", "collectors", "content"}),
-                any(DefaultErrorHandler.class));
-
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultContentMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(InputStream.class),
+                    eq(new String[]{"diagnostic", "collectors", "content"}),
+                    any(DefaultErrorHandler.class)));
+            verify(jerseyRequestContentMock).setAccept("application/zip");
+            verify(jerseyRequestContentMock).get();
+        }
     }
-
-    @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, jerseyRequestMock, jerseyRequestContentMock, operationResultMock, operationResultContentMock);
-    }
-
 }

@@ -11,8 +11,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFoundException;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import java.util.HashMap;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.Response;
 
 import static java.util.Arrays.asList;
 

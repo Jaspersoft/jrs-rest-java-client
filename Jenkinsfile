@@ -27,7 +27,7 @@ pipeline {
     PROD_REPO = "${devBuild ? env.DEV_PROD_REPO : env.PROD_PROD_REPO}"
 
     MVN_NAME = 'mvn-default'
-    JDK_NAME = 'jdk-default'
+    JDK_NAME = 'jdk-17'
 
   }
   tools {

@@ -2,10 +2,10 @@ package com.jaspersoft.jasperserver.jaxrs.client.filters;
 
 import com.jaspersoft.jasperserver.jaxrs.client.core.AuthenticationCredentials;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.xml.bind.DatatypeConverter;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 

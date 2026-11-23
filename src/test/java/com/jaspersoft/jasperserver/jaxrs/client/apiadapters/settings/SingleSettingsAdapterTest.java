@@ -13,30 +13,30 @@ import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.GlobalConfiguration
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.InputControlsSettings;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.RequestSettings;
 import com.jaspersoft.jasperserver.jaxrs.client.dto.settings.UserTimeZone;
-import java.util.List;
-import java.util.Map;
-import javax.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.GenericType;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.List;
+import java.util.Map;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.testng.Assert.assertSame;
 
 /**
  * @author Tetiana Iefimenko
  */
-@PrepareForTest({JerseyRequest.class})
-public class SingleSettingsAdapterTest extends PowerMockTestCase {
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class SingleSettingsAdapterTest {
 
     @Mock
     private SessionStorage sessionStorageMock;
@@ -86,15 +86,16 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
     private OperationResult<List<UserTimeZone>> userTimeZonesListOperationResult;
 
     private SettingsService service;
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
         service = new SettingsService(sessionStorageMock);
     }
 
     @AfterMethod
-    public void after() {
+    public void after() throws Exception {
         reset(sessionStorageMock,
                 mapJerseyRequest,
                 listJerseyRequest,
@@ -118,286 +119,253 @@ public class SingleSettingsAdapterTest extends PowerMockTestCase {
                 dateTimeSettingsOperationResult,
                 inputControlsSettingsOperationResult,
                 userTimeZonesListOperationResult);
+        mockitoSession.close();
     }
 
     @Test
-    public void should_return_map_of_aws_settings_operationResult() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(Map.class),
-                eq(new String[]{"settings", "awsSettings"}),
-                any(DefaultErrorHandler.class))).thenReturn(mapJerseyRequest);
-        PowerMockito.doReturn(mapOperationResult).when(mapJerseyRequest).get();
+    public void should_return_map_of_aws_settings_operationResult() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(Map.class),
+                    eq(new String[]{"settings", "awsSettings"}),
+                    any(DefaultErrorHandler.class))).thenReturn(mapJerseyRequest);
+            doReturn(mapOperationResult).when(mapJerseyRequest).get();
 
-        OperationResult<Map> settings = service.settings().group("awsSettings", Map.class);
-        //then
-        assertSame(settings, mapOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(Map.class),
-                eq(new String[]{"settings", "awsSettings"}),
-                any(DefaultErrorHandler.class));
+            OperationResult<Map> settings = service.settings().group("awsSettings", Map.class);
+
+            assertSame(settings, mapOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(Map.class),
+                    eq(new String[]{"settings", "awsSettings"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
     @Test
-    public void should_return_awsSettings_operationResult() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(AwsSettings.class),
-                eq(new String[]{"settings", "awsSettings"}), any(DefaultErrorHandler.class))).thenReturn(awsSettingsJerseyRequest);
-        PowerMockito.doReturn(awsSettingsOperationResult).when(awsSettingsJerseyRequest).get();
+    public void should_return_awsSettings_operationResult() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(AwsSettings.class),
+                    eq(new String[]{"settings", "awsSettings"}),
+                    any(DefaultErrorHandler.class))).thenReturn(awsSettingsJerseyRequest);
+            doReturn(awsSettingsOperationResult).when(awsSettingsJerseyRequest).get();
 
-        OperationResult<AwsSettings> settings = service.settings().group("awsSettings", AwsSettings.class);
-        //then
+            OperationResult<AwsSettings> settings = service.settings().group("awsSettings", AwsSettings.class);
 
-        assertSame(settings, awsSettingsOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(AwsSettings.class),
-                eq(new String[]{"settings", "awsSettings"}),
-                any(DefaultErrorHandler.class));
+            assertSame(settings, awsSettingsOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(AwsSettings.class),
+                    eq(new String[]{"settings", "awsSettings"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
     @Test
-    public void should_return_list_operationResult() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(List.class),
-                eq(new String[]{"settings", "userTimeZones"}),
-                any(DefaultErrorHandler.class))).thenReturn(listJerseyRequest);
-        PowerMockito.doReturn(listOperationResult).when(listJerseyRequest).get();
+    public void should_return_list_operationResult() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(List.class),
+                    eq(new String[]{"settings", "userTimeZones"}),
+                    any(DefaultErrorHandler.class))).thenReturn(listJerseyRequest);
+            doReturn(listOperationResult).when(listJerseyRequest).get();
 
-        OperationResult<List> settings = service.settings().group("userTimeZones", List.class);
+            OperationResult<List> settings = service.settings().group("userTimeZones", List.class);
 
-        //then
-        assertSame(settings, listOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(List.class),
-                eq(new String[]{"settings", "userTimeZones"}),
-                any(DefaultErrorHandler.class));
-
+            assertSame(settings, listOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(List.class),
+                    eq(new String[]{"settings", "userTimeZones"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
     @Test
-    public void should_return_list_of_user_time_zones__operationResult() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(new GenericType<List<UserTimeZone>>() {
-                }),
-                eq(new String[]{"settings", "userTimeZones"}),
-                any(DefaultErrorHandler.class))).thenReturn(userTimeZonesListJerseyRequest);
-        PowerMockito.doReturn(userTimeZonesListOperationResult).when(userTimeZonesListJerseyRequest).get();
+    public void should_return_list_of_user_time_zones__operationResult() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(new GenericType<List<UserTimeZone>>() {}),
+                    eq(new String[]{"settings", "userTimeZones"}),
+                    any(DefaultErrorHandler.class))).thenReturn(userTimeZonesListJerseyRequest);
+            doReturn(userTimeZonesListOperationResult).when(userTimeZonesListJerseyRequest).get();
 
-        OperationResult<List<UserTimeZone>> settings = service.settings().group("userTimeZones", new GenericType<List<UserTimeZone>>() {
-        });
+            OperationResult<List<UserTimeZone>> settings = service.settings().group("userTimeZones", new GenericType<List<UserTimeZone>>() {});
 
-        //then
-        assertSame(settings, userTimeZonesListOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(new GenericType<List<UserTimeZone>>() {
-                }),
-                eq(new String[]{"settings", "userTimeZones"}),
-                any(DefaultErrorHandler.class));
+            assertSame(settings, userTimeZonesListOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(new GenericType<List<UserTimeZone>>() {}),
+                    eq(new String[]{"settings", "userTimeZones"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
     @Test
-    public void should_return_request_settings_dto__operationResult_by_specified_method() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(RequestSettings.class),
-                eq(new String[]{"settings", "request"}),
-                any(DefaultErrorHandler.class))).thenReturn(requestSettingsJerseyRequest);
-        PowerMockito.doReturn(requestSettingsOperationResult).when(requestSettingsJerseyRequest).get();
+    public void should_return_request_settings_dto__operationResult_by_specified_method() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(RequestSettings.class),
+                    eq(new String[]{"settings", "request"}),
+                    any(DefaultErrorHandler.class))).thenReturn(requestSettingsJerseyRequest);
+            doReturn(requestSettingsOperationResult).when(requestSettingsJerseyRequest).get();
 
-        OperationResult<RequestSettings> settings = service.settings().ofRequestGroup();
+            OperationResult<RequestSettings> settings = service.settings().ofRequestGroup();
 
-        //then
-        assertSame(settings, requestSettingsOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(RequestSettings.class),
-                eq(new String[]{"settings", "request"}),
-                any(DefaultErrorHandler.class));
-
+            assertSame(settings, requestSettingsOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(RequestSettings.class),
+                    eq(new String[]{"settings", "request"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
     @Test
-    public void should_return_dataSourcePatterns_settings_dto__operationResult_by_specified_method() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(DataSourcePatternsSettings.class),
-                eq(new String[]{"settings", "dataSourcePatterns"}),
-                any(DefaultErrorHandler.class))).thenReturn(dataSoursePattermsSettingsJerseyRequest);
-        PowerMockito.doReturn(dataSourcePatternsSettingsOperationResult).when(dataSoursePattermsSettingsJerseyRequest).get();
+    public void should_return_dataSourcePatterns_settings_dto__operationResult_by_specified_method() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(DataSourcePatternsSettings.class),
+                    eq(new String[]{"settings", "dataSourcePatterns"}),
+                    any(DefaultErrorHandler.class))).thenReturn(dataSoursePattermsSettingsJerseyRequest);
+            doReturn(dataSourcePatternsSettingsOperationResult).when(dataSoursePattermsSettingsJerseyRequest).get();
 
-        OperationResult<DataSourcePatternsSettings> settings = service.settings().ofDataSourcePatternsGroup();
+            OperationResult<DataSourcePatternsSettings> settings = service.settings().ofDataSourcePatternsGroup();
 
-        //then
-        assertSame(settings, dataSourcePatternsSettingsOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(DataSourcePatternsSettings.class),
-                eq(new String[]{"settings", "dataSourcePatterns"}),
-                any(DefaultErrorHandler.class));
-
+            assertSame(settings, dataSourcePatternsSettingsOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(DataSourcePatternsSettings.class),
+                    eq(new String[]{"settings", "dataSourcePatterns"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
     @Test
-    public void should_return_userTimeZones_settings_dto__operationResult_by_specified_method() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(new GenericType<List<UserTimeZone>>() {
-                }),
-                eq(new String[]{"settings", "userTimeZones"}),
-                any(DefaultErrorHandler.class))).thenReturn(userTimeZonesListJerseyRequest);
-        PowerMockito.doReturn(userTimeZonesListOperationResult).when(userTimeZonesListJerseyRequest).get();
+    public void should_return_userTimeZones_settings_dto__operationResult_by_specified_method() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(new GenericType<List<UserTimeZone>>() {}),
+                    eq(new String[]{"settings", "userTimeZones"}),
+                    any(DefaultErrorHandler.class))).thenReturn(userTimeZonesListJerseyRequest);
+            doReturn(userTimeZonesListOperationResult).when(userTimeZonesListJerseyRequest).get();
 
-        OperationResult<List<UserTimeZone>> settings = service.settings().ofUserTimeZonesGroup();
+            OperationResult<List<UserTimeZone>> settings = service.settings().ofUserTimeZonesGroup();
 
-        //then
-        assertSame(settings, userTimeZonesListOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(new GenericType<List<UserTimeZone>>() {
-                }),
-                eq(new String[]{"settings", "userTimeZones"}),
-                any(DefaultErrorHandler.class));
+            assertSame(settings, userTimeZonesListOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(new GenericType<List<UserTimeZone>>() {}),
+                    eq(new String[]{"settings", "userTimeZones"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
     @Test
-    public void should_return_aws_settings_dto__operationResult_by_specified_method() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(AwsSettings.class),
-                eq(new String[]{"settings", "awsSettings"}),
-                any(DefaultErrorHandler.class))).thenReturn(awsSettingsJerseyRequest);
-        PowerMockito.doReturn(awsSettingsOperationResult).when(awsSettingsJerseyRequest).get();
+    public void should_return_aws_settings_dto__operationResult_by_specified_method() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(AwsSettings.class),
+                    eq(new String[]{"settings", "awsSettings"}),
+                    any(DefaultErrorHandler.class))).thenReturn(awsSettingsJerseyRequest);
+            doReturn(awsSettingsOperationResult).when(awsSettingsJerseyRequest).get();
 
-        OperationResult<AwsSettings> settings = service.settings().ofAwsGroup();
+            OperationResult<AwsSettings> settings = service.settings().ofAwsGroup();
 
-        //then
-        assertSame(settings, awsSettingsOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(AwsSettings.class),
-                eq(new String[]{"settings", "awsSettings"}),
-                any(DefaultErrorHandler.class));
-    }
-
-
-    @Test
-    public void should_return_decimalFormatSymbol_settings_dto__operationResult_by_specified_method() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(DecimalFormatSymbolsSettings.class),
-                eq(new String[]{"settings", "decimalFormatSymbols"}),
-                any(DefaultErrorHandler.class))).thenReturn(decimalFormatSymbolsSettingsJerseyRequest);
-        PowerMockito.doReturn(decimalFormatSymbolsSettingsOperationResult).when(decimalFormatSymbolsSettingsJerseyRequest).get();
-
-        OperationResult<DecimalFormatSymbolsSettings> settings = service.settings().ofDecimalFormatSymbolsGroup();
-
-        //then
-        assertSame(settings, decimalFormatSymbolsSettingsOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(DecimalFormatSymbolsSettings.class),
-                eq(new String[]{"settings", "decimalFormatSymbols"}),
-                any(DefaultErrorHandler.class));
+            assertSame(settings, awsSettingsOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(AwsSettings.class),
+                    eq(new String[]{"settings", "awsSettings"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
     @Test
-    public void should_return_dashboard_settings_dto__operationResult_by_specified_method() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(DashboardSettings.class),
-                eq(new String[]{"settings", "dashboardSettings"}),
-                any(DefaultErrorHandler.class))).thenReturn(dashboardSettingsJerseyRequest);
-        PowerMockito.doReturn(dashboardSettingsOperationResult).when(dashboardSettingsJerseyRequest).get();
+    public void should_return_decimalFormatSymbol_settings_dto__operationResult_by_specified_method() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(DecimalFormatSymbolsSettings.class),
+                    eq(new String[]{"settings", "decimalFormatSymbols"}),
+                    any(DefaultErrorHandler.class))).thenReturn(decimalFormatSymbolsSettingsJerseyRequest);
+            doReturn(decimalFormatSymbolsSettingsOperationResult).when(decimalFormatSymbolsSettingsJerseyRequest).get();
 
-        OperationResult<DashboardSettings> settings = service.settings().ofDashboardGroup();
+            OperationResult<DecimalFormatSymbolsSettings> settings = service.settings().ofDecimalFormatSymbolsGroup();
 
-        //then
-        assertSame(settings, dashboardSettingsOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(DashboardSettings.class),
-                eq(new String[]{"settings", "dashboardSettings"}),
-                any(DefaultErrorHandler.class));
+            assertSame(settings, decimalFormatSymbolsSettingsOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(DecimalFormatSymbolsSettings.class),
+                    eq(new String[]{"settings", "decimalFormatSymbols"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
     @Test
-    public void should_return_globalConfiguration_settings_dto__operationResult_by_specified_method() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(GlobalConfigurationSettings.class),
-                eq(new String[]{"settings", "globalConfiguration"}),
-                any(DefaultErrorHandler.class))).thenReturn(globalConfigurationSettingsJerseyRequest);
-        PowerMockito.doReturn(globalConfigurationSettingsOperationResult).when(globalConfigurationSettingsJerseyRequest).get();
+    public void should_return_dashboard_settings_dto__operationResult_by_specified_method() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(DashboardSettings.class),
+                    eq(new String[]{"settings", "dashboardSettings"}),
+                    any(DefaultErrorHandler.class))).thenReturn(dashboardSettingsJerseyRequest);
+            doReturn(dashboardSettingsOperationResult).when(dashboardSettingsJerseyRequest).get();
 
-        OperationResult<GlobalConfigurationSettings> settings = service.settings().ofGlobalConfigurationGroup();
+            OperationResult<DashboardSettings> settings = service.settings().ofDashboardGroup();
 
-        //then
-        assertSame(settings, globalConfigurationSettingsOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(GlobalConfigurationSettings.class),
-                eq(new String[]{"settings", "globalConfiguration"}),
-                any(DefaultErrorHandler.class));
+            assertSame(settings, dashboardSettingsOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(DashboardSettings.class),
+                    eq(new String[]{"settings", "dashboardSettings"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
     @Test
-    public void should_return_dateTime_settings_dto__operationResult_by_specified_method() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(DateTimeSettings.class),
-                eq(new String[]{"settings", "dateTimeSettings"}),
-                any(DefaultErrorHandler.class))).thenReturn(dateTimeSettingsJerseyRequest);
-        PowerMockito.doReturn(dateTimeSettingsOperationResult).when(dateTimeSettingsJerseyRequest).get();
+    public void should_return_globalConfiguration_settings_dto__operationResult_by_specified_method() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(GlobalConfigurationSettings.class),
+                    eq(new String[]{"settings", "globalConfiguration"}),
+                    any(DefaultErrorHandler.class))).thenReturn(globalConfigurationSettingsJerseyRequest);
+            doReturn(globalConfigurationSettingsOperationResult).when(globalConfigurationSettingsJerseyRequest).get();
 
-        OperationResult<DateTimeSettings> settings = service.settings().ofDateTimeGroup();
+            OperationResult<GlobalConfigurationSettings> settings = service.settings().ofGlobalConfigurationGroup();
 
-        //then
-        assertSame(settings, dateTimeSettingsOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(DateTimeSettings.class),
-                eq(new String[]{"settings", "dateTimeSettings"}),
-                any(DefaultErrorHandler.class));
+            assertSame(settings, globalConfigurationSettingsOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(GlobalConfigurationSettings.class),
+                    eq(new String[]{"settings", "globalConfiguration"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
     @Test
-    public void should_return_inputControls_settings_dto__operationResult_by_specified_method() throws Exception {
-        //when
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(InputControlsSettings.class),
-                eq(new String[]{"settings", "inputControls"}),
-                any(DefaultErrorHandler.class))).thenReturn(inputControlsSettingsJerseyRequest);
-        PowerMockito.doReturn(inputControlsSettingsOperationResult).when(inputControlsSettingsJerseyRequest).get();
+    public void should_return_dateTime_settings_dto__operationResult_by_specified_method() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(DateTimeSettings.class),
+                    eq(new String[]{"settings", "dateTimeSettings"}),
+                    any(DefaultErrorHandler.class))).thenReturn(dateTimeSettingsJerseyRequest);
+            doReturn(dateTimeSettingsOperationResult).when(dateTimeSettingsJerseyRequest).get();
 
-        OperationResult<InputControlsSettings> settings = service.settings().ofInputControlsGroup();
+            OperationResult<DateTimeSettings> settings = service.settings().ofDateTimeGroup();
 
-        //then
-        assertSame(settings, inputControlsSettingsOperationResult);
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(eq(sessionStorageMock),
-                eq(InputControlsSettings.class),
-                eq(new String[]{"settings", "inputControls"}),
-                any(DefaultErrorHandler.class));
+            assertSame(settings, dateTimeSettingsOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(DateTimeSettings.class),
+                    eq(new String[]{"settings", "dateTimeSettings"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
     }
 
+    @Test
+    public void should_return_inputControls_settings_dto__operationResult_by_specified_method() {
+        try (MockedStatic<JerseyRequest> mockedStatic = Mockito.mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(InputControlsSettings.class),
+                    eq(new String[]{"settings", "inputControls"}),
+                    any(DefaultErrorHandler.class))).thenReturn(inputControlsSettingsJerseyRequest);
+            doReturn(inputControlsSettingsOperationResult).when(inputControlsSettingsJerseyRequest).get();
+
+            OperationResult<InputControlsSettings> settings = service.settings().ofInputControlsGroup();
+
+            assertSame(settings, inputControlsSettingsOperationResult);
+            mockedStatic.verify(() -> JerseyRequest.buildRequest(eq(sessionStorageMock),
+                    eq(InputControlsSettings.class),
+                    eq(new String[]{"settings", "inputControls"}),
+                    any(DefaultErrorHandler.class)), times(1));
+        }
+    }
 }

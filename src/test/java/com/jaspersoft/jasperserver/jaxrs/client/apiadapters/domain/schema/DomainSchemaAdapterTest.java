@@ -9,33 +9,28 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.enums.MimeType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import java.io.File;
-import java.util.List;
-import javax.ws.rs.core.MediaType;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.List;
+import jakarta.ws.rs.core.MediaType;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.reflect.Whitebox.getInternalState;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyNoMoreInteractions;
-import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
@@ -48,162 +43,155 @@ import static org.testng.Assert.assertSame;
  * @version $Id$
  * @see
  */
-@PrepareForTest({JerseyRequest.class})
-public class DomainSchemaAdapterTest extends PowerMockTestCase {
+@SuppressWarnings("unchecked")
+public class DomainSchemaAdapterTest {
 
     public static final String URI = "domainSchemaUri";
-    public static final List<String> path = asList("resources", URI);
+    public static final List<String> PATH = asList("resources", URI);
     public static final String CONTENT_TYPE = "application/repository.domainSchema+json";
+
     @Mock
     private SessionStorage sessionStorageMock;
-
+    @Mock
+    private RestClientConfiguration configurationMock;
     @Mock
     private JerseyRequest<Schema> requestMock;
-
     @Mock
     private OperationResult<Schema> resultMock;
-
     @Mock
     private JerseyRequest<ClientFile> fileJerseyRequestMock;
-
     @Mock
     private OperationResult<ClientFile> fileOperationResultMock;
 
+    private AutoCloseable mockitoSession;
+
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock, configurationMock, requestMock, resultMock,
+                fileJerseyRequestMock, fileOperationResultMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
-    public void should_pass_proper_session_storage_to_parent_class_and_set_own_fields() {
-
-        // When
+    public void should_pass_proper_session_storage_to_parent_class_and_set_own_fields() throws Exception {
         DomainSchemaAdapter adapter = new DomainSchemaAdapter(sessionStorageMock, URI);
-        List<String>  uri = (List<String> ) getInternalState(adapter, "path");
+        List<String> path = (List<String>) getInternalState(adapter, "path");
 
-        // Then
         assertNotNull(adapter);
-        assertEquals(uri, path);
+        assertEquals(path, PATH);
         assertSame(adapter.getSessionStorage(), sessionStorageMock);
     }
 
     @Test
-    public void should_invoke_private_method_and_return_a_mock_when_get() throws Exception {
-
-        // Given
-        DomainSchemaAdapter adapter = spy(new DomainSchemaAdapter(sessionStorageMock, URI));
-        RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
-        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
+    public void should_invoke_private_method_and_return_a_mock_when_get() {
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        doReturn(requestMock).when(requestMock).setAccept(CONTENT_TYPE);
-        doReturn(requestMock).when(adapter, "buildRequest");
-        doReturn(resultMock).when(requestMock).get();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
 
-        // When
-        adapter.get();
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(Schema.class),
+                    eq(new String[]{"resources", URI}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+            doReturn(resultMock).when(requestMock).get();
 
-        // Then
-        verifyPrivate(adapter, times(1)).invoke("buildRequest");
-        verify(requestMock, times(1)).get();
-        verify(requestMock, times(1)).setAccept(CONTENT_TYPE);
-        verifyNoMoreInteractions(requestMock);
+            new DomainSchemaAdapter(sessionStorageMock, URI).get();
+
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(Schema.class),
+                    eq(new String[]{"resources", URI}), any(DefaultErrorHandler.class)));
+            verify(requestMock).setAccept(CONTENT_TYPE);
+            verify(requestMock).get();
+            verifyNoMoreInteractions(requestMock);
+        }
     }
 
     @Test
-    public void should_invoke_private_method_and_return_a_mock_when_update() throws Exception {
+    public void should_invoke_private_method_and_return_a_mock_when_update() {
+        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
 
-        // Given
-        DomainSchemaAdapter adapter = spy(new DomainSchemaAdapter(sessionStorageMock, URI));
         Schema schema = new Schema();
 
-        RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
-        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
-        doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        doReturn(requestMock).when(requestMock).setContentType(CONTENT_TYPE);
-        doReturn(requestMock).when(adapter, "buildRequest");
-        doReturn(resultMock).when(requestMock).put(schema);
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(Schema.class),
+                    eq(new String[]{"resources", URI}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+            doReturn(resultMock).when(requestMock).put(schema);
 
-        // When
-        adapter.update(schema);
+            new DomainSchemaAdapter(sessionStorageMock, URI).update(schema);
 
-        // Then
-        verifyPrivate(adapter, times(1)).invoke("buildRequest");
-        verify(requestMock, times(1)).put(schema);
-        verify(requestMock, times(1)).setContentType(CONTENT_TYPE);
-        verifyNoMoreInteractions(requestMock);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(Schema.class),
+                    eq(new String[]{"resources", URI}), any(DefaultErrorHandler.class)));
+            verify(requestMock).setContentType(CONTENT_TYPE);
+            verify(requestMock).put(schema);
+            verifyNoMoreInteractions(requestMock);
+        }
     }
 
     @Test(enabled = true)
-    public void should_involve_protected_methods() throws Exception {
+    public void should_involve_protected_methods() {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(ClientFile.class),
+                    eq(new String[]{"resources", URI}))).thenReturn(fileJerseyRequestMock);
+            doReturn(fileOperationResultMock).when(fileJerseyRequestMock).post(any(FormDataMultiPart.class));
 
-        // Given
-        DomainSchemaAdapter adapter = spy(new DomainSchemaAdapter(sessionStorageMock, URI));
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientFile.class),
-                eq(new String[]{"resources", URI})))
-                .thenReturn(fileJerseyRequestMock);
-        doReturn(fileJerseyRequestMock).when(fileJerseyRequestMock).setContentType(MediaType.MULTIPART_FORM_DATA);
-        doReturn(fileOperationResultMock).when(fileJerseyRequestMock).post(any(FormDataMultiPart.class));
+            OperationResult<ClientFile> result = new DomainSchemaAdapter(sessionStorageMock, URI)
+                    .upload("path", "name", "description");
 
-        // When
-        OperationResult<ClientFile> result = adapter.upload("path", "name", "description");
-
-        // Then
-        assertEquals(fileOperationResultMock, result);
-        verify(fileJerseyRequestMock, times(1)).setContentType(MediaType.MULTIPART_FORM_DATA);
-        verify(fileJerseyRequestMock, times(1)).post(any(FormDataMultiPart.class));
-
+            assertEquals(fileOperationResultMock, result);
+            verify(fileJerseyRequestMock).setContentType(MediaType.MULTIPART_FORM_DATA);
+            verify(fileJerseyRequestMock).post(any(FormDataMultiPart.class));
+        }
     }
 
     @Test
-    public void should_invoke_private_method_and_return_a_mock_when_upload() throws Exception {
-
-        // Given
-        DomainSchemaAdapter adapter = spy(new DomainSchemaAdapter(sessionStorageMock, URI));
+    public void should_invoke_private_method_and_return_a_mock_when_upload() {
         File file = new File("path");
-        doReturn(resultMock)
-                .when(adapter).uploadFile(file, ClientFile.FileType.xml, "name", "description");
+        DomainSchemaAdapter spyAdapter = spy(new DomainSchemaAdapter(sessionStorageMock, URI));
+        doReturn(fileOperationResultMock).when(spyAdapter)
+                .uploadFile(file, ClientFile.FileType.xml, "name", "description");
 
-        // When
-        OperationResult<ClientFile> result = adapter.upload("path", "name", "description");
+        OperationResult<ClientFile> result = spyAdapter.upload("path", "name", "description");
 
-        // Then
-        verify(adapter, times(1)).uploadFile(file, ClientFile.FileType.xml, "name", "description");
-        assertEquals(resultMock, result);
+        verify(spyAdapter).uploadFile(file, ClientFile.FileType.xml, "name", "description");
+        assertEquals(fileOperationResultMock, result);
     }
-
 
     @Test
     public void should_involve_static_method() {
-
-        // Given
-        DomainSchemaAdapter schemaAdapter = new DomainSchemaAdapter(sessionStorageMock, URI);
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(Schema.class),
-                eq(new String[]{"resources", URI}), any(DefaultErrorHandler.class)))
-                .thenReturn(requestMock);
-        RestClientConfiguration configurationMock = mock(RestClientConfiguration.class);
-        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
+        // Verifies the URI is correctly split into path segments for the static buildRequest call
+        String multiSegmentUri = "a/b";
         doReturn(configurationMock).when(sessionStorageMock).getConfiguration();
-        doReturn(requestMock).when(requestMock).setAccept(CONTENT_TYPE);
-        doReturn(resultMock).when(requestMock).get();
+        doReturn(MimeType.JSON).when(configurationMock).getAcceptMimeType();
 
-        // When
-        OperationResult<Schema> retrieved = schemaAdapter.get();
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(eq(sessionStorageMock), eq(Schema.class),
+                    eq(new String[]{"resources", "a", "b"}), any(DefaultErrorHandler.class))).thenReturn(requestMock);
+            doReturn(resultMock).when(requestMock).get();
 
-        // Then
-        assertNotNull(retrieved);
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(eq(sessionStorageMock),
-                eq(Schema.class),
-                eq(new String[]{"resources", URI}),
-                any(DefaultErrorHandler.class));
-        verify(requestMock, times(1)).get();
-        verify(requestMock, times(1)).setAccept(CONTENT_TYPE);
-    }
+            OperationResult<Schema> retrieved = new DomainSchemaAdapter(sessionStorageMock, multiSegmentUri).get();
 
-    @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, requestMock, resultMock, fileJerseyRequestMock, fileOperationResultMock);
+            assertNotNull(retrieved);
+            assertSame(retrieved, resultMock);
+            mockedStatic.verify(() -> buildRequest(eq(sessionStorageMock), eq(Schema.class),
+                    eq(new String[]{"resources", "a", "b"}), any(DefaultErrorHandler.class)));
+            verify(requestMock).setAccept(CONTENT_TYPE);
+            verify(requestMock).get();
+        }
     }
 }

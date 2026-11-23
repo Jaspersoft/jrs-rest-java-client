@@ -24,7 +24,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.alerting.calender;
 //import com.jaspersoft.jasperserver.dto.job.ClientJobCalendar;
 import com.jaspersoft.jasperserver.dto.alerting.ClientAlertCalendar;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "reportJobCalendar")
 public class CronCalendar extends Calendar {

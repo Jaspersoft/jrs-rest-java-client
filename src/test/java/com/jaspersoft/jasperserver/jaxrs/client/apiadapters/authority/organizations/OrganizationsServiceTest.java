@@ -1,117 +1,107 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.authority.organizations;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientTenant;
-import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.reset;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-import static org.testng.AssertJUnit.assertSame;
+import java.lang.reflect.Field;
 
-@PrepareForTest({OrganizationsService.class,JerseyRequest.class})
-public class OrganizationsServiceTest extends PowerMockTestCase {
+import static org.mockito.Mockito.reset;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
+
+@SuppressWarnings("unchecked")
+public class OrganizationsServiceTest {
 
     @Mock
     private SessionStorage sessionStorageMock;
-    @Mock
-    private BatchOrganizationsAdapter batchOrganizationsAdapter;
-    @Mock
-    private SingleOrganizationAdapter singleOrganizationAdapter;
-    @Mock
-    private JerseyRequest<ClientTenant> jerseyRequestMock;
-    @Mock
-    private OperationResult<ClientTenant> operationResultMock;
+
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
-    public void should_return_proper_instance_of_BatchOrganizationsAdapter() throws Exception {
-
-        // Given
-        whenNew(BatchOrganizationsAdapter.class).withArguments(sessionStorageMock).thenReturn(batchOrganizationsAdapter);
+    public void should_return_proper_instance_of_BatchOrganizationsAdapter() {
         OrganizationsService service = new OrganizationsService(sessionStorageMock);
 
-        // When
         BatchOrganizationsAdapter retrieved = service.allOrganizations();
 
-        // Then
-        assertSame(retrieved, batchOrganizationsAdapter);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof BatchOrganizationsAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
     }
 
     @Test
     public void should_return_proper_instance_of_SingleOrganizationAdapter_by_organization_name() throws Exception {
-
-        // Given
-        ClientTenant clientTenant = new ClientTenant();
-        clientTenant.setId("orgId");
-        whenNew(SingleOrganizationAdapter.class).withArguments(sessionStorageMock, clientTenant).thenReturn(singleOrganizationAdapter);
         OrganizationsService service = new OrganizationsService(sessionStorageMock);
 
-        // When
         SingleOrganizationAdapter retrieved = service.organization("orgId");
 
-        // Then
-        assertSame(retrieved, singleOrganizationAdapter);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleOrganizationAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ClientTenant internalTenant = (ClientTenant) getInternalState(retrieved, "clientTenant");
+        assertSame(internalTenant.getId(), "orgId");
     }
 
     @Test
     public void should_return_proper_instance_of_SingleOrganizationAdapter_by_object() throws Exception {
-
-        // Given
         ClientTenant clientTenant = new ClientTenant();
         clientTenant.setId("orgId");
-        whenNew(SingleOrganizationAdapter.class).withArguments(sessionStorageMock, clientTenant).thenReturn(singleOrganizationAdapter);
         OrganizationsService service = new OrganizationsService(sessionStorageMock);
 
-        // When
         SingleOrganizationAdapter retrieved = service.organization(clientTenant);
 
-        // Then
-        assertSame(retrieved, singleOrganizationAdapter);
+        assertNotNull(retrieved);
+        assertTrue(retrieved instanceof SingleOrganizationAdapter);
+        assertSame(retrieved.getSessionStorage(), sessionStorageMock);
+        ClientTenant internalTenant = (ClientTenant) getInternalState(retrieved, "clientTenant");
+        assertSame(internalTenant, clientTenant);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exception_when_organization_is_null() throws Exception {
-
-        // Given
+    public void should_throw_exception_when_organization_is_null() {
         OrganizationsService service = new OrganizationsService(sessionStorageMock);
-
-        // When
         service.organization((ClientTenant) null);
     }
+
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exception_when_organization_id_is_null() throws Exception {
-
-        // Given
+    public void should_throw_exception_when_organization_id_is_null() {
         OrganizationsService service = new OrganizationsService(sessionStorageMock);
-
-        // When
         service.organization((String) null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void should_throw_exception_when_organization_id_is_empty() throws Exception {
-
-        // Given
+    public void should_throw_exception_when_organization_id_is_empty() {
         OrganizationsService service = new OrganizationsService(sessionStorageMock);
-
-        // When
         service.organization("");
-    }
-
-    @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, batchOrganizationsAdapter,operationResultMock, jerseyRequestMock, singleOrganizationAdapter);
     }
 }

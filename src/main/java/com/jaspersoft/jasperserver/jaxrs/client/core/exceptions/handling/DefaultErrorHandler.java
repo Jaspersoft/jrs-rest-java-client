@@ -34,8 +34,8 @@ import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.ResourceNotFound
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;

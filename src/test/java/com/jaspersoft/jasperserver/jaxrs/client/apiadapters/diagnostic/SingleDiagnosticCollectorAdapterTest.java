@@ -1,35 +1,31 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.diagnostic;
 
-
 import com.jaspersoft.jasperserver.dto.common.PatchDescriptor;
 import com.jaspersoft.jasperserver.dto.logcapture.CollectorSettings;
 import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
 import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.exceptions.handling.DefaultErrorHandler;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import java.io.InputStream;
 import org.mockito.Mock;
-import org.powermock.reflect.Whitebox;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.io.InputStream;
+import java.lang.reflect.Field;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
-import static org.testng.AssertJUnit.assertNotNull;
 
 /**
  * <p/>
@@ -39,8 +35,9 @@ import static org.testng.AssertJUnit.assertNotNull;
  * @version $Id$
  * @see
  */
-@PrepareForTest(JerseyRequest.class)
-public class SingleDiagnosticCollectorAdapterTest extends PowerMockTestCase {
+@SuppressWarnings("unchecked")
+public class SingleDiagnosticCollectorAdapterTest {
+
     @Mock
     private SessionStorage sessionStorageMock;
     @Mock
@@ -52,223 +49,212 @@ public class SingleDiagnosticCollectorAdapterTest extends PowerMockTestCase {
     @Mock
     private OperationResult<InputStream> operationResultContentMock;
 
+    private AutoCloseable mockitoSession;
+
     @BeforeMethod
     public void before() {
-        initMocks(this);
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        mockitoSession.close();
+        reset(sessionStorageMock, jerseyRequestMock, jerseyRequestContentMock,
+                operationResultMock, operationResultContentMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
     public void should_set_proper_session_storage() {
-        // When
-        SingleDiagnosticCollectorAdapter adapter = new SingleDiagnosticCollectorAdapter(sessionStorageMock, new CollectorSettings());
-        //Then
-        assertSame(Whitebox.getInternalState(adapter, "sessionStorage"), sessionStorageMock);
+        SingleDiagnosticCollectorAdapter adapter =
+                new SingleDiagnosticCollectorAdapter(sessionStorageMock, new CollectorSettings());
+        assertSame(adapter.getSessionStorage(), sessionStorageMock);
     }
 
-
     @Test
-    public void should_set_proper_collector() {
-        // When
+    public void should_set_proper_collector() throws Exception {
         CollectorSettings collectorSettings = new CollectorSettings();
-        SingleDiagnosticCollectorAdapter adapter = new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettings);
-        //Then
-        assertSame(Whitebox.getInternalState(adapter, "collector"), collectorSettings);
+        SingleDiagnosticCollectorAdapter adapter =
+                new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettings);
+        assertSame(getInternalState(adapter, "collector"), collectorSettings);
     }
 
     @Test
     public void should_return_proper_operation_result_when_create() {
-        // Given
         CollectorSettings collectorSettingsMock = mock(CollectorSettings.class);
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettings.class),
-                eq(new String[]{"diagnostic", "collectors"}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).post(collectorSettingsMock);
 
-        SingleDiagnosticCollectorAdapter adapter = new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock);
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettings.class),
+                    eq(new String[]{"diagnostic", "collectors"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(operationResultMock).when(jerseyRequestMock).post(collectorSettingsMock);
 
-        // When /
-        OperationResult<CollectorSettings> retrieved = adapter.create();
+            OperationResult<CollectorSettings> retrieved =
+                    new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock).create();
 
-        // Then /
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-        verify(jerseyRequestMock).post(collectorSettingsMock);
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettings.class),
-                eq(new String[]{"diagnostic", "collectors"}),
-                any(DefaultErrorHandler.class));
-
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettings.class),
+                    eq(new String[]{"diagnostic", "collectors"}),
+                    any(DefaultErrorHandler.class)));
+            verify(jerseyRequestMock).post(collectorSettingsMock);
+        }
     }
 
     @Test
     public void should_return_proper_operation_result_when_delete() {
-        // Given
         CollectorSettings collectorSettingsMock = mock(CollectorSettings.class);
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettings.class),
-                eq(new String[]{"diagnostic", "collectors", "someId"}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).delete();
         doReturn("someId").when(collectorSettingsMock).getId();
 
-        SingleDiagnosticCollectorAdapter adapter = new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock);
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettings.class),
+                    eq(new String[]{"diagnostic", "collectors", "someId"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(operationResultMock).when(jerseyRequestMock).delete();
 
-        // When /
-        OperationResult<CollectorSettings> retrieved = adapter.delete();
+            OperationResult<CollectorSettings> retrieved =
+                    new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock).delete();
 
-        // Then /
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-        verify(jerseyRequestMock).delete();
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettings.class),
-                eq(new String[]{"diagnostic", "collectors", "someId"}),
-                any(DefaultErrorHandler.class));
-
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettings.class),
+                    eq(new String[]{"diagnostic", "collectors", "someId"}),
+                    any(DefaultErrorHandler.class)));
+            verify(jerseyRequestMock).delete();
+        }
     }
-
 
     @Test
     public void should_return_proper_operation_result_when_get_collector_metadata() {
-        // Given
         CollectorSettings collectorSettingsMock = mock(CollectorSettings.class);
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettings.class),
-                eq(new String[]{"diagnostic", "collectors", "someId"}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).get();
         doReturn("someId").when(collectorSettingsMock).getId();
 
-        SingleDiagnosticCollectorAdapter adapter = new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock);
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettings.class),
+                    eq(new String[]{"diagnostic", "collectors", "someId"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(operationResultMock).when(jerseyRequestMock).get();
 
-        // When /
-        OperationResult<CollectorSettings> retrieved = adapter.collectorSettings();
+            OperationResult<CollectorSettings> retrieved =
+                    new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock).collectorSettings();
 
-        // Then /
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-        verify(jerseyRequestMock).get();
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettings.class),
-                eq(new String[]{"diagnostic", "collectors", "someId"}),
-                any(DefaultErrorHandler.class));
-
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettings.class),
+                    eq(new String[]{"diagnostic", "collectors", "someId"}),
+                    any(DefaultErrorHandler.class)));
+            verify(jerseyRequestMock).get();
+        }
     }
 
     @Test
     public void should_return_proper_operation_result_when_update_collector() {
-        // Given
         CollectorSettings collectorSettingsMock = mock(CollectorSettings.class);
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettings.class),
-                eq(new String[]{"diagnostic", "collectors", "someId"}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(operationResultMock).when(jerseyRequestMock).put(collectorSettingsMock);
         doReturn("someId").when(collectorSettingsMock).getId();
 
-        SingleDiagnosticCollectorAdapter adapter = new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock);
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettings.class),
+                    eq(new String[]{"diagnostic", "collectors", "someId"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(operationResultMock).when(jerseyRequestMock).put(collectorSettingsMock);
 
-        // When /
-        OperationResult<CollectorSettings> retrieved = adapter.updateCollectorSettings(collectorSettingsMock);
+            OperationResult<CollectorSettings> retrieved =
+                    new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock)
+                            .updateCollectorSettings(collectorSettingsMock);
 
-        // Then /
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-        verify(jerseyRequestMock).put(collectorSettingsMock);
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettings.class),
-                eq(new String[]{"diagnostic", "collectors", "someId"}),
-                any(DefaultErrorHandler.class));
-
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettings.class),
+                    eq(new String[]{"diagnostic", "collectors", "someId"}),
+                    any(DefaultErrorHandler.class)));
+            verify(jerseyRequestMock).put(collectorSettingsMock);
+        }
     }
 
     @Test
     public void should_return_proper_operation_result_when_update_collector_settings() {
-        // Given
         CollectorSettings collectorSettingsMock = mock(CollectorSettings.class);
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettings.class),
-                eq(new String[]{"diagnostic", "collectors", "someId"}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
-        doReturn(jerseyRequestMock).when(jerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
-        doReturn(operationResultMock).when(jerseyRequestMock).post(any(PatchDescriptor.class));
         doReturn("someId").when(collectorSettingsMock).getId();
 
-        SingleDiagnosticCollectorAdapter adapter = new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock);
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettings.class),
+                    eq(new String[]{"diagnostic", "collectors", "someId"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestMock);
+            doReturn(jerseyRequestMock).when(jerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
+            doReturn(operationResultMock).when(jerseyRequestMock).post(any(PatchDescriptor.class));
 
-        // When /
-        OperationResult<CollectorSettings> retrieved = adapter.updateCollectorSettings(new PatchDescriptor());
+            OperationResult<CollectorSettings> retrieved =
+                    new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock)
+                            .updateCollectorSettings(new PatchDescriptor());
 
-        // Then /
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultMock);
-        verify(jerseyRequestMock).post(any(PatchDescriptor.class));
-        verify(jerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(CollectorSettings.class),
-                eq(new String[]{"diagnostic", "collectors", "someId"}),
-                any(DefaultErrorHandler.class));
-
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(CollectorSettings.class),
+                    eq(new String[]{"diagnostic", "collectors", "someId"}),
+                    any(DefaultErrorHandler.class)));
+            verify(jerseyRequestMock).addHeader("X-HTTP-Method-Override", "PATCH");
+            verify(jerseyRequestMock).post(any(PatchDescriptor.class));
+        }
     }
-
 
     @Test
     public void should_return_proper_operation_result_when_get_collector_content() {
-        // Given
         CollectorSettings collectorSettingsMock = mock(CollectorSettings.class);
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(
-                eq(sessionStorageMock),
-                eq(InputStream.class),
-                eq(new String[]{"diagnostic", "collectors", "someId", "content"}),
-                any(DefaultErrorHandler.class))).thenReturn(jerseyRequestContentMock);
-        doReturn(jerseyRequestContentMock).when(jerseyRequestContentMock).setAccept("application/zip");
-        doReturn(operationResultContentMock).when(jerseyRequestContentMock).get();
         doReturn("someId").when(collectorSettingsMock).getId();
 
-        SingleDiagnosticCollectorAdapter adapter = new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock);
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(InputStream.class),
+                    eq(new String[]{"diagnostic", "collectors", "someId", "content"}),
+                    any(DefaultErrorHandler.class))).thenReturn(jerseyRequestContentMock);
+            doReturn(operationResultContentMock).when(jerseyRequestContentMock).get();
 
-        // When /
-        OperationResult<InputStream> retrieved = adapter.collectorContent();
+            OperationResult<InputStream> retrieved =
+                    new SingleDiagnosticCollectorAdapter(sessionStorageMock, collectorSettingsMock).collectorContent();
 
-        // Then /
-        assertNotNull(retrieved);
-        assertSame(retrieved, operationResultContentMock);
-        verify(jerseyRequestContentMock).setAccept("application/zip");
-        verify(jerseyRequestContentMock).get();
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(
-                eq(sessionStorageMock),
-                eq(InputStream.class),
-                eq(new String[]{"diagnostic", "collectors", "someId", "content"}),
-                any(DefaultErrorHandler.class));
-
+            assertNotNull(retrieved);
+            assertSame(retrieved, operationResultContentMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(InputStream.class),
+                    eq(new String[]{"diagnostic", "collectors", "someId", "content"}),
+                    any(DefaultErrorHandler.class)));
+            verify(jerseyRequestContentMock).setAccept("application/zip");
+            verify(jerseyRequestContentMock).get();
+        }
     }
-
-    @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, jerseyRequestMock, jerseyRequestContentMock, operationResultMock, operationResultContentMock);
-    }
-
 }

@@ -32,15 +32,16 @@ import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationIntrospector;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.jaxrs.client.core.enums.ContextMediaTypes;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.Provider;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
@@ -293,11 +294,17 @@ public class CustomRepresentationTypeProvider extends JacksonJaxbJsonProvider {
                     mapper.addHandler(new DeserializationProblemHandler() {
                         @Override
                         public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser jp,
-                                                             JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName) {
+                                                             JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName)
+                                throws IOException {
+                            // Returning true tells Jackson the value was consumed here, so it must
+                            // actually be skipped. Otherwise the parser is left on the unknown value and
+                            // reading fails ("Trailing token ... FAIL_ON_TRAILING_TOKENS"), which
+                            // OperationResult.getEntity() turns into a null entity.
+                            jp.skipChildren();
                             return true;
                         }
                     });
-                    AnnotationIntrospector primary = new JaxbAnnotationIntrospector(mapper.getTypeFactory());
+                    AnnotationIntrospector primary = new JakartaXmlBindAnnotationIntrospector(mapper.getTypeFactory());
                     AnnotationIntrospector secondary = new JacksonAnnotationIntrospector();
                     AnnotationIntrospector pair = AnnotationIntrospector.pair(primary, secondary);
                     mapper.setAnnotationIntrospector(pair);

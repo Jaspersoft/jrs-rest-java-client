@@ -22,7 +22,7 @@
 package com.jaspersoft.jasperserver.jaxrs.client.dto.jobs.calendar;
 
 import com.jaspersoft.jasperserver.dto.job.ClientJobCalendar;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "reportJobCalendar")
 public class DailyCalendar extends Calendar {

@@ -23,7 +23,7 @@ package com.jaspersoft.jasperserver.jaxrs.client.dto.reports;
 
 import com.jaspersoft.jasperserver.dto.common.DeepCloneable;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Arrays;
 
 @XmlRootElement(name = "outputResource")

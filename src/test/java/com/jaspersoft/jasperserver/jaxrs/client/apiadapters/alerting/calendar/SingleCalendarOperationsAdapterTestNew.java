@@ -1,46 +1,45 @@
 package com.jaspersoft.jasperserver.jaxrs.client.apiadapters.alerting.calendar;
 
 import com.jaspersoft.jasperserver.dto.alerting.ClientAlertCalendar;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.alerting.calendar.CalendarParameter;
-import com.jaspersoft.jasperserver.jaxrs.client.apiadapters.alerting.calendar.SingleCalendarOperationsAdapter;
-import com.jaspersoft.jasperserver.jaxrs.client.core.*;
+import com.jaspersoft.jasperserver.jaxrs.client.core.Callback;
+import com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest;
+import com.jaspersoft.jasperserver.jaxrs.client.core.RequestExecution;
+import com.jaspersoft.jasperserver.jaxrs.client.core.SessionStorage;
 import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.OperationResult;
-import com.jaspersoft.jasperserver.jaxrs.client.core.operationresult.WithEntityOperationResult;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.jaspersoft.jasperserver.jaxrs.client.core.JerseyRequest.buildRequest;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.*;
-import static org.testng.AssertJUnit.*;
-
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertSame;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Unit tests for {@link SingleCalendarOperationsAdapter}
  */
-@PrepareForTest({JerseyRequest.class, SingleCalendarOperationsAdapter.class, MultivaluedHashMap.class})
-public class SingleCalendarOperationsAdapterTestNew extends PowerMockTestCase {
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class SingleCalendarOperationsAdapterTestNew {
+
+    private static final String CALENDAR_NAME = "testCalendarName";
+    private static final String[] CALENDAR_PATH = {"alerts", "calendars", CALENDAR_NAME};
 
     @Mock
     private SessionStorage sessionStorageMock;
@@ -58,305 +57,300 @@ public class SingleCalendarOperationsAdapterTestNew extends PowerMockTestCase {
     private OperationResult<ClientAlertCalendar> operationResultMock;
 
     @Mock
-    private ClientAlertCalendar reportAlertCalendarMock;
-
-    @Mock
-    private Response responseMock;
-
-    @Mock
-    private RequestBuilder<ClientAlertCalendar> builderMock;
-
-    @Mock
-    private WithEntityOperationResult<ClientAlertCalendar> withEntityOperationResultMock;
-
-    @Mock
     private ClientAlertCalendar calendarEntityMock;
 
-    @Mock
-    private Callback<OperationResult<ClientAlertCalendar>, Object> callbackMock;
-
-    @Mock
-    private Callback<OperationResult<ClientAlertCalendar>, Object> callbackMock3;
-
-    @Mock
-    private Callback<OperationResult, Object> resultObjectCallbackMock;
-
-    private MultivaluedHashMap<String, String> paramsSpy;
+    private AutoCloseable mockitoSession;
 
     @BeforeMethod
     public void before() {
-        initMocks(this);
-        paramsSpy = spy(new MultivaluedHashMap<String, String>());
+        mockitoSession = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void after() throws Exception {
+        mockitoSession.close();
+        Mockito.reset(sessionStorageMock, requestMock, objRequestMock, delResultMock,
+                operationResultMock, calendarEntityMock);
+    }
+
+    private Object getInternalState(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 
     @Test
-    public void should_pass_proper_params_to_super_class() {
+    public void should_pass_proper_params_to_super_class() throws Exception {
+        SingleCalendarOperationsAdapter adapter =
+                new SingleCalendarOperationsAdapter(sessionStorageMock, CALENDAR_NAME);
 
-        // When
-        SingleCalendarOperationsAdapter calendarOperationsAdapter =
-                new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName");
-
-        // Then
-        assertSame(calendarOperationsAdapter.getSessionStorage(), sessionStorageMock);
-        Object calendarName = Whitebox.getInternalState(calendarOperationsAdapter, "calendarName");
-        Object params = Whitebox.getInternalState(calendarOperationsAdapter, "params");
+        assertSame(adapter.getSessionStorage(), sessionStorageMock);
+        Object calendarName = getInternalState(adapter, "calendarName");
+        Object params = getInternalState(adapter, "params");
 
         assertNotNull(params);
-        assertSame(calendarName, "testCalendarName");
-
+        assertSame(CALENDAR_NAME, calendarName);
         assertTrue(instanceOf(String.class).matches(calendarName));
         assertTrue(instanceOf(MultivaluedHashMap.class).matches(params));
-
-
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void should_set_parameter_field_of_adapter() {
+    public void should_set_parameter_field_of_adapter() throws Exception {
+        SingleCalendarOperationsAdapter adapter =
+                new SingleCalendarOperationsAdapter(sessionStorageMock, "MyCal");
 
-        // Given
-        SingleCalendarOperationsAdapter adapter = new SingleCalendarOperationsAdapter(sessionStorageMock, "MyCal");
-
-        // When
         adapter.parameter(CalendarParameter.REPLACE, "true");
-        MultivaluedMap<String, String> params = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapter, "params");
 
-        // Then
-        Assert.assertTrue(Boolean.valueOf(params.get("replace").get(0)));
-    }
-
-    @Test(enabled = true)
-    public void parameter() throws Exception {
-
-        // Given
-        PowerMockito.whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(paramsSpy);
-        SingleCalendarOperationsAdapter adapterSpy = Mockito.spy(new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName"));
-
-        // When
-        SingleCalendarOperationsAdapter retrieved = adapterSpy.parameter(CalendarParameter.UPDATE_TRIGGERS, "testValue");
-
-        // Then
-        verify(adapterSpy, times(1)).parameter(CalendarParameter.UPDATE_TRIGGERS, "testValue");
-        verify(paramsSpy, times(1)).add(CalendarParameter.UPDATE_TRIGGERS.getName(), "testValue");
-        verify(paramsSpy, never()).getFirst(anyString());
-
-        Assert.assertSame(retrieved, adapterSpy);
-        Assert.assertTrue(paramsSpy.size() == 1);
+        MultivaluedMap<String, String> params =
+                (MultivaluedMap<String, String>) getInternalState(adapter, "params");
+        Assert.assertTrue(Boolean.parseBoolean(params.getFirst(CalendarParameter.REPLACE.getName())));
     }
 
     @Test
-    public void get() throws Exception {
+    public void parameter_should_add_to_params_and_return_self() throws Exception {
+        SingleCalendarOperationsAdapter adapter =
+                new SingleCalendarOperationsAdapter(sessionStorageMock, CALENDAR_NAME);
 
-        // Given
-          SingleCalendarOperationsAdapter adapterSpy = spy(new SingleCalendarOperationsAdapter(sessionStorageMock,
-        "testCalendarName"));
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock), eq(ClientAlertCalendar.class),
-                eq(new String[]{"alerts", "calendars", "testCalendarName"}))).thenReturn(requestMock);
-        doReturn(operationResultMock).when(requestMock).get();
+        SingleCalendarOperationsAdapter retrieved =
+                adapter.parameter(CalendarParameter.UPDATE_TRIGGERS, "testValue");
 
-        // When
-        OperationResult<ClientAlertCalendar> retrieved = adapterSpy.getCalendar();
-
-        // Then
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(eq(sessionStorageMock), eq(ClientAlertCalendar.class),
-                eq(new String[]{"alerts", "calendars", "testCalendarName"}));
-        assertSame(retrieved, operationResultMock);
+        assertSame(retrieved, adapter);
+        MultivaluedMap<String, String> params =
+                (MultivaluedMap<String, String>) getInternalState(adapter, "params");
+        Assert.assertEquals(params.size(), 1);
+        Assert.assertNotNull(params.getFirst(CalendarParameter.UPDATE_TRIGGERS.getName()));
     }
 
     @Test
-    public void delete() throws Exception {
+    public void get() {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(ClientAlertCalendar.class),
+                    eq(CALENDAR_PATH))).thenReturn(requestMock);
+            doReturn(operationResultMock).when(requestMock).get();
 
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(Object.class),
-                eq(new String[]{"alerts", "calendars", "testCalendarName"}))).thenReturn(objRequestMock);
-        doReturn(delResultMock).when(objRequestMock).delete();
-        SingleCalendarOperationsAdapter adapterSpy = spy(new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName"));
+            SingleCalendarOperationsAdapter adapter =
+                    new SingleCalendarOperationsAdapter(sessionStorageMock, CALENDAR_NAME);
+            OperationResult<ClientAlertCalendar> retrieved = adapter.getCalendar();
 
-        // When
-        OperationResult retrieved = adapterSpy.delete();
-
-        // Then
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(eq(sessionStorageMock), eq(Object.class), eq(new String[]{"alerts", "calendars", "testCalendarName"}));
-        assertSame(retrieved, delResultMock);
+            assertSame(retrieved, operationResultMock);
+            verify(requestMock, times(1)).get();
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(ClientAlertCalendar.class),
+                    eq(CALENDAR_PATH)), times(1));
+        }
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void createNew() {
+    public void delete() {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(Object.class),
+                    eq(CALENDAR_PATH))).thenReturn(objRequestMock);
+            doReturn(delResultMock).when(objRequestMock).delete();
 
-        // Given
-        mockStatic(JerseyRequest.class);
-        when(buildRequest(eq(sessionStorageMock),
-                eq(ClientAlertCalendar.class),
-                eq(new String[]{"alerts", "calendars", "testCalendarName"}))).thenReturn(requestMock);
-        PowerMockito.when(requestMock.put(calendarEntityMock)).thenReturn(operationResultMock);
-        SingleCalendarOperationsAdapter adapterSpy = spy(new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName"));
+            SingleCalendarOperationsAdapter adapter =
+                    new SingleCalendarOperationsAdapter(sessionStorageMock, CALENDAR_NAME);
+            OperationResult retrieved = adapter.delete();
 
-        // When
-        OperationResult<ClientAlertCalendar> retrieved = adapterSpy.createNewCalendar(calendarEntityMock);
-
-        // Then
-        verifyStatic(JerseyRequest.class, times(1));
-        buildRequest(eq(sessionStorageMock),
-                eq(ClientAlertCalendar.class),
-                eq(new String[]{"alerts", "calendars", "testCalendarName"}));
-        assertSame(retrieved, operationResultMock);
-
-        MultivaluedMap<String, String> retrievedParams = (MultivaluedMap<String, String>) Whitebox.getInternalState(adapterSpy, "params");
-        Mockito.verify(requestMock).addParams(retrievedParams);
-        Mockito.verify(requestMock).put(calendarEntityMock);
+            assertSame(retrieved, delResultMock);
+            verify(objRequestMock, times(1)).delete();
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(Object.class),
+                    eq(CALENDAR_PATH)), times(1));
+        }
     }
 
     @Test
-    public void asyncGet() throws Exception {
+    public void createNew() throws Exception {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(ClientAlertCalendar.class),
+                    eq(CALENDAR_PATH))).thenReturn(requestMock);
+            doReturn(requestMock).when(requestMock).addParams(Mockito.any());
+            doReturn(operationResultMock).when(requestMock).put(calendarEntityMock);
 
-        // Given
+            SingleCalendarOperationsAdapter adapter =
+                    new SingleCalendarOperationsAdapter(sessionStorageMock, CALENDAR_NAME);
+            MultivaluedMap<String, String> internalParams =
+                    (MultivaluedMap<String, String>) getInternalState(adapter, "params");
+            OperationResult<ClientAlertCalendar> retrieved = adapter.createNewCalendar(calendarEntityMock);
+
+            assertSame(retrieved, operationResultMock);
+            verify(requestMock).addParams(internalParams);
+            verify(requestMock).put(calendarEntityMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(ClientAlertCalendar.class),
+                    eq(CALENDAR_PATH)), times(1));
+        }
+    }
+
+    @Test
+    public void asyncGet() throws InterruptedException {
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(
-                buildRequest(
-                        eq(sessionStorageMock),
-                        eq(ClientAlertCalendar.class),
-                        eq(new String[]{"alerts", "calendars", "testCalendarName"})))
-                .thenReturn(requestMock);
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(ClientAlertCalendar.class),
+                    eq(CALENDAR_PATH))).thenReturn(requestMock);
+            doReturn(operationResultMock).when(requestMock).get();
 
-        SingleCalendarOperationsAdapter adapterSpy = spy(new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName"));
+            final Callback<OperationResult<ClientAlertCalendar>, Void> callback =
+                    spy(new Callback<OperationResult<ClientAlertCalendar>, Void>() {
+                        @Override
+                        public Void execute(OperationResult<ClientAlertCalendar> data) {
+                            newThreadId.set((int) Thread.currentThread().getId());
+                            synchronized (this) {
+                                this.notify();
+                            }
+                            return null;
+                        }
+                    });
 
-        Callback<OperationResult<ClientAlertCalendar>, Void> callback = PowerMockito.spy(new Callback<OperationResult<ClientAlertCalendar>, Void>() {
-            public Void execute(OperationResult<ClientAlertCalendar> data) {
-                newThreadId.set((int) Thread.currentThread().getId());
-                synchronized (this) {
-                    this.notify();
-                }
-                return null;
+            SingleCalendarOperationsAdapter adapter =
+                    new SingleCalendarOperationsAdapter(sessionStorageMock, CALENDAR_NAME);
+            RequestExecution retrieved = adapter.asyncGetCalendar(callback);
+
+            synchronized (callback) {
+                callback.wait(1000);
             }
-        });
 
-        PowerMockito.doReturn(operationResultMock).when(requestMock).get();
-        PowerMockito.doNothing().when(callback).execute(operationResultMock);
-
-        // When
-        RequestExecution retrieved = adapterSpy.asyncGetCalendar(callback);
-
-        // Wait
-        synchronized (callback) {
-            callback.wait(500);
+            Assert.assertNotNull(retrieved);
+            Assert.assertNotEquals(newThreadId.get(), currentThreadId);
+            verify(callback).execute(operationResultMock);
         }
-
-        // Then
-        Assert.assertNotNull(retrieved);
-        Assert.assertNotSame(currentThreadId, newThreadId.get());
-    }
-
-    @Test(enabled = true)
-    public void asyncDelete() throws Exception {
-
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(
-                buildRequest(
-                        eq(sessionStorageMock),
-                        eq(Object.class),
-                        eq(new String[]{"alerts", "calendars", "testCalendarName"})))
-                .thenReturn(objRequestMock);
-
-        SingleCalendarOperationsAdapter adapterSpy = spy(new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName"));
-        PowerMockito.doReturn(delResultMock).when(objRequestMock).delete();
-        PowerMockito.doReturn(new Object()).when(resultObjectCallbackMock).execute(delResultMock);
-
-        // When
-        adapterSpy.asyncDelete(resultObjectCallbackMock);
-
-        // Then
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(
-                eq(sessionStorageMock),
-                eq(Object.class),
-                eq(new String[]{"alerts", "calendars", "testCalendarName"}));
-
     }
 
     @Test
-    public void asyncCreateNew() throws Exception {
+    public void asyncDelete() throws InterruptedException {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(Object.class),
+                    eq(CALENDAR_PATH))).thenReturn(objRequestMock);
+            doReturn(delResultMock).when(objRequestMock).delete();
 
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.whenNew(MultivaluedHashMap.class).withNoArguments().thenReturn(paramsSpy);
-        PowerMockito.when(
-                buildRequest(
-                        eq(sessionStorageMock),
-                        eq(ClientAlertCalendar.class),
-                        eq(new String[]{"alerts", "calendars", "testCalendarName"})))
-                .thenReturn(requestMock);
+            final Callback<OperationResult, Object> callback =
+                    spy(new Callback<OperationResult, Object>() {
+                        @Override
+                        public Object execute(OperationResult data) {
+                            synchronized (this) {
+                                this.notify();
+                            }
+                            return null;
+                        }
+                    });
 
-        SingleCalendarOperationsAdapter adapterSpy = PowerMockito.spy(new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName"));
+            SingleCalendarOperationsAdapter adapter =
+                    new SingleCalendarOperationsAdapter(sessionStorageMock, CALENDAR_NAME);
+            RequestExecution retrieved = adapter.asyncDelete(callback);
 
-        PowerMockito.doReturn(operationResultMock).when(requestMock).put(calendarEntityMock);
-        PowerMockito.doReturn(new Object()).when(callbackMock3).execute(operationResultMock);
-        PowerMockito.doReturn(builderMock).when(requestMock).addParams(paramsSpy);
-        // When
-        adapterSpy.asyncCreateNewCalendar(calendarEntityMock, callbackMock3);
+            synchronized (callback) {
+                callback.wait(1000);
+            }
 
-        // Then
-        verifyStatic(JerseyRequest.class, times(1));
-        JerseyRequest.buildRequest(
-                eq(sessionStorageMock),
-                eq(ClientAlertCalendar.class),
-                eq(new String[]{"alerts", "calendars", "testCalendarName"}));
+            Assert.assertNotNull(retrieved);
+            verify(objRequestMock).delete();
+            verify(callback).execute(delResultMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(Object.class),
+                    eq(CALENDAR_PATH)), times(1));
+        }
+    }
+
+    @Test
+    public void asyncCreateNew() throws InterruptedException {
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(ClientAlertCalendar.class),
+                    eq(CALENDAR_PATH))).thenReturn(requestMock);
+            doReturn(requestMock).when(requestMock).addParams(Mockito.any());
+            doReturn(operationResultMock).when(requestMock).put(calendarEntityMock);
+
+            final Callback<OperationResult<ClientAlertCalendar>, Object> callback =
+                    spy(new Callback<OperationResult<ClientAlertCalendar>, Object>() {
+                        @Override
+                        public Object execute(OperationResult<ClientAlertCalendar> data) {
+                            synchronized (this) {
+                                this.notify();
+                            }
+                            return null;
+                        }
+                    });
+
+            SingleCalendarOperationsAdapter adapter =
+                    new SingleCalendarOperationsAdapter(sessionStorageMock, CALENDAR_NAME);
+            RequestExecution retrieved = adapter.asyncCreateNewCalendar(calendarEntityMock, callback);
+
+            synchronized (callback) {
+                callback.wait(1000);
+            }
+
+            Assert.assertNotNull(retrieved);
+            verify(requestMock).addParams(Mockito.any(MultivaluedMap.class));
+            verify(requestMock).put(calendarEntityMock);
+            verify(callback).execute(operationResultMock);
+            mockedStatic.verify(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(ClientAlertCalendar.class),
+                    eq(CALENDAR_PATH)), times(1));
+        }
     }
 
     @Test
     public void should_delete_calendar_asynchronously() throws InterruptedException {
-
-        /* Given */
-        PowerMockito.mockStatic(JerseyRequest.class);
-        PowerMockito.when(buildRequest(eq(sessionStorageMock),
-                eq(Object.class),
-                eq(new String[]{"alerts", "calendars", "testCalendarName"}))).thenReturn(objRequestMock);
-
-        PowerMockito.doReturn(delResultMock).when(objRequestMock).delete();
-
         final AtomicInteger newThreadId = new AtomicInteger();
         final int currentThreadId = (int) Thread.currentThread().getId();
 
-        final Callback<OperationResult, Void> callback = PowerMockito.spy(new Callback<OperationResult, Void>() {
-            @Override
-            public Void execute(OperationResult data) {
-                newThreadId.set((int) Thread.currentThread().getId());
-                synchronized (this) {
-                    this.notify();
-                }
-                return null;
+        try (MockedStatic<JerseyRequest> mockedStatic = mockStatic(JerseyRequest.class)) {
+            mockedStatic.when(() -> buildRequest(
+                    eq(sessionStorageMock),
+                    eq(Object.class),
+                    eq(CALENDAR_PATH))).thenReturn(objRequestMock);
+            doReturn(delResultMock).when(objRequestMock).delete();
+
+            final Callback<OperationResult, Void> callback =
+                    spy(new Callback<OperationResult, Void>() {
+                        @Override
+                        public Void execute(OperationResult data) {
+                            newThreadId.set((int) Thread.currentThread().getId());
+                            synchronized (this) {
+                                this.notify();
+                            }
+                            return null;
+                        }
+                    });
+
+            SingleCalendarOperationsAdapter adapter =
+                    new SingleCalendarOperationsAdapter(sessionStorageMock, CALENDAR_NAME);
+            RequestExecution retrieved = adapter.asyncDelete(callback);
+
+            synchronized (callback) {
+                callback.wait(1000);
             }
-        });
 
-        SingleCalendarOperationsAdapter adapterSpy = PowerMockito.spy(new SingleCalendarOperationsAdapter(sessionStorageMock, "testCalendarName"));
-
-        /* When */
-        RequestExecution retrieved = adapterSpy.asyncDelete(callback);
-
-        /* Wait */
-        synchronized (callback) {
-            callback.wait(500);
+            Assert.assertNotNull(retrieved);
+            Assert.assertNotEquals(newThreadId.get(), currentThreadId);
+            verify(objRequestMock).delete();
+            verify(callback).execute(delResultMock);
         }
-
-        /* Then */
-        Assert.assertNotNull(retrieved);
-        Assert.assertNotSame(currentThreadId, newThreadId.get());
-
-        Mockito.verify(objRequestMock).delete();
-        Mockito.verify(callback).execute(delResultMock);
-    }
-
-    @AfterMethod
-    public void after() {
-        reset(sessionStorageMock, requestMock, objRequestMock, delResultMock,
-                operationResultMock, reportAlertCalendarMock, responseMock, withEntityOperationResultMock,
-                calendarEntityMock);
     }
 }
